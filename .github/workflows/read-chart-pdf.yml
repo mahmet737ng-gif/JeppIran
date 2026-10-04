@@ -1,0 +1,160 @@
+name: Read Iran2620 PDF
+
+on:
+  push:
+    paths:
+      - 'Iran2620.pdf'
+      - '.github/workflows/read-chart-pdf.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  index-pdf:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout repository with LFS
+        uses: actions/checkout@v5
+        with:
+          lfs: true
+
+      - name: Install PDF tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+
+      - name: Check PDF
+        run: |
+          ls -lh Iran2620.pdf
+          pdfinfo Iran2620.pdf | head -30
+
+      - name: Build chart page index
+        run: |
+          python3 - <<'PY'
+          import json
+          import re
+          import subprocess
+
+          info = subprocess.check_output(
+              ["pdfinfo", "Iran2620.pdf"],
+              text=True,
+              errors="replace"
+          )
+
+          match = re.search(
+              r"^Pages:\s+(\d+)",
+              info,
+              re.MULTILINE
+          )
+
+          if not match:
+              raise SystemExit("Could not determine PDF page count")
+
+          pages = int(match.group(1))
+          rows = []
+
+          for page in range(1, pages + 1):
+
+              result = subprocess.run(
+                  [
+                      "pdftotext",
+                      "-layout",
+                      "-f", str(page),
+                      "-l", str(page),
+                      "Iran2620.pdf",
+                      "-"
+                  ],
+                  capture_output=True,
+                  text=True,
+                  errors="replace"
+              )
+
+              text = result.stdout
+
+              lines = [
+                  re.sub(r"\s+", " ", line).strip()
+                  for line in text.splitlines()
+                  if line.strip()
+              ]
+
+              upper = text.upper()
+
+              # Guess chart category
+              if re.search(
+                  r"\bSTAR\b|STANDARD ARRIVAL",
+                  upper
+              ):
+                  category = "STAR"
+
+              elif re.search(
+                  r"\bSID\b|STANDARD INSTRUMENT DEPARTURE",
+                  upper
+              ):
+                  category = "SID"
+
+              elif re.search(
+                  r"\bAPPROACH\b|\bILS\b|\bLOC\b|\bVOR\b|\bNDB\b|\bRNAV\b|\bRNP\b",
+                  upper
+              ):
+                  category = "Approach"
+
+              elif re.search(
+                  r"\bAIRPORT\b|\bAERODROME\b|\bADC\b|\bGROUND\b|\bTAXI",
+                  upper
+              ):
+                  category = "Airport"
+
+              else:
+                  category = "Unknown"
+
+              # Find Iranian ICAO codes
+              icaos = sorted(
+                  set(
+                      re.findall(
+                          r"\bO[A-Z]{3}\b",
+                          upper
+                      )
+                  )
+              )
+
+              # Keep only a short title hint
+              title_hint = " ".join(lines[:2])[:120]
+
+              rows.append({
+                  "page": page,
+                  "category_guess": category,
+                  "icao_candidates": icaos,
+                  "title_hint": title_hint
+              })
+
+          with open(
+              "charts-index.json",
+              "w",
+              encoding="utf-8"
+          ) as f:
+
+              json.dump(
+                  {
+                      "source": "Iran2620.pdf",
+                      "pages": pages,
+                      "charts": rows
+                  },
+                  f,
+                  ensure_ascii=False,
+                  indent=2
+              )
+
+          PY
+
+      - name: Commit chart index
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add charts-index.json
+
+          git diff --cached --quiet || git commit -m "Build chart page index"
+
+          git push
