@@ -3,14 +3,613 @@ name: Analyze Charts V5
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
-  test:
+  analyze:
     runs-on: ubuntu-24.04
 
     steps:
-      - name: Test V5
+
+      - name: Checkout repository with LFS
+        uses: actions/checkout@v5
+        with:
+          lfs: true
+          fetch-depth: 0
+
+      - name: Install PDF tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+
+      - name: Verify PDF
         run: |
           echo "================================"
-          echo "JeppIran Chart Analyzer V5"
-          echo "WORKFLOW IS WORKING"
+          echo "Checking Iran2620.pdf"
           echo "================================"
+
+          ls -lh Iran2620.pdf
+
+          pdfinfo Iran2620.pdf | head -20
+
+      - name: Analyze PDF
+        shell: bash
+        run: |
+
+          python3 <<'PY'
+
+          import json
+          import os
+          import re
+          import subprocess
+
+          PDF = "Iran2620.pdf"
+
+          print("========================================")
+          print("JeppIran Chart Analyzer V5")
+          print("========================================")
+
+          # -------------------------------------------------
+          # Helpers
+          # -------------------------------------------------
+
+          def run_cmd(cmd):
+              result = subprocess.run(
+                  cmd,
+                  stdout=subprocess.PIPE,
+                  stderr=subprocess.DEVNULL,
+                  text=True
+              )
+              return result.stdout
+
+          def clean_text(text):
+              text = text.replace("\x00", " ")
+              text = re.sub(r"\s+", " ", text)
+              return text.strip()
+
+          # -------------------------------------------------
+          # PDF page count
+          # -------------------------------------------------
+
+          info = run_cmd(["pdfinfo", PDF])
+
+          match = re.search(r"Pages:\s+(\d+)", info)
+
+          if not match:
+              raise RuntimeError("Could not determine PDF page count")
+
+          page_count = int(match.group(1))
+
+          print(f"PDF pages: {page_count}")
+
+          # -------------------------------------------------
+          # ICAO detection
+          # -------------------------------------------------
+
+          FALSE_WORDS = {
+              "IRAN",
+              "AREA",
+              "ELEV",
+              "RWYS",
+              "RWY",
+              "TURN",
+              "TAKE",
+              "MAKE",
+              "ACFT",
+              "WILL",
+              "LAND",
+              "ATIS",
+              "APCH",
+              "PAPI",
+              "CDFA",
+              "PANS",
+              "VNAV",
+              "LIEU",
+              "ONLY",
+              "ONTO",
+              "ICAO",
+              "JEPP",
+              "CHART",
+              "DATA",
+              "DATE",
+              "PAGE",
+              "NOTE",
+              "NOTES",
+              "STAR",
+              "SID"
+          }
+
+          def detect_icaos(text):
+
+              candidates = []
+
+              # Strong Jeppesen airport pattern:
+              # OIAA/ABD
+              # LTFM/IST
+              strong = re.findall(
+                  r"\b([A-Z]{4})/([A-Z]{3})\b",
+                  text.upper()
+              )
+
+              for icao, iata in strong:
+
+                  if icao in FALSE_WORDS:
+                      continue
+
+                  if icao[0] not in "OLUM":
+                      continue
+
+                  candidates.append(icao)
+
+              # Normal four-letter aviation identifiers
+              tokens = re.findall(r"\b[A-Z]{4}\b", text.upper())
+
+              for token in tokens:
+
+                  if token in FALSE_WORDS:
+                      continue
+
+                  if token[0] not in "OLUM":
+                      continue
+
+                  # Avoid obvious English words
+                  if token in {
+                      "ONLY",
+                      "ONTO",
+                      "AREA",
+                      "TURN",
+                      "TAKE",
+                      "MAKE",
+                      "WILL",
+                      "LAND",
+                      "ACFT",
+                      "ELEV"
+                  }:
+                      continue
+
+                  candidates.append(token)
+
+              # preserve order / remove duplicates
+              result = []
+
+              for item in candidates:
+                  if item not in result:
+                      result.append(item)
+
+              return result[:5]
+
+          # -------------------------------------------------
+          # Category detection
+          # -------------------------------------------------
+
+          def classify(text):
+
+              upper = text.upper()
+
+              scores = {
+                  "Airport": 0,
+                  "SID": 0,
+                  "STAR": 0,
+                  "Approach": 0,
+                  "Other": 0
+              }
+
+              # ---------------------------------------------
+              # OTHER
+              # ---------------------------------------------
+
+              other_patterns = [
+                  "REVISION",
+                  "REVISION NOTICE",
+                  "CHANGE NOTICE",
+                  "CHANGE INFORMATION",
+                  "TEMPORARY CHANGE",
+                  "TABLE OF CONTENTS",
+                  "CONTENTS",
+                  "LIST OF CHARTS"
+              ]
+
+              for pattern in other_patterns:
+                  if pattern in upper:
+                      scores["Other"] += 50
+
+              # ---------------------------------------------
+              # SID
+              # ---------------------------------------------
+
+              sid_patterns = [
+                  ".SID.",
+                  " SID ",
+                  "STANDARD INSTRUMENT DEPARTURE",
+                  "INSTRUMENT DEPARTURE",
+                  "DEPARTURE PROCEDURE",
+                  "DEPARTURES"
+              ]
+
+              for pattern in sid_patterns:
+                  if pattern in upper:
+                      scores["SID"] += 40
+
+              # Explicit SID chart numbering
+              if re.search(r"\b10-3[A-Z0-9]*\b", upper):
+                  scores["SID"] += 20
+
+              # ---------------------------------------------
+              # STAR
+              # ---------------------------------------------
+
+              star_patterns = [
+                  ".STAR.",
+                  " STAR ",
+                  "STANDARD TERMINAL ARRIVAL",
+                  "ARRIVAL PROCEDURE",
+                  "ARRIVALS"
+              ]
+
+              for pattern in star_patterns:
+                  if pattern in upper:
+                      scores["STAR"] += 40
+
+              # Explicit STAR chart numbering
+              if re.search(r"\b10-2[A-Z0-9]*\b", upper):
+                  scores["STAR"] += 20
+
+              # ---------------------------------------------
+              # APPROACH
+              # ---------------------------------------------
+
+              approach_patterns = [
+                  "APPROACH",
+                  "APCH",
+                  "ILS",
+                  "LOC",
+                  "VOR",
+                  "NDB",
+                  "RNAV",
+                  "RNP",
+                  "PAPI",
+                  "MDA",
+                  "DA/H",
+                  "DA ",
+                  "DH ",
+                  "CDFA",
+                  "MISSED APPROACH",
+                  "FINAL APPROACH",
+                  "INSTRUMENTAL APPROACH",
+                  "ACFT EXECUTING INSTRUMENTAL APPROACH"
+              ]
+
+              for pattern in approach_patterns:
+                  if pattern in upper:
+                      scores["Approach"] += 15
+
+              # ---------------------------------------------
+              # AIRPORT
+              # ---------------------------------------------
+
+              airport_patterns = [
+                  "AIRPORT INFORMATION",
+                  "AERODROME CHART",
+                  "AIRPORT CHART",
+                  "AIRPORT INFORMATION CHART",
+                  "ATIS",
+                  "TAXIWAY",
+                  "RUNWAY",
+                  "RWY",
+                  "APRON",
+                  "RCLM",
+                  "ELEV"
+              ]
+
+              for pattern in airport_patterns:
+                  if pattern in upper:
+                      scores["Airport"] += 8
+
+              # Strong airport header:
+              # OIAA/ABD | JEPPESEN ABADAN, IRAN
+              if re.search(
+                  r"\b[A-Z]{4}/[A-Z]{3}\b.*JEPPESEN",
+                  upper
+              ):
+                  scores["Airport"] += 50
+
+              # Airport chart keywords
+              if "JEPPESEN" in upper and "IRAN" in upper:
+                  scores["Airport"] += 5
+
+              # ---------------------------------------------
+              # Special handling
+              # ---------------------------------------------
+
+              # If page contains strong SID/STAR marker,
+              # do not let generic approach keywords win.
+              if ".SID." in upper or "STANDARD INSTRUMENT DEPARTURE" in upper:
+                  scores["SID"] += 30
+
+              if ".STAR." in upper or "STANDARD TERMINAL ARRIVAL" in upper:
+                  scores["STAR"] += 30
+
+              # Strong approach title
+              if "ACFT EXECUTING INSTRUMENTAL APPROACH" in upper:
+                  scores["Approach"] += 40
+
+              # ---------------------------------------------
+              # Pick category
+              # ---------------------------------------------
+
+              best = max(scores, key=scores.get)
+
+              if scores[best] == 0:
+                  best = "Unknown"
+
+              # Require meaningful score
+              elif scores[best] < 15:
+                  best = "Unknown"
+
+              return best, scores
+
+          # -------------------------------------------------
+          # Process pages
+          # -------------------------------------------------
+
+          records = []
+
+          for page in range(1, page_count + 1):
+
+              print(f"Processing page {page}/{page_count}")
+
+              txt_file = f"/tmp/page-{page}.txt"
+
+              subprocess.run(
+                  [
+                      "pdftotext",
+                      "-f",
+                      str(page),
+                      "-l",
+                      str(page),
+                      "-layout",
+                      PDF,
+                      txt_file
+                  ],
+                  stdout=subprocess.DEVNULL,
+                  stderr=subprocess.DEVNULL
+              )
+
+              try:
+                  with open(
+                      txt_file,
+                      "r",
+                      encoding="utf-8",
+                      errors="ignore"
+                  ) as f:
+                      raw = f.read()
+              except:
+                  raw = ""
+
+              text = clean_text(raw)
+
+              icaos = detect_icaos(text)
+
+              category, scores = classify(text)
+
+              # Airport from strongest ICAO candidate
+              airport = icaos[0] if icaos else None
+
+              # Do not accept fake ICAO
+              if airport == "ICAO":
+                  airport = None
+
+              # Create short diagnostic title
+              title = text[:250]
+
+              records.append({
+                  "page": page,
+                  "category": category,
+                  "airport_icao": airport,
+                  "icao_candidates": icaos,
+                  "scores": scores,
+                  "text_preview": title
+              })
+
+          # -------------------------------------------------
+          # Context repair
+          # -------------------------------------------------
+
+          # Some pages have weak/no text classification.
+          # If the previous and next pages strongly agree,
+          # use that information.
+
+          for i in range(1, len(records) - 1):
+
+              current = records[i]
+
+              if current["category"] != "Unknown":
+                  continue
+
+              prev = records[i - 1]
+              nxt = records[i + 1]
+
+              if (
+                  prev["category"] == nxt["category"]
+                  and prev["category"] in {
+                      "SID",
+                      "STAR",
+                      "Approach",
+                      "Airport"
+                  }
+              ):
+                  current["category"] = prev["category"]
+                  current["repaired_by_context"] = True
+
+          # -------------------------------------------------
+          # Build summary
+          # -------------------------------------------------
+
+          counts = {
+              "Airport": 0,
+              "SID": 0,
+              "STAR": 0,
+              "Approach": 0,
+              "Other": 0,
+              "Unknown": 0
+          }
+
+          airports = {}
+
+          for record in records:
+
+              category = record["category"]
+
+              counts.setdefault(category, 0)
+              counts[category] += 1
+
+              airport = record.get("airport_icao")
+
+              if airport:
+
+                  if airport not in airports:
+                      airports[airport] = {
+                          "Airport": 0,
+                          "SID": 0,
+                          "STAR": 0,
+                          "Approach": 0,
+                          "Other": 0,
+                          "Unknown": 0
+                      }
+
+                  airports[airport][category] += 1
+
+          # -------------------------------------------------
+          # Application-ready structure
+          # -------------------------------------------------
+
+          airport_list = []
+
+          for icao in sorted(airports.keys()):
+
+              airport_list.append({
+                  "icao": icao,
+                  "categories": airports[icao]
+              })
+
+          app_data = {
+              "source": PDF,
+              "pages": page_count,
+              "categories": [
+                  "SID",
+                  "STAR",
+                  "Airport",
+                  "Approach"
+              ],
+              "summary": counts,
+              "airports": airport_list,
+              "pages_index": records
+          }
+
+          # -------------------------------------------------
+          # Write files
+          # -------------------------------------------------
+
+          with open(
+              "charts-index-v5.json",
+              "w",
+              encoding="utf-8"
+          ) as f:
+              json.dump(
+                  records,
+                  f,
+                  ensure_ascii=False,
+                  indent=2
+              )
+
+          summary = {
+              "source": PDF,
+              "pages": page_count,
+              "category_counts": counts,
+              "airport_count": len(airports),
+              "airports": airports
+          }
+
+          with open(
+              "charts-summary-v5.json",
+              "w",
+              encoding="utf-8"
+          ) as f:
+              json.dump(
+                  summary,
+                  f,
+                  ensure_ascii=False,
+                  indent=2
+              )
+
+          with open(
+              "charts-app-v5.json",
+              "w",
+              encoding="utf-8"
+          ) as f:
+              json.dump(
+                  app_data,
+                  f,
+                  ensure_ascii=False,
+                  indent=2
+              )
+
+          # -------------------------------------------------
+          # Console summary
+          # -------------------------------------------------
+
+          print("")
+          print("========================================")
+          print("V5 ANALYSIS COMPLETE")
+          print("========================================")
+
+          print(f"Pages:     {page_count}")
+          print(f"Airport:   {counts['Airport']}")
+          print(f"SID:       {counts['SID']}")
+          print(f"STAR:      {counts['STAR']}")
+          print(f"Approach:  {counts['Approach']}")
+          print(f"Other:     {counts['Other']}")
+          print(f"Unknown:   {counts['Unknown']}")
+          print(f"Airports:  {len(airports)}")
+
+          print("")
+          print("Airport breakdown:")
+
+          for icao in sorted(airports):
+
+              data = airports[icao]
+
+              print(
+                  f"{icao}: "
+                  f"Airport={data['Airport']} "
+                  f"SID={data['SID']} "
+                  f"STAR={data['STAR']} "
+                  f"Approach={data['Approach']}"
+              )
+
+          PY
+
+      - name: Upload V5 analysis
+        uses: actions/upload-artifact@v4
+        with:
+          name: JeppIran-chart-analysis-v5
+          path: |
+            charts-index-v5.json
+            charts-summary-v5.json
+            charts-app-v5.json
+
+      - name: Commit V5 results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add \
+            charts-index-v5.json \
+            charts-summary-v5.json \
+            charts-app-v5.json
+
+          git diff --cached --quiet || \
+            git commit -m "Add chart analysis V5"
+
+          git push
