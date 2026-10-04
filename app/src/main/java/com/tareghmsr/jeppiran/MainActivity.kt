@@ -1,6 +1,8 @@
 package com.tareghmsr.jeppiran
 
+import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
@@ -31,6 +33,32 @@ class MainActivity : ComponentActivity() {
             )
 
             insets
+        }
+
+        findViewById<android.view.View>(R.id.cardCharts).setOnClickListener {
+            startActivity(
+                Intent(this, ChartsActivity::class.java)
+            )
+        }
+
+        findViewById<android.view.View>(R.id.cardEnroute).setOnClickListener {
+            Toast.makeText(this, "En-route Charts", Toast.LENGTH_SHORT).show()
+        }
+
+        findViewById<android.view.View>(R.id.cardWx).setOnClickListener {
+            Toast.makeText(this, "WX", Toast.LENGTH_SHORT).show()
+        }
+
+        findViewById<android.view.View>(R.id.cardUpdate).setOnClickListener {
+            Toast.makeText(this, "Update", Toast.LENGTH_SHORT).show()
+        }
+
+        findViewById<android.view.View>(R.id.cardSettings).setOnClickListener {
+            Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show()
+        }
+
+        findViewById<android.view.View>(R.id.cardInfo).setOnClickListener {
+            Toast.makeText(this, "JeppIran\nDeveloper: Taregh Msr", Toast.LENGTH_SHORT).show()
         }
     }
 }
