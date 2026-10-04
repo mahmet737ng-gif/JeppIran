@@ -1,0 +1,554 @@
+name: Analyze Iran2620 Charts V2
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - 'Iran2620.pdf'
+      - '.github/workflows/analyze-charts-v2.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  analyze:
+    runs-on: ubuntu-24.04
+
+    steps:
+
+      - name: Checkout repository with LFS
+        uses: actions/checkout@v5
+        with:
+          lfs: true
+
+      - name: Install PDF tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+
+      - name: Check PDF
+        run: |
+          ls -lh Iran2620.pdf
+          pdfinfo Iran2620.pdf | head -30
+
+      - name: Analyze charts
+        run: |
+          python3 - <<'PY'
+          import json
+          import re
+          import subprocess
+          from collections import defaultdict, Counter
+
+          PDF = "Iran2620.pdf"
+
+          # ---------------------------------------------------------
+          # Get page count
+          # ---------------------------------------------------------
+
+          info = subprocess.check_output(
+              ["pdfinfo", PDF],
+              text=True,
+              errors="replace"
+          )
+
+          match = re.search(
+              r"^Pages:\s+(\d+)",
+              info,
+              re.MULTILINE
+          )
+
+          if not match:
+              raise SystemExit("Could not determine PDF page count")
+
+          pages = int(match.group(1))
+
+          # ---------------------------------------------------------
+          # Common English words which can look like ICAO codes
+          # ---------------------------------------------------------
+
+          FALSE_ICAOS = {
+              "ONLY", "ONTO", "NOTE", "THIS", "THEN",
+              "FROM", "WITH", "WIND", "FEET", "PLAN",
+              "DATA", "INFO", "TYPE", "PAGE", "DATE",
+              "TEXT", "TRUE", "LEFT", "RIGHT", "FINAL",
+              "AIRPORT", "APPROACH", "ARRIVAL",
+              "DEPARTURE", "STANDARD", "PROCEDURE",
+              "INSTRUMENT", "RUNWAY", "GROUND",
+              "TAXI", "CHART", "CHARTS", "CHANGE",
+              "NOTICES", "NOTICE", "REVISION", "LETTER",
+              "TERMINAL", "ROUTE", "STAR", "SID",
+              "ILS", "LOC", "VOR", "NDB", "RNAV",
+              "RNP", "MIN", "MAX", "ALT", "TIME",
+              "LEVEL", "CLIMB", "DESCENT", "FINAL",
+              "TRANSITION", "VECTOR", "VECTORS",
+              "CONTACT", "FREQUENCY", "FREQ",
+              "ATC", "RADAR", "SPEED", "COURSE",
+              "HEADING", "MILES", "MILE", "NORTH",
+              "SOUTH", "EAST", "WEST", "PAGE",
+              "PRINTED", "CYCLE", "FOR", "THE",
+              "AND", "ARE", "NOT", "USE", "WHEN",
+              "IF", "OR", "OF", "TO", "IN"
+          }
+
+          # ---------------------------------------------------------
+          # Extract ICAO codes
+          # ---------------------------------------------------------
+
+          def extract_icaos(text):
+
+              candidates = []
+
+              # Strong format:
+              # OIAW/2
+              # LTFM/IST
+              # OIII/THR
+              for m in re.findall(
+                  r"\b([A-Z]{4})/[A-Z0-9]{2,4}\b",
+                  text.upper()
+              ):
+                  candidates.append(m)
+
+              # Airport Information For OIAW
+              for m in re.findall(
+                  r"AIRPORT\s+INFORMATION\s+FOR\s+([A-Z]{4})",
+                  text.upper()
+              ):
+                  candidates.append(m)
+
+              # Generic four-letter tokens
+              for m in re.findall(
+                  r"\b([A-Z]{4})\b",
+                  text.upper()
+              ):
+                  if m not in FALSE_ICAOS:
+                      candidates.append(m)
+
+              # Keep unique values
+              result = []
+
+              for code in candidates:
+                  if code not in result:
+                      result.append(code)
+
+              return result
+
+          # ---------------------------------------------------------
+          # Classify page
+          # ---------------------------------------------------------
+
+          def classify(text):
+
+              upper = text.upper()
+
+              # -----------------------------------------------------
+              # Non-chart pages MUST be detected first
+              # -----------------------------------------------------
+
+              if re.search(
+                  r"REVISION\s+LETTER",
+                  upper
+              ):
+                  return "Other"
+
+              if re.search(
+                  r"TERMINAL\s+CHART\s+CHANGE\s+NOTICES",
+                  upper
+              ):
+                  return "Other"
+
+              if re.search(
+                  r"CHANGE\s+NOTICES",
+                  upper
+              ):
+                  return "Other"
+
+              if re.search(
+                  r"TABLE\s+OF\s+CONTENTS",
+                  upper
+              ):
+                  return "Other"
+
+              # -----------------------------------------------------
+              # Airport pages have priority over Approach keywords
+              # -----------------------------------------------------
+
+              if re.search(
+                  r"AIRPORT\s+INFORMATION\s+FOR\s+[A-Z]{4}",
+                  upper
+              ):
+                  return "Airport"
+
+              if re.search(
+                  r"AERODROME\s+CHART",
+                  upper
+              ):
+                  return "Airport"
+
+              if re.search(
+                  r"\bAIRPORT\s+CHART\b",
+                  upper
+              ):
+                  return "Airport"
+
+              # -----------------------------------------------------
+              # STAR
+              # -----------------------------------------------------
+
+              if re.search(
+                  r"STANDARD\s+TERMINAL\s+ARRIVAL",
+                  upper
+              ):
+                  return "STAR"
+
+              if re.search(
+                  r"STANDARD\s+ARRIVAL",
+                  upper
+              ):
+                  return "STAR"
+
+              # -----------------------------------------------------
+              # SID
+              # -----------------------------------------------------
+
+              if re.search(
+                  r"STANDARD\s+INSTRUMENT\s+DEPARTURE",
+                  upper
+              ):
+                  return "SID"
+
+              if re.search(
+                  r"STANDARD\s+DEPARTURE",
+                  upper
+              ):
+                  return "SID"
+
+              # -----------------------------------------------------
+              # Approach
+              # -----------------------------------------------------
+
+              if re.search(
+                  r"\bAPPROACH\b",
+                  upper
+              ):
+                  return "Approach"
+
+              if re.search(
+                  r"\bILS\b|\bLOC\b|\bVOR\b|\bNDB\b|\bRNAV\b|\bRNP\b",
+                  upper
+              ):
+                  return "Approach"
+
+              return "Unknown"
+
+          # ---------------------------------------------------------
+          # Extract useful title
+          # ---------------------------------------------------------
+
+          def get_title(text):
+
+              lines = []
+
+              for line in text.splitlines():
+
+                  line = re.sub(
+                      r"\s+",
+                      " ",
+                      line
+                  ).strip()
+
+                  if not line:
+                      continue
+
+                  # Remove extremely long garbage lines
+                  if len(line) > 250:
+                      line = line[:250]
+
+                  lines.append(line)
+
+              # Prefer meaningful aviation headers
+              patterns = [
+                  r"AIRPORT INFORMATION",
+                  r"STANDARD TERMINAL ARRIVAL",
+                  r"STANDARD ARRIVAL",
+                  r"STANDARD INSTRUMENT DEPARTURE",
+                  r"STANDARD DEPARTURE",
+                  r"APPROACH",
+                  r"REVISION LETTER",
+                  r"CHANGE NOTICES"
+              ]
+
+              for pattern in patterns:
+
+                  for line in lines:
+
+                      if re.search(pattern, line, re.I):
+
+                          return line[:200]
+
+              # Otherwise use first useful lines
+              useful = []
+
+              for line in lines[:8]:
+
+                  if len(line) >= 4:
+                      useful.append(line)
+
+                  if len(useful) >= 2:
+                      break
+
+              return " | ".join(useful)[:200]
+
+          # ---------------------------------------------------------
+          # Analyze every page
+          # ---------------------------------------------------------
+
+          charts = []
+
+          current_airport = None
+
+          for page in range(1, pages + 1):
+
+              result = subprocess.run(
+                  [
+                      "pdftotext",
+                      "-layout",
+                      "-f",
+                      str(page),
+                      "-l",
+                      str(page),
+                      PDF,
+                      "-"
+                  ],
+                  capture_output=True,
+                  text=True,
+                  errors="replace"
+              )
+
+              text = result.stdout
+
+              upper = text.upper()
+
+              category = classify(text)
+
+              icaos = extract_icaos(text)
+
+              # -----------------------------------------------------
+              # Detect airport from explicit Airport Information
+              # -----------------------------------------------------
+
+              airport_match = re.search(
+                  r"AIRPORT\s+INFORMATION\s+FOR\s+([A-Z]{4})",
+                  upper
+              )
+
+              if airport_match:
+
+                  current_airport = airport_match.group(1)
+
+              # -----------------------------------------------------
+              # Strong ICAO detection
+              # -----------------------------------------------------
+
+              if icaos:
+
+                  # Prefer ICAO found in Airport Information
+                  if airport_match:
+
+                      current_airport = airport_match.group(1)
+
+                  # Otherwise prefer first candidate
+                  elif current_airport is None:
+
+                      current_airport = icaos[0]
+
+              # -----------------------------------------------------
+              # Ignore pages should not inherit airport
+              # -----------------------------------------------------
+
+              airport = None
+
+              if category != "Other":
+
+                  airport = current_airport
+
+              title = get_title(text)
+
+              charts.append(
+                  {
+                      "page": page,
+                      "airport_icao": airport,
+                      "category": category,
+                      "icao_candidates": icaos,
+                      "title": title
+                  }
+              )
+
+          # ---------------------------------------------------------
+          # Build grouped airport structure
+          # ---------------------------------------------------------
+
+          grouped = defaultdict(
+              lambda: defaultdict(list)
+          )
+
+          for chart in charts:
+
+              airport = chart["airport_icao"]
+              category = chart["category"]
+
+              if airport and category in {
+                  "Airport",
+                  "STAR",
+                  "SID",
+                  "Approach"
+              }:
+
+                  grouped[airport][category].append(
+                      chart["page"]
+                  )
+
+          # ---------------------------------------------------------
+          # Convert defaultdict to normal JSON structure
+          # ---------------------------------------------------------
+
+          airports = {}
+
+          for airport in sorted(grouped):
+
+              airports[airport] = {}
+
+              for category in [
+                  "Airport",
+                  "STAR",
+                  "SID",
+                  "Approach"
+              ]:
+
+                  if category in grouped[airport]:
+
+                      airports[airport][category] = \
+                          grouped[airport][category]
+
+          # ---------------------------------------------------------
+          # Statistics
+          # ---------------------------------------------------------
+
+          category_counts = Counter(
+              chart["category"]
+              for chart in charts
+          )
+
+          airport_counts = Counter(
+              chart["airport_icao"]
+              for chart in charts
+              if chart["airport_icao"]
+          )
+
+          summary = {
+              "source": PDF,
+              "pages": pages,
+              "category_counts": dict(category_counts),
+              "airport_count": len(airports),
+              "airports": {}
+          }
+
+          for airport in sorted(airports):
+
+              summary["airports"][airport] = {
+                  category: len(pages_list)
+                  for category, pages_list
+                  in airports[airport].items()
+              }
+
+          # ---------------------------------------------------------
+          # Write detailed index
+          # ---------------------------------------------------------
+
+          output = {
+              "source": PDF,
+              "pages": pages,
+              "charts": charts,
+              "airports": airports
+          }
+
+          with open(
+              "charts-index-v2.json",
+              "w",
+              encoding="utf-8"
+          ) as f:
+
+              json.dump(
+                  output,
+                  f,
+                  ensure_ascii=False,
+                  indent=2
+              )
+
+          # ---------------------------------------------------------
+          # Write small summary
+          # ---------------------------------------------------------
+
+          with open(
+              "charts-summary-v2.json",
+              "w",
+              encoding="utf-8"
+          ) as f:
+
+              json.dump(
+                  summary,
+                  f,
+                  ensure_ascii=False,
+                  indent=2
+              )
+
+          print()
+          print("========================================")
+          print(" JeppIran Chart Analyzer V2")
+          print("========================================")
+          print()
+          print("PDF pages:", pages)
+          print("Airports:", len(airports))
+          print()
+          print("Categories:")
+
+          for category, count in sorted(
+              category_counts.items()
+          ):
+              print(
+                  "  ",
+                  category,
+                  ":",
+                  count
+              )
+
+          print()
+          print("Detected airports:")
+
+          for airport in sorted(airports):
+
+              counts = summary["airports"][airport]
+
+              print(
+                  "  ",
+                  airport,
+                  counts
+              )
+
+          print()
+          print("Files created:")
+          print("  charts-index-v2.json")
+          print("  charts-summary-v2.json")
+          print()
+
+          PY
+
+      - name: Commit analysis results
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add charts-index-v2.json charts-summary-v2.json
+
+          git diff --cached --quiet || git commit -m "Build chart index V2"
+
+          git push
