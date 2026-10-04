@@ -1,0 +1,159 @@
+{
+  "source": "Iran2620.pdf",
+  "pages": 991,
+  "category_counts": {
+    "Airport": 67,
+    "Approach": 798,
+    "Unknown": 117,
+    "STAR": 1,
+    "Other": 8
+  },
+  "airport_count": 36,
+  "airports": {
+    "LTFM": {
+      "Airport": 4,
+      "Approach": 148
+    },
+    "OIAA": {
+      "Airport": 1,
+      "Approach": 17
+    },
+    "OIAM": {
+      "Airport": 1,
+      "Approach": 7
+    },
+    "OIAW": {
+      "Airport": 2,
+      "Approach": 23
+    },
+    "OIBB": {
+      "Airport": 2,
+      "Approach": 20
+    },
+    "OIBK": {
+      "Airport": 2,
+      "Approach": 15
+    },
+    "OIBP": {
+      "Airport": 1,
+      "Approach": 14
+    },
+    "OICC": {
+      "Airport": 3,
+      "Approach": 21
+    },
+    "OICI": {
+      "Airport": 1,
+      "Approach": 10
+    },
+    "OIFM": {
+      "Airport": 2,
+      "Approach": 35
+    },
+    "OIGG": {
+      "Airport": 2,
+      "Approach": 24
+    },
+    "OIHH": {
+      "Airport": 2,
+      "Approach": 11
+    },
+    "OIIE": {
+      "Airport": 2,
+      "Approach": 24
+    },
+    "OIII": {
+      "Airport": 3,
+      "Approach": 32
+    },
+    "OIIP": {
+      "Airport": 1,
+      "Approach": 14
+    },
+    "OIKK": {
+      "Airport": 2,
+      "Approach": 15
+    },
+    "OIMB": {
+      "Airport": 2,
+      "Approach": 12
+    },
+    "OIMM": {
+      "Airport": 2,
+      "Approach": 37
+    },
+    "OIMN": {
+      "Airport": 2,
+      "Approach": 11
+    },
+    "OIMS": {
+      "Airport": 1,
+      "Approach": 9
+    },
+    "OING": {
+      "Airport": 2,
+      "Approach": 10
+    },
+    "OINZ": {
+      "Airport": 2,
+      "Approach": 8
+    },
+    "OISS": {
+      "Airport": 2,
+      "Approach": 34
+    },
+    "OITL": {
+      "Airport": 2,
+      "Approach": 26
+    },
+    "OITR": {
+      "Airport": 1,
+      "Approach": 20
+    },
+    "OITT": {
+      "Airport": 2,
+      "Approach": 15
+    },
+    "OIYY": {
+      "Airport": 2,
+      "Approach": 23
+    },
+    "OIZC": {
+      "Airport": 2,
+      "Approach": 11
+    },
+    "OIZH": {
+      "Airport": 2,
+      "Approach": 28
+    },
+    "OMDB": {
+      "Airport": 2,
+      "STAR": 1,
+      "Approach": 28
+    },
+    "OOMS": {
+      "Airport": 2,
+      "Approach": 29
+    },
+    "ORBI": {
+      "Airport": 2,
+      "Approach": 8
+    },
+    "ORNI": {
+      "Airport": 2,
+      "Approach": 12
+    },
+    "UDYZ": {
+      "Airport": 1,
+      "Approach": 16
+    },
+    "UGSB": {
+      "Airport": 1,
+      "Approach": 11
+    },
+    "UGTB": {
+      "Airport": 2,
+      "Approach": 20
+    }
+  }
+}
