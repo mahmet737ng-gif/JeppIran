@@ -6,16 +6,17 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:background="?android:attr/colorBackground">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingStart="24dp"
-        android:paddingTop="32dp"
-        android:paddingEnd="24dp"
-        android:paddingBottom="32dp">
+        android:paddingStart="20dp"
+        android:paddingTop="28dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="28dp">
 
         <!-- Header -->
 
@@ -23,26 +24,25 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="JeppIran"
-            android:textSize="32sp"
+            android:textSize="34sp"
             android:textStyle="bold"
             android:textColor="?attr/colorOnBackground" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Iranian Aviation Charts"
-            android:textSize="15sp"
+            android:layout_marginTop="3dp"
+            android:text="Iranian Aviation Charts &amp; Weather"
+            android:textSize="14sp"
             android:textColor="?attr/colorOnSurfaceVariant" />
 
-        <!-- Main Grid -->
+        <!-- Main menu -->
 
         <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="26dp"
             android:columnCount="2"
-            android:rowCount="3"
             android:useDefaultMargins="false">
 
             <!-- Charts -->
@@ -50,12 +50,13 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardCharts"
                 android:layout_width="0dp"
-                android:layout_height="150dp"
+                android:layout_height="145dp"
                 android:layout_columnWeight="1"
                 android:layout_margin="6dp"
                 android:clickable="true"
                 android:focusable="true"
-                app:cardCornerRadius="20dp"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardCornerRadius="18dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp">
 
@@ -64,21 +65,29 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:contentDescription="Charts"
-                        android:src="@android:drawable/ic_menu_mapmode" />
+                    android:padding="18dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:text="✈"
+                        android:textSize="34sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
                         android:text="Charts"
-                        android:textSize="17sp"
+                        android:textSize="18sp"
                         android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="Airport charts"
+                        android:textSize="12sp"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
 
                 </LinearLayout>
 
@@ -89,12 +98,13 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardEnroute"
                 android:layout_width="0dp"
-                android:layout_height="150dp"
+                android:layout_height="145dp"
                 android:layout_columnWeight="1"
                 android:layout_margin="6dp"
                 android:clickable="true"
                 android:focusable="true"
-                app:cardCornerRadius="20dp"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardCornerRadius="18dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp">
 
@@ -103,21 +113,29 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:contentDescription="En-route Charts"
-                        android:src="@android:drawable/ic_menu_directions" />
+                    android:padding="18dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:text="⇄"
+                        android:textSize="34sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
                         android:text="En-route"
-                        android:textSize="17sp"
+                        android:textSize="18sp"
                         android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="Airway charts"
+                        android:textSize="12sp"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
 
                 </LinearLayout>
 
@@ -128,12 +146,13 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardWx"
                 android:layout_width="0dp"
-                android:layout_height="150dp"
+                android:layout_height="145dp"
                 android:layout_columnWeight="1"
                 android:layout_margin="6dp"
                 android:clickable="true"
                 android:focusable="true"
-                app:cardCornerRadius="20dp"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardCornerRadius="18dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp">
 
@@ -142,21 +161,29 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:contentDescription="Weather"
-                        android:src="@android:drawable/ic_menu_compass" />
+                    android:padding="18dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:text="☁"
+                        android:textSize="34sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
                         android:text="WX"
-                        android:textSize="17sp"
+                        android:textSize="18sp"
                         android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="METAR / TAF"
+                        android:textSize="12sp"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
 
                 </LinearLayout>
 
@@ -167,12 +194,13 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardUpdate"
                 android:layout_width="0dp"
-                android:layout_height="150dp"
+                android:layout_height="145dp"
                 android:layout_columnWeight="1"
                 android:layout_margin="6dp"
                 android:clickable="true"
                 android:focusable="true"
-                app:cardCornerRadius="20dp"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardCornerRadius="18dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp">
 
@@ -181,21 +209,29 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:contentDescription="Update"
-                        android:src="@android:drawable/ic_popup_sync" />
+                    android:padding="18dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:text="↻"
+                        android:textSize="34sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
                         android:text="Update"
-                        android:textSize="17sp"
+                        android:textSize="18sp"
                         android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="Chart database"
+                        android:textSize="12sp"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
 
                 </LinearLayout>
 
@@ -206,12 +242,13 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardSettings"
                 android:layout_width="0dp"
-                android:layout_height="150dp"
+                android:layout_height="145dp"
                 android:layout_columnWeight="1"
                 android:layout_margin="6dp"
                 android:clickable="true"
                 android:focusable="true"
-                app:cardCornerRadius="20dp"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardCornerRadius="18dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp">
 
@@ -220,21 +257,29 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:contentDescription="Settings"
-                        android:src="@android:drawable/ic_menu_preferences" />
+                    android:padding="18dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:text="⚙"
+                        android:textSize="34sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
                         android:text="Settings"
-                        android:textSize="17sp"
+                        android:textSize="18sp"
                         android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="App preferences"
+                        android:textSize="12sp"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
 
                 </LinearLayout>
 
@@ -245,12 +290,13 @@
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardInfo"
                 android:layout_width="0dp"
-                android:layout_height="150dp"
+                android:layout_height="145dp"
                 android:layout_columnWeight="1"
                 android:layout_margin="6dp"
                 android:clickable="true"
                 android:focusable="true"
-                app:cardCornerRadius="20dp"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardCornerRadius="18dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="1dp">
 
@@ -259,21 +305,29 @@
                     android:layout_height="match_parent"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="20dp">
-
-                    <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:contentDescription="Information"
-                        android:src="@android:drawable/ic_dialog_info" />
+                    android:padding="18dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:text="ⓘ"
+                        android:textSize="34sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
                         android:text="Info"
-                        android:textSize="17sp"
+                        android:textSize="18sp"
                         android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="3dp"
+                        android:text="About JeppIran"
+                        android:textSize="12sp"
+                        android:textColor="?attr/colorOnSurfaceVariant" />
 
                 </LinearLayout>
 
