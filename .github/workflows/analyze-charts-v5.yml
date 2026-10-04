@@ -1,0 +1,16 @@
+name: Analyze Charts V5
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Test V5
+        run: |
+          echo "================================"
+          echo "JeppIran Chart Analyzer V5"
+          echo "WORKFLOW IS WORKING"
+          echo "================================"
