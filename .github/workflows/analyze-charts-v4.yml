@@ -1,7 +1,10 @@
-name: Analyze JeppIran Charts V4
+name: Analyze Charts V4
 
 on:
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   analyze:
@@ -12,6 +15,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           lfs: true
+          fetch-depth: 0
 
       - name: Install PDF tools
         run: |
@@ -35,7 +39,11 @@ jobs:
 
           PAGES=$(pdfinfo "$PDF" | awk '/^Pages:/ {print $2}')
 
-          echo "PDF pages: $PAGES"
+          echo "========================================"
+          echo "JeppIran Chart Analyzer V4"
+          echo "PDF: $PDF"
+          echo "Pages: $PAGES"
+          echo "========================================"
 
           TMP=$(mktemp -d)
 
@@ -55,18 +63,65 @@ jobs:
 
           results = []
 
-          # ------------------------------------------------------------
-          # Strong ICAO detection
-          # ------------------------------------------------------------
+          # ============================================================
+          # FALSE ICAO WORDS
+          # ============================================================
 
           false_words = {
-              "TAKE","IRAN","ELEV","ATIS","EOBT","DOGS","AREA","ACFT",
-              "MAKE","TURN","PAPI","RCLM","RWYS","WILL","LAND","CDFA",
-              "PANS","VNAV","LIEU","APCH","ONLY","ONTO","FROM","WITH",
-              "THIS","THAT","THEN","WHEN","WHERE","HAVE","BEEN","YOUR",
-              "THEM","THEIR","MUST","MAYB","NOTE","FINAL","MISSED",
-              "CLIMB","DESC","DESCENT","ARR","DEPT","PROC","CHART"
+              "TAKE",
+              "IRAN",
+              "ELEV",
+              "ATIS",
+              "EOBT",
+              "DOGS",
+              "AREA",
+              "ACFT",
+              "MAKE",
+              "TURN",
+              "PAPI",
+              "RCLM",
+              "RWYS",
+              "WILL",
+              "LAND",
+              "CDFA",
+              "PANS",
+              "VNAV",
+              "LIEU",
+              "APCH",
+              "ONLY",
+              "ONTO",
+              "FROM",
+              "WITH",
+              "THIS",
+              "THAT",
+              "THEN",
+              "WHEN",
+              "WHERE",
+              "HAVE",
+              "BEEN",
+              "YOUR",
+              "THEM",
+              "THEIR",
+              "MUST",
+              "MAYB",
+              "NOTE",
+              "FINAL",
+              "MISSED",
+              "CLIMB",
+              "DESC",
+              "DESCENT",
+              "ARR",
+              "DEPT",
+              "PROC",
+              "CHART",
+              "ICAO",
+              "JEPP",
+              "JEPPESEN"
           }
+
+          # ============================================================
+          # ICAO VALIDATION
+          # ============================================================
 
           def valid_icao(x):
               if not re.fullmatch(r"[A-Z]{4}", x):
@@ -75,12 +130,16 @@ jobs:
               if x in false_words:
                   return False
 
-              # ICAO location identifiers in this dataset normally
-              # begin with O, L, U or M.
+              # Dataset contains Iran, Turkey, Iraq,
+              # Georgia, Armenia and UAE identifiers.
               if x[0] not in "OLUM":
                   return False
 
               return True
+
+          # ============================================================
+          # ICAO EXTRACTION
+          # ============================================================
 
           def extract_icaos(text):
               found = []
@@ -88,8 +147,12 @@ jobs:
               # Strong format:
               # OIAA/ABD
               # LTFM/IST
-              for m in re.finditer(r"\b([A-Z]{4})/[A-Z]{3}\b", text):
+              for m in re.finditer(
+                  r"\b([A-Z]{4})/[A-Z]{3}\b",
+                  text
+              ):
                   x = m.group(1)
+
                   if valid_icao(x) and x not in found:
                       found.append(x)
 
@@ -97,21 +160,21 @@ jobs:
               patterns = [
                   r"\bAIRPORT INFORMATION FOR\s+([A-Z]{4})\b",
                   r"\bAIRPORT\s+([A-Z]{4})\b",
-                  r"\bAERODROME\s+([A-Z]{4})\b",
-                  r"\bJEPPESEN\s+[A-Z .'-]+,\s*(?:IRAN|TURKEY|IRAQ|GEORGIA|ARMENIA|UAE)"
+                  r"\bAERODROME\s+([A-Z]{4})\b"
               ]
 
-              for pat in patterns[:3]:
+              for pat in patterns:
                   for m in re.finditer(pat, text):
                       x = m.group(1)
+
                       if valid_icao(x) and x not in found:
                           found.append(x)
 
               return found
 
-          # ------------------------------------------------------------
-          # Helpers
-          # ------------------------------------------------------------
+          # ============================================================
+          # NORMALIZATION
+          # ============================================================
 
           def normalize(text):
               text = text.upper()
@@ -119,39 +182,56 @@ jobs:
               text = re.sub(r"[ \t]+", " ", text)
               return text
 
-          def title_from_text(text):
-              lines = [x.strip() for x in text.splitlines() if x.strip()]
+          # ============================================================
+          # TITLE EXTRACTION
+          # ============================================================
 
-              # Prefer explicit procedure/chart names
+          def title_from_text(text):
+              lines = [
+                  x.strip()
+                  for x in text.splitlines()
+                  if x.strip()
+              ]
+
+              # Strong SID title
               for line in lines:
                   if re.search(r"\.SID\.", line, re.I):
                       return line[:300]
 
+              # Strong STAR title
+              for line in lines:
                   if re.search(r"\.STAR\.", line, re.I):
                       return line[:300]
 
+              # Explicit procedure titles
               for line in lines:
-                  if any(k in line for k in [
-                      "STANDARD INSTRUMENT DEPARTURE",
-                      "STANDARD TERMINAL ARRIVAL",
-                      "APPROACH",
-                      "AERODROME CHART",
-                      "AIRPORT INFORMATION"
-                  ]):
+                  if any(
+                      k in line
+                      for k in [
+                          "STANDARD INSTRUMENT DEPARTURE",
+                          "STANDARD TERMINAL ARRIVAL",
+                          "MISSED APPROACH",
+                          "FINAL APPROACH",
+                          "APPROACH",
+                          "AERODROME CHART",
+                          "AIRPORT INFORMATION"
+                      ]
+                  ):
                       return line[:300]
 
               # Jeppesen metadata/header
-              for line in lines[:80]:
+              for line in lines[:100]:
                   if "JEPPESEN" in line:
                       return line[:300]
 
               return lines[0][:300] if lines else ""
 
-          # ------------------------------------------------------------
-          # Category scoring
-          # ------------------------------------------------------------
+          # ============================================================
+          # CATEGORY SCORING
+          # ============================================================
 
-          def score_page(text, icao_candidates):
+          def score_page(text):
+
               t = normalize(text)
 
               scores = {
@@ -162,105 +242,120 @@ jobs:
                   "Other": 0
               }
 
-              # -------------------------
-              # OTHER / NON-CHART
-              # -------------------------
+              # --------------------------------------------------------
+              # OTHER
+              # --------------------------------------------------------
 
-              if re.search(r"REVISION LETTER", t):
-                  scores["Other"] += 100
+              if re.search(
+                  r"REVISION LETTER|REVISION NOTICE|CHANGE NOTICE",
+                  t
+              ):
+                  scores["Other"] += 120
 
-              if re.search(r"CHANGE NOTICE|TERMINAL CHART CHANGE", t):
-                  scores["Other"] += 100
+              if re.search(
+                  r"TERMINAL CHART CHANGE",
+                  t
+              ):
+                  scores["Other"] += 120
 
-              if re.search(r"TABLE OF CONTENTS", t):
-                  scores["Other"] += 100
+              if re.search(
+                  r"TABLE OF CONTENTS",
+                  t
+              ):
+                  scores["Other"] += 120
 
-              # -------------------------
+              # --------------------------------------------------------
               # SID
-              # -------------------------
+              # --------------------------------------------------------
 
               if re.search(r"\.SID\.", t):
-                  scores["SID"] += 120
+                  scores["SID"] += 150
 
               if "STANDARD INSTRUMENT DEPARTURE" in t:
-                  scores["SID"] += 100
+                  scores["SID"] += 120
 
               if re.search(r"\bSID\b", t):
-                  scores["SID"] += 40
+                  scores["SID"] += 50
 
               if re.search(r"\bDEPARTURE\b", t):
-                  scores["SID"] += 15
+                  scores["SID"] += 20
 
-              # -------------------------
+              # --------------------------------------------------------
               # STAR
-              # -------------------------
+              # --------------------------------------------------------
 
               if re.search(r"\.STAR\.", t):
-                  scores["STAR"] += 120
+                  scores["STAR"] += 150
 
               if "STANDARD TERMINAL ARRIVAL" in t:
-                  scores["STAR"] += 100
+                  scores["STAR"] += 120
 
               if re.search(r"\bSTAR\b", t):
-                  scores["STAR"] += 40
+                  scores["STAR"] += 50
 
               if re.search(r"\bARRIVAL\b", t):
-                  scores["STAR"] += 15
+                  scores["STAR"] += 20
 
-              # -------------------------
+              # --------------------------------------------------------
               # APPROACH
-              # -------------------------
+              # --------------------------------------------------------
 
               if "APPROACH" in t:
-                  scores["Approach"] += 70
+                  scores["Approach"] += 80
 
               if re.search(r"\bAPCH\b", t):
-                  scores["Approach"] += 40
+                  scores["Approach"] += 50
 
-              for word in [
+              approach_words = [
                   "ILS",
                   "LOC",
                   "VOR",
                   "NDB",
                   "RNAV",
                   "RNP",
-                  "PAPI",
                   "MDA",
                   "DA",
                   "DH",
                   "CDFA",
                   "MISSED APPROACH",
                   "FINAL APPROACH"
-              ]:
-                  if re.search(r"\b" + re.escape(word) + r"\b", t):
+              ]
+
+              for word in approach_words:
+                  if re.search(
+                      r"\b" + re.escape(word) + r"\b",
+                      t
+                  ):
                       scores["Approach"] += 10
 
-              # Strong operational approach clues
-              if re.search(r"ACFT EXECUTING INSTRUMENTAL APPROACH", t):
-                  scores["Approach"] += 80
+              if re.search(
+                  r"ACFT EXECUTING INSTRUMENTAL APPROACH",
+                  t
+              ):
+                  scores["Approach"] += 100
 
-              # -------------------------
+              # --------------------------------------------------------
               # AIRPORT
-              # -------------------------
+              # --------------------------------------------------------
 
               if "AIRPORT INFORMATION" in t:
-                  scores["Airport"] += 120
+                  scores["Airport"] += 150
 
               if "AERODROME CHART" in t:
-                  scores["Airport"] += 120
+                  scores["Airport"] += 150
 
               if "AIRPORT CHART" in t:
-                  scores["Airport"] += 100
+                  scores["Airport"] += 120
 
-              # Strong Jeppesen airport-header pattern
+              # Strong Jeppesen airport header:
+              # OIAA/ABD ... JEPPESEN
               if re.search(
                   r"\b[A-Z]{4}/[A-Z]{3}\b.*\bJEPPESEN\b",
                   t,
                   re.S
               ):
-                  scores["Airport"] += 40
+                  scores["Airport"] += 70
 
-              # Airport operational information
               airport_words = [
                   "ATIS",
                   "PAPI",
@@ -269,44 +364,45 @@ jobs:
                   "RUNWAY",
                   "RWY",
                   "TAXIWAY",
-                  "APRON",
-                  "ILS"
+                  "APRON"
               ]
 
               airport_hits = 0
+
               for word in airport_words:
-                  if re.search(r"\b" + re.escape(word) + r"\b", t):
+                  if re.search(
+                      r"\b" + re.escape(word) + r"\b",
+                      t
+                  ):
                       airport_hits += 1
 
-              if airport_hits >= 4:
-                  scores["Airport"] += 50
+              if airport_hits >= 5:
+                  scores["Airport"] += 70
+              elif airport_hits >= 3:
+                  scores["Airport"] += 45
               elif airport_hits >= 2:
                   scores["Airport"] += 20
 
-              # A pure airport-info page usually has lots of
-              # aerodrome data but no explicit procedure title.
-              if (
-                  scores["Airport"] > 0
-                  and scores["SID"] == 0
-                  and scores["STAR"] == 0
-              ):
-                  scores["Airport"] += 10
-
               return scores
 
-          # ------------------------------------------------------------
-          # Extract every page
-          # ------------------------------------------------------------
+          # ============================================================
+          # PAGE ANALYSIS
+          # ============================================================
 
           for page in range(1, pages + 1):
 
-              txt = os.path.join(tmp, f"page-{page}.txt")
+              txt = os.path.join(
+                  tmp,
+                  f"page-{page}.txt"
+              )
 
               subprocess.run(
                   [
                       "pdftotext",
-                      "-f", str(page),
-                      "-l", str(page),
+                      "-f",
+                      str(page),
+                      "-l",
+                      str(page),
                       "-layout",
                       pdf,
                       txt
@@ -316,7 +412,12 @@ jobs:
               )
 
               try:
-                  with open(txt, "r", encoding="utf-8", errors="ignore") as f:
+                  with open(
+                      txt,
+                      "r",
+                      encoding="utf-8",
+                      errors="ignore"
+                  ) as f:
                       raw = f.read()
               except Exception:
                   raw = ""
@@ -325,55 +426,41 @@ jobs:
 
               icaos = extract_icaos(text)
               title = title_from_text(text)
-              scores = score_page(text, icaos)
-
-              # --------------------------------------------------------
-              # Determine category
-              # --------------------------------------------------------
+              scores = score_page(text)
 
               category = "Unknown"
 
-              # Other always wins
+              # --------------------------------------------------------
+              # OTHER
+              # --------------------------------------------------------
+
               if scores["Other"] >= 100:
                   category = "Other"
+
               else:
-                  best = max(scores, key=scores.get)
 
-                  if scores[best] >= 30:
-                      category = best
+                  # Explicit strong categories first
+                  if scores["SID"] >= 100:
+                      category = "SID"
 
-              # --------------------------------------------------------
-              # Airport fallback
-              # --------------------------------------------------------
+                  elif scores["STAR"] >= 100:
+                      category = "STAR"
 
-              # This specifically catches pages like OIAA/ABD
-              # with Jeppesen + airport operational information.
-              if category == "Unknown":
+                  elif scores["Approach"] >= 80:
+                      category = "Approach"
 
-                  airport_header = bool(
-                      re.search(
-                          r"\b[A-Z]{4}/[A-Z]{3}\b.*\bJEPPESEN\b",
-                          text,
-                          re.S
-                      )
-                  )
-
-                  operational = sum(
-                      bool(re.search(r"\b" + re.escape(w) + r"\b", text))
-                      for w in [
-                          "ATIS",
-                          "PAPI",
-                          "RCLM",
-                          "ELEV",
-                          "RUNWAY",
-                          "RWY",
-                          "TAXIWAY",
-                          "APRON"
-                      ]
-                  )
-
-                  if airport_header and operational >= 3:
+                  elif scores["Airport"] >= 100:
                       category = "Airport"
+
+                  else:
+
+                      best = max(
+                          scores,
+                          key=scores.get
+                      )
+
+                      if scores[best] >= 30:
+                          category = best
 
               results.append({
                   "page": page,
@@ -381,107 +468,147 @@ jobs:
                   "icao_candidates": icaos,
                   "title": title,
                   "scores": scores,
-                  "airport_icao": icaos[0] if icaos else None
+                  "airport_icao": (
+                      icaos[0]
+                      if icaos
+                      else None
+                  )
               })
 
               if page % 50 == 0:
-                  print(f"Processed {page}/{pages}")
+                  print(
+                      f"Processed {page}/{pages}"
+                  )
 
-          # ------------------------------------------------------------
-          # Contextual repair
-          # ------------------------------------------------------------
+          # ============================================================
+          # CONTEXTUAL REPAIR
+          # ============================================================
 
-          # Do not change strong classifications.
-          strong = {"SID", "STAR", "Approach", "Airport", "Other"}
+          strong_categories = {
+              "SID",
+              "STAR",
+              "Approach",
+              "Airport",
+              "Other"
+          }
 
           for i, item in enumerate(results):
 
               if item["category"] != "Unknown":
                   continue
 
-              prev = results[i - 1]["category"] if i > 0 else None
-              nxt = results[i + 1]["category"] if i + 1 < len(results) else None
+              title = item["title"].upper()
+              scores = item["scores"]
 
-              text_title = item["title"].upper()
-
-              # Explicit title patterns have priority
-              if ".SID." in text_title:
+              # Explicit title
+              if ".SID." in title:
                   item["category"] = "SID"
                   continue
 
-              if ".STAR." in text_title:
+              if ".STAR." in title:
                   item["category"] = "STAR"
                   continue
 
-              # If surrounded by the same category, inherit it.
-              if prev == nxt and prev in strong:
+              # Neighbor context
+              prev = (
+                  results[i - 1]["category"]
+                  if i > 0
+                  else None
+              )
+
+              nxt = (
+                  results[i + 1]["category"]
+                  if i + 1 < len(results)
+                  else None
+              )
+
+              if (
+                  prev == nxt
+                  and prev in strong_categories
+              ):
                   item["category"] = prev
                   continue
 
-              # Approach-heavy pages with approach terminology
-              s = item["scores"]
-
+              # Approach-heavy
               if (
-                  s["Approach"] >= 40
-                  and s["Approach"] > s["Airport"]
-                  and s["Approach"] > s["SID"]
-                  and s["Approach"] > s["STAR"]
+                  scores["Approach"] >= 40
+                  and scores["Approach"] >
+                      scores["Airport"]
+                  and scores["Approach"] >
+                      scores["SID"]
+                  and scores["Approach"] >
+                      scores["STAR"]
               ):
                   item["category"] = "Approach"
                   continue
 
-              # Airport-heavy operational page
-              if s["Airport"] >= 40:
+              # Airport-heavy
+              if scores["Airport"] >= 50:
                   item["category"] = "Airport"
                   continue
 
-          # ------------------------------------------------------------
-          # Remove impossible fake airport identifiers
-          # ------------------------------------------------------------
+          # ============================================================
+          # CLEAN ICAO VALUES
+          # ============================================================
 
           for item in results:
-              if item["airport_icao"] == "ICAO":
-                  item["airport_icao"] = None
 
               item["icao_candidates"] = [
-                  x for x in item["icao_candidates"]
+                  x
+                  for x in item["icao_candidates"]
                   if valid_icao(x)
               ]
 
               if (
-                  item["airport_icao"] is None
-                  and item["icao_candidates"]
+                  item["airport_icao"]
+                  not in item["icao_candidates"]
               ):
-                  item["airport_icao"] = item["icao_candidates"][0]
+                  item["airport_icao"] = (
+                      item["icao_candidates"][0]
+                      if item["icao_candidates"]
+                      else None
+                  )
 
-          # ------------------------------------------------------------
-          # Summary
-          # ------------------------------------------------------------
+          # ============================================================
+          # SUMMARY
+          # ============================================================
 
           category_counts = {}
 
           for item in results:
-              c = item["category"]
-              category_counts[c] = category_counts.get(c, 0) + 1
+
+              category = item["category"]
+
+              category_counts[category] = (
+                  category_counts.get(category, 0) + 1
+              )
 
           airport_map = {}
 
           for item in results:
+
               airport = item["airport_icao"]
 
               if not airport:
                   continue
 
-              if airport not in airport_map:
-                  airport_map[airport] = {}
+              category = item["category"]
 
-              c = item["category"]
-              airport_map[airport][c] = (
-                  airport_map[airport].get(c, 0) + 1
+              airport_map.setdefault(
+                  airport,
+                  {}
+              )
+
+              airport_map[airport][category] = (
+                  airport_map[airport].get(
+                      category,
+                      0
+                  ) + 1
               )
 
           unknown_pages = [
-              x["page"] for x in results
+              x["page"]
+              for x in results
               if x["category"] == "Unknown"
           ]
 
@@ -495,27 +622,26 @@ jobs:
               "airports": airport_map
           }
 
-          # ------------------------------------------------------------
-          # App-oriented grouped structure
-          # ------------------------------------------------------------
+          # ============================================================
+          # APP STRUCTURE
+          # ============================================================
 
           app = {}
 
           for item in results:
 
               airport = item["airport_icao"]
+              category = item["category"]
 
               if not airport:
                   continue
 
-              category = item["category"]
-
-              if category not in [
+              if category not in {
                   "SID",
                   "STAR",
                   "Airport",
                   "Approach"
-              ]:
+              }:
                   continue
 
               app.setdefault(
@@ -533,20 +659,57 @@ jobs:
                   "title": item["title"]
               })
 
-          with open(out_file, "w", encoding="utf-8") as f:
-              json.dump(results, f, indent=2, ensure_ascii=False)
+          # ============================================================
+          # WRITE OUTPUT FILES
+          # ============================================================
 
-          with open(summary_file, "w", encoding="utf-8") as f:
-              json.dump(summary, f, indent=2, ensure_ascii=False)
+          with open(
+              out_file,
+              "w",
+              encoding="utf-8"
+          ) as f:
+              json.dump(
+                  results,
+                  f,
+                  indent=2,
+                  ensure_ascii=False
+              )
 
-          with open(app_file, "w", encoding="utf-8") as f:
-              json.dump(app, f, indent=2, ensure_ascii=False)
+          with open(
+              summary_file,
+              "w",
+              encoding="utf-8"
+          ) as f:
+              json.dump(
+                  summary,
+                  f,
+                  indent=2,
+                  ensure_ascii=False
+              )
+
+          with open(
+              app_file,
+              "w",
+              encoding="utf-8"
+          ) as f:
+              json.dump(
+                  app,
+                  f,
+                  indent=2,
+                  ensure_ascii=False
+              )
 
           print("")
           print("========================================")
           print("V4 ANALYSIS COMPLETE")
           print("========================================")
-          print(json.dumps(summary, indent=2, ensure_ascii=False))
+          print(
+              json.dumps(
+                  summary,
+                  indent=2,
+                  ensure_ascii=False
+              )
+          )
 
           PY
 
@@ -564,9 +727,14 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add charts-index-v4.json charts-summary-v4.json charts-app-v4.json
+          git add \
+            charts-index-v4.json \
+            charts-summary-v4.json \
+            charts-app-v4.json
 
-          git diff --cached --quiet || \
+          if git diff --cached --quiet; then
+            echo "No changes to commit."
+          else
             git commit -m "Add chart analysis V4"
-
-          git push
+            git push
+          fi
