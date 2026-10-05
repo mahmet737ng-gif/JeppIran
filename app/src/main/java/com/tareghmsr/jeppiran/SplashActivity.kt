@@ -4,15 +4,22 @@ import android.animation.ValueAnimator
 import android.content.Intent
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Path
+import android.graphics.RadialGradient
+import android.graphics.RectF
+import android.graphics.Shader
 import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import android.view.animation.LinearInterpolator
+import android.view.WindowInsetsController
+import android.view.animation.DecelerateInterpolator
 import androidx.activity.ComponentActivity
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import kotlin.math.atan2
 import kotlin.math.sin
 
@@ -20,19 +27,58 @@ class SplashActivity : ComponentActivity() {
 
     private val splashDuration = 3000L
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreate(
+        savedInstanceState: Bundle?
+    ) {
+        super.onCreate(
+            savedInstanceState
+        )
 
-        window.statusBarColor = Color.rgb(8, 17, 28)
-        window.navigationBarColor = Color.rgb(8, 17, 28)
+        WindowCompat.setDecorFitsSystemWindows(
+            window,
+            false
+        )
 
-        val splashView = SplashView()
+        window.statusBarColor =
+            Color.TRANSPARENT
 
-        setContentView(splashView)
+        window.navigationBarColor =
+            Color.TRANSPARENT
+
+        val controller =
+            WindowInsetsControllerCompat(
+                window,
+                window.decorView
+            )
+
+        controller.isAppearanceLightStatusBars =
+            false
+
+        controller.isAppearanceLightNavigationBars =
+            false
+
+        if (
+            android.os.Build.VERSION.SDK_INT >= 30
+        ) {
+            window.insetsController?.let {
+                it.systemBarsBehavior =
+                    WindowInsetsController
+                        .BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            }
+        }
+
+        val splashView =
+            SplashView()
+
+        setContentView(
+            splashView
+        )
 
         splashView.startAnimation()
 
-        Handler(Looper.getMainLooper()).postDelayed({
+        Handler(
+            Looper.getMainLooper()
+        ).postDelayed({
 
             startActivity(
                 Intent(
@@ -41,26 +87,61 @@ class SplashActivity : ComponentActivity() {
                 )
             )
 
+            overridePendingTransition(
+                android.R.anim.fade_in,
+                android.R.anim.fade_out
+            )
+
             finish()
 
         }, splashDuration)
     }
 
-    private inner class SplashView : View(this) {
+    private inner class SplashView :
+        View(this) {
 
-        private val paint =
-            Paint(Paint.ANTI_ALIAS_FLAG)
+        private val backgroundPaint =
+            Paint(
+                Paint.ANTI_ALIAS_FLAG
+            )
 
-        private val pathPaint =
-            Paint(Paint.ANTI_ALIAS_FLAG)
+        private val cloudPaint =
+            Paint(
+                Paint.ANTI_ALIAS_FLAG
+            )
 
-        private var progress = 0f
-        private var pulse = 0f
-        private var chartPhase = 0f
+        private val linePaint =
+            Paint(
+                Paint.ANTI_ALIAS_FLAG
+            )
 
-        private var progressAnimator: ValueAnimator? = null
-        private var pulseAnimator: ValueAnimator? = null
-        private var chartAnimator: ValueAnimator? = null
+        private val textPaint =
+            Paint(
+                Paint.ANTI_ALIAS_FLAG
+            )
+
+        private val aircraftPaint =
+            Paint(
+                Paint.ANTI_ALIAS_FLAG
+            )
+
+        private var progress =
+            0f
+
+        private var sceneProgress =
+            0f
+
+        private var aircraftProgress =
+            0f
+
+        private var progressAnimator:
+            ValueAnimator? = null
+
+        private var sceneAnimator:
+            ValueAnimator? = null
+
+        private var aircraftAnimator:
+            ValueAnimator? = null
 
         init {
 
@@ -69,11 +150,17 @@ class SplashActivity : ComponentActivity() {
                 null
             )
 
-            pathPaint.style =
+            linePaint.style =
                 Paint.Style.STROKE
 
-            pathPaint.strokeCap =
+            linePaint.strokeCap =
                 Paint.Cap.ROUND
+
+            aircraftPaint.style =
+                Paint.Style.FILL
+
+            textPaint.isAntiAlias =
+                true
         }
 
         fun startAnimation() {
@@ -84,15 +171,19 @@ class SplashActivity : ComponentActivity() {
                     1f
                 ).apply {
 
-                    duration = 2850L
+                    duration =
+                        2850L
 
                     interpolator =
-                        LinearInterpolator()
+                        DecelerateInterpolator(
+                            1.15f
+                        )
 
                     addUpdateListener {
 
                         progress =
-                            it.animatedValue as Float
+                            it.animatedValue
+                                as Float
 
                         invalidate()
                     }
@@ -100,24 +191,29 @@ class SplashActivity : ComponentActivity() {
                     start()
                 }
 
-            pulseAnimator =
+            sceneAnimator =
                 ValueAnimator.ofFloat(
                     0f,
                     1f
                 ).apply {
 
-                    duration = 1300L
+                    duration =
+                        14000L
 
                     repeatCount =
                         ValueAnimator.INFINITE
 
+                    repeatMode =
+                        ValueAnimator.REVERSE
+
                     interpolator =
-                        LinearInterpolator()
+                        DecelerateInterpolator()
 
                     addUpdateListener {
 
-                        pulse =
-                            it.animatedValue as Float
+                        sceneProgress =
+                            it.animatedValue
+                                as Float
 
                         invalidate()
                     }
@@ -125,24 +221,25 @@ class SplashActivity : ComponentActivity() {
                     start()
                 }
 
-            chartAnimator =
+            aircraftAnimator =
                 ValueAnimator.ofFloat(
                     0f,
                     1f
                 ).apply {
 
-                    duration = 4200L
-
-                    repeatCount =
-                        ValueAnimator.INFINITE
+                    duration =
+                        2850L
 
                     interpolator =
-                        LinearInterpolator()
+                        DecelerateInterpolator(
+                            1.3f
+                        )
 
                     addUpdateListener {
 
-                        chartPhase =
-                            it.animatedValue as Float
+                        aircraftProgress =
+                            it.animatedValue
+                                as Float
 
                         invalidate()
                     }
@@ -155,353 +252,613 @@ class SplashActivity : ComponentActivity() {
             canvas: Canvas
         ) {
 
-            super.onDraw(canvas)
-
-            val w = width.toFloat()
-            val h = height.toFloat()
-
-            canvas.drawColor(
-                Color.rgb(
-                    8,
-                    17,
-                    28
-                )
+            super.onDraw(
+                canvas
             )
 
-            drawChartBackground(
+            val width =
+                width.toFloat()
+
+            val height =
+                height.toFloat()
+
+            val landscape =
+                width >= height
+
+            drawSky(
                 canvas,
-                w,
-                h
+                width,
+                height
             )
 
-            drawApproachGeometry(
+            drawSun(
                 canvas,
-                w,
-                h
+                width,
+                height,
+                landscape
             )
 
-            drawGpsPulse(
+            drawClouds(
                 canvas,
-                w,
-                h
+                width,
+                height,
+                landscape
+            )
+
+            drawAviationChart(
+                canvas,
+                width,
+                height
+            )
+
+            drawRoute(
+                canvas,
+                width,
+                height,
+                landscape
             )
 
             drawAircraft(
                 canvas,
-                w,
-                h
+                width,
+                height,
+                landscape
             )
 
             drawBrand(
                 canvas,
-                w,
-                h
+                width,
+                height,
+                landscape
             )
 
             drawLoading(
                 canvas,
-                w,
-                h
+                width,
+                height,
+                landscape
+            )
+
+            drawVersion(
+                canvas,
+                width,
+                height
             )
         }
 
-        private fun drawChartBackground(
+        private fun drawSky(
             canvas: Canvas,
-            w: Float,
-            h: Float
+            width: Float,
+            height: Float
         ) {
 
-            paint.style =
-                Paint.Style.STROKE
-
-            paint.strokeWidth = 1f
-
-            paint.color =
-                Color.argb(
-                    32,
-                    160,
-                    190,
-                    205
-                )
-
-            val grid = 48f
-
-            var x =
-                -grid +
-                        chartPhase * grid
-
-            while (
-                x < w + grid
-            ) {
-
-                canvas.drawLine(
-                    x,
-                    h * .08f,
-                    x,
-                    h * .88f,
-                    paint
-                )
-
-                x += grid
-            }
-
-            var y = h * .08f
-
-            while (
-                y < h * .88f
-            ) {
-
-                canvas.drawLine(
+            val gradient =
+                LinearGradient(
                     0f,
-                    y,
-                    w,
-                    y,
-                    paint
+                    0f,
+                    0f,
+                    height,
+                    Color.rgb(
+                        17,
+                        46,
+                        77
+                    ),
+                    Color.rgb(
+                        89,
+                        139,
+                        174
+                    ),
+                    Shader.TileMode.CLAMP
                 )
 
-                y += grid
-            }
+            backgroundPaint.shader =
+                gradient
 
-            paint.color =
-                Color.argb(
-                    42,
-                    95,
-                    160,
-                    180
-                )
-
-            paint.strokeWidth = 2f
-
-            val route = Path()
-
-            route.moveTo(
-                w * .08f,
-                h * .68f
+            canvas.drawRect(
+                0f,
+                0f,
+                width,
+                height,
+                backgroundPaint
             )
 
-            route.cubicTo(
-                w * .30f,
-                h * .55f,
-                w * .43f,
-                h * .78f,
-                w * .62f,
-                h * .52f
-            )
-
-            route.cubicTo(
-                w * .73f,
-                h * .37f,
-                w * .84f,
-                h * .43f,
-                w * .94f,
-                h * .25f
-            )
-
-            canvas.drawPath(
-                route,
-                paint
-            )
-
-            paint.style =
-                Paint.Style.FILL
+            backgroundPaint.shader =
+                null
         }
 
-        private fun drawApproachGeometry(
+        private fun drawSun(
             canvas: Canvas,
-            w: Float,
-            h: Float
+            width: Float,
+            height: Float,
+            landscape: Boolean
         ) {
 
-            val centerX =
-                w / 2f
+            val cx =
+                if (landscape) {
+                    width * 0.82f
+                } else {
+                    width * 0.78f
+                }
 
-            val touchY =
-                h * .54f
-
-            pathPaint.color =
-                Color.argb(
-                    125,
-                    74,
-                    186,
-                    211
-                )
-
-            pathPaint.strokeWidth = 3f
-
-            canvas.drawLine(
-                w * .12f,
-                h * .18f,
-                centerX,
-                touchY,
-                pathPaint
-            )
-
-            canvas.drawLine(
-                w * .88f,
-                h * .18f,
-                centerX,
-                touchY,
-                pathPaint
-            )
-
-            pathPaint.color =
-                Color.argb(
-                    65,
-                    210,
-                    225,
-                    232
-                )
-
-            pathPaint.strokeWidth = 1.5f
-
-            canvas.drawLine(
-                centerX,
-                h * .10f,
-                centerX,
-                h * .88f,
-                pathPaint
-            )
-
-            canvas.drawLine(
-                w * .08f,
-                touchY,
-                w * .92f,
-                touchY,
-                pathPaint
-            )
-
-            paint.color =
-                Color.argb(
-                    115,
-                    205,
-                    216,
-                    222
-                )
-
-            val runway = Path()
-
-            runway.moveTo(
-                w * .43f,
-                h * .88f
-            )
-
-            runway.lineTo(
-                w * .57f,
-                h * .88f
-            )
-
-            runway.lineTo(
-                w * .525f,
-                touchY
-            )
-
-            runway.lineTo(
-                w * .475f,
-                touchY
-            )
-
-            runway.close()
-
-            canvas.drawPath(
-                runway,
-                paint
-            )
-        }
-
-        private fun drawGpsPulse(
-            canvas: Canvas,
-            w: Float,
-            h: Float
-        ) {
-
-            val cx = w / 2f
-            val cy = h * .54f
+            val cy =
+                if (landscape) {
+                    height * 0.25f
+                } else {
+                    height * 0.18f
+                }
 
             val radius =
-                12f +
-                        pulse * 62f
+                if (landscape) {
+                    height * 0.38f
+                } else {
+                    height * 0.30f
+                }
 
-            val alpha =
-                (
-                    145f *
-                            (1f - pulse)
-                    ).toInt()
-                    .coerceIn(
+            val glow =
+                RadialGradient(
+                    cx,
+                    cy,
+                    radius,
+                    Color.argb(
+                        170,
+                        255,
+                        242,
+                        204
+                    ),
+                    Color.argb(
                         0,
-                        145
-                    )
-
-            paint.style =
-                Paint.Style.STROKE
-
-            paint.strokeWidth = 3f
-
-            paint.color =
-                Color.argb(
-                    alpha,
-                    255,
-                    68,
-                    151
+                        255,
+                        242,
+                        204
+                    ),
+                    Shader.TileMode.CLAMP
                 )
+
+            backgroundPaint.shader =
+                glow
 
             canvas.drawCircle(
                 cx,
                 cy,
                 radius,
-                paint
+                backgroundPaint
             )
 
-            paint.style =
-                Paint.Style.FILL
+            backgroundPaint.shader =
+                null
 
-            paint.color =
-                Color.rgb(
-                    255,
-                    68,
-                    151
-                )
-
-            paint.setShadowLayer(
-                18f,
-                0f,
-                0f,
+            backgroundPaint.color =
                 Color.argb(
-                    180,
+                    165,
                     255,
-                    68,
-                    151
+                    248,
+                    220
                 )
-            )
 
             canvas.drawCircle(
                 cx,
                 cy,
-                6f,
-                paint
+                if (landscape) {
+                    32f
+                } else {
+                    25f
+                },
+                backgroundPaint
+            )
+        }
+
+        private fun drawClouds(
+            canvas: Canvas,
+            width: Float,
+            height: Float,
+            landscape: Boolean
+        ) {
+
+            val firstY =
+                if (landscape) {
+                    height * 0.63f
+                } else {
+                    height * 0.59f
+                }
+
+            val secondY =
+                if (landscape) {
+                    height * 0.75f
+                } else {
+                    height * 0.73f
+                }
+
+            drawCloud(
+                canvas,
+                width * 0.02f,
+                firstY,
+                width * 0.45f,
+                height * 0.16f,
+                205
             )
 
-            paint.clearShadowLayer()
+            drawCloud(
+                canvas,
+                width * 0.48f,
+                firstY + height * 0.04f,
+                width * 0.48f,
+                height * 0.18f,
+                185
+            )
+
+            drawCloud(
+                canvas,
+                width * 0.16f,
+                secondY,
+                width * 0.70f,
+                height * 0.14f,
+                155
+            )
+        }
+
+        private fun drawCloud(
+            canvas: Canvas,
+            x: Float,
+            y: Float,
+            width: Float,
+            height: Float,
+            alpha: Int
+        ) {
+
+            cloudPaint.color =
+                Color.argb(
+                    alpha,
+                    239,
+                    245,
+                    249
+                )
+
+            cloudPaint.style =
+                Paint.Style.FILL
+
+            val cloud =
+                Path()
+
+            cloud.moveTo(
+                x,
+                y + height * 0.72f
+            )
+
+            cloud.cubicTo(
+                x + width * 0.05f,
+                y + height * 0.38f,
+                x + width * 0.17f,
+                y + height * 0.35f,
+                x + width * 0.24f,
+                y + height * 0.60f
+            )
+
+            cloud.cubicTo(
+                x + width * 0.28f,
+                y + height * 0.16f,
+                x + width * 0.42f,
+                y + height * 0.08f,
+                x + width * 0.51f,
+                y + height * 0.46f
+            )
+
+            cloud.cubicTo(
+                x + width * 0.61f,
+                y + height * 0.14f,
+                x + width * 0.78f,
+                y + height * 0.19f,
+                x + width * 0.80f,
+                y + height * 0.52f
+            )
+
+            cloud.cubicTo(
+                x + width * 0.91f,
+                y + height * 0.36f,
+                x + width,
+                y + height * 0.49f,
+                x + width,
+                y + height * 0.72f
+            )
+
+            cloud.close()
+
+            canvas.drawPath(
+                cloud,
+                cloudPaint
+            )
+        }
+
+        private fun drawAviationChart(
+            canvas: Canvas,
+            width: Float,
+            height: Float
+        ) {
+
+            linePaint.color =
+                Color.argb(
+                    30,
+                    255,
+                    255,
+                    255
+                )
+
+            linePaint.strokeWidth =
+                1f
+
+            val gridSize =
+                if (width >= height) {
+                    78f
+                } else {
+                    56f
+                }
+
+            var x =
+                -gridSize +
+                        sceneProgress *
+                        gridSize
+
+            while (
+                x < width + gridSize
+            ) {
+
+                canvas.drawLine(
+                    x,
+                    height * 0.08f,
+                    x,
+                    height * 0.90f,
+                    linePaint
+                )
+
+                x += gridSize
+            }
+
+            var y =
+                height * 0.10f
+
+            while (
+                y < height * 0.90f
+            ) {
+
+                canvas.drawLine(
+                    0f,
+                    y,
+                    width,
+                    y,
+                    linePaint
+                )
+
+                y += gridSize
+            }
+
+            linePaint.color =
+                Color.argb(
+                    40,
+                    255,
+                    255,
+                    255
+                )
+
+            linePaint.strokeWidth =
+                1.5f
+
+            val arc =
+                RectF(
+                    width * 0.08f,
+                    height * 0.18f,
+                    width * 0.92f,
+                    height * 0.88f
+                )
+
+            canvas.drawArc(
+                arc,
+                205f,
+                105f,
+                false,
+                linePaint
+            )
+
+            linePaint.color =
+                Color.argb(
+                    38,
+                    7,
+                    52,
+                    82
+                )
+
+            linePaint.strokeWidth =
+                2f
+
+            canvas.drawCircle(
+                width * 0.52f,
+                height * 0.46f,
+                height * 0.18f,
+                linePaint
+            )
+
+            canvas.drawCircle(
+                width * 0.52f,
+                height * 0.46f,
+                height * 0.27f,
+                linePaint
+            )
+        }
+
+        private fun drawRoute(
+            canvas: Canvas,
+            width: Float,
+            height: Float,
+            landscape: Boolean
+        ) {
+
+            val startX =
+                if (landscape) {
+                    width * 0.12f
+                } else {
+                    width * 0.14f
+                }
+
+            val startY =
+                if (landscape) {
+                    height * 0.65f
+                } else {
+                    height * 0.56f
+                }
+
+            val endX =
+                if (landscape) {
+                    width * 0.80f
+                } else {
+                    width * 0.80f
+                }
+
+            val endY =
+                if (landscape) {
+                    height * 0.34f
+                } else {
+                    height * 0.31f
+                }
+
+            linePaint.color =
+                Color.argb(
+                    115,
+                    255,
+                    255,
+                    255
+                )
+
+            linePaint.strokeWidth =
+                2.5f
+
+            val route =
+                Path()
+
+            route.moveTo(
+                startX,
+                startY
+            )
+
+            route.cubicTo(
+                width * 0.26f,
+                height * 0.78f,
+                width * 0.34f,
+                height * 0.30f,
+                width * 0.53f,
+                height * 0.49f
+            )
+
+            route.cubicTo(
+                width * 0.65f,
+                height * 0.61f,
+                width * 0.71f,
+                height * 0.41f,
+                endX,
+                endY
+            )
+
+            canvas.drawPath(
+                route,
+                linePaint
+            )
+
+            linePaint.color =
+                Color.argb(
+                    55,
+                    255,
+                    255,
+                    255
+                )
+
+            linePaint.strokeWidth =
+                1f
+
+            canvas.drawLine(
+                width * 0.50f,
+                height * 0.10f,
+                width * 0.50f,
+                height * 0.86f,
+                linePaint
+            )
+
+            canvas.drawLine(
+                width * 0.08f,
+                height * 0.46f,
+                width * 0.92f,
+                height * 0.46f,
+                linePaint
+            )
+
+            paintNavigationPoint(
+                canvas,
+                startX,
+                startY
+            )
+
+            paintNavigationPoint(
+                canvas,
+                endX,
+                endY
+            )
+        }
+
+        private fun paintNavigationPoint(
+            canvas: Canvas,
+            x: Float,
+            y: Float
+        ) {
+
+            cloudPaint.color =
+                Color.argb(
+                    210,
+                    255,
+                    255,
+                    255
+                )
+
+            canvas.drawCircle(
+                x,
+                y,
+                3.5f,
+                cloudPaint
+            )
         }
 
         private fun drawAircraft(
             canvas: Canvas,
-            w: Float,
-            h: Float
+            width: Float,
+            height: Float,
+            landscape: Boolean
         ) {
 
-            val t = progress
-
             val startX =
-                w * .18f
+                if (landscape) {
+                    width * 0.18f
+                } else {
+                    width * 0.20f
+                }
 
             val startY =
-                h * .20f
+                if (landscape) {
+                    height * 0.25f
+                } else {
+                    height * 0.21f
+                }
 
             val endX =
-                w * .50f
+                if (landscape) {
+                    width * 0.59f
+                } else {
+                    width * 0.63f
+                }
 
             val endY =
-                h * .54f
+                if (landscape) {
+                    height * 0.45f
+                } else {
+                    height * 0.40f
+                }
+
+            val t =
+                aircraftProgress
 
             val x =
                 startX +
@@ -509,25 +866,27 @@ class SplashActivity : ComponentActivity() {
 
             val y =
                 startY +
-                        (endY - startY) * t +
+                        (endY - startY) * t -
                         sin(
-                            t * Math.PI
+                            t *
+                                Math.PI
                         ).toFloat() *
-                        (-h * .045f)
-
-            val dx =
-                endX - startX
-
-            val dy =
-                endY - startY
+                        height *
+                        0.035f
 
             val angle =
                 Math.toDegrees(
                     atan2(
-                        dy.toDouble(),
-                        dx.toDouble()
+                        (
+                            endY -
+                                startY
+                        ).toDouble(),
+                        (
+                            endX -
+                                startX
+                        ).toDouble()
                     )
-                ).toFloat() + 90f
+                ).toFloat()
 
             canvas.save()
 
@@ -540,15 +899,15 @@ class SplashActivity : ComponentActivity() {
                 angle
             )
 
-            paint.color =
+            aircraftPaint.color =
                 Color.WHITE
 
-            paint.setShadowLayer(
-                14f,
+            aircraftPaint.setShadowLayer(
+                18f,
                 0f,
                 0f,
                 Color.argb(
-                    150,
+                    170,
                     255,
                     255,
                     255
@@ -559,227 +918,296 @@ class SplashActivity : ComponentActivity() {
                 Path()
 
             aircraft.moveTo(
-                0f,
-                -27f
+                28f,
+                0f
             )
 
             aircraft.lineTo(
-                5f,
-                5f
-            )
-
-            aircraft.lineTo(
-                25f,
-                13f
-            )
-
-            aircraft.lineTo(
-                5f,
-                15f
-            )
-
-            aircraft.lineTo(
-                0f,
-                30f
-            )
-
-            aircraft.lineTo(
-                -5f,
-                15f
+                -8f,
+                -5f
             )
 
             aircraft.lineTo(
                 -25f,
-                13f
+                -18f
             )
 
             aircraft.lineTo(
-                -5f,
-                5f
+                -29f,
+                -16f
+            )
+
+            aircraft.lineTo(
+                -13f,
+                -2f
+            )
+
+            aircraft.lineTo(
+                -35f,
+                8f
+            )
+
+            aircraft.lineTo(
+                -32f,
+                12f
+            )
+
+            aircraft.lineTo(
+                -8f,
+                6f
+            )
+
+            aircraft.lineTo(
+                -2f,
+                23f
+            )
+
+            aircraft.lineTo(
+                4f,
+                23f
+            )
+
+            aircraft.lineTo(
+                6f,
+                7f
+            )
+
+            aircraft.lineTo(
+                28f,
+                4f
             )
 
             aircraft.close()
 
             canvas.drawPath(
                 aircraft,
-                paint
+                aircraftPaint
             )
 
-            paint.clearShadowLayer()
-
-            paint.color =
-                Color.rgb(
-                    255,
-                    68,
-                    151
-                )
-
-            canvas.drawCircle(
-                0f,
-                18f,
-                3f,
-                paint
-            )
+            aircraftPaint.clearShadowLayer()
 
             canvas.restore()
         }
 
         private fun drawBrand(
             canvas: Canvas,
-            w: Float,
-            h: Float
+            width: Float,
+            height: Float,
+            landscape: Boolean
         ) {
 
-            paint.textAlign =
+            val centerX =
+                width / 2f
+
+            val brandY =
+                if (landscape) {
+                    height * 0.57f
+                } else {
+                    height * 0.53f
+                }
+
+            textPaint.textAlign =
                 Paint.Align.CENTER
 
-            paint.typeface =
+            textPaint.typeface =
                 Typeface.create(
-                    Typeface.DEFAULT,
+                    "sans-serif",
                     Typeface.BOLD
                 )
 
-            paint.textSize = 36f
+            textPaint.textSize =
+                if (landscape) {
+                    46f
+                } else {
+                    38f
+                }
 
-            paint.color =
+            textPaint.color =
                 Color.WHITE
+
+            textPaint.setShadowLayer(
+                20f,
+                0f,
+                4f,
+                Color.argb(
+                    100,
+                    0,
+                    0,
+                    0
+                )
+            )
 
             canvas.drawText(
                 "JEPPIRAN",
-                w / 2f,
-                h * .70f,
-                paint
+                centerX,
+                brandY,
+                textPaint
             )
 
-            paint.typeface =
-                Typeface.DEFAULT
+            textPaint.clearShadowLayer()
 
-            paint.textSize = 12f
+            textPaint.typeface =
+                Typeface.create(
+                    "sans-serif",
+                    Typeface.NORMAL
+                )
 
-            paint.color =
-                Color.rgb(
-                    145,
-                    175,
-                    190
+            textPaint.textSize =
+                if (landscape) {
+                    13f
+                } else {
+                    11f
+                }
+
+            textPaint.color =
+                Color.argb(
+                    235,
+                    244,
+                    248,
+                    251
                 )
 
             canvas.drawText(
-                "FLIGHT CHARTS • IRAN",
-                w / 2f,
-                h * .75f,
-                paint
+                "FLIGHT CHARTS  •  IRAN",
+                centerX,
+                brandY + 28f,
+                textPaint
             )
         }
 
         private fun drawLoading(
             canvas: Canvas,
-            w: Float,
-            h: Float
+            width: Float,
+            height: Float,
+            landscape: Boolean
         ) {
 
+            val barWidth =
+                if (landscape) {
+                    width * 0.38f
+                } else {
+                    width * 0.68f
+                }
+
+            val barHeight =
+                5f
+
+            val left =
+                (width - barWidth) / 2f
+
+            val y =
+                if (landscape) {
+                    height * 0.79f
+                } else {
+                    height * 0.78f
+                }
+
+            cloudPaint.color =
+                Color.argb(
+                    70,
+                    255,
+                    255,
+                    255
+                )
+
+            canvas.drawRoundRect(
+                left,
+                y,
+                left + barWidth,
+                y + barHeight,
+                4f,
+                4f,
+                cloudPaint
+            )
+
+            cloudPaint.color =
+                Color.WHITE
+
+            canvas.drawRoundRect(
+                left,
+                y,
+                left +
+                    barWidth *
+                    progress,
+                y + barHeight,
+                4f,
+                4f,
+                cloudPaint
+            )
+
             val percent =
-                (progress * 100f)
+                (
+                    progress *
+                        100f
+                )
                     .toInt()
                     .coerceIn(
                         0,
                         100
                     )
 
-            val left =
-                w * .15f
-
-            val right =
-                w * .85f
-
-            val y =
-                h * .84f
-
-            paint.color =
-                Color.argb(
-                    55,
-                    210,
-                    225,
-                    232
-                )
-
-            canvas.drawRoundRect(
-                left,
-                y,
-                right,
-                y + 5f,
-                3f,
-                3f,
-                paint
-            )
-
-            paint.color =
-                Color.rgb(
-                    255,
-                    68,
-                    151
-                )
-
-            canvas.drawRoundRect(
-                left,
-                y,
-                left +
-                        (right - left) *
-                        progress,
-                y + 5f,
-                3f,
-                3f,
-                paint
-            )
-
-            paint.textAlign =
+            textPaint.textAlign =
                 Paint.Align.CENTER
 
-            paint.typeface =
+            textPaint.typeface =
                 Typeface.create(
-                    Typeface.DEFAULT,
-                    Typeface.BOLD
+                    "sans-serif-medium",
+                    Typeface.NORMAL
                 )
 
-            paint.textSize = 13f
+            textPaint.textSize =
+                12f
 
-            paint.color =
+            textPaint.color =
                 Color.WHITE
 
             canvas.drawText(
-                "$percent%",
-                w / 2f,
-                y + 34f,
-                paint
+                "INITIALIZING  •  $percent%",
+                width / 2f,
+                y + 28f,
+                textPaint
             )
+        }
 
-            paint.typeface =
-                Typeface.DEFAULT
+        private fun drawVersion(
+            canvas: Canvas,
+            width: Float,
+            height: Float
+        ) {
 
-            paint.textSize = 11f
+            textPaint.textAlign =
+                Paint.Align.CENTER
 
-            paint.color =
-                Color.rgb(
-                    125,
-                    155,
-                    170
+            textPaint.typeface =
+                Typeface.create(
+                    "sans-serif",
+                    Typeface.NORMAL
+                )
+
+            textPaint.textSize =
+                10f
+
+            textPaint.color =
+                Color.argb(
+                    190,
+                    235,
+                    241,
+                    245
                 )
 
             canvas.drawText(
-                if (percent >= 100)
-                    "READY"
-                else
-                    "LOADING CHART SYSTEM",
-                w / 2f,
-                y + 54f,
-                paint
+                "VERSION 1.0.0",
+                width / 2f,
+                height - 30f,
+                textPaint
             )
         }
 
         override fun onDetachedFromWindow() {
 
             progressAnimator?.cancel()
-            pulseAnimator?.cancel()
-            chartAnimator?.cancel()
+            sceneAnimator?.cancel()
+            aircraftAnimator?.cancel()
 
             super.onDetachedFromWindow()
         }
