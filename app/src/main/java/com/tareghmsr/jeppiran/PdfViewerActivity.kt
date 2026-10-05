@@ -114,8 +114,7 @@ private val locationPermissionLauncher =
         private const val ACTIVE_RENDER_QUALITY =
             3.0f
 
-        private const val NEIGHBOR_RENDER_QUALITY =
-            1.0f
+        private const val NEIGHBOR_RENDER_QUALITY = 3.0f
 
         private const val MAX_ZOOM =
             3.0f
@@ -157,6 +156,9 @@ private val locationPermissionLauncher =
         TextView
 
     private lateinit var metarBanner:
+        TextView
+
+    private lateinit var metarIcon:
         TextView
 
     private lateinit var gpsText:
@@ -225,12 +227,15 @@ private val locationPermissionLauncher =
         false
 
 
-    private var annotationTool =
-        Tool.SELECT
+    private var annotationTool: Tool? = null
 
 
-    private var eraserMode =
-        EraserMode.OBJECT
+    private var eraserMode = EraserMode.OBJECT
+
+    private var penColor = Color.rgb(255, 60, 130)
+    private var highlightColor = Color.argb(105, 255, 220, 0)
+    private var textColor = Color.rgb(255, 60, 130)
+    private var lastMetarValue = ""
 
 
     private var lastMetarIcao =
@@ -272,7 +277,6 @@ private val locationPermissionLauncher =
 
 
     private enum class Tool {
-        SELECT,
         PEN,
         HIGHLIGHT,
         TEXT,
@@ -1284,8 +1288,7 @@ private val locationPermissionLauncher =
                         "JeppIran Chart"
                     }
 
-                textSize =
-                    14f
+                textSize = 17f
 
                 typeface =
                     Typeface.DEFAULT_BOLD
@@ -1343,20 +1346,8 @@ private val locationPermissionLauncher =
             }
 
 
-        topToolbar.addView(
-            pageText,
-            LinearLayout.LayoutParams(
-                94.dp,
-                LinearLayout.LayoutParams.MATCH_PARENT
-            )
-        )
-
-
         val previous =
-            toolbarButton(
-                "◀",
-                14f
-            )
+            toolbarButton("‹", 25f)
 
 
         previous.contentDescription =
@@ -1380,10 +1371,7 @@ private val locationPermissionLauncher =
 
 
         val next =
-            toolbarButton(
-                "▶",
-                14f
-            )
+            toolbarButton("›", 25f)
 
 
         next.contentDescription =
@@ -1510,18 +1498,7 @@ private val locationPermissionLauncher =
 
         tools.addView(
             toolButton(
-                "SELECT",
-                Tool.SELECT
-            ),
-            toolButtonParams(
-                72.dp
-            )
-        )
-
-
-        tools.addView(
-            toolButton(
-                "PEN",
+                "✎  PEN",
                 Tool.PEN
             ),
             toolButtonParams(
@@ -1532,7 +1509,7 @@ private val locationPermissionLauncher =
 
         tools.addView(
             toolButton(
-                "HIGHLIGHT",
+                "▰  HIGHLIGHT",
                 Tool.HIGHLIGHT
             ),
             toolButtonParams(
@@ -1543,7 +1520,7 @@ private val locationPermissionLauncher =
 
         tools.addView(
             toolButton(
-                "TEXT",
+                "T  TEXT",
                 Tool.TEXT
             ),
             toolButtonParams(
@@ -1554,7 +1531,7 @@ private val locationPermissionLauncher =
 
         tools.addView(
             toolButton(
-                "ERASER",
+                "⌫  ERASER",
                 Tool.ERASER
             ),
             toolButtonParams(
@@ -1617,6 +1594,29 @@ private val locationPermissionLauncher =
 
 
     private fun buildMetarBanner() {
+
+        metarIcon = TextView(this).apply {
+            text = "☁︎☀"
+            textSize = 20f
+            gravity = Gravity.CENTER
+            setTextColor(Color.WHITE)
+            background = roundedBackground(
+                Color.argb(210, 22, 44, 56),
+                Color.argb(130, 75, 205, 205),
+                18
+            )
+            visibility = View.GONE
+            setOnClickListener { requestMetarIfAirportChanged(true) }
+        }
+
+        root.addView(
+            metarIcon,
+            FrameLayout.LayoutParams(54.dp, 46.dp).apply {
+                gravity = Gravity.TOP or Gravity.END
+                topMargin = 116.dp
+                rightMargin = 12.dp
+            }
+        )
 
         metarBanner =
             TextView(
@@ -3096,8 +3096,7 @@ private val locationPermissionLauncher =
                 annotationMode =
                     false
 
-                annotationTool =
-                    Tool.SELECT
+                annotationTool = null
 
                 updateToolButtonStates()
             }
@@ -3142,8 +3141,7 @@ private val locationPermissionLauncher =
                 annotationMode =
                     false
 
-                annotationTool =
-                    Tool.SELECT
+                annotationTool = null
 
                 updateToolButtonStates()
 
@@ -3793,8 +3791,7 @@ private val locationPermissionLauncher =
 
         if (
             annotationMode &&
-            annotationTool !=
-            Tool.SELECT
+            annotationTool != null
         ) {
 
             return
@@ -3818,7 +3815,7 @@ private val locationPermissionLauncher =
     }
 
 
-    private fun requestMetarIfAirportChanged() {
+    private fun requestMetarIfAirportChanged(force: Boolean = false) {
 
         if (
             currentIcao.isBlank()
@@ -3827,17 +3824,13 @@ private val locationPermissionLauncher =
         }
 
 
-        if (
-            lastMetarIcao ==
-            currentIcao
-        ) {
-
+        if (!force && lastMetarIcao == currentIcao) {
             return
         }
 
 
-        lastMetarIcao =
-            currentIcao
+        lastMetarIcao = currentIcao
+        if (::metarIcon.isInitialized) metarIcon.visibility = View.GONE
 
 
         requestMetar(
@@ -3951,9 +3944,12 @@ private val locationPermissionLauncher =
 
                     } else {
 
-                        showMetarBanner(
-                            parsed
-                        )
+                        if (parsed != lastMetarValue) {
+                            lastMetarValue = parsed
+                            showMetarBanner(parsed)
+                        } else {
+                            hideMetarBanner(false)
+                        }
                     }
                 }
 
@@ -4081,8 +4077,8 @@ private val locationPermissionLauncher =
         }
 
 
-        metarBanner.text =
-            value
+        metarBanner.text = value
+        if (::metarIcon.isInitialized) metarIcon.visibility = View.GONE
 
 
         metarBanner.visibility =
@@ -4151,15 +4147,15 @@ private val locationPermissionLauncher =
                     metarBanner.alpha =
                         1f
 
-                    metarBanner.translationY =
-                        0f
+                    metarBanner.translationY = 0f
+                    if (::metarIcon.isInitialized) metarIcon.visibility = View.VISIBLE
                 }
                 .start()
 
         } else {
 
-            metarBanner.visibility =
-                View.GONE
+            metarBanner.visibility = View.GONE
+            if (::metarIcon.isInitialized) metarIcon.visibility = View.VISIBLE
         }
     }
 
@@ -4380,9 +4376,7 @@ private val locationPermissionLauncher =
             )
 
 
-        updateGpsText(
-            "GPS  $lat, $lon"
-        )
+        updateGpsText("")
     }
 
 
@@ -4445,8 +4439,7 @@ private val locationPermissionLauncher =
                 ) {
 
                     "SELECT" ->
-                        annotationTool ==
-                            Tool.SELECT
+                        annotationTool == null
 
                     "PEN" ->
                         annotationTool ==
@@ -4513,6 +4506,41 @@ private val locationPermissionLauncher =
     }
 
 
+    private fun showAnnotationColorDialog() {
+        val labels = arrayOf("Pen", "Highlight", "Text")
+        val names = arrayOf("Pink", "Yellow", "Blue", "Green", "White", "Black")
+        val colors = intArrayOf(
+            Color.rgb(255, 60, 130),
+            Color.rgb(255, 220, 0),
+            Color.rgb(60, 160, 255),
+            Color.rgb(80, 225, 135),
+            Color.WHITE,
+            Color.BLACK
+        )
+        AlertDialog.Builder(this)
+            .setTitle("Annotation color")
+            .setItems(labels) { _, toolIndex ->
+                AlertDialog.Builder(this)
+                    .setTitle(labels[toolIndex])
+                    .setItems(names) { _, colorIndex ->
+                        when (toolIndex) {
+                            0 -> penColor = colors[colorIndex]
+                            1 -> highlightColor = Color.argb(
+                                105,
+                                Color.red(colors[colorIndex]),
+                                Color.green(colors[colorIndex]),
+                                Color.blue(colors[colorIndex])
+                            )
+                            2 -> textColor = colors[colorIndex]
+                        }
+                        chartView.invalidate()
+                    }
+                    .show()
+            }
+            .show()
+    }
+
+
     private fun toolbarButton(
         text: String,
         size: Float
@@ -4576,27 +4604,14 @@ private val locationPermissionLauncher =
 
 
             setOnClickListener {
-
-                annotationTool =
-                    tool
-
-
-                annotationMode =
-                    tool !=
-                        Tool.SELECT
-
-
-                if (
-                    tool ==
-                    Tool.ERASER
-                ) {
-
-                    showEraserModeDialog()
+                if (annotationTool == tool) {
+                    annotationTool = null
+                    annotationMode = false
+                } else {
+                    annotationTool = tool
+                    annotationMode = true
                 }
-
-
                 updateToolButtonStates()
-
                 chartView.invalidate()
             }
         }
@@ -5519,8 +5534,8 @@ private val locationPermissionLauncher =
                 )
 
 
-                textPaint.textSize =
-                    item.size
+                textPaint.color = textColor
+                textPaint.textSize = item.size
 
 
                 textPaint.textAlign =
@@ -5597,26 +5612,7 @@ private val locationPermissionLauncher =
             }
 
 
-            strokePaint.color =
-                if (
-                    highlight
-                ) {
-
-                    Color.argb(
-                        105,
-                        255,
-                        220,
-                        0
-                    )
-
-                } else {
-
-                    Color.rgb(
-                        255,
-                        60,
-                        130
-                    )
-                }
+            strokePaint.color = if (highlight) highlightColor else penColor
 
 
             strokePaint.strokeWidth =
@@ -6510,8 +6506,7 @@ private val locationPermissionLauncher =
 
                     selectedTextIndex =
                         if (
-                            annotationTool ==
-                            Tool.SELECT
+                            annotationTool == null
                         ) {
 
                             findTextAt(
@@ -6613,7 +6608,7 @@ private val locationPermissionLauncher =
                         }
 
 
-                        Tool.SELECT -> {
+                        null -> {
 
                             return true
                         }
@@ -6626,8 +6621,7 @@ private val locationPermissionLauncher =
                     if (
                         event.pointerCount >=
                         2 &&
-                        annotationTool ==
-                        Tool.SELECT &&
+                        annotationTool == null &&
                         selectedTextIndex >=
                         0
                     ) {
@@ -6689,8 +6683,7 @@ private val locationPermissionLauncher =
                     ) {
 
                         if (
-                            annotationTool ==
-                            Tool.SELECT &&
+                            annotationTool == null &&
                             selectedTextIndex >=
                             0
                         ) {
@@ -6891,7 +6884,7 @@ private val locationPermissionLauncher =
                         }
 
 
-                        Tool.SELECT -> {
+                        null -> {
 
                             if (
                                 selectedTextIndex >=
@@ -7091,7 +7084,7 @@ private val locationPermissionLauncher =
                         }
 
 
-                        Tool.SELECT -> {
+                        null -> {
 
                             if (
                                 selectedTextIndex >=
@@ -7364,8 +7357,7 @@ private val locationPermissionLauncher =
 
 
             if (
-                annotationTool ==
-                Tool.SELECT
+                annotationTool == null
             ) {
 
                 toggleViewerControls()
