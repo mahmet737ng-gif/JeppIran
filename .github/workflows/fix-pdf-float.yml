@@ -21,6 +21,7 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          import re
 
           path = Path(
               "app/src/main/java/com/tareghmsr/jeppiran/PdfViewerActivity.kt"
@@ -30,40 +31,54 @@ jobs:
               encoding="utf-8"
           )
 
-          old = """                    ).contains(
-                        localX,
-                        localY
-                    )"""
+          pattern = re.compile(
+              r"""
+              (\.contains\s*\(\s*)
+              localX
+              \s*,\s*
+              localY
+              (\s*\))
+              """,
+              re.MULTILINE | re.VERBOSE
+          )
 
-          new = """                    ).contains(
-                        localX.toFloat(),
-                        localY.toFloat()
-                    )"""
+          matches = list(
+              pattern.finditer(text)
+          )
 
-          if old not in text:
+          print(
+              "Found target blocks:",
+              len(matches)
+          )
+
+          if len(matches) != 1:
               raise SystemExit(
-                  "Target Float error lines were not found."
+                  "Expected exactly one localX/localY contains block, "
+                  "but found "
+                  + str(len(matches))
               )
 
-          if text.count(old) != 1:
-              raise SystemExit(
-                  "Unexpected number of target blocks: "
-                  + str(text.count(old))
-              )
+          replacement = (
+              r"\1"
+              "localX.toFloat(),"
+              "\n"
+              "                            localY.toFloat()"
+              r"\2"
+          )
 
-          text = text.replace(
-              old,
-              new,
-              1
+          new_text = pattern.sub(
+              replacement,
+              text,
+              count=1
           )
 
           path.write_text(
-              text,
+              new_text,
               encoding="utf-8"
           )
 
           print(
-              "PdfViewerActivity.kt Float conversion fixed."
+              "PdfViewerActivity.kt updated successfully."
           )
           PY
 
@@ -81,18 +96,28 @@ jobs:
               encoding="utf-8"
           )
 
-          expected = """localX.toFloat(),
-                        localY.toFloat()"""
-
-          if expected not in text:
+          if "localX.toFloat()" not in text:
               raise SystemExit(
-                  "Float conversion was not applied."
+                  "localX.toFloat() was not found."
               )
 
-          print("Verification passed.")
+          if "localY.toFloat()" not in text:
+              raise SystemExit(
+                  "localY.toFloat() was not found."
+              )
+
+          print(
+              "Float conversion verification passed."
+          )
           PY
 
-      - name: Commit
+      - name: Show diff
+        shell: bash
+        run: |
+          git diff -- \
+            app/src/main/java/com/tareghmsr/jeppiran/PdfViewerActivity.kt
+
+      - name: Commit fix
         shell: bash
         run: |
           git config user.name \
@@ -104,9 +129,31 @@ jobs:
           git add \
             app/src/main/java/com/tareghmsr/jeppiran/PdfViewerActivity.kt
 
+          if git diff --cached --quiet; then
+            echo "No changes detected."
+            exit 0
+          fi
+
           git commit \
-            -m "Fix PdfViewer float type conversion"
+            -m "Fix PdfViewer float conversion"
 
           git fetch origin main
           git rebase origin/main
+          git push origin HEAD:main
+
+      - name: Remove temporary workflow
+        shell: bash
+        run: |
+          git config user.name \
+            "github-actions[bot]"
+
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git rm \
+            ".github/workflows/fix-pdf-float.yml"
+
+          git commit \
+            -m "Remove temporary float fixer"
+
           git push origin HEAD:main
