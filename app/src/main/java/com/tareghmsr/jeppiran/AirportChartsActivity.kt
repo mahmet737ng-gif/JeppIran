@@ -25,13 +25,20 @@ class AirportChartsActivity : ComponentActivity() {
         val category: String
     )
 
-    override fun onCreate(savedInstanceState: Bundle?) {
+    override fun onCreate(
+        savedInstanceState: Bundle?
+    ) {
         super.onCreate(savedInstanceState)
 
         enableEdgeToEdge()
 
-        icao = intent.getStringExtra("ICAO").orEmpty()
-        city = intent.getStringExtra("CITY").orEmpty()
+        icao =
+            intent.getStringExtra("ICAO")
+                .orEmpty()
+
+        city =
+            intent.getStringExtra("CITY")
+                .orEmpty()
 
         buildUi()
         loadCharts()
@@ -39,34 +46,46 @@ class AirportChartsActivity : ComponentActivity() {
 
     private fun buildUi() {
 
-        val root = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setBackgroundColor(0xFFF7F8FA.toInt())
-        }
+        val root =
+            LinearLayout(this).apply {
 
-        val header = TextView(this).apply {
+                orientation =
+                    LinearLayout.VERTICAL
 
-            text = "$icao  •  $city"
+                setBackgroundColor(
+                    0xFFF7F8FA.toInt()
+                )
+            }
 
-            textSize = 22f
+        val header =
+            TextView(this).apply {
 
-            typeface = Typeface.DEFAULT_BOLD
+                text =
+                    "$icao  •  $city"
 
-            setPadding(
-                20.dp,
-                20.dp,
-                20.dp,
-                20.dp
-            )
+                textSize = 22f
 
-            setBackgroundColor(
-                0xFFFFFFFF.toInt()
-            )
-        }
+                typeface =
+                    Typeface.DEFAULT_BOLD
 
-        listContainer = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-        }
+                setPadding(
+                    20.dp,
+                    20.dp,
+                    20.dp,
+                    20.dp
+                )
+
+                setBackgroundColor(
+                    0xFFFFFFFF.toInt()
+                )
+            }
+
+        listContainer =
+            LinearLayout(this).apply {
+
+                orientation =
+                    LinearLayout.VERTICAL
+            }
 
         root.addView(header)
 
@@ -81,11 +100,14 @@ class AirportChartsActivity : ComponentActivity() {
 
         setContentView(root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(
+            root
+        ) { view, insets ->
 
-            val bars = insets.getInsets(
-                WindowInsetsCompat.Type.systemBars()
-            )
+            val bars =
+                insets.getInsets(
+                    WindowInsetsCompat.Type.systemBars()
+                )
 
             view.setPadding(
                 0,
@@ -100,18 +122,24 @@ class AirportChartsActivity : ComponentActivity() {
 
     private fun loadCharts() {
 
-        val text = assets
-            .open("charts-app-v16.json")
-            .bufferedReader()
-            .use { it.readText() }
+        val text =
+            assets
+                .open("charts-app-v16.json")
+                .bufferedReader()
+                .use {
+                    it.readText()
+                }
 
-        val charts = mutableListOf<Chart>()
+        val charts =
+            mutableListOf<Chart>()
 
-        val root = text.trim()
+        val root =
+            text.trim()
 
         if (root.startsWith("[")) {
 
-            val array = JSONArray(root)
+            val array =
+                JSONArray(root)
 
             readArray(
                 array,
@@ -120,20 +148,23 @@ class AirportChartsActivity : ComponentActivity() {
 
         } else {
 
-            val object = JSONObject(root)
+            val jsonObject =
+                JSONObject(root)
 
-            val possibleArrays = listOf(
-                "charts",
-                "data",
-                "items",
-                "pages"
-            )
+            val possibleArrays =
+                listOf(
+                    "charts",
+                    "data",
+                    "items",
+                    "pages"
+                )
 
             var found = false
 
             for (key in possibleArrays) {
 
-                val value = object.opt(key)
+                val value =
+                    jsonObject.opt(key)
 
                 if (value is JSONArray) {
 
@@ -149,13 +180,16 @@ class AirportChartsActivity : ComponentActivity() {
 
             if (!found) {
 
-                val keys = object.keys()
+                val keys =
+                    jsonObject.keys()
 
                 while (keys.hasNext()) {
 
-                    val key = keys.next()
+                    val key =
+                        keys.next()
 
-                    val value = object.opt(key)
+                    val value =
+                        jsonObject.opt(key)
 
                     if (value is JSONObject) {
 
@@ -169,12 +203,17 @@ class AirportChartsActivity : ComponentActivity() {
         }
 
         charts
-            .filter { it.page > 0 }
+            .filter {
+                it.page > 0
+            }
             .distinctBy {
                 "${it.page}|${it.name}|${it.category}"
             }
-            .sortedBy { it.page }
+            .sortedBy {
+                it.page
+            }
             .forEach { chart ->
+
                 addChartRow(chart)
             }
     }
@@ -184,9 +223,12 @@ class AirportChartsActivity : ComponentActivity() {
         charts: MutableList<Chart>
     ) {
 
-        for (i in 0 until array.length()) {
+        for (
+            i in 0 until array.length()
+        ) {
 
-            val value = array.opt(i)
+            val value =
+                array.opt(i)
 
             if (value is JSONObject) {
 
@@ -203,11 +245,12 @@ class AirportChartsActivity : ComponentActivity() {
         charts: MutableList<Chart>
     ) {
 
-        val itemIcao = firstNonEmpty(
-            item.optString("icao"),
-            item.optString("airport"),
-            item.optString("airport_icao")
-        ).uppercase()
+        val itemIcao =
+            firstNonEmpty(
+                item.optString("icao"),
+                item.optString("airport"),
+                item.optString("airport_icao")
+            ).uppercase()
 
         if (
             itemIcao.isNotEmpty() &&
@@ -216,29 +259,53 @@ class AirportChartsActivity : ComponentActivity() {
             return
         }
 
-        val page = firstPositiveInt(
-            item.optInt("page", -1),
-            item.optInt("pageNumber", -1),
-            item.optInt("page_number", -1)
-        )
+        val page =
+            firstPositiveInt(
+                item.optInt(
+                    "page",
+                    -1
+                ),
+                item.optInt(
+                    "pageNumber",
+                    -1
+                ),
+                item.optInt(
+                    "page_number",
+                    -1
+                )
+            )
 
         if (page <= 0) {
             return
         }
 
-        val category = firstNonEmpty(
-            item.optString("category"),
-            item.optString("type"),
-            item.optString("chart_type"),
-            "Other"
-        )
+        val category =
+            firstNonEmpty(
+                item.optString(
+                    "category"
+                ),
+                item.optString(
+                    "type"
+                ),
+                item.optString(
+                    "chart_type"
+                ),
+                "Other"
+            )
 
-        val name = firstNonEmpty(
-            item.optString("name"),
-            item.optString("title"),
-            item.optString("chart_name"),
-            "Chart page $page"
-        )
+        val name =
+            firstNonEmpty(
+                item.optString(
+                    "name"
+                ),
+                item.optString(
+                    "title"
+                ),
+                item.optString(
+                    "chart_name"
+                ),
+                "Chart page $page"
+            )
 
         charts.add(
             Chart(
@@ -249,79 +316,90 @@ class AirportChartsActivity : ComponentActivity() {
         )
     }
 
-    private fun addChartRow(chart: Chart) {
+    private fun addChartRow(
+        chart: Chart
+    ) {
 
-        val row = LinearLayout(this).apply {
+        val row =
+            LinearLayout(this).apply {
 
-            orientation = LinearLayout.VERTICAL
+                orientation =
+                    LinearLayout.VERTICAL
 
-            setPadding(
-                20.dp,
-                15.dp,
-                20.dp,
-                15.dp
-            )
-
-            setBackgroundColor(
-                0xFFFFFFFF.toInt()
-            )
-
-            setOnClickListener {
-
-                val intent = Intent(
-                    this@AirportChartsActivity,
-                    PdfViewerActivity::class.java
+                setPadding(
+                    20.dp,
+                    15.dp,
+                    20.dp,
+                    15.dp
                 )
 
-                intent.putExtra(
-                    "PAGE",
-                    chart.page
+                setBackgroundColor(
+                    0xFFFFFFFF.toInt()
                 )
 
-                intent.putExtra(
-                    "TITLE",
-                    chart.name
-                )
+                setOnClickListener {
 
-                intent.putExtra(
-                    "ICAO",
-                    icao
-                )
+                    val intent =
+                        Intent(
+                            this@AirportChartsActivity,
+                            PdfViewerActivity::class.java
+                        )
 
-                intent.putExtra(
-                    "CITY",
-                    city
-                )
+                    intent.putExtra(
+                        "PAGE",
+                        chart.page
+                    )
 
-                intent.putExtra(
-                    "CATEGORY",
-                    chart.category
-                )
+                    intent.putExtra(
+                        "TITLE",
+                        chart.name
+                    )
 
-                startActivity(intent)
+                    intent.putExtra(
+                        "ICAO",
+                        icao
+                    )
+
+                    intent.putExtra(
+                        "CITY",
+                        city
+                    )
+
+                    intent.putExtra(
+                        "CATEGORY",
+                        chart.category
+                    )
+
+                    startActivity(intent)
+                }
             }
-        }
 
-        val title = TextView(this).apply {
+        val title =
+            TextView(this).apply {
 
-            text = chart.name
+                text =
+                    chart.name
 
-            textSize = 17f
+                textSize =
+                    17f
 
-            typeface = Typeface.DEFAULT_BOLD
-        }
+                typeface =
+                    Typeface.DEFAULT_BOLD
+            }
 
-        val subtitle = TextView(this).apply {
+        val subtitle =
+            TextView(this).apply {
 
-            text =
-                "${chart.category}  •  Page ${chart.page}"
+                text =
+                    "${chart.category}  •  Page ${chart.page}"
 
-            textSize = 13f
+                textSize =
+                    13f
 
-            setTextColor(
-                0xFF667085.toInt()
-            )
-        }
+                setTextColor(
+                    0xFF667085.toInt()
+                )
+            }
 
         row.addView(title)
 
@@ -331,7 +409,9 @@ class AirportChartsActivity : ComponentActivity() {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply {
-                topMargin = 4.dp
+
+                topMargin =
+                    4.dp
             }
         )
 
@@ -341,6 +421,7 @@ class AirportChartsActivity : ComponentActivity() {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply {
+
                 setMargins(
                     16.dp,
                     4.dp,
@@ -367,13 +448,16 @@ class AirportChartsActivity : ComponentActivity() {
         vararg values: Int
     ): Int {
 
-        return values.firstOrNull {
-            it > 0
-        } ?: -1
+        return values
+            .firstOrNull {
+                it > 0
+            }
+            ?: -1
     }
 
     private val Int.dp: Int
         get() = (
-            this * resources.displayMetrics.density
-        ).toInt()
+            this *
+                    resources.displayMetrics.density
+            ).toInt()
 }
