@@ -5,6 +5,7 @@ import org.json.JSONArray
 import org.json.JSONObject
 import java.util.Locale
 
+
 class ChartRepository(
     private val context: Context
 ) {
@@ -14,6 +15,7 @@ class ChartRepository(
         val airportName: String,
         val city: String
     )
+
 
     data class ChartInfo(
         val page: Int,
@@ -25,6 +27,7 @@ class ChartRepository(
         val name: String
     )
 
+
     data class SearchResult(
         val page: Int,
         val icao: String,
@@ -35,10 +38,12 @@ class ChartRepository(
         val name: String
     )
 
+
     companion object {
 
         private const val ASSET_FILE =
-            "charts-app-v16.json"
+            "charts-app-v17.json"
+
 
         private val AIRPORTS =
             listOf(
@@ -260,6 +265,7 @@ class ChartRepository(
                 )
             )
 
+
         private val CATEGORY_ORDER =
             listOf(
                 "Airport",
@@ -269,29 +275,37 @@ class ChartRepository(
                 "Other"
             )
 
+
         fun airports():
             List<AirportInfo> {
 
             return AIRPORTS.toList()
         }
 
+
         fun airport(
             icao: String
-        ): AirportInfo? {
+        ):
+            AirportInfo? {
 
             val key =
                 icao
                     .trim()
-                    .uppercase(Locale.US)
+                    .uppercase(
+                        Locale.US
+                    )
+
 
             return AIRPORTS.firstOrNull {
                 it.icao == key
             }
         }
 
+
         fun airportName(
             icao: String
-        ): String {
+        ):
+            String {
 
             return airport(
                 icao
@@ -299,9 +313,11 @@ class ChartRepository(
                 ?: ""
         }
 
+
         fun city(
             icao: String
-        ): String {
+        ):
+            String {
 
             return airport(
                 icao
@@ -309,37 +325,48 @@ class ChartRepository(
                 ?: ""
         }
 
+
         fun categoryOrder(
             category: String
-        ): Int {
+        ):
+            Int {
 
             val normalized =
                 normalizeCategory(
                     category
                 )
 
+
             val index =
                 CATEGORY_ORDER.indexOf(
                     normalized
                 )
 
+
             return if (
                 index >= 0
             ) {
+
                 index
+
             } else {
+
                 CATEGORY_ORDER.size
             }
         }
 
+
         fun normalizeCategory(
             value: String
-        ): String {
+        ):
+            String {
 
             return when (
                 value
                     .trim()
-                    .uppercase(Locale.US)
+                    .uppercase(
+                        Locale.US
+                    )
             ) {
 
                 "AIRPORT" ->
@@ -360,11 +387,14 @@ class ChartRepository(
         }
     }
 
+
     private var loaded =
         false
 
+
     private val chartList =
         mutableListOf<ChartInfo>()
+
 
     @Synchronized
     fun getAllCharts():
@@ -375,6 +405,7 @@ class ChartRepository(
         return chartList.toList()
     }
 
+
     @Synchronized
     fun getChartsForAirport(
         icao: String
@@ -383,10 +414,14 @@ class ChartRepository(
 
         ensureLoaded()
 
+
         val key =
             icao
                 .trim()
-                .uppercase(Locale.US)
+                .uppercase(
+                    Locale.US
+                )
+
 
         return chartList
             .filter {
@@ -397,24 +432,32 @@ class ChartRepository(
             }
     }
 
+
     @Synchronized
     fun getChartForPage(
         icao: String,
         page: Int
-    ): ChartInfo? {
+    ):
+        ChartInfo? {
 
         ensureLoaded()
+
 
         val key =
             icao
                 .trim()
-                .uppercase(Locale.US)
+                .uppercase(
+                    Locale.US
+                )
+
 
         return chartList.firstOrNull {
+
             it.icao == key &&
                 it.page == page
         }
     }
+
 
     fun search(
         query: String
@@ -423,16 +466,22 @@ class ChartRepository(
 
         ensureLoaded()
 
+
         val normalizedQuery =
             query
                 .trim()
-                .lowercase(Locale.US)
+                .lowercase(
+                    Locale.US
+                )
+
 
         if (
             normalizedQuery.isBlank()
         ) {
+
             return emptyList()
         }
+
 
         return chartList
             .mapNotNull { chart ->
@@ -441,6 +490,7 @@ class ChartRepository(
                     airport(
                         chart.icao
                     )
+
 
                 val fields =
                     listOf(
@@ -452,22 +502,29 @@ class ChartRepository(
                         chart.name
                     )
 
+
                 val matches =
                     fields.any {
+
                         it.lowercase(
                             Locale.US
-                        ).contains(
-                            normalizedQuery
                         )
+                            .contains(
+                                normalizedQuery
+                            )
                     }
+
 
                 if (
                     !matches
                 ) {
+
                     return@mapNotNull null
                 }
 
+
                 SearchResult(
+
                     page =
                         chart.page,
 
@@ -475,11 +532,13 @@ class ChartRepository(
                         chart.icao,
 
                     airportName =
-                        airport?.airportName
+                        airport
+                            ?.airportName
                             ?: chart.airportName,
 
                     city =
-                        airport?.city
+                        airport
+                            ?.city
                             ?: chart.city,
 
                     category =
@@ -489,34 +548,46 @@ class ChartRepository(
                         chart.chartNumber,
 
                     name =
-                        chart.name
+                        cleanRuntimeName(
+                            chart.name,
+                            chart.category,
+                            chart.chartNumber,
+                            chart.page
+                        )
                 )
             }
             .sortedWith(
+
                 compareByDescending<SearchResult> {
+
                     exactMatchScore(
                         it,
                         normalizedQuery
                     )
                 }
+
                     .thenBy {
                         it.icao
                     }
+
                     .thenBy {
                         it.page
                     }
             )
     }
 
+
     private fun exactMatchScore(
         result: SearchResult,
         query: String
-    ): Int {
+    ):
+        Int {
 
         val q =
             query.lowercase(
                 Locale.US
             )
+
 
         if (
             result.icao.equals(
@@ -524,8 +595,10 @@ class ChartRepository(
                 ignoreCase = true
             )
         ) {
+
             return 1000
         }
+
 
         if (
             result.name.equals(
@@ -533,8 +606,10 @@ class ChartRepository(
                 ignoreCase = true
             )
         ) {
+
             return 900
         }
+
 
         if (
             result.chartNumber.equals(
@@ -542,8 +617,10 @@ class ChartRepository(
                 ignoreCase = true
             )
         ) {
+
             return 850
         }
+
 
         if (
             result.airportName.equals(
@@ -551,8 +628,10 @@ class ChartRepository(
                 ignoreCase = true
             )
         ) {
+
             return 800
         }
+
 
         if (
             result.city.equals(
@@ -560,8 +639,10 @@ class ChartRepository(
                 ignoreCase = true
             )
         ) {
+
             return 750
         }
+
 
         if (
             result.category.equals(
@@ -569,8 +650,10 @@ class ChartRepository(
                 ignoreCase = true
             )
         ) {
+
             return 700
         }
+
 
         if (
             result.icao.contains(
@@ -578,8 +661,10 @@ class ChartRepository(
                 ignoreCase = true
             )
         ) {
+
             return 600
         }
+
 
         if (
             result.name.contains(
@@ -587,8 +672,10 @@ class ChartRepository(
                 ignoreCase = true
             )
         ) {
+
             return 500
         }
+
 
         if (
             result.chartNumber.contains(
@@ -596,8 +683,10 @@ class ChartRepository(
                 ignoreCase = true
             )
         ) {
+
             return 450
         }
+
 
         if (
             result.airportName.contains(
@@ -605,8 +694,10 @@ class ChartRepository(
                 ignoreCase = true
             )
         ) {
+
             return 400
         }
+
 
         if (
             result.city.contains(
@@ -614,11 +705,14 @@ class ChartRepository(
                 ignoreCase = true
             )
         ) {
+
             return 350
         }
 
+
         return 100
     }
+
 
     @Synchronized
     fun reload() {
@@ -631,15 +725,19 @@ class ChartRepository(
         ensureLoaded()
     }
 
+
     private fun ensureLoaded() {
 
         if (
             loaded
         ) {
+
             return
         }
 
+
         chartList.clear()
+
 
         try {
 
@@ -653,6 +751,7 @@ class ChartRepository(
                         it.readText()
                     }
                     .trim()
+
 
             if (
                 raw.startsWith("[")
@@ -671,75 +770,34 @@ class ChartRepository(
                         raw
                     )
 
-                val arrayKeys =
-                    listOf(
-                        "charts",
-                        "data",
-                        "items",
-                        "pages"
+
+                val array =
+                    root.optJSONArray(
+                        "charts"
                     )
 
-                var arrayLoaded =
-                    false
-
-                for (
-                    key in arrayKeys
-                ) {
-
-                    val value =
-                        root.opt(
-                            key
-                        )
-
-                    if (
-                        value is JSONArray
-                    ) {
-
-                        readArray(
-                            value
-                        )
-
-                        arrayLoaded =
-                            true
-
-                        break
-                    }
-                }
 
                 if (
-                    !arrayLoaded
+                    array != null
                 ) {
 
-                    val keys =
-                        root.keys()
+                    readArray(
+                        array
+                    )
 
-                    while (
-                        keys.hasNext()
-                    ) {
+                } else {
 
-                        val key =
-                            keys.next()
-
-                        val value =
-                            root.opt(
-                                key
-                            )
-
-                        if (
-                            value is JSONObject
-                        ) {
-
-                            readChartObject(
-                                value
-                            )
-                        }
-                    }
+                    readObjectMap(
+                        root
+                    )
                 }
             }
+
 
             chartList.sortBy {
                 it.page
             }
+
 
             loaded =
                 true
@@ -753,12 +811,15 @@ class ChartRepository(
         }
     }
 
+
     private fun readArray(
         array: JSONArray
     ) {
 
         for (
-            index in 0 until array.length()
+            index in
+                0 until
+                array.length()
         ) {
 
             val item =
@@ -767,11 +828,47 @@ class ChartRepository(
                 )
                     ?: continue
 
+
             readChartObject(
                 item
             )
         }
     }
+
+
+    private fun readObjectMap(
+        root: JSONObject
+    ) {
+
+        val keys =
+            root.keys()
+
+
+        while (
+            keys.hasNext()
+        ) {
+
+            val key =
+                keys.next()
+
+
+            val value =
+                root.opt(
+                    key
+                )
+
+
+            if (
+                value is JSONObject
+            ) {
+
+                readChartObject(
+                    value
+                )
+            }
+        }
+    }
+
 
     private fun readChartObject(
         item: JSONObject
@@ -779,105 +876,143 @@ class ChartRepository(
 
         val itemIcao =
             firstNonEmpty(
+
                 item.optString(
                     "icao"
                 ),
+
                 item.optString(
                     "airport"
                 ),
+
                 item.optString(
                     "airport_icao"
                 )
             )
-                .uppercase(Locale.US)
+                .uppercase(
+                    Locale.US
+                )
+
 
         if (
             itemIcao.isBlank()
         ) {
+
             return
         }
 
+
         val page =
             firstPositiveInt(
+
                 item.optInt(
                     "page",
                     -1
                 ),
+
                 item.optInt(
                     "pageNumber",
                     -1
                 ),
+
                 item.optInt(
                     "page_number",
                     -1
                 )
             )
 
+
         if (
             page <= 0
         ) {
+
             return
         }
 
+
         val category =
             normalizeCategory(
+
                 firstNonEmpty(
+
                     item.optString(
                         "category"
                     ),
+
                     item.optString(
                         "type"
                     ),
+
                     item.optString(
                         "chart_type"
                     ),
+
                     "Other"
                 )
             )
 
+
         val chartNumber =
             firstNonEmpty(
+
                 item.optString(
                     "chart_number"
                 ),
+
                 item.optString(
                     "chartNumber"
                 ),
+
                 item.optString(
                     "chart_no"
                 ),
+
                 item.optString(
                     "number"
                 )
             )
 
+
         val rawName =
             firstNonEmpty(
+
                 item.optString(
                     "name"
                 ),
+
                 item.optString(
                     "title"
                 ),
+
                 item.optString(
                     "chart_name"
                 )
             )
 
-        val cleanName =
-            buildDisplayName(
-                rawName,
-                category,
-                chartNumber
-            )
 
         val info =
             airport(
                 itemIcao
             )
 
+
+        val displayName =
+            cleanRuntimeName(
+
+                rawName,
+
+                category,
+
+                chartNumber,
+
+                page
+            )
+
+
         chartList.add(
+
             ChartInfo(
+
                 page =
                     page,
 
@@ -885,11 +1020,13 @@ class ChartRepository(
                     itemIcao,
 
                 airportName =
-                    info?.airportName
+                    info
+                        ?.airportName
                         ?: itemIcao,
 
                 city =
-                    info?.city
+                    info
+                        ?.city
                         ?: itemIcao,
 
                 category =
@@ -899,54 +1036,154 @@ class ChartRepository(
                     chartNumber,
 
                 name =
-                    cleanName
+                    displayName
             )
         )
     }
 
-    private fun buildDisplayName(
+
+    private fun cleanRuntimeName(
         rawName: String,
         category: String,
-        chartNumber: String
-    ): String {
+        chartNumber: String,
+        page: Int
+    ):
+        String {
 
         val clean =
             rawName
                 .trim()
 
-        val placeholder =
-            clean.isBlank() ||
-                clean.matches(
-                    Regex(
-                        "(?i)chart\\s*page\\s*\\d+"
-                    )
-                )
 
         if (
-            !placeholder
+            clean.isNotBlank() &&
+            !isGenericPageName(
+                clean
+            )
         ) {
+
             return clean
         }
+
 
         if (
             chartNumber.isNotBlank()
         ) {
 
-            return category
-                .uppercase(Locale.US) +
-                " " +
-                chartNumber
-                    .trim()
+            return when (
+                category
+            ) {
+
+                "Airport" ->
+                    "AIRPORT " +
+                        chartNumber
+
+                "STAR" ->
+                    "STAR " +
+                        chartNumber
+
+                "SID" ->
+                    "SID " +
+                        chartNumber
+
+                "Approach" ->
+                    "APPROACH " +
+                        chartNumber
+
+                else ->
+                    "OTHER " +
+                        chartNumber
+            }
         }
 
-        return category
-            .uppercase(Locale.US) +
-            " CHART"
+
+        return when (
+            category
+        ) {
+
+            "Airport" ->
+                "AIRPORT CHART"
+
+            "STAR" ->
+                "STAR CHART"
+
+            "SID" ->
+                "SID CHART"
+
+            "Approach" ->
+                "APPROACH CHART"
+
+            else ->
+                "OTHER CHART"
+        }
     }
+
+
+    private fun isGenericPageName(
+        value: String
+    ):
+        Boolean {
+
+        val normalized =
+            value
+                .trim()
+                .lowercase(
+                    Locale.US
+                )
+
+
+        if (
+            normalized.isBlank()
+        ) {
+
+            return true
+        }
+
+
+        if (
+            normalized.matches(
+                Regex(
+                    "chart\\s*page\\s*\\d+"
+                )
+            )
+        ) {
+
+            return true
+        }
+
+
+        if (
+            normalized.matches(
+                Regex(
+                    "page\\s*\\d+"
+                )
+            )
+        ) {
+
+            return true
+        }
+
+
+        if (
+            normalized.matches(
+                Regex(
+                    "other\\s*chart"
+                )
+            )
+        ) {
+
+            return true
+        }
+
+
+        return false
+    }
+
 
     private fun firstNonEmpty(
         vararg values: String
-    ): String {
+    ):
+        String {
 
         return values
             .firstOrNull {
@@ -956,9 +1193,11 @@ class ChartRepository(
             ?: ""
     }
 
+
     private fun firstPositiveInt(
         vararg values: Int
-    ): Int {
+    ):
+        Int {
 
         return values
             .firstOrNull {
