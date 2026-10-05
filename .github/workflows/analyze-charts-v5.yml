@@ -74,8 +74,6 @@ jobs:
                   if valid_icao(token) and token not in result:
                       result.append(token)
 
-              # Strong Jeppesen airport header:
-              # OIAA/ABD | JEPPESEN ABADAN, IRAN
               strong = re.findall(
                   r'\b([OLUM][A-Z0-9]{3})\s*/\s*[A-Z]{3}\b',
                   text.upper()
@@ -99,9 +97,7 @@ jobs:
                   "Other": 0
               }
 
-              # ---------------------------------------
               # OTHER / NON-CHART PAGES
-              # ---------------------------------------
               other_patterns = [
                   "REVISION",
                   "REVISION NOTICE",
@@ -116,9 +112,7 @@ jobs:
                   if p in t:
                       scores["Other"] += 80
 
-              # ---------------------------------------
               # SID
-              # ---------------------------------------
               sid_patterns = [
                   ".SID.",
                   " SID ",
@@ -132,9 +126,7 @@ jobs:
                   if p in t or p in h:
                       scores["SID"] += 40
 
-              # ---------------------------------------
               # STAR
-              # ---------------------------------------
               star_patterns = [
                   ".STAR.",
                   " STAR ",
@@ -148,9 +140,7 @@ jobs:
                   if p in t or p in h:
                       scores["STAR"] += 40
 
-              # ---------------------------------------
               # APPROACH
-              # ---------------------------------------
               approach_patterns = [
                   "APPROACH",
                   "APCH",
@@ -174,7 +164,6 @@ jobs:
                   if p in t or p in h:
                       scores["Approach"] += 10
 
-              # Stronger approach evidence
               if re.search(r'\bILS\b.*\bRWY\b', t):
                   scores["Approach"] += 35
 
@@ -184,9 +173,7 @@ jobs:
               if "FINAL APPROACH" in t:
                   scores["Approach"] += 25
 
-              # ---------------------------------------
               # AIRPORT
-              # ---------------------------------------
               airport_patterns = [
                   "AIRPORT INFORMATION",
                   "AERODROME CHART",
@@ -205,7 +192,6 @@ jobs:
                   if p in t or p in h:
                       scores["Airport"] += 8
 
-              # Very strong Jeppesen airport header
               if re.search(
                   r'\b[OLUM][A-Z0-9]{3}\s*/\s*[A-Z]{3}\b.*JEPPESEN',
                   t
@@ -215,7 +201,6 @@ jobs:
               if "JEPPESEN" in t and "AIRPORT" in t:
                   scores["Airport"] += 25
 
-              # Airport chart usually contains several of these
               operational = [
                   "ATIS",
                   "PAPI",
@@ -226,7 +211,9 @@ jobs:
                   "APRON"
               ]
 
-              operational_count = sum(1 for p in operational if p in t)
+              operational_count = sum(
+                  1 for p in operational if p in t
+              )
 
               if operational_count >= 4:
                   scores["Airport"] += 35
@@ -236,9 +223,11 @@ jobs:
               return scores
 
           def choose_category(scores):
-              # Ignore Other unless clearly dominant.
               if scores["Other"] >= 70:
-                  return "Other", min(1.0, scores["Other"] / 100.0)
+                  return "Other", min(
+                      1.0,
+                      scores["Other"] / 100.0
+                  )
 
               ranked = sorted(
                   scores.items(),
@@ -252,9 +241,11 @@ jobs:
               if best_score <= 0:
                   return "Unknown", 0.0
 
-              # If categories are too close, don't force classification.
               if best_score - second_score < 10:
-                  return "Unknown", min(0.89, best_score / 100.0)
+                  return "Unknown", min(
+                      0.89,
+                      best_score / 100.0
+                  )
 
               confidence = min(
                   0.99,
@@ -273,7 +264,6 @@ jobs:
                   if x.strip()
               ]
 
-              # Prefer explicit SID / STAR / approach headers
               for line in lines:
                   u = line.upper()
 
@@ -288,15 +278,16 @@ jobs:
                   ):
                       return line[:300]
 
-              # Prefer Jeppesen airport header
               for line in lines:
                   if (
                       "JEPPESEN" in line.upper()
-                      and re.search(r'\b[OLUM][A-Z0-9]{3}\s*/\s*[A-Z]{3}\b', line.upper())
+                      and re.search(
+                          r'\b[OLUM][A-Z0-9]{3}\s*/\s*[A-Z]{3}\b',
+                          line.upper()
+                      )
                   ):
                       return line[:300]
 
-              # First meaningful line
               for line in lines[:30]:
                   if len(line) >= 8:
                       return line[:300]
@@ -310,10 +301,15 @@ jobs:
               text=True
           )
 
-          pages_match = re.search(r"Pages:\s+(\d+)", info)
+          pages_match = re.search(
+              r"Pages:\s+(\d+)",
+              info
+          )
 
           if not pages_match:
-              raise RuntimeError("Could not determine PDF page count")
+              raise RuntimeError(
+                  "Could not determine PDF page count"
+              )
 
           pages = int(pages_match.group(1))
 
@@ -322,13 +318,18 @@ jobs:
           with tempfile.TemporaryDirectory() as tmp:
               for page in range(1, pages + 1):
 
-                  txt_file = os.path.join(tmp, f"{page}.txt")
+                  txt_file = os.path.join(
+                      tmp,
+                      f"{page}.txt"
+                  )
 
                   subprocess.run(
                       [
                           "pdftotext",
-                          "-f", str(page),
-                          "-l", str(page),
+                          "-f",
+                          str(page),
+                          "-l",
+                          str(page),
                           "-layout",
                           PDF,
                           txt_file
@@ -351,34 +352,43 @@ jobs:
 
                   icaos = find_icaos(text)
                   title = extract_title(text)
-                  scores = score_category(text, title)
+                  scores = score_category(
+                      text,
+                      title
+                  )
 
-                  category, confidence = choose_category(scores)
+                  category, confidence = choose_category(
+                      scores
+                  )
 
-                  # Prevent ICAO itself from becoming an airport.
                   if icaos and icaos[0] == "ICAO":
                       icaos = icaos[1:]
 
-                  airport = icaos[0] if icaos else None
+                  airport = (
+                      icaos[0]
+                      if icaos
+                      else None
+                  )
 
                   results.append({
                       "page": page,
                       "airport_icao": airport,
                       "category": category,
-                      "confidence": round(confidence, 3),
+                      "confidence": round(
+                          confidence,
+                          3
+                      ),
                       "title": title,
                       "icao_candidates": icaos[:10],
                       "scores": scores
                   })
 
                   if page % 25 == 0 or page == pages:
-                      print(f"Processed {page}/{pages}")
+                      print(
+                          f"Processed {page}/{pages}"
+                      )
 
-          # ---------------------------------------
           # CONTEXT PASS
-          # ---------------------------------------
-          # If a page has no ICAO, inherit from
-          # immediate neighboring pages when safe.
           for i, item in enumerate(results):
 
               if item["airport_icao"]:
@@ -387,25 +397,30 @@ jobs:
               candidates = []
 
               if i > 0:
-                  prev_airport = results[i - 1]["airport_icao"]
+                  prev_airport = results[i - 1][
+                      "airport_icao"
+                  ]
+
                   if prev_airport:
-                      candidates.append(prev_airport)
+                      candidates.append(
+                          prev_airport
+                      )
 
               if i + 1 < len(results):
-                  next_airport = results[i + 1]["airport_icao"]
+                  next_airport = results[i + 1][
+                      "airport_icao"
+                  ]
+
                   if next_airport:
-                      candidates.append(next_airport)
+                      candidates.append(
+                          next_airport
+                      )
 
               if candidates:
                   if len(set(candidates)) == 1:
                       item["airport_icao"] = candidates[0]
 
-          # ---------------------------------------
           # CATEGORY CONTEXT REPAIR
-          # ---------------------------------------
-          # If a page is Unknown between two pages
-          # of the same category and same airport,
-          # use the surrounding context.
           for i, item in enumerate(results):
 
               if item["category"] != "Unknown":
@@ -418,23 +433,30 @@ jobs:
               next_item = results[i + 1]
 
               if (
-                  prev_item["category"] == next_item["category"]
-                  and prev_item["category"] in {
+                  prev_item["category"]
+                  == next_item["category"]
+                  and prev_item["category"]
+                  in {
                       "SID",
                       "STAR",
                       "Approach",
                       "Airport"
                   }
                   and prev_item["airport_icao"]
-                  and prev_item["airport_icao"] == next_item["airport_icao"]
+                  and prev_item["airport_icao"]
+                  == next_item["airport_icao"]
               ):
-                  item["category"] = prev_item["category"]
-                  item["airport_icao"] = prev_item["airport_icao"]
+                  item["category"] = (
+                      prev_item["category"]
+                  )
+
+                  item["airport_icao"] = (
+                      prev_item["airport_icao"]
+                  )
+
                   item["confidence"] = 0.75
 
-          # ---------------------------------------
-          # BUILD SUMMARY
-          # ---------------------------------------
+          # SUMMARY
           counts = {
               "Airport": 0,
               "STAR": 0,
@@ -482,9 +504,7 @@ jobs:
               "airports": airports
           }
 
-          # ---------------------------------------
           # APP DATA
-          # ---------------------------------------
           app_airports = {}
 
           for item in results:
@@ -572,8 +592,12 @@ jobs:
           print("========================================")
           print("V5 ANALYSIS COMPLETE")
           print("========================================")
-          print(json.dumps(summary, indent=2))
-
+          print(
+              json.dumps(
+                  summary,
+                  indent=2
+              )
+          )
           PY
 
           python3 analyze_v5.py
@@ -586,15 +610,3 @@ jobs:
             charts-index-v5.json
             charts-summary-v5.json
             charts-app-v5.json
-
-      - name: Commit analysis results
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add charts-index-v5.json charts-summary-v5.json charts-app-v5.json
-
-          git diff --cached --quiet || \
-            git commit -m "Add V5 chart analysis results"
-
-          git push
