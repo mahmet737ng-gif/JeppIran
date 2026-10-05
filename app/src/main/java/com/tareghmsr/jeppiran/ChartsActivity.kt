@@ -4,7 +4,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.View
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -78,8 +77,9 @@ class ChartsActivity : ComponentActivity() {
 
         searchBox = EditText(this).apply {
             hint = "Search ICAO / Airport / City"
-            singleLine = true
+            isSingleLine = true
             textSize = 16f
+
             setPadding(
                 20.dp,
                 12.dp,
@@ -118,7 +118,9 @@ class ChartsActivity : ComponentActivity() {
 
         setContentView(root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(
+            root
+        ) { view, insets ->
 
             val bars = insets.getInsets(
                 WindowInsetsCompat.Type.systemBars()
@@ -164,7 +166,9 @@ class ChartsActivity : ComponentActivity() {
         )
     }
 
-    private fun loadAirports(query: String = "") {
+    private fun loadAirports(
+        query: String = ""
+    ) {
 
         listContainer.removeAllViews()
 
@@ -179,7 +183,6 @@ class ChartsActivity : ComponentActivity() {
             .forEach { airport ->
 
                 val row = LinearLayout(this).apply {
-
                     orientation = LinearLayout.VERTICAL
 
                     setPadding(
@@ -214,22 +217,32 @@ class ChartsActivity : ComponentActivity() {
                     }
                 }
 
-                val airportText = TextView(this).apply {
-                    text = airport.icao
-                    textSize = 18f
-                    setTypeface(
-                        null,
-                        android.graphics.Typeface.BOLD
-                    )
-                }
+                val airportText =
+                    TextView(this).apply {
 
-                val cityText = TextView(this).apply {
-                    text = airport.city
-                    textSize = 13f
-                    setTextColor(0xFF667085.toInt())
-                }
+                        text = airport.icao
+                        textSize = 18f
 
-                row.addView(airportText)
+                        setTypeface(
+                            null,
+                            android.graphics.Typeface.BOLD
+                        )
+                    }
+
+                val cityText =
+                    TextView(this).apply {
+
+                        text = airport.city
+                        textSize = 13f
+
+                        setTextColor(
+                            0xFF667085.toInt()
+                        )
+                    }
+
+                row.addView(
+                    airportText
+                )
 
                 row.addView(
                     cityText,
@@ -247,6 +260,7 @@ class ChartsActivity : ComponentActivity() {
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
                     ).apply {
+
                         setMargins(
                             16.dp,
                             4.dp,
@@ -260,6 +274,7 @@ class ChartsActivity : ComponentActivity() {
 
     private val Int.dp: Int
         get() = (
-            this * resources.displayMetrics.density
-        ).toInt()
+            this *
+                    resources.displayMetrics.density
+            ).toInt()
 }
