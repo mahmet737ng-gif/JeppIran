@@ -4324,6 +4324,10 @@ private val locationPermissionLauncher =
                     location: Location
                 ) {
 
+                    if (!aircraftPositionEnabled) {
+                        return
+                    }
+
                     lastGpsLocation =
                         location
 
