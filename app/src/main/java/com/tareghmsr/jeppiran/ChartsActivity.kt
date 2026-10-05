@@ -1,5 +1,6 @@
 package com.tareghmsr.jeppiran
 
+import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
@@ -405,16 +406,26 @@ class ChartsActivity : ComponentActivity() {
             )
 
             /*
-             * Temporary click behavior.
-             * Later this will open the chart categories.
+             * Open airport chart categories
              */
             card.setOnClickListener {
 
-                Toast.makeText(
+                val intent = Intent(
                     this,
-                    "${airport.icao} • ${airport.city}",
-                    Toast.LENGTH_SHORT
-                ).show()
+                    AirportChartsActivity::class.java
+                )
+
+                intent.putExtra(
+                    "ICAO",
+                    airport.icao
+                )
+
+                intent.putExtra(
+                    "AIRPORT_NAME",
+                    airport.city
+                )
+
+                startActivity(intent)
             }
 
             airportList.addView(
