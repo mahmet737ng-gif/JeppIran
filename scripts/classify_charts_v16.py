@@ -7,37 +7,18 @@ from collections import Counter, defaultdict
 
 
 # ============================================================
-# JeppIran - Chart Classifier V16
-# ============================================================
-#
-# Input:
-#   charts-index-v12.json
-#
-# Outputs:
-#   charts-index-v16.json
-#   charts-app-v16.json
-#   charts-summary-v16.json
-#
-# IMPORTANT:
-#   V12 naming is preserved.
-#   This script changes classification only.
+# JeppIran - Chart Classifier V16.1
 # ============================================================
 
+INPUT = Path("charts-index-v12.json")
 
-BASE_DIR = Path(".")
-
-INPUT_FILES = [
-    BASE_DIR / "charts-index-v12.json",
-    BASE_DIR / "charts-index-v12" / "charts-index-v12.json",
-]
-
-OUTPUT_INDEX = BASE_DIR / "charts-index-v16.json"
-OUTPUT_APP = BASE_DIR / "charts-app-v16.json"
-OUTPUT_SUMMARY = BASE_DIR / "charts-summary-v16.json"
+OUTPUT_INDEX = Path("charts-index-v16.json")
+OUTPUT_APP = Path("charts-app-v16.json")
+OUTPUT_SUMMARY = Path("charts-summary-v16.json")
 
 
 # ============================================================
-# Supported ICAO prefixes
+# COUNTRY PREFIXES
 # ============================================================
 
 COUNTRY_PREFIXES = {
@@ -52,7 +33,7 @@ COUNTRY_PREFIXES = {
 
 
 # ============================================================
-# Known airports
+# KNOWN AIRPORTS
 # ============================================================
 
 KNOWN_AIRPORTS = {
@@ -95,10 +76,6 @@ KNOWN_AIRPORTS = {
 }
 
 
-# ============================================================
-# ICAO false positives
-# ============================================================
-
 FALSE_ICAO = {
     "ONLY",
     "ONTO",
@@ -125,10 +102,6 @@ FALSE_ICAO = {
 }
 
 
-# ============================================================
-# Category names
-# ============================================================
-
 CATEGORIES = {
     "Airport",
     "STAR",
@@ -139,15 +112,24 @@ CATEGORIES = {
 
 
 # ============================================================
-# Utility functions
+# BASIC HELPERS
 # ============================================================
 
-def normalize_text(value):
+def text_value(value):
     if value is None:
         return ""
 
+    if isinstance(value, str):
+        return value
+
+    if isinstance(value, (int, float)):
+        return str(value)
+
     if isinstance(value, list):
-        return "\n".join(str(x) for x in value)
+        return "\n".join(
+            text_value(x)
+            for x in value
+        )
 
     if isinstance(value, dict):
         parts = []
@@ -161,84 +143,211 @@ def normalize_text(value):
             "title",
         ):
             if key in value:
-                parts.append(str(value[key]))
+                parts.append(
+                    text_value(value[key])
+                )
 
         return "\n".join(parts)
 
     return str(value)
 
 
-def find_input_file():
-    for path in INPUT_FILES:
-        if path.exists():
-            return path
+def first_value(obj, keys):
+    if not isinstance(obj, dict):
+        return ""
 
-    raise FileNotFoundError(
-        "Could not find charts-index-v12.json"
-    )
-
-
-def load_json(path):
-    with path.open("r", encoding="utf-8") as f:
-        return json.load(f)
-
-
-def save_json(path, data):
-    with path.open("w", encoding="utf-8") as f:
-        json.dump(
-            data,
-            f,
-            ensure_ascii=False,
-            indent=2,
-        )
-
-
-def first_nonempty(obj, keys):
     for key in keys:
-        if key in obj:
-            value = obj[key]
+        if key not in obj:
+            continue
 
-            if value is None:
-                continue
+        value = obj[key]
 
-            if isinstance(value, str) and not value.strip():
-                continue
+        if value is None:
+            continue
 
+        if isinstance(value, str):
+            if value.strip():
+                return value
+
+        elif value != "":
             return value
 
     return ""
 
 
 # ============================================================
-# ICAO detection
+# FLATTEN ANY JSON STRUCTURE
 # ============================================================
 
-def detect_airport(text, existing_airport=""):
-    existing = str(existing_airport or "").upper().strip()
+def flatten_records(value):
+    """
+    Converts nested lists/dictionaries into a flat list
+    of page-record dictionaries.
+
+    This specifically prevents:
+
+        'list' object has no attribute 'get'
+    """
+
+    result = []
+
+    if isinstance(value, dict):
+
+        # A dictionary that already looks like a page record.
+        record_keys = {
+            "page",
+            "page_number",
+            "pageNumber",
+            "text",
+            "raw_text",
+            "page_text",
+            "content",
+            "airport",
+            "icao",
+            "category",
+            "name",
+            "title",
+            "chart_number",
+        }
+
+        if any(
+            key in value
+            for key in record_keys
+        ):
+            result.append(value)
+            return result
+
+        # Otherwise recursively inspect dictionary values.
+        for key, child in value.items():
+
+            if (
+                str(key).isdigit()
+                and isinstance(child, dict)
+            ):
+                item = dict(child)
+
+                if "page" not in item:
+                    item["page"] = int(key)
+
+                result.append(item)
+
+            elif isinstance(child, (dict, list)):
+                result.extend(
+                    flatten_records(child)
+                )
+
+        return result
+
+    if isinstance(value, list):
+
+        for child in value:
+            result.extend(
+                flatten_records(child)
+            )
+
+        return result
+
+    return result
+
+
+# ============================================================
+# LOAD INPUT
+# ============================================================
+
+def load_input():
+
+    if not INPUT.exists():
+        raise FileNotFoundError(
+            f"Input file not found: {INPUT}"
+        )
+
+    with INPUT.open(
+        "r",
+        encoding="utf-8",
+    ) as f:
+        data = json.load(f)
+
+    records = flatten_records(data)
+
+    # Remove accidental duplicate page records.
+    by_page = {}
+
+    for record in records:
+
+        if not isinstance(record, dict):
+            continue
+
+        page = first_value(
+            record,
+            [
+                "page",
+                "page_number",
+                "pageNumber",
+                "pdf_page",
+            ],
+        )
+
+        try:
+            page = int(page)
+        except Exception:
+            continue
+
+        record["page"] = page
+
+        # Prefer the latest complete record.
+        by_page[page] = record
+
+    records = list(
+        by_page.values()
+    )
+
+    records.sort(
+        key=lambda x: x["page"]
+    )
+
+    return records
+
+
+# ============================================================
+# ICAO
+# ============================================================
+
+def detect_airport(
+    text,
+    existing="",
+):
+
+    existing = text_value(
+        existing
+    ).upper().strip()
 
     if existing in KNOWN_AIRPORTS:
         return existing
 
     upper = text.upper()
 
-    # First: exact known airports
-    for airport in sorted(KNOWN_AIRPORTS, key=len, reverse=True):
-        if re.search(rf"\b{re.escape(airport)}\b", upper):
+    for airport in sorted(
+        KNOWN_AIRPORTS,
+        key=len,
+        reverse=True,
+    ):
+        if re.search(
+            rf"\b{re.escape(airport)}\b",
+            upper,
+        ):
             return airport
 
-    # Generic ICAO candidate
     candidates = re.findall(
         r"\b[A-Z]{4}\b",
         upper,
     )
 
     for candidate in candidates:
+
         if candidate in FALSE_ICAO:
             continue
 
-        prefix = candidate[:2]
-
-        if prefix not in COUNTRY_PREFIXES:
+        if candidate[:2] not in COUNTRY_PREFIXES:
             continue
 
         return candidate
@@ -247,59 +356,28 @@ def detect_airport(text, existing_airport=""):
 
 
 def detect_country(airport):
-    airport = str(airport or "").upper()
 
-    if len(airport) >= 2:
-        return COUNTRY_PREFIXES.get(
-            airport[:2],
-            "",
-        )
+    airport = airport.upper()
 
-    return ""
+    return COUNTRY_PREFIXES.get(
+        airport[:2],
+        "",
+    )
 
 
 # ============================================================
-# Chart number detection
+# CHART NUMBER
 # ============================================================
 
-def detect_chart_number(text, existing=""):
-    """
-    Detect Jeppesen chart numbers.
+def detect_chart_number(
+    text,
+    existing="",
+):
 
-    Examples:
-      10-2
-      10-2A
-      10-2B
-      10-3
-      10-3A
-      10-9
-      10-9S
-      10-9S1
-      10-1P
-      10-1P10
-      10-1R
-      11-1
-      13-2
-      16-1
-      17-1
-    """
+    existing = text_value(
+        existing
+    ).upper()
 
-    existing = str(existing or "").strip()
-
-    if existing:
-        # Do not blindly trust arbitrary existing text.
-        m = re.search(
-            r"\b(?:10-[1239][A-Z0-9]*|"
-            r"(?:11|13|14|15|16|17)-[A-Z0-9]*)\b",
-            existing.upper(),
-        )
-
-        if m:
-            return m.group(0)
-
-    upper = text.upper()
-
-    # Prefer the normal Jeppesen chart-number forms.
     patterns = [
         r"\b10-9[A-Z0-9]*\b",
         r"\b10-3[A-Z0-9]*\b",
@@ -309,52 +387,68 @@ def detect_chart_number(text, existing=""):
     ]
 
     for pattern in patterns:
-        matches = re.findall(pattern, upper)
 
-        if matches:
-            # Prefer the first useful match.
-            return matches[0]
+        match = re.search(
+            pattern,
+            existing,
+        )
+
+        if match:
+            return match.group(0)
+
+    upper = text.upper()
+
+    for pattern in patterns:
+
+        match = re.search(
+            pattern,
+            upper,
+        )
+
+        if match:
+            return match.group(0)
 
     return ""
 
 
 # ============================================================
-# Strong page signals
+# PAGE SIGNALS
 # ============================================================
 
-def is_airport_information(text):
+def airport_information(text):
+
     upper = text.upper()
 
-    strong_patterns = [
-        r"\bAIRPORT INFORMATION\b",
-        r"\bAERODROME INFORMATION\b",
-        r"\bAIRPORT\s+INFORMATION\b",
-        r"\bAERODROME\s+INFORMATION\b",
-    ]
-
-    return any(
-        re.search(pattern, upper)
-        for pattern in strong_patterns
+    return bool(
+        re.search(
+            r"\bAIRPORT\s+INFORMATION\b",
+            upper,
+        )
+        or re.search(
+            r"\bAERODROME\s+INFORMATION\b",
+            upper,
+        )
     )
 
 
-def is_airport_chart(text):
+def airport_chart(text):
+
     upper = text.upper()
 
-    patterns = [
-        r"\bAIRPORT CHART\b",
-        r"\bAERODROME CHART\b",
-        r"\bAIRPORT\s+CHART\b",
-        r"\bAERODROME\s+CHART\b",
-    ]
-
-    return any(
-        re.search(pattern, upper)
-        for pattern in patterns
+    return bool(
+        re.search(
+            r"\bAIRPORT\s+CHART\b",
+            upper,
+        )
+        or re.search(
+            r"\bAERODROME\s+CHART\b",
+            upper,
+        )
     )
 
 
-def is_star(text):
+def star_text(text):
+
     upper = text.upper()
 
     return bool(
@@ -369,7 +463,8 @@ def is_star(text):
     )
 
 
-def is_sid(text):
+def sid_text(text):
+
     upper = text.upper()
 
     return bool(
@@ -384,10 +479,11 @@ def is_sid(text):
     )
 
 
-def is_approach_text(text):
+def approach_text(text):
+
     upper = text.upper()
 
-    strong_patterns = [
+    signals = [
         r"\bILS\b",
         r"\bLOC\b",
         r"\bVOR\b",
@@ -403,86 +499,43 @@ def is_approach_text(text):
 
     score = 0
 
-    for pattern in strong_patterns:
-        if re.search(pattern, upper):
+    for pattern in signals:
+
+        if re.search(
+            pattern,
+            upper,
+        ):
             score += 1
 
     return score >= 2
 
 
-def is_other_chart(text, chart_number):
-    upper = text.upper()
-
-    if chart_number:
-        if re.fullmatch(
-            r"10-1[A-Z0-9]*",
-            chart_number,
-        ):
-            return True
-
-    # Radar minimum altitude charts are Other.
-    if (
-        "RADAR.MINIMUM.ALTITUDES" in upper
-        or "RADAR MINIMUM ALTITUDES" in upper
-        or "MINIMUM ALTITUDES" in upper
-    ):
-        return True
-
-    # En-route / terminal reference style material.
-    other_patterns = [
-        r"\bTHR\b",
-        r"\bTERMINAL\b",
-        r"\bRADAR\b",
-    ]
-
-    if chart_number.startswith("10-1"):
-        return True
-
-    return False
-
-
 # ============================================================
-# Category classification
+# CLASSIFIER
 # ============================================================
 
-def classify_page(
+def classify(
     text,
-    airport="",
-    chart_number="",
+    chart_number,
     previous_category="",
 ):
-    """
-    V16 priority order.
-
-    1. Airport Information
-    2. Explicit chart number
-    3. Explicit STAR
-    4. Explicit SID
-    5. Approach text
-    6. Airport text
-    7. Other
-    8. Previous/base category
-    """
 
     upper = text.upper()
 
     # --------------------------------------------------------
-    # 1. Airport Information MUST come first.
-    #
-    # This prevents generic words such as ILS/VOR/RWY appearing
-    # in airport information pages from turning them into
-    # Approach.
+    # 1. Airport Information
     # --------------------------------------------------------
 
-    if is_airport_information(upper):
+    if airport_information(upper):
         return "Airport"
 
     # --------------------------------------------------------
-    # 2. Explicit Jeppesen chart number
+    # 2. Explicit chart number
     # --------------------------------------------------------
 
     if chart_number:
-        cn = chart_number.upper().strip()
+
+        cn = chart_number.upper()
 
         # 10-9 = Airport
         if re.fullmatch(
@@ -512,7 +565,7 @@ def classify_page(
         ):
             return "Other"
 
-        # Approach chart series
+        # Approach
         if re.fullmatch(
             r"(?:11|13|14|15|16|17)-[A-Z0-9]*",
             cn,
@@ -520,138 +573,125 @@ def classify_page(
             return "Approach"
 
     # --------------------------------------------------------
-    # 3. Strong STAR signal
+    # 3. Explicit STAR
     # --------------------------------------------------------
 
-    if is_star(upper):
+    if star_text(upper):
         return "STAR"
 
     # --------------------------------------------------------
-    # 4. Strong SID signal
+    # 4. Explicit SID
     # --------------------------------------------------------
 
-    if is_sid(upper):
+    if sid_text(upper):
         return "SID"
 
     # --------------------------------------------------------
-    # 5. Airport chart signal
-    #
-    # This is intentionally before generic approach terms.
+    # 5. Airport chart
     # --------------------------------------------------------
 
-    if is_airport_chart(upper):
+    if airport_chart(upper):
         return "Airport"
 
     # --------------------------------------------------------
-    # 6. Approach textual fallback
-    #
-    # Important for airports/pages where chart number OCR is
-    # missing or damaged.
+    # 6. Approach fallback
     # --------------------------------------------------------
 
-    if is_approach_text(upper):
+    if approach_text(upper):
         return "Approach"
 
     # --------------------------------------------------------
-    # 7. Other
-    # --------------------------------------------------------
-
-    if is_other_chart(upper, chart_number):
-        return "Other"
-
-    # --------------------------------------------------------
-    # 8. Preserve previous/base classifier if available.
+    # 7. Preserve previous classification
     # --------------------------------------------------------
 
     if previous_category in CATEGORIES:
         return previous_category
 
     # --------------------------------------------------------
-    # 9. Final fallback
+    # 8. Final fallback
     # --------------------------------------------------------
 
     return "Other"
 
 
 # ============================================================
-# Normalize input records
+# PROCESS ONE RECORD
 # ============================================================
 
-def extract_records(data):
-    """
-    Accept several possible V12 JSON structures.
+def process(record):
 
-    Returns:
-        list of dictionaries
-    """
+    # Safety:
+    # never allow a list to reach .get()
+    if not isinstance(record, dict):
+        return None
 
-    if isinstance(data, list):
-        return data
-
-    if isinstance(data, dict):
-
-        # Common keys
-        for key in (
-            "pages",
-            "charts",
-            "items",
-            "records",
-            "index",
-            "data",
-        ):
-            value = data.get(key)
-
-            if isinstance(value, list):
-                return value
-
-        # Page-keyed dictionary:
-        # {
-        #   "27": {...},
-        #   "28": {...}
-        # }
-        numeric_keys = []
-
-        for key, value in data.items():
-            if str(key).isdigit() and isinstance(value, dict):
-                numeric_keys.append(
-                    (int(key), value)
-                )
-
-        if numeric_keys:
-            numeric_keys.sort(
-                key=lambda x: x[0]
-            )
-
-            records = []
-
-            for page, value in numeric_keys:
-                item = dict(value)
-                item.setdefault(
-                    "page",
-                    page,
-                )
-                records.append(item)
-
-            return records
-
-    raise ValueError(
-        "Unsupported charts-index-v12.json structure"
+    text = first_value(
+        record,
+        [
+            "text",
+            "raw_text",
+            "page_text",
+            "content",
+            "raw",
+        ],
     )
 
+    text = text_value(text)
 
-# ============================================================
-# Convert one record
-# ============================================================
+    existing_airport = first_value(
+        record,
+        [
+            "airport",
+            "icao",
+            "airport_icao",
+        ],
+    )
 
-def process_record(record):
-    item = dict(record)
+    existing_category = first_value(
+        record,
+        [
+            "category",
+            "type",
+        ],
+    )
+
+    existing_chart_number = first_value(
+        record,
+        [
+            "chart_number",
+            "chartNumber",
+            "chart_no",
+            "number",
+        ],
+    )
+
+    # --------------------------------------------------------
+    # IMPORTANT:
+    # preserve V12 name
+    # --------------------------------------------------------
+
+    name = first_value(
+        record,
+        [
+            "name",
+            "title",
+            "chart_name",
+        ],
+    )
+
+    name = text_value(
+        name
+    ).strip()
+
+    if not name:
+        name = "Chart"
 
     # --------------------------------------------------------
     # Page
     # --------------------------------------------------------
 
-    page = first_nonempty(
-        item,
+    page = first_value(
+        record,
         [
             "page",
             "page_number",
@@ -663,58 +703,10 @@ def process_record(record):
     try:
         page = int(page)
     except Exception:
-        page = 0
+        return None
 
     # --------------------------------------------------------
-    # Text
-    # --------------------------------------------------------
-
-    text = first_nonempty(
-        item,
-        [
-            "text",
-            "raw_text",
-            "page_text",
-            "content",
-            "raw",
-        ],
-    )
-
-    text = normalize_text(text)
-
-    # --------------------------------------------------------
-    # Existing values
-    # --------------------------------------------------------
-
-    existing_airport = first_nonempty(
-        item,
-        [
-            "airport",
-            "icao",
-            "airport_icao",
-        ],
-    )
-
-    existing_category = first_nonempty(
-        item,
-        [
-            "category",
-            "type",
-        ],
-    )
-
-    existing_chart_number = first_nonempty(
-        item,
-        [
-            "chart_number",
-            "chartNumber",
-            "chart_no",
-            "number",
-        ],
-    )
-
-    # --------------------------------------------------------
-    # Detect airport
+    # Detect
     # --------------------------------------------------------
 
     airport = detect_airport(
@@ -722,138 +714,72 @@ def process_record(record):
         existing_airport,
     )
 
-    # --------------------------------------------------------
-    # Detect country
-    # --------------------------------------------------------
-
-    country = detect_country(airport)
-
-    # --------------------------------------------------------
-    # Detect chart number
-    # --------------------------------------------------------
+    country = detect_country(
+        airport
+    )
 
     chart_number = detect_chart_number(
         text,
         existing_chart_number,
     )
 
-    # --------------------------------------------------------
-    # Preserve V12 name.
-    #
-    # DO NOT replace a good V12 name with raw header text.
-    # --------------------------------------------------------
-
-    name = first_nonempty(
-        item,
-        [
-            "name",
-            "title",
-            "chart_name",
-        ],
-    )
-
-    name = normalize_text(name).strip()
-
-    if not name:
-        name = "Chart"
-
-    # --------------------------------------------------------
-    # Classify
-    # --------------------------------------------------------
-
-    category = classify_page(
-        text=text,
-        airport=airport,
-        chart_number=chart_number,
-        previous_category=existing_category,
+    category = classify(
+        text,
+        chart_number,
+        existing_category,
     )
 
     # --------------------------------------------------------
-    # Write normalized V16 fields.
+    # Copy original record
     # --------------------------------------------------------
 
-    item["page"] = page
-    item["airport"] = airport
-    item["country"] = country
-    item["chart_number"] = chart_number
-    item["category"] = category
-    item["name"] = name
+    output = dict(record)
 
-    return item
+    output["page"] = page
+    output["airport"] = airport
+    output["country"] = country
+    output["chart_number"] = chart_number
+    output["category"] = category
+    output["name"] = name
 
-
-# ============================================================
-# Sort records
-# ============================================================
-
-def sort_records(records):
-    return sorted(
-        records,
-        key=lambda x: (
-            int(x.get("page", 0))
-            if str(x.get("page", "")).isdigit()
-            else 0
-        ),
-    )
+    return output
 
 
 # ============================================================
-# Build app index
+# BUILD APP JSON
 # ============================================================
 
-def build_app_index(records):
-    app = []
+def build_app(records):
+
+    result = []
 
     for item in records:
-        page = item.get("page", 0)
 
-        airport = item.get(
-            "airport",
-            "",
-        )
-
-        category = item.get(
-            "category",
-            "Other",
-        )
-
-        name = item.get(
-            "name",
-            "Chart",
-        )
-
-        chart_number = item.get(
-            "chart_number",
-            "",
-        )
-
-        country = item.get(
-            "country",
-            "",
-        )
-
-        app.append(
+        result.append(
             {
-                "page": page,
-                "airport": airport,
-                "country": country,
-                "category": category,
-                "chart_number": chart_number,
-                "name": name,
+                "page": item["page"],
+                "airport": item["airport"],
+                "country": item["country"],
+                "category": item["category"],
+                "chart_number": item[
+                    "chart_number"
+                ],
+                "name": item["name"],
             }
         )
 
-    return app
+    return result
 
 
 # ============================================================
-# Build summary
+# SUMMARY
 # ============================================================
 
 def build_summary(records):
-    category_counts = Counter()
 
-    airport_data = defaultdict(
+    counts = Counter()
+
+    airports = defaultdict(
         lambda: {
             "country": "",
             "Airport": 0,
@@ -865,6 +791,7 @@ def build_summary(records):
     )
 
     for item in records:
+
         category = item.get(
             "category",
             "Other",
@@ -883,206 +810,427 @@ def build_summary(records):
         if category not in CATEGORIES:
             category = "Other"
 
-        category_counts[category] += 1
+        counts[category] += 1
 
         if airport:
-            if not airport_data[airport]["country"]:
-                airport_data[airport]["country"] = country
 
-            airport_data[airport][category] += 1
+            if not airports[airport][
+                "country"
+            ]:
+                airports[airport][
+                    "country"
+                ] = country
 
-    # Ensure all categories exist
-    final_category_counts = {
-        "Airport": category_counts.get(
-            "Airport",
-            0,
-        ),
-        "STAR": category_counts.get(
-            "STAR",
-            0,
-        ),
-        "SID": category_counts.get(
-            "SID",
-            0,
-        ),
-        "Approach": category_counts.get(
-            "Approach",
-            0,
-        ),
-        "Other": category_counts.get(
-            "Other",
-            0,
-        ),
-    }
-
-    airports = {}
-
-    for airport in sorted(airport_data):
-        airports[airport] = airport_data[
-            airport
-        ]
+            airports[airport][
+                category
+            ] += 1
 
     return {
         "source": "Iran2620.pdf",
         "pages": len(records),
-        "category_counts": final_category_counts,
+        "category_counts": {
+            "Airport": counts["Airport"],
+            "STAR": counts["STAR"],
+            "SID": counts["SID"],
+            "Approach": counts["Approach"],
+            "Other": counts["Other"],
+        },
         "airport_count": len(airports),
-        "airports": airports,
+        "airports": {
+            key: airports[key]
+            for key in sorted(airports)
+        },
     }
 
 
 # ============================================================
-# Validation
+# VERIFIED BLOCKS
+# ============================================================
+
+VERIFIED = {
+
+    "OIAW": [
+        (27, 28, "Airport"),
+        (29, 31, "STAR"),
+        (32, 37, "SID"),
+        (38, 40, "Airport"),
+        (41, 51, "Approach"),
+    ],
+
+    "OIII": [
+        (268, 269, "Airport"),
+        (270, 282, "Other"),
+        (283, 293, "STAR"),
+        (294, 303, "SID"),
+        (304, 308, "Airport"),
+        (309, 314, "Approach"),
+    ],
+
+    "OIMM": [
+        (361, 362, "Airport"),
+        (363, 365, "Other"),
+        (366, 376, "STAR"),
+        (377, 389, "SID"),
+        (390, 393, "Airport"),
+        (394, 403, "Approach"),
+    ],
+
+    "OIZC": [
+        (587, 588, "Airport"),
+        (589, 590, "STAR"),
+        (591, 593, "SID"),
+        (594, 596, "Airport"),
+        (597, 601, "Approach"),
+    ],
+}
+
+
+# ============================================================
+# VALIDATION
 # ============================================================
 
 def validate(records, summary):
+
     errors = []
 
-    # --------------------------------------------------------
-    # Page count
-    # --------------------------------------------------------
-
+    # 991 pages
     if len(records) != 991:
         errors.append(
-            f"Expected 991 pages, found {len(records)}"
+            f"Expected 991 pages, got {len(records)}"
         )
 
-    # --------------------------------------------------------
     # Category total
-    # --------------------------------------------------------
-
-    counts = summary["category_counts"]
-
-    total = sum(counts.values())
+    total = sum(
+        summary["category_counts"].values()
+    )
 
     if total != len(records):
         errors.append(
-            f"Category total {total} != "
-            f"record total {len(records)}"
+            f"Category total {total} "
+            f"!= {len(records)}"
         )
 
-    # --------------------------------------------------------
-    # Airport count
-    # --------------------------------------------------------
-
+    # 36 airports
     if summary["airport_count"] != 36:
         errors.append(
-            "Expected 36 airports, found "
-            f"{summary['airport_count']}"
+            f"Expected 36 airports, "
+            f"got {summary['airport_count']}"
         )
 
-    # --------------------------------------------------------
-    # Check airport names
-    # --------------------------------------------------------
-
-    found_airports = set(
-        item.get("airport", "")
-        for item in records
-        if item.get("airport")
-    )
-
-    missing_airports = sorted(
-        KNOWN_AIRPORTS - found_airports
-    )
-
-    if missing_airports:
-        errors.append(
-            "Missing airports: "
-            + ", ".join(missing_airports)
-        )
-
-    # --------------------------------------------------------
-    # Known verified blocks
-    # --------------------------------------------------------
-
-    VERIFIED = {
-        "OIAW": [
-            (27, 28, "Airport"),
-            (29, 31, "STAR"),
-            (32, 37, "SID"),
-            (38, 40, "Airport"),
-            (41, 51, "Approach"),
-        ],
-
-        "OIII": [
-            (268, 269, "Airport"),
-            (270, 282, "Other"),
-            (283, 293, "STAR"),
-            (294, 303, "SID"),
-            (304, 308, "Airport"),
-            (309, 314, "Approach"),
-        ],
-
-        "OIMM": [
-            (361, 362, "Airport"),
-            (363, 365, "Other"),
-            (366, 376, "STAR"),
-            (377, 389, "SID"),
-            (390, 393, "Airport"),
-            (394, 403, "Approach"),
-        ],
-
-        "OIZC": [
-            (587, 588, "Airport"),
-            (589, 590, "STAR"),
-            (591, 593, "SID"),
-            (594, 596, "Airport"),
-            (597, 601, "Approach"),
-        ],
-    }
-
+    # Page dictionary
     by_page = {
-        int(item["page"]): item
+        item["page"]: item
         for item in records
-        if str(item.get("page", "")).isdigit()
     }
 
+    # Verified blocks
     for airport, blocks in VERIFIED.items():
 
         for start, end, expected in blocks:
 
-            for page in range(start, end + 1):
+            for page in range(
+                start,
+                end + 1,
+            ):
 
                 item = by_page.get(page)
 
-                if not item:
+                if item is None:
+
                     errors.append(
                         f"{airport} page {page}: "
                         "missing"
                     )
+
                     continue
 
-                actual_airport = item.get(
+                if item.get(
                     "airport",
                     "",
-                )
+                ) != airport:
 
-                actual_category = item.get(
-                    "category",
-                    "",
-                )
-
-                if actual_airport != airport:
                     errors.append(
                         f"{airport} page {page}: "
-                        f"airport={actual_airport}"
+                        f"wrong airport "
+                        f"{item.get('airport', '')}"
                     )
 
-                if actual_category != expected:
+                if item.get(
+                    "category",
+                    "",
+                ) != expected:
+
                     errors.append(
                         f"{airport} page {page}: "
                         f"expected {expected}, "
-                        f"got {actual_category}"
+                        f"got {item.get('category', '')}"
                     )
 
     return errors
 
 
 # ============================================================
-# Print summary
+# SAMPLE PRINTER
 # ============================================================
 
-def print_summary(summary):
+def print_block(
+    records,
+    airport,
+    start,
+    end,
+):
+
+    print()
+    print(
+        f"----- {airport} "
+        f"{start}-{end} -----"
+    )
+
+    for item in records:
+
+        # IMPORTANT:
+        # item is guaranteed to be a dict here.
+        if not isinstance(
+            item,
+            dict,
+        ):
+            continue
+
+        page = item.get(
+            "page",
+            0,
+        )
+
+        if page < start or page > end:
+            continue
+
+        print(
+            f"Page {page}: "
+            f"{item.get('category', '')} | "
+            f"{item.get('chart_number', '')} | "
+            f"{item.get('airport', '')} | "
+            f"{item.get('name', '')}"
+        )
+
+
+def print_samples(records):
+
+    print()
+    print("=" * 40)
+    print("V16 SAMPLE PAGES")
+    print("=" * 40)
+
+    print_block(
+        records,
+        "OIAW",
+        27,
+        51,
+    )
+
+    print_block(
+        records,
+        "OIII",
+        268,
+        314,
+    )
+
+    print_block(
+        records,
+        "OIMM",
+        361,
+        403,
+    )
+
+    print_block(
+        records,
+        "OIZC",
+        587,
+        601,
+    )
+
+
+# ============================================================
+# OICC
+# ============================================================
+
+def print_oicc(records):
+
+    print()
+    print("=" * 40)
+    print("OICC SAMPLE")
+    print("=" * 40)
+
+    found = False
+
+    for item in records:
+
+        if not isinstance(
+            item,
+            dict,
+        ):
+            continue
+
+        if item.get(
+            "airport",
+            "",
+        ) != "OICC":
+            continue
+
+        found = True
+
+        print(
+            f"Page {item.get('page', '')}: "
+            f"{item.get('category', '')} | "
+            f"{item.get('chart_number', '')} | "
+            f"{item.get('airport', '')} | "
+            f"{item.get('name', '')}"
+        )
+
+    if not found:
+        print(
+            "WARNING: No OICC pages detected."
+        )
+
+
+# ============================================================
+# MAIN
+# ============================================================
+
+def main():
+
+    print()
+    print("=" * 40)
+    print("JeppIran V16.1")
+    print("=" * 40)
+    print()
+
+    print(
+        f"Reading: {INPUT}"
+    )
+
+    raw_records = load_input()
+
+    print(
+        f"Raw page records: "
+        f"{len(raw_records)}"
+    )
+
+    # --------------------------------------------------------
+    # Process
+    # --------------------------------------------------------
+
+    records = []
+
+    for raw in raw_records:
+
+        item = process(raw)
+
+        if item is not None:
+            records.append(item)
+
+    records.sort(
+        key=lambda x: x["page"]
+    )
+
+    print(
+        f"Processed pages: "
+        f"{len(records)}"
+    )
+
+    # --------------------------------------------------------
+    # Build
+    # --------------------------------------------------------
+
+    app = build_app(
+        records
+    )
+
+    summary = build_summary(
+        records
+    )
+
+    # --------------------------------------------------------
+    # Validation
+    # --------------------------------------------------------
+
+    errors = validate(
+        records,
+        summary,
+    )
+
+    print()
+
+    print("=" * 40)
+    print("V16 VALIDATION")
+    print("=" * 40)
+
+    if errors:
+
+        print()
+
+        for error in errors:
+            print(
+                "ERROR:",
+                error,
+            )
+
+        print()
+        print(
+            f"Validation errors: "
+            f"{len(errors)}"
+        )
+
+    else:
+
+        print()
+        print(
+            "ALL VALIDATED BLOCKS PASSED"
+        )
+
+    # --------------------------------------------------------
+    # Save
+    # --------------------------------------------------------
+
+    with OUTPUT_INDEX.open(
+        "w",
+        encoding="utf-8",
+    ) as f:
+
+        json.dump(
+            records,
+            f,
+            ensure_ascii=False,
+            indent=2,
+        )
+
+    with OUTPUT_APP.open(
+        "w",
+        encoding="utf-8",
+    ) as f:
+
+        json.dump(
+            app,
+            f,
+            ensure_ascii=False,
+            indent=2,
+        )
+
+    with OUTPUT_SUMMARY.open(
+        "w",
+        encoding="utf-8",
+    ) as f:
+
+        json.dump(
+            summary,
+            f,
+            ensure_ascii=False,
+            indent=2,
+        )
+
+    # --------------------------------------------------------
+    # Summary
+    # --------------------------------------------------------
+
     print()
     print("=" * 40)
     print("V16 SUMMARY")
@@ -1097,234 +1245,24 @@ def print_summary(summary):
         )
     )
 
-    print()
-
-
-# ============================================================
-# Print sample pages
-# ============================================================
-
-def print_samples(records):
-    samples = [
-        ("OIAW", 27, 51),
-        ("OIII", 268, 314),
-        ("OIMM", 361, 403),
-        ("OIZC", 587, 601),
-    ]
-
-    print()
-    print("=" * 40)
-    print("V16 SAMPLE PAGES")
-    print("=" * 40)
-
-    for airport, start, end in samples:
-
-        print()
-        print(
-            f"----- {airport} -----"
-        )
-
-        for item in records:
-
-            page = item.get(
-                "page",
-                0,
-            )
-
-            if not (
-                start <= page <= end
-            ):
-                continue
-
-            print(
-                f"Page {page}: "
-                f"{item.get('category', '')} | "
-                f"{item.get('chart_number', '')} | "
-                f"{item.get('airport', '')} | "
-                f"{item.get('name', '')}"
-            )
-
-
-def print_oicc(records):
-    print()
-    print("=" * 40)
-    print("OICC SAMPLE")
-    print("=" * 40)
-    print()
-
-    found = False
-
-    for item in records:
-
-        if item.get("airport") != "OICC":
-            continue
-
-        found = True
-
-        print(
-            f"Page {item.get('page', '')}: "
-            f"{item.get('category', '')} | "
-            f"{item.get('chart_number', '')} | "
-            f"{item.get('airport', '')} | "
-            f"{item.get('name', '')}"
-        )
-
-    if not found:
-        print("WARNING: No OICC pages detected.")
-
-
-# ============================================================
-# Main
-# ============================================================
-
-def main():
-
-    print()
-    print("=" * 40)
-    print("JeppIran V16 classifier")
-    print("=" * 40)
-    print()
-
-    input_file = find_input_file()
-
-    print(
-        f"Input: {input_file}"
-    )
-
-    data = load_json(
-        input_file
-    )
-
-    records = extract_records(
-        data
-    )
-
-    print(
-        f"Input records: {len(records)}"
-    )
-
     # --------------------------------------------------------
-    # Process
-    # --------------------------------------------------------
-
-    processed = []
-
-    for record in records:
-        processed.append(
-            process_record(record)
-        )
-
-    processed = sort_records(
-        processed
-    )
-
-    # --------------------------------------------------------
-    # Build outputs
-    # --------------------------------------------------------
-
-    app_index = build_app_index(
-        processed
-    )
-
-    summary = build_summary(
-        processed
-    )
-
-    # --------------------------------------------------------
-    # Validate
-    # --------------------------------------------------------
-
-    errors = validate(
-        processed,
-        summary,
-    )
-
-    if errors:
-
-        print()
-        print("=" * 40)
-        print("V16 VALIDATION ERRORS")
-        print("=" * 40)
-        print()
-
-        for error in errors:
-            print(
-                f"ERROR: {error}"
-            )
-
-        print()
-        print(
-            f"Total validation errors: "
-            f"{len(errors)}"
-        )
-
-        # Do not stop the workflow.
-        # Outputs are still generated so they can be inspected.
-
-    else:
-
-        print()
-        print("=" * 40)
-        print("V16 VALIDATION")
-        print("=" * 40)
-        print()
-        print(
-            "ALL VALIDATED BLOCKS PASSED"
-        )
-
-    # --------------------------------------------------------
-    # Save index
-    # --------------------------------------------------------
-
-    save_json(
-        OUTPUT_INDEX,
-        processed,
-    )
-
-    # --------------------------------------------------------
-    # Save app index
-    # --------------------------------------------------------
-
-    save_json(
-        OUTPUT_APP,
-        app_index,
-    )
-
-    # --------------------------------------------------------
-    # Save summary
-    # --------------------------------------------------------
-
-    save_json(
-        OUTPUT_SUMMARY,
-        summary,
-    )
-
-    # --------------------------------------------------------
-    # Print summary
-    # --------------------------------------------------------
-
-    print_summary(
-        summary
-    )
-
-    # --------------------------------------------------------
-    # Print samples
+    # Samples
     # --------------------------------------------------------
 
     print_samples(
-        processed
+        records
     )
 
     # --------------------------------------------------------
-    # IMPORTANT OICC CHECK
+    # OICC
     # --------------------------------------------------------
 
     print_oicc(
-        processed
+        records
     )
 
     # --------------------------------------------------------
-    # Output files
+    # Outputs
     # --------------------------------------------------------
 
     print()
@@ -1349,11 +1287,11 @@ def main():
 
     if errors:
         print(
-            "V16 completed with validation warnings."
+            "V16 finished with validation errors."
         )
     else:
         print(
-            "V16 completed successfully."
+            "V16 finished successfully."
         )
 
 
