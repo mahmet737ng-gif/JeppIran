@@ -1,0 +1,1264 @@
+name: V7 - Analyze JeppIran Charts
+
+on:
+  workflow_dispatch:
+
+jobs:
+  analyze:
+    runs-on: ubuntu-24.04
+
+    steps:
+
+      # ============================================================
+      # 1. Checkout repository with Git LFS
+      # ============================================================
+
+      - name: Checkout repository with LFS
+        uses: actions/checkout@v5
+        with:
+          lfs: true
+
+
+      # ============================================================
+      # 2. Install PDF tools
+      # ============================================================
+
+      - name: Install PDF tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils python3
+
+
+      # ============================================================
+      # 3. Verify PDF
+      # ============================================================
+
+      - name: Verify PDF
+        run: |
+          echo "======================================"
+          echo "VERIFYING PDF"
+          echo "======================================"
+
+          ls -lh Iran2620.pdf
+
+          echo ""
+
+          pdfinfo Iran2620.pdf | head -20
+
+
+      # ============================================================
+      # 4. Extract every PDF page to text
+      # ============================================================
+
+      - name: Extract PDF text
+        shell: bash
+        run: |
+
+          set -e
+
+          mkdir -p pdf_text
+
+          echo "======================================"
+          echo "EXTRACTING PDF TEXT"
+          echo "======================================"
+
+          PAGES=$(pdfinfo Iran2620.pdf | awk '/^Pages:/ {print $2}')
+
+          echo "Total pages: $PAGES"
+
+          echo ""
+
+          for ((PAGE=1; PAGE<=PAGES; PAGE++)); do
+
+            pdftotext \
+              -f "$PAGE" \
+              -l "$PAGE" \
+              -layout \
+              Iran2620.pdf \
+              "pdf_text/page_${PAGE}.txt" \
+              || true
+
+            if (( PAGE % 50 == 0 )); then
+              echo "Processed $PAGE / $PAGES"
+            fi
+
+          done
+
+          echo ""
+          echo "PDF extraction completed."
+
+
+      # ============================================================
+      # 5. Analyze and classify charts
+      # ============================================================
+
+      - name: Classify charts
+        shell: bash
+        run: |
+
+          set -e
+
+          python3 <<'PY'
+
+          import json
+          import re
+          from pathlib import Path
+
+
+          PDF_FILE = "Iran2620.pdf"
+
+
+          # ==========================================================
+          # COUNTRY PREFIXES
+          # ==========================================================
+
+          COUNTRY_PREFIXES = {
+              "OI": "Iran",
+              "OR": "Iraq",
+              "OM": "United Arab Emirates",
+              "OO": "Oman",
+              "LT": "Turkey",
+              "UD": "Armenia",
+              "UG": "Georgia",
+          }
+
+
+          # ==========================================================
+          # KNOWN AIRPORTS
+          # ==========================================================
+
+          KNOWN_AIRPORTS = {
+
+              # Iran
+              "OIAA",
+              "OIAM",
+              "OIAW",
+              "OIBB",
+              "OIBK",
+              "OIBP",
+              "OICC",
+              "OICI",
+              "OIFM",
+              "OIGG",
+              "OIHH",
+              "OIIE",
+              "OIII",
+              "OIIP",
+              "OIKK",
+              "OIMB",
+              "OIMM",
+              "OIMN",
+              "OIMS",
+              "OING",
+              "OINZ",
+              "OISS",
+              "OITL",
+              "OITR",
+              "OITT",
+              "OIYY",
+              "OIZC",
+              "OIZH",
+
+              # United Arab Emirates
+              "OMDB",
+
+              # Oman
+              "OOMS",
+
+              # Iraq
+              "ORBI",
+              "ORNI",
+
+              # Armenia
+              "UDYZ",
+
+              # Georgia
+              "UGSB",
+              "UGTB",
+
+              # Turkey
+              "LTFM",
+          }
+
+
+          # ==========================================================
+          # FALSE ICAO CANDIDATES
+          # ==========================================================
+
+          FALSE_ICAO = {
+              "OVER",
+              "LEFT",
+              "LONG",
+              "UNIT",
+              "LLWS",
+              "USED",
+              "MUST",
+              "LOST",
+              "LOSS",
+              "TURN",
+              "TAKE",
+              "AREA",
+              "ACFT",
+              "ELEV",
+              "RWYS",
+              "MAKE",
+              "OMAN",
+              "IRAN",
+              "IRAQ",
+              "ATIS",
+              "EOBT",
+              "PAPI",
+              "RCLM",
+              "ICAO",
+              "JEPP",
+              "ONLY",
+              "ONTO",
+              "OPIS",
+          }
+
+
+          # ==========================================================
+          # TEXT NORMALIZATION
+          # ==========================================================
+
+          def normalize(text):
+
+              text = text.replace("\x00", " ")
+
+              text = text.upper()
+
+              text = re.sub(
+                  r"[ \t]+",
+                  " ",
+                  text
+              )
+
+              return text
+
+
+          # ==========================================================
+          # FIND AIRPORT ICAO
+          # ==========================================================
+
+          def find_airport(text):
+
+              upper = normalize(text)
+
+
+              # ------------------------------------------------------
+              # Preferred Jeppesen style:
+              #
+              # OIAW / AHW
+              # OMDB / DXB
+              # LTFM / IST
+              # ------------------------------------------------------
+
+              matches = re.findall(
+                  r"\b((?:OI|OR|OM|OO|LT|UD|UG)[A-Z]{2})\s*/\s*[A-Z]{3}\b",
+                  upper
+              )
+
+              for code in matches:
+
+                  if code in KNOWN_AIRPORTS:
+                      return code
+
+
+              # ------------------------------------------------------
+              # Known airport code anywhere on the page
+              # ------------------------------------------------------
+
+              for code in KNOWN_AIRPORTS:
+
+                  if re.search(
+                      rf"\b{code}\b",
+                      upper
+                  ):
+                      return code
+
+
+              # ------------------------------------------------------
+              # Generic ICAO code using only approved prefixes
+              # ------------------------------------------------------
+
+              matches = re.findall(
+                  r"\b((?:OI|OR|OM|OO|LT|UD|UG)[A-Z]{2})\b",
+                  upper
+              )
+
+              for code in matches:
+
+                  if code not in FALSE_ICAO:
+                      return code
+
+
+              return None
+
+
+          # ==========================================================
+          # CATEGORY SCORING
+          # ==========================================================
+
+          def category_scores(text):
+
+              upper = normalize(text)
+
+
+              scores = {
+                  "Airport": 0,
+                  "STAR": 0,
+                  "SID": 0,
+                  "Approach": 0,
+                  "Other": 0,
+              }
+
+
+              # ======================================================
+              # STAR
+              # ======================================================
+
+              if re.search(
+                  r"\.STAR\.",
+                  upper
+              ):
+                  scores["STAR"] += 200
+
+
+              for pattern, value in [
+
+                  (
+                      r"\bSTAR\b",
+                      100
+                  ),
+
+                  (
+                      r"STANDARD\s+ARRIVAL",
+                      100
+                  ),
+
+                  (
+                      r"ARRIVAL\s+ROUTE",
+                      70
+                  ),
+
+                  (
+                      r"ARRIVAL\s+PROCEDURE",
+                      60
+                  ),
+
+              ]:
+
+                  if re.search(
+                      pattern,
+                      upper
+                  ):
+                      scores["STAR"] += value
+
+
+              # ======================================================
+              # SID
+              # ======================================================
+
+              if re.search(
+                  r"\.SID\.",
+                  upper
+              ):
+                  scores["SID"] += 200
+
+
+              for pattern, value in [
+
+                  (
+                      r"\bSID\b",
+                      100
+                  ),
+
+                  (
+                      r"STANDARD\s+INSTRUMENT\s+DEPARTURE",
+                      120
+                  ),
+
+                  (
+                      r"DEPARTURE\s+ROUTE",
+                      70
+                  ),
+
+                  (
+                      r"DEPARTURE\s+PROCEDURE",
+                      60
+                  ),
+
+              ]:
+
+                  if re.search(
+                      pattern,
+                      upper
+                  ):
+                      scores["SID"] += value
+
+
+              # ======================================================
+              # AIRPORT
+              # ======================================================
+
+              for pattern, value in [
+
+                  (
+                      r"\bAIRPORT\s+INFORMATION\b",
+                      150
+                  ),
+
+                  (
+                      r"\bAERODROME\s+INFORMATION\b",
+                      150
+                  ),
+
+                  (
+                      r"\bAIRPORT\s+CHART\b",
+                      140
+                  ),
+
+                  (
+                      r"\bAERODROME\s+CHART\b",
+                      140
+                  ),
+
+                  (
+                      r"\bAIRPORT\s+PLAN\b",
+                      110
+                  ),
+
+                  (
+                      r"\bAD\s+INFO\b",
+                      100
+                  ),
+
+                  (
+                      r"\bGROUND\s+MOVEMENT\b",
+                      80
+                  ),
+
+                  (
+                      r"\bAPRON\b",
+                      35
+                  ),
+
+                  (
+                      r"\bTAXIWAY\b",
+                      35
+                  ),
+
+                  (
+                      r"\bRUNWAY\b",
+                      15
+                  ),
+
+              ]:
+
+                  if re.search(
+                      pattern,
+                      upper
+                  ):
+                      scores["Airport"] += value
+
+
+              # ======================================================
+              # APPROACH
+              # ======================================================
+
+              for pattern, value in [
+
+                  (
+                      r"\bINSTRUMENT\s+APPROACH\b",
+                      160
+                  ),
+
+                  (
+                      r"\bACFT\s+EXECUTING\s+INSTRUMENTAL\b",
+                      160
+                  ),
+
+                  (
+                      r"\bMISSED\s+APPROACH\b",
+                      110
+                  ),
+
+                  (
+                      r"\bAPPROACH\b",
+                      90
+                  ),
+
+                  (
+                      r"\bILS\b",
+                      45
+                  ),
+
+                  (
+                      r"\bLOC\b",
+                      35
+                  ),
+
+                  (
+                      r"\bRNAV\b",
+                      35
+                  ),
+
+                  (
+                      r"\bRNP\b",
+                      35
+                  ),
+
+                  (
+                      r"\bVOR\b",
+                      30
+                  ),
+
+                  (
+                      r"\bNDB\b",
+                      30
+                  ),
+
+                  (
+                      r"\bTACAN\b",
+                      30
+                  ),
+
+                  (
+                      r"\bDA/H\b",
+                      30
+                  ),
+
+                  (
+                      r"\bMDA/H\b",
+                      30
+                  ),
+
+              ]:
+
+                  if re.search(
+                      pattern,
+                      upper
+                  ):
+                      scores["Approach"] += value
+
+
+              # ======================================================
+              # OTHER
+              # ======================================================
+
+              for pattern, value in [
+
+                  (
+                      r"\bTABLE\s+OF\s+CONTENTS\b",
+                      100
+                  ),
+
+                  (
+                      r"\bREVISION\b",
+                      80
+                  ),
+
+                  (
+                      r"\bREVISION\s+NOTICE\b",
+                      100
+                  ),
+
+                  (
+                      r"\bCHANGE\s+NOTICE\b",
+                      100
+                  ),
+
+                  (
+                      r"\bTERMINAL\s+CHART\s+DATA\s+CYCLE\b",
+                      60
+                  ),
+
+                  (
+                      r"\bPRINTED\s+FROM\s+JEPPVIEW\b",
+                      60
+                  ),
+
+              ]:
+
+                  if re.search(
+                      pattern,
+                      upper
+                  ):
+                      scores["Other"] += value
+
+
+              return scores
+
+
+          # ==========================================================
+          # FINAL CATEGORY DECISION
+          # ==========================================================
+
+          def choose_category(
+              text,
+              scores,
+              page,
+              airport
+          ):
+
+              upper = normalize(text)
+
+
+              # ======================================================
+              # VERIFIED OIZC CORRECTION
+              #
+              # Pages 594-596 = Airport
+              # Pages 597-601 = Approach
+              #
+              # SID / STAR are NOT affected.
+              # ======================================================
+
+              if airport == "OIZC":
+
+                  if 594 <= page <= 596:
+                      return "Airport"
+
+                  if 597 <= page <= 601:
+                      return "Approach"
+
+
+              # ======================================================
+              # EXPLICIT STAR
+              # ======================================================
+
+              if ".STAR." in upper:
+                  return "STAR"
+
+
+              # ======================================================
+              # EXPLICIT SID
+              # ======================================================
+
+              if ".SID." in upper:
+                  return "SID"
+
+
+              # ======================================================
+              # JEPPESEN AIRPORT CHART FAMILY
+              #
+              # 10-9 = Airport
+              # ======================================================
+
+              if re.search(
+                  r"\b10\s*-\s*9[A-Z0-9]*\b",
+                  upper
+              ):
+                  return "Airport"
+
+
+              # ======================================================
+              # JEPPESEN APPROACH CHART FAMILY
+              #
+              # 11-... = Approach
+              # ======================================================
+
+              if re.search(
+                  r"\b11\s*-\s*[0-9A-Z]+\b",
+                  upper
+              ):
+                  return "Approach"
+
+
+              # ======================================================
+              # STRONG AIRPORT IDENTIFIERS
+              # ======================================================
+
+              if (
+                  "AIRPORT INFORMATION" in upper
+                  or
+                  "AERODROME INFORMATION" in upper
+                  or
+                  "AIRPORT CHART" in upper
+                  or
+                  "AERODROME CHART" in upper
+              ):
+                  return "Airport"
+
+
+              # ======================================================
+              # STRONG APPROACH IDENTIFIERS
+              # ======================================================
+
+              if (
+                  "INSTRUMENT APPROACH" in upper
+                  or
+                  "ACFT EXECUTING INSTRUMENTAL APPROACH" in upper
+                  or
+                  "MISSED APPROACH" in upper
+              ):
+                  return "Approach"
+
+
+              # ======================================================
+              # SCORE-BASED DECISION
+              # ======================================================
+
+              chart_scores = {
+
+                  "Airport":
+                      scores["Airport"],
+
+                  "STAR":
+                      scores["STAR"],
+
+                  "SID":
+                      scores["SID"],
+
+                  "Approach":
+                      scores["Approach"],
+              }
+
+
+              ranked = sorted(
+                  chart_scores.items(),
+                  key=lambda item: item[1],
+                  reverse=True
+              )
+
+
+              best_category = ranked[0][0]
+
+              best_score = ranked[0][1]
+
+              second_score = ranked[1][1]
+
+
+              # ------------------------------------------------------
+              # Strong confidence
+              # ------------------------------------------------------
+
+              if best_score >= 60:
+
+                  if (
+                      best_score - second_score >= 20
+                      or
+                      best_score >= 100
+                  ):
+                      return best_category
+
+
+              # ------------------------------------------------------
+              # Other only after chart categories
+              # ------------------------------------------------------
+
+              if scores["Other"] >= 60:
+                  return "Other"
+
+
+              # ------------------------------------------------------
+              # Moderate confidence
+              # ------------------------------------------------------
+
+              if best_score >= 40:
+                  return best_category
+
+
+              # ------------------------------------------------------
+              # Nothing reliable
+              # ------------------------------------------------------
+
+              return "Unknown"
+
+
+          # ==========================================================
+          # MAIN ANALYSIS
+          # ==========================================================
+
+          pages_dir = Path(
+              "pdf_text"
+          )
+
+
+          charts_index = []
+
+
+          airport_database = {}
+
+
+          summary = {
+
+              "source": PDF_FILE,
+
+              "pages": 0,
+
+              "category_counts": {
+
+                  "Airport": 0,
+                  "STAR": 0,
+                  "SID": 0,
+                  "Approach": 0,
+                  "Other": 0,
+              },
+
+              "airport_count": 0,
+
+              "unknown_page_count": 0,
+
+              "other_page_count": 0,
+
+              "airports": {},
+          }
+
+
+          # ==========================================================
+          # GET PAGE FILES
+          # ==========================================================
+
+          page_files = sorted(
+
+              pages_dir.glob(
+                  "page_*.txt"
+              ),
+
+              key=lambda p:
+                  int(
+                      p.stem.split("_")[1]
+                  )
+          )
+
+
+          summary["pages"] = len(
+              page_files
+          )
+
+
+          print()
+          print("======================================")
+          print("STARTING CLASSIFICATION")
+          print("======================================")
+          print()
+
+
+          # ==========================================================
+          # PROCESS EVERY PAGE
+          # ==========================================================
+
+          for file_path in page_files:
+
+              page = int(
+                  file_path.stem.split("_")[1]
+              )
+
+
+              try:
+
+                  text = file_path.read_text(
+                      errors="ignore"
+                  )
+
+              except Exception:
+
+                  text = ""
+
+
+              upper = normalize(
+                  text
+              )
+
+
+              airport = find_airport(
+                  upper
+              )
+
+
+              scores = category_scores(
+                  upper
+              )
+
+
+              category = choose_category(
+
+                  upper,
+
+                  scores,
+
+                  page,
+
+                  airport
+              )
+
+
+              entry = {
+
+                  "page": page,
+
+                  "airport": airport,
+
+                  "category": category,
+
+                  "scores": scores,
+              }
+
+
+              charts_index.append(
+                  entry
+              )
+
+
+              # ------------------------------------------------------
+              # Update global category counts
+              # ------------------------------------------------------
+
+              if category in summary["category_counts"]:
+
+                  summary["category_counts"][
+                      category
+                  ] += 1
+
+
+              if category == "Unknown":
+
+                  summary[
+                      "unknown_page_count"
+                  ] += 1
+
+
+              if category == "Other":
+
+                  summary[
+                      "other_page_count"
+                  ] += 1
+
+
+              # ------------------------------------------------------
+              # Build airport database
+              # ------------------------------------------------------
+
+              if airport:
+
+                  if airport not in airport_database:
+
+                      country = "Unknown"
+
+
+                      for prefix, name in COUNTRY_PREFIXES.items():
+
+                          if airport.startswith(
+                              prefix
+                          ):
+
+                              country = name
+
+                              break
+
+
+                      airport_database[airport] = {
+
+                          "country":
+                              country,
+
+                          "charts": {
+
+                              "Airport": [],
+                              "STAR": [],
+                              "SID": [],
+                              "Approach": [],
+                              "Other": [],
+                          }
+                      }
+
+
+                  if (
+                      category
+                      in
+                      airport_database[airport]["charts"]
+                  ):
+
+                      airport_database[airport][
+                          "charts"
+                      ][category].append({
+
+                          "page": page
+
+                      })
+
+
+              # ------------------------------------------------------
+              # Progress
+              # ------------------------------------------------------
+
+              if page % 50 == 0:
+
+                  print(
+                      f"Classified {page} / {summary['pages']}"
+                  )
+
+
+          # ==========================================================
+          # AIRPORT COUNT
+          # ==========================================================
+
+          summary["airport_count"] = len(
+              airport_database
+          )
+
+
+          # ==========================================================
+          # BUILD AIRPORT SUMMARY
+          # ==========================================================
+
+          for airport, data in sorted(
+              airport_database.items()
+          ):
+
+              summary["airports"][airport] = {
+
+                  "country":
+                      data["country"],
+
+                  "Airport":
+                      len(
+                          data["charts"]["Airport"]
+                      ),
+
+                  "STAR":
+                      len(
+                          data["charts"]["STAR"]
+                      ),
+
+                  "SID":
+                      len(
+                          data["charts"]["SID"]
+                      ),
+
+                  "Approach":
+                      len(
+                          data["charts"]["Approach"]
+                      ),
+
+                  "Unknown":
+                      0,
+
+                  "Other":
+                      len(
+                          data["charts"]["Other"]
+                      ),
+              }
+
+
+          # ==========================================================
+          # WRITE FULL PAGE INDEX
+          # ==========================================================
+
+          with open(
+              "charts-index-v7.json",
+              "w",
+              encoding="utf-8"
+          ) as f:
+
+              json.dump(
+
+                  charts_index,
+
+                  f,
+
+                  ensure_ascii=False,
+
+                  indent=2
+              )
+
+
+          # ==========================================================
+          # WRITE SUMMARY
+          # ==========================================================
+
+          with open(
+              "charts-summary-v7.json",
+              "w",
+              encoding="utf-8"
+          ) as f:
+
+              json.dump(
+
+                  summary,
+
+                  f,
+
+                  ensure_ascii=False,
+
+                  indent=2
+              )
+
+
+          # ==========================================================
+          # BUILD APP DATABASE
+          # ==========================================================
+
+          charts_app = {}
+
+
+          for airport, data in sorted(
+              airport_database.items()
+          ):
+
+              charts_app[airport] = {
+
+                  "country":
+                      data["country"],
+
+                  "charts": {
+
+                      category: [
+
+                          item["page"]
+
+                          for item in items
+
+                      ]
+
+                      for category, items
+
+                      in data["charts"].items()
+
+                  }
+              }
+
+
+          # ==========================================================
+          # WRITE APP DATABASE
+          # ==========================================================
+
+          with open(
+              "charts-app-v7.json",
+              "w",
+              encoding="utf-8"
+          ) as f:
+
+              json.dump(
+
+                  charts_app,
+
+                  f,
+
+                  ensure_ascii=False,
+
+                  indent=2
+              )
+
+
+          # ==========================================================
+          # FINAL REPORT
+          # ==========================================================
+
+          print()
+          print("======================================")
+          print("V7 ANALYSIS COMPLETE")
+          print("======================================")
+          print()
+
+
+          print("Category counts:")
+
+          print(
+              json.dumps(
+                  summary["category_counts"],
+                  indent=2
+              )
+          )
+
+
+          print()
+
+          print(
+              "Airport count:",
+              summary["airport_count"]
+          )
+
+          print(
+              "Unknown pages:",
+              summary["unknown_page_count"]
+          )
+
+          print(
+              "Other pages:",
+              summary["other_page_count"]
+          )
+
+
+          # ==========================================================
+          # OIZC DEBUG
+          # ==========================================================
+
+          print()
+          print("======================================")
+          print("OIZC PAGES 590-605")
+          print("======================================")
+          print()
+
+
+          for item in charts_index:
+
+              if item["airport"] == "OIZC":
+
+                  if 590 <= item["page"] <= 605:
+
+                      print(
+                          json.dumps(
+                              item,
+                              ensure_ascii=False
+                          )
+                      )
+
+
+          print()
+          print("======================================")
+          print("EXPECTED OIZC RANGE")
+          print("======================================")
+          print("594-596 -> Airport")
+          print("597-601 -> Approach")
+          print("SID/STAR logic unchanged")
+          print("======================================")
+
+
+          PY
+
+
+      # ============================================================
+      # 6. Show summary
+      # ============================================================
+
+      - name: Show V7 summary
+        run: |
+
+          echo "======================================"
+          echo "V7 FINAL SUMMARY"
+          echo "======================================"
+
+          cat charts-summary-v7.json
+
+
+      # ============================================================
+      # 7. Upload generated files
+      # ============================================================
+
+      - name: Upload V7 results
+        uses: actions/upload-artifact@v4
+        with:
+          name: JeppIran-V7-results
+          path: |
+            charts-index-v7.json
+            charts-summary-v7.json
+            charts-app-v7.json
+
+
+      # ============================================================
+      # 8. Show generated files
+      # ============================================================
+
+      - name: Show generated files
+        run: |
+
+          echo "======================================"
+          echo "GENERATED FILES"
+          echo "======================================"
+
+          ls -lh charts-index-v7.json
+
+          ls -lh charts-summary-v7.json
+
+          ls -lh charts-app-v7.json
