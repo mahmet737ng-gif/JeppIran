@@ -17,8 +17,19 @@ class ChartRepository(
     )
 
 
+    data class AirportPdfInfo(
+        val icao: String,
+        val file: String,
+        val url: String,
+        val sha256: String,
+        val size: Long,
+        val pages: Int
+    )
+
+
     data class ChartInfo(
         val page: Int,
+        val pdfPage: Int,
         val icao: String,
         val airportName: String,
         val city: String,
@@ -30,6 +41,7 @@ class ChartRepository(
 
     data class SearchResult(
         val page: Int,
+        val pdfPage: Int,
         val icao: String,
         val airportName: String,
         val city: String,
@@ -41,8 +53,17 @@ class ChartRepository(
 
     companion object {
 
-        private const val ASSET_FILE =
-            "charts-app-v17.json"
+        private const val APP_FILE =
+            "charts-app-v18.json"
+
+        private const val MANIFEST_FILE =
+            "charts-manifest.json"
+
+        private const val FALLBACK_RELEASE_TAG =
+            "charts-v18"
+
+        private const val FALLBACK_BASE_URL =
+            "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-v18/"
 
 
         private val AIRPORTS =
@@ -295,7 +316,6 @@ class ChartRepository(
                         Locale.US
                     )
 
-
             return AIRPORTS.firstOrNull {
                 it.icao == key
             }
@@ -336,12 +356,10 @@ class ChartRepository(
                     category
                 )
 
-
             val index =
                 CATEGORY_ORDER.indexOf(
                     normalized
                 )
-
 
             return if (
                 index >= 0
@@ -392,8 +410,19 @@ class ChartRepository(
         false
 
 
+    private var manifestLoaded =
+        false
+
+
     private val chartList =
         mutableListOf<ChartInfo>()
+
+
+    private val airportPdfList =
+        mutableMapOf<
+            String,
+            AirportPdfInfo
+        >()
 
 
     @Synchronized
@@ -427,9 +456,11 @@ class ChartRepository(
             .filter {
                 it.icao == key
             }
-            .sortedBy {
-                it.page
-            }
+            .sortedWith(
+                compareBy<ChartInfo> {
+                    it.page
+                }
+            )
     }
 
 
@@ -456,6 +487,140 @@ class ChartRepository(
             it.icao == key &&
                 it.page == page
         }
+    }
+
+
+    @Synchronized
+    fun getChartForPdfPage(
+        icao: String,
+        pdfPage: Int
+    ):
+        ChartInfo? {
+
+        ensureLoaded()
+
+
+        val key =
+            icao
+                .trim()
+                .uppercase(
+                    Locale.US
+                )
+
+
+        return chartList.firstOrNull {
+
+            it.icao == key &&
+                it.pdfPage == pdfPage
+        }
+    }
+
+
+    @Synchronized
+    fun getAirportPdfInfo(
+        icao: String
+    ):
+        AirportPdfInfo {
+
+        ensureManifestLoaded()
+
+
+        val key =
+            icao
+                .trim()
+                .uppercase(
+                    Locale.US
+                )
+
+
+        val existing =
+            airportPdfList[key]
+
+
+        if (
+            existing != null
+        ) {
+
+            return existing
+        }
+
+
+        val fallback =
+            AirportPdfInfo(
+
+                icao =
+                    key,
+
+                file =
+                    "$key.pdf",
+
+                url =
+                    FALLBACK_BASE_URL +
+                        "$key.pdf",
+
+                sha256 =
+                    "",
+
+                size =
+                    0L,
+
+                pages =
+                    getChartsForAirport(
+                        key
+                    ).size
+            )
+
+
+        airportPdfList[key] =
+            fallback
+
+
+        return fallback
+    }
+
+
+    fun getReleaseTag():
+        String {
+
+        ensureManifestLoaded()
+
+        val first =
+            airportPdfList.values
+                .firstOrNull()
+
+
+        if (
+            first != null &&
+            first.url.isNotBlank()
+        ) {
+
+            val marker =
+                "/releases/download/"
+
+            val index =
+                first.url.indexOf(
+                    marker
+                )
+
+
+            if (
+                index >= 0
+            ) {
+
+                val rest =
+                    first.url.substring(
+                        index +
+                            marker.length
+                    )
+
+
+                return rest
+                    .substringBefore("/")
+            }
+        }
+
+
+        return FALLBACK_RELEASE_TAG
     }
 
 
@@ -486,24 +651,24 @@ class ChartRepository(
         return chartList
             .mapNotNull { chart ->
 
-                val airport =
-                    airport(
-                        chart.icao
-                    )
-
-
                 val fields =
                     listOf(
+
                         chart.icao,
+
                         chart.airportName,
+
                         chart.city,
+
                         chart.category,
+
                         chart.chartNumber,
+
                         chart.name
                     )
 
 
-                val matches =
+                val match =
                     fields.any {
 
                         it.lowercase(
@@ -516,7 +681,7 @@ class ChartRepository(
 
 
                 if (
-                    !matches
+                    !match
                 ) {
 
                     return@mapNotNull null
@@ -528,18 +693,17 @@ class ChartRepository(
                     page =
                         chart.page,
 
+                    pdfPage =
+                        chart.pdfPage,
+
                     icao =
                         chart.icao,
 
                     airportName =
-                        airport
-                            ?.airportName
-                            ?: chart.airportName,
+                        chart.airportName,
 
                     city =
-                        airport
-                            ?.city
-                            ?: chart.city,
+                        chart.city,
 
                     category =
                         chart.category,
@@ -548,12 +712,7 @@ class ChartRepository(
                         chart.chartNumber,
 
                     name =
-                        cleanRuntimeName(
-                            chart.name,
-                            chart.category,
-                            chart.chartNumber,
-                            chart.page
-                        )
+                        chart.name
                 )
             }
             .sortedWith(
@@ -578,8 +737,10 @@ class ChartRepository(
 
 
     private fun exactMatchScore(
-        result: SearchResult,
-        query: String
+        result:
+            SearchResult,
+        query:
+            String
     ):
         Int {
 
@@ -720,7 +881,12 @@ class ChartRepository(
         loaded =
             false
 
+        manifestLoaded =
+            false
+
         chartList.clear()
+
+        airportPdfList.clear()
 
         ensureLoaded()
     }
@@ -744,7 +910,7 @@ class ChartRepository(
             val raw =
                 context.assets
                     .open(
-                        ASSET_FILE
+                        APP_FILE
                     )
                     .bufferedReader()
                     .use {
@@ -771,32 +937,32 @@ class ChartRepository(
                     )
 
 
-                val array =
+                val charts =
                     root.optJSONArray(
                         "charts"
                     )
 
 
                 if (
-                    array != null
+                    charts != null
                 ) {
 
                     readArray(
-                        array
-                    )
-
-                } else {
-
-                    readObjectMap(
-                        root
+                        charts
                     )
                 }
             }
 
 
-            chartList.sortBy {
-                it.page
-            }
+            chartList.sortWith(
+
+                compareBy<ChartInfo> {
+                    it.icao
+                }
+                    .thenBy {
+                        it.page
+                    }
+            )
 
 
             loaded =
@@ -807,6 +973,130 @@ class ChartRepository(
         ) {
 
             loaded =
+                true
+        }
+    }
+
+
+    private fun ensureManifestLoaded() {
+
+        if (
+            manifestLoaded
+        ) {
+
+            return
+        }
+
+
+        airportPdfList.clear()
+
+
+        try {
+
+            val raw =
+                context.assets
+                    .open(
+                        MANIFEST_FILE
+                    )
+                    .bufferedReader()
+                    .use {
+                        it.readText()
+                    }
+                    .trim()
+
+
+            val root =
+                JSONObject(
+                    raw
+                )
+
+
+            val airportsObject =
+                root.optJSONObject(
+                    "airports"
+                )
+
+
+            if (
+                airportsObject != null
+            ) {
+
+                val keys =
+                    airportsObject.keys()
+
+
+                while (
+                    keys.hasNext()
+                ) {
+
+                    val icao =
+                        keys.next()
+                            .trim()
+                            .uppercase(
+                                Locale.US
+                            )
+
+
+                    val item =
+                        airportsObject.optJSONObject(
+                            icao
+                        )
+                            ?: continue
+
+
+                    val info =
+                        AirportPdfInfo(
+
+                            icao =
+                                icao,
+
+                            file =
+                                item.optString(
+                                    "file",
+                                    "$icao.pdf"
+                                ),
+
+                            url =
+                                item.optString(
+                                    "url",
+                                    FALLBACK_BASE_URL +
+                                        "$icao.pdf"
+                                ),
+
+                            sha256 =
+                                item.optString(
+                                    "sha256",
+                                    ""
+                                ),
+
+                            size =
+                                item.optLong(
+                                    "size",
+                                    0L
+                                ),
+
+                            pages =
+                                item.optInt(
+                                    "pages",
+                                    0
+                                )
+                        )
+
+
+                    airportPdfList[icao] =
+                        info
+                }
+            }
+
+
+            manifestLoaded =
+                true
+
+        } catch (
+            _: Exception
+        ) {
+
+            manifestLoaded =
                 true
         }
     }
@@ -832,40 +1122,6 @@ class ChartRepository(
             readChartObject(
                 item
             )
-        }
-    }
-
-
-    private fun readObjectMap(
-        root: JSONObject
-    ) {
-
-        val keys =
-            root.keys()
-
-
-        while (
-            keys.hasNext()
-        ) {
-
-            val key =
-                keys.next()
-
-
-            val value =
-                root.opt(
-                    key
-                )
-
-
-            if (
-                value is JSONObject
-            ) {
-
-                readChartObject(
-                    value
-                )
-            }
         }
     }
 
@@ -911,12 +1167,12 @@ class ChartRepository(
                 ),
 
                 item.optInt(
-                    "pageNumber",
+                    "global_page",
                     -1
                 ),
 
                 item.optInt(
-                    "page_number",
+                    "pageNumber",
                     -1
                 )
             )
@@ -928,6 +1184,26 @@ class ChartRepository(
 
             return
         }
+
+
+        val pdfPage =
+            firstPositiveInt(
+
+                item.optInt(
+                    "pdf_page",
+                    -1
+                ),
+
+                item.optInt(
+                    "local_page",
+                    -1
+                ),
+
+                item.optInt(
+                    "localPage",
+                    -1
+                )
+            )
 
 
         val category =
@@ -990,7 +1266,7 @@ class ChartRepository(
             )
 
 
-        val info =
+        val airportInfo =
             airport(
                 itemIcao
             )
@@ -1016,16 +1292,19 @@ class ChartRepository(
                 page =
                     page,
 
+                pdfPage =
+                    pdfPage,
+
                 icao =
                     itemIcao,
 
                 airportName =
-                    info
+                    airportInfo
                         ?.airportName
                         ?: itemIcao,
 
                 city =
-                    info
+                    airportInfo
                         ?.city
                         ?: itemIcao,
 
@@ -1051,8 +1330,7 @@ class ChartRepository(
         String {
 
         val clean =
-            rawName
-                .trim()
+            rawName.trim()
 
 
         if (
@@ -1156,6 +1434,18 @@ class ChartRepository(
             normalized.matches(
                 Regex(
                     "page\\s*\\d+"
+                )
+            )
+        ) {
+
+            return true
+        }
+
+
+        if (
+            normalized.matches(
+                Regex(
+                    "chart"
                 )
             )
         ) {
