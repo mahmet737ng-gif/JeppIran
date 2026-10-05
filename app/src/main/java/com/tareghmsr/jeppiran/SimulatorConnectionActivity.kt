@@ -2,6 +2,7 @@ package com.tareghmsr.jeppiran
 
 import android.graphics.Color
 import android.graphics.Typeface
+import android.net.wifi.WifiManager
 import android.os.Bundle
 import android.view.Gravity
 import android.widget.EditText
@@ -49,9 +50,9 @@ class SimulatorConnectionActivity : AppCompatActivity() {
 
         root.addView(text("CONNECTION", 12f, true, secondaryTextColor(), 0, 18, 0, 8))
         hostInput = EditText(this).apply {
-            hint = "PC IP address, e.g. 192.168.1.50"
+            hint = "Phone IP address on the simulator network"
             setSingleLine(true)
-            setText(SimulatorManager.host(this@SimulatorConnectionActivity))
+            setText(SimulatorManager.host(this@SimulatorConnectionActivity).ifBlank { localIpAddress() })
             setTextColor(textColor())
             setHintTextColor(secondaryTextColor())
         }
@@ -79,7 +80,7 @@ class SimulatorConnectionActivity : AppCompatActivity() {
 
         root.addView(text("HOW IT WORKS", 12f, true, secondaryTextColor(), 0, 14, 0, 8))
         root.addView(text(
-            "JeppIran listens on the UDP port above. The PC side sends a small JSON position packet over your local Wi-Fi. The phone and simulator PC must be on the same network.\n\n" +
+            "JeppIran listens on the UDP port above. The PC side sends a small JSON position packet over your local Wi-Fi. The phone and simulator PC must be on the same network. The address shown above is the phone address that the PC sends data to.\n\n" +
             "X-Plane: enable the JeppIran X-Plane data output/bridge and enter this phone's IP and UDP port.\n\n" +
             "MSFS 2020 / 2024: SimConnect is available on the Windows simulator PC. The JeppIran bridge reads the aircraft state through SimConnect and forwards it to this app.\n\n" +
             "Prepar3D: use the same bridge concept through SimConnect.\n\n" +
@@ -157,6 +158,20 @@ class SimulatorConnectionActivity : AppCompatActivity() {
             setPadding(16.dp, 16.dp, 16.dp, 16.dp)
             layoutParams = LinearLayout.LayoutParams(-1, 54.dp).apply { setMargins(0, 6.dp, 0, 6.dp) }
         }
+
+    private fun localIpAddress(): String {
+        return try {
+            val wm = applicationContext.getSystemService(WIFI_SERVICE) as WifiManager
+            val ip = wm.connectionInfo.ipAddress
+            if (ip == 0) "192.168.x.x" else
+                (ip and 0xff).toString() + "." +
+                ((ip shr 8) and 0xff) + "." +
+                ((ip shr 16) and 0xff) + "." +
+                ((ip shr 24) and 0xff)
+        } catch (_: Exception) {
+            "192.168.x.x"
+        }
+    }
 
     private fun fieldParams() = LinearLayout.LayoutParams(-1, 58.dp).apply { setMargins(0, 4.dp, 0, 4.dp) }
 
