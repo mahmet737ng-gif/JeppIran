@@ -1,8 +1,10 @@
 package com.tareghmsr.jeppiran
 
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
+import android.util.TypedValue
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
@@ -14,10 +16,14 @@ import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
-class ChartsActivity : ComponentActivity() {
+class ChartsActivity :
+    ComponentActivity() {
 
-    private lateinit var searchBox: EditText
-    private lateinit var listContainer: LinearLayout
+    private lateinit var searchBox:
+        EditText
+
+    private lateinit var listContainer:
+        LinearLayout
 
     private data class Airport(
         val icao: String,
@@ -27,68 +33,228 @@ class ChartsActivity : ComponentActivity() {
 
     private val airports =
         listOf(
-            Airport("LTFM", "ISTANBUL", "ISTANBUL"),
-            Airport("OIAA", "ABADAN", "ABADAN"),
-            Airport("OIAM", "MAHSHAHR", "MAHSHAHR"),
-            Airport("OIAW", "AHWAZ", "AHWAZ"),
-            Airport("OIBB", "BUSHEHR", "BUSHEHR"),
-            Airport("OIBK", "KISH", "KISH"),
-            Airport("OIBP", "ASALOUYEH", "ASALOUYEH"),
-            Airport("OICC", "KERMANSHAH", "KERMANSHAH"),
-            Airport("OICI", "ILAM", "ILAM"),
-            Airport("OIFM", "ISFAHAN", "ISFAHAN"),
-            Airport("OIGG", "RASHT", "RASHT"),
-            Airport("OIHH", "HAMADAN", "HAMADAN"),
-            Airport("OIIE", "IMAM KHOMEINI", "TEHRAN"),
-            Airport("OIII", "MEHRABAD", "TEHRAN"),
-            Airport("OIIP", "KARAJ", "KARAJ"),
-            Airport("OIKK", "KERMAN", "KERMAN"),
-            Airport("OIMB", "BIRJAND", "BIRJAND"),
-            Airport("OIMM", "MASHHAD", "MASHHAD"),
-            Airport("OIMN", "BOJNURD", "BOJNURD"),
-            Airport("OIMS", "SABZEVAR", "SABZEVAR"),
-            Airport("OING", "GORGAN", "GORGAN"),
-            Airport("OINZ", "SARI", "SARI"),
-            Airport("OISS", "SHIRAZ", "SHIRAZ"),
-            Airport("OITL", "ARDABIL", "ARDABIL"),
-            Airport("OITR", "URMIA", "URMIA"),
-            Airport("OITT", "TABRIZ", "TABRIZ"),
-            Airport("OIYY", "YAZD", "YAZD"),
-            Airport("OIZC", "CHABAHAR", "CHABAHAR"),
-            Airport("OIZH", "ZAHEDAN", "ZAHEDAN"),
-            Airport("OMDB", "DUBAI INTL", "DUBAI"),
-            Airport("OOMS", "MUSCAT INTL", "MUSCAT"),
-            Airport("ORBI", "BAGHDAD INTL", "BAGHDAD"),
-            Airport("ORNI", "NAJAF", "NAJAF"),
-            Airport("UDYZ", "ZVARTNOTS", "YEREVAN"),
-            Airport("UGSB", "BATUMI", "BATUMI"),
-            Airport("UGTB", "TBILISI", "TBILISI")
-        )
-            .sortedBy {
-                it.icao
-            }
+            Airport(
+                "OIAA",
+                "ABADAN",
+                "ABADAN"
+            ),
+            Airport(
+                "OIAM",
+                "MAHSHAHR",
+                "MAHSHAHR"
+            ),
+            Airport(
+                "OIAW",
+                "AHWAZ",
+                "AHWAZ"
+            ),
+            Airport(
+                "OIBB",
+                "BUSHEHR",
+                "BUSHEHR"
+            ),
+            Airport(
+                "OIBK",
+                "KISH",
+                "KISH"
+            ),
+            Airport(
+                "OIBP",
+                "ASALOUYEH",
+                "ASALOUYEH"
+            ),
+            Airport(
+                "OICC",
+                "KERMANSHAH",
+                "KERMANSHAH"
+            ),
+            Airport(
+                "OICI",
+                "ILAM",
+                "ILAM"
+            ),
+            Airport(
+                "OIFM",
+                "ISFAHAN",
+                "ISFAHAN"
+            ),
+            Airport(
+                "OIGG",
+                "RASHT",
+                "RASHT"
+            ),
+            Airport(
+                "OIHH",
+                "HAMADAN",
+                "HAMADAN"
+            ),
+            Airport(
+                "OIIE",
+                "IMAM KHOMEINI",
+                "TEHRAN"
+            ),
+            Airport(
+                "OIII",
+                "MEHRABAD",
+                "TEHRAN"
+            ),
+            Airport(
+                "OIIP",
+                "KARAJ",
+                "KARAJ"
+            ),
+            Airport(
+                "OIKK",
+                "KERMAN",
+                "KERMAN"
+            ),
+            Airport(
+                "OIMB",
+                "BIRJAND",
+                "BIRJAND"
+            ),
+            Airport(
+                "OIMM",
+                "MASHHAD",
+                "MASHHAD"
+            ),
+            Airport(
+                "OIMN",
+                "BOJNURD",
+                "BOJNURD"
+            ),
+            Airport(
+                "OIMS",
+                "SABZEVAR",
+                "SABZEVAR"
+            ),
+            Airport(
+                "OING",
+                "GORGAN",
+                "GORGAN"
+            ),
+            Airport(
+                "OINZ",
+                "SARI",
+                "SARI"
+            ),
+            Airport(
+                "OISS",
+                "SHIRAZ",
+                "SHIRAZ"
+            ),
+            Airport(
+                "OITL",
+                "ARDABIL",
+                "ARDABIL"
+            ),
+            Airport(
+                "OITR",
+                "URMIA",
+                "URMIA"
+            ),
+            Airport(
+                "OITT",
+                "TABRIZ",
+                "TABRIZ"
+            ),
+            Airport(
+                "OIYY",
+                "YAZD",
+                "YAZD"
+            ),
+            Airport(
+                "OIZC",
+                "CHABAHAR",
+                "CHABAHAR"
+            ),
+            Airport(
+                "OIZH",
+                "ZAHEDAN",
+                "ZAHEDAN"
+            ),
+            Airport(
+                "OMDB",
+                "DUBAI INTL",
+                "DUBAI"
+            ),
+            Airport(
+                "OOMS",
+                "MUSCAT INTL",
+                "MUSCAT"
+            ),
+            Airport(
+                "ORBI",
+                "BAGHDAD INTL",
+                "BAGHDAD"
+            ),
+            Airport(
+                "ORNI",
+                "NAJAF",
+                "NAJAF"
+            ),
+            Airport(
+                "UDYZ",
+                "ZVARTNOTS",
+                "YEREVAN"
+            ),
+            Airport(
+                "UGSB",
+                "BATUMI",
+                "BATUMI"
+            ),
+            Airport(
+                "UGTB",
+                "TBILISI",
+                "TBILISI"
+            ),
+            Airport(
+                "LTFM",
+                "ISTANBUL",
+                "ISTANBUL"
+            )
+        ).sortedBy {
+            it.icao
+        }
 
     override fun onCreate(
         savedInstanceState: Bundle?
     ) {
+        ThemeManager.apply(
+            this
+        )
+
         super.onCreate(
             savedInstanceState
         )
 
         enableEdgeToEdge()
 
+        buildUi()
+    }
+
+    private fun buildUi() {
+
         val root =
-            LinearLayout(this).apply {
+            LinearLayout(
+                this
+            ).apply {
+
                 orientation =
                     LinearLayout.VERTICAL
 
                 setBackgroundColor(
-                    0xFFF7F8FA.toInt()
+                    color(
+                        android.R.attr.colorBackground
+                    )
                 )
             }
 
         searchBox =
-            EditText(this).apply {
+            EditText(
+                this
+            ).apply {
+
                 hint =
                     "Search ICAO / Airport / City"
 
@@ -97,6 +263,18 @@ class ChartsActivity : ComponentActivity() {
 
                 textSize =
                     16f
+
+                setTextColor(
+                    color(
+                        android.R.attr.textColorPrimary
+                    )
+                )
+
+                setHintTextColor(
+                    color(
+                        android.R.attr.textColorSecondary
+                    )
+                )
 
                 setPadding(
                     20.dp,
@@ -107,19 +285,25 @@ class ChartsActivity : ComponentActivity() {
             }
 
         listContainer =
-            LinearLayout(this).apply {
+            LinearLayout(
+                this
+            ).apply {
+
                 orientation =
                     LinearLayout.VERTICAL
             }
 
         val scrollView =
-            ScrollView(this).apply {
+            ScrollView(
+                this
+            ).apply {
 
                 isFillViewport =
                     true
 
                 overScrollMode =
-                    ScrollView.OVER_SCROLL_IF_CONTENT_SCROLLS
+                    ScrollView
+                        .OVER_SCROLL_IF_CONTENT_SCROLLS
 
                 addView(
                     listContainer
@@ -132,6 +316,7 @@ class ChartsActivity : ComponentActivity() {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 64.dp
             ).apply {
+
                 setMargins(
                     16.dp,
                     12.dp,
@@ -191,8 +376,10 @@ class ChartsActivity : ComponentActivity() {
                     before: Int,
                     count: Int
                 ) {
+
                     loadAirports(
-                        s?.toString().orEmpty()
+                        s?.toString()
+                            .orEmpty()
                     )
                 }
 
@@ -221,9 +408,10 @@ class ChartsActivity : ComponentActivity() {
                         airport.icao.contains(
                             q
                         ) ||
-                        airport.airportName.contains(
-                            q
-                        ) ||
+                        airport.airportName
+                            .contains(
+                                q
+                            ) ||
                         airport.city.contains(
                             q
                         )
@@ -231,7 +419,9 @@ class ChartsActivity : ComponentActivity() {
             .forEach { airport ->
 
                 val row =
-                    LinearLayout(this).apply {
+                    LinearLayout(
+                        this
+                    ).apply {
 
                         orientation =
                             LinearLayout.VERTICAL
@@ -244,7 +434,10 @@ class ChartsActivity : ComponentActivity() {
                         )
 
                         setBackgroundColor(
-                            0xFFFFFFFF.toInt()
+                            color(
+                                com.google.android.material.R.attr
+                                    .colorSurface
+                            )
                         )
 
                         setOnClickListener {
@@ -265,6 +458,11 @@ class ChartsActivity : ComponentActivity() {
                                 airport.city
                             )
 
+                            intent.putExtra(
+                                "AIRPORT_NAME",
+                                airport.airportName
+                            )
+
                             startActivity(
                                 intent
                             )
@@ -272,7 +470,9 @@ class ChartsActivity : ComponentActivity() {
                     }
 
                 val icaoText =
-                    TextView(this).apply {
+                    TextView(
+                        this
+                    ).apply {
 
                         text =
                             airport.icao
@@ -286,12 +486,16 @@ class ChartsActivity : ComponentActivity() {
                         )
 
                         setTextColor(
-                            0xFF172033.toInt()
+                            color(
+                                android.R.attr.textColorPrimary
+                            )
                         )
                     }
 
                 val airportNameText =
-                    TextView(this).apply {
+                    TextView(
+                        this
+                    ).apply {
 
                         text =
                             airport.airportName
@@ -305,12 +509,16 @@ class ChartsActivity : ComponentActivity() {
                         )
 
                         setTextColor(
-                            0xFF344054.toInt()
+                            color(
+                                android.R.attr.textColorPrimary
+                            )
                         )
                     }
 
                 val cityText =
-                    TextView(this).apply {
+                    TextView(
+                        this
+                    ).apply {
 
                         text =
                             airport.city
@@ -319,7 +527,9 @@ class ChartsActivity : ComponentActivity() {
                             13f
 
                         setTextColor(
-                            0xFF667085.toInt()
+                            color(
+                                android.R.attr.textColorSecondary
+                            )
                         )
                     }
 
@@ -333,6 +543,7 @@ class ChartsActivity : ComponentActivity() {
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
                     ).apply {
+
                         topMargin =
                             4.dp
                     }
@@ -344,6 +555,7 @@ class ChartsActivity : ComponentActivity() {
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
                     ).apply {
+
                         topMargin =
                             2.dp
                     }
@@ -367,10 +579,39 @@ class ChartsActivity : ComponentActivity() {
             }
     }
 
+    private fun color(
+        attribute: Int
+    ): Int {
+
+        val value =
+            TypedValue()
+
+        theme.resolveAttribute(
+            attribute,
+            value,
+            true
+        )
+
+        return if (
+            value.resourceId != 0
+        ) {
+
+            getColor(
+                value.resourceId
+            )
+
+        } else {
+
+            value.data
+        }
+    }
+
     private val Int.dp: Int
         get() =
             (
                 this *
-                    resources.displayMetrics.density
+                    resources
+                        .displayMetrics
+                        .density
                 ).toInt()
 }
