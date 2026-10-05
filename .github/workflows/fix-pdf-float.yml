@@ -1,0 +1,112 @@
+name: Fix PdfViewer Float Types
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Fix remaining Float type error
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path(
+              "app/src/main/java/com/tareghmsr/jeppiran/PdfViewerActivity.kt"
+          )
+
+          text = path.read_text(
+              encoding="utf-8"
+          )
+
+          old = """                    ).contains(
+                        localX,
+                        localY
+                    )"""
+
+          new = """                    ).contains(
+                        localX.toFloat(),
+                        localY.toFloat()
+                    )"""
+
+          if old not in text:
+              raise SystemExit(
+                  "Target Float error lines were not found."
+              )
+
+          if text.count(old) != 1:
+              raise SystemExit(
+                  "Unexpected number of target blocks: "
+                  + str(text.count(old))
+              )
+
+          text = text.replace(
+              old,
+              new,
+              1
+          )
+
+          path.write_text(
+              text,
+              encoding="utf-8"
+          )
+
+          print(
+              "PdfViewerActivity.kt Float conversion fixed."
+          )
+          PY
+
+      - name: Verify
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path(
+              "app/src/main/java/com/tareghmsr/jeppiran/PdfViewerActivity.kt"
+          )
+
+          text = path.read_text(
+              encoding="utf-8"
+          )
+
+          expected = """localX.toFloat(),
+                        localY.toFloat()"""
+
+          if expected not in text:
+              raise SystemExit(
+                  "Float conversion was not applied."
+              )
+
+          print("Verification passed.")
+          PY
+
+      - name: Commit
+        shell: bash
+        run: |
+          git config user.name \
+            "github-actions[bot]"
+
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git add \
+            app/src/main/java/com/tareghmsr/jeppiran/PdfViewerActivity.kt
+
+          git commit \
+            -m "Fix PdfViewer float type conversion"
+
+          git fetch origin main
+          git rebase origin/main
+          git push origin HEAD:main
