@@ -1,8 +1,12 @@
 package com.tareghmsr.jeppiran
 
 import android.content.Intent
+import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ScrollView
@@ -14,18 +18,67 @@ import androidx.core.view.WindowInsetsCompat
 import org.json.JSONArray
 import org.json.JSONObject
 
-class AirportChartsActivity : ComponentActivity() {
+class AirportChartsActivity :
+    ComponentActivity() {
 
-    private lateinit var listContainer: LinearLayout
+    private lateinit var chartScrollView:
+            ScrollView
 
-    private var icao = ""
-    private var city = ""
+    private lateinit var listContainer:
+            LinearLayout
+
+    private lateinit var categoryContainer:
+            LinearLayout
+
+    private lateinit var selectedCategoryTitle:
+            TextView
+
+    private var icao =
+        ""
+
+    private var airportName =
+        ""
+
+    private var city =
+        ""
 
     private data class Chart(
         val page: Int,
         val name: String,
         val category: String
     )
+
+    private data class CategoryItem(
+        val key: String,
+        val label: String
+    )
+
+    private val categories =
+        listOf(
+            CategoryItem(
+                "STAR",
+                "STAR"
+            ),
+            CategoryItem(
+                "SID",
+                "SID"
+            ),
+            CategoryItem(
+                "Airport",
+                "AIRPORT"
+            ),
+            CategoryItem(
+                "Approach",
+                "APPROACH"
+            ),
+            CategoryItem(
+                "Other",
+                "OTHER"
+            )
+        )
+
+    private val allCharts =
+        mutableListOf<Chart>()
 
     override fun onCreate(
         savedInstanceState: Bundle?
@@ -37,16 +90,28 @@ class AirportChartsActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         icao =
-            intent.getStringExtra(
-                "ICAO"
-            ).orEmpty()
+            intent
+                .getStringExtra(
+                    "ICAO"
+                )
+                .orEmpty()
+
+        airportName =
+            intent
+                .getStringExtra(
+                    "AIRPORT_NAME"
+                )
+                .orEmpty()
 
         city =
-            intent.getStringExtra(
-                "CITY"
-            ).orEmpty()
+            intent
+                .getStringExtra(
+                    "CITY"
+                )
+                .orEmpty()
 
         buildUi()
+
         loadCharts()
     }
 
@@ -59,7 +124,11 @@ class AirportChartsActivity : ComponentActivity() {
                     LinearLayout.VERTICAL
 
                 setBackgroundColor(
-                    0xFFF7F8FA.toInt()
+                    Color.rgb(
+                        244,
+                        247,
+                        250
+                    )
                 )
             }
 
@@ -67,23 +136,68 @@ class AirportChartsActivity : ComponentActivity() {
             TextView(this).apply {
 
                 text =
-                    "$icao  •  $city"
+                    buildAirportTitle()
 
                 textSize =
-                    22f
+                    21f
 
                 typeface =
-                    Typeface.DEFAULT_BOLD
+                    Typeface.create(
+                        "sans-serif",
+                        Typeface.BOLD
+                    )
+
+                setTextColor(
+                    Color.rgb(
+                        18,
+                        32,
+                        48
+                    )
+                )
+
+                gravity =
+                    Gravity.CENTER_VERTICAL
 
                 setPadding(
                     20.dp,
+                    18.dp,
                     20.dp,
-                    20.dp,
-                    20.dp
+                    18.dp
                 )
 
                 setBackgroundColor(
-                    0xFFFFFFFF.toInt()
+                    Color.WHITE
+                )
+            }
+
+        selectedCategoryTitle =
+            TextView(this).apply {
+
+                text =
+                    "SELECT A CHART CATEGORY"
+
+                textSize =
+                    12f
+
+                typeface =
+                    Typeface.create(
+                        "sans-serif-medium",
+                        Typeface.NORMAL
+                    )
+
+                setTextColor(
+                    Color.rgb(
+                        80,
+                        96,
+                        112
+                    )
+                )
+
+                setPadding(
+                    18.dp,
+                    10.dp,
+                    18.dp,
+                    10.dp
                 )
             }
 
@@ -93,14 +207,15 @@ class AirportChartsActivity : ComponentActivity() {
                 orientation =
                     LinearLayout.VERTICAL
 
-                layoutParams =
-                    ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                    )
+                setPadding(
+                    14.dp,
+                    6.dp,
+                    14.dp,
+                    14.dp
+                )
             }
 
-        val scrollView =
+        chartScrollView =
             ScrollView(this).apply {
 
                 isFillViewport =
@@ -114,18 +229,39 @@ class AirportChartsActivity : ComponentActivity() {
                 )
             }
 
-        root.addView(
-            header
-        )
+        categoryContainer =
+            LinearLayout(this).apply {
 
-        root.addView(
-            scrollView,
-            LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                0,
-                1f
+                setBackgroundColor(
+                    Color.WHITE
+                )
+
+                elevation =
+                    8.dp.toFloat()
+            }
+
+        val landscape =
+            resources.displayMetrics.widthPixels >=
+                    resources.displayMetrics.heightPixels
+
+        if (landscape) {
+
+            buildLandscape(
+                root,
+                header,
+                selectedCategoryTitle,
+                chartScrollView
             )
-        )
+
+        } else {
+
+            buildPortrait(
+                root,
+                header,
+                selectedCategoryTitle,
+                chartScrollView
+            )
+        }
 
         setContentView(
             root
@@ -151,7 +287,673 @@ class AirportChartsActivity : ComponentActivity() {
         }
     }
 
+    private fun buildPortrait(
+        root: LinearLayout,
+        header: TextView,
+        title: TextView,
+        chartScroll: ScrollView
+    ) {
+
+        root.addView(
+            header,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        )
+
+        val content =
+            LinearLayout(this).apply {
+
+                orientation =
+                    LinearLayout.VERTICAL
+            }
+
+        content.addView(
+            title,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        )
+
+        content.addView(
+            buildChartScroller(
+                chartScroll
+            ),
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                0,
+                1f
+            )
+        )
+
+        root.addView(
+            content,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                0,
+                1f
+            )
+        )
+
+        configureCategoryContainer(
+            horizontal = true
+        )
+
+        root.addView(
+            categoryContainer,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                72.dp
+            )
+        )
+
+        createCategoryButtons()
+    }
+
+    private fun buildLandscape(
+        root: LinearLayout,
+        header: TextView,
+        title: TextView,
+        chartScroll: ScrollView
+    ) {
+
+        root.addView(
+            header,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        )
+
+        val workspace =
+            LinearLayout(this).apply {
+
+                orientation =
+                    LinearLayout.HORIZONTAL
+            }
+
+        configureCategoryContainer(
+            horizontal = false
+        )
+
+        workspace.addView(
+            categoryContainer,
+            LinearLayout.LayoutParams(
+                122.dp,
+                LinearLayout.LayoutParams.MATCH_PARENT
+            )
+        )
+
+        val content =
+            LinearLayout(this).apply {
+
+                orientation =
+                    LinearLayout.VERTICAL
+            }
+
+        content.addView(
+            title,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            )
+        )
+
+        content.addView(
+            buildChartScroller(
+                chartScroll
+            ),
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                0,
+                1f
+            )
+        )
+
+        workspace.addView(
+            content,
+            LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                1f
+            )
+        )
+
+        root.addView(
+            workspace,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                0,
+                1f
+            )
+        )
+
+        createCategoryButtons()
+    }
+
+    private fun buildChartScroller(
+        scrollView: ScrollView
+    ): LinearLayout {
+
+        val wrapper =
+            LinearLayout(this).apply {
+
+                orientation =
+                    LinearLayout.VERTICAL
+            }
+
+        val upButton =
+            TextView(this).apply {
+
+                text =
+                    "▲"
+
+                textSize =
+                    18f
+
+                gravity =
+                    Gravity.CENTER
+
+                setTextColor(
+                    Color.rgb(
+                        66,
+                        82,
+                        98
+                    )
+                )
+
+                setBackgroundColor(
+                    Color.argb(
+                        20,
+                        20,
+                        45,
+                        65
+                    )
+                )
+
+                setOnClickListener {
+
+                    scrollView.smoothScrollBy(
+                        0,
+                        -420.dp
+                    )
+                }
+            }
+
+        val downButton =
+            TextView(this).apply {
+
+                text =
+                    "▼"
+
+                textSize =
+                    18f
+
+                gravity =
+                    Gravity.CENTER
+
+                setTextColor(
+                    Color.rgb(
+                        66,
+                        82,
+                        98
+                    )
+                )
+
+                setBackgroundColor(
+                    Color.argb(
+                        20,
+                        20,
+                        45,
+                        65
+                    )
+                )
+
+                setOnClickListener {
+
+                    scrollView.smoothScrollBy(
+                        0,
+                        420.dp
+                    )
+                }
+            }
+
+        wrapper.addView(
+            upButton,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                34.dp
+            )
+        )
+
+        wrapper.addView(
+            scrollView,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                0,
+                1f
+            )
+        )
+
+        wrapper.addView(
+            downButton,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                34.dp
+            )
+        )
+
+        scrollView.viewTreeObserver.addOnScrollChangedListener {
+
+            upButton.alpha =
+                if (
+                    scrollView.scrollY > 0
+                ) {
+                    1f
+                } else {
+                    0.25f
+                }
+
+            val child =
+                scrollView.getChildAt(0)
+
+            val maxScroll =
+                child.height -
+                        scrollView.height
+
+            downButton.alpha =
+                if (
+                    maxScroll > 0 &&
+                    scrollView.scrollY <
+                        maxScroll
+                ) {
+                    1f
+                } else {
+                    0.25f
+                }
+        }
+
+        return wrapper
+    }
+
+    private fun configureCategoryContainer(
+        horizontal: Boolean
+    ) {
+
+        categoryContainer.orientation =
+            if (horizontal) {
+                LinearLayout.HORIZONTAL
+            } else {
+                LinearLayout.VERTICAL
+            }
+
+        categoryContainer.gravity =
+            Gravity.CENTER
+
+        categoryContainer.setPadding(
+            if (horizontal) 8.dp else 6.dp,
+            6.dp,
+            if (horizontal) 8.dp else 6.dp,
+            6.dp
+        )
+    }
+
+    private fun createCategoryButtons() {
+
+        categoryContainer.removeAllViews()
+
+        val availableCategories =
+            categories.filter { category ->
+
+                allCharts.any {
+                    normalizeCategory(
+                        it.category
+                    ) == normalizeCategory(
+                        category.key
+                    )
+                }
+            }
+
+        if (
+            availableCategories.isEmpty()
+        ) {
+            return
+        }
+
+        val horizontal =
+            categoryContainer.orientation ==
+                    LinearLayout.HORIZONTAL
+
+        availableCategories.forEach {
+            category ->
+
+            val count =
+                allCharts.count {
+                    normalizeCategory(
+                        it.category
+                    ) ==
+                            normalizeCategory(
+                                category.key
+                            )
+                }
+
+            val button =
+                TextView(this).apply {
+
+                    text =
+                        "${category.label}\n$count"
+
+                    textSize =
+                        if (horizontal) {
+                            10f
+                        } else {
+                            11f
+                        }
+
+                    gravity =
+                        Gravity.CENTER
+
+                    typeface =
+                        Typeface.create(
+                            "sans-serif-medium",
+                            Typeface.NORMAL
+                        )
+
+                    setPadding(
+                        8.dp,
+                        6.dp,
+                        8.dp,
+                        6.dp
+                    )
+
+                    isClickable =
+                        true
+
+                    isFocusable =
+                        true
+
+                    setOnClickListener {
+
+                        selectCategory(
+                            category
+                        )
+                    }
+                }
+
+            val params =
+                if (horizontal) {
+
+                    LinearLayout.LayoutParams(
+                        0,
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        1f
+                    )
+
+                } else {
+
+                    LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        0,
+                        1f
+                    )
+                }
+
+            params.setMargins(
+                4.dp,
+                3.dp,
+                4.dp,
+                3.dp
+            )
+
+            categoryContainer.addView(
+                button,
+                params
+            )
+        }
+    }
+
+    private fun selectCategory(
+        category: CategoryItem
+    ) {
+
+        selectedCategoryTitle.text =
+            "${category.label}  •  CHARTS"
+
+        val filtered =
+            allCharts
+                .filter {
+                    normalizeCategory(
+                        it.category
+                    ) ==
+                            normalizeCategory(
+                                category.key
+                            )
+                }
+                .sortedBy {
+                    it.page
+                }
+
+        listContainer.removeAllViews()
+
+        filtered.forEach {
+            chart ->
+
+            addChartRow(
+                chart
+            )
+        }
+
+        chartScrollView.post {
+
+            chartScrollView.fullScroll(
+                View.FOCUS_UP
+            )
+        }
+
+        refreshCategoryButtonStates(
+            category.key
+        )
+    }
+
+    private fun refreshCategoryButtonStates(
+        selectedKey: String
+    ) {
+
+        val selectedNormalized =
+            normalizeCategory(
+                selectedKey
+            )
+
+        for (
+            i in 0 until
+                    categoryContainer.childCount
+        ) {
+
+            val child =
+                categoryContainer.getChildAt(
+                    i
+                )
+
+            if (
+                child !is TextView
+            ) {
+                continue
+            }
+
+            val rawText =
+                child.text
+                    .toString()
+                    .uppercase()
+
+            val isSelected =
+                rawText.startsWith(
+                    selectedNormalized
+                )
+
+            child.background =
+                createCategoryBackground(
+                    isSelected
+                )
+
+            child.setTextColor(
+                if (isSelected) {
+                    Color.WHITE
+                } else {
+                    Color.rgb(
+                        45,
+                        61,
+                        78
+                    )
+                }
+            )
+        }
+    }
+
+    private fun addChartRow(
+        chart: Chart
+    ) {
+
+        val row =
+            LinearLayout(this).apply {
+
+                orientation =
+                    LinearLayout.VERTICAL
+
+                setPadding(
+                    18.dp,
+                    15.dp,
+                    18.dp,
+                    15.dp
+                )
+
+                background =
+                    createChartBackground()
+
+                isClickable =
+                    true
+
+                isFocusable =
+                    true
+
+                setOnClickListener {
+
+                    val intent =
+                        Intent(
+                            this@AirportChartsActivity,
+                            PdfViewerActivity::class.java
+                        )
+
+                    intent.putExtra(
+                        "PAGE",
+                        chart.page
+                    )
+
+                    intent.putExtra(
+                        "TITLE",
+                        chart.name
+                    )
+
+                    intent.putExtra(
+                        "ICAO",
+                        icao
+                    )
+
+                    intent.putExtra(
+                        "CITY",
+                        city
+                    )
+
+                    intent.putExtra(
+                        "CATEGORY",
+                        chart.category
+                    )
+
+                    startActivity(
+                        intent
+                    )
+                }
+            }
+
+        val title =
+            TextView(this).apply {
+
+                text =
+                    chart.name
+
+                textSize =
+                    16f
+
+                typeface =
+                    Typeface.create(
+                        "sans-serif",
+                        Typeface.BOLD
+                    )
+
+                setTextColor(
+                    Color.rgb(
+                        23,
+                        38,
+                        54
+                    )
+                )
+            }
+
+        val subtitle =
+            TextView(this).apply {
+
+                text =
+                    "${chart.category}  •  Page ${chart.page}"
+
+                textSize =
+                    12f
+
+                setTextColor(
+                    Color.rgb(
+                        102,
+                        116,
+                        132
+                    )
+                )
+            }
+
+        row.addView(
+            title
+        )
+
+        row.addView(
+            subtitle,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+
+                topMargin =
+                    4.dp
+            }
+        )
+
+        listContainer.addView(
+            row,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+
+                setMargins(
+                    2.dp,
+                    5.dp,
+                    2.dp,
+                    5.dp
+                )
+            }
+        )
+    }
+
     private fun loadCharts() {
+
+        allCharts.clear()
 
         val text =
             assets
@@ -163,9 +965,6 @@ class AirportChartsActivity : ComponentActivity() {
                     it.readText()
                 }
 
-        val charts =
-            mutableListOf<Chart>()
-
         val root =
             text.trim()
 
@@ -173,12 +972,8 @@ class AirportChartsActivity : ComponentActivity() {
             root.startsWith("[")
         ) {
 
-            val array =
-                JSONArray(root)
-
             readArray(
-                array,
-                charts
+                JSONArray(root)
             )
 
         } else {
@@ -211,8 +1006,7 @@ class AirportChartsActivity : ComponentActivity() {
                 ) {
 
                     readArray(
-                        value,
-                        charts
+                        value
                     )
 
                     found =
@@ -231,12 +1025,9 @@ class AirportChartsActivity : ComponentActivity() {
                     keys.hasNext()
                 ) {
 
-                    val key =
-                        keys.next()
-
                     val value =
                         jsonObject.opt(
-                            key
+                            keys.next()
                         )
 
                     if (
@@ -244,44 +1035,51 @@ class AirportChartsActivity : ComponentActivity() {
                     ) {
 
                         readChartObject(
-                            value,
-                            charts
+                            value
                         )
                     }
                 }
             }
         }
 
-        charts
-            .filter {
-                it.page > 0
-            }
-            .distinctBy {
-                "${it.page}|${it.name}|${it.category}"
-            }
-            .sortedBy {
-                it.page
-            }
-            .forEach { chart ->
+        createCategoryButtons()
 
-                addChartRow(
-                    chart
-                )
+        val firstAvailable =
+            categories.firstOrNull {
+                category ->
+
+                allCharts.any {
+                    normalizeCategory(
+                        it.category
+                    ) ==
+                            normalizeCategory(
+                                category.key
+                            )
+                }
             }
+
+        if (
+            firstAvailable != null
+        ) {
+
+            selectCategory(
+                firstAvailable
+            )
+        }
     }
 
     private fun readArray(
-        array: JSONArray,
-        charts: MutableList<Chart>
+        array: JSONArray
     ) {
 
         for (
-            i in 0 until array.length()
+            index in
+            0 until array.length()
         ) {
 
             val value =
                 array.opt(
-                    i
+                    index
                 )
 
             if (
@@ -289,16 +1087,14 @@ class AirportChartsActivity : ComponentActivity() {
             ) {
 
                 readChartObject(
-                    value,
-                    charts
+                    value
                 )
             }
         }
     }
 
     private fun readChartObject(
-        item: JSONObject,
-        charts: MutableList<Chart>
+        item: JSONObject
     ) {
 
         val itemIcao =
@@ -371,133 +1167,68 @@ class AirportChartsActivity : ComponentActivity() {
                 "Chart page $page"
             )
 
-        charts.add(
+        allCharts.add(
             Chart(
-                page = page,
-                name = name,
-                category = category
+                page =
+                    page,
+                name =
+                    name,
+                category =
+                    category
             )
         )
     }
 
-    private fun addChartRow(
-        chart: Chart
-    ) {
+    private fun normalizeCategory(
+        value: String
+    ): String {
 
-        val row =
-            LinearLayout(this).apply {
+        return when (
+            value
+                .trim()
+                .uppercase()
+        ) {
 
-                orientation =
-                    LinearLayout.VERTICAL
+            "STAR" ->
+                "STAR"
 
-                setPadding(
-                    20.dp,
-                    15.dp,
-                    20.dp,
-                    15.dp
-                )
+            "SID" ->
+                "SID"
 
-                setBackgroundColor(
-                    0xFFFFFFFF.toInt()
-                )
+            "AIRPORT" ->
+                "AIRPORT"
 
-                setOnClickListener {
+            "APPROACH" ->
+                "APPROACH"
 
-                    val intent =
-                        Intent(
-                            this@AirportChartsActivity,
-                            PdfViewerActivity::class.java
-                        )
+            else ->
+                "OTHER"
+        }
+    }
 
-                    intent.putExtra(
-                        "PAGE",
-                        chart.page
-                    )
+    private fun buildAirportTitle():
+            String {
 
-                    intent.putExtra(
-                        "TITLE",
-                        chart.name
-                    )
+        val cleanIcao =
+            icao.trim()
 
-                    intent.putExtra(
-                        "ICAO",
-                        icao
-                    )
+        val cleanAirport =
+            airportName.trim()
 
-                    intent.putExtra(
-                        "CITY",
-                        city
-                    )
+        val cleanCity =
+            city.trim()
 
-                    intent.putExtra(
-                        "CATEGORY",
-                        chart.category
-                    )
-
-                    startActivity(
-                        intent
-                    )
-                }
-            }
-
-        val title =
-            TextView(this).apply {
-
-                text =
-                    chart.name
-
-                textSize =
-                    17f
-
-                typeface =
-                    Typeface.DEFAULT_BOLD
-            }
-
-        val subtitle =
-            TextView(this).apply {
-
-                text =
-                    "${chart.category}  •  Page ${chart.page}"
-
-                textSize =
-                    13f
-
-                setTextColor(
-                    0xFF667085.toInt()
-                )
-            }
-
-        row.addView(
-            title
+        return listOf(
+            cleanIcao,
+            cleanAirport,
+            cleanCity
         )
-
-        row.addView(
-            subtitle,
-            LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-
-                topMargin =
-                    4.dp
+            .filter {
+                it.isNotEmpty()
             }
-        )
-
-        listContainer.addView(
-            row,
-            LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-
-                setMargins(
-                    16.dp,
-                    4.dp,
-                    16.dp,
-                    4.dp
-                )
-            }
-        )
+            .joinToString(
+                "  •  "
+            )
     }
 
     private fun firstNonEmpty(
@@ -521,6 +1252,85 @@ class AirportChartsActivity : ComponentActivity() {
                 it > 0
             }
             ?: -1
+    }
+
+    private fun createChartBackground():
+            GradientDrawable {
+
+        return GradientDrawable().apply {
+
+            shape =
+                GradientDrawable.RECTANGLE
+
+            cornerRadius =
+                14.dp.toFloat()
+
+            setColor(
+                Color.WHITE
+            )
+
+            setStroke(
+                1.dp,
+                Color.rgb(
+                    224,
+                    230,
+                    236
+                )
+            )
+        }
+    }
+
+    private fun createCategoryBackground(
+        selected: Boolean
+    ): GradientDrawable {
+
+        return GradientDrawable().apply {
+
+            shape =
+                GradientDrawable.RECTANGLE
+
+            cornerRadius =
+                12.dp.toFloat()
+
+            if (selected) {
+
+                setColor(
+                    Color.rgb(
+                        25,
+                        97,
+                        111
+                    )
+                )
+
+                setStroke(
+                    1.dp,
+                    Color.rgb(
+                        25,
+                        97,
+                        111
+                    )
+                )
+
+            } else {
+
+                setColor(
+                    Color.rgb(
+                        239,
+                        243,
+                        247
+                    )
+                )
+
+                setStroke(
+                    1.dp,
+                    Color.rgb(
+                        215,
+                        223,
+                        231
+                    )
+                )
+            }
+        }
     }
 
     private val Int.dp: Int
