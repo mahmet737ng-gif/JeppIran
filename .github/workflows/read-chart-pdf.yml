@@ -9,35 +9,26 @@ on:
 
   workflow_dispatch:
 
-
 permissions:
   contents: write
 
-
 jobs:
-
   build-chart-database:
-
     runs-on: ubuntu-24.04
 
-
     steps:
-
       - name: Checkout repository with LFS
         uses: actions/checkout@v5
         with:
           lfs: true
-
 
       - name: Install PDF tools
         run: |
           sudo apt-get update
           sudo apt-get install -y qpdf poppler-utils
 
-
       - name: Check source files
         run: |
-
           echo "Repository:"
           pwd
 
@@ -57,13 +48,10 @@ jobs:
           echo "QPDF:"
           qpdf --version
 
-
       - name: Build per-airport PDFs and v18 database
         shell: bash
         run: |
-
           python3 - <<'PY'
-
           import hashlib
           import json
           import os
@@ -71,125 +59,72 @@ jobs:
           import subprocess
           from datetime import datetime, timezone
 
-
           SOURCE_PDF = "Iran2620.pdf"
-
-          SOURCE_DATABASE = (
-              "app/src/main/assets/charts-app-v16.json"
-          )
+          SOURCE_DATABASE = "app/src/main/assets/charts-app-v16.json"
 
           ROOT_DATABASE = "charts-app-v18.json"
-
-          ASSET_DATABASE = (
-              "app/src/main/assets/charts-app-v18.json"
-          )
-
+          ASSET_DATABASE = "app/src/main/assets/charts-app-v18.json"
           INDEX_DATABASE = "charts-index.json"
-
-          MANIFEST_FILE = (
-              "app/src/main/assets/charts-manifest.json"
-          )
+          MANIFEST_FILE = "app/src/main/assets/charts-manifest.json"
 
           BUILD_DIR = "airport-pdfs"
 
           VERSION = "v18"
-
           RELEASE_TAG = "charts-v18"
 
           BASE_URL = (
-              "https://github.com/"
-              "mahmet737ng-gif/"
-              "JeppIran/releases/download/"
-              "charts-v18/"
+              "https://github.com/mahmet737ng-gif/"
+              "JeppIran/releases/download/charts-v18/"
           )
-
 
           print("=" * 70)
           print("JEPPIRAN V18 BUILD")
           print("=" * 70)
 
-
           # --------------------------------------------------
-          # Load existing validated chart database
+          # Load source chart database
           # --------------------------------------------------
 
-          with open(
-              SOURCE_DATABASE,
-              "r",
-              encoding="utf-8"
-          ) as f:
-
+          with open(SOURCE_DATABASE, "r", encoding="utf-8") as f:
               source_rows = json.load(f)
 
-
-          if not isinstance(
-              source_rows,
-              list
-          ):
-
+          if not isinstance(source_rows, list):
               raise SystemExit(
                   "charts-app-v16.json is not an array"
               )
 
-
           if not source_rows:
-
               raise SystemExit(
                   "charts-app-v16.json is empty"
               )
 
-
-          print(
-              "Source database rows:",
-              len(source_rows)
-          )
-
+          print("Source database rows:", len(source_rows))
 
           # --------------------------------------------------
           # Read actual PDF page count
           # --------------------------------------------------
 
           pdfinfo = subprocess.check_output(
-              [
-                  "pdfinfo",
-                  SOURCE_PDF
-              ],
+              ["pdfinfo", SOURCE_PDF],
               text=True,
               errors="replace"
           )
 
-
           pdf_pages = 0
 
-
           for line in pdfinfo.splitlines():
-
-              if line.startswith(
-                  "Pages:"
-              ):
-
+              if line.startswith("Pages:"):
                   pdf_pages = int(
-                      line.split(
-                          ":",
-                          1
-                      )[1].strip()
+                      line.split(":", 1)[1].strip()
                   )
-
                   break
 
-
           if pdf_pages <= 0:
-
               raise SystemExit(
                   "Could not determine PDF page count"
               )
 
-
-          print(
-              "Source PDF pages:",
-              pdf_pages
-          )
-
+          print("Source PDF pages:", pdf_pages)
 
           # --------------------------------------------------
           # Validate source rows
@@ -197,222 +132,123 @@ jobs:
 
           rows = []
 
-
           for item in source_rows:
-
-              if not isinstance(
-                  item,
-                  dict
-              ):
-
+              if not isinstance(item, dict):
                   continue
 
-
-              page = int(
-                  item.get(
-                      "page",
-                      0
-                  )
-              )
-
+              page = int(item.get("page", 0))
 
               airport = str(
-                  item.get(
-                      "airport",
-                      ""
-                  )
+                  item.get("airport", "")
               ).strip().upper()
 
-
               category = str(
-                  item.get(
-                      "category",
-                      "Other"
-                  )
+                  item.get("category", "Other")
               ).strip()
-
 
               chart_number = str(
-                  item.get(
-                      "chart_number",
-                      ""
-                  )
+                  item.get("chart_number", "")
               ).strip()
-
 
               name = str(
-                  item.get(
-                      "name",
-                      ""
-                  )
+                  item.get("name", "")
               ).strip()
 
-
               if page <= 0:
-
                   continue
 
-
               if page > pdf_pages:
-
                   raise SystemExit(
                       "Database page exceeds PDF: "
                       + str(page)
                   )
 
-
               if not airport:
-
                   continue
-
 
               row = dict(item)
 
-
               row["page"] = page
-
               row["airport"] = airport
-
               row["category"] = category
-
               row["chart_number"] = chart_number
-
               row["name"] = name
-
               row["pdf_page"] = 0
 
-
-              rows.append(
-                  row
-              )
-
+              rows.append(row)
 
           if not rows:
-
               raise SystemExit(
                   "No usable chart rows found"
               )
 
-
-          print(
-              "Usable chart rows:",
-              len(rows)
-          )
-
+          print("Usable chart rows:", len(rows))
 
           # --------------------------------------------------
-          # Group pages by airport
+          # Group global PDF pages by airport
           # --------------------------------------------------
 
           airport_pages = {}
 
-
           for row in rows:
+              airport = row["airport"]
 
-              airport =
-                  row["airport"]
+              if airport not in airport_pages:
+                  airport_pages[airport] = []
 
-
-              airport_pages.setdefault(
-                  airport,
-                  []
-              ).append(
+              airport_pages[airport].append(
                   row["page"]
               )
 
-
           for airport in airport_pages:
-
-              airport_pages[
-                  airport
-              ] = sorted(
-                  set(
-                      airport_pages[
-                          airport
-                      ]
-                  )
+              airport_pages[airport] = sorted(
+                  set(airport_pages[airport])
               )
-
 
           print(
               "Detected airports:",
               len(airport_pages)
           )
 
-
           # --------------------------------------------------
-          # Prepare clean output directory
+          # Prepare output directory
           # --------------------------------------------------
 
-          if os.path.isdir(
-              BUILD_DIR
-          ):
-
-              shutil.rmtree(
-                  BUILD_DIR
-              )
-
+          if os.path.isdir(BUILD_DIR):
+              shutil.rmtree(BUILD_DIR)
 
           os.makedirs(
               BUILD_DIR,
               exist_ok=True
           )
 
-
           # --------------------------------------------------
-          # Create local page numbers
+          # Build local PDF page map
           # --------------------------------------------------
 
           local_page_map = {}
 
-
-          for airport in sorted(
-              airport_pages.keys()
-          ):
-
-              local_page_map[
-                  airport
-              ] = {}
-
+          for airport in sorted(airport_pages.keys()):
+              local_page_map[airport] = {}
 
               for local_page, global_page in enumerate(
-                  airport_pages[
-                      airport
-                  ],
+                  airport_pages[airport],
                   start=1
               ):
-
-                  local_page_map[
-                      airport
-                  ][
-                      global_page
-                  ] = local_page
-
+                  local_page_map[airport][global_page] = local_page
 
           # --------------------------------------------------
-          # Add local PDF page numbers to chart rows
+          # Add local pdf_page to every chart
           # --------------------------------------------------
 
           for row in rows:
+              airport = row["airport"]
+              global_page = row["page"]
 
-              airport =
-                  row["airport"]
-
-
-              global_page =
-                  row["page"]
-
-
-              row["pdf_page"] =
-                  local_page_map[
-                      airport
-                  ][
-                      global_page
-                  ]
-
+              row["pdf_page"] = local_page_map[airport][global_page]
 
           # --------------------------------------------------
-          # Sort database
+          # Sort rows
           # --------------------------------------------------
 
           rows.sort(
@@ -422,42 +258,31 @@ jobs:
               )
           )
 
+          # --------------------------------------------------
+          # Generate timestamp
+          # --------------------------------------------------
+
+          generated_at = datetime.now(
+              timezone.utc
+          ).isoformat()
 
           # --------------------------------------------------
-          # Create v18 application database
+          # Create root database
           # --------------------------------------------------
-
-          generated_at =
-              datetime.now(
-                  timezone.utc
-              ).isoformat()
-
 
           database = {
-
-              "version":
-                  VERSION,
-
-              "source":
-                  SOURCE_PDF,
-
-              "generated_at":
-                  generated_at,
-
-              "pages":
-                  pdf_pages,
-
-              "charts":
-                  rows
+              "version": VERSION,
+              "source": SOURCE_PDF,
+              "generated_at": generated_at,
+              "pages": pdf_pages,
+              "charts": rows
           }
-
 
           with open(
               ROOT_DATABASE,
               "w",
               encoding="utf-8"
           ) as f:
-
               json.dump(
                   database,
                   f,
@@ -465,19 +290,20 @@ jobs:
                   indent=2
               )
 
+          # --------------------------------------------------
+          # Create Android asset database
+          # --------------------------------------------------
 
           os.makedirs(
               "app/src/main/assets",
               exist_ok=True
           )
 
-
           with open(
               ASSET_DATABASE,
               "w",
               encoding="utf-8"
           ) as f:
-
               json.dump(
                   rows,
                   f,
@@ -485,9 +311,8 @@ jobs:
                   indent=2
               )
 
-
           # --------------------------------------------------
-          # Create compact index
+          # Create index database
           # --------------------------------------------------
 
           with open(
@@ -495,7 +320,6 @@ jobs:
               "w",
               encoding="utf-8"
           ) as f:
-
               json.dump(
                   database,
                   f,
@@ -503,35 +327,24 @@ jobs:
                   indent=2
               )
 
-
           # --------------------------------------------------
-          # Create one PDF for every airport
+          # Create one PDF per airport
           # --------------------------------------------------
 
           manifest_airports = {}
 
-
-          for airport in sorted(
-              airport_pages.keys()
-          ):
-
-              pages = airport_pages[
-                  airport
-              ]
-
+          for airport in sorted(airport_pages.keys()):
+              pages = airport_pages[airport]
 
               output_pdf = os.path.join(
                   BUILD_DIR,
                   airport + ".pdf"
               )
 
-
-              page_spec =
-                  ",".join(
-                      str(page)
-                      for page in pages
-                  )
-
+              page_spec = ",".join(
+                  str(page)
+                  for page in pages
+              )
 
               print()
               print(
@@ -541,7 +354,6 @@ jobs:
                   len(pages),
                   "pages"
               )
-
 
               subprocess.run(
                   [
@@ -556,155 +368,85 @@ jobs:
                   check=True
               )
 
-
-              if not os.path.isfile(
-                  output_pdf
-              ):
-
+              if not os.path.isfile(output_pdf):
                   raise SystemExit(
                       "PDF was not created: "
                       + output_pdf
                   )
 
-
-              size =
-                  os.path.getsize(
-                      output_pdf
-                  )
-
+              size = os.path.getsize(output_pdf)
 
               if size <= 0:
-
                   raise SystemExit(
                       "PDF is empty: "
                       + output_pdf
                   )
 
-
-              # ----------------------------------------------
               # Check PDF integrity
-              # ----------------------------------------------
-
-              check =
-                  subprocess.run(
-                      [
-                          "qpdf",
-                          "--check",
-                          output_pdf
-                      ],
-                      capture_output=True,
-                      text=True
-                  )
-
+              check = subprocess.run(
+                  [
+                      "qpdf",
+                      "--check",
+                      output_pdf
+                  ],
+                  capture_output=True,
+                  text=True
+              )
 
               if check.returncode != 0:
-
-                  print(
-                      check.stdout
-                  )
-
-                  print(
-                      check.stderr
-                  )
+                  print(check.stdout)
+                  print(check.stderr)
 
                   raise SystemExit(
                       "Invalid PDF: "
                       + output_pdf
                   )
 
-
-              # ----------------------------------------------
               # SHA256
-              # ----------------------------------------------
-
-              digest =
-                  hashlib.sha256()
-
+              digest = hashlib.sha256()
 
               with open(
                   output_pdf,
                   "rb"
               ) as f:
-
                   while True:
-
-                      block =
-                          f.read(
-                              1024 * 1024
-                          )
-
-
-                      if not block:
-
-                          break
-
-
-                      digest.update(
-                          block
+                      block = f.read(
+                          1024 * 1024
                       )
 
+                      if not block:
+                          break
 
-              manifest_airports[
-                  airport
-              ] = {
+                      digest.update(block)
 
-                  "file":
-                      airport + ".pdf",
-
-                  "url":
-                      BASE_URL +
-                      airport +
-                      ".pdf",
-
-                  "sha256":
-                      digest.hexdigest(),
-
-                  "size":
-                      size,
-
-                  "pages":
-                      len(pages),
-
-                  "global_pages":
-                      pages
+              manifest_airports[airport] = {
+                  "file": airport + ".pdf",
+                  "url": BASE_URL + airport + ".pdf",
+                  "sha256": digest.hexdigest(),
+                  "size": size,
+                  "pages": len(pages),
+                  "global_pages": pages
               }
-
 
           # --------------------------------------------------
           # Create manifest
           # --------------------------------------------------
 
           manifest = {
-
-              "version":
-                  VERSION,
-
-              "release_tag":
-                  RELEASE_TAG,
-
-              "base_url":
-                  BASE_URL,
-
-              "source":
-                  SOURCE_PDF,
-
-              "generated_at":
-                  generated_at,
-
-              "pages":
-                  pdf_pages,
-
-              "airports":
-                  manifest_airports
+              "version": VERSION,
+              "release_tag": RELEASE_TAG,
+              "base_url": BASE_URL,
+              "source": SOURCE_PDF,
+              "generated_at": generated_at,
+              "pages": pdf_pages,
+              "airports": manifest_airports
           }
-
 
           with open(
               MANIFEST_FILE,
               "w",
               encoding="utf-8"
           ) as f:
-
               json.dump(
                   manifest,
                   f,
@@ -712,41 +454,27 @@ jobs:
                   indent=2
               )
 
-
           # --------------------------------------------------
           # Final validation
           # --------------------------------------------------
 
-          for airport in sorted(
-              airport_pages.keys()
-          ):
+          for airport in sorted(airport_pages.keys()):
+              path = os.path.join(
+                  BUILD_DIR,
+                  airport + ".pdf"
+              )
 
-              path =
-                  os.path.join(
-                      BUILD_DIR,
-                      airport + ".pdf"
-                  )
-
-
-              if not os.path.isfile(
-                  path
-              ):
-
+              if not os.path.isfile(path):
                   raise SystemExit(
                       "Missing airport PDF: "
                       + airport
                   )
 
-
-              if os.path.getsize(
-                  path
-              ) <= 0:
-
+              if os.path.getsize(path) <= 0:
                   raise SystemExit(
                       "Empty airport PDF: "
                       + airport
                   )
-
 
           print()
           print("=" * 70)
@@ -773,11 +501,7 @@ jobs:
           for airport in sorted(
               manifest_airports.keys()
           ):
-
-              item =
-                  manifest_airports[
-                      airport
-                  ]
+              item = manifest_airports[airport]
 
               print(
                   airport,
@@ -789,169 +513,108 @@ jobs:
               )
 
           print("=" * 70)
-
           PY
-
 
       - name: Validate generated files
         shell: bash
         run: |
-
           test -f charts-app-v18.json
-
           test -f charts-index.json
-
           test -f app/src/main/assets/charts-app-v18.json
-
           test -f app/src/main/assets/charts-manifest.json
-
           test -d airport-pdfs
 
-
           python3 - <<'PY'
-
           import json
           import os
-
 
           with open(
               "charts-app-v18.json",
               "r",
               encoding="utf-8"
           ) as f:
-
-              database =
-                  json.load(
-                      f
-                  )
-
+              database = json.load(f)
 
           with open(
               "app/src/main/assets/charts-app-v18.json",
               "r",
               encoding="utf-8"
           ) as f:
-
-              asset =
-                  json.load(
-                      f
-                  )
-
+              asset = json.load(f)
 
           with open(
               "app/src/main/assets/charts-manifest.json",
               "r",
               encoding="utf-8"
           ) as f:
+              manifest = json.load(f)
 
-              manifest =
-                  json.load(
-                      f
-                  )
-
-
-          charts =
-              database.get(
-                  "charts",
-                  []
-              )
-
+          charts = database.get(
+              "charts",
+              []
+          )
 
           if not charts:
-
               raise SystemExit(
                   "Database contains no charts"
               )
 
-
           if len(charts) != len(asset):
-
               raise SystemExit(
                   "Root database and asset database differ"
               )
 
-
-          if (
-              database.get("version")
-              != "v18"
-          ):
-
+          if database.get("version") != "v18":
               raise SystemExit(
                   "Wrong database version"
               )
 
-
-          if (
-              manifest.get("version")
-              != "v18"
-          ):
-
+          if manifest.get("version") != "v18":
               raise SystemExit(
                   "Wrong manifest version"
               )
 
-
-          airports =
-              manifest.get(
-                  "airports",
-                  {}
-              )
-
+          airports = manifest.get(
+              "airports",
+              {}
+          )
 
           if not airports:
-
               raise SystemExit(
                   "Manifest contains no airports"
               )
 
-
           for airport, item in airports.items():
+              filename = item["file"]
 
-              filename =
-                  item["file"]
+              path = os.path.join(
+                  "airport-pdfs",
+                  filename
+              )
 
-
-              path =
-                  os.path.join(
-                      "airport-pdfs",
-                      filename
-                  )
-
-
-              if not os.path.isfile(
-                  path
-              ):
-
+              if not os.path.isfile(path):
                   raise SystemExit(
-                      "Missing "
-                      + path
+                      "Missing " + path
                   )
-
 
           print(
               "Database rows:",
               len(charts)
           )
 
-
           print(
               "Airport PDFs:",
               len(airports)
           )
-
           PY
-
 
       - name: Create chart data release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
         shell: bash
-
         run: |
-
           TAG="charts-v18"
-
 
           if gh release view \
               "$TAG" \
@@ -968,7 +631,6 @@ jobs:
 
           fi
 
-
           gh release create \
             "$TAG" \
             airport-pdfs/*.pdf \
@@ -976,19 +638,14 @@ jobs:
             --title "JeppIran Chart Data v18" \
             --notes "Per-airport chart PDFs generated from Iran2620.pdf."
 
-
       - name: Commit generated database
         shell: bash
-
         run: |
-
           git config user.name \
             "github-actions[bot]"
 
-
           git config user.email \
             "41898282+github-actions[bot]@users.noreply.github.com"
-
 
           git add \
             charts-index.json \
@@ -996,16 +653,11 @@ jobs:
             app/src/main/assets/charts-app-v18.json \
             app/src/main/assets/charts-manifest.json
 
-
           if git diff --cached --quiet; then
-
             echo "No database changes."
-
           else
-
             git commit \
               -m "Build JeppIran chart database v18"
 
             git push
-
           fi
