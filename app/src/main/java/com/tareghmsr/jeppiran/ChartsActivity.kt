@@ -62,9 +62,17 @@ class ChartsActivity : ComponentActivity() {
         val city: String
     )
 
-    private val airports = airportCities
-        .map { Airport(it.key, it.value) }
-        .sortedBy { it.city }
+    private val airports =
+        airportCities
+            .map {
+                Airport(
+                    it.key,
+                    it.value
+                )
+            }
+            .sortedBy {
+                it.city
+            }
 
     override fun onCreate(
         savedInstanceState: Bundle?
@@ -112,6 +120,7 @@ class ChartsActivity : ComponentActivity() {
 
         val scrollView =
             ScrollView(this).apply {
+
                 isFillViewport =
                     true
 
@@ -119,11 +128,7 @@ class ChartsActivity : ComponentActivity() {
                     ScrollView.OVER_SCROLL_IF_CONTENT_SCROLLS
 
                 addView(
-                    listContainer,
-                    ScrollView.LayoutParams(
-                        ScrollView.LayoutParams.MATCH_PARENT,
-                        ScrollView.LayoutParams.WRAP_CONTENT
-                    )
+                    listContainer
                 )
             }
 
@@ -217,6 +222,7 @@ class ChartsActivity : ComponentActivity() {
 
         airports
             .filter { airport ->
+
                 q.isEmpty() ||
                         airport.icao.contains(
                             q
@@ -307,6 +313,7 @@ class ChartsActivity : ComponentActivity() {
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
                     ).apply {
+
                         topMargin =
                             4.dp
                     }
