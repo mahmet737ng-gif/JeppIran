@@ -1144,6 +1144,9 @@ private val locationPermissionLauncher =
                 this
             ).apply {
 
+                visibility =
+                    View.GONE
+
                 text =
                     "GPS: waiting..."
 
