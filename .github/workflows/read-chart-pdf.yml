@@ -1,47 +1,684 @@
-name: Read Iran2620 PDF
+name: Build JeppIran Chart Database
 
 on:
   push:
     paths:
       - 'Iran2620.pdf'
       - '.github/workflows/read-chart-pdf.yml'
+
   workflow_dispatch:
 
 permissions:
   contents: write
 
+
 jobs:
-  index-pdf:
+
+  build-chart-database:
+
     runs-on: ubuntu-24.04
 
+
     steps:
+
       - name: Checkout repository with LFS
         uses: actions/checkout@v5
         with:
           lfs: true
+
 
       - name: Install PDF tools
         run: |
           sudo apt-get update
           sudo apt-get install -y poppler-utils
 
+
       - name: Check PDF
         run: |
           ls -lh Iran2620.pdf
           pdfinfo Iran2620.pdf | head -30
 
-      - name: Build chart page index
+
+      - name: Build chart index and application database
+        shell: bash
         run: |
+
           python3 - <<'PY'
+
           import json
           import re
           import subprocess
+          from datetime import datetime, timezone
+
+
+          PDF_FILE = "Iran2620.pdf"
+
+          INDEX_FILE = "charts-index.json"
+
+          APP_FILE = "charts-app-v17.json"
+
+          ASSET_DIR = "app/src/main/assets"
+
+          ASSET_FILE = f"{ASSET_DIR}/charts-app-v17.json"
+
+
+          SUPPORTED_ICAOS = {
+              "LTFM",
+
+              "OIAA",
+              "OIAM",
+              "OIAW",
+              "OIBB",
+              "OIBK",
+              "OIBP",
+              "OICC",
+              "OICI",
+              "OIFM",
+              "OIGG",
+              "OIHH",
+              "OIIE",
+              "OIII",
+              "OIIP",
+              "OIKK",
+              "OIMB",
+              "OIMM",
+              "OIMN",
+              "OIMS",
+              "OING",
+              "OINZ",
+              "OISS",
+              "OITL",
+              "OITR",
+              "OITT",
+              "OIYY",
+              "OIZC",
+              "OIZH",
+
+              "OMDB",
+              "OOMS",
+
+              "ORBI",
+              "ORNI",
+
+              "UDYZ",
+
+              "UGSB",
+              "UGTB"
+          }
+
+
+          def clean_spaces(value):
+
+              return re.sub(
+                  r"\s+",
+                  " ",
+                  value
+              ).strip()
+
+
+          def get_lines(text):
+
+              lines = []
+
+              for raw in text.splitlines():
+
+                  line = clean_spaces(raw)
+
+                  if not line:
+                      continue
+
+                  upper = line.upper()
+
+                  if "PRINTED FROM JEPPVIEW FOR WINDOWS" in upper:
+                      continue
+
+                  if upper.startswith("PRINTED FROM JEPPESEN"):
+                      continue
+
+                  lines.append(line)
+
+              return lines
+
+
+          def detect_icaos(text):
+
+              upper = text.upper()
+
+              candidates = re.findall(
+                  r"\b[A-Z]{4}\b",
+                  upper
+              )
+
+              result = []
+
+              seen = set()
+
+              for code in candidates:
+
+                  if code not in SUPPORTED_ICAOS:
+                      continue
+
+                  if code in seen:
+                      continue
+
+                  seen.add(code)
+                  result.append(code)
+
+              return result
+
+
+          def detect_category(text):
+
+              upper = text.upper()
+
+
+              if re.search(
+                  r"\bSTAR\b|STANDARD ARRIVAL",
+                  upper
+              ):
+                  return "STAR"
+
+
+              if re.search(
+                  r"\bSID\b|STANDARD INSTRUMENT DEPARTURE",
+                  upper
+              ):
+                  return "SID"
+
+
+              if re.search(
+                  r"\bAPPROACH\b",
+                  upper
+              ):
+                  return "Approach"
+
+
+              if re.search(
+                  r"\bILS\b|\bLOC\b|\bVOR\b|\bNDB\b|\bRNAV\b|\bRNP\b|\bGLS\b|\bLDA\b|\bSRA\b",
+                  upper
+              ):
+
+                  if re.search(
+                      r"\bRWY\b|\bRUNWAY\b",
+                      upper
+                  ):
+                      return "Approach"
+
+
+              if re.search(
+                  r"AERODROME CHART|AIRPORT CHART|AIRPORT INFORMATION|AERODROME INFORMATION|ADC\b|GROUND CHART|TAXIWAY|APRON",
+                  upper
+              ):
+                  return "Airport"
+
+
+              return "Other"
+
+
+          def extract_chart_number(lines):
+
+              patterns = [
+
+                  re.compile(
+                      r"\b(\d{1,2}-\d{1,2}[A-Z]?)\b"
+                  ),
+
+                  re.compile(
+                      r"\b(\d{1,2}-[A-Z]-\d{1,2})\b"
+                  ),
+
+                  re.compile(
+                      r"\b(\d{1,2}-\d{1,2}-\d{1,2})\b"
+                  )
+              ]
+
+
+              for line in lines:
+
+                  upper = line.upper()
+
+                  if "PRINTED" in upper:
+                      continue
+
+                  for pattern in patterns:
+
+                      match = pattern.search(
+                          upper
+                      )
+
+                      if match:
+
+                          return match.group(
+                              1
+                          )
+
+
+              return ""
+
+
+          def clean_title_candidate(line):
+
+              value = clean_spaces(
+                  line
+              )
+
+              upper = value.upper()
+
+
+              if len(value) < 3:
+                  return ""
+
+
+              ignored = [
+
+                  "JEPPESEN",
+
+                  "JEPPVIEW",
+
+                  "COPYRIGHT",
+
+                  "REVISION",
+
+                  "CHANGES",
+
+                  "COMMUNICATIONS",
+
+                  "FREQUENCIES",
+
+                  "NOTES",
+
+                  "LEGEND",
+
+                  "DISTANCE",
+
+                  "ALTITUDE",
+
+                  "HEIGHT",
+
+                  "TRANSITION",
+
+                  "MAGNETIC",
+
+                  "VARIATION"
+              ]
+
+
+              for word in ignored:
+
+                  if word in upper:
+                      return ""
+
+
+              if re.fullmatch(
+                  r"[0-9\s./-]+",
+                  value
+              ):
+                  return ""
+
+
+              return value[:160]
+
+
+          def extract_airport_name(lines):
+
+              for line in lines[:40]:
+
+                  upper = line.upper()
+
+                  if "AERODROME CHART" in upper:
+
+                      return "AERODROME CHART"
+
+
+              for line in lines[:40]:
+
+                  upper = line.upper()
+
+                  if "AIRPORT CHART" in upper:
+
+                      return "AIRPORT CHART"
+
+
+              for line in lines[:40]:
+
+                  upper = line.upper()
+
+                  if "AERODROME INFORMATION" in upper:
+
+                      return "AERODROME INFORMATION"
+
+
+              for line in lines[:40]:
+
+                  upper = line.upper()
+
+                  if "AIRPORT INFORMATION" in upper:
+
+                      return "AIRPORT INFORMATION"
+
+
+              return "AIRPORT CHART"
+
+
+          def extract_procedure_codes(lines):
+
+              results = []
+
+              seen = set()
+
+
+              bracket_pattern = re.compile(
+                  r"\[([A-Z0-9][A-Z0-9.-]{2,20})\]"
+              )
+
+
+              plain_pattern = re.compile(
+                  r"\b([A-Z]{2,10})\s+([0-9]{1,2}[A-Z])\b"
+              )
+
+
+              ignored = {
+                  "RWY",
+                  "ILS",
+                  "LOC",
+                  "VOR",
+                  "NDB",
+                  "DME",
+                  "RNAV",
+                  "RNP",
+                  "STAR",
+                  "SID"
+              }
+
+
+              for line in lines:
+
+                  upper = line.upper()
+
+
+                  for code in bracket_pattern.findall(
+                      upper
+                  ):
+
+                      if code in ignored:
+                          continue
+
+                      if code not in seen:
+
+                          seen.add(code)
+                          results.append(code)
+
+
+              if results:
+                  return results[:6]
+
+
+              for line in lines:
+
+                  upper = line.upper()
+
+
+                  if "RWY" in upper:
+                      continue
+
+                  if "AIRPORT" in upper:
+                      continue
+
+                  if "AERODROME" in upper:
+                      continue
+
+
+                  for first, second in plain_pattern.findall(
+                      upper
+                  ):
+
+                      value = f"{first} {second}"
+
+
+                      if first in ignored:
+                          continue
+
+                      if value in seen:
+                          continue
+
+
+                      seen.add(value)
+                      results.append(value)
+
+
+              return results[:6]
+
+
+          def extract_approach_name(lines):
+
+              patterns = [
+
+                  re.compile(
+                      r"\bILS\s+([XYZ])?\s*(?:OR\s+LOC\s+([XYZ])?)?\s*RWY\s+([0-9]{1,2}[LRC]?(?:/[0-9]{1,2}[LRC]?)?)",
+                      re.IGNORECASE
+                  ),
+
+                  re.compile(
+                      r"\bVOR(?:\s+DME)?(?:\s+[A-Z0-9]+)?\s+RWY\s+([0-9]{1,2}[LRC]?(?:/[0-9]{1,2}[LRC]?)?)",
+                      re.IGNORECASE
+                  ),
+
+                  re.compile(
+                      r"\bNDB\s+RWY\s+([0-9]{1,2}[LRC]?(?:/[0-9]{1,2}[LRC]?)?)",
+                      re.IGNORECASE
+                  ),
+
+                  re.compile(
+                      r"\b(RNAV|RNP|GLS|LDA|SRA)(?:\s+\([A-Z0-9]+\))?(?:\s+[A-Z0-9.-]+)*\s+RWY\s+([0-9]{1,2}[LRC]?(?:/[0-9]{1,2}[LRC]?)?)",
+                      re.IGNORECASE
+                  )
+              ]
+
+
+              for line in lines[:80]:
+
+                  upper = line.upper()
+
+
+                  for index, pattern in enumerate(
+                      patterns
+                  ):
+
+                      match = pattern.search(
+                          upper
+                      )
+
+
+                      if not match:
+                          continue
+
+
+                      if index == 0:
+
+                          variant_1 =
+                              match.group(1)
+
+                          variant_2 =
+                              match.group(2)
+
+                          runway =
+                              match.group(3)
+
+
+                          if variant_1:
+
+                              if variant_2:
+
+                                  return (
+                                      f"ILS {variant_1} "
+                                      f"OR LOC {variant_2} "
+                                      f"RWY {runway}"
+                                  )
+
+                              return (
+                                  f"ILS {variant_1} "
+                                  f"RWY {runway}"
+                              )
+
+
+                          return (
+                              f"ILS OR LOC "
+                              f"RWY {runway}"
+                          )
+
+
+                      if index == 1:
+
+                          return (
+                              clean_spaces(
+                                  match.group(0)
+                              )
+                          )
+
+
+                      if index == 2:
+
+                          return (
+                              f"NDB RWY "
+                              f"{match.group(1)}"
+                          )
+
+
+                      return (
+                          f"{match.group(1).upper()} "
+                          f"RWY "
+                          f"{match.group(2)}"
+                      )
+
+
+              return ""
+
+
+          def extract_other_name(lines):
+
+              for line in lines[:40]:
+
+                  candidate =
+                      clean_title_candidate(
+                          line
+                      )
+
+                  if not candidate:
+                      continue
+
+                  if re.match(
+                      r"^(PAGE|CHART)\s+\d+$",
+                      candidate,
+                      re.IGNORECASE
+                  ):
+                      continue
+
+                  return candidate
+
+
+              return ""
+
+
+          def build_chart_name(
+              category,
+              lines,
+              chart_number,
+              page
+          ):
+
+              if category == "Airport":
+
+                  return extract_airport_name(
+                      lines
+                  )
+
+
+              if category in (
+                  "STAR",
+                  "SID"
+              ):
+
+                  procedures =
+                      extract_procedure_codes(
+                          lines
+                      )
+
+
+                  if procedures:
+
+                      return ", ".join(
+                          procedures
+                      )
+
+
+                  if chart_number:
+
+                      return (
+                          f"{category} "
+                          f"{chart_number}"
+                      )
+
+
+                  return (
+                      f"{category} CHART"
+                  )
+
+
+              if category == "Approach":
+
+                  approach =
+                      extract_approach_name(
+                          lines
+                      )
+
+
+                  if approach:
+
+                      return approach
+
+
+                  if chart_number:
+
+                      return (
+                          f"APPROACH "
+                          f"{chart_number}"
+                      )
+
+
+                  return "APPROACH CHART"
+
+
+              other =
+                  extract_other_name(
+                      lines
+                  )
+
+
+              if other:
+
+                  return other
+
+
+              if chart_number:
+
+                  return (
+                      f"OTHER "
+                      f"{chart_number}"
+                  )
+
+
+              return "OTHER CHART"
+
 
           info = subprocess.check_output(
-              ["pdfinfo", "Iran2620.pdf"],
+              [
+                  "pdfinfo",
+                  PDF_FILE
+              ],
               text=True,
               errors="replace"
           )
+
 
           match = re.search(
               r"^Pages:\s+(\d+)",
@@ -49,112 +686,420 @@ jobs:
               re.MULTILINE
           )
 
+
           if not match:
-              raise SystemExit("Could not determine PDF page count")
 
-          pages = int(match.group(1))
-          rows = []
-
-          for page in range(1, pages + 1):
-
-              result = subprocess.run(
-                  [
-                      "pdftotext",
-                      "-layout",
-                      "-f", str(page),
-                      "-l", str(page),
-                      "Iran2620.pdf",
-                      "-"
-                  ],
-                  capture_output=True,
-                  text=True,
-                  errors="replace"
+              raise SystemExit(
+                  "Could not determine PDF page count"
               )
 
-              text = result.stdout
 
-              lines = [
-                  re.sub(r"\s+", " ", line).strip()
-                  for line in text.splitlines()
-                  if line.strip()
-              ]
+          pages =
+              int(
+                  match.group(1)
+              )
 
-              upper = text.upper()
 
-              # Guess chart category
-              if re.search(
-                  r"\bSTAR\b|STANDARD ARRIVAL",
-                  upper
-              ):
-                  category = "STAR"
+          chart_index = []
 
-              elif re.search(
-                  r"\bSID\b|STANDARD INSTRUMENT DEPARTURE",
-                  upper
-              ):
-                  category = "SID"
+          chart_database = []
 
-              elif re.search(
-                  r"\bAPPROACH\b|\bILS\b|\bLOC\b|\bVOR\b|\bNDB\b|\bRNAV\b|\bRNP\b",
-                  upper
-              ):
-                  category = "Approach"
 
-              elif re.search(
-                  r"\bAIRPORT\b|\bAERODROME\b|\bADC\b|\bGROUND\b|\bTAXI",
-                  upper
-              ):
-                  category = "Airport"
+          for page in range(
+              1,
+              pages + 1
+          ):
 
-              else:
-                  category = "Unknown"
-
-              # Find Iranian ICAO codes
-              icaos = sorted(
-                  set(
-                      re.findall(
-                          r"\bO[A-Z]{3}\b",
-                          upper
-                      )
+              result =
+                  subprocess.run(
+                      [
+                          "pdftotext",
+                          "-layout",
+                          "-f",
+                          str(page),
+                          "-l",
+                          str(page),
+                          PDF_FILE,
+                          "-"
+                      ],
+                      capture_output=True,
+                      text=True,
+                      errors="replace"
                   )
+
+
+              raw_text =
+                  result.stdout
+
+
+              lines =
+                  get_lines(
+                      raw_text
+                  )
+
+
+              icaos =
+                  detect_icaos(
+                      raw_text
+                  )
+
+
+              category =
+                  detect_category(
+                      raw_text
+                  )
+
+
+              chart_number =
+                  extract_chart_number(
+                      lines
+                  )
+
+
+              name =
+                  build_chart_name(
+                      category,
+                      lines,
+                      chart_number,
+                      page
+                  )
+
+
+              primary_icao =
+                  icaos[0] if icaos else ""
+
+
+              chart_index.append(
+                  {
+                      "page": page,
+
+                      "category": category,
+
+                      "icao_candidates": icaos,
+
+                      "chart_number": chart_number,
+
+                      "name": name,
+
+                      "title_hint":
+                          " ".join(lines[:4])[:240]
+                  }
               )
 
-              # Keep only a short title hint
-              title_hint = " ".join(lines[:2])[:120]
 
-              rows.append({
-                  "page": page,
-                  "category_guess": category,
-                  "icao_candidates": icaos,
-                  "title_hint": title_hint
-              })
+              chart_database.append(
+                  {
+                      "page": page,
+
+                      "icao": primary_icao,
+
+                      "airport": primary_icao,
+
+                      "category": category,
+
+                      "chart_number": chart_number,
+
+                      "name": name
+                  }
+              )
+
+
+          root_index = {
+
+              "version": "v17",
+
+              "source":
+                  PDF_FILE,
+
+              "generated_at":
+                  datetime.now(
+                      timezone.utc
+                  ).isoformat(),
+
+              "pages":
+                  pages,
+
+              "charts":
+                  chart_index
+          }
+
+
+          root_database = {
+
+              "version": "v17",
+
+              "source":
+                  PDF_FILE,
+
+              "generated_at":
+                  datetime.now(
+                      timezone.utc
+                  ).isoformat(),
+
+              "pages":
+                  pages,
+
+              "charts":
+                  chart_database
+          }
+
 
           with open(
-              "charts-index.json",
+              INDEX_FILE,
               "w",
               encoding="utf-8"
           ) as f:
 
               json.dump(
-                  {
-                      "source": "Iran2620.pdf",
-                      "pages": pages,
-                      "charts": rows
-                  },
+                  root_index,
                   f,
                   ensure_ascii=False,
                   indent=2
               )
 
+
+          with open(
+              APP_FILE,
+              "w",
+              encoding="utf-8"
+          ) as f:
+
+              json.dump(
+                  root_database,
+                  f,
+                  ensure_ascii=False,
+                  indent=2
+              )
+
+
+          import os
+
+          os.makedirs(
+              ASSET_DIR,
+              exist_ok=True
+          )
+
+
+          with open(
+              ASSET_FILE,
+              "w",
+              encoding="utf-8"
+          ) as f:
+
+              json.dump(
+                  root_database,
+                  f,
+                  ensure_ascii=False,
+                  indent=2
+              )
+
+
+          airport_counts = {}
+
+          category_counts = {}
+
+          placeholder_count = 0
+
+
+          for item in chart_database:
+
+              icao =
+                  item["icao"] or "UNKNOWN"
+
+              category =
+                  item["category"]
+
+
+              airport_counts[
+                  icao
+              ] =
+                  airport_counts.get(
+                      icao,
+                      0
+                  ) + 1
+
+
+              category_counts[
+                  category
+              ] =
+                  category_counts.get(
+                      category,
+                      0
+                  ) + 1
+
+
+              name =
+                  item["name"]
+
+
+              if name.startswith(
+                  (
+                      "OTHER CHART",
+                      "APPROACH CHART"
+                  )
+              ):
+
+                  placeholder_count += 1
+
+
+          print()
+          print("=" * 70)
+          print("JEPPIRAN V17 DATABASE")
+          print("=" * 70)
+
+          print(
+              f"PDF pages: {pages}"
+          )
+
+          print(
+              f"Database rows: {len(chart_database)}"
+          )
+
+          print(
+              f"Airports detected: {len(airport_counts)}"
+          )
+
+          print()
+
+          print("Categories:")
+
+          for key in sorted(
+              category_counts.keys()
+          ):
+
+              print(
+                  f"  {key}: "
+                  f"{category_counts[key]}"
+              )
+
+          print()
+
+          print(
+              "Generic fallback names: "
+              f"{placeholder_count}"
+          )
+
+          print()
+
+          print(
+              "Output:"
+          )
+
+          print(
+              f"  {INDEX_FILE}"
+          )
+
+          print(
+              f"  {APP_FILE}"
+          )
+
+          print(
+              f"  {ASSET_FILE}"
+          )
+
+          print("=" * 70)
+          print()
+
           PY
 
-      - name: Commit chart index
+
+      - name: Validate generated database
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add charts-index.json
+          python3 - <<'PY'
 
-          git diff --cached --quiet || git commit -m "Build chart page index"
+          import json
 
-          git push
+          with open(
+              "charts-app-v17.json",
+              "r",
+              encoding="utf-8"
+          ) as f:
+
+              data = json.load(f)
+
+
+          charts =
+              data.get(
+                  "charts",
+                  []
+              )
+
+
+          if not charts:
+
+              raise SystemExit(
+                  "Chart database is empty"
+              )
+
+
+          pages =
+              int(
+                  data.get(
+                      "pages",
+                      0
+                  )
+              )
+
+
+          if pages != len(charts):
+
+              raise SystemExit(
+                  f"Page count mismatch: "
+                  f"{pages} != {len(charts)}"
+              )
+
+
+          for item in charts:
+
+              if "page" not in item:
+                  raise SystemExit(
+                      "Missing page field"
+                  )
+
+              if "category" not in item:
+                  raise SystemExit(
+                      "Missing category field"
+                  )
+
+              if "name" not in item:
+                  raise SystemExit(
+                      "Missing name field"
+                  )
+
+
+          print(
+              f"Validated {len(charts)} chart rows."
+          )
+
+          PY
+
+
+      - name: Commit generated database
+        run: |
+
+          git config user.name \
+            "github-actions[bot]"
+
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+
+
+          git add \
+            charts-index.json \
+            charts-app-v17.json \
+            app/src/main/assets/charts-app-v17.json
+
+
+          if git diff --cached --quiet; then
+
+            echo "No database changes."
+
+          else
+
+            git commit \
+              -m "Build JeppIran chart database v17"
+
+            git push
+
+          fi
