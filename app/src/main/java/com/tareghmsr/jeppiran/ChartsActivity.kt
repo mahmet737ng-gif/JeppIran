@@ -14,13 +14,14 @@ import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.google.android.material.card.MaterialCardView
+import com.google.android.material.textfield.TextInputEditText
 import org.json.JSONObject
 
 class ChartsActivity : ComponentActivity() {
 
     private data class Airport(
         val icao: String,
-        val country: String,
+        val city: String,
         val airportCount: Int,
         val starCount: Int,
         val sidCount: Int,
@@ -31,7 +32,84 @@ class ChartsActivity : ComponentActivity() {
     private val airports = mutableListOf<Airport>()
 
     private lateinit var airportList: LinearLayout
-    private lateinit var searchAirport: com.google.android.material.textfield.TextInputEditText
+    private lateinit var searchAirport: TextInputEditText
+
+    /*
+     * ICAO -> City
+     *
+     * Iran:
+     * OI
+     *
+     * Iraq:
+     * OR
+     *
+     * UAE:
+     * OM
+     *
+     * Oman:
+     * OO
+     *
+     * Turkey:
+     * LT
+     *
+     * Armenia:
+     * UD
+     *
+     * Georgia:
+     * UG
+     */
+    private val airportCities = mapOf(
+
+        // Iran
+        "OIAA" to "ABADAN",
+        "OIAM" to "MAHSHAHR",
+        "OIAW" to "AHWAZ",
+        "OIBB" to "BUSHEHR",
+        "OIBK" to "KISH",
+        "OIBP" to "ASALOUYEH",
+        "OICC" to "KERMANSHAH",
+        "OICI" to "ILAM",
+        "OIFM" to "ISFAHAN",
+        "OIGG" to "RASHT",
+        "OIHH" to "HAMADAN",
+        "OIIE" to "TEHRAN",
+        "OIII" to "TEHRAN",
+        "OIIP" to "KARAJ",
+        "OIKK" to "KERMAN",
+        "OIMB" to "BIRJAND",
+        "OIMM" to "MASHHAD",
+        "OIMN" to "BOJNURD",
+        "OIMS" to "SABZEVAR",
+        "OING" to "GORGAN",
+        "OINZ" to "SARI",
+        "OISS" to "SHIRAZ",
+        "OITL" to "ARDABIL",
+        "OITR" to "URMIA",
+        "OITT" to "TABRIZ",
+        "OIYY" to "YAZD",
+        "OIZC" to "CHABAHAR",
+        "OIZH" to "ZAHEDAN",
+
+        // United Arab Emirates
+        "OMDB" to "DUBAI",
+
+        // Oman
+        "OOMS" to "MUSCAT",
+
+        // Iraq
+        "ORBI" to "BAGHDAD",
+        "ORNI" to "MOSUL",
+
+        // Armenia
+        "UDYZ" to "YEREVAN",
+
+        // Georgia
+        "UGSB" to "BATUMI",
+        "UGTB" to "TBILISI",
+
+        // Turkey
+        "LTFM" to "ISTANBUL"
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -108,9 +186,6 @@ class ChartsActivity : ComponentActivity() {
 
                 val airport = root.getJSONObject(icao)
 
-                val country =
-                    airport.optString("country", "")
-
                 val charts =
                     airport.optJSONObject("charts")
 
@@ -138,10 +213,13 @@ class ChartsActivity : ComponentActivity() {
                         charts.optJSONArray("Other")?.length() ?: 0
                 }
 
+                val city =
+                    airportCities[icao] ?: icao
+
                 airports.add(
                     Airport(
                         icao = icao,
-                        country = country,
+                        city = city,
                         airportCount = airportCount,
                         starCount = starCount,
                         sidCount = sidCount,
@@ -180,7 +258,7 @@ class ChartsActivity : ComponentActivity() {
             airports.filter {
 
                 it.icao.contains(text) ||
-                        it.country.uppercase().contains(text)
+                        it.city.contains(text)
             }
         }
 
@@ -198,7 +276,13 @@ class ChartsActivity : ComponentActivity() {
             emptyText.text = "No airport found"
             emptyText.textSize = 16f
             emptyText.gravity = Gravity.CENTER
-            emptyText.setPadding(24, 40, 24, 40)
+
+            emptyText.setPadding(
+                24,
+                40,
+                24,
+                40
+            )
 
             airportList.addView(emptyText)
 
@@ -226,6 +310,7 @@ class ChartsActivity : ComponentActivity() {
 
             card.radius = 18f
             card.cardElevation = 2f
+
             card.setCardBackgroundColor(
                 Color.WHITE
             )
@@ -242,29 +327,19 @@ class ChartsActivity : ComponentActivity() {
                 18
             )
 
+            // ICAO + CITY
             val title = TextView(this)
 
-            title.text = airport.icao
-            title.textSize = 21f
+            title.text =
+                "${airport.icao}  •  ${airport.city}"
+
+            title.textSize = 20f
+
             title.setTextColor(
                 Color.rgb(20, 40, 65)
             )
 
-            val country = TextView(this)
-
-            country.text = airport.country
-            country.textSize = 14f
-            country.setTextColor(
-                Color.rgb(100, 110, 120)
-            )
-
-            country.setPadding(
-                0,
-                4,
-                0,
-                12
-            )
-
+            // Chart statistics
             val charts = TextView(this)
 
             charts.text = buildString {
@@ -276,23 +351,32 @@ class ChartsActivity : ComponentActivity() {
                 append("   •   ")
 
                 append("SID: ${airport.sidCount}")
+
                 append("\n")
 
                 append("Approach: ${airport.approachCount}")
 
                 if (airport.otherCount > 0) {
-                    append("   •   Other: ${airport.otherCount}")
+
+                    append("   •   ")
+                    append("Other: ${airport.otherCount}")
                 }
             }
 
             charts.textSize = 14f
 
             charts.setTextColor(
-                Color.rgb(55, 65, 75)
+                Color.rgb(80, 90, 100)
+            )
+
+            charts.setPadding(
+                0,
+                10,
+                0,
+                0
             )
 
             content.addView(title)
-            content.addView(country)
             content.addView(charts)
 
             card.addView(content)
@@ -301,7 +385,7 @@ class ChartsActivity : ComponentActivity() {
 
                 Toast.makeText(
                     this,
-                    "${airport.icao} selected",
+                    "${airport.icao} • ${airport.city}",
                     Toast.LENGTH_SHORT
                 ).show()
             }
