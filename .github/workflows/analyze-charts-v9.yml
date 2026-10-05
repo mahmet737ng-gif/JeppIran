@@ -901,16 +901,9 @@ jobs:
           print("")
 
           if validation_pass:
-
-              print(
-                  "ALL VERIFIED BLOCKS: PASS"
-              )
-
+              print("ALL VERIFIED BLOCKS: PASS")
           else:
-
-              print(
-                  "WARNING: SOME VERIFIED BLOCKS FAILED"
-              )
+              print("WARNING: SOME VERIFIED BLOCKS FAILED")
 
           print("")
           print("========== V9 SUMMARY ==========")
@@ -933,6 +926,64 @@ jobs:
           python scripts/name_charts_v10.py
 
       # ==========================================================
+      # SHOW SAMPLE V10 CHART NAMES
+      # ==========================================================
+
+      - name: Show V10 sample chart names
+        shell: python
+        run: |
+          import json
+
+          with open(
+              "charts-app-v10.json",
+              "r",
+              encoding="utf-8"
+          ) as f:
+              data = json.load(f)
+
+          airports = [
+              "OIAW",
+              "OIII",
+              "OIMM",
+              "OIZC"
+          ]
+
+          for airport in airports:
+
+              print("")
+              print("=" * 60)
+              print(airport)
+              print("=" * 60)
+
+              if airport not in data:
+                  print("AIRPORT NOT FOUND")
+                  continue
+
+              charts = data[airport]["charts"]
+
+              for category in [
+                  "Airport",
+                  "STAR",
+                  "SID",
+                  "Approach"
+              ]:
+
+                  print("")
+                  print(f"[{category}]")
+
+                  items = charts.get(
+                      category,
+                      []
+                  )
+
+                  for item in items[:20]:
+
+                      print(
+                          f'Page {item.get("page")}: '
+                          f'{item.get("name", "NO NAME")}'
+                      )
+
+      # ==========================================================
       # UPLOAD RESULTS
       # ==========================================================
 
@@ -946,12 +997,3 @@ jobs:
             charts-app-v9.json
             charts-index-v10.json
             charts-app-v10.json
-
-      # ==========================================================
-      # SHOW V10 RESULT
-      # ==========================================================
-
-      - name: Show V10 app database
-        run: |
-          echo "===== charts-app-v10.json ====="
-          cat charts-app-v10.json
