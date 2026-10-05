@@ -1,0 +1,7 @@
+{
+  "version": 1,
+  "coordinateSystem": "WGS84",
+  "coordinateSpace": "normalized",
+  "description": "Only verified chart control points belong here. Empty until real PDF control points are audited; no synthetic coordinates are permitted.",
+  "charts": []
+}
