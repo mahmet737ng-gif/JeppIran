@@ -26,6 +26,7 @@ class SimulatorActivity : AppCompatActivity() {
     private lateinit var statusText: TextView
     private lateinit var positionText: TextView
     private lateinit var connectButton: Button
+    private lateinit var guideText: TextView
 
     private var selectedType = SimulatorLocationStore.TYPE_XPLANE
     private val handler = android.os.Handler(android.os.Looper.getMainLooper())
@@ -141,12 +142,13 @@ class SimulatorActivity : AppCompatActivity() {
         content.addView(positionText, lp(0, 10, 0, 12))
 
         content.addView(sectionTitle("SETUP GUIDE"))
-        content.addView(TextView(this).apply {
+        guideText = TextView(this).apply {
             textSize = 14f
             setTextColor(textColor())
             setLineSpacing(4f, 1.05f)
             text = buildGuide()
-        })
+        }
+        content.addView(guideText)
 
         content.addView(TextView(this).apply {
             textSize = 13f
@@ -187,6 +189,7 @@ class SimulatorActivity : AppCompatActivity() {
                         hostInput.setText("192.168.1.100")
                     }
                 }
+                guideText.text = buildGuide()
                 statusText.text = "Selected: " + selectedType
             }
             .show()
