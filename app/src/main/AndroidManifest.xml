@@ -2,8 +2,8 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Internet access for chart/PDF updates and WX -->
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission
+        android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -11,29 +11,39 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.JeppIran">
 
-        <!-- Main screen -->
+        <!-- Splash -->
         <activity
-            android:name=".MainActivity"
+            android:name=".SplashActivity"
             android:exported="true">
 
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+
+                <action
+                    android:name="android.intent.action.MAIN" />
+
+                <category
+                    android:name="android.intent.category.LAUNCHER" />
+
             </intent-filter>
 
         </activity>
+
+        <!-- Main screen -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="false" />
 
         <!-- Airport list -->
         <activity
             android:name=".ChartsActivity"
             android:exported="false" />
 
-        <!-- Charts inside an airport -->
+        <!-- Airport charts -->
         <activity
             android:name=".AirportChartsActivity"
             android:exported="false" />
 
-        <!-- PDF chart viewer -->
+        <!-- PDF viewer -->
         <activity
             android:name=".PdfViewerActivity"
             android:exported="false" />
