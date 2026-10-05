@@ -4,7 +4,6 @@ import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
-import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.ComponentActivity
@@ -26,6 +25,7 @@ class AirportChartsActivity : ComponentActivity() {
             setBackgroundColor(Color.rgb(233, 238, 243))
         }
 
+        // Header
         val header = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
@@ -37,6 +37,7 @@ class AirportChartsActivity : ComponentActivity() {
             text = "‹"
             textSize = 36f
             gravity = Gravity.CENTER
+
             setOnClickListener {
                 finish()
             }
@@ -65,6 +66,7 @@ class AirportChartsActivity : ComponentActivity() {
 
         root.addView(header)
 
+        // Scrollable chart categories
         val scroll = android.widget.ScrollView(this)
 
         val list = LinearLayout(this).apply {
@@ -78,6 +80,7 @@ class AirportChartsActivity : ComponentActivity() {
         addCategory(list, "APPROACH", "Approach")
 
         scroll.addView(list)
+
         root.addView(
             scroll,
             LinearLayout.LayoutParams(
@@ -108,6 +111,7 @@ class AirportChartsActivity : ComponentActivity() {
         val pages = loadPages(jsonCategory)
 
         if (pages.isEmpty()) {
+
             val empty = TextView(this).apply {
                 text = "No charts"
                 textSize = 14f
@@ -116,17 +120,22 @@ class AirportChartsActivity : ComponentActivity() {
             }
 
             parent.addView(empty)
+
             return
         }
 
         pages.forEachIndexed { index, page ->
 
             val card = TextView(this).apply {
+
                 text = "Chart ${index + 1}    •    PDF page $page"
+
                 textSize = 16f
                 setTextColor(Color.rgb(25, 35, 45))
                 gravity = Gravity.CENTER_VERTICAL
+
                 setPadding(18, 0, 18, 0)
+
                 setBackgroundColor(Color.WHITE)
 
                 setOnClickListener {
@@ -137,6 +146,7 @@ class AirportChartsActivity : ComponentActivity() {
                     )
 
                     intent.putExtra("PAGE", page)
+
                     intent.putExtra(
                         "TITLE",
                         "$airportCode • $title"
@@ -171,6 +181,7 @@ class AirportChartsActivity : ComponentActivity() {
         }
 
         val airport = root.getJSONObject(airportCode)
+
         val charts = airport.getJSONObject("charts")
 
         if (!charts.has(category)) {
@@ -182,6 +193,7 @@ class AirportChartsActivity : ComponentActivity() {
         val pages = mutableListOf<Int>()
 
         for (i in 0 until array.length()) {
+
             pages.add(
                 array.getJSONObject(i).getInt("page")
             )
