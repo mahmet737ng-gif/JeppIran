@@ -18,7 +18,8 @@ Code committed in 51b111b58b5d3d9a585efdd657e8c0d9d6c71cf1:
 - Do not fall back to phone coordinates while a simulator connection is active.
 
 Validation: reviewed the diff and passed git diff --check.
-Compilation and JVM tests are being checked in the new GitHub georeferencing workflow.
+Compilation and all four georeferencing JVM tests passed in the GitHub workflow
+for code commit 6d1fcc331f3fa2c2a71e9841d9a6fbe632d6c230 (run 37386575059).
 Device behavior remains unverified; user device testing is deferred until the final APK.
 The simulator transport itself is unchanged; pausing the viewer does not disconnect it.
 
@@ -58,8 +59,14 @@ airport, including rotated charts and insets. Independent AWZ VOR check: 1.31066
 points (tolerance 1.6). These are checks against the printed chart, not certified navigation accuracy.
 
 Added JVM tests for the independent AWZ location, exact crop/render dimensions, invalid
-references, inset masking and rotated heading. GitHub CI/build result will be recorded
-after the workflow finishes. Android device checks are still pending.
+references, inset masking and rotated heading. All four passed: zero failures,
+errors or skipped tests. Both CI jobs (PDF validation and Android test/APK build)
+succeeded on code commit 6d1fcc331f3fa2c2a71e9841d9a6fbe632d6c230.
+Android device checks are still pending.
+
+Workflow: https://github.com/mahmet737ng-gif/JeppIran/actions/runs/37386575059
+Debug APK artifact: JeppIran-georeferencing-debug (artifact 11379900972).
+This APK contains Steps 1 and 2; it is not a final release or verification of every UI feature.
 
 Full per-airport/page coverage and exclusion reasons: [georeferencing/COVERAGE.md](georeferencing/COVERAGE.md)
 and [georeferencing/georef-audit.json](georeferencing/georef-audit.json).
@@ -77,8 +84,12 @@ and [georeferencing/georef-audit.json](georeferencing/georef-audit.json).
 10. Dark mode/invert and portrait/landscape layout.
 11. Build, fix actual compilation errors, deliver APK for final user testing.
 12. Resolve final test findings and prepare release.
+13. iPhone/iPad implementation and installable iOS/iPadOS output; no iOS project is present yet.
 
-Steps 1 and 2 have code/data changes in this work session. The remaining feature areas
-have not yet been audited end to end or changed in this step; existing code may already
-implement parts of them. Do not report them as newly completed.
+Steps 1 and 2 have code/data changes in this work session. A limited static review
+confirmed existing Android annotation/navigation/search/theme/METAR code and the
+initial X-Plane RREF/MSFS UDP receiver. Those paths have not been tested end to end
+or changed in this step. No Windows SimConnect bridge or P3D transport is present;
+bookmarks, keep-awake, TAF/decode and requested finished artwork also remain unverified
+or absent. See [REQUEST_STATUS.fa.md](REQUEST_STATUS.fa.md) for the request-by-request report.
 User device testing is deferred until the final APK.
