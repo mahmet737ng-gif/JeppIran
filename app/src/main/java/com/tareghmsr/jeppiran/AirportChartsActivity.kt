@@ -3,6 +3,7 @@ package com.tareghmsr.jeppiran
 import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
@@ -13,17 +14,12 @@ import androidx.core.view.WindowInsetsCompat
 import org.json.JSONArray
 import org.json.JSONObject
 
-class AirportChartsActivity :
-    ComponentActivity() {
+class AirportChartsActivity : ComponentActivity() {
 
-    private lateinit var listContainer:
-            LinearLayout
+    private lateinit var listContainer: LinearLayout
 
-    private var icao =
-        ""
-
-    private var city =
-        ""
+    private var icao = ""
+    private var city = ""
 
     private data class Chart(
         val page: Int,
@@ -51,7 +47,6 @@ class AirportChartsActivity :
             ).orEmpty()
 
         buildUi()
-
         loadCharts()
     }
 
@@ -97,6 +92,12 @@ class AirportChartsActivity :
 
                 orientation =
                     LinearLayout.VERTICAL
+
+                layoutParams =
+                    ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                    )
             }
 
         val scrollView =
@@ -109,11 +110,7 @@ class AirportChartsActivity :
                     ScrollView.OVER_SCROLL_IF_CONTENT_SCROLLS
 
                 addView(
-                    listContainer,
-                    ScrollView.LayoutParams(
-                        ScrollView.LayoutParams.MATCH_PARENT,
-                        ScrollView.LayoutParams.WRAP_CONTENT
-                    )
+                    listContainer
                 )
             }
 
@@ -145,7 +142,7 @@ class AirportChartsActivity :
 
             view.setPadding(
                 0,
-                               bars.top,
+                bars.top,
                 0,
                 bars.bottom
             )
@@ -275,8 +272,7 @@ class AirportChartsActivity :
 
     private fun readArray(
         array: JSONArray,
-        charts:
-            MutableList<Chart>
+        charts: MutableList<Chart>
     ) {
 
         for (
@@ -284,7 +280,9 @@ class AirportChartsActivity :
         ) {
 
             val value =
-                array.opt(i)
+                array.opt(
+                    i
+                )
 
             if (
                 value is JSONObject
@@ -300,8 +298,7 @@ class AirportChartsActivity :
 
     private fun readChartObject(
         item: JSONObject,
-        charts:
-            MutableList<Chart>
+        charts: MutableList<Chart>
     ) {
 
         val itemIcao =
@@ -376,12 +373,9 @@ class AirportChartsActivity :
 
         charts.add(
             Chart(
-                page =
-                    page,
-                name =
-                    name,
-                category =
-                    category
+                page = page,
+                name = name,
+                category = category
             )
         )
     }
@@ -533,6 +527,6 @@ class AirportChartsActivity :
         get() =
             (
                 this *
-                        resources.displayMetrics.density
+                    resources.displayMetrics.density
                 ).toInt()
 }
