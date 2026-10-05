@@ -63,6 +63,10 @@
             android:name=".SettingsActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".SimulatorActivity"
+            android:exported="false" />
+
 
     </application>
 
