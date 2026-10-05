@@ -4,54 +4,69 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.pdf.PdfRenderer
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.os.ParcelFileDescriptor
 import android.view.Gravity
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.ComponentActivity
+import java.io.BufferedInputStream
 import java.io.File
+import java.io.FileOutputStream
+import java.net.HttpURLConnection
+import java.net.URL
 
 class PdfViewerActivity : ComponentActivity() {
 
     private var renderer: PdfRenderer? = null
     private var descriptor: ParcelFileDescriptor? = null
+
     private var currentPage = 0
 
     private lateinit var imageView: ImageView
     private lateinit var pageLabel: TextView
+    private lateinit var statusLabel: TextView
+    private lateinit var progressBar: ProgressBar
+
+    private val handler = Handler(Looper.getMainLooper())
+
+    /*
+     * GitHub LFS resolved download URL
+     */
+    private val pdfUrl =
+        "https://media.githubusercontent.com/media/mahmet737ng-gif/JeppIran/main/Iran2620.pdf"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val requestedPage =
+        currentPage =
             (intent.getIntExtra("PAGE", 1) - 1)
                 .coerceAtLeast(0)
-
-        currentPage = requestedPage
 
         val file = File(
             filesDir,
             "Iran2620.pdf"
         )
 
-        if (!file.exists()) {
-            showNotDownloaded()
-            return
+        if (file.exists() && file.length() > 0) {
+
+            buildUi()
+            openPdf(file)
+
+        } else {
+
+            buildDownloadUi()
+            downloadPdf(file)
         }
-
-        descriptor = ParcelFileDescriptor.open(
-            file,
-            ParcelFileDescriptor.MODE_READ_ONLY
-        )
-
-        renderer = PdfRenderer(descriptor!!)
-
-        buildUi()
-        showPage(currentPage)
     }
 
+    /*
+     * Normal PDF viewer UI
+     */
     private fun buildUi() {
 
         val root = LinearLayout(this).apply {
@@ -59,11 +74,15 @@ class PdfViewerActivity : ComponentActivity() {
             setBackgroundColor(Color.BLACK)
         }
 
-        // Toolbar
+        /*
+         * Toolbar
+         */
         val toolbar = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
-            setBackgroundColor(Color.rgb(20, 25, 30))
+            setBackgroundColor(
+                Color.rgb(20, 25, 30)
+            )
         }
 
         val back = ImageButton(this).apply {
@@ -72,7 +91,9 @@ class PdfViewerActivity : ComponentActivity() {
                 android.R.drawable.ic_menu_revert
             )
 
-            setBackgroundColor(Color.TRANSPARENT)
+            setBackgroundColor(
+                Color.TRANSPARENT
+            )
 
             setOnClickListener {
                 finish()
@@ -81,12 +102,18 @@ class PdfViewerActivity : ComponentActivity() {
 
         toolbar.addView(
             back,
-            LinearLayout.LayoutParams(55, 55)
+            LinearLayout.LayoutParams(
+                55,
+                55
+            )
         )
 
         pageLabel = TextView(this).apply {
+
             setTextColor(Color.WHITE)
+
             gravity = Gravity.CENTER
+
             textSize = 15f
         }
 
@@ -99,7 +126,9 @@ class PdfViewerActivity : ComponentActivity() {
             )
         )
 
-        // Previous page
+        /*
+         * Previous page
+         */
         val previous = TextView(this).apply {
 
             text = "‹"
@@ -111,16 +140,24 @@ class PdfViewerActivity : ComponentActivity() {
             gravity = Gravity.CENTER
 
             setOnClickListener {
-                showPage(currentPage - 1)
+
+                showPage(
+                    currentPage - 1
+                )
             }
         }
 
         toolbar.addView(
             previous,
-            LinearLayout.LayoutParams(55, 55)
+            LinearLayout.LayoutParams(
+                55,
+                55
+            )
         )
 
-        // Next page
+        /*
+         * Next page
+         */
         val next = TextView(this).apply {
 
             text = "›"
@@ -132,22 +169,30 @@ class PdfViewerActivity : ComponentActivity() {
             gravity = Gravity.CENTER
 
             setOnClickListener {
-                showPage(currentPage + 1)
+
+                showPage(
+                    currentPage + 1
+                )
             }
         }
 
         toolbar.addView(
             next,
-            LinearLayout.LayoutParams(55, 55)
+            LinearLayout.LayoutParams(
+                55,
+                55
+            )
         )
 
         root.addView(toolbar)
 
-        // Scroll container
+        /*
+         * PDF image
+         */
         val scroll =
             androidx.core.widget.NestedScrollView(this)
 
-        val zoomContainer =
+        val container =
             android.widget.FrameLayout(this)
 
         imageView = ImageView(this).apply {
@@ -158,7 +203,7 @@ class PdfViewerActivity : ComponentActivity() {
             setBackgroundColor(Color.BLACK)
         }
 
-        zoomContainer.addView(
+        container.addView(
             imageView,
             android.widget.FrameLayout.LayoutParams(
                 -1,
@@ -167,7 +212,7 @@ class PdfViewerActivity : ComponentActivity() {
         )
 
         scroll.addView(
-            zoomContainer,
+            container,
             android.widget.FrameLayout.LayoutParams(
                 -1,
                 -1
@@ -186,28 +231,396 @@ class PdfViewerActivity : ComponentActivity() {
         setContentView(root)
     }
 
-    private fun showPage(index: Int) {
+    /*
+     * Download screen
+     */
+    private fun buildDownloadUi() {
 
-        val pdf = renderer ?: return
+        val root = LinearLayout(this).apply {
 
-        if (index < 0 || index >= pdf.pageCount) {
+            orientation =
+                LinearLayout.VERTICAL
+
+            gravity =
+                Gravity.CENTER
+
+            setPadding(
+                40,
+                40,
+                40,
+                40
+            )
+
+            setBackgroundColor(
+                Color.rgb(233, 238, 243)
+            )
+        }
+
+        val title = TextView(this).apply {
+
+            text =
+                "Downloading Iran Airport Charts"
+
+            textSize = 21f
+
+            gravity =
+                Gravity.CENTER
+
+            setTextColor(
+                Color.rgb(25, 48, 72)
+            )
+        }
+
+        root.addView(
+            title,
+            LinearLayout.LayoutParams(
+                -1,
+                -2
+            )
+        )
+
+        val size = TextView(this).apply {
+
+            text =
+                "Approximately 40 MB"
+
+            textSize = 15f
+
+            gravity =
+                Gravity.CENTER
+
+            setTextColor(
+                Color.DKGRAY
+            )
+
+            setPadding(
+                0,
+                12,
+                0,
+                20
+            )
+        }
+
+        root.addView(
+            size,
+            LinearLayout.LayoutParams(
+                -1,
+                -2
+            )
+        )
+
+        progressBar =
+            ProgressBar(
+                this,
+                null,
+                android.R.attr.progressBarStyleHorizontal
+            )
+
+        progressBar.max = 100
+
+        root.addView(
+            progressBar,
+            LinearLayout.LayoutParams(
+                -1,
+                30
+            )
+        )
+
+        statusLabel = TextView(this).apply {
+
+            text =
+                "Preparing download..."
+
+            textSize = 15f
+
+            gravity =
+                Gravity.CENTER
+
+            setTextColor(
+                Color.rgb(55, 70, 85)
+            )
+
+            setPadding(
+                0,
+                15,
+                0,
+                0
+            )
+        }
+
+        root.addView(
+            statusLabel,
+            LinearLayout.LayoutParams(
+                -1,
+                -2
+            )
+        )
+
+        setContentView(root)
+    }
+
+    /*
+     * Download PDF
+     */
+    private fun downloadPdf(
+        destination: File
+    ) {
+
+        Thread {
+
+            var connection:
+                    HttpURLConnection? = null
+
+            val temporaryFile =
+                File(
+                    filesDir,
+                    "Iran2620.pdf.part"
+                )
+
+            try {
+
+                handler.post {
+
+                    statusLabel.text =
+                        "Connecting to GitHub..."
+                }
+
+                connection =
+                    URL(pdfUrl)
+                        .openConnection()
+                            as HttpURLConnection
+
+                connection.connectTimeout =
+                    30000
+
+                connection.readTimeout =
+                    60000
+
+                connection.instanceFollowRedirects =
+                    true
+
+                connection.requestMethod =
+                    "GET"
+
+                connection.connect()
+
+                val response =
+                    connection.responseCode
+
+                if (
+                    response !in
+                    200..299
+                ) {
+
+                    throw Exception(
+                        "HTTP $response"
+                    )
+                }
+
+                val total =
+                    connection.contentLengthLong
+
+                val input =
+                    BufferedInputStream(
+                        connection.inputStream
+                    )
+
+                val output =
+                    FileOutputStream(
+                        temporaryFile
+                    )
+
+                val buffer =
+                    ByteArray(64 * 1024)
+
+                var downloaded =
+                    0L
+
+                while (true) {
+
+                    val count =
+                        input.read(buffer)
+
+                    if (count == -1) {
+                        break
+                    }
+
+                    output.write(
+                        buffer,
+                        0,
+                        count
+                    )
+
+                    downloaded += count
+
+                    if (total > 0) {
+
+                        val percent =
+                            (
+                                downloaded *
+                                    100L /
+                                    total
+                            )
+                                .toInt()
+
+                        val downloadedMb =
+                            downloaded /
+                                (1024.0 * 1024.0)
+
+                        val totalMb =
+                            total /
+                                (1024.0 * 1024.0)
+
+                        handler.post {
+
+                            progressBar.progress =
+                                percent
+
+                            statusLabel.text =
+                                String.format(
+                                    "%.1f MB / %.1f MB  (%d%%)",
+                                    downloadedMb,
+                                    totalMb,
+                                    percent
+                                )
+                        }
+                    }
+                }
+
+                output.flush()
+                output.close()
+                input.close()
+
+                if (
+                    !temporaryFile.exists() ||
+                    temporaryFile.length() == 0L
+                ) {
+
+                    throw Exception(
+                        "Downloaded file is empty"
+                    )
+                }
+
+                if (destination.exists()) {
+                    destination.delete()
+                }
+
+                if (
+                    !temporaryFile.renameTo(
+                        destination
+                    )
+                ) {
+
+                    throw Exception(
+                        "Could not save PDF"
+                    )
+                }
+
+                handler.post {
+
+                    statusLabel.text =
+                        "Opening chart..."
+
+                    openPdf(destination)
+                }
+
+            } catch (e: Exception) {
+
+                e.printStackTrace()
+
+                if (temporaryFile.exists()) {
+                    temporaryFile.delete()
+                }
+
+                handler.post {
+
+                    statusLabel.text =
+                        "Download failed:\n${e.message}"
+                }
+
+            } finally {
+
+                connection?.disconnect()
+            }
+
+        }.start()
+    }
+
+    /*
+     * Open PDF
+     */
+    private fun openPdf(
+        file: File
+    ) {
+
+        try {
+
+            descriptor =
+                ParcelFileDescriptor.open(
+                    file,
+                    ParcelFileDescriptor.MODE_READ_ONLY
+                )
+
+            renderer =
+                PdfRenderer(
+                    descriptor!!
+                )
+
+            buildUi()
+
+            showPage(
+                currentPage
+            )
+
+        } catch (e: Exception) {
+
+            e.printStackTrace()
+
+            showError(
+                "Could not open PDF:\n${e.message}"
+            )
+        }
+    }
+
+    /*
+     * Render selected PDF page
+     */
+    private fun showPage(
+        index: Int
+    ) {
+
+        val pdf =
+            renderer
+                ?: return
+
+        if (
+            index < 0 ||
+            index >= pdf.pageCount
+        ) {
             return
         }
 
         currentPage = index
 
-        val page = pdf.openPage(index)
+        val page =
+            pdf.openPage(index)
 
-        val width = page.width * 2
-        val height = page.height * 2
+        val width =
+            page.width * 2
 
-        val bitmap = Bitmap.createBitmap(
-            width,
-            height,
-            Bitmap.Config.ARGB_8888
+        val height =
+            page.height * 2
+
+        val bitmap =
+            Bitmap.createBitmap(
+                width,
+                height,
+                Bitmap.Config.ARGB_8888
+            )
+
+        bitmap.eraseColor(
+            Color.WHITE
         )
-
-        bitmap.eraseColor(Color.WHITE)
 
         page.render(
             bitmap,
@@ -218,26 +631,45 @@ class PdfViewerActivity : ComponentActivity() {
 
         page.close()
 
-        imageView.setImageBitmap(bitmap)
+        imageView.setImageBitmap(
+            bitmap
+        )
 
         pageLabel.text =
             "Page ${index + 1} / ${pdf.pageCount}"
     }
 
-    private fun showNotDownloaded() {
+    /*
+     * Error screen
+     */
+    private fun showError(
+        message: String
+    ) {
 
-        val text = TextView(this).apply {
+        val text =
+            TextView(this).apply {
 
-            text = "Iran2620.pdf is not downloaded."
+                text = message
 
-            textSize = 18f
+                textSize = 17f
 
-            gravity = Gravity.CENTER
+                gravity = Gravity.CENTER
 
-            setTextColor(Color.WHITE)
+                setTextColor(
+                    Color.WHITE
+                )
 
-            setBackgroundColor(Color.BLACK)
-        }
+                setBackgroundColor(
+                    Color.BLACK
+                )
+
+                setPadding(
+                    30,
+                    30,
+                    30,
+                    30
+                )
+            }
 
         setContentView(text)
     }
