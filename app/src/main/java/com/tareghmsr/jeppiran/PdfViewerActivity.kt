@@ -108,6 +108,12 @@ private val locationPermissionLauncher =
         private const val METAR_TIMEOUT =
             15000
 
+        private const val METAR_POLL_INTERVAL =
+            5 * 60 * 1000L
+
+        private const val METAR_DISPLAY_DURATION =
+            8000L
+
         private const val TOP_CROP_PERCENT =
             0.014f
 
@@ -249,6 +255,13 @@ private val locationPermissionLauncher =
     private var metarRemoveRunnable:
         Runnable? =
         null
+
+    private var metarPollRunnable:
+        Runnable? =
+        null
+
+    private lateinit var aircraftPositionButton:
+        TextView
 
 
     private var locationManager:
@@ -545,6 +558,11 @@ private val locationPermissionLauncher =
             )
         }
 
+        metarPollRunnable?.let {
+            handler.removeCallbacks(
+                it
+            )
+        }
 
         stopGps()
 
@@ -1204,7 +1222,13 @@ private val locationPermissionLauncher =
 
         applyInsets()
 
-        startGps()
+        if (AircraftPositionStore.isEnabled(this)) {
+            startGps()
+        } else {
+            updateGpsText("Aircraft position OFF")
+        }
+
+        startMetarPolling()
     }
 
 
@@ -1392,6 +1416,55 @@ private val locationPermissionLauncher =
 
         topToolbar.addView(
             next,
+            toolbarButtonParams(
+                42.dp
+            )
+        )
+
+
+        aircraftPositionButton =
+            toolbarButton(
+                "✈",
+                18f
+            )
+
+        aircraftPositionButton.contentDescription =
+            "Aircraft position"
+
+        updateToggleButton(
+            aircraftPositionButton,
+            AircraftPositionStore.isEnabled(this)
+        )
+
+        aircraftPositionButton.setOnClickListener {
+            val enabled =
+                !AircraftPositionStore.isEnabled(this)
+
+            AircraftPositionStore.setEnabled(
+                this,
+                enabled
+            )
+
+            updateToggleButton(
+                aircraftPositionButton,
+                enabled
+            )
+
+            if (enabled) {
+                startGps()
+                updateGpsLabel()
+            } else {
+                stopGps()
+                handler.removeCallbacks(simulatorUpdateRunnable)
+                updateGpsText("Aircraft position OFF")
+                if (::chartView.isInitialized) {
+                    chartView.invalidate()
+                }
+            }
+        }
+
+        topToolbar.addView(
+            aircraftPositionButton,
             toolbarButtonParams(
                 42.dp
             )
@@ -3819,6 +3892,34 @@ private val locationPermissionLauncher =
     }
 
 
+    private fun startMetarPolling() {
+        metarPollRunnable?.let {
+            handler.removeCallbacks(it)
+        }
+
+        metarPollRunnable =
+            object : Runnable {
+                override fun run() {
+                    if (!isFinishing && !isDestroyed && currentIcao.isNotBlank()) {
+                        requestMetar(
+                            currentIcao,
+                            false
+                        )
+                        handler.postDelayed(
+                            this,
+                            METAR_POLL_INTERVAL
+                        )
+                    }
+                }
+            }
+
+        handler.postDelayed(
+            metarPollRunnable!!,
+            METAR_POLL_INTERVAL
+        )
+    }
+
+
     private fun requestMetarIfAirportChanged(force: Boolean = false) {
 
         if (
@@ -3838,22 +3939,26 @@ private val locationPermissionLauncher =
 
 
         requestMetar(
-            currentIcao
+            currentIcao,
+            true
         )
     }
 
 
     private fun requestMetar(
-        airportIcao: String
+        airportIcao: String,
+        showLoading: Boolean = true
     ) {
 
         val requestId =
             ++metarRequestId
 
 
-        showMetarBanner(
-            "$airportIcao METAR: loading..."
-        )
+        if (showLoading) {
+            showMetarBanner(
+                "$airportIcao METAR: loading..."
+            )
+        }
 
 
         thread {
@@ -3951,7 +4056,7 @@ private val locationPermissionLauncher =
                         if (parsed != lastMetarValue) {
                             lastMetarValue = parsed
                             showMetarBanner(parsed)
-                        } else {
+                        } else if (showLoading) {
                             hideMetarBanner(false)
                         }
                     }
@@ -4104,7 +4209,7 @@ private val locationPermissionLauncher =
 
         handler.postDelayed(
             metarRemoveRunnable!!,
-            30000L
+            METAR_DISPLAY_DURATION
         )
     }
 
@@ -4182,6 +4287,15 @@ private val locationPermissionLauncher =
 
 
     private fun startGps() {
+
+        if (
+            !AircraftPositionStore.isEnabled(this)
+        ) {
+            stopGps()
+            handler.removeCallbacks(simulatorUpdateRunnable)
+            updateGpsText("Aircraft position OFF")
+            return
+        }
 
         if (
             SimulatorLocationStore.isConnected()
@@ -4427,6 +4541,10 @@ private val locationPermissionLauncher =
         updateGpsText(
             "GPS: $lat, $lon"
         )
+
+        if (::chartView.isInitialized) {
+            chartView.invalidate()
+        }
     }
 
 
@@ -4479,6 +4597,10 @@ private val locationPermissionLauncher =
         updateGpsText(
             "SIM: $lat, $lon$altitude$heading"
         )
+
+        if (::chartView.isInitialized) {
+            chartView.invalidate()
+        }
     }
 
 
@@ -5552,13 +5674,116 @@ private val locationPermissionLauncher =
             }
 
 
+            drawAircraftPosition(
+                canvas,
+                image
+            )
+
             canvas.restore()
 
             canvas.restore()
         }
 
 
-        private fun drawBitmapAt(
+        private fun drawAircraftPosition(
+            canvas: Canvas,
+            image: Bitmap
+        ) {
+            if (!AircraftPositionStore.isEnabled(this@PdfViewerActivity)) {
+                return
+            }
+
+            val position =
+                SimulatorLocationStore.getPosition()
+                    ?.let {
+                        Triple(
+                            it.latitude,
+                            it.longitude,
+                            it.headingDegrees
+                        )
+                    }
+                    ?: lastGpsLocation?.let {
+                        Triple(
+                            it.latitude,
+                            it.longitude,
+                            it.bearing.toDouble()
+                        )
+                    }
+                    ?: return
+
+            val normalized =
+                ChartGeoreferenceStore.normalizedPoint(
+                    this@PdfViewerActivity,
+                    currentChartGlobalPage(),
+                    position.first,
+                    position.second
+                )
+                    ?: return
+
+            val x = normalized.first * image.width
+            val y = normalized.second * image.height
+
+            if (x < -image.width * 0.05f ||
+                x > image.width * 1.05f ||
+                y < -image.height * 0.05f ||
+                y > image.height * 1.05f
+            ) {
+                return
+            }
+
+            val heading = position.third ?: 0.0
+            val size = min(image.width, image.height) * 0.018f
+
+            val shadowPaint =
+                Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                    color = Color.argb(210, 0, 0, 0)
+                    style = Paint.Style.FILL
+                }
+
+            val aircraftPaint =
+                Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                    color = Color.WHITE
+                    style = Paint.Style.FILL
+                }
+
+            val outlinePaint =
+                Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                    color = Color.BLACK
+                    style = Paint.Style.STROKE
+                    strokeWidth = max(2f, size * 0.10f)
+                    strokeJoin = Paint.Join.ROUND
+                }
+
+            val path = Path().apply {
+                moveTo(0f, -size)
+                lineTo(size * 0.24f, size * 0.25f)
+                lineTo(size * 0.85f, size * 0.52f)
+                lineTo(size * 0.72f, size * 0.72f)
+                lineTo(size * 0.20f, size * 0.48f)
+                lineTo(0f, size * 0.95f)
+                lineTo(-size * 0.20f, size * 0.48f)
+                lineTo(-size * 0.72f, size * 0.72f)
+                lineTo(-size * 0.85f, size * 0.52f)
+                lineTo(-size * 0.24f, size * 0.25f)
+                close()
+            }
+
+            canvas.save()
+            canvas.translate(x, y)
+            canvas.rotate(heading.toFloat())
+
+            canvas.save()
+            canvas.translate(size * 0.08f, size * 0.08f)
+            canvas.drawPath(path, shadowPaint)
+            canvas.restore()
+
+            canvas.drawPath(path, aircraftPaint)
+            canvas.drawPath(path, outlinePaint)
+            canvas.restore()
+        }
+
+
+        private fun drawBitmapAt (
             canvas: Canvas,
             image: Bitmap,
             left: Float,
