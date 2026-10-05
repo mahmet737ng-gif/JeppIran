@@ -8,22 +8,40 @@ import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
-class MainActivity : ComponentActivity() {
+class MainActivity :
+    ComponentActivity() {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreate(
+        savedInstanceState: Bundle?
+    ) {
+
+        ThemeManager.apply(
+            this
+        )
+
+        super.onCreate(
+            savedInstanceState
+        )
 
         enableEdgeToEdge()
 
-        setContentView(R.layout.activity_main)
+        setContentView(
+            R.layout.activity_main
+        )
 
-        val mainView = findViewById<android.view.View>(R.id.main)
-
-        ViewCompat.setOnApplyWindowInsetsListener(mainView) { view, insets ->
-
-            val systemBars = insets.getInsets(
-                WindowInsetsCompat.Type.systemBars()
+        val mainView =
+            findViewById<android.view.View>(
+                R.id.main
             )
+
+        ViewCompat.setOnApplyWindowInsetsListener(
+            mainView
+        ) { view, insets ->
+
+            val systemBars =
+                insets.getInsets(
+                    WindowInsetsCompat.Type.systemBars()
+                )
 
             view.setPadding(
                 systemBars.left + 16,
@@ -35,29 +53,67 @@ class MainActivity : ComponentActivity() {
             insets
         }
 
-        findViewById<android.view.View>(R.id.cardCharts).setOnClickListener {
+        findViewById<android.view.View>(
+            R.id.cardCharts
+        ).setOnClickListener {
+
             startActivity(
-                Intent(this, ChartsActivity::class.java)
+                Intent(
+                    this,
+                    ChartsActivity::class.java
+                )
             )
         }
 
-        findViewById<android.view.View>(R.id.cardEnroute).setOnClickListener {
-            Toast.makeText(this, "En-route Charts", Toast.LENGTH_SHORT).show()
+        findViewById<android.view.View>(
+            R.id.cardEnroute
+        ).setOnClickListener {
+
+            Toast.makeText(
+                this,
+                "En-route Charts",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
-        findViewById<android.view.View>(R.id.cardWx).setOnClickListener {
-            Toast.makeText(this, "WX", Toast.LENGTH_SHORT).show()
+        findViewById<android.view.View>(
+            R.id.cardWx
+        ).setOnClickListener {
+
+            Toast.makeText(
+                this,
+                "WX",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
-        findViewById<android.view.View>(R.id.cardUpdate).setOnClickListener {
-            Toast.makeText(this, "Update", Toast.LENGTH_SHORT).show()
+        findViewById<android.view.View>(
+            R.id.cardUpdate
+        ).setOnClickListener {
+
+            Toast.makeText(
+                this,
+                "Update",
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
-        findViewById<android.view.View>(R.id.cardSettings).setOnClickListener {
-            Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show()
+        findViewById<android.view.View>(
+            R.id.cardSettings
+        ).setOnClickListener {
+
+            startActivity(
+                Intent(
+                    this,
+                    SettingsActivity::class.java
+                )
+            )
         }
 
-        findViewById<android.view.View>(R.id.cardInfo).setOnClickListener {
+        findViewById<android.view.View>(
+            R.id.cardInfo
+        ).setOnClickListener {
+
             Toast.makeText(
                 this,
                 "JeppIran\nDeveloper: Taregh Msr",
