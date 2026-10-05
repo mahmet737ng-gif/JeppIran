@@ -21,6 +21,7 @@ import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.animation.DecelerateInterpolator
 import android.widget.EditText
 import android.widget.FrameLayout
@@ -41,8 +42,10 @@ import java.net.URL
 import kotlin.concurrent.thread
 import kotlin.math.abs
 import kotlin.math.atan2
+import kotlin.math.cos
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.sin
 import kotlin.math.sqrt
 
 class PdfViewerActivity : ComponentActivity() {
@@ -53,35 +56,33 @@ class PdfViewerActivity : ComponentActivity() {
     private var currentPage = 0
     private var totalPages = 0
 
+    private var chartTitle = ""
+    private var icao = ""
+    private var airportName = ""
+    private var city = ""
+    private var category = ""
+
     private lateinit var root: FrameLayout
     private lateinit var chartView: ChartView
     private lateinit var toolbar: LinearLayout
-
     private lateinit var titleText: TextView
     private lateinit var pageText: TextView
     private lateinit var loadingText: TextView
     private lateinit var progressBar: ProgressBar
 
-    private var chartTitle = ""
-    private var icao = ""
-    private var city = ""
-    private var category = ""
-
+    private var invertChart = false
     private var controlsVisible = true
 
     private var annotationMode = false
     private var annotationTool = Tool.SELECT
     private var eraserMode = EraserMode.OBJECT
 
-    private var invertChart = false
-    private var currentOrientationLandscape = false
-
     private val airportCharts =
         mutableListOf<ChartInfo>()
 
     private var previousBitmap: Bitmap? = null
     private var nextBitmap: Bitmap? = null
-    private var loadingNeighbors = false
+    private var neighborsLoading = false
 
     private enum class Tool {
         SELECT,
@@ -105,7 +106,8 @@ class PdfViewerActivity : ComponentActivity() {
     private data class ChartInfo(
         val page: Int,
         val name: String,
-        val category: String
+        val category: String,
+        val chartNumber: String
     )
 
     private data class StoredStroke(
@@ -114,7 +116,7 @@ class PdfViewerActivity : ComponentActivity() {
     )
 
     private data class StoredText(
-        val text: String,
+        var text: String,
         var x: Float,
         var y: Float,
         var scale: Float,
@@ -128,6 +130,22 @@ class PdfViewerActivity : ComponentActivity() {
 
     private val pdfFileName =
         "Iran2620.pdf"
+
+    /*
+     * The old viewer rendered at about 1.55x / 1.75x and then
+     * enlarged that bitmap during zoom.
+     *
+     * We now render the active chart at a much higher raster
+     * resolution and keep maximum zoom at the useful raster limit.
+     */
+    private val activeRenderQuality =
+        2.5f
+
+    private val neighborRenderQuality =
+        1.0f
+
+    private val maxZoom =
+        activeRenderQuality
 
     private val topCropPercent =
         0.014f
@@ -146,7 +164,8 @@ class PdfViewerActivity : ComponentActivity() {
 
         currentPage =
             savedInstanceState?.getInt(
-                "CURRENT_PAGE"
+                "CURRENT_PAGE",
+                0
             )
                 ?: (
                     intent.getIntExtra(
@@ -161,32 +180,32 @@ class PdfViewerActivity : ComponentActivity() {
             savedInstanceState?.getString(
                 "TITLE"
             )
-                ?: intent
-                    .getStringExtra(
-                        "TITLE"
-                    )
-                    .orEmpty()
+                ?: intent.getStringExtra(
+                    "TITLE"
+                ).orEmpty()
 
         icao =
-            intent
-                .getStringExtra(
-                    "ICAO"
-                )
-                .orEmpty()
+            intent.getStringExtra(
+                "ICAO"
+            ).orEmpty()
+
+        airportName =
+            savedInstanceState?.getString(
+                "AIRPORT_NAME"
+            )
+                ?: intent.getStringExtra(
+                    "AIRPORT_NAME"
+                ).orEmpty()
 
         city =
-            intent
-                .getStringExtra(
-                    "CITY"
-                )
-                .orEmpty()
+            intent.getStringExtra(
+                "CITY"
+            ).orEmpty()
 
         category =
-            intent
-                .getStringExtra(
-                    "CATEGORY"
-                )
-                .orEmpty()
+            intent.getStringExtra(
+                "CATEGORY"
+            ).orEmpty()
 
         loadAirportChartList()
 
@@ -242,6 +261,11 @@ class PdfViewerActivity : ComponentActivity() {
             chartTitle
         )
 
+        outState.putString(
+            "AIRPORT_NAME",
+            airportName
+        )
+
         super.onSaveInstanceState(
             outState
         )
@@ -252,14 +276,14 @@ class PdfViewerActivity : ComponentActivity() {
         previousBitmap?.recycle()
         nextBitmap?.recycle()
 
-        previousBitmap =
-            null
-
-        nextBitmap =
-            null
+        previousBitmap = null
+        nextBitmap = null
 
         renderer?.close()
+        renderer = null
+
         descriptor?.close()
+        descriptor = null
 
         super.onDestroy()
     }
@@ -268,7 +292,6 @@ class PdfViewerActivity : ComponentActivity() {
 
         root =
             FrameLayout(this).apply {
-
                 setBackgroundColor(
                     Color.rgb(
                         15,
@@ -300,10 +323,9 @@ class PdfViewerActivity : ComponentActivity() {
                 this,
                 null,
                 android.R.attr.progressBarStyleHorizontal
-            )
-
-        progressBar.max =
-            100
+            ).apply {
+                max = 100
+            }
 
         loadingText =
             TextView(this).apply {
@@ -365,9 +387,8 @@ class PdfViewerActivity : ComponentActivity() {
                 val connection =
                     URL(
                         pdfUrl
-                    )
-                        .openConnection()
-                            as HttpURLConnection
+                    ).openConnection()
+                        as HttpURLConnection
 
                 connection.connectTimeout =
                     30000
@@ -384,7 +405,6 @@ class PdfViewerActivity : ComponentActivity() {
                     connection.responseCode !in
                     200..299
                 ) {
-
                     throw Exception(
                         "HTTP ${connection.responseCode}"
                     )
@@ -768,13 +788,11 @@ class PdfViewerActivity : ComponentActivity() {
         val clear =
             makeToolbarButton(
                 "CLR"
-            )
-
-        clear.textSize =
-            13f
+            ).apply {
+                textSize = 13f
+            }
 
         clear.setOnClickListener {
-
             showClearAllDialog()
         }
 
@@ -814,7 +832,6 @@ class PdfViewerActivity : ComponentActivity() {
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 68.dp
             ).apply {
-
                 gravity =
                     Gravity.TOP
             }
@@ -900,11 +917,11 @@ class PdfViewerActivity : ComponentActivity() {
 
                 } else {
 
-                    annotationMode =
-                        tool != Tool.SELECT
-
                     annotationTool =
                         tool
+
+                    annotationMode =
+                        tool != Tool.SELECT
                 }
 
                 updateToolButtonStates()
@@ -923,12 +940,12 @@ class PdfViewerActivity : ComponentActivity() {
         }
 
         for (
-            index in 0 until toolbar.childCount
+            i in 0 until toolbar.childCount
         ) {
 
             val child =
                 toolbar.getChildAt(
-                    index
+                    i
                 )
 
             if (
@@ -937,36 +954,31 @@ class PdfViewerActivity : ComponentActivity() {
                 continue
             }
 
-            val label =
+            val value =
                 child.text
                     .toString()
                     .uppercase()
 
             val active =
-                when {
+                when (value) {
 
-                    label ==
-                        "SELECT" ->
+                    "SELECT" ->
                         annotationTool ==
                             Tool.SELECT
 
-                    label ==
-                        "PEN" ->
+                    "PEN" ->
                         annotationTool ==
                             Tool.PEN
 
-                    label ==
-                        "HIGHLIGHT" ->
+                    "HIGHLIGHT" ->
                         annotationTool ==
                             Tool.HIGHLIGHT
 
-                    label ==
-                        "TEXT" ->
+                    "TEXT" ->
                         annotationTool ==
                             Tool.TEXT
 
-                    label ==
-                        "ERASER" ->
+                    "ERASER" ->
                         annotationTool ==
                             Tool.ERASER
 
@@ -986,8 +998,6 @@ class PdfViewerActivity : ComponentActivity() {
                 }
             )
         }
-
-        chartView.invalidate()
     }
 
     private fun updateToggleButton(
@@ -1055,7 +1065,7 @@ class PdfViewerActivity : ComponentActivity() {
 
             chartView.setContentInsets(
                 bars.left,
-                bars.top + toolbarHeight(),
+                bars.top + 68.dp,
                 bars.right,
                 bars.bottom
             )
@@ -1066,12 +1076,6 @@ class PdfViewerActivity : ComponentActivity() {
         ViewCompat.requestApplyInsets(
             root
         )
-    }
-
-    private fun toolbarHeight():
-        Int {
-
-        return 68.dp
     }
 
     private fun openPdf(
@@ -1181,27 +1185,26 @@ class PdfViewerActivity : ComponentActivity() {
 
         page.close()
 
-        currentOrientationLandscape =
+        val landscape =
             width > height
 
         requestedOrientation =
             if (
-                currentOrientationLandscape
+                landscape
             ) {
-                ActivityInfo
-                    .SCREEN_ORIENTATION_LANDSCAPE
+                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE
             } else {
-                ActivityInfo
-                    .SCREEN_ORIENTATION_PORTRAIT
+                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
             }
 
         chartView.setLandscapeMode(
-            currentOrientationLandscape
+            landscape
         )
 
         val bitmap =
             renderPageBitmap(
-                index
+                index,
+                activeRenderQuality
             )
 
         if (
@@ -1254,7 +1257,9 @@ class PdfViewerActivity : ComponentActivity() {
         }
 
         showPage(
-            airportCharts[target].page - 1
+            airportCharts[
+                target
+            ].page - 1
         )
     }
 
@@ -1262,11 +1267,11 @@ class PdfViewerActivity : ComponentActivity() {
         pageIndex: Int
     ): Int {
 
-        val pageNumber =
+        val number =
             pageIndex + 1
 
         return airportCharts.indexOfFirst {
-            it.page == pageNumber
+            it.page == number
         }
     }
 
@@ -1274,11 +1279,11 @@ class PdfViewerActivity : ComponentActivity() {
         pageIndex: Int
     ): ChartInfo? {
 
-        val pageNumber =
+        val number =
             pageIndex + 1
 
         return airportCharts.firstOrNull {
-            it.page == pageNumber
+            it.page == number
         }
     }
 
@@ -1305,63 +1310,65 @@ class PdfViewerActivity : ComponentActivity() {
     private fun prepareNeighborBitmaps() {
 
         if (
-            loadingNeighbors
+            neighborsLoading
         ) {
             return
         }
 
-        val current =
+        val currentIndex =
             airportIndexForPage(
                 currentPage
             )
 
         if (
-            current < 0
+            currentIndex < 0
         ) {
             return
         }
 
         val previousIndex =
-            current - 1
+            currentIndex - 1
 
         val nextIndex =
-            current + 1
+            currentIndex + 1
 
-        loadingNeighbors =
+        neighborsLoading =
             true
 
         thread {
 
-            var previous:
-                Bitmap? = null
+            val previous =
+                if (
+                    previousIndex >= 0
+                ) {
 
-            var next:
-                Bitmap? = null
-
-            if (
-                previousIndex >= 0
-            ) {
-
-                previous =
                     renderPageBitmap(
                         airportCharts[
                             previousIndex
-                        ].page - 1
+                        ].page - 1,
+                        neighborRenderQuality
                     )
-            }
 
-            if (
-                nextIndex <
-                airportCharts.size
-            ) {
+                } else {
+                    null
+                }
 
-                next =
+            val next =
+                if (
+                    nextIndex <
+                    airportCharts.size
+                ) {
+
                     renderPageBitmap(
                         airportCharts[
                             nextIndex
-                        ].page - 1
+                        ].page - 1,
+                        neighborRenderQuality
                     )
-            }
+
+                } else {
+                    null
+                }
 
             runOnUiThread {
 
@@ -1374,19 +1381,20 @@ class PdfViewerActivity : ComponentActivity() {
                 nextBitmap =
                     next
 
-                loadingNeighbors =
+                neighborsLoading =
                     false
 
                 chartView.setNeighborBitmaps(
-                    previousBitmap,
-                    nextBitmap
+                    previous,
+                    next
                 )
             }
         }
     }
 
     private fun renderPageBitmap(
-        pageIndex: Int
+        pageIndex: Int,
+        quality: Float
     ): Bitmap? {
 
         val pdf =
@@ -1396,54 +1404,65 @@ class PdfViewerActivity : ComponentActivity() {
 
             synchronized(pdf) {
 
+                if (
+                    pageIndex < 0 ||
+                    pageIndex >= pdf.pageCount
+                ) {
+                    return null
+                }
+
                 val page =
                     pdf.openPage(
                         pageIndex
                     )
 
-                val scale =
+                val baseScale =
                     if (
                         page.width >
-                            page.height
+                        page.height
                     ) {
                         1.55f
                     } else {
                         1.75f
                     }
 
-                val fullWidth =
+                val renderScale =
+                    baseScale *
+                        quality
+
+                val bitmapWidth =
                     (
                         page.width *
-                            scale
+                            renderScale
                     )
                         .toInt()
                         .coerceAtLeast(
                             1
                         )
 
-                val fullHeight =
+                val bitmapHeight =
                     (
                         page.height *
-                            scale
+                            renderScale
                     )
                         .toInt()
                         .coerceAtLeast(
                             1
                         )
 
-                val fullBitmap =
+                val bitmap =
                     Bitmap.createBitmap(
-                        fullWidth,
-                        fullHeight,
+                        bitmapWidth,
+                        bitmapHeight,
                         Bitmap.Config.ARGB_8888
                     )
 
-                fullBitmap.eraseColor(
+                bitmap.eraseColor(
                     Color.WHITE
                 )
 
                 page.render(
-                    fullBitmap,
+                    bitmap,
                     null,
                     null,
                     PdfRenderer.Page.RENDER_MODE_FOR_DISPLAY
@@ -1453,34 +1472,34 @@ class PdfViewerActivity : ComponentActivity() {
 
                 val cropTop =
                     (
-                        fullBitmap.height *
+                        bitmap.height *
                             topCropPercent
                     )
                         .toInt()
                         .coerceIn(
                             0,
-                            fullBitmap.height - 1
+                            bitmap.height - 1
                         )
 
                 if (
                     cropTop <= 0
                 ) {
 
-                    fullBitmap
+                    bitmap
 
                 } else {
 
                     val cropped =
                         Bitmap.createBitmap(
-                            fullBitmap,
+                            bitmap,
                             0,
                             cropTop,
-                            fullBitmap.width,
-                            fullBitmap.height -
+                            bitmap.width,
+                            bitmap.height -
                                 cropTop
                         )
 
-                    fullBitmap.recycle()
+                    bitmap.recycle()
 
                     cropped
                 }
@@ -1500,7 +1519,7 @@ class PdfViewerActivity : ComponentActivity() {
 
         try {
 
-            val text =
+            val raw =
                 assets
                     .open(
                         "charts-app-v16.json"
@@ -1509,28 +1528,26 @@ class PdfViewerActivity : ComponentActivity() {
                     .use {
                         it.readText()
                     }
-
-            val rootText =
-                text.trim()
+                    .trim()
 
             if (
-                rootText.startsWith("[")
+                raw.startsWith("[")
             ) {
 
                 readChartArray(
                     JSONArray(
-                        rootText
+                        raw
                     )
                 )
 
             } else {
 
-                val objectRoot =
+                val root =
                     JSONObject(
-                        rootText
+                        raw
                     )
 
-                val arrays =
+                val possibleArrays =
                     listOf(
                         "charts",
                         "data",
@@ -1538,15 +1555,15 @@ class PdfViewerActivity : ComponentActivity() {
                         "pages"
                     )
 
-                var found =
+                var loaded =
                     false
 
                 for (
-                    key in arrays
+                    key in possibleArrays
                 ) {
 
                     val value =
-                        objectRoot.opt(
+                        root.opt(
                             key
                         )
 
@@ -1558,7 +1575,7 @@ class PdfViewerActivity : ComponentActivity() {
                             value
                         )
 
-                        found =
+                        loaded =
                             true
 
                         break
@@ -1566,18 +1583,18 @@ class PdfViewerActivity : ComponentActivity() {
                 }
 
                 if (
-                    !found
+                    !loaded
                 ) {
 
                     val keys =
-                        objectRoot.keys()
+                        root.keys()
 
                     while (
                         keys.hasNext()
                     ) {
 
                         val value =
-                            objectRoot.opt(
+                            root.opt(
                                 keys.next()
                             )
 
@@ -1611,19 +1628,15 @@ class PdfViewerActivity : ComponentActivity() {
             i in 0 until array.length()
         ) {
 
-            val value =
-                array.opt(
+            val item =
+                array.optJSONObject(
                     i
                 )
+                    ?: continue
 
-            if (
-                value is JSONObject
-            ) {
-
-                readChartObject(
-                    value
-                )
-            }
+            readChartObject(
+                item
+            )
         }
     }
 
@@ -1645,8 +1658,13 @@ class PdfViewerActivity : ComponentActivity() {
             ).uppercase()
 
         if (
+            itemIcao.isBlank()
+        ) {
+            return
+        }
+
+        if (
             icao.isNotBlank() &&
-            itemIcao.isNotBlank() &&
             itemIcao != icao.uppercase()
         ) {
             return
@@ -1674,20 +1692,6 @@ class PdfViewerActivity : ComponentActivity() {
             return
         }
 
-        val name =
-            firstNonEmpty(
-                item.optString(
-                    "name"
-                ),
-                item.optString(
-                    "title"
-                ),
-                item.optString(
-                    "chart_name"
-                ),
-                "Chart page $page"
-            )
-
         val chartCategory =
             firstNonEmpty(
                 item.optString(
@@ -1702,13 +1706,84 @@ class PdfViewerActivity : ComponentActivity() {
                 "Other"
             )
 
+        val chartNumber =
+            firstNonEmpty(
+                item.optString(
+                    "chart_number"
+                ),
+                item.optString(
+                    "chartNumber"
+                )
+            )
+
+        val rawName =
+            firstNonEmpty(
+                item.optString(
+                    "name"
+                ),
+                item.optString(
+                    "title"
+                ),
+                item.optString(
+                    "chart_name"
+                )
+            )
+
+        val name =
+            makeChartDisplayName(
+                rawName,
+                chartCategory,
+                chartNumber,
+                page
+            )
+
         airportCharts.add(
             ChartInfo(
                 page,
                 name,
-                chartCategory
+                chartCategory,
+                chartNumber
             )
         )
+    }
+
+    private fun makeChartDisplayName(
+        rawName: String,
+        chartCategory: String,
+        chartNumber: String,
+        page: Int
+    ): String {
+
+        val clean =
+            rawName.trim()
+
+        val placeholder =
+            clean.isBlank() ||
+                clean.matches(
+                    Regex(
+                        "(?i)chart\\s*page\\s*\\d+"
+                    )
+                )
+
+        if (
+            !placeholder
+        ) {
+            return clean
+        }
+
+        if (
+            chartNumber.isNotBlank()
+        ) {
+
+            return chartCategory.trim()
+                .uppercase() +
+                " " +
+                chartNumber.trim()
+        }
+
+        return chartCategory.trim()
+            .uppercase() +
+            " CHART"
     }
 
     private fun showEraserModeDialog() {
@@ -1835,6 +1910,9 @@ class PdfViewerActivity : ComponentActivity() {
             )
         )
 
+        var alignment =
+            TextAlign.LEFT
+
         val alignmentRow =
             LinearLayout(this).apply {
 
@@ -1852,89 +1930,56 @@ class PdfViewerActivity : ComponentActivity() {
                 )
             }
 
-        var alignment =
-            TextAlign.LEFT
+        fun makeAlignButton(
+            label: String,
+            value: TextAlign
+        ): TextView {
 
-        val leftButton =
-            TextView(this).apply {
+            return TextView(
+                this
+            ).apply {
 
                 text =
-                    "LEFT"
+                    label
 
                 gravity =
                     Gravity.CENTER
 
                 setPadding(
-                    16.dp,
                     10.dp,
-                    16.dp,
+                    10.dp,
+                    10.dp,
                     10.dp
                 )
 
                 setOnClickListener {
 
                     alignment =
-                        TextAlign.LEFT
+                        value
 
                     input.textAlignment =
-                        View.TEXT_ALIGNMENT_TEXT_START
+                        when (
+                            value
+                        ) {
+
+                            TextAlign.LEFT ->
+                                View.TEXT_ALIGNMENT_TEXT_START
+
+                            TextAlign.CENTER ->
+                                View.TEXT_ALIGNMENT_CENTER
+
+                            TextAlign.RIGHT ->
+                                View.TEXT_ALIGNMENT_TEXT_END
+                        }
                 }
             }
-
-        val centerButton =
-            TextView(this).apply {
-
-                text =
-                    "CENTER"
-
-                gravity =
-                    Gravity.CENTER
-
-                setPadding(
-                    16.dp,
-                    10.dp,
-                    16.dp,
-                    10.dp
-                )
-
-                setOnClickListener {
-
-                    alignment =
-                        TextAlign.CENTER
-
-                    input.textAlignment =
-                        View.TEXT_ALIGNMENT_CENTER
-                }
-            }
-
-        val rightButton =
-            TextView(this).apply {
-
-                text =
-                    "RIGHT"
-
-                gravity =
-                    Gravity.CENTER
-
-                setPadding(
-                    16.dp,
-                    10.dp,
-                    16.dp,
-                    10.dp
-                )
-
-                setOnClickListener {
-
-                    alignment =
-                        TextAlign.RIGHT
-
-                    input.textAlignment =
-                        View.TEXT_ALIGNMENT_TEXT_END
-                }
-            }
+        }
 
         alignmentRow.addView(
-            leftButton,
+            makeAlignButton(
+                "LEFT",
+                TextAlign.LEFT
+            ),
             LinearLayout.LayoutParams(
                 0,
                 46.dp,
@@ -1943,7 +1988,10 @@ class PdfViewerActivity : ComponentActivity() {
         )
 
         alignmentRow.addView(
-            centerButton,
+            makeAlignButton(
+                "CENTER",
+                TextAlign.CENTER
+            ),
             LinearLayout.LayoutParams(
                 0,
                 46.dp,
@@ -1952,7 +2000,10 @@ class PdfViewerActivity : ComponentActivity() {
         )
 
         alignmentRow.addView(
-            rightButton,
+            makeAlignButton(
+                "RIGHT",
+                TextAlign.RIGHT
+            ),
             LinearLayout.LayoutParams(
                 0,
                 46.dp,
@@ -2021,19 +2072,79 @@ class PdfViewerActivity : ComponentActivity() {
                 .create()
 
         dialog.window?.setSoftInputMode(
-            android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
+            WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
         )
 
         dialog.show()
 
         input.requestFocus()
 
-        dialog.window?.setLayout(
-            (resources.displayMetrics.widthPixels *
-                0.82f)
-                .toInt(),
-            ViewGroup.LayoutParams.WRAP_CONTENT
+        dialog.window?.setSoftInputMode(
+            WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE or
+                WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE
         )
+    }
+
+    private fun showTextEditDialog(
+        index: Int
+    ) {
+
+        val item =
+            chartView.getTextAt(
+                index
+            )
+                ?: return
+
+        val input =
+            EditText(
+                this
+            ).apply {
+
+                setText(
+                    item.text
+                )
+
+                inputType =
+                    InputType.TYPE_CLASS_TEXT or
+                        InputType.TYPE_TEXT_FLAG_MULTI_LINE
+
+                minLines =
+                    5
+
+                gravity =
+                    Gravity.TOP
+
+                setSelection(
+                    text.length
+                )
+            }
+
+        AlertDialog.Builder(
+            this
+        )
+            .setTitle(
+                "Edit text"
+            )
+            .setView(
+                input
+            )
+            .setNegativeButton(
+                "Cancel",
+                null
+            )
+            .setPositiveButton(
+                "Save"
+            ) { _, _ ->
+
+                item.text =
+                    input.text
+                        .toString()
+
+                saveAnnotationsForPage()
+
+                chartView.invalidate()
+            }
+            .show()
     }
 
     private fun annotationPreferences() =
@@ -2044,10 +2155,8 @@ class PdfViewerActivity : ComponentActivity() {
 
     private fun annotationKey(
         page: Int
-    ): String {
-
-        return "page_$page"
-    }
+    ) =
+        "page_$page"
 
     private fun saveAnnotationsForPage() {
 
@@ -2063,8 +2172,7 @@ class PdfViewerActivity : ComponentActivity() {
         val strokes =
             JSONArray()
 
-        chartView
-            .getStrokes()
+        chartView.getStrokes()
             .forEach { stroke ->
 
                 val strokeObject =
@@ -2080,21 +2188,16 @@ class PdfViewerActivity : ComponentActivity() {
 
                 stroke.points.forEach { point ->
 
-                    val pointObject =
-                        JSONObject()
-
-                    pointObject.put(
-                        "x",
-                        point.x.toDouble()
-                    )
-
-                    pointObject.put(
-                        "y",
-                        point.y.toDouble()
-                    )
-
                     points.put(
-                        pointObject
+                        JSONObject()
+                            .put(
+                                "x",
+                                point.x.toDouble()
+                            )
+                            .put(
+                                "y",
+                                point.y.toDouble()
+                            )
                     )
                 }
 
@@ -2111,50 +2214,39 @@ class PdfViewerActivity : ComponentActivity() {
         val texts =
             JSONArray()
 
-        chartView
-            .getTexts()
+        chartView.getTexts()
             .forEach { item ->
 
-                val textObject =
-                    JSONObject()
-
-                textObject.put(
-                    "text",
-                    item.text
-                )
-
-                textObject.put(
-                    "x",
-                    item.x.toDouble()
-                )
-
-                textObject.put(
-                    "y",
-                    item.y.toDouble()
-                )
-
-                textObject.put(
-                    "scale",
-                    item.scale.toDouble()
-                )
-
-                textObject.put(
-                    "rotation",
-                    item.rotation.toDouble()
-                )
-
-                textObject.put(
-                    "align",
-                    item.align.name
-                )
-
-                textObject.put(
-                    "size",
-                    item.size.toDouble()
-                )
-
                 texts.put(
-                    textObject
+                    JSONObject()
+                        .put(
+                            "text",
+                            item.text
+                        )
+                        .put(
+                            "x",
+                            item.x.toDouble()
+                        )
+                        .put(
+                            "y",
+                            item.y.toDouble()
+                        )
+                        .put(
+                            "scale",
+                            item.scale.toDouble()
+                        )
+                        .put(
+                            "rotation",
+                            item.rotation.toDouble()
+                        )
+                        .put(
+                            "align",
+                            item.align.name
+                        )
+                        .put(
+                            "size",
+                            item.size.toDouble()
+                        )
                 )
             }
 
@@ -2243,25 +2335,23 @@ class PdfViewerActivity : ComponentActivity() {
                     val points =
                         mutableListOf<PointF>()
 
-                    val pointArray =
+                    val array =
                         stroke.optJSONArray(
                             "points"
                         )
 
                     if (
-                        pointArray != null
+                        array != null
                     ) {
 
                         for (
-                            j in 0 until
-                                pointArray.length()
+                            j in 0 until array.length()
                         ) {
 
                             val point =
-                                pointArray
-                                    .optJSONObject(
-                                        j
-                                    )
+                                array.optJSONObject(
+                                    j
+                                )
                                     ?: continue
 
                             points.add(
@@ -2304,16 +2394,16 @@ class PdfViewerActivity : ComponentActivity() {
                     i in 0 until texts.length()
                 ) {
 
-                    val text =
+                    val item =
                         texts.optJSONObject(
                             i
                         )
                             ?: continue
 
-                    val alignment =
+                    val align =
                         runCatching {
                             TextAlign.valueOf(
-                                text.optString(
+                                item.optString(
                                     "align",
                                     "LEFT"
                                 )
@@ -2323,28 +2413,28 @@ class PdfViewerActivity : ComponentActivity() {
                         )
 
                     chartView.addStoredText(
-                        text.optString(
+                        item.optString(
                             "text",
                             ""
                         ),
-                        text.optDouble(
+                        item.optDouble(
                             "x",
                             0.0
                         ).toFloat(),
-                        text.optDouble(
+                        item.optDouble(
                             "y",
                             0.0
                         ).toFloat(),
-                        text.optDouble(
+                        item.optDouble(
                             "scale",
                             1.0
                         ).toFloat(),
-                        text.optDouble(
+                        item.optDouble(
                             "rotation",
                             0.0
                         ).toFloat(),
-                        alignment,
-                        text.optDouble(
+                        align,
+                        item.optDouble(
                             "size",
                             20.0
                         ).toFloat()
@@ -2376,91 +2466,6 @@ class PdfViewerActivity : ComponentActivity() {
         chartView.invalidate()
     }
 
-    private fun showTextEditDialog(
-        index: Int
-    ) {
-
-        if (
-            index !in
-            chartView.textCountRange()
-        ) {
-            return
-        }
-
-        val item =
-            chartView.getTextAt(
-                index
-            )
-                ?: return
-
-        val input =
-            EditText(this).apply {
-
-                setText(
-                    item.text
-                )
-
-                inputType =
-                    InputType.TYPE_CLASS_TEXT or
-                        InputType.TYPE_TEXT_FLAG_MULTI_LINE
-
-                minLines =
-                    5
-
-                gravity =
-                    Gravity.TOP
-
-                setSelection(
-                    text.length
-                )
-            }
-
-        AlertDialog.Builder(
-            this
-        )
-            .setTitle(
-                "Edit text"
-            )
-            .setView(
-                input
-            )
-            .setNegativeButton(
-                "Cancel",
-                null
-            )
-            .setPositiveButton(
-                "Save"
-            ) { _, _ ->
-
-                item.text =
-                    input.text
-                        .toString()
-
-                saveAnnotationsForPage()
-
-                chartView.invalidate()
-            }
-            .show()
-    }
-
-    private fun showError(
-        message: String
-    ) {
-
-        AlertDialog.Builder(this)
-            .setTitle(
-                "JeppIran"
-            )
-            .setMessage(
-                message
-            )
-            .setPositiveButton(
-                "OK",
-                null
-            )
-            .show()
-    }
-
     private fun hideViewerControls() {
 
         toolbar.visibility =
@@ -2471,11 +2476,6 @@ class PdfViewerActivity : ComponentActivity() {
             0,
             0,
             0
-        )
-
-        WindowCompat.setDecorFitsSystemWindows(
-            window,
-            false
         )
 
         WindowInsetsControllerCompat(
@@ -2497,11 +2497,6 @@ class PdfViewerActivity : ComponentActivity() {
 
         toolbar.visibility =
             View.VISIBLE
-
-        WindowCompat.setDecorFitsSystemWindows(
-            window,
-            false
-        )
 
         WindowInsetsControllerCompat(
             window,
@@ -2530,23 +2525,37 @@ class PdfViewerActivity : ComponentActivity() {
         if (
             controlsVisible
         ) {
-
             showViewerControls()
-
         } else {
-
             hideViewerControls()
         }
+    }
+
+    private fun showError(
+        message: String
+    ) {
+
+        AlertDialog.Builder(
+            this
+        )
+            .setTitle(
+                "JeppIran"
+            )
+            .setMessage(
+                message
+            )
+            .setPositiveButton(
+                "OK",
+                null
+            )
+            .show()
     }
 
     private fun isDarkTheme():
         Boolean {
 
         return (
-            resources
-                .configuration
-                .uiMode
-                and
+            resources.configuration.uiMode and
                 android.content.res.Configuration
                     .UI_MODE_NIGHT_MASK
         ) ==
@@ -2558,14 +2567,9 @@ class PdfViewerActivity : ComponentActivity() {
         context: Context
     ) : View(context) {
 
-        private var bitmap:
-            Bitmap? = null
-
-        private var previous:
-            Bitmap? = null
-
-        private var next:
-            Bitmap? = null
+        private var bitmap: Bitmap? = null
+        private var previous: Bitmap? = null
+        private var next: Bitmap? = null
 
         private var scale =
             1f
@@ -2588,10 +2592,10 @@ class PdfViewerActivity : ComponentActivity() {
         private var contentBottom =
             0
 
-        private var landscapeMode =
+        private var inverted =
             false
 
-        private var inverted =
+        private var landscape =
             false
 
         private var downX =
@@ -2621,6 +2625,10 @@ class PdfViewerActivity : ComponentActivity() {
         private var swiping =
             false
 
+        private var activePoints:
+            MutableList<PointF>? =
+                null
+
         private var selectedTextIndex =
             -1
 
@@ -2641,10 +2649,6 @@ class PdfViewerActivity : ComponentActivity() {
 
         private var textGestureStartY =
             0f
-
-        private var activePoints:
-            MutableList<PointF>? =
-            null
 
         private val strokes =
             mutableListOf<StoredStroke>()
@@ -2685,9 +2689,6 @@ class PdfViewerActivity : ComponentActivity() {
                         120
                     )
 
-                textSize =
-                    20f
-
                 typeface =
                     Typeface.DEFAULT_BOLD
             }
@@ -2716,10 +2717,7 @@ class PdfViewerActivity : ComponentActivity() {
         ) {
 
             bitmap?.let {
-
-                if (
-                    !it.isRecycled
-                ) {
+                if (!it.isRecycled) {
                     it.recycle()
                 }
             }
@@ -2766,30 +2764,26 @@ class PdfViewerActivity : ComponentActivity() {
             inverted =
                 value
 
-            if (
-                inverted
-            ) {
+            bitmapPaint.colorFilter =
+                if (
+                    inverted
+                ) {
 
-                val matrix =
-                    ColorMatrix(
-                        floatArrayOf(
-                            -1f, 0f, 0f, 0f, 255f,
-                            0f, -1f, 0f, 0f, 255f,
-                            0f, 0f, -1f, 0f, 255f,
-                            0f, 0f, 0f, 1f, 0f
+                    ColorMatrixColorFilter(
+                        ColorMatrix(
+                            floatArrayOf(
+                                -1f, 0f, 0f, 0f, 255f,
+                                0f, -1f, 0f, 0f, 255f,
+                                0f, 0f, -1f, 0f, 255f,
+                                0f, 0f, 0f, 1f, 0f
+                            )
                         )
                     )
 
-                bitmapPaint.colorFilter =
-                    ColorMatrixColorFilter(
-                        matrix
-                    )
+                } else {
 
-            } else {
-
-                bitmapPaint.colorFilter =
                     null
-            }
+                }
 
             invalidate()
         }
@@ -2820,23 +2814,19 @@ class PdfViewerActivity : ComponentActivity() {
             value: Boolean
         ) {
 
-            landscapeMode =
+            landscape =
                 value
 
             invalidate()
         }
 
         fun getStrokes():
-            List<StoredStroke> {
-
-            return strokes.toList()
-        }
+            List<StoredStroke> =
+            strokes.toList()
 
         fun getTexts():
-            List<StoredText> {
-
-            return texts.toList()
-        }
+            List<StoredText> =
+            texts.toList()
 
         fun clearAnnotationsInternal() {
 
@@ -2875,10 +2865,10 @@ class PdfViewerActivity : ComponentActivity() {
             value: String,
             x: Float,
             y: Float,
-            scaleValue: Float = 1f,
-            rotationValue: Float = 0f,
-            alignValue: TextAlign = TextAlign.LEFT,
-            sizeValue: Float = 20f
+            scaleValue: Float,
+            rotationValue: Float,
+            alignValue: TextAlign,
+            sizeValue: Float
         ) {
 
             if (
@@ -2920,20 +2910,12 @@ class PdfViewerActivity : ComponentActivity() {
             )
         }
 
-        fun textCountRange():
-            IntRange {
-
-            return 0 until texts.size
-        }
-
         fun getTextAt(
             index: Int
-        ): StoredText? {
-
-            return texts.getOrNull(
+        ): StoredText? =
+            texts.getOrNull(
                 index
             )
-        }
 
         override fun onDraw(
             canvas: Canvas
@@ -2986,7 +2968,6 @@ class PdfViewerActivity : ComponentActivity() {
                 min(
                     availableWidth /
                         image.width,
-
                     availableHeight /
                         image.height
                 )
@@ -3005,25 +2986,21 @@ class PdfViewerActivity : ComponentActivity() {
 
             val centerX =
                 contentLeft +
-                    availableWidth /
-                    2f
+                    availableWidth / 2f
 
             val centerY =
                 contentTop +
-                    availableHeight /
-                    2f
+                    availableHeight / 2f
 
             val left =
                 centerX -
-                    drawWidth /
-                    2f +
+                    drawWidth / 2f +
                     offsetX +
                     swipeOffset
 
             val top =
                 centerY -
-                    drawHeight /
-                    2f +
+                    drawHeight / 2f +
                     offsetY
 
             canvas.save()
@@ -3031,10 +3008,14 @@ class PdfViewerActivity : ComponentActivity() {
             canvas.clipRect(
                 contentLeft.toFloat(),
                 contentTop.toFloat(),
-                width -
-                    contentRight,
-                height -
-                    contentBottom
+                (
+                    width -
+                        contentRight
+                    ).toFloat(),
+                (
+                    height -
+                        contentBottom
+                    ).toFloat()
             )
 
             if (
@@ -3044,8 +3025,7 @@ class PdfViewerActivity : ComponentActivity() {
                 drawNeighbor(
                     canvas,
                     previous,
-                    left -
-                        width,
+                    left - width,
                     top,
                     finalScale
                 )
@@ -3053,8 +3033,7 @@ class PdfViewerActivity : ComponentActivity() {
                 drawNeighbor(
                     canvas,
                     next,
-                    left +
-                        width,
+                    left + width,
                     top,
                     finalScale
                 )
@@ -3066,10 +3045,8 @@ class PdfViewerActivity : ComponentActivity() {
                 RectF(
                     left,
                     top,
-                    left +
-                        drawWidth,
-                    top +
-                        drawHeight
+                    left + drawWidth,
+                    top + drawHeight
                 ),
                 bitmapPaint
             )
@@ -3136,10 +3113,8 @@ class PdfViewerActivity : ComponentActivity() {
                 RectF(
                     left,
                     top,
-                    left +
-                        drawWidth,
-                    top +
-                        drawHeight
+                    left + drawWidth,
+                    top + drawHeight
                 ),
                 bitmapPaint
             )
@@ -3195,16 +3170,17 @@ class PdfViewerActivity : ComponentActivity() {
                     }
 
                 val lines =
-                    item.text
-                        .split(
-                            "\n"
-                        )
+                    item.text.split(
+                        "\n"
+                    )
 
                 val lineHeight =
                     item.size *
                         1.25f
 
-                lines.forEachIndexed { lineIndex, line ->
+                lines.forEachIndexed {
+                    lineIndex,
+                    line ->
 
                     canvas.drawText(
                         line,
@@ -3212,7 +3188,7 @@ class PdfViewerActivity : ComponentActivity() {
                         lineHeight *
                             (
                                 lineIndex + 1
-                            ),
+                                ),
                         textPaint
                     )
                 }
@@ -3225,13 +3201,6 @@ class PdfViewerActivity : ComponentActivity() {
                     val bounds =
                         measureTextBounds(
                             item
-                        )
-
-                    selectionPaint.color =
-                        Color.rgb(
-                            80,
-                            225,
-                            135
                         )
 
                     canvas.drawRect(
@@ -3259,10 +3228,9 @@ class PdfViewerActivity : ComponentActivity() {
                 item.size
 
             val lines =
-                item.text
-                    .split(
-                        "\n"
-                    )
+                item.text.split(
+                    "\n"
+                )
 
             var maxWidth =
                 1f
@@ -3278,19 +3246,16 @@ class PdfViewerActivity : ComponentActivity() {
                     )
             }
 
-            val heightValue =
+            val height =
                 item.size *
                     1.25f *
                     lines.size
 
-            val widthValue =
-                maxWidth
-
             return RectF(
-                -widthValue / 2f - 12f,
-                0f - 4f,
-                widthValue / 2f + 12f,
-                heightValue + 8f
+                -maxWidth / 2f - 12f,
+                -4f,
+                maxWidth / 2f + 12f,
+                height + 8f
             )
         }
 
@@ -3331,11 +3296,8 @@ class PdfViewerActivity : ComponentActivity() {
                 if (
                     highlight
                 ) {
-
                     22f
-
                 } else {
-
                     5f
                 }
 
@@ -3360,93 +3322,6 @@ class PdfViewerActivity : ComponentActivity() {
             canvas.drawPath(
                 path,
                 strokePaint
-            )
-        }
-
-        private fun imageToScreen(
-            point: PointF
-        ): PointF {
-
-            val image =
-                bitmap ?: return PointF(
-                    0f,
-                    0f
-                )
-
-            val availableWidth =
-                (
-                    width -
-                        contentLeft -
-                        contentRight
-                )
-                    .coerceAtLeast(
-                        1
-                    )
-                    .toFloat()
-
-            val availableHeight =
-                (
-                    height -
-                        contentTop -
-                        contentBottom
-                )
-                    .coerceAtLeast(
-                        1
-                    )
-                    .toFloat()
-
-            val baseScale =
-                min(
-                    availableWidth /
-                        image.width,
-
-                    availableHeight /
-                        image.height
-                )
-
-            val finalScale =
-                baseScale *
-                    scale
-
-            val drawWidth =
-                image.width *
-                    finalScale
-
-            val drawHeight =
-                image.height *
-                    finalScale
-
-            val centerX =
-                contentLeft +
-                    availableWidth /
-                    2f
-
-            val centerY =
-                contentTop +
-                    availableHeight /
-                    2f
-
-            val left =
-                centerX -
-                    drawWidth /
-                    2f +
-                    offsetX +
-                    swipeOffset
-
-            val top =
-                centerY -
-                    drawHeight /
-                    2f +
-                    offsetY
-
-            return PointF(
-                left +
-                    point.x *
-                    finalScale,
-
-                top +
-                    point.y *
-                    finalScale
             )
         }
 
@@ -3484,7 +3359,6 @@ class PdfViewerActivity : ComponentActivity() {
                 min(
                     availableWidth /
                         image.width,
-
                     availableHeight /
                         image.height
                 )
@@ -3509,46 +3383,58 @@ class PdfViewerActivity : ComponentActivity() {
 
             val centerX =
                 contentLeft +
-                    availableWidth /
-                    2f
+                    availableWidth / 2f
 
             val centerY =
                 contentTop +
-                    availableHeight /
-                    2f
+                    availableHeight / 2f
 
             val left =
                 centerX -
-                    drawWidth /
-                    2f +
+                    drawWidth / 2f +
                     offsetX +
                     swipeOffset
 
             val top =
                 centerY -
-                    drawHeight /
-                    2f +
+                    drawHeight / 2f +
                     offsetY
 
             return PointF(
                 (
-                    x -
-                        left
-                ) /
-                    finalScale,
-
+                    x - left
+                ) / finalScale,
                 (
-                    y -
-                        top
-                ) /
-                    finalScale
+                    y - top
+                ) / finalScale
             )
         }
 
-        private fun constrainPan() {
+        private fun isInsideImage(
+            point: PointF?
+        ): Boolean {
 
             val image =
-                bitmap ?: return
+                bitmap ?: return false
+
+            if (
+                point == null
+            ) {
+                return false
+            }
+
+            return point.x >= 0f &&
+                point.y >= 0f &&
+                point.x <= image.width.toFloat() &&
+                point.y <= image.height.toFloat()
+        }
+
+        private fun imageToScreen(
+            point: PointF
+        ): PointF {
+
+            val image =
+                bitmap ?: return PointF()
 
             val availableWidth =
                 (
@@ -3576,7 +3462,6 @@ class PdfViewerActivity : ComponentActivity() {
                 min(
                     availableWidth /
                         image.width,
-
                     availableHeight /
                         image.height
                 )
@@ -3584,6 +3469,48 @@ class PdfViewerActivity : ComponentActivity() {
             val finalScale =
                 baseScale *
                     scale
+
+            val drawWidth =
+                image.width *
+                    finalScale
+
+            val drawHeight =
+                image.height *
+                    finalScale
+
+            val centerX =
+                contentLeft +
+                    availableWidth / 2f
+
+            val centerY =
+                contentTop +
+                    availableHeight / 2f
+
+            val left =
+                centerX -
+                    drawWidth / 2f +
+                    offsetX +
+                    swipeOffset
+
+            val top =
+                centerY -
+                    drawHeight / 2f +
+                    offsetY
+
+            return PointF(
+                left +
+                    point.x *
+                    finalScale,
+                top +
+                    point.y *
+                    finalScale
+            )
+        }
+
+        private fun constrainPan() {
+
+            val image =
+                bitmap ?: return
 
             if (
                 scale <= 1.02f
@@ -3601,32 +3528,58 @@ class PdfViewerActivity : ComponentActivity() {
                 return
             }
 
-            val drawWidth =
-                image.width *
-                    finalScale
+            val availableWidth =
+                (
+                    width -
+                        contentLeft -
+                        contentRight
+                )
+                    .coerceAtLeast(
+                        1
+                    )
+                    .toFloat()
 
-            val drawHeight =
-                image.height *
-                    finalScale
+            val availableHeight =
+                (
+                    height -
+                        contentTop -
+                        contentBottom
+                )
+                    .coerceAtLeast(
+                        1
+                    )
+                    .toFloat()
+
+            val baseScale =
+                min(
+                    availableWidth /
+                        image.width,
+                    availableHeight /
+                        image.height
+                )
+
+            val finalScale =
+                baseScale *
+                    scale
 
             val excessX =
                 max(
                     0f,
                     (
-                        drawWidth -
+                        image.width *
+                            finalScale -
                             availableWidth
-                    ) /
-                        2f
+                        ) / 2f
                 )
 
             val excessY =
                 max(
                     0f,
                     (
-                        drawHeight -
+                        image.height *
+                            finalScale -
                             availableHeight
-                    ) /
-                        2f
+                        ) / 2f
                 )
 
             offsetX =
@@ -3647,12 +3600,19 @@ class PdfViewerActivity : ComponentActivity() {
             screenY: Float
         ): Int {
 
-            val imagePoint =
+            val point =
                 screenToImage(
                     screenX,
                     screenY
                 )
-                    ?: return -1
+
+            if (
+                !isInsideImage(
+                    point
+                )
+            ) {
+                return -1
+            }
 
             for (
                 index in texts.indices.reversed()
@@ -3662,55 +3622,44 @@ class PdfViewerActivity : ComponentActivity() {
                     texts[index]
 
                 val dx =
-                    imagePoint.x -
+                    point!!.x -
                         item.x
 
                 val dy =
-                    imagePoint.y -
+                    point.y -
                         item.y
 
                 val radians =
                     Math.toRadians(
-                        (-item.rotation)
-                            .toDouble()
+                        (-item.rotation).toDouble()
                     )
 
                 val localX =
                     (
                         dx *
-                            kotlin.math.cos(
-                                radians
-                            ) -
-                        dy *
-                            kotlin.math.sin(
-                                radians
-                            )
+                            cos(radians) -
+                            dy *
+                            sin(radians)
                     ) /
                         item.scale
 
                 val localY =
                     (
                         dx *
-                            kotlin.math.sin(
-                                radians
-                            ) +
-                        dy *
-                            kotlin.math.cos(
-                                radians
-                            )
+                            sin(radians) +
+                            dy *
+                            cos(radians)
                     ) /
                         item.scale
 
-                val bounds =
+                if (
                     measureTextBounds(
                         item
                     )
-
-                if (
-                    bounds.contains(
-                        localX,
-                        localY
-                    )
+                        .contains(
+                            localX,
+                            localY
+                        )
                 ) {
 
                     return index
@@ -3730,7 +3679,14 @@ class PdfViewerActivity : ComponentActivity() {
                     screenX,
                     screenY
                 )
-                    ?: return -1
+
+            if (
+                !isInsideImage(
+                    point
+                )
+            ) {
+                return -1
+            }
 
             val radius =
                 30f /
@@ -3739,8 +3695,7 @@ class PdfViewerActivity : ComponentActivity() {
                     )
 
             for (
-                index in
-                    strokes.indices.reversed()
+                index in strokes.indices.reversed()
             ) {
 
                 val stroke =
@@ -3751,7 +3706,7 @@ class PdfViewerActivity : ComponentActivity() {
 
                         val dx =
                             sample.x -
-                                point.x
+                                point!!.x
 
                         val dy =
                             sample.y -
@@ -3776,6 +3731,20 @@ class PdfViewerActivity : ComponentActivity() {
             screenX: Float,
             screenY: Float
         ) {
+
+            val imagePoint =
+                screenToImage(
+                    screenX,
+                    screenY
+                )
+
+            if (
+                !isInsideImage(
+                    imagePoint
+                )
+            ) {
+                return
+            }
 
             val textIndex =
                 findTextAt(
@@ -3826,6 +3795,20 @@ class PdfViewerActivity : ComponentActivity() {
             screenY: Float
         ) {
 
+            val point =
+                screenToImage(
+                    screenX,
+                    screenY
+                )
+
+            if (
+                !isInsideImage(
+                    point
+                )
+            ) {
+                return
+            }
+
             val textIndex =
                 findTextAt(
                     screenX,
@@ -3850,13 +3833,6 @@ class PdfViewerActivity : ComponentActivity() {
                 return
             }
 
-            val point =
-                screenToImage(
-                    screenX,
-                    screenY
-                )
-                    ?: return
-
             val radius =
                 32f /
                     scale.coerceAtLeast(
@@ -3875,7 +3851,7 @@ class PdfViewerActivity : ComponentActivity() {
 
                     val dx =
                         sample.x -
-                            point.x
+                            point!!.x
 
                     val dy =
                         sample.y -
@@ -3930,7 +3906,6 @@ class PdfViewerActivity : ComponentActivity() {
             }
 
             strokes.clear()
-
             strokes.addAll(
                 rebuilt
             )
@@ -3951,16 +3926,16 @@ class PdfViewerActivity : ComponentActivity() {
                 return
             }
 
-            val item =
-                texts[
-                    selectedTextIndex
-                ]
-
             if (
                 event.pointerCount < 2
             ) {
                 return
             }
+
+            val item =
+                texts[
+                    selectedTextIndex
+                ]
 
             val currentDistance =
                 pointerDistance(
@@ -3976,22 +3951,16 @@ class PdfViewerActivity : ComponentActivity() {
                         textGestureStartScale *
                             currentDistance /
                             textGestureStartDistance
+                    ).coerceIn(
+                        0.35f,
+                        maxZoom
                     )
-                        .coerceIn(
-                            0.35f,
-                            5f
-                        )
             }
-
-            val currentAngle =
-                pointerAngle(
-                    event
-                )
 
             item.rotation =
                 textGestureStartRotation +
                     (
-                        currentAngle -
+                        pointerAngle(event) -
                             textGestureStartAngle
                     )
 
@@ -4014,25 +3983,24 @@ class PdfViewerActivity : ComponentActivity() {
 
             if (
                 centerImage != null &&
-                startImage != null
+                startImage != null &&
+                isInsideImage(
+                    centerImage
+                )
             ) {
 
                 item.x =
                     textGestureStartX +
-                        (
-                            centerImage.x -
-                                startImage.x
-                        )
+                        centerImage.x -
+                        startImage.x
 
                 item.y =
                     textGestureStartY +
-                        (
-                            centerImage.y -
-                                startImage.y
-                        )
-            }
+                        centerImage.y -
+                        startImage.y
 
-            saveAnnotationsForPage()
+                saveAnnotationsForPage()
+            }
 
             invalidate()
         }
@@ -4062,14 +4030,14 @@ class PdfViewerActivity : ComponentActivity() {
                     swipeStartX =
                         event.x
 
+                    swipeOffset =
+                        0f
+
                     moved =
                         false
 
                     swiping =
                         false
-
-                    swipeOffset =
-                        0f
 
                     selectedTextIndex =
                         if (
@@ -4083,6 +4051,7 @@ class PdfViewerActivity : ComponentActivity() {
                             )
 
                         } else {
+
                             selectedTextIndex
                         }
 
@@ -4118,25 +4087,22 @@ class PdfViewerActivity : ComponentActivity() {
                         annotationMode
                     ) {
 
+                        val point =
+                            screenToImage(
+                                event.x,
+                                event.y
+                            )
+
                         if (
-                            !moved
+                            isInsideImage(
+                                point
+                            )
                         ) {
 
-                            val point =
-                                screenToImage(
-                                    event.x,
-                                    event.y
-                                )
-
-                            if (
-                                point != null
-                            ) {
-
-                                showTextDialog(
-                                    point.x,
-                                    point.y
-                                )
-                            }
+                            showTextDialog(
+                                point!!.x,
+                                point.y
+                            )
                         }
 
                         return true
@@ -4155,24 +4121,21 @@ class PdfViewerActivity : ComponentActivity() {
                                 event.y
                             )
 
-                        if (
-                            point != null
-                        ) {
-
-                            activePoints =
-                                mutableListOf(
+                        activePoints =
+                            if (
+                                isInsideImage(
                                     point
                                 )
-                        }
+                            ) {
 
-                        return true
-                    }
+                                mutableListOf(
+                                    point!!
+                                )
 
-                    if (
-                        annotationTool ==
-                            Tool.SELECT &&
-                        selectedTextIndex >= 0
-                    ) {
+                            } else {
+
+                                null
+                            }
 
                         return true
                     }
@@ -4267,11 +4230,10 @@ class PdfViewerActivity : ComponentActivity() {
                                     (
                                         scale *
                                             factor
+                                    ).coerceIn(
+                                        1f,
+                                        maxZoom
                                     )
-                                        .coerceIn(
-                                            1f,
-                                            5f
-                                        )
 
                                 pinchDistance =
                                     currentDistance
@@ -4322,12 +4284,14 @@ class PdfViewerActivity : ComponentActivity() {
                                 )
 
                             if (
-                                point != null
+                                isInsideImage(
+                                    point
+                                )
                             ) {
 
                                 activePoints
                                     ?.add(
-                                        point
+                                        point!!
                                     )
                             }
 
@@ -4346,7 +4310,7 @@ class PdfViewerActivity : ComponentActivity() {
                                         event.y
                                     )
 
-                                val previous =
+                                val previousPoint =
                                     screenToImage(
                                         lastX,
                                         lastY
@@ -4354,7 +4318,10 @@ class PdfViewerActivity : ComponentActivity() {
 
                                 if (
                                     point != null &&
-                                    previous != null
+                                    previousPoint != null &&
+                                    isInsideImage(
+                                        point
+                                    )
                                 ) {
 
                                     val item =
@@ -4364,11 +4331,11 @@ class PdfViewerActivity : ComponentActivity() {
 
                                     item.x +=
                                         point.x -
-                                            previous.x
+                                            previousPoint.x
 
                                     item.y +=
                                         point.y -
-                                            previous.y
+                                            previousPoint.y
 
                                     saveAnnotationsForPage()
                                 }
@@ -4387,19 +4354,41 @@ class PdfViewerActivity : ComponentActivity() {
 
                             } else {
 
-                                swiping =
-                                    true
+                                val currentIndex =
+                                    airportIndexForPage(
+                                        currentPage
+                                    )
 
-                                swipeOffset =
-                                    event.x -
-                                        swipeStartX
-
-                                swipeOffset =
-                                    swipeOffset
-                                        .coerceIn(
-                                            -width.toFloat(),
-                                            width.toFloat()
+                                val canSwipe =
+                                    (
+                                        currentIndex >
+                                            0
+                                        ) ||
+                                        (
+                                            currentIndex >=
+                                                0 &&
+                                            currentIndex <
+                                                airportCharts.size -
+                                                    1
                                         )
+
+                                if (
+                                    canSwipe
+                                ) {
+
+                                    swiping =
+                                        true
+
+                                    swipeOffset =
+                                        (
+                                            event.x -
+                                                swipeStartX
+                                            )
+                                            .coerceIn(
+                                                -width.toFloat(),
+                                                width.toFloat()
+                                            )
+                                }
                             }
 
                             invalidate()
@@ -4442,15 +4431,17 @@ class PdfViewerActivity : ComponentActivity() {
                         Tool.PEN,
                         Tool.HIGHLIGHT -> {
 
+                            val points =
+                                activePoints
+
                             if (
-                                activePoints != null &&
-                                activePoints!!
-                                    .size >= 2
+                                points != null &&
+                                points.size >= 2
                             ) {
 
                                 strokes.add(
                                     StoredStroke(
-                                        activePoints!!
+                                        points
                                             .map {
                                                 PointF(
                                                     it.x,
@@ -4503,7 +4494,7 @@ class PdfViewerActivity : ComponentActivity() {
                                 swiping
                             ) {
 
-                                val distanceX =
+                                val distance =
                                     event.x -
                                         swipeStartX
 
@@ -4517,12 +4508,10 @@ class PdfViewerActivity : ComponentActivity() {
                                     )
 
                                 if (
-                                    distanceX <
-                                        -threshold &&
+                                    distance < -threshold &&
                                     currentIndex >= 0 &&
                                     currentIndex <
-                                        airportCharts.size -
-                                            1
+                                        airportCharts.size - 1
                                 ) {
 
                                     completeSwipe(
@@ -4530,8 +4519,7 @@ class PdfViewerActivity : ComponentActivity() {
                                     )
 
                                 } else if (
-                                    distanceX >
-                                        threshold &&
+                                    distance > threshold &&
                                     currentIndex > 0
                                 ) {
 
@@ -4559,15 +4547,6 @@ class PdfViewerActivity : ComponentActivity() {
                         }
 
                         else -> {
-
-                            if (
-                                !moved
-                            ) {
-
-                                performClick()
-
-                                return true
-                            }
 
                             return true
                         }
@@ -4616,16 +4595,14 @@ class PdfViewerActivity : ComponentActivity() {
             animator.addUpdateListener {
 
                 swipeOffset =
-                    it.animatedValue
-                        as Float
+                    it.animatedValue as Float
 
                 invalidate()
             }
 
             animator.addListener(
                 object :
-                    android.animation.Animator
-                        .AnimatorListener {
+                    android.animation.Animator.AnimatorListener {
 
                     override fun onAnimationStart(
                         animation:
@@ -4650,8 +4627,8 @@ class PdfViewerActivity : ComponentActivity() {
                         swipeOffset =
                             0f
 
-                        navigateToAirportIndex(
-                            newIndex
+                        navigateWithinAirport(
+                            direction
                         )
                     }
 
@@ -4672,22 +4649,6 @@ class PdfViewerActivity : ComponentActivity() {
             animator.start()
         }
 
-        private fun navigateToAirportIndex(
-            index: Int
-        ) {
-
-            if (
-                index < 0 ||
-                index >= airportCharts.size
-            ) {
-                return
-            }
-
-            showPage(
-                airportCharts[index].page - 1
-            )
-        }
-
         private fun returnToCenter() {
 
             val animator =
@@ -4705,16 +4666,14 @@ class PdfViewerActivity : ComponentActivity() {
             animator.addUpdateListener {
 
                 swipeOffset =
-                    it.animatedValue
-                        as Float
+                    it.animatedValue as Float
 
                 invalidate()
             }
 
             animator.addListener(
                 object :
-                    android.animation.Animator
-                        .AnimatorListener {
+                    android.animation.Animator.AnimatorListener {
 
                     override fun onAnimationStart(
                         animation:
@@ -4822,7 +4781,6 @@ class PdfViewerActivity : ComponentActivity() {
                     event.getX(0) +
                         event.getX(1)
                 ) / 2f,
-
                 (
                     event.getY(0) +
                         event.getY(1)
@@ -4851,10 +4809,9 @@ class PdfViewerActivity : ComponentActivity() {
         vararg values: String
     ): String {
 
-        return values
-            .firstOrNull {
-                it.trim().isNotEmpty()
-            }
+        return values.firstOrNull {
+            it.trim().isNotEmpty()
+        }
             ?.trim()
             ?: ""
     }
@@ -4863,11 +4820,37 @@ class PdfViewerActivity : ComponentActivity() {
         vararg values: Int
     ): Int {
 
-        return values
-            .firstOrNull {
-                it > 0
-            }
+        return values.firstOrNull {
+            it > 0
+        }
             ?: -1
+    }
+
+    private fun resolveThemeColor(
+        attribute: Int
+    ): Int {
+
+        val value =
+            android.util.TypedValue()
+
+        theme.resolveAttribute(
+            attribute,
+            value,
+            true
+        )
+
+        return if (
+            value.resourceId != 0
+        ) {
+
+            getColor(
+                value.resourceId
+            )
+
+        } else {
+
+            value.data
+        }
     }
 
     private val Int.dp: Int
@@ -4877,5 +4860,5 @@ class PdfViewerActivity : ComponentActivity() {
                     resources
                         .displayMetrics
                         .density
-            ).toInt()
+                ).toInt()
 }
