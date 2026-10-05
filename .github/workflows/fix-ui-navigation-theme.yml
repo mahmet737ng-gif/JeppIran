@@ -1,0 +1,695 @@
+name: Fix UI Navigation Theme and Airport Names
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Fix application UI
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import re
+
+
+          ROOT = Path(
+              "app/src/main/java/com/tareghmsr/jeppiran"
+          )
+
+
+          ACTIVITY_FILES = [
+              ROOT / "MainActivity.kt",
+              ROOT / "ChartsActivity.kt",
+              ROOT / "AirportChartsActivity.kt",
+              ROOT / "PdfViewerActivity.kt",
+              ROOT / "SettingsActivity.kt",
+              ROOT / "SplashActivity.kt",
+          ]
+
+
+          def read(path):
+              return path.read_text(
+                  encoding="utf-8"
+              )
+
+
+          def write(path, text):
+              path.write_text(
+                  text,
+                  encoding="utf-8"
+              )
+
+
+          # ==================================================
+          # 1. Convert every Activity to AppCompatActivity
+          # ==================================================
+
+          for path in ACTIVITY_FILES:
+
+              text = read(path)
+
+              text = text.replace(
+                  "import androidx.activity.ComponentActivity",
+                  "import androidx.appcompat.app.AppCompatActivity"
+              )
+
+              text = re.sub(
+                  r"\bComponentActivity\(\)",
+                  "AppCompatActivity()",
+                  text
+              )
+
+              write(
+                  path,
+                  text
+              )
+
+              print(
+                  "Converted to AppCompatActivity:",
+                  path.name
+              )
+
+
+          # ==================================================
+          # 2. Apply saved theme to SplashActivity
+          # ==================================================
+
+          splash = ROOT / "SplashActivity.kt"
+
+          text = read(splash)
+
+          if "ThemeManager.apply(" not in text:
+
+              pattern = re.compile(
+                  r"""
+                  (override\s+fun\s+onCreate\s*
+                  \(\s*
+                  savedInstanceState\s*:\s*Bundle\?\s*
+                  \)\s*
+                  \{\s*)
+                  """,
+                  re.MULTILINE | re.VERBOSE
+              )
+
+              replacement = (
+                  r"\1"
+                  "\n"
+                  "        ThemeManager.apply(\n"
+                  "            this\n"
+                  "        )\n"
+              )
+
+              text, count = pattern.subn(
+                  replacement,
+                  text,
+                  count=1
+              )
+
+              print(
+                  "Splash theme initialization replacements:",
+                  count
+              )
+
+          write(
+              splash,
+              text
+          )
+
+
+          # ==================================================
+          # 3. Fix AirportChartsActivity double-parent crash
+          # ==================================================
+
+          airport_path = ROOT / "AirportChartsActivity.kt"
+
+          text = read(airport_path)
+
+
+          start_marker = (
+              "        portraitCategoryScroll ="
+          )
+
+          end_marker = (
+              "        if (\n"
+              "            landscape\n"
+              "        ) {"
+          )
+
+
+          start = text.find(
+              start_marker
+          )
+
+          if start < 0:
+
+              raise SystemExit(
+                  "AirportChartsActivity portraitCategoryScroll block not found."
+              )
+
+
+          end = text.find(
+              end_marker,
+              start
+          )
+
+          if end < 0:
+
+              raise SystemExit(
+                  "AirportChartsActivity landscape block marker not found."
+              )
+
+
+          replacement = """        val landscape =
+            resources.configuration.orientation ==
+                Configuration.ORIENTATION_LANDSCAPE
+
+
+        if (
+            landscape
+        ) {
+
+            landscapeCategoryScroll =
+                ScrollView(
+                    this
+                ).apply {
+
+                    isVerticalScrollBarEnabled =
+                        false
+
+                    overScrollMode =
+                        ScrollView.OVER_SCROLL_IF_CONTENT_SCROLLS
+
+                    addView(
+                        categoryContainer,
+                        ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                        )
+                    )
+                }
+
+        } else {
+
+            portraitCategoryScroll =
+                HorizontalScrollView(
+                    this
+                ).apply {
+
+                    isHorizontalScrollBarEnabled =
+                        false
+
+                    overScrollMode =
+                        HorizontalScrollView.OVER_SCROLL_IF_CONTENT_SCROLLS
+
+                    addView(
+                        categoryContainer,
+                        ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                        )
+                    )
+                }
+        }
+
+
+"""
+
+
+          text = (
+              text[:start]
+              + replacement
+              + text[end:]
+          )
+
+
+          write(
+              airport_path,
+              text
+          )
+
+
+          print(
+              "AirportChartsActivity double-parent crash fixed."
+          )
+
+
+          # ==================================================
+          # 4. Normalize airport display names
+          # ==================================================
+
+          repository_path = ROOT / "ChartRepository.kt"
+
+          text = read(repository_path)
+
+
+          airport_names = {
+
+              "LTFM": (
+                  "ISTANBUL AIRPORT",
+                  "ISTANBUL"
+              ),
+
+              "OIAA": (
+                  "ABADAN AIRPORT",
+                  "ABADAN"
+              ),
+
+              "OIAM": (
+                  "MAHSHAHR AIRPORT",
+                  "MAHSHAHR"
+              ),
+
+              "OIAW": (
+                  "AHWAZ AIRPORT",
+                  "AHWAZ"
+              ),
+
+              "OIBB": (
+                  "BUSHEHR AIRPORT",
+                  "BUSHEHR"
+              ),
+
+              "OIBK": (
+                  "KISH ISLAND",
+                  "KISH ISLAND"
+              ),
+
+              "OIBP": (
+                  "ASALOUYEH AIRPORT",
+                  "ASALOUYEH"
+              ),
+
+              "OICC": (
+                  "KERMANSHAH AIRPORT",
+                  "KERMANSHAH"
+              ),
+
+              "OICI": (
+                  "ILAM AIRPORT",
+                  "ILAM"
+              ),
+
+              "OIFM": (
+                  "ISFAHAN AIRPORT",
+                  "ISFAHAN"
+              ),
+
+              "OIGG": (
+                  "RASHT AIRPORT",
+                  "RASHT"
+              ),
+
+              "OIHH": (
+                  "HAMADAN AIRPORT",
+                  "HAMADAN"
+              ),
+
+              "OIIE": (
+                  "IMAM KHOMEINI INTERNATIONAL",
+                  "TEHRAN"
+              ),
+
+              "OIII": (
+                  "MEHRABAD INTERNATIONAL",
+                  "TEHRAN"
+              ),
+
+              "OIIP": (
+                  "KARAJ AIRPORT",
+                  "KARAJ"
+              ),
+
+              "OIKK": (
+                  "KERMAN AIRPORT",
+                  "KERMAN"
+              ),
+
+              "OIMB": (
+                  "BIRJAND AIRPORT",
+                  "BIRJAND"
+              ),
+
+              "OIMM": (
+                  "MASHHAD INTERNATIONAL",
+                  "MASHHAD"
+              ),
+
+              "OIMN": (
+                  "BOJNURD AIRPORT",
+                  "BOJNURD"
+              ),
+
+              "OIMS": (
+                  "SABZEVAR AIRPORT",
+                  "SABZEVAR"
+              ),
+
+              "OING": (
+                  "GORGAN AIRPORT",
+                  "GORGAN"
+              ),
+
+              "OINZ": (
+                  "SARI AIRPORT",
+                  "SARI"
+              ),
+
+              "OISS": (
+                  "SHIRAZ INTERNATIONAL",
+                  "SHIRAZ"
+              ),
+
+              "OITL": (
+                  "ARDABIL AIRPORT",
+                  "ARDABIL"
+              ),
+
+              "OITR": (
+                  "URMIA AIRPORT",
+                  "URMIA"
+              ),
+
+              "OITT": (
+                  "TABRIZ INTERNATIONAL",
+                  "TABRIZ"
+              ),
+
+              "OIYY": (
+                  "YAZD AIRPORT",
+                  "YAZD"
+              ),
+
+              "OIZC": (
+                  "CHABAHAR AIRPORT",
+                  "CHABAHAR"
+              ),
+
+              "OIZH": (
+                  "ZAHEDAN INTERNATIONAL",
+                  "ZAHEDAN"
+              ),
+
+              "OMDB": (
+                  "DUBAI INTERNATIONAL",
+                  "DUBAI"
+              ),
+
+              "OOMS": (
+                  "MUSCAT INTERNATIONAL",
+                  "MUSCAT"
+              ),
+
+              "ORBI": (
+                  "BAGHDAD INTERNATIONAL",
+                  "BAGHDAD"
+              ),
+
+              "ORNI": (
+                  "NAJAF INTERNATIONAL",
+                  "NAJAF"
+              ),
+
+              "UDYZ": (
+                  "ZVARTNOTS INTERNATIONAL",
+                  "YEREVAN"
+              ),
+
+              "UGSB": (
+                  "BATUMI INTERNATIONAL",
+                  "BATUMI"
+              ),
+
+              "UGTB": (
+                  "TBILISI INTERNATIONAL",
+                  "TBILISI"
+              ),
+          }
+
+
+          for icao, (name, city) in airport_names.items():
+
+              pattern = re.compile(
+                  r"""
+                  (
+                      AirportInfo\(
+                          \s*
+                          "%s"
+                          \s*,\s*
+                      )
+                      "[^"]*"
+                      \s*,\s*
+                      "[^"]*"
+                      (
+                          \s*
+                      \)
+                  )
+                  """
+                  % re.escape(icao),
+                  re.MULTILINE | re.VERBOSE
+              )
+
+
+              replacement = (
+                  r'\1'
+                  + '"' + name + '"'
+                  + ",\n"
+                  + '                    "' + city + '"'
+                  + r'\3'
+              )
+
+
+              text, count = pattern.subn(
+                  replacement,
+                  text,
+                  count=1
+              )
+
+
+              if count == 0:
+
+                  raise SystemExit(
+                      "Airport entry not found: "
+                      + icao
+                  )
+
+
+          write(
+              repository_path,
+              text
+          )
+
+
+          print(
+              "Airport names normalized."
+          )
+
+
+          # ==================================================
+          # 5. Verify
+          # ==================================================
+
+          print()
+          print("=" * 70)
+          print("FINAL VERIFICATION")
+          print("=" * 70)
+
+
+          # AppCompatActivity must be used everywhere.
+          for path in ACTIVITY_FILES:
+
+              content = read(path)
+
+              if "ComponentActivity" in content:
+
+                  raise SystemExit(
+                      path.name
+                      + " still contains ComponentActivity."
+                  )
+
+              if "AppCompatActivity" not in content:
+
+                  raise SystemExit(
+                      path.name
+                      + " does not contain AppCompatActivity."
+                  )
+
+
+          # AirportCharts must not add one container
+          # to both scroll views.
+          airport_content = read(
+              airport_path
+          )
+
+
+          portrait_add = (
+              "portraitCategoryScroll ="
+              in airport_content
+          )
+
+          landscape_add = (
+              "landscapeCategoryScroll ="
+              in airport_content
+          )
+
+
+          if not (
+              portrait_add
+              and landscape_add
+          ):
+
+              raise SystemExit(
+                  "Airport category scroll setup is incomplete."
+              )
+
+
+          # The OIBK label must be the requested value.
+          repository_content = read(
+              repository_path
+          )
+
+
+          if '"OIBK"' not in repository_content:
+
+              raise SystemExit(
+                  "OIBK entry missing."
+              )
+
+
+          oibk_match = re.search(
+              r"""
+              AirportInfo\(
+                  \s*"OIBK"\s*,\s*
+                  "([^"]+)"
+              """,
+              repository_content,
+              re.MULTILINE | re.VERBOSE
+          )
+
+
+          if (
+              not oibk_match
+              or oibk_match.group(1)
+                  != "KISH ISLAND"
+          ):
+
+              raise SystemExit(
+                  "OIBK name is not KISH ISLAND."
+              )
+
+
+          if (
+              "repository"
+              ".airportName"
+              in airport_content
+          ):
+
+              raise SystemExit(
+                  "AirportChartsActivity still uses repository.airportName."
+              )
+
+
+          if (
+              "repository.city"
+              in airport_content
+          ):
+
+              raise SystemExit(
+                  "AirportChartsActivity still uses repository.city."
+              )
+
+
+          print(
+              "Activity inheritance: OK"
+          )
+
+          print(
+              "Airport navigation crash fix: OK"
+          )
+
+          print(
+              "Theme activity compatibility: OK"
+          )
+
+          print(
+              "Airport naming: OK"
+          )
+
+          print(
+              "OIBK = KISH ISLAND: OK"
+          )
+
+          print("=" * 70)
+          PY
+
+
+      - name: Show changes
+        shell: bash
+        run: |
+          git status --short
+
+          echo
+          git diff --stat
+
+
+      - name: Commit all fixes
+        shell: bash
+        run: |
+          git config user.name \
+            "github-actions[bot]"
+
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+
+
+          git add \
+            app/src/main/java/com/tareghmsr/jeppiran/MainActivity.kt \
+            app/src/main/java/com/tareghmsr/jeppiran/ChartsActivity.kt \
+            app/src/main/java/com/tareghmsr/jeppiran/AirportChartsActivity.kt \
+            app/src/main/java/com/tareghmsr/jeppiran/PdfViewerActivity.kt \
+            app/src/main/java/com/tareghmsr/jeppiran/SettingsActivity.kt \
+            app/src/main/java/com/tareghmsr/jeppiran/SplashActivity.kt \
+            app/src/main/java/com/tareghmsr/jeppiran/ChartRepository.kt
+
+
+          git commit \
+            -m "Fix airport navigation theme and airport names"
+
+
+          git fetch origin main
+
+          git rebase origin/main
+
+          git push origin HEAD:main
+
+
+      - name: Remove temporary workflow
+        shell: bash
+        run: |
+          git config user.name \
+            "github-actions[bot]"
+
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+
+
+          git rm \
+            ".github/workflows/fix-ui-navigation-theme.yml"
+
+
+          git commit \
+            -m "Remove temporary UI fixer workflow"
+
+
+          git push origin HEAD:main
