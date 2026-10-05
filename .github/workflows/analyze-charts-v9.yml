@@ -920,10 +920,10 @@ jobs:
       # V10 - ADD REAL CHART NAMES
       # ==========================================================
 
-      - name: Add chart names V10
+      - name: Add chart names V11
         shell: bash
         run: |
-          python scripts/name_charts_v10.py
+          python scripts/name_charts_v11.py
 
       # ==========================================================
       # SHOW SAMPLE V10 CHART NAMES
