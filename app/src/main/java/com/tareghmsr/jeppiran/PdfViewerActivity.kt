@@ -4534,13 +4534,23 @@ private val locationPermissionLauncher =
             )
                 ?: return null
 
+        val bitmapSize =
+            if (::chartView.isInitialized) {
+                chartView.currentBitmapSize()
+            } else {
+                null
+            }
+                ?: return null
+
         val projected =
-            ChartGeoreference.project(
+            ChartGeoreference.projectToBitmap(
                 this,
                 chart.icao,
                 chart.page,
                 latitude,
-                longitude
+                longitude,
+                bitmapSize.first,
+                bitmapSize.second
             )
                 ?: return null
 
@@ -5208,6 +5218,12 @@ private val locationPermissionLauncher =
 
 
             invalidate()
+        }
+
+
+        fun currentBitmapSize(): Pair<Int, Int>? {
+            val image = bitmap ?: return null
+            return Pair(image.width, image.height)
         }
 
 
