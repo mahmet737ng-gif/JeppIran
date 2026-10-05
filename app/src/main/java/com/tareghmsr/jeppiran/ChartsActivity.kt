@@ -6,6 +6,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
@@ -65,32 +66,66 @@ class ChartsActivity : ComponentActivity() {
         .map { Airport(it.key, it.value) }
         .sortedBy { it.city }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    override fun onCreate(
+        savedInstanceState: Bundle?
+    ) {
+        super.onCreate(
+            savedInstanceState
+        )
 
         enableEdgeToEdge()
 
-        val root = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setBackgroundColor(0xFFF7F8FA.toInt())
-        }
+        val root =
+            LinearLayout(this).apply {
+                orientation =
+                    LinearLayout.VERTICAL
 
-        searchBox = EditText(this).apply {
-            hint = "Search ICAO / Airport / City"
-            isSingleLine = true
-            textSize = 16f
+                setBackgroundColor(
+                    0xFFF7F8FA.toInt()
+                )
+            }
 
-            setPadding(
-                20.dp,
-                12.dp,
-                20.dp,
-                12.dp
-            )
-        }
+        searchBox =
+            EditText(this).apply {
+                hint =
+                    "Search ICAO / Airport / City"
 
-        listContainer = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-        }
+                isSingleLine =
+                    true
+
+                textSize =
+                    16f
+
+                setPadding(
+                    20.dp,
+                    12.dp,
+                    20.dp,
+                    12.dp
+                )
+            }
+
+        listContainer =
+            LinearLayout(this).apply {
+                orientation =
+                    LinearLayout.VERTICAL
+            }
+
+        val scrollView =
+            ScrollView(this).apply {
+                isFillViewport =
+                    true
+
+                overScrollMode =
+                    ScrollView.OVER_SCROLL_IF_CONTENT_SCROLLS
+
+                addView(
+                    listContainer,
+                    ScrollView.LayoutParams(
+                        ScrollView.LayoutParams.MATCH_PARENT,
+                        ScrollView.LayoutParams.WRAP_CONTENT
+                    )
+                )
+            }
 
         root.addView(
             searchBox,
@@ -108,7 +143,7 @@ class ChartsActivity : ComponentActivity() {
         )
 
         root.addView(
-            listContainer,
+            scrollView,
             LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 0,
@@ -116,15 +151,18 @@ class ChartsActivity : ComponentActivity() {
             )
         )
 
-        setContentView(root)
+        setContentView(
+            root
+        )
 
         ViewCompat.setOnApplyWindowInsetsListener(
             root
         ) { view, insets ->
 
-            val bars = insets.getInsets(
-                WindowInsetsCompat.Type.systemBars()
-            )
+            val bars =
+                insets.getInsets(
+                    WindowInsetsCompat.Type.systemBars()
+                )
 
             view.setPadding(
                 0,
@@ -172,56 +210,72 @@ class ChartsActivity : ComponentActivity() {
 
         listContainer.removeAllViews()
 
-        val q = query.trim().uppercase()
+        val q =
+            query
+                .trim()
+                .uppercase()
 
         airports
             .filter { airport ->
                 q.isEmpty() ||
-                        airport.icao.contains(q) ||
-                        airport.city.contains(q)
+                        airport.icao.contains(
+                            q
+                        ) ||
+                        airport.city.contains(
+                            q
+                        )
             }
             .forEach { airport ->
 
-                val row = LinearLayout(this).apply {
-                    orientation = LinearLayout.VERTICAL
+                val row =
+                    LinearLayout(this).apply {
 
-                    setPadding(
-                        20.dp,
-                        16.dp,
-                        20.dp,
-                        16.dp
-                    )
+                        orientation =
+                            LinearLayout.VERTICAL
 
-                    setBackgroundColor(
-                        0xFFFFFFFF.toInt()
-                    )
-
-                    setOnClickListener {
-
-                        val intent = Intent(
-                            this@ChartsActivity,
-                            AirportChartsActivity::class.java
+                        setPadding(
+                            20.dp,
+                            16.dp,
+                            20.dp,
+                            16.dp
                         )
 
-                        intent.putExtra(
-                            "ICAO",
-                            airport.icao
+                        setBackgroundColor(
+                            0xFFFFFFFF.toInt()
                         )
 
-                        intent.putExtra(
-                            "CITY",
-                            airport.city
-                        )
+                        setOnClickListener {
 
-                        startActivity(intent)
+                            val intent =
+                                Intent(
+                                    this@ChartsActivity,
+                                    AirportChartsActivity::class.java
+                                )
+
+                            intent.putExtra(
+                                "ICAO",
+                                airport.icao
+                            )
+
+                            intent.putExtra(
+                                "CITY",
+                                airport.city
+                            )
+
+                            startActivity(
+                                intent
+                            )
+                        }
                     }
-                }
 
                 val airportText =
                     TextView(this).apply {
 
-                        text = airport.icao
-                        textSize = 18f
+                        text =
+                            airport.icao
+
+                        textSize =
+                            18f
 
                         setTypeface(
                             null,
@@ -232,8 +286,11 @@ class ChartsActivity : ComponentActivity() {
                 val cityText =
                     TextView(this).apply {
 
-                        text = airport.city
-                        textSize = 13f
+                        text =
+                            airport.city
+
+                        textSize =
+                            13f
 
                         setTextColor(
                             0xFF667085.toInt()
@@ -250,7 +307,8 @@ class ChartsActivity : ComponentActivity() {
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
                     ).apply {
-                        topMargin = 4.dp
+                        topMargin =
+                            4.dp
                     }
                 )
 
@@ -273,8 +331,9 @@ class ChartsActivity : ComponentActivity() {
     }
 
     private val Int.dp: Int
-        get() = (
-            this *
-                    resources.displayMetrics.density
-            ).toInt()
+        get() =
+            (
+                this *
+                        resources.displayMetrics.density
+                ).toInt()
 }
