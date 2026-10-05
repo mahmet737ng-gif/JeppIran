@@ -31,6 +31,7 @@ import android.os.ParcelFileDescriptor
 import android.text.InputType
 import android.view.Gravity
 import android.view.MotionEvent
+import android.view.ViewGroup
 import android.view.View
 import android.view.WindowManager
 import android.view.animation.DecelerateInterpolator
@@ -41,6 +42,7 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.ScrollView
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.ComponentActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
@@ -66,6 +68,31 @@ import kotlin.math.sqrt
 
 class PdfViewerActivity :
     ComponentActivity() {
+
+
+private val locationPermissionLauncher =
+    registerForActivityResult(
+        ActivityResultContracts.RequestMultiplePermissions()
+    ) { result ->
+
+        val granted =
+            result.values.any {
+                it
+            }
+
+        if (granted) {
+
+            startGps()
+
+        } else {
+
+            updateGpsText(
+                "GPS: permission denied"
+            )
+        }
+    }
+
+
 
     companion object {
 
@@ -603,10 +630,7 @@ class PdfViewerActivity :
         }
 
 
-        repository
-            .airport(
-                currentIcao
-            )
+        ChartRepository.airport(currentIcao)
             ?.let {
 
                 if (
@@ -1565,9 +1589,9 @@ class PdfViewerActivity :
 
         toolScroll.addView(
             tools,
-            HorizontalScrollView.LayoutParams(
-                HorizontalScrollView.LayoutParams.WRAP_CONTENT,
-                HorizontalScrollView.LayoutParams.MATCH_PARENT
+            ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
             )
         )
 
@@ -4183,18 +4207,13 @@ class PdfViewerActivity :
             updateGpsText(
                 "GPS: permission required"
             )
-
-
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(
-                    Manifest.permission
-                        .ACCESS_FINE_LOCATION,
-                    Manifest.permission
-                        .ACCESS_COARSE_LOCATION
-                ),
-                GPS_PERMISSION_REQUEST
-            )
+    locationPermissionLauncher.launch(
+        arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
+    )
+    
 
 
             return
@@ -4326,47 +4345,6 @@ class PdfViewerActivity :
         locationManager =
             null
     }
-
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions:
-            Array<out String>,
-        grantResults:
-            IntArray
-    ) {
-
-        super.onRequestPermissionsResult(
-            requestCode,
-            permissions,
-            grantResults
-        )
-
-
-        if (
-            requestCode ==
-            GPS_PERMISSION_REQUEST
-        ) {
-
-            if (
-                grantResults.any {
-                    it ==
-                        PackageManager
-                            .PERMISSION_GRANTED
-                }
-            ) {
-
-                startGps()
-
-            } else {
-
-                updateGpsText(
-                    "GPS: permission denied"
-                )
-            }
-        }
-    }
-
 
     private fun updateGpsLabel() {
 

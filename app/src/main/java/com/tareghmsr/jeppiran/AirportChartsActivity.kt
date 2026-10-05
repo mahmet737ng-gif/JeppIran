@@ -7,6 +7,7 @@ import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.Gravity
+import android.view.ViewGroup
 import android.view.View
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
@@ -105,10 +106,7 @@ class AirportChartsActivity :
         ) {
 
             airportName =
-                repository
-                    .airportName(
-                        icao
-                    )
+                ChartRepository.airportName(icao)
         }
 
         if (
@@ -116,9 +114,7 @@ class AirportChartsActivity :
         ) {
 
             city =
-                repository.city(
-                    icao
-                )
+                ChartRepository.city(icao)
         }
 
         buildUi()
@@ -342,9 +338,9 @@ class AirportChartsActivity :
 
                 addView(
                     listContainer,
-                    ScrollView.LayoutParams(
-                        ScrollView.LayoutParams.MATCH_PARENT,
-                        ScrollView.LayoutParams.WRAP_CONTENT
+                    ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
                     )
                 )
             }
@@ -381,9 +377,9 @@ class AirportChartsActivity :
 
                 addView(
                     categoryContainer,
-                    HorizontalScrollView.LayoutParams(
-                        HorizontalScrollView.LayoutParams.WRAP_CONTENT,
-                        HorizontalScrollView.LayoutParams.MATCH_PARENT
+                    ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
                     )
                 )
             }
@@ -401,9 +397,9 @@ class AirportChartsActivity :
 
                 addView(
                     categoryContainer,
-                    ScrollView.LayoutParams(
-                        ScrollView.LayoutParams.MATCH_PARENT,
-                        ScrollView.LayoutParams.WRAP_CONTENT
+                    ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
                     )
                 )
             }
