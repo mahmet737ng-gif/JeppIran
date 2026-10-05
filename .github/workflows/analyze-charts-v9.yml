@@ -1,10 +1,7 @@
-name: Analyze Iran Airport Charts V13
+name: Analyze Iran Charts V14
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
 
 jobs:
   analyze:
@@ -13,87 +10,86 @@ jobs:
     steps:
 
       # ============================================================
-      # 1. Checkout repository with Git LFS
+      # 1. Checkout repository + Git LFS
       # ============================================================
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           lfs: true
 
+
       # ============================================================
       # 2. Install Poppler
       # ============================================================
+
       - name: Install Poppler
         shell: bash
         run: |
           sudo apt-get update
           sudo apt-get install -y poppler-utils
 
+
       # ============================================================
       # 3. Verify PDF
       # ============================================================
+
       - name: Verify PDF
         shell: bash
         run: |
           echo "========================================"
-          echo "VERIFY PDF"
+          echo "VERIFYING PDF"
           echo "========================================"
 
           ls -lh Iran2620.pdf
 
-          echo ""
           pdfinfo Iran2620.pdf | head -30
+
 
       # ============================================================
       # 4. Extract all PDF pages
       # ============================================================
-      - name: Extract PDF text
+
+      - name: Extract PDF pages
         shell: bash
         run: |
           echo "========================================"
-          echo "EXTRACTING PDF TEXT"
+          echo "EXTRACTING PDF"
           echo "========================================"
 
           rm -rf pdf-text
           mkdir -p pdf-text
 
-          TOTAL=$(pdfinfo Iran2620.pdf | awk '/Pages:/ {print $2}')
+          PAGES=$(pdfinfo Iran2620.pdf | awk '/Pages:/ {print $2}')
 
-          echo "Total pages: $TOTAL"
+          echo "Total pages: $PAGES"
 
-          for PAGE in $(seq 1 "$TOTAL"); do
-
+          for page in $(seq 1 "$PAGES")
+          do
             pdftotext \
-              -f "$PAGE" \
-              -l "$PAGE" \
+              -f "$page" \
+              -l "$page" \
               -layout \
               Iran2620.pdf \
-              "pdf-text/page-${PAGE}.txt"
-
+              "pdf-text/page-${page}.txt"
           done
 
-          echo ""
-          echo "Extraction complete."
+          echo "PDF extraction completed."
 
-          echo "Extracted files:"
-          find pdf-text -type f | wc -l
 
       # ============================================================
-      # 5. Run V9 classifier
+      # 5. Create V9-style base index
       # ============================================================
-      - name: Run V9 classifier
+
+      - name: Create base chart index
         shell: bash
         run: |
-          echo "========================================"
-          echo "RUNNING V9 CLASSIFIER"
-          echo "========================================"
-
           python - <<'PY'
           import json
-          import os
           import re
+          from pathlib import Path
 
-          PDF_DIR = "pdf-text"
+          PDF_DIR = Path("pdf-text")
 
           COUNTRY_PREFIXES = {
               "OI": "Iran",
@@ -109,56 +105,46 @@ jobs:
               "ONLY",
               "ONTO",
               "OPIS",
-              "THIS",
-              "THE",
-              "FROM",
-              "WITH",
-              "USED",
+              "NONE",
               "PAGE",
+              "DATE",
+              "NOTE",
           }
+
+          ICAO_RE = re.compile(
+              r"\b((?:OI|OR|OM|OO|LT|UD|UG)[A-Z]{2})\s*/\s*[A-Z]{3}\b"
+          )
 
           def clean(text):
               return re.sub(r"\s+", " ", text).strip()
 
-          def read_page(page):
-              path = os.path.join(
-                  PDF_DIR,
-                  f"page-{page}.txt"
-              )
-
-              try:
-                  with open(
-                      path,
-                      "r",
-                      encoding="utf-8",
-                      errors="ignore"
-                  ) as f:
-                      return f.read()
-              except Exception:
-                  return ""
-
           def find_airport(text):
               upper = text.upper()
 
-              pattern = re.compile(
-                  r"\b((?:OI|OR|OM|OO|LT|UD|UG)[A-Z]{2})\s*/\s*[A-Z]{3}\b"
-              )
+              matches = ICAO_RE.findall(upper)
 
-              for match in pattern.finditer(upper):
-
-                  icao = match.group(1)
-
+              for icao in matches:
                   if icao not in FALSE_ICAO:
                       return icao
 
-              return None
+              # Fallback: standalone approved ICAO
+              for prefix in COUNTRY_PREFIXES:
+                  pattern = rf"\b{prefix}[A-Z]{{2}}\b"
+
+                  for match in re.findall(pattern, upper):
+                      if match not in FALSE_ICAO:
+                          return match
+
+              return ""
 
           def detect_chart_number(text):
-
               upper = text.upper()
 
               patterns = [
-                  r"\b10-[0-9]{1,2}[A-Z]?\b",
+                  r"\b10-9[A-Z]?[0-9]*\b",
+                  r"\b10-3[A-Z]?[0-9]*\b",
+                  r"\b10-2[A-Z]?[0-9]*\b",
+                  r"\b10-1[A-Z]?[0-9]*\b",
                   r"\b11-[0-9]{1,2}[A-Z]?\b",
                   r"\b12-[0-9]{1,2}[A-Z]?\b",
                   r"\b13-[0-9]{1,2}[A-Z]?\b",
@@ -169,11 +155,7 @@ jobs:
               ]
 
               for pattern in patterns:
-
-                  match = re.search(
-                      pattern,
-                      upper
-                  )
+                  match = re.search(pattern, upper)
 
                   if match:
                       return match.group(0)
@@ -184,39 +166,23 @@ jobs:
 
               upper = text.upper()
 
-              chart_number = detect_chart_number(text)
-
-              # Explicit STAR
+              # Explicit procedures
               if ".STAR." in upper:
                   return "STAR"
 
-              # Explicit SID
               if ".SID." in upper:
                   return "SID"
 
-              # Jeppesen chart number rules
-
-              if chart_number.startswith("10-2"):
-                  return "STAR"
-
-              if chart_number.startswith("10-3"):
-                  return "SID"
-
-              if chart_number.startswith("10-9"):
+              # Airport
+              if (
+                  "AIRPORT INFORMATION" in upper
+                  or "AERODROME INFORMATION" in upper
+                  or "AIRPORT CHART" in upper
+                  or "AERODROME CHART" in upper
+              ):
                   return "Airport"
 
-              # 10-1 / 10-1R = general/radar/etc.
-              if chart_number.startswith("10-1"):
-                  return "Other"
-
-              # Approach families
-              if re.match(
-                  r"^(11|13|14|15|16|17)-",
-                  chart_number
-              ):
-                  return "Approach"
-
-              # Strong textual approach indicators
+              # Approach
               approach_terms = [
                   "INSTRUMENT APPROACH",
                   "ACFT EXECUTING INSTRUMENT APPROACH",
@@ -227,41 +193,50 @@ jobs:
                   if term in upper:
                       return "Approach"
 
-              # Airport information
-              airport_terms = [
-                  "AIRPORT INFORMATION",
-                  "AERODROME INFORMATION",
-                  "AIRPORT CHART",
-                  "AERODROME CHART",
-              ]
+              # Chart number
+              chart_number = detect_chart_number(text)
 
-              for term in airport_terms:
-                  if term in upper:
-                      return "Airport"
+              if chart_number.startswith("10-9"):
+                  return "Airport"
 
-              return "Unknown"
+              if chart_number.startswith("10-2"):
+                  return "STAR"
 
-          pages = {}
+              if chart_number.startswith("10-3"):
+                  return "SID"
 
-          total_pages = len(
-              [
-                  name
-                  for name in os.listdir(PDF_DIR)
-                  if name.endswith(".txt")
-              ]
+              if chart_number.startswith("10-1"):
+                  return "Other"
+
+              if re.match(
+                  r"^(11|13|14|15|16|17)-",
+                  chart_number
+              ):
+                  return "Approach"
+
+              return "Other"
+
+          pages = sorted(
+              PDF_DIR.glob("page-*.txt"),
+              key=lambda p: int(
+                  p.stem.split("-")[1]
+              )
           )
 
-          current_airport = None
+          output = {}
 
-          for page in range(
-              1,
-              total_pages + 1
-          ):
+          current_airport = ""
 
-              text = read_page(page)
+          for path in pages:
 
-              if not text:
-                  continue
+              page = int(
+                  path.stem.split("-")[1]
+              )
+
+              text = path.read_text(
+                  encoding="utf-8",
+                  errors="ignore"
+              )
 
               airport = find_airport(text)
 
@@ -270,16 +245,17 @@ jobs:
 
               category = classify(text)
 
-              # Context repair
-              if not airport:
-                  airport = current_airport
+              chart_number = detect_chart_number(
+                  text
+              )
 
-              pages[str(page)] = {
+              output[str(page)] = {
                   "page": page,
-                  "airport": airport,
+                  "airport": airport or current_airport,
                   "category": category,
-                  "chart_number": detect_chart_number(text),
+                  "chart_number": chart_number,
                   "text": text,
+                  "name": ""
               }
 
           with open(
@@ -288,40 +264,23 @@ jobs:
               encoding="utf-8"
           ) as f:
               json.dump(
-                  pages,
+                  output,
                   f,
                   ensure_ascii=False,
                   indent=2
               )
 
-          print()
-          print("V9 pages:", len(pages))
-          print()
-
-          counts = {}
-
-          for item in pages.values():
-
-              category = item["category"]
-
-              counts[category] = (
-                  counts.get(category, 0) + 1
-              )
-
-          print("V9 COUNTS")
-
-          for category, count in sorted(
-              counts.items()
-          ):
-              print(
-                  f"{category}: {count}"
-              )
-
+          print(
+              f"Created charts-index-v9.json "
+              f"with {len(output)} pages"
+          )
           PY
+
 
       # ============================================================
       # 6. Run V12 naming
       # ============================================================
+
       - name: Run V12 naming
         shell: bash
         run: |
@@ -331,207 +290,116 @@ jobs:
 
           python scripts/name_charts_v12.py
 
+
       # ============================================================
-      # 7. Run V13 classification
+      # 7. Run V14 classification
       # ============================================================
-      - name: Run V13 classification
+
+      - name: Run V14 classification
         shell: bash
         run: |
           echo "========================================"
-          echo "RUNNING V13 CLASSIFICATION"
+          echo "RUNNING V14 CLASSIFICATION"
           echo "========================================"
 
-          python scripts/classify_charts_v13.py
+          python scripts/classify_charts_v14.py
+
 
       # ============================================================
-      # 8. Show V13 summary
+      # 8. Show V14 summary
       # ============================================================
-      - name: Show V13 summary
+
+      - name: Show V14 summary
         shell: bash
         run: |
           echo ""
           echo "========================================"
-          echo "V13 SUMMARY"
+          echo "V14 SUMMARY"
           echo "========================================"
 
-          cat charts-summary-v13.json
+          cat charts-summary-v14.json
+
 
       # ============================================================
       # 9. Show important sample pages
       # ============================================================
-      - name: Show V13 sample pages
+
+      - name: Show V14 sample pages
         shell: bash
         run: |
           echo ""
           echo "========================================"
-          echo "V13 SAMPLE PAGES"
+          echo "V14 SAMPLE PAGES"
           echo "========================================"
 
           python - <<'PY'
           import json
 
           with open(
-              "charts-index-v13.json",
+              "charts-index-v14.json",
               "r",
               encoding="utf-8"
           ) as f:
               data = json.load(f)
 
           pages = [
-              27,
-              28,
-              29,
-              30,
-              31,
-              32,
-              33,
-              34,
-              35,
-              36,
-              37,
-              38,
-              39,
-              40,
-              41,
-              42,
-              43,
-              44,
-              45,
-              46,
-              47,
-              48,
-              49,
-              50,
-              51,
+              27, 28, 29, 30, 31,
+              32, 33, 34, 35, 36, 37,
+              38, 39, 40,
+              41, 42, 43, 44, 45,
+              46, 47, 48, 49, 50, 51,
 
-              268,
-              269,
-              270,
-              280,
-              281,
-              282,
-              283,
-              284,
-              285,
-              286,
-              287,
-              288,
-              289,
-              290,
-              291,
-              292,
-              293,
-              294,
-              295,
-              296,
-              297,
-              298,
-              299,
-              300,
-              301,
-              302,
-              303,
-              304,
-              305,
-              306,
-              307,
-              308,
-              309,
-              310,
-              311,
-              312,
-              313,
-              314,
+              268, 269, 270, 280, 281, 282,
+              283, 284, 285, 286, 287, 288,
+              289, 290, 291, 292, 293,
+              294, 295, 296, 297, 298, 299,
+              300, 301, 302, 303,
+              304, 305, 306, 307, 308,
+              309, 310, 311, 312, 313, 314,
 
-              361,
-              362,
-              363,
-              364,
-              365,
-              366,
-              367,
-              368,
-              369,
-              370,
-              371,
-              372,
-              373,
-              374,
-              375,
-              376,
-              377,
-              378,
-              379,
-              380,
-              381,
-              382,
-              383,
-              384,
-              385,
-              386,
-              387,
-              388,
-              389,
-              390,
-              391,
-              392,
-              393,
-              394,
-              395,
-              396,
-              397,
-              398,
-              399,
-              400,
-              401,
-              402,
-              403,
+              361, 362, 363, 364, 365,
+              366, 367, 368, 369, 370,
+              371, 372, 373, 374, 375, 376,
+              377, 378, 379, 380, 381, 382,
+              383, 384, 385, 386, 387, 388,
+              389, 390, 391, 392, 393,
+              394, 395, 396, 397, 398, 399,
+              400, 401, 402, 403,
 
-              587,
-              588,
-              589,
-              590,
-              591,
-              592,
-              593,
-              594,
-              595,
-              596,
-              597,
-              598,
-              599,
-              600,
-              601,
+              587, 588, 589, 590, 591,
+              592, 593, 594, 595, 596,
+              597, 598, 599, 600, 601,
           ]
 
           for page in pages:
 
-              item = data.get(str(page))
-
-              if not item:
-                  continue
-
-              print(
-                  f"Page {page}: "
-                  f"{item.get('category')} | "
-                  f"{item.get('chart_number', '')} | "
-                  f"{item.get('airport', '')} | "
-                  f"{item.get('name', '')}"
+              item = data.get(
+                  str(page)
               )
 
+              if item:
+                  print(
+                      f"Page {page}: "
+                      f"{item.get('category')} | "
+                      f"{item.get('chart_number', '')} | "
+                      f"{item.get('airport', '')} | "
+                      f"{item.get('name', '')}"
+                  )
           PY
 
+
       # ============================================================
-      # 10. Upload V13 results
+      # 10. Upload all results as Artifact
       # ============================================================
-      - name: Upload V13 results
+
+      - name: Upload V14 results
         uses: actions/upload-artifact@v4
         with:
-          name: JeppIran-V13-results
+          name: JeppIran-V14-results
           path: |
             charts-index-v9.json
             charts-index-v12.json
             charts-app-v12.json
-            charts-index-v13.json
-            charts-app-v13.json
-            charts-summary-v13.json
+            charts-index-v14.json
+            charts-app-v14.json
+            charts-summary-v14.json
