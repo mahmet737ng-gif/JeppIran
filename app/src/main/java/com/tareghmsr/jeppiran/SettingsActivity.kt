@@ -115,6 +115,97 @@ class SettingsActivity :
             ThemeManager.DARK
         )
 
+        val aircraftTitle =
+            TextView(this).apply {
+
+                text =
+                    "AIRCRAFT POSITION"
+
+                textSize =
+                    12f
+
+                typeface =
+                    Typeface.DEFAULT_BOLD
+
+                setTextColor(
+                    secondaryTextColor()
+                )
+
+                setPadding(
+                    20.dp,
+                    18.dp,
+                    20.dp,
+                    10.dp
+                )
+            }
+
+        root.addView(
+            aircraftTitle
+        )
+
+        val aircraftOption =
+            TextView(this).apply {
+
+                text =
+                    if (
+                        AircraftPositionStore.isEnabled(
+                            this@SettingsActivity
+                        )
+                    ) {
+                        "✓   Aircraft Position"
+                    } else {
+                        "     Aircraft Position"
+                    }
+
+                textSize =
+                    17f
+
+                setTextColor(
+                    textColor()
+                )
+
+                gravity =
+                    Gravity.CENTER_VERTICAL
+
+                setPadding(
+                    24.dp,
+                    18.dp,
+                    24.dp,
+                    18.dp
+                )
+
+                setOnClickListener {
+
+                    val enabled =
+                        !AircraftPositionStore.isEnabled(
+                            this@SettingsActivity
+                        )
+
+                    AircraftPositionStore.setEnabled(
+                        this@SettingsActivity,
+                        enabled
+                    )
+
+                    recreate()
+                }
+            }
+
+        root.addView(
+            aircraftOption,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                60.dp
+            ).apply {
+
+                setMargins(
+                    16.dp,
+                    4.dp,
+                    16.dp,
+                    4.dp
+                )
+            }
+        )
+
         val simulatorTitle =
             TextView(this).apply {
 
