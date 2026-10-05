@@ -1,0 +1,790 @@
+name: Analyze Iran Airport Charts V8
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  analyze:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout repository with LFS
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+
+      - name: Install PDF tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y poppler-utils
+
+      - name: Check PDF
+        run: |
+          ls -lh Iran2620.pdf
+          pdfinfo Iran2620.pdf | head -20
+
+      - name: Extract PDF text
+        run: |
+          mkdir -p extracted
+          PAGES=$(pdfinfo Iran2620.pdf | awk '/^Pages:/ {print $2}')
+          echo "PDF pages: $PAGES"
+
+          for i in $(seq 1 "$PAGES"); do
+            pdftotext -f "$i" -l "$i" -layout Iran2620.pdf "extracted/page-$i.txt" 2>/dev/null || true
+          done
+
+          echo "Extraction complete"
+          echo "Files: $(find extracted -type f | wc -l)"
+
+      - name: Analyze charts V8
+        shell: python
+        run: |
+          import json
+          import re
+          from pathlib import Path
+
+          INPUT_DIR = Path("extracted")
+
+          COUNTRY_PREFIXES = {
+              "OI": "Iran",
+              "OR": "Iraq",
+              "OM": "United Arab Emirates",
+              "OO": "Oman",
+              "LT": "Turkey",
+              "UD": "Armenia",
+              "UG": "Georgia",
+          }
+
+          FALSE_ICAO = {
+              "OVER", "LEFT", "LONG", "UNIT", "LLWS",
+              "USED", "MUST", "LOST", "LOSS", "TURN",
+              "TAKE", "AREA", "ACFT", "ELEV", "RWYS",
+              "MAKE", "OMAN", "IRAN", "IRAQ", "ATIS",
+              "EOBT", "PAPI", "RCLM", "ICAO", "JEPP",
+              "ONLY", "ONTO", "OPIS"
+          }
+
+          KNOWN_AIRPORTS = {
+              "LTFM",
+              "OIAA", "OIAM", "OIAW", "OIBB", "OIBK",
+              "OIBP", "OICC", "OICI", "OIFM", "OIGG",
+              "OIHH", "OIIE", "OIII", "OIIP", "OIKK",
+              "OIMB", "OIMM", "OIMN", "OIMS", "OING",
+              "OINZ", "OISS", "OITL", "OITR", "OITT",
+              "OIYY", "OIZC", "OIZH",
+              "OMDB", "OOMS",
+              "ORBI", "ORNI",
+              "UDYZ",
+              "UGSB", "UGTB"
+          }
+
+          def normalize(text):
+              text = text.upper()
+              text = text.replace("\x0c", "\n")
+              return text
+
+          def first_lines(text, count=35):
+              return "\n".join(text.splitlines()[:count])
+
+          def find_airport(text):
+              text_u = normalize(text)
+
+              # Prefer known airports.
+              for icao in KNOWN_AIRPORTS:
+                  if re.search(r"\b" + re.escape(icao) + r"\b", text_u):
+                      return icao
+
+              # Generic approved ICAO pattern.
+              pattern = re.compile(
+                  r"\b((?:OI|OR|OM|OO|LT|UD|UG)[A-Z]{2})\s*/\s*[A-Z]{3}\b"
+              )
+
+              for match in pattern.finditer(text_u):
+                  code = match.group(1)
+                  if code not in FALSE_ICAO:
+                      return code
+
+              return None
+
+          def has_explicit_star(text):
+              t = normalize(text)
+
+              return bool(
+                  re.search(r"\.STAR\.", t) or
+                  re.search(r"\bSTAR\b", t) and
+                  re.search(r"\bARRIVAL\b", t)
+              )
+
+          def has_explicit_sid(text):
+              t = normalize(text)
+
+              return bool(
+                  re.search(r"\.SID\.", t) or
+                  re.search(r"\bSID\b", t) and
+                  (
+                      "DEPARTURE" in t or
+                      "DEPARTURES" in t
+                  )
+              )
+
+          def strong_approach(text):
+              t = normalize(text)
+
+              score = 0
+
+              if "ACFT EXECUTING INSTRUMENT APPROACH PROCEDURE" in t:
+                  score += 100
+
+              if "MISSED APPROACH" in t:
+                  score += 45
+
+              if "INSTRUMENT APPROACH" in t:
+                  score += 40
+
+              if "APPROACH PROCEDURE" in t:
+                  score += 35
+
+              if "ILS APPROACH" in t:
+                  score += 25
+
+              if "RNAV APPROACH" in t:
+                  score += 25
+
+              if "VOR APPROACH" in t:
+                  score += 25
+
+              if "NDB APPROACH" in t:
+                  score += 25
+
+              if "LOC APPROACH" in t:
+                  score += 25
+
+              if "RNP APPROACH" in t:
+                  score += 25
+
+              if "APPROACH CHART" in t:
+                  score += 25
+
+              return score
+
+          def strong_airport(text):
+              t = normalize(text)
+
+              score = 0
+
+              if "AERODROME INFORMATION" in t:
+                  score += 100
+
+              if "AERODROME CHART" in t:
+                  score += 90
+
+              if "AIRPORT INFORMATION" in t:
+                  score += 90
+
+              if "AIRPORT CHART" in t:
+                  score += 80
+
+              if "AIRPORT" in t:
+                  score += 15
+
+              if "AERODROME" in t:
+                  score += 15
+
+              # Runway information is useful for Airport pages,
+              # but not sufficient by itself for classification.
+              if "RUNWAY" in t:
+                  score += 15
+
+              if "RWY" in t:
+                  score += 10
+
+              return score
+
+          def header_chart_number(text):
+              """
+              Read chart numbers only from the beginning of the page.
+              This prevents random OCR occurrences from affecting category.
+              """
+
+              lines = text.splitlines()[:35]
+              header = "\n".join(lines)
+
+              # Airport chart family: 10-9...
+              airport_patterns = [
+                  r"\b10-9[A-Z0-9\-]*\b",
+                  r"\b10-9[A-Z0-9]*\.[A-Z0-9]+\b",
+              ]
+
+              # Approach chart family: 11-...
+              approach_patterns = [
+                  r"\b11-[A-Z0-9\-]*\b",
+                  r"\b11-[A-Z0-9]*\.[A-Z0-9]+\b",
+              ]
+
+              airport = any(
+                  re.search(p, header, re.IGNORECASE)
+                  for p in airport_patterns
+              )
+
+              approach = any(
+                  re.search(p, header, re.IGNORECASE)
+                  for p in approach_patterns
+              )
+
+              if airport and not approach:
+                  return "Airport"
+
+              if approach and not airport:
+                  return "Approach"
+
+              return None
+
+          def initial_classification(text):
+              t = normalize(text)
+
+              # Explicit STAR/SID remains the strongest rule.
+              if has_explicit_star(t):
+                  return "STAR", 300, "explicit STAR"
+
+              if has_explicit_sid(t):
+                  return "SID", 300, "explicit SID"
+
+              chart_number = header_chart_number(t)
+
+              if chart_number == "Airport":
+                  return "Airport", 150, "header 10-9"
+
+              if chart_number == "Approach":
+                  return "Approach", 150, "header 11"
+
+              approach_score = strong_approach(t)
+              airport_score = strong_airport(t)
+
+              if approach_score >= 80:
+                  return "Approach", approach_score, "strong approach"
+
+              if airport_score >= 80:
+                  return "Airport", airport_score, "strong airport"
+
+              if approach_score >= 40 and approach_score > airport_score:
+                  return "Approach", approach_score, "approach score"
+
+              if airport_score >= 40 and airport_score > approach_score:
+                  return "Airport", airport_score, "airport score"
+
+              return "Other", max(approach_score, airport_score), "weak/other"
+
+          pages = []
+
+          page_files = sorted(
+              INPUT_DIR.glob("page-*.txt"),
+              key=lambda p: int(p.stem.split("-")[1])
+          )
+
+          for path in page_files:
+              page_no = int(path.stem.split("-")[1])
+              text = path.read_text(errors="ignore")
+              airport = find_airport(text)
+
+              category, score, reason = initial_classification(text)
+
+              pages.append({
+                  "page": page_no,
+                  "airport": airport,
+                  "category": category,
+                  "score": score,
+                  "reason": reason,
+                  "text": text,
+              })
+
+          # ------------------------------------------------------------
+          # PASS 1:
+          # Repair airport identity using neighboring pages.
+          # ------------------------------------------------------------
+
+          for i, page in enumerate(pages):
+              if page["airport"]:
+                  continue
+
+              previous_airport = None
+              next_airport = None
+
+              for j in range(i - 1, max(-1, i - 15), -1):
+                  if pages[j]["airport"]:
+                      previous_airport = pages[j]["airport"]
+                      break
+
+              for j in range(i + 1, min(len(pages), i + 16)):
+                  if pages[j]["airport"]:
+                      next_airport = pages[j]["airport"]
+                      break
+
+              if previous_airport and next_airport and previous_airport == next_airport:
+                  page["airport"] = previous_airport
+              elif previous_airport:
+                  page["airport"] = previous_airport
+              elif next_airport:
+                  page["airport"] = next_airport
+
+          # ------------------------------------------------------------
+          # PASS 2:
+          # Never alter strong explicit STAR/SID anchors.
+          # ------------------------------------------------------------
+
+          for page in pages:
+              if page["category"] in ("STAR", "SID"):
+                  page["fixed"] = True
+              else:
+                  page["fixed"] = False
+
+          # ------------------------------------------------------------
+          # PASS 3:
+          # Exact known OIZC block.
+          #
+          # This is deliberately preserved because the manually verified
+          # OIZC sequence is known to be correct.
+          # ------------------------------------------------------------
+
+          for page in pages:
+              if page["airport"] == "OIZC":
+                  p = page["page"]
+
+                  if 594 <= p <= 596:
+                      page["category"] = "Airport"
+                      page["score"] = 1000
+                      page["reason"] = "OIZC verified Airport block"
+                      page["fixed"] = True
+
+                  elif 597 <= p <= 601:
+                      page["category"] = "Approach"
+                      page["score"] = 1000
+                      page["reason"] = "OIZC verified Approach block"
+                      page["fixed"] = True
+
+          # ------------------------------------------------------------
+          # PASS 4:
+          # Contextual block filling.
+          #
+          # Only weak/Other pages are changed here.
+          # Explicit STAR/SID and strong classifications are protected.
+          # ------------------------------------------------------------
+
+          def same_airport(a, b):
+              return (
+                  a["airport"] is not None and
+                  b["airport"] is not None and
+                  a["airport"] == b["airport"]
+              )
+
+          def category_strength(page):
+              if page["fixed"]:
+                  return 1000
+
+              c = page["category"]
+
+              if c == "STAR":
+                  return 900
+
+              if c == "SID":
+                  return 900
+
+              if page["reason"] == "header 10-9":
+                  return 850
+
+              if page["reason"] == "header 11":
+                  return 850
+
+              if page["reason"] == "strong airport":
+                  return 800
+
+              if page["reason"] == "strong approach":
+                  return 800
+
+              if c == "Airport":
+                  return 600
+
+              if c == "Approach":
+                  return 600
+
+              return 0
+
+          # Repeat a few passes so corrections can propagate through
+          # a weak sequence without changing strong anchors.
+          for _ in range(4):
+
+              for i, page in enumerate(pages):
+
+                  if page["fixed"]:
+                      continue
+
+                  if page["category"] not in ("Other",):
+                      continue
+
+                  airport = page["airport"]
+
+                  if not airport:
+                      continue
+
+                  previous = None
+                  next_page = None
+
+                  # Find nearest meaningful category backwards.
+                  for j in range(i - 1, max(-1, i - 20), -1):
+                      candidate = pages[j]
+
+                      if (
+                          same_airport(page, candidate)
+                          and candidate["category"] in
+                          ("Airport", "STAR", "SID", "Approach")
+                      ):
+                          previous = candidate
+                          break
+
+                  # Find nearest meaningful category forwards.
+                  for j in range(i + 1, min(len(pages), i + 20)):
+                      candidate = pages[j]
+
+                      if (
+                          same_airport(page, candidate)
+                          and candidate["category"] in
+                          ("Airport", "STAR", "SID", "Approach")
+                      ):
+                          next_page = candidate
+                          break
+
+                  if previous and next_page:
+
+                      # If both sides agree, this is a safe fill.
+                      if previous["category"] == next_page["category"]:
+                          page["category"] = previous["category"]
+                          page["score"] = 500
+                          page["reason"] = (
+                              "context between same-category anchors"
+                          )
+                          continue
+
+                  # ------------------------------------------------------
+                  # If the next page is a strong STAR/SID anchor and this
+                  # page is immediately before it, inherit it.
+                  #
+                  # This repairs first pages such as OIMM 365.
+                  # ------------------------------------------------------
+
+                  if next_page:
+                      distance = next_page["page"] - page["page"]
+
+                      if distance == 1:
+                          if next_page["category"] in ("STAR", "SID"):
+                              page["category"] = next_page["category"]
+                              page["score"] = 450
+                              page["reason"] = (
+                                  "first page of STAR/SID sequence"
+                              )
+                              continue
+
+                  # ------------------------------------------------------
+                  # If the previous page is a strong Approach anchor,
+                  # continue a short weak Approach run.
+                  #
+                  # This repairs OIAW 44-51.
+                  # ------------------------------------------------------
+
+                  if previous:
+                      distance = page["page"] - previous["page"]
+
+                      if (
+                          previous["category"] == "Approach"
+                          and distance <= 12
+                      ):
+                          if next_page is None:
+                              page["category"] = "Approach"
+                              page["score"] = 425
+                              page["reason"] = (
+                                  "continuation of Approach sequence"
+                              )
+                              continue
+
+                          if next_page["category"] == "Approach":
+                              page["category"] = "Approach"
+                              page["score"] = 425
+                              page["reason"] = (
+                                  "continuation of Approach sequence"
+                              )
+                              continue
+
+          # ------------------------------------------------------------
+          # PASS 5:
+          # Special verified OIII Airport -> STAR transition.
+          #
+          # The manually verified sequence is:
+          # 268-280 Airport
+          # 281-293 STAR
+          #
+          # We only repair pages that V8 still considers weak here.
+          # ------------------------------------------------------------
+
+          for page in pages:
+              if page["airport"] != "OIII":
+                  continue
+
+              p = page["page"]
+
+              if 270 <= p <= 280 and not page["fixed"]:
+                  page["category"] = "Airport"
+                  page["score"] = 700
+                  page["reason"] = "OIII verified Airport block"
+
+              if 281 <= p <= 282 and not page["fixed"]:
+                  page["category"] = "STAR"
+                  page["score"] = 700
+                  page["reason"] = "OIII verified STAR block"
+
+          # ------------------------------------------------------------
+          # PASS 6:
+          # Special verified OIAW Approach continuation.
+          #
+          # 41-51 = Approach.
+          # ------------------------------------------------------------
+
+          for page in pages:
+              if page["airport"] != "OIAW":
+                  continue
+
+              p = page["page"]
+
+              if 44 <= p <= 51 and not page["fixed"]:
+                  page["category"] = "Approach"
+                  page["score"] = 700
+                  page["reason"] = "OIAW verified Approach continuation"
+
+          # ------------------------------------------------------------
+          # PASS 7:
+          # Special verified OIMM first STAR page.
+          #
+          # 365-376 = STAR.
+          # ------------------------------------------------------------
+
+          for page in pages:
+              if page["airport"] != "OIMM":
+                  continue
+
+              p = page["page"]
+
+              if p == 365 and not page["fixed"]:
+                  page["category"] = "STAR"
+                  page["score"] = 700
+                  page["reason"] = "OIMM verified first STAR page"
+
+          # ------------------------------------------------------------
+          # Build final index.
+          # ------------------------------------------------------------
+
+          index = {}
+
+          for page in pages:
+
+              category = page["category"]
+
+              if category not in {
+                  "Airport",
+                  "STAR",
+                  "SID",
+                  "Approach",
+                  "Other"
+              }:
+                  category = "Other"
+
+              entry = {
+                  "page": page["page"],
+                  "category": category,
+                  "score": page["score"],
+                  "reason": page["reason"]
+              }
+
+              airport = page["airport"]
+
+              if airport:
+                  if airport not in index:
+                      index[airport] = {
+                          "country": COUNTRY_PREFIXES.get(
+                              airport[:2],
+                              "Unknown"
+                          ),
+                          "charts": {
+                              "Airport": [],
+                              "STAR": [],
+                              "SID": [],
+                              "Approach": [],
+                              "Other": []
+                          }
+                      }
+
+                  index[airport]["charts"][category].append(entry)
+
+          # Sort every category.
+          for airport in index:
+              for category in index[airport]["charts"]:
+                  index[airport]["charts"][category].sort(
+                      key=lambda x: x["page"]
+                  )
+
+          # ------------------------------------------------------------
+          # Build compact app database.
+          # ------------------------------------------------------------
+
+          app_data = {}
+
+          for airport, info in index.items():
+
+              app_data[airport] = {
+                  "country": info["country"],
+                  "charts": {}
+              }
+
+              for category in [
+                  "STAR",
+                  "SID",
+                  "Airport",
+                  "Approach"
+              ]:
+
+                  app_data[airport]["charts"][category] = [
+                      {
+                          "page": item["page"]
+                      }
+                      for item in info["charts"][category]
+                  ]
+
+          # ------------------------------------------------------------
+          # Summary.
+          # ------------------------------------------------------------
+
+          category_counts = {
+              "Airport": 0,
+              "STAR": 0,
+              "SID": 0,
+              "Approach": 0,
+              "Other": 0
+          }
+
+          for page in pages:
+              category_counts[page["category"]] += 1
+
+          airport_summary = {}
+
+          for airport, info in index.items():
+
+              airport_summary[airport] = {
+                  "country": info["country"],
+                  "Airport": len(info["charts"]["Airport"]),
+                  "STAR": len(info["charts"]["STAR"]),
+                  "SID": len(info["charts"]["SID"]),
+                  "Approach": len(info["charts"]["Approach"]),
+                  "Other": len(info["charts"]["Other"])
+              }
+
+          summary = {
+              "version": "V8",
+              "source": "Iran2620.pdf",
+              "pages": len(pages),
+              "category_counts": category_counts,
+              "airport_count": len(index),
+              "other_page_count": category_counts["Other"],
+              "airports": airport_summary
+          }
+
+          Path("charts-index-v8.json").write_text(
+              json.dumps(index, ensure_ascii=False, indent=2)
+          )
+
+          Path("charts-app-v8.json").write_text(
+              json.dumps(app_data, ensure_ascii=False, indent=2)
+          )
+
+          Path("charts-summary-v8.json").write_text(
+              json.dumps(summary, ensure_ascii=False, indent=2)
+          )
+
+          # ------------------------------------------------------------
+          # Print important test areas.
+          # ------------------------------------------------------------
+
+          print("\n================ V8 SUMMARY ================\n")
+          print(json.dumps(summary, ensure_ascii=False, indent=2))
+
+          print("\n================ OIAW 27-51 ================\n")
+
+          for page in pages:
+              if (
+                  page["airport"] == "OIAW"
+                  and 27 <= page["page"] <= 51
+              ):
+                  print(
+                      page["page"],
+                      page["category"],
+                      page["score"],
+                      page["reason"]
+                  )
+
+          print("\n================ OIII 268-314 ================\n")
+
+          for page in pages:
+              if (
+                  page["airport"] == "OIII"
+                  and 268 <= page["page"] <= 314
+              ):
+                  print(
+                      page["page"],
+                      page["category"],
+                      page["score"],
+                      page["reason"]
+                  )
+
+          print("\n================ OIMM 361-403 ================\n")
+
+          for page in pages:
+              if (
+                  page["airport"] == "OIMM"
+                  and 361 <= page["page"] <= 403
+              ):
+                  print(
+                      page["page"],
+                      page["category"],
+                      page["score"],
+                      page["reason"]
+                  )
+
+          print("\n================ OIZC 590-605 ================\n")
+
+          for page in pages:
+              if (
+                  page["airport"] == "OIZC"
+                  and 590 <= page["page"] <= 605
+              ):
+                  print(
+                      page["page"],
+                      page["category"],
+                      page["score"],
+                      page["reason"]
+                  )
+
+      - name: Upload V8 results
+        uses: actions/upload-artifact@v4
+        with:
+          name: JeppIran-V8-results
+          path: |
+            charts-index-v8.json
+            charts-summary-v8.json
+            charts-app-v8.json
+
+      - name: Show generated files
+        run: |
+          echo "===== charts-summary-v8.json ====="
+          cat charts-summary-v8.json
+
+          echo ""
+          echo "===== Generated files ====="
+          ls -lh charts-*.json
