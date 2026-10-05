@@ -265,6 +265,9 @@ private val locationPermissionLauncher =
         Location? =
         null
 
+    private var aircraftPositionEnabled =
+        true
+
 
     private var pdfRequestId =
         0
@@ -426,6 +429,13 @@ private val locationPermissionLauncher =
                     -1
                 )
 
+
+        aircraftPositionEnabled =
+            ThemeManager.isAircraftPositionEnabled(
+                this
+            )
+
+        ChartGeoreference.load(this)
 
         loadAirportCharts()
 
@@ -1200,7 +1210,7 @@ private val locationPermissionLauncher =
 
         applyInsets()
 
-        startGps()
+        applyAircraftPositionState()
     }
 
 
@@ -1370,8 +1380,40 @@ private val locationPermissionLauncher =
         )
 
 
+        val aircraft =
+            toolbarButton(
+                "✈",
+                20f
+            )
+
+        aircraft.contentDescription =
+            "Aircraft position"
+
+        updateToggleButton(
+            aircraft,
+            aircraftPositionEnabled
+        )
+
+        aircraft.setOnClickListener {
+            setAircraftPositionEnabled(
+                !aircraftPositionEnabled
+            )
+            updateToggleButton(
+                aircraft,
+                aircraftPositionEnabled
+            )
+        }
+
+        topToolbar.addView(
+            aircraft,
+            toolbarButtonParams(
+                42.dp
+            )
+        )
+
+
         val next =
-            toolbarButton("›", 25f)
+            toolbarButton("›", 25f
 
 
         next.contentDescription =
@@ -1820,6 +1862,8 @@ private val locationPermissionLauncher =
             gpsText.layoutParams =
                 gpsParams
 
+            gpsText.visibility = View.GONE
+
 
             insets
         }
@@ -1985,6 +2029,10 @@ private val locationPermissionLauncher =
 
         chartView.setBitmap(
             bitmap
+        )
+
+        chartView.setAircraftPosition(
+            projectCurrentAircraftPosition()
         )
 
 
@@ -4162,6 +4210,15 @@ private val locationPermissionLauncher =
 
     private fun startGps() {
 
+        if (!aircraftPositionEnabled) {
+            stopGps()
+            lastGpsLocation = null
+            if (::chartView.isInitialized) {
+                chartView.setAircraftPosition(null)
+            }
+            return
+        }
+
         locationManager =
             getSystemService(
                 Context.LOCATION_SERVICE
@@ -4268,6 +4325,9 @@ private val locationPermissionLauncher =
                         location
 
                     updateGpsLabel()
+                    chartView.setAircraftPosition(
+                        projectCurrentAircraftPosition()
+                    )
                 }
             }
 
@@ -4308,6 +4368,11 @@ private val locationPermissionLauncher =
 
 
         updateGpsLabel()
+        if (::chartView.isInitialized) {
+            chartView.setAircraftPosition(
+                projectCurrentAircraftPosition()
+            )
+        }
     }
 
 
@@ -4340,6 +4405,85 @@ private val locationPermissionLauncher =
 
         locationManager =
             null
+    }
+
+    private fun applyAircraftPositionState() {
+
+        aircraftPositionEnabled =
+            ThemeManager.isAircraftPositionEnabled(
+                this
+            )
+
+        if (aircraftPositionEnabled) {
+            startGps()
+        } else {
+            stopGps()
+            lastGpsLocation = null
+            if (::chartView.isInitialized) {
+                chartView.setAircraftPosition(null)
+            }
+        }
+    }
+
+    private fun setAircraftPositionEnabled(
+        enabled: Boolean
+    ) {
+        aircraftPositionEnabled = enabled
+
+        ThemeManager.setAircraftPositionEnabled(
+            this,
+            enabled
+        )
+
+        if (enabled) {
+            startGps()
+        } else {
+            stopGps()
+            lastGpsLocation = null
+        }
+
+        if (::chartView.isInitialized) {
+            chartView.setAircraftPosition(
+                if (enabled) {
+                    projectCurrentAircraftPosition()
+                } else {
+                    null
+                }
+            )
+        }
+    }
+
+    private fun projectCurrentAircraftPosition():
+        PointF? {
+
+        if (!aircraftPositionEnabled) {
+            return null
+        }
+
+        val location =
+            lastGpsLocation
+                ?: return null
+
+        val chart =
+            airportCharts.getOrNull(
+                currentChartIndex
+            )
+                ?: return null
+
+        val projected =
+            ChartGeoreference.project(
+                this,
+                chart.icao,
+                chart.page,
+                location.latitude,
+                location.longitude
+            )
+                ?: return null
+
+        return PointF(
+            projected.x,
+            projected.y
+        )
     }
 
     private fun updateGpsLabel() {
@@ -4865,6 +5009,10 @@ private val locationPermissionLauncher =
         private var selectedTextIndex =
             -1
 
+        private var aircraftPosition:
+            PointF? =
+            null
+
 
         private var textStartScale =
             1f
@@ -5110,6 +5258,19 @@ private val locationPermissionLauncher =
             invalidate()
         }
 
+
+        fun setAircraftPosition(
+            value: PointF?
+        ) {
+            aircraftPosition =
+                value?.let {
+                    PointF(
+                        it.x,
+                        it.y
+                    )
+                }
+            invalidate()
+        }
 
         fun setLandscapeMode(
             value: Boolean
@@ -5438,6 +5599,14 @@ private val locationPermissionLauncher =
                 canvas
             )
 
+            aircraftPosition?.let {
+                drawAircraftMarker(
+                    canvas,
+                    it.x,
+                    it.y
+                )
+            }
+
 
             activePoints?.let {
 
@@ -5455,6 +5624,67 @@ private val locationPermissionLauncher =
             canvas.restore()
         }
 
+
+
+        private fun drawAircraftMarker(
+            canvas: Canvas,
+            x: Float,
+            y: Float
+        ) {
+
+            val markerPaint =
+                Paint(
+                    Paint.ANTI_ALIAS_FLAG
+                ).apply {
+                    color = Color.rgb(
+                        20,
+                        130,
+                        255
+                    )
+                    style = Paint.Style.FILL
+                    shadowLayer(
+                        8f,
+                        0f,
+                        2f,
+                        Color.BLACK
+                    )
+                }
+
+            val outlinePaint =
+                Paint(
+                    Paint.ANTI_ALIAS_FLAG
+                ).apply {
+                    color = Color.WHITE
+                    style = Paint.Style.STROKE
+                    strokeWidth = 2.5f
+                    strokeJoin = Paint.Join.ROUND
+                }
+
+            val path =
+                Path().apply {
+                    moveTo(x, y - 34f)
+                    lineTo(x + 8f, y - 7f)
+                    lineTo(x + 25f, y + 5f)
+                    lineTo(x + 9f, y + 7f)
+                    lineTo(x + 5f, y + 25f)
+                    lineTo(x, y + 16f)
+                    lineTo(x - 5f, y + 25f)
+                    lineTo(x - 9f, y + 7f)
+                    lineTo(x - 25f, y + 5f)
+                    lineTo(x - 8f, y - 7f)
+                    close()
+                }
+
+            canvas.drawPath(
+                path,
+                markerPaint
+            )
+
+            canvas.drawPath(
+                path,
+                outlinePaint
+            )
+        }
 
         private fun drawBitmapAt(
             canvas: Canvas,
