@@ -265,6 +265,10 @@ private val locationPermissionLauncher =
         Location? =
         null
 
+    private var simulatorPosition:
+        SimulatorManager.Position? =
+        null
+
     private var aircraftPositionEnabled =
         true
 
@@ -557,6 +561,7 @@ private val locationPermissionLauncher =
 
 
         stopGps()
+        stopSimulatorConnection()
 
 
         previousBitmap
@@ -4422,10 +4427,18 @@ private val locationPermissionLauncher =
             )
 
         if (aircraftPositionEnabled) {
-            startGps()
+            if (SimulatorManager.simulator(this) != SimulatorManager.NONE) {
+                stopGps()
+                startSimulatorConnection()
+            } else {
+                stopSimulatorConnection()
+                startGps()
+            }
         } else {
             stopGps()
+            stopSimulatorConnection()
             lastGpsLocation = null
+            simulatorPosition = null
             if (::chartView.isInitialized) {
                 chartView.setAircraftPosition(null)
             }
@@ -4443,10 +4456,18 @@ private val locationPermissionLauncher =
         )
 
         if (enabled) {
-            startGps()
+            if (SimulatorManager.simulator(this) != SimulatorManager.NONE) {
+                stopGps()
+                startSimulatorConnection()
+            } else {
+                stopSimulatorConnection()
+                startGps()
+            }
         } else {
             stopGps()
+            stopSimulatorConnection()
             lastGpsLocation = null
+            simulatorPosition = null
         }
 
         if (::chartView.isInitialized) {
@@ -4460,6 +4481,36 @@ private val locationPermissionLauncher =
         }
     }
 
+    private fun startSimulatorConnection() {
+        if (!aircraftPositionEnabled ||
+            SimulatorManager.simulator(this) == SimulatorManager.NONE
+        ) {
+            return
+        }
+
+        SimulatorManager.start(
+            this,
+            { position ->
+                simulatorPosition = position
+                runOnUiThread {
+                    if (aircraftPositionEnabled &&
+                        ::chartView.isInitialized
+                    ) {
+                        chartView.setAircraftPosition(
+                            projectCurrentAircraftPosition()
+                        )
+                    }
+                }
+            },
+            {}
+        )
+    }
+
+    private fun stopSimulatorConnection() {
+        SimulatorManager.stop()
+        simulatorPosition = null
+    }
+
     private fun projectCurrentAircraftPosition():
         PointF? {
 
@@ -4467,8 +4518,14 @@ private val locationPermissionLauncher =
             return null
         }
 
-        val location =
-            lastGpsLocation
+        val simulator = simulatorPosition
+        val latitude =
+            simulator?.latitude
+                ?: lastGpsLocation?.latitude
+                ?: return null
+        val longitude =
+            simulator?.longitude
+                ?: lastGpsLocation?.longitude
                 ?: return null
 
         val chart =
@@ -4482,8 +4539,8 @@ private val locationPermissionLauncher =
                 this,
                 chart.icao,
                 chart.page,
-                location.latitude,
-                location.longitude
+                latitude,
+                longitude
             )
                 ?: return null
 
