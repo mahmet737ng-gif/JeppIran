@@ -12,6 +12,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: jeppiran-chart-database
+  cancel-in-progress: false
+
 jobs:
   build-chart-database:
     runs-on: ubuntu-24.04
@@ -21,6 +25,7 @@ jobs:
         uses: actions/checkout@v5
         with:
           lfs: true
+          fetch-depth: 0
 
       - name: Install PDF tools
         run: |
@@ -85,7 +90,11 @@ jobs:
           # Load source chart database
           # --------------------------------------------------
 
-          with open(SOURCE_DATABASE, "r", encoding="utf-8") as f:
+          with open(
+              SOURCE_DATABASE,
+              "r",
+              encoding="utf-8"
+          ) as f:
               source_rows = json.load(f)
 
           if not isinstance(source_rows, list):
@@ -98,7 +107,10 @@ jobs:
                   "charts-app-v16.json is empty"
               )
 
-          print("Source database rows:", len(source_rows))
+          print(
+              "Source database rows:",
+              len(source_rows)
+          )
 
           # --------------------------------------------------
           # Read actual PDF page count
@@ -124,7 +136,10 @@ jobs:
                   "Could not determine PDF page count"
               )
 
-          print("Source PDF pages:", pdf_pages)
+          print(
+              "Source PDF pages:",
+              pdf_pages
+          )
 
           # --------------------------------------------------
           # Validate source rows
@@ -136,22 +151,39 @@ jobs:
               if not isinstance(item, dict):
                   continue
 
-              page = int(item.get("page", 0))
+              page = int(
+                  item.get(
+                      "page",
+                      0
+                  )
+              )
 
               airport = str(
-                  item.get("airport", "")
+                  item.get(
+                      "airport",
+                      ""
+                  )
               ).strip().upper()
 
               category = str(
-                  item.get("category", "Other")
+                  item.get(
+                      "category",
+                      "Other"
+                  )
               ).strip()
 
               chart_number = str(
-                  item.get("chart_number", "")
+                  item.get(
+                      "chart_number",
+                      ""
+                  )
               ).strip()
 
               name = str(
-                  item.get("name", "")
+                  item.get(
+                      "name",
+                      ""
+                  )
               ).strip()
 
               if page <= 0:
@@ -182,7 +214,10 @@ jobs:
                   "No usable chart rows found"
               )
 
-          print("Usable chart rows:", len(rows))
+          print(
+              "Usable chart rows:",
+              len(rows)
+          )
 
           # --------------------------------------------------
           # Group global PDF pages by airport
@@ -202,7 +237,9 @@ jobs:
 
           for airport in airport_pages:
               airport_pages[airport] = sorted(
-                  set(airport_pages[airport])
+                  set(
+                      airport_pages[airport]
+                  )
               )
 
           print(
@@ -228,7 +265,9 @@ jobs:
 
           local_page_map = {}
 
-          for airport in sorted(airport_pages.keys()):
+          for airport in sorted(
+              airport_pages.keys()
+          ):
               local_page_map[airport] = {}
 
               for local_page, global_page in enumerate(
@@ -245,7 +284,11 @@ jobs:
               airport = row["airport"]
               global_page = row["page"]
 
-              row["pdf_page"] = local_page_map[airport][global_page]
+              row["pdf_page"] = local_page_map[
+                  airport
+              ][
+                  global_page
+              ]
 
           # --------------------------------------------------
           # Sort rows
@@ -333,7 +376,9 @@ jobs:
 
           manifest_airports = {}
 
-          for airport in sorted(airport_pages.keys()):
+          for airport in sorted(
+              airport_pages.keys()
+          ):
               pages = airport_pages[airport]
 
               output_pdf = os.path.join(
@@ -368,13 +413,17 @@ jobs:
                   check=True
               )
 
-              if not os.path.isfile(output_pdf):
+              if not os.path.isfile(
+                  output_pdf
+              ):
                   raise SystemExit(
                       "PDF was not created: "
                       + output_pdf
                   )
 
-              size = os.path.getsize(output_pdf)
+              size = os.path.getsize(
+                  output_pdf
+              )
 
               if size <= 0:
                   raise SystemExit(
@@ -382,7 +431,10 @@ jobs:
                       + output_pdf
                   )
 
+              # ------------------------------------------------
               # Check PDF integrity
+              # ------------------------------------------------
+
               check = subprocess.run(
                   [
                       "qpdf",
@@ -402,7 +454,10 @@ jobs:
                       + output_pdf
                   )
 
+              # ------------------------------------------------
               # SHA256
+              # ------------------------------------------------
+
               digest = hashlib.sha256()
 
               with open(
@@ -458,7 +513,9 @@ jobs:
           # Final validation
           # --------------------------------------------------
 
-          for airport in sorted(airport_pages.keys()):
+          for airport in sorted(
+              airport_pages.keys()
+          ):
               path = os.path.join(
                   BUILD_DIR,
                   airport + ".pdf"
@@ -655,9 +712,33 @@ jobs:
 
           if git diff --cached --quiet; then
             echo "No database changes."
-          else
-            git commit \
-              -m "Build JeppIran chart database v18"
-
-            git push
+            exit 0
           fi
+
+          git commit \
+            -m "Build JeppIran chart database v18"
+
+          # The repository may have advanced while PDFs were being built.
+          # Sync with the newest main before pushing the generated commit.
+          git fetch origin main
+
+          if ! git rebase origin/main; then
+            echo "Rebase conflict detected."
+            echo "Keeping the newly generated database files."
+
+            git checkout --theirs \
+              charts-index.json \
+              charts-app-v18.json \
+              app/src/main/assets/charts-app-v18.json \
+              app/src/main/assets/charts-manifest.json
+
+            git add \
+              charts-index.json \
+              charts-app-v18.json \
+              app/src/main/assets/charts-app-v18.json \
+              app/src/main/assets/charts-manifest.json
+
+            GIT_EDITOR=true git rebase --continue
+          fi
+
+          git push origin HEAD:main
