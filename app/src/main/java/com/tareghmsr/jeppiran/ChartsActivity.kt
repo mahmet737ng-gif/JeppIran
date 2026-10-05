@@ -161,7 +161,7 @@ class ChartsActivity : ComponentActivity() {
         try {
 
             val jsonText = assets
-                .open("charts-app-v6.json")
+                .open("charts-app-v9.json")
                 .bufferedReader()
                 .use {
                     it.readText()
