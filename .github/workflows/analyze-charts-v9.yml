@@ -1,4 +1,4 @@
-name: Analyze Iran Charts V14
+name: Analyze Iran Charts V15
 
 on:
   workflow_dispatch:
@@ -9,19 +9,11 @@ jobs:
 
     steps:
 
-      # ============================================================
-      # 1. Checkout repository + Git LFS
-      # ============================================================
-
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           lfs: true
 
-
-      # ============================================================
-      # 2. Install Poppler
-      # ============================================================
 
       - name: Install Poppler
         shell: bash
@@ -29,10 +21,6 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y poppler-utils
 
-
-      # ============================================================
-      # 3. Verify PDF
-      # ============================================================
 
       - name: Verify PDF
         shell: bash
@@ -45,10 +33,6 @@ jobs:
 
           pdfinfo Iran2620.pdf | head -30
 
-
-      # ============================================================
-      # 4. Extract all PDF pages
-      # ============================================================
 
       - name: Extract PDF pages
         shell: bash
@@ -77,11 +61,7 @@ jobs:
           echo "PDF extraction completed."
 
 
-      # ============================================================
-      # 5. Create V9-style base index
-      # ============================================================
-
-      - name: Create base chart index
+      - name: Create V9 base index
         shell: bash
         run: |
           python - <<'PY'
@@ -91,14 +71,14 @@ jobs:
 
           PDF_DIR = Path("pdf-text")
 
-          COUNTRY_PREFIXES = {
-              "OI": "Iran",
-              "OR": "Iraq",
-              "OM": "United Arab Emirates",
-              "OO": "Oman",
-              "LT": "Turkey",
-              "UD": "Armenia",
-              "UG": "Georgia",
+          PREFIXES = {
+              "OI",
+              "OR",
+              "OM",
+              "OO",
+              "LT",
+              "UD",
+              "UG",
           }
 
           FALSE_ICAO = {
@@ -115,112 +95,72 @@ jobs:
               r"\b((?:OI|OR|OM|OO|LT|UD|UG)[A-Z]{2})\s*/\s*[A-Z]{3}\b"
           )
 
-          def clean(text):
-              return re.sub(r"\s+", " ", text).strip()
-
           def find_airport(text):
+
               upper = text.upper()
 
-              matches = ICAO_RE.findall(upper)
+              matches = ICAO_RE.findall(
+                  upper
+              )
 
               for icao in matches:
+
                   if icao not in FALSE_ICAO:
                       return icao
 
-              # Fallback: standalone approved ICAO
-              for prefix in COUNTRY_PREFIXES:
-                  pattern = rf"\b{prefix}[A-Z]{{2}}\b"
+              for prefix in PREFIXES:
 
-                  for match in re.findall(pattern, upper):
-                      if match not in FALSE_ICAO:
-                          return match
+                  pattern = (
+                      rf"\b{prefix}[A-Z]{{2}}\b"
+                  )
+
+                  matches = re.findall(
+                      pattern,
+                      upper
+                  )
+
+                  for icao in matches:
+
+                      if icao not in FALSE_ICAO:
+                          return icao
 
               return ""
 
           def detect_chart_number(text):
-              upper = text.upper()
 
               patterns = [
-                  r"\b10-9[A-Z]?[0-9]*\b",
-                  r"\b10-3[A-Z]?[0-9]*\b",
-                  r"\b10-2[A-Z]?[0-9]*\b",
-                  r"\b10-1[A-Z]?[0-9]*\b",
-                  r"\b11-[0-9]{1,2}[A-Z]?\b",
-                  r"\b12-[0-9]{1,2}[A-Z]?\b",
-                  r"\b13-[0-9]{1,2}[A-Z]?\b",
-                  r"\b14-[0-9]{1,2}[A-Z]?\b",
-                  r"\b15-[0-9]{1,2}[A-Z]?\b",
-                  r"\b16-[0-9]{1,2}[A-Z]?\b",
-                  r"\b17-[0-9]{1,2}[A-Z]?\b",
+
+                  r"\b10-9[A-Z0-9]*\b",
+                  r"\b10-3[A-Z0-9]*\b",
+                  r"\b10-2[A-Z0-9]*\b",
+                  r"\b10-1[A-Z0-9]*\b",
+
+                  r"\b11-[0-9]{1,3}[A-Z0-9]*\b",
+                  r"\b13-[0-9]{1,3}[A-Z0-9]*\b",
+                  r"\b14-[0-9]{1,3}[A-Z0-9]*\b",
+                  r"\b15-[0-9]{1,3}[A-Z0-9]*\b",
+                  r"\b16-[0-9]{1,3}[A-Z0-9]*\b",
+                  r"\b17-[0-9]{1,3}[A-Z0-9]*\b",
               ]
 
+              upper = text.upper()
+
               for pattern in patterns:
-                  match = re.search(pattern, upper)
+
+                  match = re.search(
+                      pattern,
+                      upper
+                  )
 
                   if match:
                       return match.group(0)
 
               return ""
 
-          def classify(text):
-
-              upper = text.upper()
-
-              # Explicit procedures
-              if ".STAR." in upper:
-                  return "STAR"
-
-              if ".SID." in upper:
-                  return "SID"
-
-              # Airport
-              if (
-                  "AIRPORT INFORMATION" in upper
-                  or "AERODROME INFORMATION" in upper
-                  or "AIRPORT CHART" in upper
-                  or "AERODROME CHART" in upper
-              ):
-                  return "Airport"
-
-              # Approach
-              approach_terms = [
-                  "INSTRUMENT APPROACH",
-                  "ACFT EXECUTING INSTRUMENT APPROACH",
-                  "MISSED APPROACH",
-              ]
-
-              for term in approach_terms:
-                  if term in upper:
-                      return "Approach"
-
-              # Chart number
-              chart_number = detect_chart_number(text)
-
-              if chart_number.startswith("10-9"):
-                  return "Airport"
-
-              if chart_number.startswith("10-2"):
-                  return "STAR"
-
-              if chart_number.startswith("10-3"):
-                  return "SID"
-
-              if chart_number.startswith("10-1"):
-                  return "Other"
-
-              if re.match(
-                  r"^(11|13|14|15|16|17)-",
-                  chart_number
-              ):
-                  return "Approach"
-
-              return "Other"
-
           pages = sorted(
               PDF_DIR.glob("page-*.txt"),
-              key=lambda p: int(
-                  p.stem.split("-")[1]
-              )
+              key=lambda p:
+                  int(p.stem.split("-")[1])
           )
 
           output = {}
@@ -238,12 +178,12 @@ jobs:
                   errors="ignore"
               )
 
-              airport = find_airport(text)
+              airport = find_airport(
+                  text
+              )
 
               if airport:
                   current_airport = airport
-
-              category = classify(text)
 
               chart_number = detect_chart_number(
                   text
@@ -251,9 +191,11 @@ jobs:
 
               output[str(page)] = {
                   "page": page,
-                  "airport": airport or current_airport,
-                  "category": category,
-                  "chart_number": chart_number,
+                  "airport":
+                      airport or current_airport,
+                  "category": "Other",
+                  "chart_number":
+                      chart_number,
                   "text": text,
                   "name": ""
               }
@@ -263,6 +205,7 @@ jobs:
               "w",
               encoding="utf-8"
           ) as f:
+
               json.dump(
                   output,
                   f,
@@ -271,15 +214,10 @@ jobs:
               )
 
           print(
-              f"Created charts-index-v9.json "
-              f"with {len(output)} pages"
+              f"Created {len(output)} pages"
           )
           PY
 
-
-      # ============================================================
-      # 6. Run V12 naming
-      # ============================================================
 
       - name: Run V12 naming
         shell: bash
@@ -291,52 +229,40 @@ jobs:
           python scripts/name_charts_v12.py
 
 
-      # ============================================================
-      # 7. Run V14 classification
-      # ============================================================
-
-      - name: Run V14 classification
+      - name: Run V15 classification
         shell: bash
         run: |
           echo "========================================"
-          echo "RUNNING V14 CLASSIFICATION"
+          echo "RUNNING V15 CLASSIFICATION"
           echo "========================================"
 
-          python scripts/classify_charts_v14.py
+          python scripts/classify_charts_v15.py
 
 
-      # ============================================================
-      # 8. Show V14 summary
-      # ============================================================
-
-      - name: Show V14 summary
+      - name: Show V15 summary
         shell: bash
         run: |
           echo ""
           echo "========================================"
-          echo "V14 SUMMARY"
+          echo "V15 SUMMARY"
           echo "========================================"
 
-          cat charts-summary-v14.json
+          cat charts-summary-v15.json
 
 
-      # ============================================================
-      # 9. Show important sample pages
-      # ============================================================
-
-      - name: Show V14 sample pages
+      - name: Show V15 sample pages
         shell: bash
         run: |
           echo ""
           echo "========================================"
-          echo "V14 SAMPLE PAGES"
+          echo "V15 SAMPLE PAGES"
           echo "========================================"
 
           python - <<'PY'
           import json
 
           with open(
-              "charts-index-v14.json",
+              "charts-index-v15.json",
               "r",
               encoding="utf-8"
           ) as f:
@@ -378,6 +304,7 @@ jobs:
               )
 
               if item:
+
                   print(
                       f"Page {page}: "
                       f"{item.get('category')} | "
@@ -388,18 +315,13 @@ jobs:
           PY
 
 
-      # ============================================================
-      # 10. Upload all results as Artifact
-      # ============================================================
-
-      - name: Upload V14 results
+      - name: Upload V15 results
         uses: actions/upload-artifact@v4
         with:
-          name: JeppIran-V14-results
+          name: JeppIran-V15-results
           path: |
-            charts-index-v9.json
             charts-index-v12.json
             charts-app-v12.json
-            charts-index-v14.json
-            charts-app-v14.json
-            charts-summary-v14.json
+            charts-index-v15.json
+            charts-app-v15.json
+            charts-summary-v15.json
