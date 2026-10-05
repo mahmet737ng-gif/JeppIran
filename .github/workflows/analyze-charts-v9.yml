@@ -12,10 +12,18 @@ jobs:
 
     steps:
 
+      # --------------------------------------------------
+      # Checkout
+      # --------------------------------------------------
+
       - name: Checkout repository with LFS
         uses: actions/checkout@v4
         with:
           lfs: true
+
+      # --------------------------------------------------
+      # Install Poppler
+      # --------------------------------------------------
 
       - name: Install Poppler
         shell: bash
@@ -23,11 +31,24 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y poppler-utils
 
+      # --------------------------------------------------
+      # Verify PDF
+      # --------------------------------------------------
+
       - name: Verify PDF
         shell: bash
         run: |
+          echo "Checking Iran2620.pdf..."
+
           ls -lh Iran2620.pdf
+
+          echo
+          echo "PDF information:"
           pdfinfo Iran2620.pdf | head -30
+
+      # --------------------------------------------------
+      # Extract PDF text
+      # --------------------------------------------------
 
       - name: Extract PDF text
         shell: bash
@@ -40,13 +61,22 @@ jobs:
           echo "PDF pages: $PAGES"
 
           for PAGE in $(seq 1 "$PAGES"); do
+
             pdftotext \
               -f "$PAGE" \
               -l "$PAGE" \
               -layout \
               Iran2620.pdf \
               "pdf-text/page-${PAGE}.txt"
+
           done
+
+          echo
+          echo "PDF text extraction completed."
+
+      # --------------------------------------------------
+      # V9 classifier
+      # --------------------------------------------------
 
       - name: Run V9 chart classifier
         shell: python
@@ -70,22 +100,57 @@ jobs:
 
           KNOWN_AIRPORTS = {
               "LTFM",
-              "OIAA", "OIAM", "OIAW",
-              "OIBB", "OIBK", "OIBP",
-              "OICC", "OICI", "OIFM",
-              "OIGG", "OIHH",
-              "OIIE", "OIII", "OIIP",
+
+              "OIAA",
+              "OIAM",
+              "OIAW",
+
+              "OIBB",
+              "OIBK",
+              "OIBP",
+
+              "OICC",
+              "OICI",
+              "OIFM",
+
+              "OIGG",
+              "OIHH",
+
+              "OIIE",
+              "OIII",
+              "OIIP",
+
               "OIKK",
-              "OIMB", "OIMM", "OIMN", "OIMS",
-              "OING", "OINZ",
+
+              "OIMB",
+              "OIMM",
+              "OIMN",
+              "OIMS",
+
+              "OING",
+              "OINZ",
+
               "OISS",
-              "OITL", "OITR", "OITT",
+
+              "OITL",
+              "OITR",
+              "OITT",
+
               "OIYY",
-              "OIZC", "OIZH",
-              "OMDB", "OOMS",
-              "ORBI", "ORNI",
+
+              "OIZC",
+              "OIZH",
+
+              "OMDB",
+              "OOMS",
+
+              "ORBI",
+              "ORNI",
+
               "UDYZ",
-              "UGSB", "UGTB",
+
+              "UGSB",
+              "UGTB",
           }
 
           FALSE_ICAO = {
@@ -97,23 +162,29 @@ jobs:
           }
 
           def read_page(page):
+
               path = os.path.join(
                   TEXT_DIR,
                   f"page-{page}.txt"
               )
 
               try:
+
                   with open(
                       path,
                       "r",
                       encoding="utf-8",
                       errors="ignore"
                   ) as f:
+
                       return f.read()
+
               except Exception:
+
                   return ""
 
           def normalize(text):
+
               return re.sub(
                   r"\s+",
                   " ",
@@ -121,6 +192,7 @@ jobs:
               ).strip()
 
           def find_airports(text):
+
               found = []
 
               pattern = re.compile(
@@ -197,7 +269,11 @@ jobs:
               if number.startswith("10-3"):
                   scores["SID"] += 80
 
-              if number.startswith("11-") or number.startswith("13-") or number.startswith("16-"):
+              if (
+                  number.startswith("11-")
+                  or number.startswith("13-")
+                  or number.startswith("16-")
+              ):
                   scores["Approach"] += 80
 
               if re.search(
@@ -231,7 +307,10 @@ jobs:
 
           current_airport = None
 
-          for page in range(1, pdf_pages + 1):
+          for page in range(
+              1,
+              pdf_pages + 1
+          ):
 
               text = read_page(page)
 
@@ -259,11 +338,13 @@ jobs:
                   continue
 
               if airport not in airport_data:
+
                   airport_data[airport] = {
                       "country": COUNTRY_PREFIXES.get(
                           airport[:2],
                           ""
                       ),
+
                       "charts": {
                           "Airport": [],
                           "STAR": [],
@@ -288,6 +369,7 @@ jobs:
               "w",
               encoding="utf-8"
           ) as f:
+
               json.dump(
                   pages,
                   f,
@@ -300,6 +382,7 @@ jobs:
               "w",
               encoding="utf-8"
           ) as f:
+
               json.dump(
                   airport_data,
                   f,
@@ -315,9 +398,14 @@ jobs:
           }
 
           for airport in airport_data.values():
+
               for category, items in airport["charts"].items():
+
                   summary["category_counts"][category] = (
-                      summary["category_counts"].get(category, 0)
+                      summary["category_counts"].get(
+                          category,
+                          0
+                      )
                       + len(items)
                   )
 
@@ -326,6 +414,7 @@ jobs:
               "w",
               encoding="utf-8"
           ) as f:
+
               json.dump(
                   summary,
                   f,
@@ -333,35 +422,218 @@ jobs:
                   indent=2
               )
 
+          print()
+          print("=" * 70)
+          print("V9 CLASSIFIER COMPLETE")
+          print("=" * 70)
+
+          print(
+              json.dumps(
+                  summary,
+                  ensure_ascii=False,
+                  indent=2
+              )
+          )
+
+      # --------------------------------------------------
+      # V12 naming
+      # --------------------------------------------------
+
       - name: Run V12 chart naming
         shell: bash
         run: |
+          echo "Running V12 chart naming..."
+
           python scripts/name_charts_v12.py
+
+          echo
+          echo "V12 naming completed."
+
+          echo
+          ls -lh charts-*v12.json
+
+      # --------------------------------------------------
+      # DEBUG V9 STRUCTURE
+      # --------------------------------------------------
+
+      - name: Debug V9 structure
+        shell: python
+        run: |
+          import json
+
+          print()
+          print("=" * 70)
+          print("DEBUG V9 STRUCTURE")
+          print("=" * 70)
+
+          with open(
+              "charts-index-v9.json",
+              "r",
+              encoding="utf-8"
+          ) as f:
+
+              data = json.load(f)
+
+          print()
+          print("ROOT TYPE:")
+          print(type(data))
+
+          if isinstance(data, dict):
+
+              print()
+              print("ROOT KEY COUNT:")
+              print(len(data.keys()))
+
+              print()
+              print("ROOT KEYS SAMPLE:")
+
+              for key in list(data.keys())[:20]:
+                  print(
+                      repr(key)
+                  )
+
+          print()
+          print("=" * 70)
+          print("SEARCHING FOR TARGET PAGES")
+          print("=" * 70)
+
+          targets = {
+              "OIAW": [29],
+              "OIII": [281],
+              "OIMM": [365],
+              "OIZC": [591],
+          }
+
+          found_targets = set()
+
+          def inspect(obj, path="ROOT"):
+
+              if isinstance(obj, dict):
+
+                  page = obj.get("page")
+                  airport = obj.get("airport")
+
+                  if page is not None:
+
+                      try:
+                          page_number = int(page)
+                      except Exception:
+                          page_number = None
+
+                      for icao, wanted_pages in targets.items():
+
+                          if (
+                              airport == icao
+                              and page_number in wanted_pages
+                          ):
+
+                              key = (
+                                  icao,
+                                  page_number
+                              )
+
+                              if key not in found_targets:
+
+                                  found_targets.add(key)
+
+                                  print()
+                                  print(
+                                      "=" * 70
+                                  )
+
+                                  print(
+                                      f"FOUND {icao} PAGE {page_number}"
+                                  )
+
+                                  print(
+                                      "=" * 70
+                                  )
+
+                                  print(
+                                      json.dumps(
+                                          obj,
+                                          ensure_ascii=False,
+                                          indent=2
+                                      )
+                                  )
+
+                  for key, value in obj.items():
+
+                      inspect(
+                          value,
+                          f"{path}.{key}"
+                      )
+
+              elif isinstance(obj, list):
+
+                  for index, value in enumerate(obj):
+
+                      inspect(
+                          value,
+                          f"{path}[{index}]"
+                      )
+
+          inspect(data)
+
+          print()
+          print("=" * 70)
+          print("TARGETS FOUND:")
+          print("=" * 70)
+
+          for key in sorted(found_targets):
+              print(
+                  f"{key[0]} PAGE {key[1]}"
+              )
+
+          print()
+          print("=" * 70)
+          print("DEBUG COMPLETE")
+          print("=" * 70)
+
+      # --------------------------------------------------
+      # Show V12 samples
+      # --------------------------------------------------
 
       - name: Show V12 samples
         shell: python
         run: |
           import json
 
+          print()
+          print("=" * 70)
+          print("V12 SAMPLE OUTPUT")
+          print("=" * 70)
+
           with open(
               "charts-app-v12.json",
               "r",
               encoding="utf-8"
           ) as f:
+
               data = json.load(f)
 
           tests = {
-              "OIAW": [29, 30, 31, 32, 33, 34, 35, 36, 37],
-              "OIII": [281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293,
-                       296, 297, 301, 302],
-              "OIMM": [365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376],
-              "OIZC": [589, 590, 591, 592, 593],
-          }
+              "OIAW": [
+                  29, 30, 31,
+                  32, 33, 34, 35, 36, 37
+              ],
 
-          print()
-          print("=" * 70)
-          print("V12 SAMPLE OUTPUT")
-          print("=" * 70)
+              "OIII": [
+                  281, 282, 283, 284, 285, 286,
+                  287, 288, 289, 290, 291, 292, 293,
+                  296, 297, 301, 302
+              ],
+
+              "OIMM": [
+                  365, 366, 367, 368,
+                  369, 370, 371, 372,
+                  373, 374, 375, 376
+              ],
+
+              "OIZC": [
+                  589, 590, 591, 592, 593
+              ],
+          }
 
           for icao, pages in tests.items():
 
@@ -370,8 +642,15 @@ jobs:
               print(icao)
               print("=" * 70)
 
-              airport = data.get(icao, {})
-              charts = airport.get("charts", {})
+              airport = data.get(
+                  icao,
+                  {}
+              )
+
+              charts = airport.get(
+                  "charts",
+                  {}
+              )
 
               for category, items in charts.items():
 
@@ -385,13 +664,25 @@ jobs:
                       continue
 
                   print()
-                  print(f"[{category}]")
+                  print(
+                      f"[{category}]"
+                  )
 
                   for item in selected:
+
                       print(
                           f"Page {item.get('page')}: "
                           f"{item.get('name')}"
                       )
+
+          print()
+          print("=" * 70)
+          print("V12 SAMPLE OUTPUT COMPLETE")
+          print("=" * 70)
+
+      # --------------------------------------------------
+      # Upload results
+      # --------------------------------------------------
 
       - name: Upload V12 results
         uses: actions/upload-artifact@v4
