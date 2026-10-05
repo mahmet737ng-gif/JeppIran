@@ -134,6 +134,14 @@ private val locationPermissionLauncher =
     }
 
 
+    private data class RenderedPageGeometry(
+        val pdfWidth: Int, val pdfHeight: Int,
+        val fullWidth: Int, val fullHeight: Int, val cropTop: Int = 0
+    )
+    private val renderGeometries = java.util.Collections.synchronizedMap(
+        java.util.WeakHashMap<Bitmap, RenderedPageGeometry>()
+    )
+
     private var positionResumed = false
     private var gpsGeneration = 0
     private var locationPermissionRequested = false
@@ -610,6 +618,7 @@ private val locationPermissionLauncher =
 
 
         chartViewBitmapCleanup()
+        renderGeometries.clear()
 
 
         renderer?.close()
@@ -2253,6 +2262,7 @@ private val locationPermissionLauncher =
                     )
 
 
+                val renderGeometry = RenderedPageGeometry(page.width, page.height, width, height)
                 bitmap.eraseColor(
                     Color.WHITE
                 )
@@ -2288,7 +2298,7 @@ private val locationPermissionLauncher =
                 if (
                     crop <= 0
                 ) {
-
+                    renderGeometries[bitmap] = renderGeometry
                     bitmap
 
                 } else {
@@ -2304,8 +2314,7 @@ private val locationPermissionLauncher =
 
 
                     bitmap.recycle()
-
-
+                    renderGeometries[cropped] = renderGeometry.copy(cropTop = crop)
                     cropped
                 }
             }
@@ -5714,27 +5723,16 @@ private val locationPermissionLauncher =
                 }
             } ?: return
 
-            val normalized =
-                ChartGeoreferenceStore.normalizedPoint(
-                    this@PdfViewerActivity,
-                    currentChartGlobalPage(),
-                    position.first,
-                    position.second
-                )
-                    ?: return
+            val geometry = renderGeometries[image] ?: return
+            val point = ChartGeoreferenceStore.renderedPoint(
+                this@PdfViewerActivity, currentChartGlobalPage(), position.first, position.second, position.third ?: 0.0,
+                CHART_DATA_VERSION, geometry.pdfWidth, geometry.pdfHeight,
+                geometry.fullWidth, geometry.fullHeight, geometry.cropTop, image.width, image.height
+            ) ?: return
+            val x = point.x
+            val y = point.y
 
-            val x = normalized.first * image.width
-            val y = normalized.second * image.height
-
-            if (x < -image.width * 0.05f ||
-                x > image.width * 1.05f ||
-                y < -image.height * 0.05f ||
-                y > image.height * 1.05f
-            ) {
-                return
-            }
-
-            val heading = position.third ?: 0.0
+            val heading = point.headingDegrees
             val size = min(image.width, image.height) * 0.018f
 
             val shadowPaint =

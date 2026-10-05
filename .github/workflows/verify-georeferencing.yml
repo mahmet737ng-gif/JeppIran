@@ -1,0 +1,58 @@
+name: Verify JeppIran Georeferencing and APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - fix/aircraft-position-lifecycle
+    paths:
+      - 'app/**'
+      - 'scripts/*georef*'
+      - 'docs/georeferencing/**'
+      - '.github/workflows/verify-georeferencing.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          lfs: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install georeferencing dependencies
+        run: python -m pip install -r scripts/requirements-georef.txt
+      - name: Validate every accepted chart against the PDF
+        run: python scripts/validate_chart_georef.py
+
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools'
+      - name: Install Android SDK
+        run: |
+          yes | sdkmanager --licenses > /dev/null || true
+          sdkmanager "platforms;android-36" "build-tools;36.0.0"
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Test chart projection and build APK
+        run: gradle testDebugUnitTest assembleDebug --stacktrace
+      - uses: actions/upload-artifact@v4
+        with:
+          name: JeppIran-georeferencing-debug
+          path: app/build/outputs/apk/debug/app-debug.apk
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: JeppIran-georeferencing-test-results
+          path: app/build/test-results/testDebugUnitTest/
