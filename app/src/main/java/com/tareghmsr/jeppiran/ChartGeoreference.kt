@@ -159,6 +159,48 @@ object ChartGeoreference {
         return references[key(icao, page)]
     }
 
+    fun projectToBitmap(
+        context: Context,
+        icao: String,
+        page: Int,
+        latitude: Double,
+        longitude: Double,
+        bitmapWidth: Int,
+        bitmapHeight: Int
+    ): PixelPosition? {
+        if (bitmapWidth <= 0 || bitmapHeight <= 0) return null
+
+        val reference = reference(context, icao, page) ?: return null
+        if (reference.width <= 0.0 || reference.height <= 0.0) return null
+
+        val projected = project(
+            context,
+            icao,
+            page,
+            latitude,
+            longitude
+        ) ?: return null
+
+        val x = projected.x.toDouble() *
+            bitmapWidth.toDouble() / reference.width
+        val y = projected.y.toDouble() *
+            bitmapHeight.toDouble() / reference.height
+
+        if (!x.isFinite() || !y.isFinite()) return null
+
+        if (
+            x < 0.0 ||
+            y < 0.0 ||
+            x > bitmapWidth.toDouble() ||
+            y > bitmapHeight.toDouble()
+        ) return null
+
+        return PixelPosition(
+            x.toFloat(),
+            y.toFloat()
+        )
+    }
+
     private fun key(icao: String, page: Int): String {
         return "${icao.trim().uppercase()}:$page"
     }
