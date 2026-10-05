@@ -108,7 +108,7 @@ class SimulatorActivity : AppCompatActivity() {
 
         portInput = EditText(this).apply {
             hint = "UDP port"
-            setText(SimulatorLocationStore.savedPort(this).toString())
+            setText(SimulatorLocationStore.savedPort(this@SimulatorActivity).toString())
             textSize = 16f
             inputType = InputType.TYPE_CLASS_NUMBER
             setSingleLine(true)
