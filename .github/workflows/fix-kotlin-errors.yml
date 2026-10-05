@@ -24,22 +24,27 @@ jobs:
           import re
 
 
-          FILES = {
-              "airport":
-                  Path(
-                      "app/src/main/java/com/tareghmsr/jeppiran/AirportChartsActivity.kt"
-                  ),
+          ROOT = Path(
+              "app/src/main/java/com/tareghmsr/jeppiran"
+          )
 
-              "charts":
-                  Path(
-                      "app/src/main/java/com/tareghmsr/jeppiran/ChartsActivity.kt"
-                  ),
 
-              "viewer":
-                  Path(
-                      "app/src/main/java/com/tareghmsr/jeppiran/PdfViewerActivity.kt"
-                  ),
-          }
+          AIRPORT_FILE = ROOT / "AirportChartsActivity.kt"
+          CHARTS_FILE = ROOT / "ChartsActivity.kt"
+          VIEWER_FILE = ROOT / "PdfViewerActivity.kt"
+
+
+          def read(path):
+              return path.read_text(
+                  encoding="utf-8"
+              )
+
+
+          def write(path, text):
+              path.write_text(
+                  text,
+                  encoding="utf-8"
+              )
 
 
           def replace_regex(
@@ -55,96 +60,80 @@ jobs:
                   flags=re.MULTILINE
               )
 
-              if count == 0:
-                  raise SystemExit(
-                      "Required code not found: "
-                      + description
-                  )
-
               print(
-                  "Fixed:",
                   description,
-                  "matches:",
-                  count
+                  "->",
+                  count,
+                  "replacement(s)"
               )
 
               return new_text
+
+
+          def ensure_import(
+              text,
+              import_line,
+              anchor
+          ):
+              if import_line in text:
+                  return text
+
+              return text.replace(
+                  anchor,
+                  import_line + "\n" + anchor,
+                  1
+              )
 
 
           # ==================================================
           # AirportChartsActivity.kt
           # ==================================================
 
-          path = FILES["airport"]
-
-          text = path.read_text(
-              encoding="utf-8"
+          text = read(
+              AIRPORT_FILE
           )
 
 
-          # repository.airportName(icao)
           text = replace_regex(
               text,
-
               r"""repository\s*\.\s*airportName\s*\(\s*icao\s*\)""",
-
-              """ChartRepository.airportName(icao)""",
-
+              "ChartRepository.airportName(icao)",
               "AirportChartsActivity airportName"
           )
 
 
-          # repository.city(icao)
           text = replace_regex(
               text,
-
               r"""repository\s*\.\s*city\s*\(\s*icao\s*\)""",
-
-              """ChartRepository.city(icao)""",
-
+              "ChartRepository.city(icao)",
               "AirportChartsActivity city"
           )
 
 
-          # ScrollView.LayoutParams -> FrameLayout.LayoutParams
-          text = replace_regex(
-              text,
-
-              r"""ScrollView\.LayoutParams""",
-
-              """FrameLayout.LayoutParams""",
-
-              "AirportChartsActivity ScrollView LayoutParams"
+          # Fix HorizontalScrollView first.
+          text = text.replace(
+              "HorizontalScrollView.LayoutParams",
+              "ViewGroup.LayoutParams"
           )
 
 
-          # HorizontalScrollView.LayoutParams -> FrameLayout.LayoutParams
-          text = replace_regex(
-              text,
-
-              r"""HorizontalScrollView\.LayoutParams""",
-
-              """FrameLayout.LayoutParams""",
-
-              "AirportChartsActivity HorizontalScrollView LayoutParams"
+          # Fix normal ScrollView params.
+          text = text.replace(
+              "ScrollView.LayoutParams",
+              "ViewGroup.LayoutParams"
           )
 
 
-          # Make sure FrameLayout is imported.
-          if (
-              "import android.widget.FrameLayout"
-              not in text
-          ):
-              text = text.replace(
-                  "import android.widget.HorizontalScrollView",
-                  "import android.widget.FrameLayout\n"
-                  "import android.widget.HorizontalScrollView"
-              )
-
-
-          path.write_text(
+          text = ensure_import(
               text,
-              encoding="utf-8"
+              "import android.view.ViewGroup",
+              "import android.view.View"
+          )
+
+
+          write(
+              AIRPORT_FILE,
+              text
           )
 
 
@@ -152,39 +141,27 @@ jobs:
           # ChartsActivity.kt
           # ==================================================
 
-          path = FILES["charts"]
-
-          text = path.read_text(
-              encoding="utf-8"
+          text = read(
+              CHARTS_FILE
           )
 
 
-          # ScrollView.LayoutParams -> FrameLayout.LayoutParams
-          text = replace_regex(
-              text,
-
-              r"""ScrollView\.LayoutParams""",
-
-              """FrameLayout.LayoutParams""",
-
-              "ChartsActivity ScrollView LayoutParams"
+          text = text.replace(
+              "ScrollView.LayoutParams",
+              "ViewGroup.LayoutParams"
           )
 
 
-          if (
-              "import android.widget.FrameLayout"
-              not in text
-          ):
-              text = text.replace(
-                  "import android.widget.EditText",
-                  "import android.widget.FrameLayout\n"
-                  "import android.widget.EditText"
-              )
-
-
-          path.write_text(
+          text = ensure_import(
               text,
-              encoding="utf-8"
+              "import android.view.ViewGroup",
+              "import android.view.Gravity"
+          )
+
+
+          write(
+              CHARTS_FILE,
+              text
           )
 
 
@@ -192,166 +169,349 @@ jobs:
           # PdfViewerActivity.kt
           # ==================================================
 
-          path = FILES["viewer"]
-
-          text = path.read_text(
-              encoding="utf-8"
+          text = read(
+              VIEWER_FILE
           )
 
 
-          # repository.airport(currentIcao)
+          # Repository airport lookup must use the companion object.
           text = replace_regex(
               text,
-
               r"""repository\s*\.\s*airport\s*\(\s*currentIcao\s*\)""",
-
-              """ChartRepository.airport(currentIcao)""",
-
+              "ChartRepository.airport(currentIcao)",
               "PdfViewerActivity airport lookup"
           )
 
 
-          # HorizontalScrollView.LayoutParams
-          text = replace_regex(
-              text,
-
-              r"""HorizontalScrollView\.LayoutParams""",
-
-              """FrameLayout.LayoutParams""",
-
-              "PdfViewerActivity HorizontalScrollView LayoutParams"
+          # Fix HorizontalScrollView params.
+          text = text.replace(
+              "HorizontalScrollView.LayoutParams",
+              "ViewGroup.LayoutParams"
           )
 
 
-          # Permission callback type.
-          text = replace_regex(
+          # Ensure ViewGroup import.
+          text = ensure_import(
               text,
-
-              r"""Array<out\s+String>""",
-
-              """Array<String>""",
-
-              "PdfViewerActivity permission array"
+              "import android.view.ViewGroup",
+              "import android.view.View"
           )
 
 
-          # Double -> Float for text hit testing.
-          text = replace_regex(
-              text,
+          # --------------------------------------------------
+          # Replace old runtime permission callback completely.
+          # --------------------------------------------------
 
-              r"""(\.contains\(\s*\n?\s*)localX(\s*,\s*)localY(\s*\))""",
-
-              r"""\1localX.toFloat()\2localY.toFloat()\3""",
-
-              "PdfViewerActivity text bounds Float conversion"
+          permission_pattern = re.compile(
+              r"""
+              \n\s*
+              override\s+fun\s+onRequestPermissionsResult\s*
+              \(
+                  \s*requestCode\s*:\s*Int\s*,\s*
+                  permissions\s*:\s*Array<out\s+String>\s*,\s*
+                  grantResults\s*:\s*IntArray\s*
+              \)
+              \s*\{
+              .*?
+              \n\s*\}
+              \s*
+              (?=\n\s*(?:private|override|fun|companion|class|object)\b)
+              """,
+              flags=re.DOTALL | re.VERBOSE
           )
+
+
+          text, permission_count = permission_pattern.subn(
+              "\n",
+              text,
+              count=1
+          )
+
+
+          print(
+              "Old permission callback removed:",
+              permission_count
+          )
+
+
+          # --------------------------------------------------
+          # Add Activity Result API import.
+          # --------------------------------------------------
+
+          text = ensure_import(
+              text,
+              "import androidx.activity.result.contract.ActivityResultContracts",
+              "import androidx.activity.ComponentActivity"
+          )
+
+
+          # --------------------------------------------------
+          # Remove old ActivityCompat permission request.
+          # The GPS launcher will replace it.
+          # --------------------------------------------------
+
+          request_pattern = re.compile(
+              r"""
+              \s*ActivityCompat\.requestPermissions\s*
+              \(
+                  \s*this\s*,\s*
+                  arrayOf\s*
+                  \(
+                      \s*Manifest\.permission\s*
+                      \.\s*ACCESS_FINE_LOCATION\s*,\s*
+                      Manifest\.permission\s*
+                      \.\s*ACCESS_COARSE_LOCATION
+                  \s*\)\s*,\s*
+                  GPS_PERMISSION_REQUEST
+              \s*\)
+              """,
+              flags=re.DOTALL | re.VERBOSE
+          )
+
+
+          text, request_count = request_pattern.subn(
+              """
+              locationPermissionLauncher.launch(
+                  arrayOf(
+                      Manifest.permission.ACCESS_FINE_LOCATION,
+                      Manifest.permission.ACCESS_COARSE_LOCATION
+                  )
+              )
+              """,
+              text,
+              count=1
+          )
+
+
+          print(
+              "Old permission request replaced:",
+              request_count
+          )
+
+
+          # --------------------------------------------------
+          # Add Activity Result launcher property.
+          # --------------------------------------------------
+
+          launcher_code = """
+          private val locationPermissionLauncher =
+              registerForActivityResult(
+                  ActivityResultContracts.RequestMultiplePermissions()
+              ) { result ->
+
+                  val granted =
+                      result.values.any {
+                          it
+                      }
+
+                  if (granted) {
+
+                      startGps()
+
+                  } else {
+
+                      updateGpsText(
+                          "GPS: permission denied"
+                      )
+                  }
+              }
+
+
+          """
 
 
           if (
-              "import android.widget.FrameLayout"
+              "private val locationPermissionLauncher"
               not in text
           ):
+
+              marker = "class PdfViewerActivity :\n    ComponentActivity() {\n"
+
+              if marker not in text:
+
+                  raise SystemExit(
+                      "PdfViewerActivity class marker not found"
+                  )
+
               text = text.replace(
-                  "import android.widget.EditText",
-                  "import android.widget.FrameLayout\n"
-                  "import android.widget.EditText"
+                  marker,
+                  marker + "\n" + launcher_code,
+                  1
               )
 
 
-          path.write_text(
+          # --------------------------------------------------
+          # Convert text hit-test coordinates to Float.
+          # --------------------------------------------------
+
+          text = replace_regex(
               text,
-              encoding="utf-8"
+
+              r"""measureTextBounds\(\s*item\s*\)\.contains\(\s*
+                  localX\s*,\s*
+                  localY\s*
+              \)""",
+
+              """measureTextBounds(
+                            item
+                        ).contains(
+                            localX.toFloat(),
+                            localY.toFloat()
+                        )""",
+
+              "PdfViewerActivity localX/localY Float conversion"
+          )
+
+
+          write(
+              VIEWER_FILE,
+              text
           )
 
 
           # ==================================================
-          # FINAL CHECK
+          # Verification
           # ==================================================
 
           print()
           print("=" * 70)
-          print("FINAL SOURCE CHECK")
+          print("VERIFYING KOTLIN FILES")
           print("=" * 70)
 
 
-          airport_text = FILES["airport"].read_text(
-              encoding="utf-8"
+          airport_text = read(
+              AIRPORT_FILE
           )
 
-          charts_text = FILES["charts"].read_text(
-              encoding="utf-8"
+          charts_text = read(
+              CHARTS_FILE
           )
 
-          viewer_text = FILES["viewer"].read_text(
-              encoding="utf-8"
+          viewer_text = read(
+              VIEWER_FILE
           )
 
 
+          # These old references must no longer exist.
           forbidden = [
+
               (
                   "AirportChartsActivity",
-                  r"repository\s*\.\s*airportName",
-                  airport_text
+                  r"repository\s*\.\s*airportName"
               ),
 
               (
                   "AirportChartsActivity",
-                  r"repository\s*\.\s*city",
-                  airport_text
+                  r"repository\s*\.\s*city"
               ),
 
               (
                   "AirportChartsActivity",
-                  r"ScrollView\.LayoutParams",
-                  airport_text
+                  r"ScrollView\.LayoutParams"
               ),
 
               (
                   "AirportChartsActivity",
-                  r"HorizontalScrollView\.LayoutParams",
-                  airport_text
+                  r"HorizontalScrollView\.LayoutParams"
               ),
 
               (
                   "ChartsActivity",
-                  r"ScrollView\.LayoutParams",
-                  charts_text
+                  r"ScrollView\.LayoutParams"
               ),
 
               (
                   "PdfViewerActivity",
-                  r"repository\s*\.\s*airport",
-                  viewer_text
+                  r"repository\s*\.\s*airport\s*\("
               ),
 
               (
                   "PdfViewerActivity",
-                  r"HorizontalScrollView\.LayoutParams",
-                  viewer_text
+                  r"HorizontalScrollView\.LayoutParams"
               ),
 
               (
                   "PdfViewerActivity",
-                  r"Array<out\s+String>",
-                  viewer_text
+                  r"onRequestPermissionsResult"
+              ),
+
+              (
+                  "PdfViewerActivity",
+                  r"Array<out\s+String>"
               ),
           ]
 
 
-          for name, pattern, content in forbidden:
+          checks = {
+              "AirportChartsActivity": airport_text,
+              "ChartsActivity": charts_text,
+              "PdfViewerActivity": viewer_text,
+          }
+
+
+          for file_name, pattern in forbidden:
+
+              content = checks[file_name]
 
               if re.search(
                   pattern,
                   content
               ):
+
                   raise SystemExit(
-                      name
+                      file_name
                       + " still contains forbidden pattern: "
                       + pattern
                   )
 
 
-          print()
+          required_imports = [
+
+              (
+                  "AirportChartsActivity",
+                  "import android.view.ViewGroup"
+              ),
+
+              (
+                  "ChartsActivity",
+                  "import android.view.ViewGroup"
+              ),
+
+              (
+                  "PdfViewerActivity",
+                  "import android.view.ViewGroup"
+              ),
+
+              (
+                  "PdfViewerActivity",
+                  "import androidx.activity.result.contract.ActivityResultContracts"
+              ),
+          ]
+
+
+          for file_name, required in required_imports:
+
+              content = checks[file_name]
+
+              if required not in content:
+
+                  raise SystemExit(
+                      file_name
+                      + " is missing import: "
+                      + required
+                  )
+
+
+          if (
+              "private val locationPermissionLauncher"
+              not in viewer_text
+          ):
+
+              raise SystemExit(
+                  "GPS permission launcher was not created"
+              )
+
+
           print(
               "AirportChartsActivity.kt: OK"
           )
@@ -366,7 +526,7 @@ jobs:
 
           print()
           print(
-              "All Kotlin source fixes completed successfully."
+              "All source fixes verified."
           )
 
           print("=" * 70)
@@ -376,7 +536,7 @@ jobs:
       - name: Show changes
         shell: bash
         run: |
-          echo "Changed files:"
+          echo "Git status:"
           git status --short
 
           echo
@@ -401,7 +561,7 @@ jobs:
 
 
           if git diff --cached --quiet; then
-            echo "No changes detected."
+            echo "No source changes detected."
             exit 0
           fi
 
@@ -414,27 +574,6 @@ jobs:
 
 
           git rebase origin/main
-
-
-          git push origin HEAD:main
-
-
-      - name: Remove temporary fixer
-        shell: bash
-        run: |
-          git config user.name \
-            "github-actions[bot]"
-
-          git config user.email \
-            "41898282+github-actions[bot]@users.noreply.github.com"
-
-
-          git rm \
-            ".github/workflows/fix-kotlin-errors.yml"
-
-
-          git commit \
-            -m "Remove temporary Kotlin fixer workflow"
 
 
           git push origin HEAD:main
