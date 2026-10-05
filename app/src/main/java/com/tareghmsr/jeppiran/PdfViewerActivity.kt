@@ -80,6 +80,10 @@ private val locationPermissionLauncher =
                 it
             }
 
+        if (!positionResumed || !AircraftPositionStore.isEnabled(this)) {
+            return@registerForActivityResult
+        }
+
         if (granted) {
 
             startGps()
@@ -129,6 +133,10 @@ private val locationPermissionLauncher =
             0.22f
     }
 
+
+    private var positionResumed = false
+    private var gpsGeneration = 0
+    private var locationPermissionRequested = false
 
     private var renderer:
         PdfRenderer? =
@@ -543,6 +551,22 @@ private val locationPermissionLauncher =
         )
     }
 
+
+    override fun onResume() {
+        super.onResume()
+        positionResumed = true
+        if (::aircraftPositionButton.isInitialized) {
+            updateToggleButton(aircraftPositionButton, AircraftPositionStore.isEnabled(this))
+        }
+        startGps()
+    }
+
+    override fun onPause() {
+        positionResumed = false
+        stopGps()
+        handler.removeCallbacks(simulatorUpdateRunnable)
+        super.onPause()
+    }
 
     override fun onDestroy() {
 
@@ -1222,12 +1246,6 @@ private val locationPermissionLauncher =
 
         applyInsets()
 
-        if (AircraftPositionStore.isEnabled(this)) {
-            startGps()
-        } else {
-            updateGpsText("Aircraft position OFF")
-        }
-
         startMetarPolling()
     }
 
@@ -1451,6 +1469,7 @@ private val locationPermissionLauncher =
             )
 
             if (enabled) {
+                locationPermissionRequested = false
                 startGps()
                 updateGpsLabel()
             } else {
@@ -4272,6 +4291,9 @@ private val locationPermissionLauncher =
     private val simulatorUpdateRunnable =
         object : Runnable {
             override fun run() {
+                if (!positionResumed || !AircraftPositionStore.isEnabled(this@PdfViewerActivity)) {
+                    return
+                }
                 updateSimulatorLabel()
 
                 if (
@@ -4287,6 +4309,7 @@ private val locationPermissionLauncher =
 
 
     private fun startGps() {
+        if (!positionResumed) return
 
         if (
             !AircraftPositionStore.isEnabled(this)
@@ -4316,6 +4339,9 @@ private val locationPermissionLauncher =
         handler.removeCallbacks(
             simulatorUpdateRunnable
         )
+
+        // Remove any previous listener before registering a new one.
+        stopGps()
 
         locationManager =
             getSystemService(
@@ -4358,12 +4384,15 @@ private val locationPermissionLauncher =
             updateGpsText(
                 "GPS: permission required"
             )
-    locationPermissionLauncher.launch(
-        arrayOf(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            Manifest.permission.ACCESS_COARSE_LOCATION
-        )
-    )
+            if (!locationPermissionRequested) {
+                locationPermissionRequested = true
+                locationPermissionLauncher.launch(
+                    arrayOf(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                    )
+                )
+            }
     
 
 
@@ -4411,6 +4440,7 @@ private val locationPermissionLauncher =
         }
 
 
+        val generation = gpsGeneration
         locationListener =
             object :
                 LocationListener {
@@ -4418,6 +4448,12 @@ private val locationPermissionLauncher =
                 override fun onLocationChanged(
                     location: Location
                 ) {
+
+                    if (!positionResumed ||
+                        generation != gpsGeneration ||
+                        !AircraftPositionStore.isEnabled(this@PdfViewerActivity) ||
+                        SimulatorLocationStore.isConnected()
+                    ) return
 
                     lastGpsLocation =
                         location
@@ -4441,20 +4477,6 @@ private val locationPermissionLauncher =
                 )
 
 
-                val last =
-                    manager.getLastKnownLocation(
-                        provider
-                    )
-
-
-                if (
-                    last != null
-                ) {
-
-                    lastGpsLocation =
-                        last
-                }
-
             } catch (
                 _: SecurityException
             ) {
@@ -4467,37 +4489,25 @@ private val locationPermissionLauncher =
 
 
     private fun stopGps() {
+        // Invalidate queued callbacks even when no listener was registered.
+        gpsGeneration++
+        val manager = locationManager
+        val listener = locationListener
+        locationListener = null
+        locationManager = null
+        lastGpsLocation = null
 
-        val manager =
-            locationManager
-                ?: return
-
-
-        val listener =
-            locationListener
-                ?: return
-
-
-        try {
-
-            manager.removeUpdates(
-                listener
-            )
-
-        } catch (
-            _: SecurityException
-        ) {
+        if (manager != null && listener != null) {
+            try {
+                manager.removeUpdates(listener)
+            } catch (_: SecurityException) {
+            }
         }
-
-
-        locationListener =
-            null
-
-        locationManager =
-            null
+        if (::chartView.isInitialized) chartView.invalidate()
     }
 
     private fun updateGpsLabel() {
+        if (!positionResumed || !AircraftPositionStore.isEnabled(this)) return
 
         if (
             SimulatorLocationStore.isConnected()
@@ -4549,6 +4559,7 @@ private val locationPermissionLauncher =
 
 
     private fun updateSimulatorLabel() {
+        if (!positionResumed || !AircraftPositionStore.isEnabled(this)) return
 
         val position =
             SimulatorLocationStore.getPosition()
@@ -5689,27 +5700,19 @@ private val locationPermissionLauncher =
             canvas: Canvas,
             image: Bitmap
         ) {
-            if (!AircraftPositionStore.isEnabled(this@PdfViewerActivity)) {
+            if (!positionResumed || !AircraftPositionStore.isEnabled(this@PdfViewerActivity)) {
                 return
             }
 
-            val position =
-                SimulatorLocationStore.getPosition()
-                    ?.let {
-                        Triple(
-                            it.latitude,
-                            it.longitude,
-                            it.headingDegrees
-                        )
-                    }
-                    ?: lastGpsLocation?.let {
-                        Triple(
-                            it.latitude,
-                            it.longitude,
-                            it.bearing.toDouble()
-                        )
-                    }
-                    ?: return
+            val position = if (SimulatorLocationStore.isConnected()) {
+                SimulatorLocationStore.getPosition()?.let {
+                    Triple(it.latitude, it.longitude, it.headingDegrees)
+                }
+            } else {
+                lastGpsLocation?.let {
+                    Triple(it.latitude, it.longitude, it.bearing.toDouble())
+                }
+            } ?: return
 
             val normalized =
                 ChartGeoreferenceStore.normalizedPoint(
