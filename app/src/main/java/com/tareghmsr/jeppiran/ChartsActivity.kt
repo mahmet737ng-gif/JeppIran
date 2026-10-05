@@ -51,34 +51,57 @@ class ChartsActivity : ComponentActivity() {
 
             val root = JSONObject(jsonText)
 
-            val airports = root.getJSONArray("airports")
-
-            val airportList = findViewById<LinearLayout>(R.id.airportList)
+            val airportList =
+                findViewById<LinearLayout>(R.id.airportList)
 
             airportList.removeAllViews()
 
-            for (i in 0 until airports.length()) {
+            val keys = root.keys()
 
-                val airport = airports.getJSONObject(i)
+            while (keys.hasNext()) {
 
-                val icao = airport.getString("icao")
-                val name = airport.optString("name", "")
-                val country = airport.optString("country", "")
+                val icao = keys.next()
+
+                val airport = root.getJSONObject(icao)
+
+                val country =
+                    airport.optString("country", "")
+
+                val charts =
+                    airport.optJSONObject("charts")
+
+                var chartCount = 0
+
+                if (charts != null) {
+
+                    val categories = charts.keys()
+
+                    while (categories.hasNext()) {
+
+                        val category = categories.next()
+
+                        val items =
+                            charts.optJSONArray(category)
+
+                        if (items != null) {
+                            chartCount += items.length()
+                        }
+                    }
+                }
 
                 val card = TextView(this)
 
                 card.text = buildString {
+
                     append(icao)
 
-                    if (name.isNotBlank()) {
-                        append("  ")
-                        append(name)
-                    }
-
                     if (country.isNotBlank()) {
-                        append("\n")
+                        append("  •  ")
                         append(country)
                     }
+
+                    append("\n")
+                    append("$chartCount charts")
                 }
 
                 card.textSize = 17f
@@ -91,9 +114,10 @@ class ChartsActivity : ComponentActivity() {
                 )
 
                 card.setOnClickListener {
+
                     Toast.makeText(
                         this,
-                        "Airport: $icao",
+                        "$icao\n$chartCount charts",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
