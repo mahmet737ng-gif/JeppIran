@@ -3,13 +3,13 @@ package com.tareghmsr.jeppiran
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class MainActivity :
-    ComponentActivity() {
+    AppCompatActivity() {
 
     override fun onCreate(
         savedInstanceState: Bundle?

@@ -6,11 +6,11 @@ import android.os.Bundle
 import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.enableEdgeToEdge
 
 class SettingsActivity :
-    ComponentActivity() {
+    AppCompatActivity() {
 
     override fun onCreate(
         savedInstanceState: Bundle?

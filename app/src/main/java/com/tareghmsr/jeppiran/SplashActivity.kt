@@ -17,19 +17,23 @@ import android.os.Looper
 import android.view.View
 import android.view.WindowInsetsController
 import android.view.animation.DecelerateInterpolator
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import kotlin.math.atan2
 import kotlin.math.sin
 
-class SplashActivity : ComponentActivity() {
+class SplashActivity : AppCompatActivity() {
 
     private val splashDuration = 3000L
 
     override fun onCreate(
         savedInstanceState: Bundle?
     ) {
+
+        ThemeManager.apply(
+            this
+        )
         super.onCreate(
             savedInstanceState
         )

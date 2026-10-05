@@ -13,13 +13,13 @@ import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class AirportChartsActivity :
-    ComponentActivity() {
+    AppCompatActivity() {
 
     private lateinit var root:
         LinearLayout
@@ -364,50 +364,57 @@ class AirportChartsActivity :
                 )
             }
 
-        portraitCategoryScroll =
-            HorizontalScrollView(
-                this
-            ).apply {
-
-                isHorizontalScrollBarEnabled =
-                    false
-
-                overScrollMode =
-                    HorizontalScrollView.OVER_SCROLL_IF_CONTENT_SCROLLS
-
-                addView(
-                    categoryContainer,
-                    ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.WRAP_CONTENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                    )
-                )
-            }
-
-        landscapeCategoryScroll =
-            ScrollView(
-                this
-            ).apply {
-
-                isVerticalScrollBarEnabled =
-                    false
-
-                overScrollMode =
-                    ScrollView.OVER_SCROLL_IF_CONTENT_SCROLLS
-
-                addView(
-                    categoryContainer,
-                    ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                    )
-                )
-            }
-
         val landscape =
             resources.configuration.orientation ==
                 Configuration.ORIENTATION_LANDSCAPE
 
+
+        if (
+            landscape
+        ) {
+
+            landscapeCategoryScroll =
+                ScrollView(
+                    this
+                ).apply {
+
+                    isVerticalScrollBarEnabled =
+                        false
+
+                    overScrollMode =
+                        ScrollView.OVER_SCROLL_IF_CONTENT_SCROLLS
+
+                    addView(
+                        categoryContainer,
+                        ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT
+                        )
+                    )
+                }
+
+        } else {
+
+            portraitCategoryScroll =
+                HorizontalScrollView(
+                    this
+                ).apply {
+
+                    isHorizontalScrollBarEnabled =
+                        false
+
+                    overScrollMode =
+                        HorizontalScrollView.OVER_SCROLL_IF_CONTENT_SCROLLS
+
+                    addView(
+                        categoryContainer,
+                        ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                        )
+                    )
+                }
+        }
         if (
             landscape
         ) {

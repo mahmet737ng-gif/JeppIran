@@ -43,7 +43,7 @@ import android.widget.ProgressBar
 import android.widget.ScrollView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.ComponentActivity
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
@@ -67,7 +67,7 @@ import kotlin.math.sqrt
 
 
 class PdfViewerActivity :
-    ComponentActivity() {
+    AppCompatActivity() {
 
 
 private val locationPermissionLauncher =

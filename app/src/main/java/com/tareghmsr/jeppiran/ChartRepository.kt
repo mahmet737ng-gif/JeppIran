@@ -71,217 +71,217 @@ class ChartRepository(
 
                 AirportInfo(
                     "LTFM",
-                    "ISTANBUL",
+                    "ISTANBUL AIRPORT",
                     "ISTANBUL"
                 ),
 
                 AirportInfo(
                     "OIAA",
-                    "ABADAN",
+                    "ABADAN AIRPORT",
                     "ABADAN"
                 ),
 
                 AirportInfo(
                     "OIAM",
-                    "MAHSHAHR",
+                    "MAHSHAHR AIRPORT",
                     "MAHSHAHR"
                 ),
 
                 AirportInfo(
                     "OIAW",
-                    "AHWAZ",
+                    "AHWAZ AIRPORT",
                     "AHWAZ"
                 ),
 
                 AirportInfo(
                     "OIBB",
-                    "BUSHEHR",
+                    "BUSHEHR AIRPORT",
                     "BUSHEHR"
                 ),
 
                 AirportInfo(
                     "OIBK",
-                    "KISH",
-                    "KISH"
+                    "KISH ISLAND",
+                    "KISH ISLAND"
                 ),
 
                 AirportInfo(
                     "OIBP",
-                    "ASALOUYEH",
+                    "ASALOUYEH AIRPORT",
                     "ASALOUYEH"
                 ),
 
                 AirportInfo(
                     "OICC",
-                    "KERMANSHAH",
+                    "KERMANSHAH AIRPORT",
                     "KERMANSHAH"
                 ),
 
                 AirportInfo(
                     "OICI",
-                    "ILAM",
+                    "ILAM AIRPORT",
                     "ILAM"
                 ),
 
                 AirportInfo(
                     "OIFM",
-                    "ISFAHAN",
+                    "ISFAHAN AIRPORT",
                     "ISFAHAN"
                 ),
 
                 AirportInfo(
                     "OIGG",
-                    "RASHT",
+                    "RASHT AIRPORT",
                     "RASHT"
                 ),
 
                 AirportInfo(
                     "OIHH",
-                    "HAMADAN",
+                    "HAMADAN AIRPORT",
                     "HAMADAN"
                 ),
 
                 AirportInfo(
                     "OIIE",
-                    "IMAM KHOMEINI",
+                    "IMAM KHOMEINI INTERNATIONAL",
                     "TEHRAN"
                 ),
 
                 AirportInfo(
                     "OIII",
-                    "MEHRABAD",
+                    "MEHRABAD INTERNATIONAL",
                     "TEHRAN"
                 ),
 
                 AirportInfo(
                     "OIIP",
-                    "KARAJ",
+                    "KARAJ AIRPORT",
                     "KARAJ"
                 ),
 
                 AirportInfo(
                     "OIKK",
-                    "KERMAN",
+                    "KERMAN AIRPORT",
                     "KERMAN"
                 ),
 
                 AirportInfo(
                     "OIMB",
-                    "BIRJAND",
+                    "BIRJAND AIRPORT",
                     "BIRJAND"
                 ),
 
                 AirportInfo(
                     "OIMM",
-                    "MASHHAD",
+                    "MASHHAD INTERNATIONAL",
                     "MASHHAD"
                 ),
 
                 AirportInfo(
                     "OIMN",
-                    "BOJNURD",
+                    "BOJNURD AIRPORT",
                     "BOJNURD"
                 ),
 
                 AirportInfo(
                     "OIMS",
-                    "SABZEVAR",
+                    "SABZEVAR AIRPORT",
                     "SABZEVAR"
                 ),
 
                 AirportInfo(
                     "OING",
-                    "GORGAN",
+                    "GORGAN AIRPORT",
                     "GORGAN"
                 ),
 
                 AirportInfo(
                     "OINZ",
-                    "SARI",
+                    "SARI AIRPORT",
                     "SARI"
                 ),
 
                 AirportInfo(
                     "OISS",
-                    "SHIRAZ",
+                    "SHIRAZ INTERNATIONAL",
                     "SHIRAZ"
                 ),
 
                 AirportInfo(
                     "OITL",
-                    "ARDABIL",
+                    "ARDABIL AIRPORT",
                     "ARDABIL"
                 ),
 
                 AirportInfo(
                     "OITR",
-                    "URMIA",
+                    "URMIA AIRPORT",
                     "URMIA"
                 ),
 
                 AirportInfo(
                     "OITT",
-                    "TABRIZ",
+                    "TABRIZ INTERNATIONAL",
                     "TABRIZ"
                 ),
 
                 AirportInfo(
                     "OIYY",
-                    "YAZD",
+                    "YAZD AIRPORT",
                     "YAZD"
                 ),
 
                 AirportInfo(
                     "OIZC",
-                    "CHABAHAR",
+                    "CHABAHAR AIRPORT",
                     "CHABAHAR"
                 ),
 
                 AirportInfo(
                     "OIZH",
-                    "ZAHEDAN",
+                    "ZAHEDAN INTERNATIONAL",
                     "ZAHEDAN"
                 ),
 
                 AirportInfo(
                     "OMDB",
-                    "DUBAI INTL",
+                    "DUBAI INTERNATIONAL",
                     "DUBAI"
                 ),
 
                 AirportInfo(
                     "OOMS",
-                    "MUSCAT INTL",
+                    "MUSCAT INTERNATIONAL",
                     "MUSCAT"
                 ),
 
                 AirportInfo(
                     "ORBI",
-                    "BAGHDAD INTL",
+                    "BAGHDAD INTERNATIONAL",
                     "BAGHDAD"
                 ),
 
                 AirportInfo(
                     "ORNI",
-                    "NAJAF",
+                    "NAJAF INTERNATIONAL",
                     "NAJAF"
                 ),
 
                 AirportInfo(
                     "UDYZ",
-                    "ZVARTNOTS",
+                    "ZVARTNOTS INTERNATIONAL",
                     "YEREVAN"
                 ),
 
                 AirportInfo(
                     "UGSB",
-                    "BATUMI",
+                    "BATUMI INTERNATIONAL",
                     "BATUMI"
                 ),
 
                 AirportInfo(
                     "UGTB",
-                    "TBILISI",
+                    "TBILISI INTERNATIONAL",
                     "TBILISI"
                 )
             )
