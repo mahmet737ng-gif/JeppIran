@@ -1034,7 +1034,10 @@ jobs:
                   indent=2
               )
           )
-
+      - name: Add chart names V10
+        shell: python
+        run: |
+          python scripts/name_charts_v10.py
       - name: Upload V9 results
         uses: actions/upload-artifact@v4
         with:
