@@ -1,0 +1,419 @@
+name: Fix JeppIran Kotlin Compilation Errors
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/fix-kotlin-errors.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  fix-kotlin:
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+
+      - name: Fix Kotlin source files
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+
+          files = {
+              "airport":
+                  Path(
+                      "app/src/main/java/com/tareghmsr/jeppiran/AirportChartsActivity.kt"
+                  ),
+
+              "charts":
+                  Path(
+                      "app/src/main/java/com/tareghmsr/jeppiran/ChartsActivity.kt"
+                  ),
+
+              "viewer":
+                  Path(
+                      "app/src/main/java/com/tareghmsr/jeppiran/PdfViewerActivity.kt"
+                  ),
+          }
+
+
+          def replace_required(
+              text,
+              old,
+              new,
+              description
+          ):
+              if old not in text:
+                  raise SystemExit(
+                      "Required code not found: "
+                      + description
+                  )
+
+              return text.replace(
+                  old,
+                  new
+              )
+
+
+          # ==================================================
+          # AirportChartsActivity.kt
+          # ==================================================
+
+          path = files["airport"]
+
+          text = path.read_text(
+              encoding="utf-8"
+          )
+
+
+          if "import android.widget.FrameLayout\n" not in text:
+
+              text = text.replace(
+                  "import android.graphics.drawable.GradientDrawable\n",
+                  "import android.graphics.drawable.GradientDrawable\n"
+                  "import android.widget.FrameLayout\n"
+              )
+
+
+          text = replace_required(
+              text,
+
+              """repository
+                    .airportName(""",
+
+              """ChartRepository
+                    .airportName(""",
+
+              "AirportChartsActivity repository.airportName"
+          )
+
+
+          text = replace_required(
+              text,
+
+              """repository.city(
+                    icao
+                )""",
+
+              """ChartRepository.city(
+                    icao
+                )""",
+
+              "AirportChartsActivity repository.city"
+          )
+
+
+          text = replace_required(
+              text,
+
+              "ScrollView.LayoutParams",
+
+              "FrameLayout.LayoutParams",
+
+              "AirportChartsActivity ScrollView.LayoutParams"
+          )
+
+
+          text = replace_required(
+              text,
+
+              "HorizontalScrollView.LayoutParams",
+
+              "FrameLayout.LayoutParams",
+
+              "AirportChartsActivity HorizontalScrollView.LayoutParams"
+          )
+
+
+          path.write_text(
+              text,
+              encoding="utf-8"
+          )
+
+
+          # ==================================================
+          # ChartsActivity.kt
+          # ==================================================
+
+          path = files["charts"]
+
+          text = path.read_text(
+              encoding="utf-8"
+          )
+
+
+          if "import android.widget.FrameLayout\n" not in text:
+
+              text = text.replace(
+                  "import android.widget.LinearLayout\n",
+                  "import android.widget.LinearLayout\n"
+                  "import android.widget.FrameLayout\n"
+              )
+
+
+          text = replace_required(
+              text,
+
+              "ScrollView.LayoutParams",
+
+              "FrameLayout.LayoutParams",
+
+              "ChartsActivity ScrollView.LayoutParams"
+          )
+
+
+          path.write_text(
+              text,
+              encoding="utf-8"
+          )
+
+
+          # ==================================================
+          # PdfViewerActivity.kt
+          # ==================================================
+
+          path = files["viewer"]
+
+          text = path.read_text(
+              encoding="utf-8"
+          )
+
+
+          text = replace_required(
+              text,
+
+              """repository
+            .airport(
+                currentIcao
+            )""",
+
+              """ChartRepository
+            .airport(
+                currentIcao
+            )""",
+
+              "PdfViewerActivity repository.airport"
+          )
+
+
+          text = replace_required(
+              text,
+
+              "HorizontalScrollView.LayoutParams",
+
+              "FrameLayout.LayoutParams",
+
+              "PdfViewerActivity HorizontalScrollView.LayoutParams"
+          )
+
+
+          text = replace_required(
+              text,
+
+              """permissions:
+            Array<out String>""",
+
+              """permissions:
+            Array<String>""",
+
+              "PdfViewerActivity permission callback type"
+          )
+
+
+          text = replace_required(
+              text,
+
+              """                        localX,
+                        localY""",
+
+              """                        localX.toFloat(),
+                        localY.toFloat()""",
+
+              "PdfViewerActivity text bounds Float conversion"
+          )
+
+
+          path.write_text(
+              text,
+              encoding="utf-8"
+          )
+
+
+          # ==================================================
+          # Verification
+          # ==================================================
+
+          print()
+          print("=" * 70)
+          print("KOTLIN SOURCE FIX VERIFICATION")
+          print("=" * 70)
+
+
+          for name, path in files.items():
+
+              print(
+                  name,
+                  "->",
+                  path
+              )
+
+              if not path.exists():
+
+                  raise SystemExit(
+                      "Missing file: "
+                      + str(path)
+                  )
+
+
+          # Make sure problematic references are gone.
+          airport_text = files["airport"].read_text(
+              encoding="utf-8"
+          )
+
+          charts_text = files["charts"].read_text(
+              encoding="utf-8"
+          )
+
+          viewer_text = files["viewer"].read_text(
+              encoding="utf-8"
+          )
+
+
+          forbidden_checks = [
+
+              (
+                  "AirportChartsActivity",
+                  "ScrollView.LayoutParams",
+                  airport_text
+              ),
+
+              (
+                  "AirportChartsActivity",
+                  "HorizontalScrollView.LayoutParams",
+                  airport_text
+              ),
+
+              (
+                  "ChartsActivity",
+                  "ScrollView.LayoutParams",
+                  charts_text
+              ),
+
+              (
+                  "PdfViewerActivity",
+                  "HorizontalScrollView.LayoutParams",
+                  viewer_text
+              ),
+
+              (
+                  "PdfViewerActivity",
+                  "Array<out String>",
+                  viewer_text
+              ),
+          ]
+
+
+          for file_name, bad_text, content in forbidden_checks:
+
+              if bad_text in content:
+
+                  raise SystemExit(
+                      file_name
+                      + " still contains: "
+                      + bad_text
+                  )
+
+
+          print()
+          print(
+              "AirportChartsActivity.kt: OK"
+          )
+
+          print(
+              "ChartsActivity.kt: OK"
+          )
+
+          print(
+              "PdfViewerActivity.kt: OK"
+          )
+
+          print("=" * 70)
+          PY
+
+
+      - name: Check changed files
+        shell: bash
+        run: |
+          echo "Changed files:"
+          git status --short
+
+          echo
+          echo "Diff summary:"
+          git diff --stat
+
+
+      - name: Commit Kotlin fixes
+        shell: bash
+        run: |
+          git config user.name \
+            "github-actions[bot]"
+
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+
+
+          git add \
+            app/src/main/java/com/tareghmsr/jeppiran/AirportChartsActivity.kt \
+            app/src/main/java/com/tareghmsr/jeppiran/ChartsActivity.kt \
+            app/src/main/java/com/tareghmsr/jeppiran/PdfViewerActivity.kt
+
+
+          if git diff --cached --quiet; then
+
+            echo "No Kotlin changes were required."
+
+          else
+
+            git commit \
+              -m "Fix Kotlin compilation errors"
+
+            git push origin HEAD:main
+
+          fi
+
+
+      - name: Remove temporary fixer workflow
+        if: success()
+        shell: bash
+        run: |
+          git config user.name \
+            "github-actions[bot]"
+
+          git config user.email \
+            "41898282+github-actions[bot]@users.noreply.github.com"
+
+
+          if [ -f ".github/workflows/fix-kotlin-errors.yml" ]; then
+
+            git rm \
+              ".github/workflows/fix-kotlin-errors.yml"
+
+            git commit \
+              -m "Remove temporary Kotlin fixer workflow"
+
+            git push origin HEAD:main
+
+          else
+
+            echo "Temporary fixer workflow already removed."
+
+          fi
