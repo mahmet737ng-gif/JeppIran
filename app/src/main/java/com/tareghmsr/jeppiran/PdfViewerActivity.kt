@@ -59,6 +59,7 @@ class PdfViewerActivity : ComponentActivity() {
             setBackgroundColor(Color.BLACK)
         }
 
+        // Toolbar
         val toolbar = LinearLayout(this).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER_VERTICAL
@@ -66,9 +67,12 @@ class PdfViewerActivity : ComponentActivity() {
         }
 
         val back = ImageButton(this).apply {
+
             setImageResource(
                 android.R.drawable.ic_menu_revert
             )
+
+            setBackgroundColor(Color.TRANSPARENT)
 
             setOnClickListener {
                 finish()
@@ -81,7 +85,7 @@ class PdfViewerActivity : ComponentActivity() {
         )
 
         pageLabel = TextView(this).apply {
-            textColor()
+            setTextColor(Color.WHITE)
             gravity = Gravity.CENTER
             textSize = 15f
         }
@@ -95,10 +99,15 @@ class PdfViewerActivity : ComponentActivity() {
             )
         )
 
+        // Previous page
         val previous = TextView(this).apply {
+
             text = "‹"
-            textColor()
+
+            setTextColor(Color.WHITE)
+
             textSize = 32f
+
             gravity = Gravity.CENTER
 
             setOnClickListener {
@@ -111,10 +120,15 @@ class PdfViewerActivity : ComponentActivity() {
             LinearLayout.LayoutParams(55, 55)
         )
 
+        // Next page
         val next = TextView(this).apply {
+
             text = "›"
-            textColor()
+
+            setTextColor(Color.WHITE)
+
             textSize = 32f
+
             gravity = Gravity.CENTER
 
             setOnClickListener {
@@ -129,6 +143,7 @@ class PdfViewerActivity : ComponentActivity() {
 
         root.addView(toolbar)
 
+        // Scroll container
         val scroll =
             androidx.core.widget.NestedScrollView(this)
 
@@ -136,7 +151,10 @@ class PdfViewerActivity : ComponentActivity() {
             android.widget.FrameLayout(this)
 
         imageView = ImageView(this).apply {
-            scaleType = ImageView.ScaleType.FIT_CENTER
+
+            scaleType =
+                ImageView.ScaleType.FIT_CENTER
+
             setBackgroundColor(Color.BLACK)
         }
 
@@ -209,22 +227,27 @@ class PdfViewerActivity : ComponentActivity() {
     private fun showNotDownloaded() {
 
         val text = TextView(this).apply {
+
             text = "Iran2620.pdf is not downloaded."
+
             textSize = 18f
+
             gravity = Gravity.CENTER
+
             setTextColor(Color.WHITE)
+
+            setBackgroundColor(Color.BLACK)
         }
 
         setContentView(text)
     }
 
-    private fun TextView.textColor() {
-        setTextColor(Color.WHITE)
-    }
-
     override fun onDestroy() {
+
         renderer?.close()
+
         descriptor?.close()
+
         super.onDestroy()
     }
 }
