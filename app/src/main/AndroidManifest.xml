@@ -2,8 +2,7 @@
 
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <uses-permission
-        android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -11,42 +10,34 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.JeppIran">
 
-        <!-- Splash -->
         <activity
             android:name=".SplashActivity"
             android:exported="true">
 
             <intent-filter>
-
-                <action
-                    android:name="android.intent.action.MAIN" />
-
-                <category
-                    android:name="android.intent.category.LAUNCHER" />
-
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
 
         </activity>
 
-        <!-- Main screen -->
         <activity
             android:name=".MainActivity"
             android:exported="false" />
 
-        <!-- Airport list -->
         <activity
             android:name=".ChartsActivity"
             android:exported="false" />
 
-        <!-- Airport charts -->
         <activity
             android:name=".AirportChartsActivity"
             android:exported="false" />
 
-        <!-- PDF viewer -->
         <activity
             android:name=".PdfViewerActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:screenOrientation="unspecified" />
 
     </application>
 
