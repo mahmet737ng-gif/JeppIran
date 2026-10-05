@@ -1,43 +1,23 @@
 package com.tareghmsr.jeppiran
 
 import android.content.Intent
-import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.Gravity
 import android.view.View
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import com.google.android.material.card.MaterialCardView
-import com.google.android.material.textfield.TextInputEditText
-import org.json.JSONObject
 
 class ChartsActivity : ComponentActivity() {
 
-    private data class Airport(
-        val icao: String,
-        val city: String,
-        val airportCount: Int,
-        val starCount: Int,
-        val sidCount: Int,
-        val approachCount: Int,
-        val otherCount: Int
-    )
+    private lateinit var searchBox: EditText
+    private lateinit var listContainer: LinearLayout
 
-    private val airports = mutableListOf<Airport>()
-
-    private lateinit var airportList: LinearLayout
-    private lateinit var searchAirport: TextInputEditText
-
-    /*
-     * Airport / City names
-     */
     private val airportCities = mapOf(
         "OIAA" to "ABADAN",
         "OIAM" to "MAHSHAHR",
@@ -67,64 +47,96 @@ class ChartsActivity : ComponentActivity() {
         "OIYY" to "YAZD",
         "OIZC" to "CHABAHAR",
         "OIZH" to "ZAHEDAN",
-
         "OMDB" to "DUBAI",
         "OOMS" to "MUSCAT",
-
         "ORBI" to "BAGHDAD",
         "ORNI" to "NAJAF",
-
         "UDYZ" to "YEREVAN",
-
         "UGSB" to "BATUMI",
         "UGTB" to "TBILISI",
-
         "LTFM" to "ISTANBUL"
     )
+
+    private data class Airport(
+        val icao: String,
+        val city: String
+    )
+
+    private val airports = airportCities
+        .map { Airport(it.key, it.value) }
+        .sortedBy { it.city }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         enableEdgeToEdge()
 
-        setContentView(R.layout.activity_charts)
+        val root = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setBackgroundColor(0xFFF7F8FA.toInt())
+        }
 
-        val mainView = findViewById<View>(R.id.chartsMain)
+        searchBox = EditText(this).apply {
+            hint = "Search ICAO / Airport / City"
+            singleLine = true
+            textSize = 16f
+            setPadding(
+                20.dp,
+                12.dp,
+                20.dp,
+                12.dp
+            )
+        }
 
-        /*
-         * Light aviation-style background.
-         * Not pure white and not too dark.
-         */
-        mainView.setBackgroundColor(
-            Color.rgb(233, 238, 243)
+        listContainer = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+        }
+
+        root.addView(
+            searchBox,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                64.dp
+            ).apply {
+                setMargins(
+                    16.dp,
+                    12.dp,
+                    16.dp,
+                    8.dp
+                )
+            }
         )
 
-        ViewCompat.setOnApplyWindowInsetsListener(mainView) { view, insets ->
+        root.addView(
+            listContainer,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                0,
+                1f
+            )
+        )
 
-            val systemBars = insets.getInsets(
+        setContentView(root)
+
+        ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
+
+            val bars = insets.getInsets(
                 WindowInsetsCompat.Type.systemBars()
             )
 
             view.setPadding(
-                systemBars.left + 16,
-                systemBars.top + 16,
-                systemBars.right + 16,
-                systemBars.bottom + 16
+                0,
+                bars.top,
+                0,
+                bars.bottom
             )
 
             insets
         }
 
-        airportList = findViewById(R.id.airportList)
-
-        searchAirport = findViewById(R.id.searchAirport)
-
         loadAirports()
 
-        /*
-         * Live airport search
-         */
-        searchAirport.addTextChangedListener(
+        searchBox.addTextChangedListener(
             object : TextWatcher {
 
                 override fun beforeTextChanged(
@@ -132,8 +144,7 @@ class ChartsActivity : ComponentActivity() {
                     start: Int,
                     count: Int,
                     after: Int
-                ) {
-                }
+                ) = Unit
 
                 override fun onTextChanged(
                     s: CharSequence?,
@@ -141,296 +152,114 @@ class ChartsActivity : ComponentActivity() {
                     before: Int,
                     count: Int
                 ) {
-                    filterAirports(
-                        s?.toString() ?: ""
+                    loadAirports(
+                        s?.toString().orEmpty()
                     )
                 }
 
                 override fun afterTextChanged(
                     s: Editable?
-                ) {
-                }
+                ) = Unit
             }
         )
     }
 
-    /*
-     * Load airport database from assets
-     */
-    private fun loadAirports() {
+    private fun loadAirports(query: String = "") {
 
-        try {
+        listContainer.removeAllViews()
 
-            val jsonText = assets
-                .open("charts-app-v9.json")
-                .bufferedReader()
-                .use {
-                    it.readText()
-                }
+        val q = query.trim().uppercase()
 
-            val root = JSONObject(jsonText)
+        airports
+            .filter { airport ->
+                q.isEmpty() ||
+                        airport.icao.contains(q) ||
+                        airport.city.contains(q)
+            }
+            .forEach { airport ->
 
-            airports.clear()
+                val row = LinearLayout(this).apply {
 
-            val keys = root.keys()
+                    orientation = LinearLayout.VERTICAL
 
-            while (keys.hasNext()) {
-
-                val icao = keys.next()
-
-                val airport =
-                    root.getJSONObject(icao)
-
-                val charts =
-                    airport.optJSONObject("charts")
-
-                var airportCount = 0
-                var starCount = 0
-                var sidCount = 0
-                var approachCount = 0
-                var otherCount = 0
-
-                if (charts != null) {
-
-                    airportCount =
-                        charts
-                            .optJSONArray("Airport")
-                            ?.length()
-                            ?: 0
-
-                    starCount =
-                        charts
-                            .optJSONArray("STAR")
-                            ?.length()
-                            ?: 0
-
-                    sidCount =
-                        charts
-                            .optJSONArray("SID")
-                            ?.length()
-                            ?: 0
-
-                    approachCount =
-                        charts
-                            .optJSONArray("Approach")
-                            ?.length()
-                            ?: 0
-
-                    otherCount =
-                        charts
-                            .optJSONArray("Other")
-                            ?.length()
-                            ?: 0
-                }
-
-                val city =
-                    airportCities[icao]
-                        ?: icao
-
-                airports.add(
-                    Airport(
-                        icao = icao,
-                        city = city,
-                        airportCount = airportCount,
-                        starCount = starCount,
-                        sidCount = sidCount,
-                        approachCount = approachCount,
-                        otherCount = otherCount
+                    setPadding(
+                        20.dp,
+                        16.dp,
+                        20.dp,
+                        16.dp
                     )
-                )
-            }
 
-            /*
-             * Sort alphabetically by ICAO
-             */
-            airports.sortBy {
-                it.icao
-            }
+                    setBackgroundColor(
+                        0xFFFFFFFF.toInt()
+                    )
 
-            displayAirports(airports)
+                    setOnClickListener {
 
-        } catch (e: Exception) {
+                        val intent = Intent(
+                            this@ChartsActivity,
+                            AirportChartsActivity::class.java
+                        )
 
-            Toast.makeText(
-                this,
-                "خطا در خواندن اطلاعات فرودگاه‌ها",
-                Toast.LENGTH_LONG
-            ).show()
+                        intent.putExtra(
+                            "ICAO",
+                            airport.icao
+                        )
 
-            e.printStackTrace()
-        }
-    }
+                        intent.putExtra(
+                            "CITY",
+                            airport.city
+                        )
 
-    /*
-     * Airport search
-     *
-     * Supports:
-     * ICAO
-     * City
-     */
-    private fun filterAirports(
-        query: String
-    ) {
-
-        val text =
-            query
-                .trim()
-                .uppercase()
-
-        val filtered =
-
-            if (text.isEmpty()) {
-
-                airports
-
-            } else {
-
-                airports.filter {
-
-                    it.icao.contains(text) ||
-                            it.city.contains(text)
+                        startActivity(intent)
+                    }
                 }
-            }
 
-        displayAirports(filtered)
+                val airportText = TextView(this).apply {
+                    text = airport.icao
+                    textSize = 18f
+                    setTypeface(
+                        null,
+                        android.graphics.Typeface.BOLD
+                    )
+                }
+
+                val cityText = TextView(this).apply {
+                    text = airport.city
+                    textSize = 13f
+                    setTextColor(0xFF667085.toInt())
+                }
+
+                row.addView(airportText)
+
+                row.addView(
+                    cityText,
+                    LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    ).apply {
+                        topMargin = 4.dp
+                    }
+                )
+
+                listContainer.addView(
+                    row,
+                    LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    ).apply {
+                        setMargins(
+                            16.dp,
+                            4.dp,
+                            16.dp,
+                            4.dp
+                        )
+                    }
+                )
+            }
     }
 
-    /*
-     * Draw airport cards
-     */
-    private fun displayAirports(
-        list: List<Airport>
-    ) {
-
-        airportList.removeAllViews()
-
-        if (list.isEmpty()) {
-
-            val emptyText =
-                TextView(this)
-
-            emptyText.text =
-                "No airport found"
-
-            emptyText.textSize =
-                16f
-
-            emptyText.gravity =
-                Gravity.CENTER
-
-            emptyText.setTextColor(
-                Color.rgb(55, 70, 85)
-            )
-
-            emptyText.setPadding(
-                24,
-                40,
-                24,
-                40
-            )
-
-            airportList.addView(
-                emptyText
-            )
-
-            return
-        }
-
-        for (airport in list) {
-
-            val card =
-                MaterialCardView(this)
-
-            val cardParams =
-                LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    LinearLayout.LayoutParams.WRAP_CONTENT
-                )
-
-            cardParams.setMargins(
-                0,
-                0,
-                0,
-                8
-            )
-
-            card.layoutParams =
-                cardParams
-
-            /*
-             * Slightly brighter than background.
-             * Not pure white.
-             */
-            card.setCardBackgroundColor(
-                Color.rgb(244, 247, 250)
-            )
-
-            card.cardElevation =
-                1f
-
-            card.radius =
-                14f
-
-            val content =
-                LinearLayout(this)
-
-            content.orientation =
-                LinearLayout.VERTICAL
-
-            content.setPadding(
-                20,
-                16,
-                20,
-                16
-            )
-
-            val title =
-                TextView(this)
-
-            title.text =
-                "${airport.icao}  •  ${airport.city}"
-
-            title.textSize =
-                19f
-
-            title.setTextColor(
-                Color.rgb(25, 48, 72)
-            )
-
-            content.addView(
-                title
-            )
-
-            card.addView(
-                content
-            )
-
-            /*
-             * Open airport chart categories
-             */
-            card.setOnClickListener {
-
-                val intent = Intent(
-                    this,
-                    AirportChartsActivity::class.java
-                )
-
-                intent.putExtra(
-                    "ICAO",
-                    airport.icao
-                )
-
-                intent.putExtra(
-                    "AIRPORT_NAME",
-                    airport.city
-                )
-
-                startActivity(intent)
-            }
-
-            airportList.addView(
-                card
-            )
-        }
-    }
+    private val Int.dp: Int
+        get() = (
+            this * resources.displayMetrics.density
+        ).toInt()
 }
