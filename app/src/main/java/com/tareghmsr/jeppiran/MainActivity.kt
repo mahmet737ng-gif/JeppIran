@@ -1,64 +1,43 @@
-package com.tareghmsr.jeppiran
+<?xml version="1.0" encoding="utf-8"?>
 
-import android.content.Intent
-import android.os.Bundle
-import android.widget.Toast
-import androidx.activity.ComponentActivity
-import androidx.activity.enableEdgeToEdge
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
-class MainActivity : ComponentActivity() {
+    <!-- Internet access for chart/PDF updates and WX -->
+    <uses-permission android:name="android.permission.INTERNET" />
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
+    <application
+        android:allowBackup="true"
+        android:label="JeppIran"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.JeppIran">
 
-        enableEdgeToEdge()
+        <!-- Main screen -->
+        <activity
+            android:name=".MainActivity"
+            android:exported="true">
 
-        setContentView(R.layout.activity_main)
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
 
-        val mainView = findViewById<android.view.View>(R.id.main)
+        </activity>
 
-        ViewCompat.setOnApplyWindowInsetsListener(mainView) { view, insets ->
+        <!-- Airport list -->
+        <activity
+            android:name=".ChartsActivity"
+            android:exported="false" />
 
-            val systemBars = insets.getInsets(
-                WindowInsetsCompat.Type.systemBars()
-            )
+        <!-- Charts inside an airport -->
+        <activity
+            android:name=".AirportChartsActivity"
+            android:exported="false" />
 
-            view.setPadding(
-                systemBars.left + 16,
-                systemBars.top + 16,
-                systemBars.right + 16,
-                systemBars.bottom + 16
-            )
+        <!-- PDF chart viewer -->
+        <activity
+            android:name=".PdfViewerActivity"
+            android:exported="false" />
 
-            insets
-        }
+    </application>
 
-        findViewById<android.view.View>(R.id.cardCharts).setOnClickListener {
-            startActivity(
-                Intent(this, ChartsActivity::class.java)
-            )
-        }
-
-        findViewById<android.view.View>(R.id.cardEnroute).setOnClickListener {
-            Toast.makeText(this, "En-route Charts", Toast.LENGTH_SHORT).show()
-        }
-
-        findViewById<android.view.View>(R.id.cardWx).setOnClickListener {
-            Toast.makeText(this, "WX", Toast.LENGTH_SHORT).show()
-        }
-
-        findViewById<android.view.View>(R.id.cardUpdate).setOnClickListener {
-            Toast.makeText(this, "Update", Toast.LENGTH_SHORT).show()
-        }
-
-        findViewById<android.view.View>(R.id.cardSettings).setOnClickListener {
-            Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show()
-        }
-
-        findViewById<android.view.View>(R.id.cardInfo).setOnClickListener {
-            Toast.makeText(this, "JeppIran\nDeveloper: Taregh Msr", Toast.LENGTH_SHORT).show()
-        }
-    }
-}
+</manifest>
