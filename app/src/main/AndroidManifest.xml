@@ -64,6 +64,11 @@
             android:exported="false" />
 
 
+        <activity
+            android:name=".SimulatorConnectionActivity"
+            android:exported="false" />
+
+
     </application>
 
 </manifest>
