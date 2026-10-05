@@ -6039,8 +6039,8 @@ private val locationPermissionLauncher =
                     measureTextBounds(
                         item
                     ).contains(
-                        localX,
-                        localY
+                        localX.toFloat(),
+                            localY.toFloat()
                     )
                 ) {
 
