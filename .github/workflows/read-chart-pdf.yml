@@ -4,16 +4,22 @@ on:
   push:
     paths:
       - 'Iran2620.pdf'
+      - 'app/src/main/assets/charts-app-v16.json'
       - '.github/workflows/read-chart-pdf.yml'
+
   workflow_dispatch:
+
 
 permissions:
   contents: write
 
+
 jobs:
+
   build-chart-database:
 
     runs-on: ubuntu-24.04
+
 
     steps:
 
@@ -22,18 +28,37 @@ jobs:
         with:
           lfs: true
 
+
       - name: Install PDF tools
         run: |
           sudo apt-get update
-          sudo apt-get install -y poppler-utils qpdf
+          sudo apt-get install -y qpdf poppler-utils
 
-      - name: Check PDF
+
+      - name: Check source files
         run: |
+
+          echo "Repository:"
+          pwd
+
+          echo
+          echo "PDF:"
           ls -lh Iran2620.pdf
-          pdfinfo Iran2620.pdf | head -30
+
+          echo
+          echo "Chart database:"
+          ls -lh app/src/main/assets/charts-app-v16.json
+
+          echo
+          echo "PDF information:"
+          pdfinfo Iran2620.pdf | head -25
+
+          echo
+          echo "QPDF:"
           qpdf --version
 
-      - name: Build chart database
+
+      - name: Build per-airport PDFs and v18 database
         shell: bash
         run: |
 
@@ -42,867 +67,290 @@ jobs:
           import hashlib
           import json
           import os
-          import re
+          import shutil
           import subprocess
           from datetime import datetime, timezone
 
 
-          PDF_FILE = "Iran2620.pdf"
+          SOURCE_PDF = "Iran2620.pdf"
+
+          SOURCE_DATABASE = (
+              "app/src/main/assets/charts-app-v16.json"
+          )
+
+          ROOT_DATABASE = "charts-app-v18.json"
+
+          ASSET_DATABASE = (
+              "app/src/main/assets/charts-app-v18.json"
+          )
+
+          INDEX_DATABASE = "charts-index.json"
+
+          MANIFEST_FILE = (
+              "app/src/main/assets/charts-manifest.json"
+          )
+
+          BUILD_DIR = "airport-pdfs"
 
           VERSION = "v18"
 
           RELEASE_TAG = "charts-v18"
 
-          REPOSITORY = "mahmet737ng-gif/JeppIran"
-
           BASE_URL = (
               "https://github.com/"
-              + REPOSITORY
-              + "/releases/download/"
-              + RELEASE_TAG
-              + "/"
+              "mahmet737ng-gif/"
+              "JeppIran/releases/download/"
+              "charts-v18/"
           )
 
-          INDEX_FILE = "charts-index.json"
 
-          APP_FILE = "charts-app-v18.json"
+          print("=" * 70)
+          print("JEPPIRAN V18 BUILD")
+          print("=" * 70)
 
-          ASSET_DIR = "app/src/main/assets"
 
-          APP_ASSET_FILE = (
-              ASSET_DIR
-              + "/charts-app-v18.json"
+          # --------------------------------------------------
+          # Load existing validated chart database
+          # --------------------------------------------------
+
+          with open(
+              SOURCE_DATABASE,
+              "r",
+              encoding="utf-8"
+          ) as f:
+
+              source_rows = json.load(f)
+
+
+          if not isinstance(
+              source_rows,
+              list
+          ):
+
+              raise SystemExit(
+                  "charts-app-v16.json is not an array"
+              )
+
+
+          if not source_rows:
+
+              raise SystemExit(
+                  "charts-app-v16.json is empty"
+              )
+
+
+          print(
+              "Source database rows:",
+              len(source_rows)
           )
 
-          MANIFEST_ASSET_FILE = (
-              ASSET_DIR
-              + "/charts-manifest.json"
+
+          # --------------------------------------------------
+          # Read actual PDF page count
+          # --------------------------------------------------
+
+          pdfinfo = subprocess.check_output(
+              [
+                  "pdfinfo",
+                  SOURCE_PDF
+              ],
+              text=True,
+              errors="replace"
           )
 
-          BUILD_DIR = "airport-pdfs"
+
+          pdf_pages = 0
 
 
-          SUPPORTED_ICAOS = {
-              "LTFM",
+          for line in pdfinfo.splitlines():
 
-              "OIAA",
-              "OIAM",
-              "OIAW",
-              "OIBB",
-              "OIBK",
-              "OIBP",
-              "OICC",
-              "OICI",
-              "OIFM",
-              "OIGG",
-              "OIHH",
-              "OIIE",
-              "OIII",
-              "OIIP",
-              "OIKK",
-              "OIMB",
-              "OIMM",
-              "OIMN",
-              "OIMS",
-              "OING",
-              "OINZ",
-              "OISS",
-              "OITL",
-              "OITR",
-              "OITT",
-              "OIYY",
-              "OIZC",
-              "OIZH",
-
-              "OMDB",
-              "OOMS",
-
-              "ORBI",
-              "ORNI",
-
-              "UDYZ",
-
-              "UGSB",
-              "UGTB"
-          }
-
-
-          def clean_spaces(value):
-
-              return re.sub(
-                  r"\s+",
-                  " ",
-                  value
-              ).strip()
-
-
-          def get_lines(text):
-
-              lines = []
-
-              for raw in text.splitlines():
-
-                  line = clean_spaces(
-                      raw
-                  )
-
-                  if not line:
-                      continue
-
-                  upper = line.upper()
-
-                  if (
-                      "PRINTED FROM JEPPVIEW FOR WINDOWS"
-                      in upper
-                  ):
-                      continue
-
-                  if (
-                      "PRINTED FROM JEPPESEN"
-                      in upper
-                  ):
-                      continue
-
-                  lines.append(
-                      line
-                  )
-
-              return lines
-
-
-          def detect_icaos(text):
-
-              upper = text.upper()
-
-              candidates = re.findall(
-                  r"\b[A-Z]{4}\b",
-                  upper
-              )
-
-              result = []
-
-              seen = set()
-
-              for code in candidates:
-
-                  if code not in SUPPORTED_ICAOS:
-                      continue
-
-                  if code in seen:
-                      continue
-
-                  seen.add(code)
-
-                  result.append(
-                      code
-                  )
-
-              return result
-
-
-          def detect_category(text):
-
-              upper = text.upper()
-
-
-              if re.search(
-                  r"\bSTAR\b|STANDARD ARRIVAL",
-                  upper
-              ):
-                  return "STAR"
-
-
-              if re.search(
-                  r"\bSID\b|STANDARD INSTRUMENT DEPARTURE",
-                  upper
-              ):
-                  return "SID"
-
-
-              if re.search(
-                  r"\bAPPROACH\b",
-                  upper
-              ):
-                  return "Approach"
-
-
-              if re.search(
-                  r"\bILS\b|\bLOC\b|\bVOR\b|\bNDB\b|\bRNAV\b|\bRNP\b|\bGLS\b|\bLDA\b|\bSRA\b",
-                  upper
+              if line.startswith(
+                  "Pages:"
               ):
 
-                  if re.search(
-                      r"\bRWY\b|\bRUNWAY\b",
-                      upper
-                  ):
-                      return "Approach"
-
-
-              if re.search(
-                  r"AERODROME CHART|AIRPORT CHART|AIRPORT INFORMATION|AERODROME INFORMATION|ADC\b|GROUND CHART|TAXIWAY|APRON",
-                  upper
-              ):
-                  return "Airport"
-
-
-              return "Other"
-
-
-          def extract_chart_number(lines):
-
-              patterns = [
-
-                  re.compile(
-                      r"\b(\d{1,2}-\d{1,2}[A-Z]?)\b"
-                  ),
-
-                  re.compile(
-                      r"\b(\d{1,2}-[A-Z]-\d{1,2})\b"
-                  ),
-
-                  re.compile(
-                      r"\b(\d{1,2}-\d{1,2}-\d{1,2})\b"
-                  )
-              ]
-
-
-              for line in lines:
-
-                  upper = line.upper()
-
-
-                  if (
-                      "PRINTED" in upper
-                  ):
-                      continue
-
-
-                  for pattern in patterns:
-
-                      match = pattern.search(
-                          upper
-                      )
-
-
-                      if match:
-
-                          return match.group(
-                              1
-                          )
-
-
-              return ""
-
-
-          def clean_title_candidate(
-              line
-          ):
-
-              value = clean_spaces(
-                  line
-              )
-
-              upper = value.upper()
-
-
-              if len(value) < 3:
-                  return ""
-
-
-              ignored = [
-
-                  "JEPPESEN",
-                  "JEPPVIEW",
-                  "COPYRIGHT",
-                  "REVISION",
-                  "CHANGES",
-                  "COMMUNICATIONS",
-                  "FREQUENCIES",
-                  "NOTES",
-                  "LEGEND",
-                  "DISTANCE",
-                  "ALTITUDE",
-                  "HEIGHT",
-                  "TRANSITION",
-                  "MAGNETIC",
-                  "VARIATION"
-              ]
-
-
-              for word in ignored:
-
-                  if word in upper:
-                      return ""
-
-
-              if re.fullmatch(
-                  r"[0-9\s./-]+",
-                  value
-              ):
-                  return ""
-
-
-              return value[:160]
-
-
-          def extract_airport_name(
-              lines
-          ):
-
-              for line in lines[:50]:
-
-                  upper = line.upper()
-
-                  if (
-                      "AERODROME CHART"
-                      in upper
-                  ):
-
-                      return "AERODROME CHART"
-
-
-              for line in lines[:50]:
-
-                  upper = line.upper()
-
-                  if (
-                      "AIRPORT CHART"
-                      in upper
-                  ):
-
-                      return "AIRPORT CHART"
-
-
-              for line in lines[:50]:
-
-                  upper = line.upper()
-
-                  if (
-                      "AERODROME INFORMATION"
-                      in upper
-                  ):
-
-                      return "AERODROME INFORMATION"
-
-
-              for line in lines[:50]:
-
-                  upper = line.upper()
-
-                  if (
-                      "AIRPORT INFORMATION"
-                      in upper
-                  ):
-
-                      return "AIRPORT INFORMATION"
-
-
-              return "AIRPORT CHART"
-
-
-          def extract_procedure_codes(
-              lines
-          ):
-
-              results = []
-
-              seen = set()
-
-
-              bracket_pattern = re.compile(
-                  r"\[([A-Z0-9][A-Z0-9.-]{2,20})\]"
-              )
-
-
-              plain_pattern = re.compile(
-                  r"\b([A-Z]{2,10})\s+([0-9]{1,2}[A-Z])\b"
-              )
-
-
-              ignored = {
-                  "RWY",
-                  "ILS",
-                  "LOC",
-                  "VOR",
-                  "NDB",
-                  "DME",
-                  "RNAV",
-                  "RNP",
-                  "STAR",
-                  "SID"
-              }
-
-
-              for line in lines:
-
-                  upper = line.upper()
-
-
-                  for code in bracket_pattern.findall(
-                      upper
-                  ):
-
-                      if code in ignored:
-                          continue
-
-
-                      if code not in seen:
-
-                          seen.add(
-                              code
-                          )
-
-                          results.append(
-                              code
-                          )
-
-
-              if results:
-
-                  return results[:8]
-
-
-              for line in lines:
-
-                  upper = line.upper()
-
-
-                  if "RWY" in upper:
-                      continue
-
-                  if "AIRPORT" in upper:
-                      continue
-
-                  if "AERODROME" in upper:
-                      continue
-
-
-                  matches = plain_pattern.findall(
-                      upper
+                  pdf_pages = int(
+                      line.split(
+                          ":",
+                          1
+                      )[1].strip()
                   )
 
+                  break
 
-                  for first, second in matches:
 
-                      if first in ignored:
-                          continue
-
-
-                      value = (
-                          f"{first} {second}"
-                      )
-
-
-                      if value in seen:
-                          continue
-
-
-                      seen.add(
-                          value
-                      )
-
-                      results.append(
-                          value
-                      )
-
-
-              return results[:8]
-
-
-          def extract_approach_name(
-              lines
-          ):
-
-              patterns = [
-
-                  re.compile(
-                      r"\bILS\s+([XYZ])?\s*"
-                      r"(?:OR\s+LOC\s+([XYZ])?)?"
-                      r"\s+RWY\s+"
-                      r"([0-9]{1,2}[LRC]?"
-                      r"(?:/[0-9]{1,2}[LRC]?)?)",
-                      re.IGNORECASE
-                  ),
-
-                  re.compile(
-                      r"\bVOR(?:\s+DME)?"
-                      r"(?:\s+[A-Z0-9]+)?"
-                      r"\s+RWY\s+"
-                      r"([0-9]{1,2}[LRC]?"
-                      r"(?:/[0-9]{1,2}[LRC]?)?)",
-                      re.IGNORECASE
-                  ),
-
-                  re.compile(
-                      r"\bNDB\s+RWY\s+"
-                      r"([0-9]{1,2}[LRC]?"
-                      r"(?:/[0-9]{1,2}[LRC]?)?)",
-                      re.IGNORECASE
-                  ),
-
-                  re.compile(
-                      r"\b(RNAV|RNP|GLS|LDA|SRA)"
-                      r"(?:\s+\([A-Z0-9]+\))?"
-                      r"(?:\s+[A-Z0-9.-]+)*"
-                      r"\s+RWY\s+"
-                      r"([0-9]{1,2}[LRC]?"
-                      r"(?:/[0-9]{1,2}[LRC]?)?)",
-                      re.IGNORECASE
-                  )
-              ]
-
-
-              for line in lines[:100]:
-
-                  upper = line.upper()
-
-
-                  match = patterns[0].search(
-                      upper
-                  )
-
-
-                  if match:
-
-                      variant1 = (
-                          match.group(1)
-                      )
-
-                      variant2 = (
-                          match.group(2)
-                      )
-
-                      runway = (
-                          match.group(3)
-                      )
-
-
-                      if variant1:
-
-                          if variant2:
-
-                              return (
-                                  f"ILS {variant1} "
-                                  f"OR LOC {variant2} "
-                                  f"RWY {runway}"
-                              )
-
-
-                          return (
-                              f"ILS {variant1} "
-                              f"RWY {runway}"
-                          )
-
-
-                      return (
-                          f"ILS OR LOC "
-                          f"RWY {runway}"
-                      )
-
-
-                  match = patterns[1].search(
-                      upper
-                  )
-
-
-                  if match:
-
-                      return clean_spaces(
-                          match.group(0)
-                      )
-
-
-                  match = patterns[2].search(
-                      upper
-                  )
-
-
-                  if match:
-
-                      return (
-                          f"NDB RWY "
-                          f"{match.group(1)}"
-                      )
-
-
-                  match = patterns[3].search(
-                      upper
-                  )
-
-
-                  if match:
-
-                      return (
-                          f"{match.group(1).upper()} "
-                          f"RWY "
-                          f"{match.group(2)}"
-                      )
-
-
-              return ""
-
-
-          def extract_other_name(
-              lines
-          ):
-
-              for line in lines[:50]:
-
-                  candidate =
-                      clean_title_candidate(
-                          line
-                      )
-
-
-                  if not candidate:
-                      continue
-
-
-                  if re.match(
-                      r"^(PAGE|CHART)\s+\d+$",
-                      candidate,
-                      re.IGNORECASE
-                  ):
-                      continue
-
-
-                  return candidate
-
-
-              return ""
-
-
-          def build_chart_name(
-              category,
-              lines,
-              chart_number
-          ):
-
-              if category == "Airport":
-
-                  return extract_airport_name(
-                      lines
-                  )
-
-
-              if category in (
-                  "STAR",
-                  "SID"
-              ):
-
-                  procedures =
-                      extract_procedure_codes(
-                          lines
-                      )
-
-
-                  if procedures:
-
-                      return ", ".join(
-                          procedures
-                      )
-
-
-                  if chart_number:
-
-                      return (
-                          f"{category} "
-                          f"{chart_number}"
-                      )
-
-
-                  return (
-                      f"{category} CHART"
-                  )
-
-
-              if category == "Approach":
-
-                  approach =
-                      extract_approach_name(
-                          lines
-                      )
-
-
-                  if approach:
-
-                      return approach
-
-
-                  if chart_number:
-
-                      return (
-                          f"APPROACH "
-                          f"{chart_number}"
-                      )
-
-
-                  return "APPROACH CHART"
-
-
-              other =
-                  extract_other_name(
-                      lines
-                  )
-
-
-              if other:
-
-                  return other
-
-
-              if chart_number:
-
-                  return (
-                      f"OTHER "
-                      f"{chart_number}"
-                  )
-
-
-              return "OTHER CHART"
-
-
-          pdfinfo =
-              subprocess.check_output(
-                  [
-                      "pdfinfo",
-                      PDF_FILE
-                  ],
-                  text=True,
-                  errors="replace"
-              )
-
-
-          match =
-              re.search(
-                  r"^Pages:\s+(\d+)",
-                  pdfinfo,
-                  re.MULTILINE
-              )
-
-
-          if not match:
+          if pdf_pages <= 0:
 
               raise SystemExit(
                   "Could not determine PDF page count"
               )
 
 
-          total_pages =
-              int(
-                  match.group(1)
+          print(
+              "Source PDF pages:",
+              pdf_pages
+          )
+
+
+          # --------------------------------------------------
+          # Validate source rows
+          # --------------------------------------------------
+
+          rows = []
+
+
+          for item in source_rows:
+
+              if not isinstance(
+                  item,
+                  dict
+              ):
+
+                  continue
+
+
+              page = int(
+                  item.get(
+                      "page",
+                      0
+                  )
               )
 
 
-          chart_rows = []
+              airport = str(
+                  item.get(
+                      "airport",
+                      ""
+                  )
+              ).strip().upper()
 
-          airport_pages = {}
+
+              category = str(
+                  item.get(
+                      "category",
+                      "Other"
+                  )
+              ).strip()
 
 
-          for page in range(
-              1,
-              total_pages + 1
-          ):
+              chart_number = str(
+                  item.get(
+                      "chart_number",
+                      ""
+                  )
+              ).strip()
 
-              result =
-                  subprocess.run(
-                      [
-                          "pdftotext",
-                          "-layout",
-                          "-f",
-                          str(page),
-                          "-l",
-                          str(page),
-                          PDF_FILE,
-                          "-"
-                      ],
-                      capture_output=True,
-                      text=True,
-                      errors="replace"
+
+              name = str(
+                  item.get(
+                      "name",
+                      ""
+                  )
+              ).strip()
+
+
+              if page <= 0:
+
+                  continue
+
+
+              if page > pdf_pages:
+
+                  raise SystemExit(
+                      "Database page exceeds PDF: "
+                      + str(page)
                   )
 
 
-              raw_text =
-                  result.stdout
+              if not airport:
+
+                  continue
 
 
-              lines =
-                  get_lines(
-                      raw_text
-                  )
+              row = dict(item)
 
 
-              icaos =
-                  detect_icaos(
-                      raw_text
-                  )
+              row["page"] = page
+
+              row["airport"] = airport
+
+              row["category"] = category
+
+              row["chart_number"] = chart_number
+
+              row["name"] = name
+
+              row["pdf_page"] = 0
 
 
-              category =
-                  detect_category(
-                      raw_text
-                  )
-
-
-              chart_number =
-                  extract_chart_number(
-                      lines
-                  )
-
-
-              name =
-                  build_chart_name(
-                      category,
-                      lines,
-                      chart_number
-                  )
-
-
-              primary_icao =
-                  icaos[0] if icaos else ""
-
-
-              row = {
-
-                  "page":
-                      page,
-
-                  "icao":
-                      primary_icao,
-
-                  "airport":
-                      primary_icao,
-
-                  "category":
-                      category,
-
-                  "chart_number":
-                      chart_number,
-
-                  "name":
-                      name,
-
-                  "pdf_page":
-                      0
-              }
-
-
-              chart_rows.append(
+              rows.append(
                   row
               )
 
 
-              if (
-                  primary_icao in
-                  SUPPORTED_ICAOS
-              ):
+          if not rows:
 
-                  airport_pages.setdefault(
-                      primary_icao,
-                      []
-                  ).append(
-                      page
+              raise SystemExit(
+                  "No usable chart rows found"
+              )
+
+
+          print(
+              "Usable chart rows:",
+              len(rows)
+          )
+
+
+          # --------------------------------------------------
+          # Group pages by airport
+          # --------------------------------------------------
+
+          airport_pages = {}
+
+
+          for row in rows:
+
+              airport =
+                  row["airport"]
+
+
+              airport_pages.setdefault(
+                  airport,
+                  []
+              ).append(
+                  row["page"]
+              )
+
+
+          for airport in airport_pages:
+
+              airport_pages[
+                  airport
+              ] = sorted(
+                  set(
+                      airport_pages[
+                          airport
+                      ]
                   )
+              )
+
+
+          print(
+              "Detected airports:",
+              len(airport_pages)
+          )
+
+
+          # --------------------------------------------------
+          # Prepare clean output directory
+          # --------------------------------------------------
+
+          if os.path.isdir(
+              BUILD_DIR
+          ):
+
+              shutil.rmtree(
+                  BUILD_DIR
+              )
 
 
           os.makedirs(
@@ -911,100 +359,44 @@ jobs:
           )
 
 
-          local_page_maps = {}
+          # --------------------------------------------------
+          # Create local page numbers
+          # --------------------------------------------------
+
+          local_page_map = {}
 
 
-          for icao in sorted(
+          for airport in sorted(
               airport_pages.keys()
           ):
 
-              pages_for_airport =
-                  sorted(
-                      airport_pages[icao]
-                  )
+              local_page_map[
+                  airport
+              ] = {}
 
 
-              local_page_maps[icao] = {
-
-                  global_page:
-                      local_index + 1
-
-                  for local_index, global_page
-                  in enumerate(
-                      pages_for_airport
-                  )
-              }
-
-
-              page_list =
-                  ",".join(
-                      str(page)
-                      for page in
-                      pages_for_airport
-                  )
-
-
-              output_pdf =
-                  os.path.join(
-                      BUILD_DIR,
-                      f"{icao}.pdf"
-                  )
-
-
-              print(
-                  f"Building {icao}.pdf "
-                  f"with {len(pages_for_airport)} pages"
-              )
-
-
-              subprocess.run(
-                  [
-                      "qpdf",
-                      "--empty",
-                      "--pages",
-                      PDF_FILE,
-                      page_list,
-                      "--",
-                      output_pdf
+              for local_page, global_page in enumerate(
+                  airport_pages[
+                      airport
                   ],
-                  check=True
-              )
-
-
-              check =
-                  subprocess.run(
-                      [
-                          "qpdf",
-                          "--check",
-                          output_pdf
-                      ],
-                      capture_output=True,
-                      text=True
-                  )
-
-
-              if (
-                  check.returncode != 0
+                  start=1
               ):
 
-                  print(
-                      check.stdout
-                  )
-
-                  print(
-                      check.stderr
-                  )
-
-                  raise SystemExit(
-                      "qpdf validation failed for "
-                      + icao
-                  )
+                  local_page_map[
+                      airport
+                  ][
+                      global_page
+                  ] = local_page
 
 
-          for row in chart_rows:
+          # --------------------------------------------------
+          # Add local PDF page numbers to chart rows
+          # --------------------------------------------------
 
-              icao =
-                  row["icao"]
+          for row in rows:
+
+              airport =
+                  row["airport"]
 
 
               global_page =
@@ -1012,45 +404,28 @@ jobs:
 
 
               row["pdf_page"] =
-                  local_page_maps.get(
-                      icao,
-                      {}
-                  ).get(
-                      global_page,
-                      0
-                  )
+                  local_page_map[
+                      airport
+                  ][
+                      global_page
+                  ]
 
 
-          charts_by_airport = {}
+          # --------------------------------------------------
+          # Sort database
+          # --------------------------------------------------
 
-
-          for row in chart_rows:
-
-              icao =
-                  row["icao"]
-
-
-              if not icao:
-                  continue
-
-
-              charts_by_airport.setdefault(
-                  icao,
-                  []
-              ).append(
-                  dict(row)
-              )
-
-
-          for icao in charts_by_airport:
-
-              charts_by_airport[
-                  icao
-              ].sort(
-                  key=lambda item:
+          rows.sort(
+              key=lambda item: (
+                  item["airport"],
                   item["pdf_page"]
               )
+          )
 
+
+          # --------------------------------------------------
+          # Create v18 application database
+          # --------------------------------------------------
 
           generated_at =
               datetime.now(
@@ -1064,35 +439,21 @@ jobs:
                   VERSION,
 
               "source":
-                  PDF_FILE,
+                  SOURCE_PDF,
 
               "generated_at":
                   generated_at,
 
               "pages":
-                  total_pages,
+                  pdf_pages,
 
               "charts":
-                  chart_rows
+                  rows
           }
 
 
           with open(
-              INDEX_FILE,
-              "w",
-              encoding="utf-8"
-          ) as f:
-
-              json.dump(
-                  database,
-                  f,
-                  ensure_ascii=False,
-                  indent=2
-              )
-
-
-          with open(
-              APP_FILE,
+              ROOT_DATABASE,
               "w",
               encoding="utf-8"
           ) as f:
@@ -1106,13 +467,31 @@ jobs:
 
 
           os.makedirs(
-              ASSET_DIR,
+              "app/src/main/assets",
               exist_ok=True
           )
 
 
           with open(
-              APP_ASSET_FILE,
+              ASSET_DATABASE,
+              "w",
+              encoding="utf-8"
+          ) as f:
+
+              json.dump(
+                  rows,
+                  f,
+                  ensure_ascii=False,
+                  indent=2
+              )
+
+
+          # --------------------------------------------------
+          # Create compact index
+          # --------------------------------------------------
+
+          with open(
+              INDEX_DATABASE,
               "w",
               encoding="utf-8"
           ) as f:
@@ -1125,17 +504,66 @@ jobs:
               )
 
 
+          # --------------------------------------------------
+          # Create one PDF for every airport
+          # --------------------------------------------------
+
           manifest_airports = {}
 
 
-          for icao in sorted(
+          for airport in sorted(
               airport_pages.keys()
           ):
 
-              output_pdf =
-                  os.path.join(
-                      BUILD_DIR,
-                      f"{icao}.pdf"
+              pages = airport_pages[
+                  airport
+              ]
+
+
+              output_pdf = os.path.join(
+                  BUILD_DIR,
+                  airport + ".pdf"
+              )
+
+
+              page_spec =
+                  ",".join(
+                      str(page)
+                      for page in pages
+                  )
+
+
+              print()
+              print(
+                  "Creating",
+                  airport + ".pdf",
+                  "with",
+                  len(pages),
+                  "pages"
+              )
+
+
+              subprocess.run(
+                  [
+                      "qpdf",
+                      "--empty",
+                      "--pages",
+                      SOURCE_PDF,
+                      page_spec,
+                      "--",
+                      output_pdf
+                  ],
+                  check=True
+              )
+
+
+              if not os.path.isfile(
+                  output_pdf
+              ):
+
+                  raise SystemExit(
+                      "PDF was not created: "
+                      + output_pdf
                   )
 
 
@@ -1144,6 +572,50 @@ jobs:
                       output_pdf
                   )
 
+
+              if size <= 0:
+
+                  raise SystemExit(
+                      "PDF is empty: "
+                      + output_pdf
+                  )
+
+
+              # ----------------------------------------------
+              # Check PDF integrity
+              # ----------------------------------------------
+
+              check =
+                  subprocess.run(
+                      [
+                          "qpdf",
+                          "--check",
+                          output_pdf
+                      ],
+                      capture_output=True,
+                      text=True
+                  )
+
+
+              if check.returncode != 0:
+
+                  print(
+                      check.stdout
+                  )
+
+                  print(
+                      check.stderr
+                  )
+
+                  raise SystemExit(
+                      "Invalid PDF: "
+                      + output_pdf
+                  )
+
+
+              # ----------------------------------------------
+              # SHA256
+              # ----------------------------------------------
 
               digest =
                   hashlib.sha256()
@@ -1163,6 +635,7 @@ jobs:
 
 
                       if not block:
+
                           break
 
 
@@ -1172,15 +645,16 @@ jobs:
 
 
               manifest_airports[
-                  icao
+                  airport
               ] = {
 
                   "file":
-                      f"{icao}.pdf",
+                      airport + ".pdf",
 
                   "url":
                       BASE_URL +
-                      f"{icao}.pdf",
+                      airport +
+                      ".pdf",
 
                   "sha256":
                       digest.hexdigest(),
@@ -1189,14 +663,16 @@ jobs:
                       size,
 
                   "pages":
-                      len(
-                          airport_pages[icao]
-                      ),
+                      len(pages),
 
                   "global_pages":
-                      airport_pages[icao]
+                      pages
               }
 
+
+          # --------------------------------------------------
+          # Create manifest
+          # --------------------------------------------------
 
           manifest = {
 
@@ -1210,10 +686,13 @@ jobs:
                   BASE_URL,
 
               "source":
-                  PDF_FILE,
+                  SOURCE_PDF,
 
               "generated_at":
                   generated_at,
+
+              "pages":
+                  pdf_pages,
 
               "airports":
                   manifest_airports
@@ -1221,7 +700,7 @@ jobs:
 
 
           with open(
-              MANIFEST_ASSET_FILE,
+              MANIFEST_FILE,
               "w",
               encoding="utf-8"
           ) as f:
@@ -1234,19 +713,54 @@ jobs:
               )
 
 
+          # --------------------------------------------------
+          # Final validation
+          # --------------------------------------------------
+
+          for airport in sorted(
+              airport_pages.keys()
+          ):
+
+              path =
+                  os.path.join(
+                      BUILD_DIR,
+                      airport + ".pdf"
+                  )
+
+
+              if not os.path.isfile(
+                  path
+              ):
+
+                  raise SystemExit(
+                      "Missing airport PDF: "
+                      + airport
+                  )
+
+
+              if os.path.getsize(
+                  path
+              ) <= 0:
+
+                  raise SystemExit(
+                      "Empty airport PDF: "
+                      + airport
+                  )
+
+
           print()
           print("=" * 70)
-          print("JEPPIRAN V18 DATABASE")
+          print("V18 BUILD COMPLETE")
           print("=" * 70)
 
           print(
-              "Source pages:",
-              total_pages
+              "PDF pages:",
+              pdf_pages
           )
 
           print(
               "Chart rows:",
-              len(chart_rows)
+              len(rows)
           )
 
           print(
@@ -1256,50 +770,36 @@ jobs:
 
           print()
 
-          for icao in sorted(
+          for airport in sorted(
               manifest_airports.keys()
           ):
 
               item =
-                  manifest_airports[icao]
-
+                  manifest_airports[
+                      airport
+                  ]
 
               print(
-                  icao,
-                  ":",
+                  airport,
+                  "->",
                   item["pages"],
                   "pages,",
                   item["size"],
                   "bytes"
               )
 
-          print()
-
-          print(
-              "Generated:",
-              APP_FILE
-          )
-
-          print(
-              "Generated:",
-              APP_ASSET_FILE
-          )
-
-          print(
-              "Generated:",
-              MANIFEST_ASSET_FILE
-          )
-
           print("=" * 70)
 
           PY
 
 
-      - name: Validate generated database
+      - name: Validate generated files
         shell: bash
         run: |
 
           test -f charts-app-v18.json
+
+          test -f charts-index.json
 
           test -f app/src/main/assets/charts-app-v18.json
 
@@ -1327,6 +827,18 @@ jobs:
 
 
           with open(
+              "app/src/main/assets/charts-app-v18.json",
+              "r",
+              encoding="utf-8"
+          ) as f:
+
+              asset =
+                  json.load(
+                      f
+                  )
+
+
+          with open(
               "app/src/main/assets/charts-manifest.json",
               "r",
               encoding="utf-8"
@@ -1348,16 +860,20 @@ jobs:
           if not charts:
 
               raise SystemExit(
-                  "Chart database is empty"
+                  "Database contains no charts"
+              )
+
+
+          if len(charts) != len(asset):
+
+              raise SystemExit(
+                  "Root database and asset database differ"
               )
 
 
           if (
-              database.get(
-                  "version"
-              )
-              !=
-              "v18"
+              database.get("version")
+              != "v18"
           ):
 
               raise SystemExit(
@@ -1366,11 +882,8 @@ jobs:
 
 
           if (
-              manifest.get(
-                  "version"
-              )
-              !=
-              "v18"
+              manifest.get("version")
+              != "v18"
           ):
 
               raise SystemExit(
@@ -1388,16 +901,20 @@ jobs:
           if not airports:
 
               raise SystemExit(
-                  "No airport PDFs generated"
+                  "Manifest contains no airports"
               )
 
 
-          for icao, item in airports.items():
+          for airport, item in airports.items():
+
+              filename =
+                  item["file"]
+
 
               path =
                   os.path.join(
                       "airport-pdfs",
-                      item["file"]
+                      filename
                   )
 
 
@@ -1411,35 +928,21 @@ jobs:
                   )
 
 
-              if (
-                  os.path.getsize(
-                      path
-                  ) <= 0
-              ):
-
-                  raise SystemExit(
-                      "Empty PDF "
-                      + path
-                  )
-
-
           print(
-              "Validated",
-              len(charts),
-              "chart rows."
+              "Database rows:",
+              len(charts)
           )
 
 
           print(
-              "Validated",
-              len(airports),
-              "airport PDFs."
+              "Airport PDFs:",
+              len(airports)
           )
 
           PY
 
 
-      - name: Create or replace chart release
+      - name: Create chart data release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -1455,7 +958,7 @@ jobs:
               --repo "$GITHUB_REPOSITORY" \
               >/dev/null 2>&1; then
 
-            echo "Deleting existing release $TAG"
+            echo "Existing release found."
 
             gh release delete \
               "$TAG" \
@@ -1471,7 +974,7 @@ jobs:
             airport-pdfs/*.pdf \
             --repo "$GITHUB_REPOSITORY" \
             --title "JeppIran Chart Data v18" \
-            --notes "Per-airport JeppIran chart PDFs generated from Iran2620.pdf."
+            --notes "Per-airport chart PDFs generated from Iran2620.pdf."
 
 
       - name: Commit generated database
