@@ -115,6 +115,84 @@ class SettingsActivity :
             ThemeManager.DARK
         )
 
+        val simulatorTitle =
+            TextView(this).apply {
+
+                text =
+                    "FLIGHT SIMULATOR"
+
+                textSize =
+                    12f
+
+                typeface =
+                    Typeface.DEFAULT_BOLD
+
+                setTextColor(
+                    secondaryTextColor()
+                )
+
+                setPadding(
+                    20.dp,
+                    18.dp,
+                    20.dp,
+                    10.dp
+                )
+            }
+
+        root.addView(
+            simulatorTitle
+        )
+
+        val simulatorOption =
+            TextView(this).apply {
+
+                text =
+                    "     Connect to Simulator"
+
+                textSize =
+                    17f
+
+                setTextColor(
+                    textColor()
+                )
+
+                gravity =
+                    Gravity.CENTER_VERTICAL
+
+                setPadding(
+                    24.dp,
+                    18.dp,
+                    24.dp,
+                    18.dp
+                )
+
+                setOnClickListener {
+
+                    startActivity(
+                        android.content.Intent(
+                            this@SettingsActivity,
+                            SimulatorActivity::class.java
+                        )
+                    )
+                }
+            }
+
+        root.addView(
+            simulatorOption,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                60.dp
+            ).apply {
+
+                setMargins(
+                    16.dp,
+                    4.dp,
+                    16.dp,
+                    4.dp
+                )
+            }
+        )
+
         val spacer =
             LinearLayout(this)
 
