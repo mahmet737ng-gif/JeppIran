@@ -16,7 +16,7 @@ import kotlin.math.abs
 object ChartGeoreference {
 
     private const val ASSET_FILE = "chart-georef.json"
-    private const val MIN_POINTS = 3
+    private const val MIN_POINTS = 4
     private const val MAX_RESIDUAL_PX = 18.0
 
     data class GroundControlPoint(
