@@ -61,11 +61,6 @@ object SimulatorManager {
         stop()
         val host = host(context)
         val configuredPort = port(context)
-        if (host.isBlank()) {
-            onState(false)
-            return
-        }
-
         running.set(true)
         connected = false
 
