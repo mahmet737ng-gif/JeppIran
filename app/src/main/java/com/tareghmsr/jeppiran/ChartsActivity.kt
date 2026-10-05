@@ -1,6 +1,7 @@
 package com.tareghmsr.jeppiran
 
 import android.content.Intent
+import android.graphics.Typeface
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -18,60 +19,53 @@ class ChartsActivity : ComponentActivity() {
     private lateinit var searchBox: EditText
     private lateinit var listContainer: LinearLayout
 
-    private val airportCities = mapOf(
-        "OIAA" to "ABADAN",
-        "OIAM" to "MAHSHAHR",
-        "OIAW" to "AHWAZ",
-        "OIBB" to "BUSHEHR",
-        "OIBK" to "KISH",
-        "OIBP" to "ASALOUYEH",
-        "OICC" to "KERMANSHAH",
-        "OICI" to "ILAM",
-        "OIFM" to "ISFAHAN",
-        "OIGG" to "RASHT",
-        "OIHH" to "HAMADAN",
-        "OIIE" to "TEHRAN",
-        "OIII" to "TEHRAN",
-        "OIIP" to "KARAJ",
-        "OIKK" to "KERMAN",
-        "OIMB" to "BIRJAND",
-        "OIMM" to "MASHHAD",
-        "OIMN" to "BOJNURD",
-        "OIMS" to "SABZEVAR",
-        "OING" to "GORGAN",
-        "OINZ" to "SARI",
-        "OISS" to "SHIRAZ",
-        "OITL" to "ARDABIL",
-        "OITR" to "URMIA",
-        "OITT" to "TABRIZ",
-        "OIYY" to "YAZD",
-        "OIZC" to "CHABAHAR",
-        "OIZH" to "ZAHEDAN",
-        "OMDB" to "DUBAI",
-        "OOMS" to "MUSCAT",
-        "ORBI" to "BAGHDAD",
-        "ORNI" to "NAJAF",
-        "UDYZ" to "YEREVAN",
-        "UGSB" to "BATUMI",
-        "UGTB" to "TBILISI",
-        "LTFM" to "ISTANBUL"
-    )
-
     private data class Airport(
         val icao: String,
+        val airportName: String,
         val city: String
     )
 
     private val airports =
-        airportCities
-            .map {
-                Airport(
-                    it.key,
-                    it.value
-                )
-            }
+        listOf(
+            Airport("LTFM", "ISTANBUL", "ISTANBUL"),
+            Airport("OIAA", "ABADAN", "ABADAN"),
+            Airport("OIAM", "MAHSHAHR", "MAHSHAHR"),
+            Airport("OIAW", "AHWAZ", "AHWAZ"),
+            Airport("OIBB", "BUSHEHR", "BUSHEHR"),
+            Airport("OIBK", "KISH", "KISH"),
+            Airport("OIBP", "ASALOUYEH", "ASALOUYEH"),
+            Airport("OICC", "KERMANSHAH", "KERMANSHAH"),
+            Airport("OICI", "ILAM", "ILAM"),
+            Airport("OIFM", "ISFAHAN", "ISFAHAN"),
+            Airport("OIGG", "RASHT", "RASHT"),
+            Airport("OIHH", "HAMADAN", "HAMADAN"),
+            Airport("OIIE", "IMAM KHOMEINI", "TEHRAN"),
+            Airport("OIII", "MEHRABAD", "TEHRAN"),
+            Airport("OIIP", "KARAJ", "KARAJ"),
+            Airport("OIKK", "KERMAN", "KERMAN"),
+            Airport("OIMB", "BIRJAND", "BIRJAND"),
+            Airport("OIMM", "MASHHAD", "MASHHAD"),
+            Airport("OIMN", "BOJNURD", "BOJNURD"),
+            Airport("OIMS", "SABZEVAR", "SABZEVAR"),
+            Airport("OING", "GORGAN", "GORGAN"),
+            Airport("OINZ", "SARI", "SARI"),
+            Airport("OISS", "SHIRAZ", "SHIRAZ"),
+            Airport("OITL", "ARDABIL", "ARDABIL"),
+            Airport("OITR", "URMIA", "URMIA"),
+            Airport("OITT", "TABRIZ", "TABRIZ"),
+            Airport("OIYY", "YAZD", "YAZD"),
+            Airport("OIZC", "CHABAHAR", "CHABAHAR"),
+            Airport("OIZH", "ZAHEDAN", "ZAHEDAN"),
+            Airport("OMDB", "DUBAI INTL", "DUBAI"),
+            Airport("OOMS", "MUSCAT INTL", "MUSCAT"),
+            Airport("ORBI", "BAGHDAD INTL", "BAGHDAD"),
+            Airport("ORNI", "NAJAF", "NAJAF"),
+            Airport("UDYZ", "ZVARTNOTS", "YEREVAN"),
+            Airport("UGSB", "BATUMI", "BATUMI"),
+            Airport("UGTB", "TBILISI", "TBILISI")
+        )
             .sortedBy {
-                it.city
+                it.icao
             }
 
     override fun onCreate(
@@ -227,6 +221,9 @@ class ChartsActivity : ComponentActivity() {
                         airport.icao.contains(
                             q
                         ) ||
+                        airport.airportName.contains(
+                            q
+                        ) ||
                         airport.city.contains(
                             q
                         )
@@ -274,7 +271,7 @@ class ChartsActivity : ComponentActivity() {
                         }
                     }
 
-                val airportText =
+                val icaoText =
                     TextView(this).apply {
 
                         text =
@@ -285,7 +282,30 @@ class ChartsActivity : ComponentActivity() {
 
                         setTypeface(
                             null,
-                            android.graphics.Typeface.BOLD
+                            Typeface.BOLD
+                        )
+
+                        setTextColor(
+                            0xFF172033.toInt()
+                        )
+                    }
+
+                val airportNameText =
+                    TextView(this).apply {
+
+                        text =
+                            airport.airportName
+
+                        textSize =
+                            15f
+
+                        setTypeface(
+                            null,
+                            Typeface.BOLD
+                        )
+
+                        setTextColor(
+                            0xFF344054.toInt()
                         )
                     }
 
@@ -304,7 +324,18 @@ class ChartsActivity : ComponentActivity() {
                     }
 
                 row.addView(
-                    airportText
+                    icaoText
+                )
+
+                row.addView(
+                    airportNameText,
+                    LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    ).apply {
+                        topMargin =
+                            4.dp
+                    }
                 )
 
                 row.addView(
@@ -313,9 +344,8 @@ class ChartsActivity : ComponentActivity() {
                         LinearLayout.LayoutParams.MATCH_PARENT,
                         LinearLayout.LayoutParams.WRAP_CONTENT
                     ).apply {
-
                         topMargin =
-                            4.dp
+                            2.dp
                     }
                 )
 
@@ -341,6 +371,6 @@ class ChartsActivity : ComponentActivity() {
         get() =
             (
                 this *
-                        resources.displayMetrics.density
+                    resources.displayMetrics.density
                 ).toInt()
 }
