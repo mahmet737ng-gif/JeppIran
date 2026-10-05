@@ -1,13 +1,14 @@
 package com.tareghmsr.jeppiran
 
 import android.content.Intent
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
@@ -22,16 +23,16 @@ class AirportChartsActivity :
     ComponentActivity() {
 
     private lateinit var chartScrollView:
-            ScrollView
+        ScrollView
 
     private lateinit var listContainer:
-            LinearLayout
+        LinearLayout
 
     private lateinit var categoryContainer:
-            LinearLayout
+        LinearLayout
 
     private lateinit var selectedCategoryTitle:
-            TextView
+        TextView
 
     private var icao =
         ""
@@ -83,6 +84,11 @@ class AirportChartsActivity :
     override fun onCreate(
         savedInstanceState: Bundle?
     ) {
+
+        ThemeManager.apply(
+            this
+        )
+
         super.onCreate(
             savedInstanceState
         )
@@ -90,25 +96,19 @@ class AirportChartsActivity :
         enableEdgeToEdge()
 
         icao =
-            intent
-                .getStringExtra(
-                    "ICAO"
-                )
-                .orEmpty()
+            intent.getStringExtra(
+                "ICAO"
+            ).orEmpty()
 
         airportName =
-            intent
-                .getStringExtra(
-                    "AIRPORT_NAME"
-                )
-                .orEmpty()
+            intent.getStringExtra(
+                "AIRPORT_NAME"
+            ).orEmpty()
 
         city =
-            intent
-                .getStringExtra(
-                    "CITY"
-                )
-                .orEmpty()
+            intent.getStringExtra(
+                "CITY"
+            ).orEmpty()
 
         buildUi()
 
@@ -124,10 +124,8 @@ class AirportChartsActivity :
                     LinearLayout.VERTICAL
 
                 setBackgroundColor(
-                    Color.rgb(
-                        244,
-                        247,
-                        250
+                    resolveColor(
+                        android.R.attr.colorBackground
                     )
                 )
             }
@@ -148,10 +146,8 @@ class AirportChartsActivity :
                     )
 
                 setTextColor(
-                    Color.rgb(
-                        18,
-                        32,
-                        48
+                    resolveColor(
+                        android.R.attr.textColorPrimary
                     )
                 )
 
@@ -166,7 +162,9 @@ class AirportChartsActivity :
                 )
 
                 setBackgroundColor(
-                    Color.WHITE
+                    resolveColor(
+                        android.R.attr.colorBackground
+                    )
                 )
             }
 
@@ -186,10 +184,8 @@ class AirportChartsActivity :
                     )
 
                 setTextColor(
-                    Color.rgb(
-                        80,
-                        96,
-                        112
+                    resolveColor(
+                        android.R.attr.textColorSecondary
                     )
                 )
 
@@ -222,7 +218,8 @@ class AirportChartsActivity :
                     true
 
                 overScrollMode =
-                    ScrollView.OVER_SCROLL_IF_CONTENT_SCROLLS
+                    ScrollView
+                        .OVER_SCROLL_IF_CONTENT_SCROLLS
 
                 addView(
                     listContainer
@@ -233,7 +230,9 @@ class AirportChartsActivity :
             LinearLayout(this).apply {
 
                 setBackgroundColor(
-                    Color.WHITE
+                    resolveColor(
+                        android.R.attr.colorBackground
+                    )
                 )
 
                 elevation =
@@ -457,19 +456,14 @@ class AirportChartsActivity :
                     Gravity.CENTER
 
                 setTextColor(
-                    Color.rgb(
-                        66,
-                        82,
-                        98
+                    resolveColor(
+                        android.R.attr.textColorSecondary
                     )
                 )
 
                 setBackgroundColor(
-                    Color.argb(
-                        20,
-                        20,
-                        45,
-                        65
+                    resolveColor(
+                        android.R.attr.colorBackground
                     )
                 )
 
@@ -495,19 +489,14 @@ class AirportChartsActivity :
                     Gravity.CENTER
 
                 setTextColor(
-                    Color.rgb(
-                        66,
-                        82,
-                        98
+                    resolveColor(
+                        android.R.attr.textColorSecondary
                     )
                 )
 
                 setBackgroundColor(
-                    Color.argb(
-                        20,
-                        20,
-                        45,
-                        65
+                    resolveColor(
+                        android.R.attr.colorBackground
                     )
                 )
 
@@ -545,35 +534,42 @@ class AirportChartsActivity :
             )
         )
 
-        scrollView.viewTreeObserver.addOnScrollChangedListener {
+        scrollView
+            .viewTreeObserver
+            .addOnScrollChangedListener {
 
-            upButton.alpha =
-                if (
-                    scrollView.scrollY > 0
-                ) {
-                    1f
-                } else {
-                    0.25f
+                upButton.alpha =
+                    if (
+                        scrollView.scrollY > 0
+                    ) {
+                        1f
+                    } else {
+                        0.25f
+                    }
+
+                val child =
+                    scrollView.getChildAt(
+                        0
+                    )
+
+                if (child != null) {
+
+                    val maxScroll =
+                        child.height -
+                                scrollView.height
+
+                    downButton.alpha =
+                        if (
+                            maxScroll > 0 &&
+                            scrollView.scrollY <
+                                maxScroll
+                        ) {
+                            1f
+                        } else {
+                            0.25f
+                        }
                 }
-
-            val child =
-                scrollView.getChildAt(0)
-
-            val maxScroll =
-                child.height -
-                        scrollView.height
-
-            downButton.alpha =
-                if (
-                    maxScroll > 0 &&
-                    scrollView.scrollY <
-                        maxScroll
-                ) {
-                    1f
-                } else {
-                    0.25f
-                }
-        }
+            }
 
         return wrapper
     }
@@ -593,9 +589,17 @@ class AirportChartsActivity :
             Gravity.CENTER
 
         categoryContainer.setPadding(
-            if (horizontal) 8.dp else 6.dp,
+            if (horizontal) {
+                8.dp
+            } else {
+                6.dp
+            },
             6.dp,
-            if (horizontal) 8.dp else 6.dp,
+            if (horizontal) {
+                8.dp
+            } else {
+                6.dp
+            },
             6.dp
         )
     }
@@ -608,11 +612,13 @@ class AirportChartsActivity :
             categories.filter { category ->
 
                 allCharts.any {
+
                     normalizeCategory(
                         it.category
-                    ) == normalizeCategory(
-                        category.key
-                    )
+                    ) ==
+                            normalizeCategory(
+                                category.key
+                            )
                 }
             }
 
@@ -631,6 +637,7 @@ class AirportChartsActivity :
 
             val count =
                 allCharts.count {
+
                     normalizeCategory(
                         it.category
                     ) ==
@@ -712,6 +719,15 @@ class AirportChartsActivity :
                 params
             )
         }
+
+        if (
+            availableCategories.isNotEmpty()
+        ) {
+
+            refreshCategoryButtonStates(
+                availableCategories.first().key
+            )
+        }
     }
 
     private fun selectCategory(
@@ -724,6 +740,7 @@ class AirportChartsActivity :
         val filtered =
             allCharts
                 .filter {
+
                     normalizeCategory(
                         it.category
                     ) ==
@@ -767,13 +784,13 @@ class AirportChartsActivity :
             )
 
         for (
-            i in 0 until
-                    categoryContainer.childCount
+            index in
+            0 until categoryContainer.childCount
         ) {
 
             val child =
                 categoryContainer.getChildAt(
-                    i
+                    index
                 )
 
             if (
@@ -799,12 +816,13 @@ class AirportChartsActivity :
 
             child.setTextColor(
                 if (isSelected) {
+
                     Color.WHITE
+
                 } else {
-                    Color.rgb(
-                        45,
-                        61,
-                        78
+
+                    resolveColor(
+                        android.R.attr.textColorPrimary
                     )
                 }
             )
@@ -892,10 +910,8 @@ class AirportChartsActivity :
                     )
 
                 setTextColor(
-                    Color.rgb(
-                        23,
-                        38,
-                        54
+                    resolveColor(
+                        android.R.attr.textColorPrimary
                     )
                 )
             }
@@ -910,10 +926,8 @@ class AirportChartsActivity :
                     12f
 
                 setTextColor(
-                    Color.rgb(
-                        102,
-                        116,
-                        132
+                    resolveColor(
+                        android.R.attr.textColorSecondary
                     )
                 )
             }
@@ -1049,6 +1063,7 @@ class AirportChartsActivity :
                 category ->
 
                 allCharts.any {
+
                     normalizeCategory(
                         it.category
                     ) ==
@@ -1207,7 +1222,7 @@ class AirportChartsActivity :
     }
 
     private fun buildAirportTitle():
-            String {
+        String {
 
         val cleanIcao =
             icao.trim()
@@ -1254,8 +1269,38 @@ class AirportChartsActivity :
             ?: -1
     }
 
+    private fun resolveColor(
+        attribute: Int
+    ): Int {
+
+        val typedValue =
+            TypedValue()
+
+        theme.resolveAttribute(
+            attribute,
+            typedValue,
+            true
+        )
+
+        return if (
+            typedValue.resourceId != 0
+        ) {
+
+            getColor(
+                typedValue.resourceId
+            )
+
+        } else {
+
+            typedValue.data
+        }
+    }
+
     private fun createChartBackground():
-            GradientDrawable {
+        GradientDrawable {
+
+        val dark =
+            isDarkTheme()
 
         return GradientDrawable().apply {
 
@@ -1266,16 +1311,38 @@ class AirportChartsActivity :
                 14.dp.toFloat()
 
             setColor(
-                Color.WHITE
+                if (dark) {
+
+                    Color.rgb(
+                        25,
+                        35,
+                        45
+                    )
+
+                } else {
+
+                    Color.WHITE
+                }
             )
 
             setStroke(
                 1.dp,
-                Color.rgb(
-                    224,
-                    230,
-                    236
-                )
+                if (dark) {
+
+                    Color.rgb(
+                        55,
+                        70,
+                        84
+                    )
+
+                } else {
+
+                    Color.rgb(
+                        224,
+                        230,
+                        236
+                    )
+                }
             )
         }
     }
@@ -1283,6 +1350,9 @@ class AirportChartsActivity :
     private fun createCategoryBackground(
         selected: Boolean
     ): GradientDrawable {
+
+        val dark =
+            isDarkTheme()
 
         return GradientDrawable().apply {
 
@@ -1297,8 +1367,8 @@ class AirportChartsActivity :
                 setColor(
                     Color.rgb(
                         25,
-                        97,
-                        111
+                        115,
+                        125
                     )
                 )
 
@@ -1306,37 +1376,74 @@ class AirportChartsActivity :
                     1.dp,
                     Color.rgb(
                         25,
-                        97,
-                        111
+                        115,
+                        125
                     )
                 )
 
             } else {
 
                 setColor(
-                    Color.rgb(
-                        239,
-                        243,
-                        247
-                    )
+                    if (dark) {
+
+                        Color.rgb(
+                            31,
+                            43,
+                            55
+                        )
+
+                    } else {
+
+                        Color.rgb(
+                            239,
+                            243,
+                            247
+                        )
+                    }
                 )
 
                 setStroke(
                     1.dp,
-                    Color.rgb(
-                        215,
-                        223,
-                        231
-                    )
+                    if (dark) {
+
+                        Color.rgb(
+                            60,
+                            76,
+                            91
+                        )
+
+                    } else {
+
+                        Color.rgb(
+                            215,
+                            223,
+                            231
+                        )
+                    }
                 )
             }
         }
+    }
+
+    private fun isDarkTheme():
+        Boolean {
+
+        return (
+            resources
+                .configuration
+                .uiMode
+                and
+                Configuration.UI_MODE_NIGHT_MASK
+            ) ==
+                Configuration.UI_MODE_NIGHT_YES
     }
 
     private val Int.dp: Int
         get() =
             (
                 this *
-                    resources.displayMetrics.density
+                    resources
+                        .displayMetrics
+                        .density
                 ).toInt()
 }
