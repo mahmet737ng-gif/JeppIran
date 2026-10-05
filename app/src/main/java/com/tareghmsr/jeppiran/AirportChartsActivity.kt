@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.widget.LinearLayout
+import android.widget.ScrollView
 import android.widget.TextView
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
@@ -12,12 +13,17 @@ import androidx.core.view.WindowInsetsCompat
 import org.json.JSONArray
 import org.json.JSONObject
 
-class AirportChartsActivity : ComponentActivity() {
+class AirportChartsActivity :
+    ComponentActivity() {
 
-    private lateinit var listContainer: LinearLayout
+    private lateinit var listContainer:
+            LinearLayout
 
-    private var icao = ""
-    private var city = ""
+    private var icao =
+        ""
+
+    private var city =
+        ""
 
     private data class Chart(
         val page: Int,
@@ -28,19 +34,24 @@ class AirportChartsActivity : ComponentActivity() {
     override fun onCreate(
         savedInstanceState: Bundle?
     ) {
-        super.onCreate(savedInstanceState)
+        super.onCreate(
+            savedInstanceState
+        )
 
         enableEdgeToEdge()
 
         icao =
-            intent.getStringExtra("ICAO")
-                .orEmpty()
+            intent.getStringExtra(
+                "ICAO"
+            ).orEmpty()
 
         city =
-            intent.getStringExtra("CITY")
-                .orEmpty()
+            intent.getStringExtra(
+                "CITY"
+            ).orEmpty()
 
         buildUi()
+
         loadCharts()
     }
 
@@ -63,7 +74,8 @@ class AirportChartsActivity : ComponentActivity() {
                 text =
                     "$icao  •  $city"
 
-                textSize = 22f
+                textSize =
+                    22f
 
                 typeface =
                     Typeface.DEFAULT_BOLD
@@ -87,10 +99,30 @@ class AirportChartsActivity : ComponentActivity() {
                     LinearLayout.VERTICAL
             }
 
-        root.addView(header)
+        val scrollView =
+            ScrollView(this).apply {
+
+                isFillViewport =
+                    true
+
+                overScrollMode =
+                    ScrollView.OVER_SCROLL_IF_CONTENT_SCROLLS
+
+                addView(
+                    listContainer,
+                    ScrollView.LayoutParams(
+                        ScrollView.LayoutParams.MATCH_PARENT,
+                        ScrollView.LayoutParams.WRAP_CONTENT
+                    )
+                )
+            }
 
         root.addView(
-            listContainer,
+            header
+        )
+
+        root.addView(
+            scrollView,
             LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 0,
@@ -98,7 +130,9 @@ class AirportChartsActivity : ComponentActivity() {
             )
         )
 
-        setContentView(root)
+        setContentView(
+            root
+        )
 
         ViewCompat.setOnApplyWindowInsetsListener(
             root
@@ -111,7 +145,7 @@ class AirportChartsActivity : ComponentActivity() {
 
             view.setPadding(
                 0,
-                bars.top,
+                               bars.top,
                 0,
                 bars.bottom
             )
@@ -124,7 +158,9 @@ class AirportChartsActivity : ComponentActivity() {
 
         val text =
             assets
-                .open("charts-app-v16.json")
+                .open(
+                    "charts-app-v16.json"
+                )
                 .bufferedReader()
                 .use {
                     it.readText()
@@ -136,7 +172,9 @@ class AirportChartsActivity : ComponentActivity() {
         val root =
             text.trim()
 
-        if (root.startsWith("[")) {
+        if (
+            root.startsWith("[")
+        ) {
 
             val array =
                 JSONArray(root)
@@ -159,21 +197,30 @@ class AirportChartsActivity : ComponentActivity() {
                     "pages"
                 )
 
-            var found = false
+            var found =
+                false
 
-            for (key in possibleArrays) {
+            for (
+                key in possibleArrays
+            ) {
 
                 val value =
-                    jsonObject.opt(key)
+                    jsonObject.opt(
+                        key
+                    )
 
-                if (value is JSONArray) {
+                if (
+                    value is JSONArray
+                ) {
 
                     readArray(
                         value,
                         charts
                     )
 
-                    found = true
+                    found =
+                        true
+
                     break
                 }
             }
@@ -183,15 +230,21 @@ class AirportChartsActivity : ComponentActivity() {
                 val keys =
                     jsonObject.keys()
 
-                while (keys.hasNext()) {
+                while (
+                    keys.hasNext()
+                ) {
 
                     val key =
                         keys.next()
 
                     val value =
-                        jsonObject.opt(key)
+                        jsonObject.opt(
+                            key
+                        )
 
-                    if (value is JSONObject) {
+                    if (
+                        value is JSONObject
+                    ) {
 
                         readChartObject(
                             value,
@@ -214,13 +267,16 @@ class AirportChartsActivity : ComponentActivity() {
             }
             .forEach { chart ->
 
-                addChartRow(chart)
+                addChartRow(
+                    chart
+                )
             }
     }
 
     private fun readArray(
         array: JSONArray,
-        charts: MutableList<Chart>
+        charts:
+            MutableList<Chart>
     ) {
 
         for (
@@ -230,7 +286,9 @@ class AirportChartsActivity : ComponentActivity() {
             val value =
                 array.opt(i)
 
-            if (value is JSONObject) {
+            if (
+                value is JSONObject
+            ) {
 
                 readChartObject(
                     value,
@@ -242,14 +300,21 @@ class AirportChartsActivity : ComponentActivity() {
 
     private fun readChartObject(
         item: JSONObject,
-        charts: MutableList<Chart>
+        charts:
+            MutableList<Chart>
     ) {
 
         val itemIcao =
             firstNonEmpty(
-                item.optString("icao"),
-                item.optString("airport"),
-                item.optString("airport_icao")
+                item.optString(
+                    "icao"
+                ),
+                item.optString(
+                    "airport"
+                ),
+                item.optString(
+                    "airport_icao"
+                )
             ).uppercase()
 
         if (
@@ -275,7 +340,9 @@ class AirportChartsActivity : ComponentActivity() {
                 )
             )
 
-        if (page <= 0) {
+        if (
+            page <= 0
+        ) {
             return
         }
 
@@ -309,9 +376,12 @@ class AirportChartsActivity : ComponentActivity() {
 
         charts.add(
             Chart(
-                page = page,
-                name = name,
-                category = category
+                page =
+                    page,
+                name =
+                    name,
+                category =
+                    category
             )
         )
     }
@@ -370,7 +440,9 @@ class AirportChartsActivity : ComponentActivity() {
                         chart.category
                     )
 
-                    startActivity(intent)
+                    startActivity(
+                        intent
+                    )
                 }
             }
 
@@ -401,7 +473,9 @@ class AirportChartsActivity : ComponentActivity() {
                 )
             }
 
-        row.addView(title)
+        row.addView(
+            title
+        )
 
         row.addView(
             subtitle,
@@ -456,8 +530,9 @@ class AirportChartsActivity : ComponentActivity() {
     }
 
     private val Int.dp: Int
-        get() = (
-            this *
-                    resources.displayMetrics.density
-            ).toInt()
+        get() =
+            (
+                this *
+                        resources.displayMetrics.density
+                ).toInt()
 }
