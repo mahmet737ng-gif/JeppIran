@@ -1,4 +1,4 @@
-name: V5
+name: V6
 
 'on':
   workflow_dispatch:
@@ -21,7 +21,7 @@ jobs:
       - name: Check PDF
         run: |
           echo "========================================"
-          echo "JeppIran Chart Analyzer V5"
+          echo "JeppIran Chart Analyzer V6"
           echo "========================================"
 
           if [ ! -f "Iran2620.pdf" ]; then
@@ -34,7 +34,7 @@ jobs:
       - name: Analyze charts
         shell: bash
         run: |
-          cat > analyze_v5.py <<'PY'
+          cat > analyze_v6.py <<'PY'
           import json
           import os
           import re
@@ -42,23 +42,64 @@ jobs:
           import tempfile
 
           PDF = "Iran2620.pdf"
-          OUT_INDEX = "charts-index-v5.json"
-          OUT_SUMMARY = "charts-summary-v5.json"
-          OUT_APP = "charts-app-v5.json"
+
+          OUT_INDEX = "charts-index-v6.json"
+          OUT_SUMMARY = "charts-summary-v6.json"
+          OUT_APP = "charts-app-v6.json"
 
           VALID_PREFIXES = ("O", "L", "U", "M")
 
           FALSE_WORDS = {
-              "ONLY", "ONTO", "AREA", "ACFT", "MAKE", "TURN",
-              "ELEV", "RWYS", "IRAN", "TAKE", "ATIS", "EOBT",
-              "DOGS", "PAPI", "RCLM", "WILL", "LAND", "CDFA",
-              "PANS", "VNAV", "LIEU", "APCH", "ICAO", "JEPPESEN",
-              "CHART", "CHARTS", "PAGE", "DATE", "TIME", "TYPE",
-              "AIRPORT", "APPROACH", "DEPARTURE", "ARRIVAL"
+              "ONLY",
+              "ONTO",
+              "AREA",
+              "ACFT",
+              "MAKE",
+              "TURN",
+              "ELEV",
+              "RWYS",
+              "IRAN",
+              "TAKE",
+              "ATIS",
+              "EOBT",
+              "DOGS",
+              "PAPI",
+              "RCLM",
+              "WILL",
+              "LAND",
+              "CDFA",
+              "PANS",
+              "VNAV",
+              "LIEU",
+              "APCH",
+              "ICAO",
+              "JEPPESEN",
+              "CHART",
+              "CHARTS",
+              "PAGE",
+              "DATE",
+              "TIME",
+              "TYPE",
+              "AIRPORT",
+              "APPROACH",
+              "DEPARTURE",
+              "ARRIVAL",
+              "LEFT",
+              "RIGHT",
+              "LONG",
+              "UNIT",
+              "LLWS",
+              "OVER",
+              "LOST",
+              "LOSS",
+              "USED",
+              "MUST",
+              "OPIS"
           }
 
           def valid_icao(token):
               token = token.upper()
+
               return (
                   len(token) == 4
                   and token[0] in VALID_PREFIXES
@@ -67,23 +108,154 @@ jobs:
               )
 
           def find_icaos(text):
-              tokens = re.findall(r'\b[A-Z]{4}\b', text.upper())
+              text_upper = text.upper()
+
               result = []
+
+              # Strong Jeppesen header:
+              # OIAA/ABD
+              # OIAW/AHW
+              # LTFM/IST
+              # etc.
+              strong = re.findall(
+                  r'\b([OLUM][A-Z0-9]{3})\s*/\s*[A-Z]{3}\b',
+                  text_upper
+              )
+
+              for token in strong:
+                  if valid_icao(token) and token not in result:
+                      result.append(token)
+
+              # Normal four-letter candidates
+              tokens = re.findall(
+                  r'\b[A-Z]{4}\b',
+                  text_upper
+              )
 
               for token in tokens:
                   if valid_icao(token) and token not in result:
                       result.append(token)
 
-              strong = re.findall(
-                  r'\b([OLUM][A-Z0-9]{3})\s*/\s*[A-Z]{3}\b',
-                  text.upper()
-              )
-
-              for token in strong:
-                  if valid_icao(token) and token not in result:
-                      result.insert(0, token)
-
               return result
+
+          def normalize_lines(text):
+              lines = []
+
+              for line in text.splitlines():
+                  line = re.sub(
+                      r'\s+',
+                      ' ',
+                      line
+                  ).strip()
+
+                  if line:
+                      lines.append(line)
+
+              return lines
+
+          def extract_title(text):
+              lines = normalize_lines(text)
+
+              # 1. Explicit SID title
+              for line in lines:
+                  u = line.upper()
+
+                  if (
+                      ".SID." in u
+                      or "STANDARD INSTRUMENT DEPARTURE" in u
+                      or "INSTRUMENT DEPARTURE" in u
+                  ):
+                      return line[:300]
+
+              # 2. Explicit STAR title
+              for line in lines:
+                  u = line.upper()
+
+                  if (
+                      ".STAR." in u
+                      or "STANDARD TERMINAL ARRIVAL" in u
+                      or "STANDARD ARRIVAL" in u
+                  ):
+                      return line[:300]
+
+              # 3. Explicit approach title
+              for line in lines:
+                  u = line.upper()
+
+                  if (
+                      "APPROACH" in u
+                      or "APCH" in u
+                      or "ILS RWY" in u
+                      or "RNAV RWY" in u
+                      or "RNP RWY" in u
+                      or "VOR RWY" in u
+                      or "NDB RWY" in u
+                  ):
+                      return line[:300]
+
+              # 4. Airport information
+              for line in lines:
+                  u = line.upper()
+
+                  if "AIRPORT INFORMATION" in u:
+                      return line[:300]
+
+              # 5. Jeppesen airport header
+              for line in lines:
+                  u = line.upper()
+
+                  if (
+                      "JEPPESEN" in u
+                      and re.search(
+                          r'\b[OLUM][A-Z0-9]{3}\s*/\s*[A-Z]{3}\b',
+                          u
+                      )
+                  ):
+                      return line[:300]
+
+              # 6. First useful line
+              for line in lines[:40]:
+                  if len(line) >= 8:
+                      return line[:300]
+
+              return ""
+
+          def explicit_category_from_title(title):
+              u = title.upper()
+
+              # HIGHEST PRIORITY
+
+              if (
+                  ".SID." in u
+                  or "STANDARD INSTRUMENT DEPARTURE" in u
+                  or "INSTRUMENT DEPARTURE" in u
+                  or re.search(r'\bSID\b', u)
+              ):
+                  return "SID"
+
+              if (
+                  ".STAR." in u
+                  or "STANDARD TERMINAL ARRIVAL" in u
+                  or "STANDARD ARRIVAL" in u
+                  or re.search(r'\bSTAR\b', u)
+              ):
+                  return "STAR"
+
+              if (
+                  "APPROACH" in u
+                  or "APCH" in u
+                  or "ILS RWY" in u
+                  or "RNAV RWY" in u
+                  or "RNP RWY" in u
+                  or "VOR RWY" in u
+                  or "NDB RWY" in u
+              ):
+                  return "Approach"
+
+              if "AIRPORT INFORMATION" in u:
+                  return "Airport"
+
+              return None
 
           def score_category(text, title):
               t = text.upper()
@@ -97,25 +269,38 @@ jobs:
                   "Other": 0
               }
 
-              # OTHER / NON-CHART PAGES
-              other_patterns = [
-                  "REVISION",
+              # --------------------------------------------------
+              # OTHER
+              # --------------------------------------------------
+              # IMPORTANT:
+              # Do NOT use generic words such as:
+              # CHANGES
+              # EFFECTIVE DATE
+              # CONTENTS
+              # because they can appear inside real charts.
+              #
+              # Only very strong non-chart indicators.
+              # --------------------------------------------------
+
+              strong_other_patterns = [
                   "REVISION NOTICE",
-                  "CHANGE NOTICE",
-                  "CHANGES",
+                  "REVISION SUMMARY",
                   "TABLE OF CONTENTS",
-                  "CONTENTS",
-                  "EFFECTIVE DATE"
+                  "TERMINAL CHART DATA CYCLE",
+                  "LIST OF EFFECTIVE PAGES",
+                  "NOT FOR NAVIGATION"
               ]
 
-              for p in other_patterns:
+              for p in strong_other_patterns:
                   if p in t:
                       scores["Other"] += 80
 
+              # --------------------------------------------------
               # SID
+              # --------------------------------------------------
+
               sid_patterns = [
                   ".SID.",
-                  " SID ",
                   "STANDARD INSTRUMENT DEPARTURE",
                   "INSTRUMENT DEPARTURE",
                   "DEPARTURE PROCEDURE",
@@ -123,13 +308,21 @@ jobs:
               ]
 
               for p in sid_patterns:
-                  if p in t or p in h:
+                  if p in t:
                       scores["SID"] += 40
 
+              if ".SID." in h:
+                  scores["SID"] += 80
+
+              if "STANDARD INSTRUMENT DEPARTURE" in h:
+                  scores["SID"] += 80
+
+              # --------------------------------------------------
               # STAR
+              # --------------------------------------------------
+
               star_patterns = [
                   ".STAR.",
-                  " STAR ",
                   "STANDARD TERMINAL ARRIVAL",
                   "STANDARD ARRIVAL",
                   "ARRIVAL PROCEDURE",
@@ -137,10 +330,19 @@ jobs:
               ]
 
               for p in star_patterns:
-                  if p in t or p in h:
+                  if p in t:
                       scores["STAR"] += 40
 
+              if ".STAR." in h:
+                  scores["STAR"] += 80
+
+              if "STANDARD TERMINAL ARRIVAL" in h:
+                  scores["STAR"] += 80
+
+              # --------------------------------------------------
               # APPROACH
+              # --------------------------------------------------
+
               approach_patterns = [
                   "APPROACH",
                   "APCH",
@@ -161,11 +363,11 @@ jobs:
               ]
 
               for p in approach_patterns:
-                  if p in t or p in h:
+                  if p in t:
                       scores["Approach"] += 10
 
-              if re.search(r'\bILS\b.*\bRWY\b', t):
-                  scores["Approach"] += 35
+              if "ACFT EXECUTING INSTRUMENTAL APPROACH" in h:
+                  scores["Approach"] += 80
 
               if "MISSED APPROACH" in t:
                   scores["Approach"] += 30
@@ -173,7 +375,16 @@ jobs:
               if "FINAL APPROACH" in t:
                   scores["Approach"] += 25
 
+              if re.search(
+                  r'\bILS\b.*\bRWY\b',
+                  t
+              ):
+                  scores["Approach"] += 30
+
+              # --------------------------------------------------
               # AIRPORT
+              # --------------------------------------------------
+
               airport_patterns = [
                   "AIRPORT INFORMATION",
                   "AERODROME CHART",
@@ -189,18 +400,17 @@ jobs:
               ]
 
               for p in airport_patterns:
-                  if p in t or p in h:
-                      scores["Airport"] += 8
+                  if p in t:
+                      scores["Airport"] += 6
 
+              # Strong Jeppesen airport header
               if re.search(
                   r'\b[OLUM][A-Z0-9]{3}\s*/\s*[A-Z]{3}\b.*JEPPESEN',
                   t
               ):
-                  scores["Airport"] += 50
+                  scores["Airport"] += 45
 
-              if "JEPPESEN" in t and "AIRPORT" in t:
-                  scores["Airport"] += 25
-
+              # Operational airport information
               operational = [
                   "ATIS",
                   "PAPI",
@@ -212,110 +422,127 @@ jobs:
               ]
 
               operational_count = sum(
-                  1 for p in operational if p in t
+                  1
+                  for p in operational
+                  if p in t
               )
 
-              if operational_count >= 4:
-                  scores["Airport"] += 35
-              elif operational_count >= 2:
+              if operational_count >= 5:
+                  scores["Airport"] += 30
+
+              elif operational_count >= 3:
                   scores["Airport"] += 15
 
               return scores
 
-          def choose_category(scores):
-              if scores["Other"] >= 70:
-                  return "Other", min(
-                      1.0,
-                      scores["Other"] / 100.0
-                  )
+          def choose_category(scores, title):
+              # ---------------------------------------------
+              # FIRST: explicit title always wins
+              # ---------------------------------------------
+
+              explicit = explicit_category_from_title(
+                  title
+              )
+
+              if explicit:
+                  return explicit, 0.99
+
+              # ---------------------------------------------
+              # Strong non-chart page
+              # ---------------------------------------------
+
+              if (
+                  scores["Other"] >= 80
+                  and max(
+                      scores["STAR"],
+                      scores["SID"],
+                      scores["Approach"],
+                      scores["Airport"]
+                  ) < 60
+              ):
+                  return "Other", 0.95
+
+              # ---------------------------------------------
+              # Rank chart categories
+              # ---------------------------------------------
+
+              chart_scores = {
+                  "Airport": scores["Airport"],
+                  "STAR": scores["STAR"],
+                  "SID": scores["SID"],
+                  "Approach": scores["Approach"]
+              }
 
               ranked = sorted(
-                  scores.items(),
+                  chart_scores.items(),
                   key=lambda x: x[1],
                   reverse=True
               )
 
-              best, best_score = ranked[0]
+              best_category, best_score = ranked[0]
               second_score = ranked[1][1]
 
               if best_score <= 0:
+                  if scores["Other"] > 0:
+                      return "Other", 0.75
+
                   return "Unknown", 0.0
 
-              if best_score - second_score < 10:
-                  return "Unknown", min(
-                      0.89,
-                      best_score / 100.0
+              # Clear winner
+              if best_score >= 70:
+                  confidence = min(
+                      0.95,
+                      0.70 +
+                      (best_score - second_score) / 200.0
                   )
 
-              confidence = min(
-                  0.99,
-                  max(
-                      0.50,
-                      (best_score - second_score + 20) / 100.0
+                  return (
+                      best_category,
+                      round(confidence, 3)
                   )
-              )
 
-              return best, confidence
-
-          def extract_title(text):
-              lines = [
-                  re.sub(r'\s+', ' ', x).strip()
-                  for x in text.splitlines()
-                  if x.strip()
-              ]
-
-              for line in lines:
-                  u = line.upper()
-
-                  if (
-                      ".SID." in u
-                      or ".STAR." in u
-                      or "STANDARD INSTRUMENT DEPARTURE" in u
-                      or "STANDARD TERMINAL ARRIVAL" in u
-                      or "APPROACH" in u
-                      or "ILS RWY" in u
-                      or "RNAV RWY" in u
-                  ):
-                      return line[:300]
-
-              for line in lines:
-                  if (
-                      "JEPPESEN" in line.upper()
-                      and re.search(
-                          r'\b[OLUM][A-Z0-9]{3}\s*/\s*[A-Z]{3}\b',
-                          line.upper()
+              # Moderate winner
+              if best_score >= 35:
+                  if best_score - second_score >= 10:
+                      return (
+                          best_category,
+                          0.80
                       )
-                  ):
-                      return line[:300]
 
-              for line in lines[:30]:
-                  if len(line) >= 8:
-                      return line[:300]
+              # Other only if no useful chart evidence
+              if (
+                  scores["Other"] >= 80
+                  and best_score < 35
+              ):
+                  return "Other", 0.90
 
-              return ""
+              return "Unknown", 0.0
 
-          print("Extracting PDF information...")
+          print("Reading PDF...")
 
           info = subprocess.check_output(
               ["pdfinfo", PDF],
               text=True
           )
 
-          pages_match = re.search(
+          match = re.search(
               r"Pages:\s+(\d+)",
               info
           )
 
-          if not pages_match:
+          if not match:
               raise RuntimeError(
-                  "Could not determine PDF page count"
+                  "Unable to determine page count"
               )
 
-          pages = int(pages_match.group(1))
+          pages = int(match.group(1))
+
+          print(f"Total pages: {pages}")
 
           results = []
 
           with tempfile.TemporaryDirectory() as tmp:
+
               for page in range(1, pages + 1):
 
                   txt_file = os.path.join(
@@ -351,18 +578,18 @@ jobs:
                       text = ""
 
                   icaos = find_icaos(text)
+
                   title = extract_title(text)
+
                   scores = score_category(
                       text,
                       title
                   )
 
                   category, confidence = choose_category(
-                      scores
+                      scores,
+                      title
                   )
-
-                  if icaos and icaos[0] == "ICAO":
-                      icaos = icaos[1:]
 
                   airport = (
                       icaos[0]
@@ -374,59 +601,52 @@ jobs:
                       "page": page,
                       "airport_icao": airport,
                       "category": category,
-                      "confidence": round(
-                          confidence,
-                          3
-                      ),
+                      "confidence": confidence,
                       "title": title,
                       "icao_candidates": icaos[:10],
                       "scores": scores
                   })
 
-                  if page % 25 == 0 or page == pages:
+                  if page % 25 == 0:
                       print(
                           f"Processed {page}/{pages}"
                       )
 
-          # CONTEXT PASS
-          for i, item in enumerate(results):
+          # --------------------------------------------------
+          # AIRPORT CONTEXT PASS
+          # --------------------------------------------------
+
+          last_airport = None
+
+          for item in results:
 
               if item["airport_icao"]:
-                  continue
+                  last_airport = item["airport_icao"]
 
-              candidates = []
+              elif last_airport:
+                  item["airport_icao"] = last_airport
 
-              if i > 0:
-                  prev_airport = results[i - 1][
-                      "airport_icao"
-                  ]
+          # Backward context for pages before first airport
+          next_airport = None
 
-                  if prev_airport:
-                      candidates.append(
-                          prev_airport
-                      )
+          for item in reversed(results):
 
-              if i + 1 < len(results):
-                  next_airport = results[i + 1][
-                      "airport_icao"
-                  ]
+              if item["airport_icao"]:
+                  next_airport = item["airport_icao"]
 
-                  if next_airport:
-                      candidates.append(
-                          next_airport
-                      )
+              elif next_airport:
+                  item["airport_icao"] = next_airport
 
-              if candidates:
-                  if len(set(candidates)) == 1:
-                      item["airport_icao"] = candidates[0]
-
+          # --------------------------------------------------
           # CATEGORY CONTEXT REPAIR
+          # --------------------------------------------------
+
           for i, item in enumerate(results):
 
               if item["category"] != "Unknown":
                   continue
 
-              if i == 0 or i == len(results) - 1:
+              if i <= 0 or i >= len(results) - 1:
                   continue
 
               prev_item = results[i - 1]
@@ -435,6 +655,8 @@ jobs:
               if (
                   prev_item["category"]
                   == next_item["category"]
+                  and prev_item["airport_icao"]
+                  == next_item["airport_icao"]
                   and prev_item["category"]
                   in {
                       "SID",
@@ -442,9 +664,6 @@ jobs:
                       "Approach",
                       "Airport"
                   }
-                  and prev_item["airport_icao"]
-                  and prev_item["airport_icao"]
-                  == next_item["airport_icao"]
               ):
                   item["category"] = (
                       prev_item["category"]
@@ -456,7 +675,10 @@ jobs:
 
                   item["confidence"] = 0.75
 
+          # --------------------------------------------------
           # SUMMARY
+          # --------------------------------------------------
+
           counts = {
               "Airport": 0,
               "STAR": 0,
@@ -472,27 +694,26 @@ jobs:
 
               category = item["category"]
 
-              if category not in counts:
-                  counts[category] = 0
-
               counts[category] += 1
 
               airport = item["airport_icao"]
 
-              if airport:
-                  airports.setdefault(
-                      airport,
-                      {
-                          "Airport": 0,
-                          "STAR": 0,
-                          "SID": 0,
-                          "Approach": 0,
-                          "Unknown": 0,
-                          "Other": 0
-                      }
-                  )
+              if not airport:
+                  continue
 
-                  airports[airport][category] += 1
+              airports.setdefault(
+                  airport,
+                  {
+                      "Airport": 0,
+                      "STAR": 0,
+                      "SID": 0,
+                      "Approach": 0,
+                      "Unknown": 0,
+                      "Other": 0
+                  }
+              )
+
+              airports[airport][category] += 1
 
           summary = {
               "source": PDF,
@@ -504,17 +725,19 @@ jobs:
               "airports": airports
           }
 
+          # --------------------------------------------------
           # APP DATA
+          # --------------------------------------------------
+
           app_airports = {}
 
           for item in results:
 
               airport = item["airport_icao"]
+              category = item["category"]
 
               if not airport:
                   continue
-
-              category = item["category"]
 
               if category not in {
                   "Airport",
@@ -534,7 +757,9 @@ jobs:
                   }
               )
 
-              app_airports[airport][category].append({
+              app_airports[
+                  airport
+              ][category].append({
                   "page": item["page"],
                   "title": item["title"],
                   "confidence": item["confidence"]
@@ -551,6 +776,10 @@ jobs:
               ],
               "airports": app_airports
           }
+
+          # --------------------------------------------------
+          # WRITE FILES
+          # --------------------------------------------------
 
           with open(
               OUT_INDEX,
@@ -588,25 +817,32 @@ jobs:
                   indent=2
               )
 
+          # --------------------------------------------------
+          # PRINT FINAL SUMMARY
+          # --------------------------------------------------
+
           print("")
           print("========================================")
-          print("V5 ANALYSIS COMPLETE")
+          print("V6 ANALYSIS COMPLETE")
           print("========================================")
+
           print(
               json.dumps(
                   summary,
+                  ensure_ascii=False,
                   indent=2
               )
           )
+
           PY
 
-          python3 analyze_v5.py
+          python3 analyze_v6.py
 
-      - name: Upload V5 analysis
+      - name: Upload V6 analysis
         uses: actions/upload-artifact@v4
         with:
-          name: JeppIran-chart-analysis-v5
+          name: JeppIran-chart-analysis-v6
           path: |
-            charts-index-v5.json
-            charts-summary-v5.json
-            charts-app-v5.json
+            charts-index-v6.json
+            charts-summary-v6.json
+            charts-app-v6.json
