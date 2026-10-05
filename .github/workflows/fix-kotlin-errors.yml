@@ -2,11 +2,6 @@ name: Fix JeppIran Kotlin Compilation Errors
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
-    paths:
-      - '.github/workflows/fix-kotlin-errors.yml'
 
 permissions:
   contents: write
@@ -26,9 +21,10 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          import re
 
 
-          files = {
+          FILES = {
               "airport":
                   Path(
                       "app/src/main/java/com/tareghmsr/jeppiran/AirportChartsActivity.kt"
@@ -46,92 +42,104 @@ jobs:
           }
 
 
-          def replace_required(
+          def replace_regex(
               text,
-              old,
-              new,
+              pattern,
+              replacement,
               description
           ):
-              if old not in text:
+              new_text, count = re.subn(
+                  pattern,
+                  replacement,
+                  text,
+                  flags=re.MULTILINE
+              )
+
+              if count == 0:
                   raise SystemExit(
                       "Required code not found: "
                       + description
                   )
 
-              return text.replace(
-                  old,
-                  new
+              print(
+                  "Fixed:",
+                  description,
+                  "matches:",
+                  count
               )
+
+              return new_text
 
 
           # ==================================================
           # AirportChartsActivity.kt
           # ==================================================
 
-          path = files["airport"]
+          path = FILES["airport"]
 
           text = path.read_text(
               encoding="utf-8"
           )
 
 
-          if "import android.widget.FrameLayout\n" not in text:
+          # repository.airportName(icao)
+          text = replace_regex(
+              text,
 
+              r"""repository\s*\.\s*airportName\s*\(\s*icao\s*\)""",
+
+              """ChartRepository.airportName(icao)""",
+
+              "AirportChartsActivity airportName"
+          )
+
+
+          # repository.city(icao)
+          text = replace_regex(
+              text,
+
+              r"""repository\s*\.\s*city\s*\(\s*icao\s*\)""",
+
+              """ChartRepository.city(icao)""",
+
+              "AirportChartsActivity city"
+          )
+
+
+          # ScrollView.LayoutParams -> FrameLayout.LayoutParams
+          text = replace_regex(
+              text,
+
+              r"""ScrollView\.LayoutParams""",
+
+              """FrameLayout.LayoutParams""",
+
+              "AirportChartsActivity ScrollView LayoutParams"
+          )
+
+
+          # HorizontalScrollView.LayoutParams -> FrameLayout.LayoutParams
+          text = replace_regex(
+              text,
+
+              r"""HorizontalScrollView\.LayoutParams""",
+
+              """FrameLayout.LayoutParams""",
+
+              "AirportChartsActivity HorizontalScrollView LayoutParams"
+          )
+
+
+          # Make sure FrameLayout is imported.
+          if (
+              "import android.widget.FrameLayout"
+              not in text
+          ):
               text = text.replace(
-                  "import android.graphics.drawable.GradientDrawable\n",
-                  "import android.graphics.drawable.GradientDrawable\n"
+                  "import android.widget.HorizontalScrollView",
                   "import android.widget.FrameLayout\n"
+                  "import android.widget.HorizontalScrollView"
               )
-
-
-          text = replace_required(
-              text,
-
-              """repository
-                    .airportName(""",
-
-              """ChartRepository
-                    .airportName(""",
-
-              "AirportChartsActivity repository.airportName"
-          )
-
-
-          text = replace_required(
-              text,
-
-              """repository.city(
-                    icao
-                )""",
-
-              """ChartRepository.city(
-                    icao
-                )""",
-
-              "AirportChartsActivity repository.city"
-          )
-
-
-          text = replace_required(
-              text,
-
-              "ScrollView.LayoutParams",
-
-              "FrameLayout.LayoutParams",
-
-              "AirportChartsActivity ScrollView.LayoutParams"
-          )
-
-
-          text = replace_required(
-              text,
-
-              "HorizontalScrollView.LayoutParams",
-
-              "FrameLayout.LayoutParams",
-
-              "AirportChartsActivity HorizontalScrollView.LayoutParams"
-          )
 
 
           path.write_text(
@@ -144,31 +152,34 @@ jobs:
           # ChartsActivity.kt
           # ==================================================
 
-          path = files["charts"]
+          path = FILES["charts"]
 
           text = path.read_text(
               encoding="utf-8"
           )
 
 
-          if "import android.widget.FrameLayout\n" not in text:
-
-              text = text.replace(
-                  "import android.widget.LinearLayout\n",
-                  "import android.widget.LinearLayout\n"
-                  "import android.widget.FrameLayout\n"
-              )
-
-
-          text = replace_required(
+          # ScrollView.LayoutParams -> FrameLayout.LayoutParams
+          text = replace_regex(
               text,
 
-              "ScrollView.LayoutParams",
+              r"""ScrollView\.LayoutParams""",
 
-              "FrameLayout.LayoutParams",
+              """FrameLayout.LayoutParams""",
 
-              "ChartsActivity ScrollView.LayoutParams"
+              "ChartsActivity ScrollView LayoutParams"
           )
+
+
+          if (
+              "import android.widget.FrameLayout"
+              not in text
+          ):
+              text = text.replace(
+                  "import android.widget.EditText",
+                  "import android.widget.FrameLayout\n"
+                  "import android.widget.EditText"
+              )
 
 
           path.write_text(
@@ -181,65 +192,70 @@ jobs:
           # PdfViewerActivity.kt
           # ==================================================
 
-          path = files["viewer"]
+          path = FILES["viewer"]
 
           text = path.read_text(
               encoding="utf-8"
           )
 
 
-          text = replace_required(
+          # repository.airport(currentIcao)
+          text = replace_regex(
               text,
 
-              """repository
-            .airport(
-                currentIcao
-            )""",
+              r"""repository\s*\.\s*airport\s*\(\s*currentIcao\s*\)""",
 
-              """ChartRepository
-            .airport(
-                currentIcao
-            )""",
+              """ChartRepository.airport(currentIcao)""",
 
-              "PdfViewerActivity repository.airport"
+              "PdfViewerActivity airport lookup"
           )
 
 
-          text = replace_required(
+          # HorizontalScrollView.LayoutParams
+          text = replace_regex(
               text,
 
-              "HorizontalScrollView.LayoutParams",
+              r"""HorizontalScrollView\.LayoutParams""",
 
-              "FrameLayout.LayoutParams",
+              """FrameLayout.LayoutParams""",
 
-              "PdfViewerActivity HorizontalScrollView.LayoutParams"
+              "PdfViewerActivity HorizontalScrollView LayoutParams"
           )
 
 
-          text = replace_required(
+          # Permission callback type.
+          text = replace_regex(
               text,
 
-              """permissions:
-            Array<out String>""",
+              r"""Array<out\s+String>""",
 
-              """permissions:
-            Array<String>""",
+              """Array<String>""",
 
-              "PdfViewerActivity permission callback type"
+              "PdfViewerActivity permission array"
           )
 
 
-          text = replace_required(
+          # Double -> Float for text hit testing.
+          text = replace_regex(
               text,
 
-              """                        localX,
-                        localY""",
+              r"""(\.contains\(\s*\n?\s*)localX(\s*,\s*)localY(\s*\))""",
 
-              """                        localX.toFloat(),
-                        localY.toFloat()""",
+              r"""\1localX.toFloat()\2localY.toFloat()\3""",
 
               "PdfViewerActivity text bounds Float conversion"
           )
+
+
+          if (
+              "import android.widget.FrameLayout"
+              not in text
+          ):
+              text = text.replace(
+                  "import android.widget.EditText",
+                  "import android.widget.FrameLayout\n"
+                  "import android.widget.EditText"
+              )
 
 
           path.write_text(
@@ -249,87 +265,89 @@ jobs:
 
 
           # ==================================================
-          # Verification
+          # FINAL CHECK
           # ==================================================
 
           print()
           print("=" * 70)
-          print("KOTLIN SOURCE FIX VERIFICATION")
+          print("FINAL SOURCE CHECK")
           print("=" * 70)
 
 
-          for name, path in files.items():
-
-              print(
-                  name,
-                  "->",
-                  path
-              )
-
-              if not path.exists():
-
-                  raise SystemExit(
-                      "Missing file: "
-                      + str(path)
-                  )
-
-
-          # Make sure problematic references are gone.
-          airport_text = files["airport"].read_text(
+          airport_text = FILES["airport"].read_text(
               encoding="utf-8"
           )
 
-          charts_text = files["charts"].read_text(
+          charts_text = FILES["charts"].read_text(
               encoding="utf-8"
           )
 
-          viewer_text = files["viewer"].read_text(
+          viewer_text = FILES["viewer"].read_text(
               encoding="utf-8"
           )
 
 
-          forbidden_checks = [
-
+          forbidden = [
               (
                   "AirportChartsActivity",
-                  "ScrollView.LayoutParams",
+                  r"repository\s*\.\s*airportName",
                   airport_text
               ),
 
               (
                   "AirportChartsActivity",
-                  "HorizontalScrollView.LayoutParams",
+                  r"repository\s*\.\s*city",
+                  airport_text
+              ),
+
+              (
+                  "AirportChartsActivity",
+                  r"ScrollView\.LayoutParams",
+                  airport_text
+              ),
+
+              (
+                  "AirportChartsActivity",
+                  r"HorizontalScrollView\.LayoutParams",
                   airport_text
               ),
 
               (
                   "ChartsActivity",
-                  "ScrollView.LayoutParams",
+                  r"ScrollView\.LayoutParams",
                   charts_text
               ),
 
               (
                   "PdfViewerActivity",
-                  "HorizontalScrollView.LayoutParams",
+                  r"repository\s*\.\s*airport",
                   viewer_text
               ),
 
               (
                   "PdfViewerActivity",
-                  "Array<out String>",
+                  r"HorizontalScrollView\.LayoutParams",
+                  viewer_text
+              ),
+
+              (
+                  "PdfViewerActivity",
+                  r"Array<out\s+String>",
                   viewer_text
               ),
           ]
 
 
-          for file_name, bad_text, content in forbidden_checks:
+          for name, pattern, content in forbidden:
 
-              if bad_text in content:
-
+              if re.search(
+                  pattern,
+                  content
+              ):
                   raise SystemExit(
-                      file_name
-                      + " still contains: "
-                      + bad_text
+                      name
+                      + " still contains forbidden pattern: "
+                      + pattern
                   )
 
 
@@ -346,11 +364,16 @@ jobs:
               "PdfViewerActivity.kt: OK"
           )
 
+          print()
+          print(
+              "All Kotlin source fixes completed successfully."
+          )
+
           print("=" * 70)
           PY
 
 
-      - name: Check changed files
+      - name: Show changes
         shell: bash
         run: |
           echo "Changed files:"
@@ -361,7 +384,7 @@ jobs:
           git diff --stat
 
 
-      - name: Commit Kotlin fixes
+      - name: Commit fixes
         shell: bash
         run: |
           git config user.name \
@@ -378,21 +401,25 @@ jobs:
 
 
           if git diff --cached --quiet; then
-
-            echo "No Kotlin changes were required."
-
-          else
-
-            git commit \
-              -m "Fix Kotlin compilation errors"
-
-            git push origin HEAD:main
-
+            echo "No changes detected."
+            exit 0
           fi
 
 
-      - name: Remove temporary fixer workflow
-        if: success()
+          git commit \
+            -m "Fix Kotlin compilation errors"
+
+
+          git fetch origin main
+
+
+          git rebase origin/main
+
+
+          git push origin HEAD:main
+
+
+      - name: Remove temporary fixer
         shell: bash
         run: |
           git config user.name \
@@ -402,18 +429,12 @@ jobs:
             "41898282+github-actions[bot]@users.noreply.github.com"
 
 
-          if [ -f ".github/workflows/fix-kotlin-errors.yml" ]; then
+          git rm \
+            ".github/workflows/fix-kotlin-errors.yml"
 
-            git rm \
-              ".github/workflows/fix-kotlin-errors.yml"
 
-            git commit \
-              -m "Remove temporary Kotlin fixer workflow"
+          git commit \
+            -m "Remove temporary Kotlin fixer workflow"
 
-            git push origin HEAD:main
 
-          else
-
-            echo "Temporary fixer workflow already removed."
-
-          fi
+          git push origin HEAD:main
