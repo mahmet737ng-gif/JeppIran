@@ -548,6 +548,10 @@ private val locationPermissionLauncher =
 
         stopGps()
 
+        handler.removeCallbacks(
+            simulatorUpdateRunnable
+        )
+
 
         previousBitmap
             ?.takeIf {
@@ -4160,7 +4164,44 @@ private val locationPermissionLauncher =
     }
 
 
+    private val simulatorUpdateRunnable =
+        object : Runnable {
+            override fun run() {
+                updateSimulatorLabel()
+
+                if (
+                    SimulatorLocationStore.isConnected()
+                ) {
+                    handler.postDelayed(
+                        this,
+                        500L
+                    )
+                }
+            }
+        }
+
+
     private fun startGps() {
+
+        if (
+            SimulatorLocationStore.isConnected()
+        ) {
+            stopGps()
+
+            handler.removeCallbacks(
+                simulatorUpdateRunnable
+            )
+
+            handler.post(
+                simulatorUpdateRunnable
+            )
+
+            return
+        }
+
+        handler.removeCallbacks(
+            simulatorUpdateRunnable
+        )
 
         locationManager =
             getSystemService(
@@ -4344,6 +4385,13 @@ private val locationPermissionLauncher =
 
     private fun updateGpsLabel() {
 
+        if (
+            SimulatorLocationStore.isConnected()
+        ) {
+            updateSimulatorLabel()
+            return
+        }
+
         val location =
             lastGpsLocation
 
@@ -4376,7 +4424,61 @@ private val locationPermissionLauncher =
             )
 
 
-        updateGpsText("")
+        updateGpsText(
+            "GPS: $lat, $lon"
+        )
+    }
+
+
+    private fun updateSimulatorLabel() {
+
+        val position =
+            SimulatorLocationStore.getPosition()
+
+        if (
+            position == null
+        ) {
+            updateGpsText(
+                "SIM: waiting..."
+            )
+            return
+        }
+
+        val lat =
+            String.format(
+                Locale.US,
+                "%.6f",
+                position.latitude
+            )
+
+        val lon =
+            String.format(
+                Locale.US,
+                "%.6f",
+                position.longitude
+            )
+
+        val altitude =
+            position.altitudeMeters?.let {
+                String.format(
+                    Locale.US,
+                    "  ALT %.0f m",
+                    it
+                )
+            }.orEmpty()
+
+        val heading =
+            position.headingDegrees?.let {
+                String.format(
+                    Locale.US,
+                    "  HDG %.0f°",
+                    it
+                )
+            }.orEmpty()
+
+        updateGpsText(
+            "SIM: $lat, $lon$altitude$heading"
+        )
     }
 
 
