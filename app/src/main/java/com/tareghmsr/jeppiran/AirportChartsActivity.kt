@@ -1,91 +1,77 @@
 package com.tareghmsr.jeppiran
 
 import android.content.Intent
-import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
-import android.view.Gravity
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.ComponentActivity
+import androidx.activity.enableEdgeToEdge
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import org.json.JSONArray
 import org.json.JSONObject
 
 class AirportChartsActivity : ComponentActivity() {
 
-    private lateinit var airportCode: String
-    private lateinit var airportName: String
+    private lateinit var listContainer: LinearLayout
+
+    private var icao = ""
+    private var city = ""
+
+    private data class Chart(
+        val page: Int,
+        val name: String,
+        val category: String
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        airportCode = intent.getStringExtra("ICAO") ?: run {
-            finish()
-            return
-        }
+        enableEdgeToEdge()
 
-        airportName = intent.getStringExtra("AIRPORT_NAME") ?: airportCode
+        icao = intent.getStringExtra("ICAO").orEmpty()
+        city = intent.getStringExtra("CITY").orEmpty()
+
+        buildUi()
+        loadCharts()
+    }
+
+    private fun buildUi() {
 
         val root = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setBackgroundColor(Color.rgb(233, 238, 243))
+            setBackgroundColor(0xFFF7F8FA.toInt())
         }
 
-        val header = LinearLayout(this).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER_VERTICAL
-            setPadding(16, 16, 16, 16)
-            setBackgroundColor(Color.rgb(244, 247, 250))
-        }
+        val header = TextView(this).apply {
 
-        val back = TextView(this).apply {
-            text = "‹"
-            textSize = 36f
-            gravity = Gravity.CENTER
-            setTextColor(Color.rgb(25, 35, 45))
+            text = "$icao  •  $city"
 
-            setOnClickListener {
-                finish()
-            }
-        }
+            textSize = 22f
 
-        header.addView(
-            back,
-            LinearLayout.LayoutParams(50, 60)
-        )
+            typeface = Typeface.DEFAULT_BOLD
 
-        val title = TextView(this).apply {
-            text = "$airportCode • $airportName"
-            textSize = 20f
-            setTextColor(Color.rgb(25, 35, 45))
-            setPadding(12, 0, 0, 0)
-        }
-
-        header.addView(
-            title,
-            LinearLayout.LayoutParams(
-                0,
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                1f
+            setPadding(
+                20.dp,
+                20.dp,
+                20.dp,
+                20.dp
             )
-        )
+
+            setBackgroundColor(
+                0xFFFFFFFF.toInt()
+            )
+        }
+
+        listContainer = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+        }
 
         root.addView(header)
 
-        val scroll = android.widget.ScrollView(this)
-
-        val list = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(16, 16, 16, 24)
-        }
-
-        addCategory(list, "AIRPORT", "Airport")
-        addCategory(list, "STAR", "STAR")
-        addCategory(list, "SID", "SID")
-        addCategory(list, "APPROACH", "Approach")
-
-        scroll.addView(list)
-
         root.addView(
-            scroll,
+            listContainer,
             LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 0,
@@ -94,148 +80,300 @@ class AirportChartsActivity : ComponentActivity() {
         )
 
         setContentView(root)
+
+        ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
+
+            val bars = insets.getInsets(
+                WindowInsetsCompat.Type.systemBars()
+            )
+
+            view.setPadding(
+                0,
+                bars.top,
+                0,
+                bars.bottom
+            )
+
+            insets
+        }
     }
 
-    private fun addCategory(
-        parent: LinearLayout,
-        title: String,
-        jsonCategory: String
-    ) {
-        val categoryTitle = TextView(this).apply {
-            text = title
-            textSize = 17f
-            setTextColor(Color.rgb(30, 55, 75))
-            setPadding(4, 18, 4, 8)
-        }
+    private fun loadCharts() {
 
-        parent.addView(categoryTitle)
+        val text = assets
+            .open("charts-app-v16.json")
+            .bufferedReader()
+            .use { it.readText() }
 
-        val charts = loadCharts(jsonCategory)
+        val charts = mutableListOf<Chart>()
 
-        if (charts.isEmpty()) {
-            val empty = TextView(this).apply {
-                text = "No charts"
-                textSize = 14f
-                setTextColor(Color.DKGRAY)
-                setPadding(12, 10, 12, 10)
+        val root = text.trim()
+
+        if (root.startsWith("[")) {
+
+            val array = JSONArray(root)
+
+            readArray(
+                array,
+                charts
+            )
+
+        } else {
+
+            val object = JSONObject(root)
+
+            val possibleArrays = listOf(
+                "charts",
+                "data",
+                "items",
+                "pages"
+            )
+
+            var found = false
+
+            for (key in possibleArrays) {
+
+                val value = object.opt(key)
+
+                if (value is JSONArray) {
+
+                    readArray(
+                        value,
+                        charts
+                    )
+
+                    found = true
+                    break
+                }
             }
 
-            parent.addView(empty)
+            if (!found) {
+
+                val keys = object.keys()
+
+                while (keys.hasNext()) {
+
+                    val key = keys.next()
+
+                    val value = object.opt(key)
+
+                    if (value is JSONObject) {
+
+                        readChartObject(
+                            value,
+                            charts
+                        )
+                    }
+                }
+            }
+        }
+
+        charts
+            .filter { it.page > 0 }
+            .distinctBy {
+                "${it.page}|${it.name}|${it.category}"
+            }
+            .sortedBy { it.page }
+            .forEach { chart ->
+                addChartRow(chart)
+            }
+    }
+
+    private fun readArray(
+        array: JSONArray,
+        charts: MutableList<Chart>
+    ) {
+
+        for (i in 0 until array.length()) {
+
+            val value = array.opt(i)
+
+            if (value is JSONObject) {
+
+                readChartObject(
+                    value,
+                    charts
+                )
+            }
+        }
+    }
+
+    private fun readChartObject(
+        item: JSONObject,
+        charts: MutableList<Chart>
+    ) {
+
+        val itemIcao = firstNonEmpty(
+            item.optString("icao"),
+            item.optString("airport"),
+            item.optString("airport_icao")
+        ).uppercase()
+
+        if (
+            itemIcao.isNotEmpty() &&
+            itemIcao != icao.uppercase()
+        ) {
             return
         }
 
-        charts.forEach { chart ->
+        val page = firstPositiveInt(
+            item.optInt("page", -1),
+            item.optInt("pageNumber", -1),
+            item.optInt("page_number", -1)
+        )
 
-            val card = TextView(this).apply {
-                text = chart.name
-                textSize = 16f
-                setTextColor(Color.rgb(25, 35, 45))
-                gravity = Gravity.CENTER_VERTICAL
-                setPadding(18, 0, 18, 0)
-                setBackgroundColor(Color.WHITE)
+        if (page <= 0) {
+            return
+        }
 
-                setOnClickListener {
+        val category = firstNonEmpty(
+            item.optString("category"),
+            item.optString("type"),
+            item.optString("chart_type"),
+            "Other"
+        )
 
-                    val intent = Intent(
-                        this@AirportChartsActivity,
-                        PdfViewerActivity::class.java
-                    )
+        val name = firstNonEmpty(
+            item.optString("name"),
+            item.optString("title"),
+            item.optString("chart_name"),
+            "Chart page $page"
+        )
 
-                    intent.putExtra("PAGE", chart.page)
-                    intent.putExtra("TITLE", chart.name)
+        charts.add(
+            Chart(
+                page = page,
+                name = name,
+                category = category
+            )
+        )
+    }
 
-                    startActivity(intent)
-                }
+    private fun addChartRow(chart: Chart) {
+
+        val row = LinearLayout(this).apply {
+
+            orientation = LinearLayout.VERTICAL
+
+            setPadding(
+                20.dp,
+                15.dp,
+                20.dp,
+                15.dp
+            )
+
+            setBackgroundColor(
+                0xFFFFFFFF.toInt()
+            )
+
+            setOnClickListener {
+
+                val intent = Intent(
+                    this@AirportChartsActivity,
+                    PdfViewerActivity::class.java
+                )
+
+                intent.putExtra(
+                    "PAGE",
+                    chart.page
+                )
+
+                intent.putExtra(
+                    "TITLE",
+                    chart.name
+                )
+
+                intent.putExtra(
+                    "ICAO",
+                    icao
+                )
+
+                intent.putExtra(
+                    "CITY",
+                    city
+                )
+
+                intent.putExtra(
+                    "CATEGORY",
+                    chart.category
+                )
+
+                startActivity(intent)
             }
+        }
 
-            val params = LinearLayout.LayoutParams(
+        val title = TextView(this).apply {
+
+            text = chart.name
+
+            textSize = 17f
+
+            typeface = Typeface.DEFAULT_BOLD
+        }
+
+        val subtitle = TextView(this).apply {
+
+            text =
+                "${chart.category}  •  Page ${chart.page}"
+
+            textSize = 13f
+
+            setTextColor(
+                0xFF667085.toInt()
+            )
+        }
+
+        row.addView(title)
+
+        row.addView(
+            subtitle,
+            LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
-                58
-            )
-
-            params.setMargins(
-                0,
-                4,
-                0,
-                4
-            )
-
-            parent.addView(card, params)
-        }
-    }
-
-    private data class Chart(
-        val page: Int,
-        val name: String
-    )
-
-    private fun loadCharts(
-        category: String
-    ): List<Chart> {
-
-        return try {
-
-            val json = assets
-                .open("charts-app-v9.json")
-                .bufferedReader()
-                .use {
-                    it.readText()
-                }
-
-            val root = JSONObject(json)
-
-            if (!root.has(airportCode)) {
-                return emptyList()
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                topMargin = 4.dp
             }
+        )
 
-            val airport = root.getJSONObject(
-                airportCode
-            )
-
-            val charts = airport.optJSONObject(
-                "charts"
-            ) ?: return emptyList()
-
-            val array = charts.optJSONArray(
-                category
-            ) ?: return emptyList()
-
-            val result = mutableListOf<Chart>()
-
-            for (i in 0 until array.length()) {
-
-                val item = array.optJSONObject(i)
-                    ?: continue
-
-                val page = item.optInt(
-                    "page",
-                    -1
-                )
-
-                if (page < 1) {
-                    continue
-                }
-
-                val name = item.optString(
-                    "name",
-                    "Chart page $page"
-                )
-
-                result.add(
-                    Chart(
-                        page = page,
-                        name = name
-                    )
+        listContainer.addView(
+            row,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(
+                    16.dp,
+                    4.dp,
+                    16.dp,
+                    4.dp
                 )
             }
-
-            result
-
-        } catch (e: Exception) {
-
-            e.printStackTrace()
-
-            emptyList()
-        }
+        )
     }
+
+    private fun firstNonEmpty(
+        vararg values: String
+    ): String {
+
+        return values
+            .firstOrNull {
+                it.trim().isNotEmpty()
+            }
+            ?.trim()
+            ?: ""
+    }
+
+    private fun firstPositiveInt(
+        vararg values: Int
+    ): Int {
+
+        return values.firstOrNull {
+            it > 0
+        } ?: -1
+    }
+
+    private val Int.dp: Int
+        get() = (
+            this * resources.displayMetrics.density
+        ).toInt()
 }
