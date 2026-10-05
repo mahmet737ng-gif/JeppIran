@@ -36,28 +36,8 @@ class ChartsActivity : ComponentActivity() {
 
     /*
      * ICAO -> City
-     *
-     * Iran:
-     * OI
-     *
-     * Iraq:
-     * OR
-     *
-     * UAE:
-     * OM
-     *
-     * Oman:
-     * OO
-     *
-     * Turkey:
-     * LT
-     *
-     * Armenia:
-     * UD
-     *
-     * Georgia:
-     * UG
      */
+
     private val airportCities = mapOf(
 
         // Iran
@@ -90,7 +70,7 @@ class ChartsActivity : ComponentActivity() {
         "OIZC" to "CHABAHAR",
         "OIZH" to "ZAHEDAN",
 
-        // United Arab Emirates
+        // UAE
         "OMDB" to "DUBAI",
 
         // Oman
@@ -98,7 +78,7 @@ class ChartsActivity : ComponentActivity() {
 
         // Iraq
         "ORBI" to "BAGHDAD",
-        "ORNI" to "MOSUL",
+        "ORNI" to "NAJAF",
 
         // Armenia
         "UDYZ" to "YEREVAN",
@@ -303,17 +283,22 @@ class ChartsActivity : ComponentActivity() {
                 0,
                 0,
                 0,
-                12
+                8
             )
 
             card.layoutParams = cardParams
 
-            card.radius = 18f
-            card.cardElevation = 2f
-
+            /*
+             * No white background.
+             * The card is transparent and uses the
+             * same background as the Charts screen.
+             */
             card.setCardBackgroundColor(
-                Color.WHITE
+                Color.TRANSPARENT
             )
+
+            card.cardElevation = 0f
+            card.radius = 0f
 
             val content = LinearLayout(this)
 
@@ -322,62 +307,26 @@ class ChartsActivity : ComponentActivity() {
 
             content.setPadding(
                 20,
-                18,
+                16,
                 20,
-                18
+                16
             )
 
-            // ICAO + CITY
+            /*
+             * ICAO + CITY
+             */
             val title = TextView(this)
 
             title.text =
                 "${airport.icao}  •  ${airport.city}"
 
-            title.textSize = 20f
+            title.textSize = 19f
 
             title.setTextColor(
                 Color.rgb(20, 40, 65)
             )
 
-            // Chart statistics
-            val charts = TextView(this)
-
-            charts.text = buildString {
-
-                append("Airport: ${airport.airportCount}")
-                append("   •   ")
-
-                append("STAR: ${airport.starCount}")
-                append("   •   ")
-
-                append("SID: ${airport.sidCount}")
-
-                append("\n")
-
-                append("Approach: ${airport.approachCount}")
-
-                if (airport.otherCount > 0) {
-
-                    append("   •   ")
-                    append("Other: ${airport.otherCount}")
-                }
-            }
-
-            charts.textSize = 14f
-
-            charts.setTextColor(
-                Color.rgb(80, 90, 100)
-            )
-
-            charts.setPadding(
-                0,
-                10,
-                0,
-                0
-            )
-
             content.addView(title)
-            content.addView(charts)
 
             card.addView(content)
 
