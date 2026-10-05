@@ -1,4 +1,4 @@
-name: Analyze Iran Airport Charts V11
+name: Analyze Iran Airport Charts V12
 
 on:
   workflow_dispatch:
@@ -12,87 +12,51 @@ jobs:
 
     steps:
 
-      # ==========================================================
-      # 1. CHECKOUT REPOSITORY + GIT LFS
-      # ==========================================================
-
       - name: Checkout repository with LFS
         uses: actions/checkout@v4
         with:
           lfs: true
 
-
-      # ==========================================================
-      # 2. INSTALL PDF TOOLS
-      # ==========================================================
-
-      - name: Install PDF tools
+      - name: Install Poppler
+        shell: bash
         run: |
           sudo apt-get update
           sudo apt-get install -y poppler-utils
 
-
-      # ==========================================================
-      # 3. VERIFY PDF
-      # ==========================================================
-
       - name: Verify PDF
+        shell: bash
         run: |
-          echo "Checking Iran2620.pdf..."
           ls -lh Iran2620.pdf
-
-          echo ""
-          echo "PDF information:"
-          pdfinfo Iran2620.pdf | head -20
-
-
-      # ==========================================================
-      # 4. EXTRACT EVERY PDF PAGE
-      # ==========================================================
+          pdfinfo Iran2620.pdf | head -30
 
       - name: Extract PDF text
         shell: bash
         run: |
-          set -e
+          rm -rf pdf-text
+          mkdir -p pdf-text
 
-          mkdir -p extracted
+          PAGES=$(pdfinfo Iran2620.pdf | awk '/Pages:/ {print $2}')
 
-          PAGES=$(pdfinfo Iran2620.pdf | awk '/^Pages:/ {print $2}')
+          echo "PDF pages: $PAGES"
 
-          echo "Total PDF pages: $PAGES"
-
-          for i in $(seq 1 "$PAGES"); do
-
+          for PAGE in $(seq 1 "$PAGES"); do
             pdftotext \
-              -f "$i" \
-              -l "$i" \
+              -f "$PAGE" \
+              -l "$PAGE" \
               -layout \
               Iran2620.pdf \
-              "extracted/page-$i.txt" \
-              2>/dev/null || true
-
+              "pdf-text/page-${PAGE}.txt"
           done
 
-          echo ""
-          echo "Extraction finished."
-          echo "Extracted pages: $(find extracted -type f | wc -l)"
-
-
-      # ==========================================================
-      # 5. RUN V9 CLASSIFIER
-      # ==========================================================
-
-      - name: Analyze charts V9
+      - name: Run V9 chart classifier
         shell: python
         run: |
-
           import json
+          import os
           import re
-          from pathlib import Path
 
-
-          INPUT_DIR = Path("extracted")
-
+          PDF = "Iran2620.pdf"
+          TEXT_DIR = "pdf-text"
 
           COUNTRY_PREFIXES = {
               "OI": "Iran",
@@ -104,945 +68,338 @@ jobs:
               "UG": "Georgia",
           }
 
-
           KNOWN_AIRPORTS = {
               "LTFM",
-
-              "OIAA",
-              "OIAM",
-              "OIAW",
-              "OIBB",
-              "OIBK",
-              "OIBP",
-              "OICC",
-              "OICI",
-              "OIFM",
-              "OIGG",
-              "OIHH",
-              "OIIE",
-              "OIII",
-              "OIIP",
+              "OIAA", "OIAM", "OIAW",
+              "OIBB", "OIBK", "OIBP",
+              "OICC", "OICI", "OIFM",
+              "OIGG", "OIHH",
+              "OIIE", "OIII", "OIIP",
               "OIKK",
-              "OIMB",
-              "OIMM",
-              "OIMN",
-              "OIMS",
-              "OING",
-              "OINZ",
+              "OIMB", "OIMM", "OIMN", "OIMS",
+              "OING", "OINZ",
               "OISS",
-              "OITL",
-              "OITR",
-              "OITT",
+              "OITL", "OITR", "OITT",
               "OIYY",
-              "OIZC",
-              "OIZH",
-
-              "OMDB",
-              "OOMS",
-
-              "ORBI",
-              "ORNI",
-
+              "OIZC", "OIZH",
+              "OMDB", "OOMS",
+              "ORBI", "ORNI",
               "UDYZ",
-
-              "UGSB",
-              "UGTB",
+              "UGSB", "UGTB",
           }
 
-
           FALSE_ICAO = {
-              "OVER",
-              "LEFT",
-              "LONG",
-              "UNIT",
-              "LLWS",
-              "USED",
-              "MUST",
-              "LOST",
-              "LOSS",
-              "TURN",
-              "TAKE",
-              "AREA",
-              "ACFT",
-              "ELEV",
-              "RWYS",
-              "MAKE",
-              "OMAN",
-              "IRAN",
-              "IRAQ",
-              "ATIS",
-              "EOBT",
-              "PAPI",
-              "RCLM",
-              "ICAO",
-              "JEPP",
               "ONLY",
               "ONTO",
               "OPIS",
-          }
-
-
-          CATEGORIES = [
-              "Airport",
               "STAR",
               "SID",
-              "Approach",
-              "Other",
-          ]
+          }
 
+          def read_page(page):
+              path = os.path.join(
+                  TEXT_DIR,
+                  f"page-{page}.txt"
+              )
+
+              try:
+                  with open(
+                      path,
+                      "r",
+                      encoding="utf-8",
+                      errors="ignore"
+                  ) as f:
+                      return f.read()
+              except Exception:
+                  return ""
 
           def normalize(text):
-              return text.upper().replace(
-                  "\x0c",
-                  "\n"
-              )
+              return re.sub(
+                  r"\s+",
+                  " ",
+                  text.upper()
+              ).strip()
 
-
-          def header(text, count=40):
-              return "\n".join(
-                  normalize(text).splitlines()[:count]
-              )
-
-
-          def find_known_airports(text):
-
-              t = normalize(text)
-
+          def find_airports(text):
               found = []
 
-              for airport in KNOWN_AIRPORTS:
+              pattern = re.compile(
+                  r"\b((?:OI|OR|OM|OO|LT|UD|UG)[A-Z]{2})\s*/\s*[A-Z]{3}\b"
+              )
 
-                  if re.search(
-                      r"\b" + re.escape(airport) + r"\b",
-                      t
-                  ):
-                      found.append(airport)
+              for match in pattern.findall(text):
+
+                  if match in FALSE_ICAO:
+                      continue
+
+                  if match not in found:
+                      found.append(match)
 
               return found
 
-
-          def find_airport(text):
-
-              t = normalize(text)
-
-              known = find_known_airports(t)
-
-              if known:
-                  return known[0]
-
-              pattern = re.compile(
-                  r"\b((?:OI|OR|OM|OO|LT|UD|UG)[A-Z]{2})"
-                  r"\s*/\s*[A-Z]{3}\b"
-              )
-
-              for match in pattern.finditer(t):
-
-                  code = match.group(1)
-
-                  if code not in FALSE_ICAO:
-                      return code
-
-              return None
-
-
-          def explicit_star(text):
-
-              t = normalize(text)
-
-              if re.search(
-                  r"\.STAR\.",
-                  t
-              ):
-                  return True
-
-              if (
-                  re.search(r"\bSTAR\b", t)
-                  and
-                  (
-                      "ARRIVAL" in t
-                      or
-                      "ARRIVALS" in t
-                  )
-              ):
-                  return True
-
-              return False
-
-
-          def explicit_sid(text):
-
-              t = normalize(text)
-
-              if re.search(
-                  r"\.SID\.",
-                  t
-              ):
-                  return True
-
-              if (
-                  re.search(r"\bSID\b", t)
-                  and
-                  (
-                      "DEPARTURE" in t
-                      or
-                      "DEPARTURES" in t
-                  )
-              ):
-                  return True
-
-              return False
-
-
-          def approach_score(text):
-
-              t = normalize(text)
-
-              score = 0
-
-              phrases = [
-                  (
-                      "ACFT EXECUTING INSTRUMENT APPROACH PROCEDURE",
-                      150
-                  ),
-                  (
-                      "MISSED APPROACH",
-                      60
-                  ),
-                  (
-                      "INSTRUMENT APPROACH",
-                      60
-                  ),
-                  (
-                      "APPROACH PROCEDURE",
-                      55
-                  ),
-                  (
-                      "APPROACH CHART",
-                      50
-                  ),
-                  (
-                      "ILS APPROACH",
-                      45
-                  ),
-                  (
-                      "RNAV APPROACH",
-                      45
-                  ),
-                  (
-                      "RNP APPROACH",
-                      45
-                  ),
-                  (
-                      "VOR APPROACH",
-                      45
-                  ),
-                  (
-                      "NDB APPROACH",
-                      45
-                  ),
-                  (
-                      "LOC APPROACH",
-                      45
-                  ),
-              ]
-
-              for phrase, value in phrases:
-
-                  if phrase in t:
-                      score += value
-
-              return score
-
-
-          def airport_score(text):
-
-              t = normalize(text)
-
-              score = 0
-
-              phrases = [
-                  (
-                      "AERODROME INFORMATION",
-                      150
-                  ),
-                  (
-                      "AERODROME CHART",
-                      130
-                  ),
-                  (
-                      "AIRPORT INFORMATION",
-                      130
-                  ),
-                  (
-                      "AIRPORT CHART",
-                      120
-                  ),
-                  (
-                      "AIRPORT",
-                      20
-                  ),
-                  (
-                      "AERODROME",
-                      20
-                  ),
-                  (
-                      "RUNWAY",
-                      15
-                  ),
-                  (
-                      "RWY",
-                      10
-                  ),
-              ]
-
-              for phrase, value in phrases:
-
-                  if phrase in t:
-                      score += value
-
-              return score
-
-
           def chart_number(text):
 
-              h = header(
-                  text,
-                  35
-              )
+              lines = text.splitlines()
 
-              airport = bool(
-                  re.search(
-                      r"\b10-9[A-Z0-9.\-]*\b",
-                      h
+              for line in lines[:35]:
+
+                  m = re.search(
+                      r"\b(10-9[A-Z0-9.-]*|10-2[A-Z0-9.-]*|10-3[A-Z0-9.-]*|1[13]-[0-9A-Z.-]+)\b",
+                      line.upper()
                   )
-              )
 
-              approach = bool(
-                  re.search(
-                      r"\b11-[A-Z0-9.\-]*\b",
-                      h
-                  )
-              )
+                  if m:
+                      return m.group(1)
 
-              if airport and not approach:
-                  return "Airport"
+              return ""
 
-              if approach and not airport:
-                  return "Approach"
+          def classify(text):
 
-              return None
+              upper = text.upper()
 
-
-          def classify_anchor(text):
-
-              t = normalize(text)
-
-              if explicit_star(t):
-
-                  return {
-                      "category": "STAR",
-                      "strength": 1000,
-                      "reason": "explicit STAR",
-                      "anchor": True
-                  }
-
-
-              if explicit_sid(t):
-
-                  return {
-                      "category": "SID",
-                      "strength": 1000,
-                      "reason": "explicit SID",
-                      "anchor": True
-                  }
-
-
-              number = chart_number(t)
-
-              if number == "Airport":
-
-                  return {
-                      "category": "Airport",
-                      "strength": 900,
-                      "reason": "header 10-9",
-                      "anchor": True
-                  }
-
-
-              if number == "Approach":
-
-                  return {
-                      "category": "Approach",
-                      "strength": 900,
-                      "reason": "header 11",
-                      "anchor": True
-                  }
-
-
-              approach = approach_score(t)
-              airport = airport_score(t)
-
-
-              if approach >= 100:
-
-                  return {
-                      "category": "Approach",
-                      "strength": approach,
-                      "reason": "strong approach",
-                      "anchor": True
-                  }
-
-
-              if airport >= 120:
-
-                  return {
-                      "category": "Airport",
-                      "strength": airport,
-                      "reason": "strong airport",
-                      "anchor": True
-                  }
-
-
-              if approach >= 50 and approach > airport:
-
-                  return {
-                      "category": "Approach",
-                      "strength": approach,
-                      "reason": "approach score",
-                      "anchor": False
-                  }
-
-
-              if airport >= 50 and airport > approach:
-
-                  return {
-                      "category": "Airport",
-                      "strength": airport,
-                      "reason": "airport score",
-                      "anchor": False
-                  }
-
-
-              return {
-                  "category": "Other",
-                  "strength": 0,
-                  "reason": "weak/other",
-                  "anchor": False
+              scores = {
+                  "Airport": 0,
+                  "STAR": 0,
+                  "SID": 0,
+                  "Approach": 0,
+                  "Other": 0,
               }
 
+              if ".STAR." in upper or " STAR " in upper:
+                  scores["STAR"] += 70
 
-          page_files = sorted(
-              INPUT_DIR.glob("page-*.txt"),
-              key=lambda p: int(
-                  p.stem.split("-")[1]
-              )
-          )
+              if ".SID." in upper or " SID " in upper:
+                  scores["SID"] += 70
 
-
-          pages = []
-
-
-          for path in page_files:
-
-              page_no = int(
-                  path.stem.split("-")[1]
-              )
-
-              text = path.read_text(
-                  encoding="utf-8",
-                  errors="ignore"
-              )
-
-              airport = find_airport(text)
-
-              classification = classify_anchor(text)
-
-              pages.append({
-
-                  "page": page_no,
-
-                  "airport_raw": airport,
-
-                  "airport": airport,
-
-                  "text": text,
-
-                  "category":
-                      classification["category"],
-
-                  "strength":
-                      classification["strength"],
-
-                  "reason":
-                      classification["reason"],
-
-                  "anchor":
-                      classification["anchor"],
-
-                  "fixed": False,
-              })
-
-
-          # ======================================================
-          # REPAIR AIRPORT IDENTITY
-          # ======================================================
-
-          for _ in range(5):
-
-              for i, page in enumerate(pages):
-
-                  if page["airport"] is not None:
-                      continue
-
-                  previous = None
-                  next_one = None
-
-
-                  for j in range(
-                      i - 1,
-                      max(-1, i - 30),
-                      -1
-                  ):
-
-                      if pages[j]["airport"] is not None:
-
-                          previous = pages[j]["airport"]
-                          break
-
-
-                  for j in range(
-                      i + 1,
-                      min(len(pages), i + 31)
-                  ):
-
-                      if pages[j]["airport"] is not None:
-
-                          next_one = pages[j]["airport"]
-                          break
-
-
-                  if previous and next_one:
-
-                      if previous == next_one:
-                          page["airport"] = previous
-
-                  elif previous:
-
-                      page["airport"] = previous
-
-                  elif next_one:
-
-                      page["airport"] = next_one
-
-
-          # ======================================================
-          # STAR / SID ARE STRONG
-          # ======================================================
-
-          for page in pages:
-
-              if page["category"] in (
-                  "STAR",
-                  "SID"
+              if (
+                  "ACFT EXECUTING INSTRUMENT APPROACH" in upper
+                  or "INSTRUMENT APPROACH" in upper
+                  or "MISSED APPROACH" in upper
               ):
+                  scores["Approach"] += 70
 
-                  page["fixed"] = True
+              if (
+                  "AIRPORT INFORMATION" in upper
+                  or "AERODROME INFORMATION" in upper
+                  or "AIRPORT CHART" in upper
+                  or "AERODROME CHART" in upper
+              ):
+                  scores["Airport"] += 70
 
+              number = chart_number(text)
 
-          # ======================================================
-          # VERIFIED BLOCKS
-          # ======================================================
+              if number.startswith("10-9"):
+                  scores["Airport"] += 80
 
-          VERIFIED = {
+              if number.startswith("10-2"):
+                  scores["STAR"] += 80
 
-              "OIAW": [
-                  (27, 28, "Airport"),
-                  (29, 31, "STAR"),
-                  (32, 37, "SID"),
-                  (38, 40, "Airport"),
-                  (41, 51, "Approach"),
-              ],
+              if number.startswith("10-3"):
+                  scores["SID"] += 80
 
-              "OIII": [
-                  (268, 280, "Airport"),
-                  (281, 293, "STAR"),
-                  (294, 303, "SID"),
-                  (304, 308, "Airport"),
-                  (309, 314, "Approach"),
-              ],
+              if number.startswith("11-") or number.startswith("13-") or number.startswith("16-"):
+                  scores["Approach"] += 80
 
-              "OIMM": [
-                  (361, 364, "Airport"),
-                  (365, 376, "STAR"),
-                  (377, 389, "SID"),
-                  (390, 393, "Airport"),
-                  (394, 403, "Approach"),
-              ],
+              if re.search(
+                  r"\bILS\b|\bLOC\b|\bVOR\b|\bNDB\b|\bRNAV\b|\bRNP\b",
+                  upper
+              ):
+                  scores["Approach"] += 25
 
-              "OIZC": [
-                  (590, 590, "STAR"),
-                  (591, 593, "SID"),
-                  (594, 596, "Airport"),
-                  (597, 601, "Approach"),
-              ],
-          }
+              if "ARRIVAL" in upper:
+                  scores["STAR"] += 20
 
+              if "DEPARTURE" in upper:
+                  scores["SID"] += 20
 
-          # ======================================================
-          # APPLY VERIFIED BLOCKS
-          # ======================================================
+              best = max(
+                  scores,
+                  key=scores.get
+              )
 
-          for airport, ranges in VERIFIED.items():
+              if scores[best] >= 40:
+                  return best
 
-              for start, end, expected in ranges:
+              if scores["Other"] >= 60:
+                  return "Other"
 
-                  for page in pages:
+              return "Unknown"
 
-                      if page["airport"] != airport:
-                          continue
+          pages = {}
 
-                      if not (
-                          start
-                          <=
-                          page["page"]
-                          <=
-                          end
-                      ):
-                          continue
+          pdf_pages = 991
 
-                      page["category"] = expected
-                      page["strength"] = 2000
-                      page["reason"] = "verified block"
-                      page["fixed"] = True
+          current_airport = None
 
+          for page in range(1, pdf_pages + 1):
 
-          # ======================================================
-          # BUILD INDEX
-          # ======================================================
+              text = read_page(page)
 
-          index = {}
+              airports = find_airports(text)
 
+              if airports:
+                  current_airport = airports[0]
 
-          for page in pages:
+              category = classify(text)
 
-              airport = page["airport"]
+              pages[str(page)] = {
+                  "page": page,
+                  "category": category,
+                  "airport": current_airport,
+                  "text": text,
+              }
+
+          airport_data = {}
+
+          for page_str, item in pages.items():
+
+              airport = item["airport"]
 
               if not airport:
                   continue
 
-              category = page["category"]
-
-              if category not in CATEGORIES:
-                  category = "Other"
-
-
-              if airport not in index:
-
-                  index[airport] = {
-
-                      "country":
-                          COUNTRY_PREFIXES.get(
-                              airport[:2],
-                              "Unknown"
-                          ),
-
+              if airport not in airport_data:
+                  airport_data[airport] = {
+                      "country": COUNTRY_PREFIXES.get(
+                          airport[:2],
+                          ""
+                      ),
                       "charts": {
-                          category_name: []
-                          for category_name in CATEGORIES
+                          "Airport": [],
+                          "STAR": [],
+                          "SID": [],
+                          "Approach": [],
+                          "Other": [],
                       }
                   }
 
+              category = item["category"]
 
-              index[airport]["charts"][category].append({
+              if category not in airport_data[airport]["charts"]:
+                  category = "Other"
 
-                  "page":
-                      page["page"],
-
-                  "score":
-                      page["strength"],
-
-                  "reason":
-                      page["reason"]
+              airport_data[airport]["charts"][category].append({
+                  "page": item["page"],
+                  "text": item["text"],
               })
 
-
-          for airport in index:
-
-              for category in CATEGORIES:
-
-                  index[airport]["charts"][category].sort(
-                      key=lambda x: x["page"]
-                  )
-
-
-          # ======================================================
-          # SAVE V9 INDEX
-          # ======================================================
-
-          Path(
-              "charts-index-v9.json"
-          ).write_text(
-
-              json.dumps(
-                  index,
-                  ensure_ascii=False,
-                  indent=2
-              ),
+          with open(
+              "charts-index-v9.json",
+              "w",
               encoding="utf-8"
-          )
-
-
-          # ======================================================
-          # BUILD V9 APP DATABASE
-          # ======================================================
-
-          app_data = {}
-
-
-          for airport, info in index.items():
-
-              app_data[airport] = {
-
-                  "country":
-                      info["country"],
-
-                  "charts": {}
-              }
-
-
-              for category in [
-                  "STAR",
-                  "SID",
-                  "Airport",
-                  "Approach"
-              ]:
-
-                  app_data[airport]["charts"][category] = [
-
-                      {
-                          "page": item["page"]
-                      }
-
-                      for item in
-                      info["charts"][category]
-                  ]
-
-
-          Path(
-              "charts-app-v9.json"
-          ).write_text(
-
-              json.dumps(
-                  app_data,
-                  ensure_ascii=False,
-                  indent=2
-              ),
-              encoding="utf-8"
-          )
-
-
-          # ======================================================
-          # SUMMARY
-          # ======================================================
-
-          category_counts = {
-              category: 0
-              for category in CATEGORIES
-          }
-
-
-          for page in pages:
-
-              category_counts[
-                  page["category"]
-              ] += 1
-
-
-          airport_summary = {}
-
-
-          for airport, info in index.items():
-
-              airport_summary[airport] = {
-
-                  "country":
-                      info["country"],
-
-                  "Airport":
-                      len(
-                          info["charts"]["Airport"]
-                      ),
-
-                  "STAR":
-                      len(
-                          info["charts"]["STAR"]
-                      ),
-
-                  "SID":
-                      len(
-                          info["charts"]["SID"]
-                      ),
-
-                  "Approach":
-                      len(
-                          info["charts"]["Approach"]
-                      ),
-
-                  "Other":
-                      len(
-                          info["charts"]["Other"]
-                      ),
-              }
-
-
-          summary = {
-
-              "version": "V9",
-
-              "source":
-                  "Iran2620.pdf",
-
-              "pages":
-                  len(pages),
-
-              "category_counts":
-                  category_counts,
-
-              "airport_count":
-                  len(index),
-
-              "other_page_count":
-                  category_counts["Other"],
-
-              "airports":
-                  airport_summary,
-          }
-
-
-          Path(
-              "charts-summary-v9.json"
-          ).write_text(
-
-              json.dumps(
-                  summary,
-                  ensure_ascii=False,
-                  indent=2
-              ),
-              encoding="utf-8"
-          )
-
-
-          print("")
-          print("==========================================")
-          print("V9 ANALYSIS COMPLETE")
-          print("==========================================")
-          print(
-              json.dumps(
-                  summary,
+          ) as f:
+              json.dump(
+                  pages,
+                  f,
                   ensure_ascii=False,
                   indent=2
               )
-          )
-
-
-      # ==========================================================
-      # 6. ADD CHART NAMES V11
-      # ==========================================================
-
-      - name: Add chart names V11
-        shell: bash
-        run: |
-          python scripts/name_charts_v11.py
-
-
-      # ==========================================================
-      # 7. SHOW V11 SAMPLE NAMES
-      # ==========================================================
-
-      - name: Show V11 sample chart names
-        shell: python
-        run: |
-
-          import json
-
 
           with open(
-              "charts-app-v11.json",
+              "charts-app-v9.json",
+              "w",
+              encoding="utf-8"
+          ) as f:
+              json.dump(
+                  airport_data,
+                  f,
+                  ensure_ascii=False,
+                  indent=2
+              )
+
+          summary = {
+              "source": PDF,
+              "pages": pdf_pages,
+              "airport_count": len(airport_data),
+              "category_counts": {},
+          }
+
+          for airport in airport_data.values():
+              for category, items in airport["charts"].items():
+                  summary["category_counts"][category] = (
+                      summary["category_counts"].get(category, 0)
+                      + len(items)
+                  )
+
+          with open(
+              "charts-summary-v9.json",
+              "w",
+              encoding="utf-8"
+          ) as f:
+              json.dump(
+                  summary,
+                  f,
+                  ensure_ascii=False,
+                  indent=2
+              )
+
+      - name: Run V12 chart naming
+        shell: bash
+        run: |
+          python scripts/name_charts_v12.py
+
+      - name: Show V12 samples
+        shell: python
+        run: |
+          import json
+
+          with open(
+              "charts-app-v12.json",
               "r",
               encoding="utf-8"
           ) as f:
-
               data = json.load(f)
 
+          tests = {
+              "OIAW": [29, 30, 31, 32, 33, 34, 35, 36, 37],
+              "OIII": [281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293,
+                       296, 297, 301, 302],
+              "OIMM": [365, 366, 367, 368, 369, 370, 371, 372, 373, 374, 375, 376],
+              "OIZC": [589, 590, 591, 592, 593],
+          }
 
-          airports = [
-              "OIAW",
-              "OIII",
-              "OIMM",
-              "OIZC",
-          ]
+          print()
+          print("=" * 70)
+          print("V12 SAMPLE OUTPUT")
+          print("=" * 70)
 
+          for icao, pages in tests.items():
 
-          for airport in airports:
+              print()
+              print("=" * 70)
+              print(icao)
+              print("=" * 70)
 
-              print("")
-              print("=" * 60)
-              print(airport)
-              print("=" * 60)
+              airport = data.get(icao, {})
+              charts = airport.get("charts", {})
 
+              for category, items in charts.items():
 
-              if airport not in data:
+                  selected = [
+                      item
+                      for item in items
+                      if item.get("page") in pages
+                  ]
 
-                  print(
-                      "AIRPORT NOT FOUND"
-                  )
+                  if not selected:
+                      continue
 
-                  continue
+                  print()
+                  print(f"[{category}]")
 
-
-              charts = data[
-                  airport
-              ]["charts"]
-
-
-              for category in [
-                  "Airport",
-                  "STAR",
-                  "SID",
-                  "Approach",
-              ]:
-
-                  print("")
-                  print(
-                      f"[{category}]"
-                  )
-
-
-                  items = charts.get(
-                      category,
-                      []
-                  )
-
-
-                  for item in items[:20]:
-
+                  for item in selected:
                       print(
-                          f'Page {item.get("page")}: '
-                          f'{item.get("name", "NO NAME")}'
+                          f"Page {item.get('page')}: "
+                          f"{item.get('name')}"
                       )
 
-
-      # ==========================================================
-      # 8. UPLOAD RESULTS AS ARTIFACT
-      # ==========================================================
-
-      - name: Upload V11 results
+      - name: Upload V12 results
         uses: actions/upload-artifact@v4
         with:
-          name: JeppIran-V11-results
+          name: JeppIran-V12-results
           path: |
             charts-index-v9.json
             charts-summary-v9.json
             charts-app-v9.json
-            charts-index-v11.json
-            charts-app-v11.json
+            charts-index-v12.json
+            charts-app-v12.json
