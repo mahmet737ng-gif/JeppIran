@@ -9,11 +9,19 @@ jobs:
 
     steps:
 
+      # ========================================================
+      # CHECKOUT
+      # ========================================================
+
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
           lfs: true
 
+
+      # ========================================================
+      # POPPLER
+      # ========================================================
 
       - name: Install Poppler
         shell: bash
@@ -21,6 +29,10 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y poppler-utils
 
+
+      # ========================================================
+      # VERIFY PDF
+      # ========================================================
 
       - name: Verify PDF
         shell: bash
@@ -33,6 +45,10 @@ jobs:
 
           pdfinfo Iran2620.pdf | head -30
 
+
+      # ========================================================
+      # EXTRACT PDF
+      # ========================================================
 
       - name: Extract PDF pages
         shell: bash
@@ -62,9 +78,7 @@ jobs:
 
 
       # ========================================================
-      # IMPORTANT:
-      # Rebuild the original V9-style classification.
-      # Do NOT use the simplified V15 base classifier.
+      # CREATE V9 BASE INDEX
       # ========================================================
 
       - name: Create V9 base index
@@ -100,13 +114,6 @@ jobs:
           ICAO_RE = re.compile(
               r"\b((?:OI|OR|OM|OO|LT|UD|UG)[A-Z]{2})\s*/\s*[A-Z]{3}\b"
           )
-
-          def clean(text):
-              return re.sub(
-                  r"\s+",
-                  " ",
-                  text
-              ).strip()
 
           def find_airport(text):
 
@@ -174,15 +181,12 @@ jobs:
 
               upper = text.upper()
 
-              # Explicit STAR
               if ".STAR." in upper:
                   return "STAR"
 
-              # Explicit SID
               if ".SID." in upper:
                   return "SID"
 
-              # Strong Airport
               airport_terms = [
                   "AIRPORT INFORMATION",
                   "AERODROME INFORMATION",
@@ -195,7 +199,6 @@ jobs:
                   if term in upper:
                       return "Airport"
 
-              # Strong Approach
               approach_terms = [
                   "INSTRUMENT APPROACH",
                   "ACFT EXECUTING INSTRUMENT APPROACH",
@@ -237,7 +240,6 @@ jobs:
               ):
                   return "Approach"
 
-              # Additional procedure text
               if (
                   "ILS" in upper
                   or "VOR" in upper
@@ -329,7 +331,7 @@ jobs:
 
 
       # ========================================================
-      # V12 naming
+      # V12 NAMING
       # ========================================================
 
       - name: Run V12 naming
@@ -343,7 +345,7 @@ jobs:
 
 
       # ========================================================
-      # V16 classification
+      # V16 CLASSIFICATION
       # ========================================================
 
       - name: Run V16 classification
@@ -357,7 +359,7 @@ jobs:
 
 
       # ========================================================
-      # SUMMARY
+      # SHOW SUMMARY
       # ========================================================
 
       - name: Show V16 summary
@@ -372,7 +374,15 @@ jobs:
 
 
       # ========================================================
-      # SAMPLES
+      # SHOW SAMPLE PAGES
+      #
+      # IMPORTANT:
+      # charts-index-v16.json may be either:
+      #
+      # 1. a list
+      # 2. a dictionary keyed by page number
+      #
+      # This code supports BOTH.
       # ========================================================
 
       - name: Show V16 sample pages
@@ -393,14 +403,98 @@ jobs:
           ) as f:
               data = json.load(f)
 
+
+          # ====================================================
+          # Normalize V16 data
+          # ====================================================
+
+          pages_by_number = {}
+
+
+          if isinstance(data, dict):
+
+              # Dictionary format:
+              #
+              # {
+              #   "27": {...},
+              #   "28": {...}
+              # }
+
+              for key, value in data.items():
+
+                  if not isinstance(value, dict):
+                      continue
+
+                  try:
+                      page = int(
+                          value.get(
+                              "page",
+                              key
+                          )
+                      )
+                  except Exception:
+                      continue
+
+                  pages_by_number[page] = value
+
+
+          elif isinstance(data, list):
+
+              # List format:
+              #
+              # [
+              #   {...},
+              #   {...}
+              # ]
+
+              for value in data:
+
+                  if not isinstance(
+                      value,
+                      dict
+                  ):
+                      continue
+
+                  try:
+                      page = int(
+                          value.get(
+                              "page",
+                              0
+                          )
+                      )
+                  except Exception:
+                      continue
+
+                  if page > 0:
+                      pages_by_number[page] = value
+
+
+          else:
+
+              raise RuntimeError(
+                  "Unsupported charts-index-v16.json format"
+              )
+
+
+          print(
+              f"Loaded {len(pages_by_number)} pages"
+          )
+
+
+          # ====================================================
+          # SAMPLE PAGE LIST
+          # ====================================================
+
           pages = [
 
+              # OIAW
               27, 28, 29, 30, 31,
               32, 33, 34, 35, 36, 37,
               38, 39, 40,
               41, 42, 43, 44, 45,
               46, 47, 48, 49, 50, 51,
 
+              # OIII
               268, 269, 270, 280,
               281, 282,
               283, 284, 285, 286,
@@ -413,10 +507,12 @@ jobs:
               309, 310, 311, 312,
               313, 314,
 
+              # OIMM
               361, 362, 363, 364, 365,
               366, 367, 368, 369, 370,
               371, 372, 373, 374, 375,
-              376, 377, 378, 379, 380,
+              376,
+              377, 378, 379, 380,
               381, 382, 383, 384, 385,
               386, 387, 388, 389,
               390, 391, 392, 393,
@@ -424,32 +520,91 @@ jobs:
               398, 399, 400, 401,
               402, 403,
 
-              587, 588, 589, 590,
-              591, 592, 593, 594,
-              595, 596, 597, 598,
-              599, 600, 601,
+              # OIZC
+              587, 588,
+              589, 590,
+              591, 592, 593,
+              594, 595, 596,
+              597, 598, 599, 600, 601,
           ]
+
+
+          # ====================================================
+          # PRINT SAMPLES
+          # ====================================================
 
           for page in pages:
 
-              item = data.get(
-                  str(page)
+              item = pages_by_number.get(
+                  page
               )
 
-              if item:
+              if item is None:
 
                   print(
-                      f"Page {page}: "
-                      f"{item.get('category')} | "
-                      f"{item.get('chart_number', '')} | "
-                      f"{item.get('airport', '')} | "
-                      f"{item.get('name', '')}"
+                      f"Page {page}: NOT FOUND"
                   )
+
+                  continue
+
+              print(
+                  f"Page {page}: "
+                  f"{item.get('category', '')} | "
+                  f"{item.get('chart_number', '')} | "
+                  f"{item.get('airport', '')} | "
+                  f"{item.get('name', '')}"
+              )
+
+
+          # ====================================================
+          # OICC FULL SAMPLE
+          # ====================================================
+
+          print("")
+          print("========================================")
+          print("OICC SAMPLE")
+          print("========================================")
+
+          oicc_found = False
+
+          for page in sorted(
+              pages_by_number
+          ):
+
+              item = pages_by_number[
+                  page
+              ]
+
+              if (
+                  item.get(
+                      "airport",
+                      ""
+                  ) != "OICC"
+              ):
+                  continue
+
+              oicc_found = True
+
+              print(
+                  f"Page {page}: "
+                  f"{item.get('category', '')} | "
+                  f"{item.get('chart_number', '')} | "
+                  f"{item.get('airport', '')} | "
+                  f"{item.get('name', '')}"
+              )
+
+
+          if not oicc_found:
+
+              print(
+                  "WARNING: No OICC pages detected."
+              )
+
           PY
 
 
       # ========================================================
-      # ARTIFACT
+      # UPLOAD RESULTS
       # ========================================================
 
       - name: Upload V16 results
