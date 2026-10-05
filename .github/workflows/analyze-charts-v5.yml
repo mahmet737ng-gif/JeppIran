@@ -1,4 +1,4 @@
-name: Analyze Charts V5
+name: V5
 
 on:
   workflow_dispatch:
