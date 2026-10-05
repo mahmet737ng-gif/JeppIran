@@ -16,6 +16,7 @@ class SimulatorConnectionActivity : AppCompatActivity() {
     private lateinit var statusValue: TextView
     private lateinit var hostInput: EditText
     private lateinit var portInput: EditText
+    private lateinit var guideValue: TextView
 
     private var selectedSimulator = SimulatorManager.simulator(this)
 
@@ -78,15 +79,9 @@ class SimulatorConnectionActivity : AppCompatActivity() {
         simulatorValue = text("", 14f, false, textColor(), 0, 0, 0, 10)
         root.addView(simulatorValue)
 
-        root.addView(text("HOW IT WORKS", 12f, true, secondaryTextColor(), 0, 14, 0, 8))
-        root.addView(text(
-            "JeppIran listens on the UDP port above. The PC side sends a small JSON position packet over your local Wi-Fi. The phone and simulator PC must be on the same network. The address shown above is the phone address that the PC sends data to.\n\n" +
-            "X-Plane: enable the JeppIran X-Plane data output/bridge and enter this phone's IP and UDP port.\n\n" +
-            "MSFS 2020 / 2024: SimConnect is available on the Windows simulator PC. The JeppIran bridge reads the aircraft state through SimConnect and forwards it to this app.\n\n" +
-            "Prepar3D: use the same bridge concept through SimConnect.\n\n" +
-            "The app accepts latitude, longitude, altitude, heading and ground speed. Once a valid chart georeference exists, the aircraft symbol can be placed on the chart. Simulator data takes priority over phone GPS while this connection is active.",
-            14f, false, secondaryTextColor(), 0, 0, 0, 18
-        ))
+        root.addView(text("HOW TO CONNECT", 12f, true, secondaryTextColor(), 0, 14, 0, 8))
+        guideValue = text("", 14f, false, secondaryTextColor(), 0, 0, 0, 18)
+        root.addView(guideValue)
 
         root.addView(button("DISCONNECT").apply {
             setOnClickListener {
@@ -124,6 +119,38 @@ class SimulatorConnectionActivity : AppCompatActivity() {
             else -> "No simulator selected"
         }
         simulatorValue.text = label
+    }
+
+    private fun updateGuide() {
+        if (!::guideValue.isInitialized) return
+        guideValue.text = when (selectedSimulator) {
+            SimulatorManager.XPLANE ->
+                "1. Start X-Plane on the Windows PC.\n" +
+                "2. Use the JeppIran X-Plane bridge/data-output configuration.\n" +
+                "3. Set the destination to this phone's IP address and the UDP port shown above.\n" +
+                "4. Keep the phone and PC on the same Wi-Fi/LAN.\n" +
+                "5. Tap SAVE & CONNECT and start the simulator flight."
+            SimulatorManager.MSFS2020 ->
+                "1. Start MSFS 2020 on Windows.\n" +
+                "2. Run the JeppIran Windows bridge on the same PC.\n" +
+                "3. The bridge reads latitude, longitude, altitude, heading and ground speed through SimConnect.\n" +
+                "4. Set the bridge destination to this phone's IP and UDP port.\n" +
+                "5. Tap SAVE & CONNECT."
+            SimulatorManager.MSFS2024 ->
+                "1. Start MSFS 2024 on Windows.\n" +
+                "2. Run the JeppIran Windows bridge on the same PC.\n" +
+                "3. The bridge reads the aircraft state through SimConnect and forwards it over UDP.\n" +
+                "4. Set the bridge destination to this phone's IP and UDP port.\n" +
+                "5. Tap SAVE & CONNECT."
+            SimulatorManager.PREPAR3D ->
+                "1. Start Prepar3D on Windows.\n" +
+                "2. Run the JeppIran Windows bridge on the same PC.\n" +
+                "3. The bridge reads the aircraft state through SimConnect.\n" +
+                "4. Set the bridge destination to this phone's IP and UDP port.\n" +
+                "5. Tap SAVE & CONNECT."
+            else ->
+                "Select a simulator above to see the connection steps."
+        }
     }
 
     private fun saveAndConnect() {
