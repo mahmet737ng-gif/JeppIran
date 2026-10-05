@@ -46,7 +46,8 @@ class AirportChartsActivity :
     private data class Chart(
         val page: Int,
         val name: String,
-        val category: String
+        val category: String,
+        val chartNumber: String
     )
 
     private data class CategoryItem(
@@ -118,7 +119,9 @@ class AirportChartsActivity :
     private fun buildUi() {
 
         val root =
-            LinearLayout(this).apply {
+            LinearLayout(
+                this
+            ).apply {
 
                 orientation =
                     LinearLayout.VERTICAL
@@ -160,12 +163,6 @@ class AirportChartsActivity :
                     20.dp,
                     18.dp
                 )
-
-                setBackgroundColor(
-                    resolveColor(
-                        android.R.attr.colorBackground
-                    )
-                )
             }
 
         selectedCategoryTitle =
@@ -198,7 +195,9 @@ class AirportChartsActivity :
             }
 
         listContainer =
-            LinearLayout(this).apply {
+            LinearLayout(
+                this
+            ).apply {
 
                 orientation =
                     LinearLayout.VERTICAL
@@ -212,14 +211,15 @@ class AirportChartsActivity :
             }
 
         chartScrollView =
-            ScrollView(this).apply {
+            ScrollView(
+                this
+            ).apply {
 
                 isFillViewport =
                     true
 
                 overScrollMode =
-                    ScrollView
-                        .OVER_SCROLL_IF_CONTENT_SCROLLS
+                    ScrollView.OVER_SCROLL_IF_CONTENT_SCROLLS
 
                 addView(
                     listContainer
@@ -227,7 +227,9 @@ class AirportChartsActivity :
             }
 
         categoryContainer =
-            LinearLayout(this).apply {
+            LinearLayout(
+                this
+            ).apply {
 
                 setBackgroundColor(
                     resolveColor(
@@ -241,9 +243,11 @@ class AirportChartsActivity :
 
         val landscape =
             resources.displayMetrics.widthPixels >=
-                    resources.displayMetrics.heightPixels
+                resources.displayMetrics.heightPixels
 
-        if (landscape) {
+        if (
+            landscape
+        ) {
 
             buildLandscape(
                 root,
@@ -303,7 +307,6 @@ class AirportChartsActivity :
 
         val content =
             LinearLayout(this).apply {
-
                 orientation =
                     LinearLayout.VERTICAL
             }
@@ -368,7 +371,6 @@ class AirportChartsActivity :
 
         val workspace =
             LinearLayout(this).apply {
-
                 orientation =
                     LinearLayout.HORIZONTAL
             }
@@ -387,7 +389,6 @@ class AirportChartsActivity :
 
         val content =
             LinearLayout(this).apply {
-
                 orientation =
                     LinearLayout.VERTICAL
             }
@@ -438,12 +439,11 @@ class AirportChartsActivity :
 
         val wrapper =
             LinearLayout(this).apply {
-
                 orientation =
                     LinearLayout.VERTICAL
             }
 
-        val upButton =
+        val up =
             TextView(this).apply {
 
                 text =
@@ -461,12 +461,6 @@ class AirportChartsActivity :
                     )
                 )
 
-                setBackgroundColor(
-                    resolveColor(
-                        android.R.attr.colorBackground
-                    )
-                )
-
                 setOnClickListener {
 
                     scrollView.smoothScrollBy(
@@ -476,7 +470,7 @@ class AirportChartsActivity :
                 }
             }
 
-        val downButton =
+        val down =
             TextView(this).apply {
 
                 text =
@@ -494,12 +488,6 @@ class AirportChartsActivity :
                     )
                 )
 
-                setBackgroundColor(
-                    resolveColor(
-                        android.R.attr.colorBackground
-                    )
-                )
-
                 setOnClickListener {
 
                     scrollView.smoothScrollBy(
@@ -510,7 +498,7 @@ class AirportChartsActivity :
             }
 
         wrapper.addView(
-            upButton,
+            up,
             LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 34.dp
@@ -527,7 +515,7 @@ class AirportChartsActivity :
         )
 
         wrapper.addView(
-            downButton,
+            down,
             LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 34.dp
@@ -538,7 +526,7 @@ class AirportChartsActivity :
             .viewTreeObserver
             .addOnScrollChangedListener {
 
-                upButton.alpha =
+                up.alpha =
                     if (
                         scrollView.scrollY > 0
                     ) {
@@ -552,13 +540,15 @@ class AirportChartsActivity :
                         0
                     )
 
-                if (child != null) {
+                if (
+                    child != null
+                ) {
 
                     val maxScroll =
                         child.height -
-                                scrollView.height
+                            scrollView.height
 
-                    downButton.alpha =
+                    down.alpha =
                         if (
                             maxScroll > 0 &&
                             scrollView.scrollY <
@@ -579,7 +569,9 @@ class AirportChartsActivity :
     ) {
 
         categoryContainer.orientation =
-            if (horizontal) {
+            if (
+                horizontal
+            ) {
                 LinearLayout.HORIZONTAL
             } else {
                 LinearLayout.VERTICAL
@@ -589,17 +581,9 @@ class AirportChartsActivity :
             Gravity.CENTER
 
         categoryContainer.setPadding(
-            if (horizontal) {
-                8.dp
-            } else {
-                6.dp
-            },
+            if (horizontal) 8.dp else 6.dp,
             6.dp,
-            if (horizontal) {
-                8.dp
-            } else {
-                6.dp
-            },
+            if (horizontal) 8.dp else 6.dp,
             6.dp
         )
     }
@@ -608,31 +592,32 @@ class AirportChartsActivity :
 
         categoryContainer.removeAllViews()
 
-        val availableCategories =
-            categories.filter { category ->
+        val available =
+            categories.filter {
+                category ->
 
                 allCharts.any {
 
                     normalizeCategory(
                         it.category
                     ) ==
-                            normalizeCategory(
-                                category.key
-                            )
+                        normalizeCategory(
+                            category.key
+                        )
                 }
             }
 
         if (
-            availableCategories.isEmpty()
+            available.isEmpty()
         ) {
             return
         }
 
         val horizontal =
             categoryContainer.orientation ==
-                    LinearLayout.HORIZONTAL
+                LinearLayout.HORIZONTAL
 
-        availableCategories.forEach {
+        available.forEach {
             category ->
 
             val count =
@@ -641,9 +626,9 @@ class AirportChartsActivity :
                     normalizeCategory(
                         it.category
                     ) ==
-                            normalizeCategory(
-                                category.key
-                            )
+                        normalizeCategory(
+                            category.key
+                        )
                 }
 
             val button =
@@ -653,7 +638,9 @@ class AirportChartsActivity :
                         "${category.label}\n$count"
 
                     textSize =
-                        if (horizontal) {
+                        if (
+                            horizontal
+                        ) {
                             10f
                         } else {
                             11f
@@ -690,7 +677,9 @@ class AirportChartsActivity :
                 }
 
             val params =
-                if (horizontal) {
+                if (
+                    horizontal
+                ) {
 
                     LinearLayout.LayoutParams(
                         0,
@@ -720,33 +709,27 @@ class AirportChartsActivity :
             )
         }
 
-        if (
-            availableCategories.isNotEmpty()
-        ) {
-
-            refreshCategoryButtonStates(
-                availableCategories.first().key
-            )
-        }
+        refreshCategoryButtonStates(
+            available.first().key
+        )
     }
 
     private fun selectCategory(
-        category: CategoryItem
+        selected: CategoryItem
     ) {
 
         selectedCategoryTitle.text =
-            "${category.label}  •  CHARTS"
+            "${selected.label}  •  CHARTS"
 
         val filtered =
             allCharts
                 .filter {
-
                     normalizeCategory(
                         it.category
                     ) ==
-                            normalizeCategory(
-                                category.key
-                            )
+                        normalizeCategory(
+                            selected.key
+                        )
                 }
                 .sortedBy {
                     it.page
@@ -754,8 +737,7 @@ class AirportChartsActivity :
 
         listContainer.removeAllViews()
 
-        filtered.forEach {
-            chart ->
+        filtered.forEach { chart ->
 
             addChartRow(
                 chart
@@ -763,14 +745,13 @@ class AirportChartsActivity :
         }
 
         chartScrollView.post {
-
             chartScrollView.fullScroll(
                 View.FOCUS_UP
             )
         }
 
         refreshCategoryButtonStates(
-            category.key
+            selected.key
         )
     }
 
@@ -778,19 +759,18 @@ class AirportChartsActivity :
         selectedKey: String
     ) {
 
-        val selectedNormalized =
+        val selected =
             normalizeCategory(
                 selectedKey
             )
 
         for (
-            index in
-            0 until categoryContainer.childCount
+            i in 0 until categoryContainer.childCount
         ) {
 
             val child =
                 categoryContainer.getChildAt(
-                    index
+                    i
                 )
 
             if (
@@ -799,28 +779,27 @@ class AirportChartsActivity :
                 continue
             }
 
-            val rawText =
+            val value =
                 child.text
                     .toString()
                     .uppercase()
 
-            val isSelected =
-                rawText.startsWith(
-                    selectedNormalized
+            val active =
+                value.startsWith(
+                    selected
                 )
 
             child.background =
                 createCategoryBackground(
-                    isSelected
+                    active
                 )
 
             child.setTextColor(
-                if (isSelected) {
-
+                if (
+                    active
+                ) {
                     Color.WHITE
-
                 } else {
-
                     resolveColor(
                         android.R.attr.textColorPrimary
                     )
@@ -834,7 +813,9 @@ class AirportChartsActivity :
     ) {
 
         val row =
-            LinearLayout(this).apply {
+            LinearLayout(
+                this
+            ).apply {
 
                 orientation =
                     LinearLayout.VERTICAL
@@ -879,6 +860,11 @@ class AirportChartsActivity :
                     )
 
                     intent.putExtra(
+                        "AIRPORT_NAME",
+                        airportName
+                    )
+
+                    intent.putExtra(
                         "CITY",
                         city
                     )
@@ -920,7 +906,9 @@ class AirportChartsActivity :
             TextView(this).apply {
 
                 text =
-                    "${chart.category}  •  Page ${chart.page}"
+                    chart.category +
+                        "  •  Page " +
+                        chart.page
 
                 textSize =
                     12f
@@ -930,6 +918,13 @@ class AirportChartsActivity :
                         android.R.attr.textColorSecondary
                     )
                 )
+
+                setPadding(
+                    0,
+                    4.dp,
+                    0,
+                    0
+                )
             }
 
         row.addView(
@@ -937,15 +932,7 @@ class AirportChartsActivity :
         )
 
         row.addView(
-            subtitle,
-            LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-
-                topMargin =
-                    4.dp
-            }
+            subtitle
         )
 
         listContainer.addView(
@@ -969,96 +956,107 @@ class AirportChartsActivity :
 
         allCharts.clear()
 
-        val text =
-            assets
-                .open(
-                    "charts-app-v16.json"
-                )
-                .bufferedReader()
-                .use {
-                    it.readText()
-                }
+        try {
 
-        val root =
-            text.trim()
+            val raw =
+                assets
+                    .open(
+                        "charts-app-v16.json"
+                    )
+                    .bufferedReader()
+                    .use {
+                        it.readText()
+                    }
+                    .trim()
 
-        if (
-            root.startsWith("[")
-        ) {
-
-            readArray(
-                JSONArray(root)
-            )
-
-        } else {
-
-            val jsonObject =
-                JSONObject(root)
-
-            val possibleArrays =
-                listOf(
-                    "charts",
-                    "data",
-                    "items",
-                    "pages"
-                )
-
-            var found =
-                false
-
-            for (
-                key in possibleArrays
+            if (
+                raw.startsWith("[")
             ) {
 
-                val value =
-                    jsonObject.opt(
-                        key
+                readArray(
+                    JSONArray(
+                        raw
+                    )
+                )
+
+            } else {
+
+                val root =
+                    JSONObject(
+                        raw
                     )
 
-                if (
-                    value is JSONArray
-                ) {
-
-                    readArray(
-                        value
+                val arrays =
+                    listOf(
+                        "charts",
+                        "data",
+                        "items",
+                        "pages"
                     )
 
-                    found =
-                        true
+                var loaded =
+                    false
 
-                    break
-                }
-            }
-
-            if (!found) {
-
-                val keys =
-                    jsonObject.keys()
-
-                while (
-                    keys.hasNext()
+                for (
+                    key in arrays
                 ) {
 
                     val value =
-                        jsonObject.opt(
-                            keys.next()
+                        root.opt(
+                            key
                         )
 
                     if (
-                        value is JSONObject
+                        value is JSONArray
                     ) {
 
-                        readChartObject(
+                        readArray(
                             value
                         )
+
+                        loaded =
+                            true
+
+                        break
+                    }
+                }
+
+                if (
+                    !loaded
+                ) {
+
+                    val keys =
+                        root.keys()
+
+                    while (
+                        keys.hasNext()
+                    ) {
+
+                        val value =
+                            root.opt(
+                                keys.next()
+                            )
+
+                        if (
+                            value is JSONObject
+                        ) {
+
+                            readChartObject(
+                                value
+                            )
+                        }
                     }
                 }
             }
+
+        } catch (
+            _: Exception
+        ) {
         }
 
         createCategoryButtons()
 
-        val firstAvailable =
+        val first =
             categories.firstOrNull {
                 category ->
 
@@ -1067,18 +1065,18 @@ class AirportChartsActivity :
                     normalizeCategory(
                         it.category
                     ) ==
-                            normalizeCategory(
-                                category.key
-                            )
+                        normalizeCategory(
+                            category.key
+                        )
                 }
             }
 
         if (
-            firstAvailable != null
+            first != null
         ) {
 
             selectCategory(
-                firstAvailable
+                first
             )
         }
     }
@@ -1088,23 +1086,18 @@ class AirportChartsActivity :
     ) {
 
         for (
-            index in
-            0 until array.length()
+            i in 0 until array.length()
         ) {
 
-            val value =
-                array.opt(
-                    index
+            val item =
+                array.optJSONObject(
+                    i
                 )
+                    ?: continue
 
-            if (
-                value is JSONObject
-            ) {
-
-                readChartObject(
-                    value
-                )
-            }
+            readChartObject(
+                item
+            )
         }
     }
 
@@ -1126,7 +1119,7 @@ class AirportChartsActivity :
             ).uppercase()
 
         if (
-            itemIcao.isNotEmpty() &&
+            itemIcao.isNotBlank() &&
             itemIcao != icao.uppercase()
         ) {
             return
@@ -1154,7 +1147,7 @@ class AirportChartsActivity :
             return
         }
 
-        val category =
+        val chartCategory =
             firstNonEmpty(
                 item.optString(
                     "category"
@@ -1168,7 +1161,17 @@ class AirportChartsActivity :
                 "Other"
             )
 
-        val name =
+        val chartNumber =
+            firstNonEmpty(
+                item.optString(
+                    "chart_number"
+                ),
+                item.optString(
+                    "chartNumber"
+                )
+            )
+
+        val rawName =
             firstNonEmpty(
                 item.optString(
                     "name"
@@ -1178,20 +1181,64 @@ class AirportChartsActivity :
                 ),
                 item.optString(
                     "chart_name"
-                ),
-                "Chart page $page"
+                )
+            )
+
+        val name =
+            makeChartDisplayName(
+                rawName,
+                chartCategory,
+                chartNumber
             )
 
         allCharts.add(
             Chart(
-                page =
-                    page,
-                name =
-                    name,
-                category =
-                    category
+                page,
+                name,
+                chartCategory,
+                chartNumber
             )
         )
+    }
+
+    private fun makeChartDisplayName(
+        rawName: String,
+        category: String,
+        chartNumber: String
+    ): String {
+
+        val clean =
+            rawName.trim()
+
+        val placeholder =
+            clean.isBlank() ||
+                clean.matches(
+                    Regex(
+                        "(?i)chart\\s*page\\s*\\d+"
+                    )
+                )
+
+        if (
+            !placeholder
+        ) {
+            return clean
+        }
+
+        if (
+            chartNumber.isNotBlank()
+        ) {
+
+            return category
+                .trim()
+                .uppercase() +
+                " " +
+                chartNumber.trim()
+        }
+
+        return category
+            .trim()
+            .uppercase() +
+            " CHART"
     }
 
     private fun normalizeCategory(
@@ -1199,9 +1246,7 @@ class AirportChartsActivity :
     ): String {
 
         return when (
-            value
-                .trim()
-                .uppercase()
+            value.trim().uppercase()
         ) {
 
             "STAR" ->
@@ -1224,19 +1269,10 @@ class AirportChartsActivity :
     private fun buildAirportTitle():
         String {
 
-        val cleanIcao =
-            icao.trim()
-
-        val cleanAirport =
-            airportName.trim()
-
-        val cleanCity =
-            city.trim()
-
         return listOf(
-            cleanIcao,
-            cleanAirport,
-            cleanCity
+            icao.trim(),
+            airportName.trim(),
+            city.trim()
         )
             .filter {
                 it.isNotEmpty()
@@ -1250,10 +1286,9 @@ class AirportChartsActivity :
         vararg values: String
     ): String {
 
-        return values
-            .firstOrNull {
-                it.trim().isNotEmpty()
-            }
+        return values.firstOrNull {
+            it.trim().isNotEmpty()
+        }
             ?.trim()
             ?: ""
     }
@@ -1262,10 +1297,9 @@ class AirportChartsActivity :
         vararg values: Int
     ): Int {
 
-        return values
-            .firstOrNull {
-                it > 0
-            }
+        return values.firstOrNull {
+            it > 0
+        }
             ?: -1
     }
 
@@ -1273,26 +1307,26 @@ class AirportChartsActivity :
         attribute: Int
     ): Int {
 
-        val typedValue =
+        val value =
             TypedValue()
 
         theme.resolveAttribute(
             attribute,
-            typedValue,
+            value,
             true
         )
 
         return if (
-            typedValue.resourceId != 0
+            value.resourceId != 0
         ) {
 
             getColor(
-                typedValue.resourceId
+                value.resourceId
             )
 
         } else {
 
-            typedValue.data
+            value.data
         }
     }
 
@@ -1311,7 +1345,9 @@ class AirportChartsActivity :
                 14.dp.toFloat()
 
             setColor(
-                if (dark) {
+                if (
+                    dark
+                ) {
 
                     Color.rgb(
                         25,
@@ -1327,7 +1363,9 @@ class AirportChartsActivity :
 
             setStroke(
                 1.dp,
-                if (dark) {
+                if (
+                    dark
+                ) {
 
                     Color.rgb(
                         55,
@@ -1362,7 +1400,9 @@ class AirportChartsActivity :
             cornerRadius =
                 12.dp.toFloat()
 
-            if (selected) {
+            if (
+                selected
+            ) {
 
                 setColor(
                     Color.rgb(
@@ -1384,7 +1424,9 @@ class AirportChartsActivity :
             } else {
 
                 setColor(
-                    if (dark) {
+                    if (
+                        dark
+                    ) {
 
                         Color.rgb(
                             31,
@@ -1404,7 +1446,9 @@ class AirportChartsActivity :
 
                 setStroke(
                     1.dp,
-                    if (dark) {
+                    if (
+                        dark
+                    ) {
 
                         Color.rgb(
                             60,
@@ -1429,13 +1473,10 @@ class AirportChartsActivity :
         Boolean {
 
         return (
-            resources
-                .configuration
-                .uiMode
-                and
+            resources.configuration.uiMode and
                 Configuration.UI_MODE_NIGHT_MASK
-            ) ==
-                Configuration.UI_MODE_NIGHT_YES
+        ) ==
+            Configuration.UI_MODE_NIGHT_YES
     }
 
     private val Int.dp: Int
@@ -1445,5 +1486,5 @@ class AirportChartsActivity :
                     resources
                         .displayMetrics
                         .density
-                ).toInt()
+            ).toInt()
 }
