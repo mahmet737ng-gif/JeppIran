@@ -914,8 +914,8 @@ class ChartsActivity :
                 ) {
 
                     Color.rgb(
-                        27,
-                        38,
+                        7,
+                        26,
                         49
                     )
 
@@ -932,9 +932,9 @@ class ChartsActivity :
                 ) {
 
                     Color.rgb(
-                        63,
-                        79,
-                        94
+                        23,
+                        108,
+                        181
                     )
 
                 } else {
