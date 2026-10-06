@@ -1663,6 +1663,24 @@ private val locationPermissionLauncher =
 
         actionRow.addView(
             toolbarButton(
+                "N",
+                13f
+            ).apply {
+                contentDescription =
+                    "Procedure hot note"
+
+                setOnClickListener {
+                    showCurrentChartHotNoteDialog()
+                }
+            },
+            toolbarButtonParams(
+                42.dp
+            )
+        )
+
+
+        actionRow.addView(
+            toolbarButton(
                 "⛶",
                 18f
             ).apply {
@@ -4196,6 +4214,77 @@ private val locationPermissionLauncher =
                 chartView.invalidate()
             }
         }
+    }
+
+
+    private fun showCurrentChartHotNoteDialog() {
+
+        val page =
+            currentChartGlobalPage()
+
+        if (
+            page <= 0
+        ) {
+            return
+        }
+
+        val input =
+            EditText(
+                this
+            ).apply {
+                setText(
+                    HotNotesStore.chartNote(
+                        this@PdfViewerActivity,
+                        page
+                    )
+                )
+                hint =
+                    "Personal note for " +
+                        chartTitle.ifBlank {
+                            "this procedure"
+                        }
+                minLines =
+                    5
+                gravity =
+                    Gravity.TOP or
+                        Gravity.START
+                setSelection(
+                    text.length
+                )
+            }
+
+        AlertDialog.Builder(
+            this
+        )
+            .setTitle(
+                "Procedure Hot Note"
+            )
+            .setView(
+                input
+            )
+            .setNegativeButton(
+                "Cancel",
+                null
+            )
+            .setNeutralButton(
+                "Clear"
+            ) { _, _ ->
+                HotNotesStore.setChartNote(
+                    this,
+                    page,
+                    ""
+                )
+            }
+            .setPositiveButton(
+                "Save"
+            ) { _, _ ->
+                HotNotesStore.setChartNote(
+                    this,
+                    page,
+                    input.text.toString()
+                )
+            }
+            .show()
     }
 
 
