@@ -235,6 +235,10 @@ private val locationPermissionLauncher =
         TextView? =
         null
 
+    private var notamAlertBanner:
+        TextView? =
+        null
+
     private lateinit var metarIcon:
         TextView
 
@@ -1266,6 +1270,8 @@ private val locationPermissionLauncher =
         buildMetarBanner()
 
         buildTaxiRouteBanner()
+
+        buildNotamAlertBanner()
 
 
         setContentView(
@@ -2439,6 +2445,277 @@ private val locationPermissionLauncher =
     }
 
 
+    private fun buildNotamAlertBanner() {
+
+        notamAlertBanner =
+            TextView(
+                this
+            ).apply {
+
+                visibility =
+                    View.GONE
+
+                textSize =
+                    11.5f
+
+                typeface =
+                    Typeface.DEFAULT_BOLD
+
+                gravity =
+                    Gravity.CENTER_VERTICAL
+
+                setTextColor(
+                    if (
+                        isDarkTheme()
+                    ) {
+                        Color.rgb(
+                            255,
+                            220,
+                            123
+                        )
+                    } else {
+                        Color.rgb(
+                            116,
+                            69,
+                            0
+                        )
+                    }
+                )
+
+                setPadding(
+                    14.dp,
+                    10.dp,
+                    14.dp,
+                    10.dp
+                )
+
+                background =
+                    roundedBackground(
+                        if (
+                            isDarkTheme()
+                        ) {
+                            Color.argb(
+                                238,
+                                63,
+                                42,
+                                4
+                            )
+                        } else {
+                            Color.argb(
+                                246,
+                                255,
+                                242,
+                                200
+                            )
+                        },
+                        if (
+                            isDarkTheme()
+                        ) {
+                            Color.rgb(
+                                255,
+                                190,
+                                63
+                            )
+                        } else {
+                            Color.rgb(
+                                205,
+                                137,
+                                21
+                            )
+                        },
+                        15
+                    )
+
+                elevation =
+                    15.dp.toFloat()
+
+                maxLines =
+                    2
+
+                setOnClickListener {
+
+                    startActivity(
+                        Intent(
+                            this@PdfViewerActivity,
+                            PilotBriefingActivity::class.java
+                        ).putExtra(
+                            "ICAO",
+                            currentIcao
+                        )
+                    )
+                }
+            }
+
+        root.addView(
+            notamAlertBanner,
+            FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+
+                gravity =
+                    Gravity.BOTTOM
+
+                leftMargin =
+                    12.dp
+
+                rightMargin =
+                    12.dp
+
+                bottomMargin =
+                    if (
+                        intent.getBooleanExtra(
+                            "TAXI_MODE",
+                            false
+                        )
+                    ) {
+                        76.dp
+                    } else {
+                        18.dp
+                    }
+            }
+        )
+    }
+
+
+    private fun updateNotamAlertForCurrentChart(
+        chart: ChartRepository.ChartInfo
+    ) {
+
+        val banner =
+            notamAlertBanner
+                ?: return
+
+        val items =
+            NotamStore
+                .cached(
+                    this,
+                    currentIcao
+                )
+                ?.items
+                .orEmpty()
+
+        if (
+            items.isEmpty()
+        ) {
+
+            banner.visibility =
+                View.GONE
+
+            return
+        }
+
+        val normalizedCategory =
+            ChartRepository
+                .normalizeCategory(
+                    chart.category
+                )
+
+        val related =
+            when (
+                normalizedCategory
+            ) {
+
+                "Approach" ->
+                    NotamStore
+                        .relevantToApproach(
+                            items,
+                            chart.name
+                        )
+
+                "Airport" -> {
+
+                    val upperName =
+                        chart.name
+                            .uppercase(
+                                Locale.US
+                            )
+
+                    val runway =
+                        Regex(
+                            """RWY\s+(\d{2}[LRC]?)"""
+                        )
+                            .find(
+                                upperName
+                            )
+                            ?.groupValues
+                            ?.getOrNull(
+                                1
+                            )
+
+                    items.filter {
+                        notam ->
+
+                        val text =
+                            notam.text
+                                .uppercase(
+                                    Locale.US
+                                )
+
+                        (
+                            runway != null &&
+                            (
+                                text.contains(
+                                    "RWY " +
+                                        runway
+                                ) ||
+                                text.contains(
+                                    runway
+                                )
+                                )
+                            ) ||
+                            (
+                                (
+                                    "AIRPORT DIAGRAM" in
+                                        upperName ||
+                                    "PARKING" in
+                                        upperName ||
+                                    "TAXI" in
+                                        upperName
+                                    ) &&
+                                notam.category in
+                                    setOf(
+                                        "RUNWAY",
+                                        "TAXI / APRON",
+                                        "LIGHTING"
+                                    )
+                                )
+                    }
+                }
+
+                else ->
+                    emptyList()
+            }
+
+        if (
+            related.isEmpty()
+        ) {
+
+            banner.visibility =
+                View.GONE
+
+            return
+        }
+
+        banner.text =
+            "⚠  " +
+                related.size +
+                " RELATED NOTAM" +
+                if (
+                    related.size ==
+                    1
+                ) {
+                    ""
+                } else {
+                    "S"
+                } +
+                "  •  TAP FOR OPERATIONAL BRIEF"
+
+        banner.visibility =
+            View.VISIBLE
+    }
+
+
     private fun buildTaxiRouteBanner() {
 
         if (
@@ -3064,6 +3341,10 @@ private val locationPermissionLauncher =
 
         pageText.text =
             buildPageText()
+
+        updateNotamAlertForCurrentChart(
+            chart
+        )
 
 
         loadAnnotationsForCurrentChart()
