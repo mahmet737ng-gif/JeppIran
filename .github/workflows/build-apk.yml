@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - work-no-build
+      - airport-card-backgrounds
       - pilot-ops-suite
 
 permissions:
