@@ -100,9 +100,7 @@ class WxActivity : AppCompatActivity() {
                 orientation =
                     LinearLayout.VERTICAL
 
-                setBackgroundColor(
-                    backgroundColor()
-                )
+                background = getDrawable(R.drawable.bg_flight_deck)
             }
 
 
