@@ -652,5 +652,7 @@ jobs:
             echo "Canonical chart index is already current."
           else
             git commit -m "Refresh canonical chart index"
+            git fetch origin work-no-build
+            git rebase origin/work-no-build
             git push origin HEAD:work-no-build
           fi
