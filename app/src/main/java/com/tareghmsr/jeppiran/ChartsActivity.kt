@@ -2383,13 +2383,12 @@ class ChartsActivity : AppCompatActivity() {
          * inside each family, so cards do not repeat in obvious batches.
          */
         private val seed =
-            abs(
-                icao
-                    .uppercase(
-                        Locale.US
-                    )
-                    .hashCode()
-            )
+            icao
+                .uppercase(
+                    Locale.US
+                )
+                .hashCode() and
+                0x7fffffff
 
         private fun value(
             slot: Int,
