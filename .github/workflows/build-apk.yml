@@ -8,6 +8,7 @@ on:
       - work-no-build
       - pilot-ops-suite
       - experimental-pilot-intelligence
+      - smart-airport-surface
 
 permissions:
   contents: write
@@ -93,6 +94,10 @@ jobs:
             --data-version v18 \
             --cycle 2026-20
           python scripts/validate_chart_georef.py
+          python scripts/audit_surface_chart_coverage.py \
+            --index app/src/main/assets/charts-current.json \
+            --georef app/src/main/assets/chart-georef.json \
+            --output docs/georeferencing/surface-chart-audit.json
           python scripts/build_approach_briefings.py \
             --pdf Iran2620.pdf \
             --index app/src/main/assets/charts-current.json \
@@ -132,6 +137,7 @@ jobs:
           path: |
             app/src/main/assets/chart-georef.json
             docs/georeferencing/georef-audit.json
+            docs/georeferencing/surface-chart-audit.json
 
       - name: Publish permanent Chrome download
         if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/experimental-pilot-intelligence'
