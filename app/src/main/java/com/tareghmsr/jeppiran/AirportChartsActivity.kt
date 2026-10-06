@@ -102,6 +102,14 @@ class AirportChartsActivity :
                 .orEmpty()
                 .trim()
 
+        selectedCategory =
+            intent
+                .getStringExtra(
+                    "CATEGORY"
+                )
+                .orEmpty()
+                .trim()
+
         repository =
             ChartRepository(
                 this
@@ -982,8 +990,17 @@ class AirportChartsActivity :
             )
         }
 
+        val requestedCategory =
+            ChartRepository
+                .normalizeCategory(
+                    selectedCategory
+                )
+
         val firstCategory =
-            categories.firstOrNull()
+            categories.firstOrNull {
+                it == requestedCategory
+            }
+                ?: categories.firstOrNull()
 
         if (
             firstCategory != null
