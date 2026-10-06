@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net48</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+    <PlatformTarget>x64</PlatformTarget>
+    <RootNamespace>JeppIran.P3DBridge</RootNamespace>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="LockheedMartin.Prepar3D.SimConnect">
+      <HintPath>$(P3D_SIMCONNECT_MANAGED_DLL)</HintPath>
+      <Private>false</Private>
+    </Reference>
+  </ItemGroup>
+</Project>

@@ -94,7 +94,7 @@ class SimulatorActivity : AppCompatActivity() {
         content.addView(sectionTitle("CONNECTION"))
 
         hostInput = EditText(this).apply {
-            hint = "Simulator PC IP address"
+            hint = "Simulator PC IP (X-Plane only)"
             setText(SimulatorLocationStore.savedHost(this@SimulatorActivity))
             textSize = 16f
             inputType = InputType.TYPE_CLASS_TEXT
@@ -173,24 +173,38 @@ class SimulatorActivity : AppCompatActivity() {
     private fun chooseSimulator() {
         val items = arrayOf(
             SimulatorLocationStore.TYPE_XPLANE,
-            SimulatorLocationStore.TYPE_MSFS
+            SimulatorLocationStore.TYPE_MSFS,
+            SimulatorLocationStore.TYPE_P3D
         )
         android.app.AlertDialog.Builder(this)
             .setTitle("Select simulator")
             .setItems(items) { _, which ->
                 selectedType = items[which]
                 typeText.text = selectedType
-                if (selectedType == SimulatorLocationStore.TYPE_MSFS) {
-                    portInput.setText("49010")
-                    hostInput.setText("MSFS bridge")
-                } else {
-                    portInput.setText("49000")
-                    if (hostInput.text.toString() == "MSFS bridge") {
-                        hostInput.setText("192.168.1.100")
+
+                when (selectedType) {
+                    SimulatorLocationStore.TYPE_XPLANE -> {
+                        portInput.setText("49000")
+                        if (
+                            hostInput.text.toString() == "PC bridge"
+                        ) {
+                            hostInput.setText("192.168.1.100")
+                        }
+                    }
+
+                    SimulatorLocationStore.TYPE_MSFS -> {
+                        portInput.setText("49010")
+                        hostInput.setText("PC bridge")
+                    }
+
+                    SimulatorLocationStore.TYPE_P3D -> {
+                        portInput.setText("49011")
+                        hostInput.setText("PC bridge")
                     }
                 }
+
                 guideText.text = buildGuide()
-                statusText.text = "Selected: " + selectedType
+                statusText.text = "Selected: $selectedType"
             }
             .show()
     }
@@ -202,15 +216,38 @@ class SimulatorActivity : AppCompatActivity() {
         }
 
         val port = portInput.text.toString().toIntOrNull()
-        if (selectedType == SimulatorLocationStore.TYPE_XPLANE) {
+
+        if (
+            port == null ||
+            port !in 1..65535
+        ) {
+            statusText.text = "Enter a valid UDP port."
+            return
+        }
+
+        if (
+            selectedType ==
+            SimulatorLocationStore.TYPE_XPLANE
+        ) {
             val host = hostInput.text.toString().trim()
-            if (host.isBlank() || port == null || port !in 1..65535) {
-                statusText.text = "Enter a valid X-Plane PC IP and UDP port."
+            if (host.isBlank() || host == "PC bridge") {
+                statusText.text = "Enter the X-Plane PC IPv4 address."
                 return
             }
-            SimulatorLocationStore.connect(this, selectedType, host, port)
+
+            SimulatorLocationStore.connect(
+                this,
+                selectedType,
+                host,
+                port
+            )
         } else {
-            SimulatorLocationStore.connect(this, selectedType, "", 49010)
+            SimulatorLocationStore.connect(
+                this,
+                selectedType,
+                "",
+                port
+            )
         }
     }
 
@@ -241,22 +278,33 @@ class SimulatorActivity : AppCompatActivity() {
     }
 
     private fun buildGuide(): String {
-        return if (selectedType == SimulatorLocationStore.TYPE_XPLANE) {
-            "X-PLANE 11 / 12\n\n" +
-                "1. Connect the Android device and the simulator PC to the same Wi-Fi/LAN.\n" +
-                "2. Enter the simulator PC IPv4 address above.\n" +
-                "3. Leave UDP port 49000 unless you changed X-Plane's network port.\n" +
-                "4. Tap CONNECT and keep X-Plane running. JEPPIRAN requests latitude, longitude, altitude and heading through X-Plane's UDP dataref interface.\n\n" +
-                "No GPS permission is used while the simulator connection is active."
-        } else {
-            "MICROSOFT FLIGHT SIMULATOR 2020 / 2024\n\n" +
-                "MSFS uses SimConnect on the Windows PC. JEPPIRAN receives the simulator position through a small PC-side SimConnect bridge.\n\n" +
-                "1. Install/run the bridge on the same PC as MSFS.\n" +
-                "2. Configure the bridge to send JSON by UDP to the Android device on port 49010.\n" +
-                "3. Use this format:\n" +
-                "{\"lat\":35.6895,\"lon\":51.3130,\"alt\":4200,\"heading\":270}\n" +
-                "4. Tap CONNECT in JEPPIRAN.\n\n" +
-                "No GPS permission is used while the simulator connection is active."
+        return when (selectedType) {
+            SimulatorLocationStore.TYPE_XPLANE ->
+                "X-PLANE 11 / 12\n\n" +
+                    "1. Connect the Android device and simulator PC to the same Wi-Fi/LAN.\n" +
+                    "2. Enter the simulator PC IPv4 address above.\n" +
+                    "3. Leave UDP port 49000 unless X-Plane uses another network port.\n" +
+                    "4. Tap CONNECT. JEPPIRAN requests latitude, longitude, altitude and true heading directly through X-Plane RREF/UDP.\n\n" +
+                    "While the simulator is connected, JEPPIRAN uses simulator position instead of phone GPS."
+
+            SimulatorLocationStore.TYPE_MSFS ->
+                "MICROSOFT FLIGHT SIMULATOR 2020 / 2024\n\n" +
+                    "1. Build/run simulator-bridge/msfs on the Windows simulator PC.\n" +
+                    "2. Start MSFS, then launch the bridge with this Android device IP and UDP port 49010.\n" +
+                    "3. Leave JEPPIRAN on port 49010 unless you also change the bridge port.\n" +
+                    "4. Tap CONNECT. The bridge sends latitude, longitude, altitude and true heading from SimConnect to JEPPIRAN.\n\n" +
+                    "Android device IP: " + localIpAddress()
+
+            SimulatorLocationStore.TYPE_P3D ->
+                "PREPAR3D v4 / v5 / v6\n\n" +
+                    "1. Build/run simulator-bridge/p3d on the Prepar3D Windows PC.\n" +
+                    "2. Start Prepar3D, then launch the bridge with this Android device IP and UDP port 49011.\n" +
+                    "3. Leave JEPPIRAN on port 49011 unless you also change the bridge port.\n" +
+                    "4. Tap CONNECT. The bridge relays aircraft position and true heading through Prepar3D SimConnect.\n\n" +
+                    "Android device IP: " + localIpAddress()
+
+            else ->
+                "Select a supported simulator."
         }
     }
 

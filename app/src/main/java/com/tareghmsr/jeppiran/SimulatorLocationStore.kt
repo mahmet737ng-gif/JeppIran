@@ -21,6 +21,7 @@ data class SimulatorPosition(
 object SimulatorLocationStore {
     const val TYPE_XPLANE = "X-Plane 11 / 12"
     const val TYPE_MSFS = "Microsoft Flight Simulator 2020 / 2024"
+    const val TYPE_P3D = "Prepar3D v4 / v5 / v6"
 
     private const val PREFS = "simulator_connection"
     private const val PREF_TYPE = "type"
@@ -68,7 +69,12 @@ object SimulatorLocationStore {
 
         worker = thread(name = "JeppIran-Simulator") {
             try {
-                if (type == TYPE_XPLANE) runXPlane(host, port) else runMsfs()
+                when (type) {
+                    TYPE_XPLANE -> runXPlane(host, port)
+                    TYPE_MSFS -> runBridge(port, "MSFS")
+                    TYPE_P3D -> runBridge(port, "Prepar3D")
+                    else -> error("Unsupported simulator: $type")
+                }
             } catch (t: Throwable) {
                 if (running.get()) {
                     status = "Connection error: ${t.message ?: "unknown error"}"
@@ -169,11 +175,14 @@ object SimulatorLocationStore {
         return data
     }
 
-    private fun runMsfs() {
-        val s = DatagramSocket(49010)
+    private fun runBridge(
+        port: Int,
+        simulatorLabel: String
+    ) {
+        val s = DatagramSocket(port)
         socket = s
         s.soTimeout = 2000
-        status = "Listening for MSFS bridge on UDP 49010"
+        status = "Listening for $simulatorLabel bridge on UDP $port"
 
         val buffer = ByteArray(8192)
         while (running.get()) {
@@ -197,14 +206,16 @@ object SimulatorLocationStore {
                 val heading = json.optDouble("heading", Double.NaN)
 
                 position = SimulatorPosition(
-                    lat, lon,
+                    lat,
+                    lon,
                     altitude.takeUnless { it.isNaN() },
                     heading.takeUnless { it.isNaN() }
                 )
-                status = "MSFS bridge connected"
+                status = "$simulatorLabel bridge connected"
             } catch (_: java.net.SocketTimeoutException) {
             } catch (_: org.json.JSONException) {
             }
         }
     }
 }
+
