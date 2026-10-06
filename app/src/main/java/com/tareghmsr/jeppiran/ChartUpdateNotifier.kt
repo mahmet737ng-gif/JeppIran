@@ -68,6 +68,7 @@ object ChartUpdateNotifier {
                     val remote =
                         JSONObject(
                             fetchText(
+                                appContext,
                                 REMOTE_MANIFEST
                             )
                         )
@@ -477,6 +478,7 @@ object ChartUpdateNotifier {
 
 
     private fun fetchText(
+        context: Context,
         address: String
     ): String {
 
