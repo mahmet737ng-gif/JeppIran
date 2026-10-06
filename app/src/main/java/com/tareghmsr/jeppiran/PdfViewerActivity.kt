@@ -887,7 +887,7 @@ private val locationPermissionLauncher =
 
                 connection.setRequestProperty(
                     "User-Agent",
-                    "JeppIran/1.0"
+                    "JEPPIRAN/" + BuildConfig.VERSION_NAME
                 )
 
 

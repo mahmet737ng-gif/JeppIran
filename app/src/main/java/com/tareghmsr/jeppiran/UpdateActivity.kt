@@ -761,7 +761,7 @@ class UpdateActivity : AppCompatActivity() {
 
             connection.setRequestProperty(
                 "User-Agent",
-                "JEPPIRAN/1.0 chart updater"
+                "JEPPIRAN/" + BuildConfig.VERSION_NAME + " chart updater"
             )
 
 

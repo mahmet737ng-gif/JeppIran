@@ -927,7 +927,7 @@ class WxActivity : AppCompatActivity() {
 
             connection.setRequestProperty(
                 "User-Agent",
-                "JEPPIRAN/26-20 Android"
+                "JEPPIRAN/" + BuildConfig.VERSION_NAME + " Android"
             )
 
 
