@@ -292,8 +292,15 @@ class ChartRepository(
                 "Airport",
                 "STAR",
                 "SID",
-                "Approach",
-                "Other"
+                "Approach"
+            )
+
+        private val CONTINUATION_NAMES =
+            setOf(
+                "AIRPORT INFORMATION",
+                "AIRPORT BRIEFING",
+                "AIRPORT QUALIFICATION",
+                "INS COORDINATES"
             )
 
 
@@ -396,12 +403,60 @@ class ChartRepository(
                 "SID" ->
                     "SID"
 
-                "APPROACH" ->
+                "APPROACH",
+                "APP" ->
                     "Approach"
 
                 else ->
                     "Other"
             }
+        }
+
+
+        fun displayCategory(
+            value: String
+        ):
+            String {
+
+            return when (
+                normalizeCategory(
+                    value
+                )
+            ) {
+
+                "Approach" ->
+                    "APP"
+
+                "Airport" ->
+                    "AIRPORT"
+
+                "STAR" ->
+                    "STAR"
+
+                "SID" ->
+                    "SID"
+
+                else ->
+                    "OTHER"
+            }
+        }
+
+
+        fun isContinuationChart(
+            chart: ChartInfo
+        ):
+            Boolean {
+
+            return normalizeCategory(
+                chart.category
+            ) ==
+                "Airport" &&
+                chart.name
+                    .trim()
+                    .uppercase(
+                        Locale.US
+                    ) in
+                    CONTINUATION_NAMES
         }
     }
 
@@ -493,6 +548,75 @@ class ChartRepository(
                     it.page
                 }
             )
+    }
+
+
+    @Synchronized
+    fun getDisplayChartsForAirport(
+        icao: String
+    ):
+        List<ChartInfo> {
+
+        val source =
+            getChartsForAirport(
+                icao
+            )
+
+        val result =
+            mutableListOf<ChartInfo>()
+
+        var lastContinuationKey =
+            ""
+
+        source.forEach {
+            chart ->
+
+            if (
+                isContinuationChart(
+                    chart
+                )
+            ) {
+
+                val key =
+                    chart.category +
+                        "|" +
+                        chart.name
+                            .trim()
+                            .uppercase(
+                                Locale.US
+                            )
+
+                if (
+                    key ==
+                    lastContinuationKey
+                ) {
+
+                    return@forEach
+                }
+
+                lastContinuationKey =
+                    key
+
+            } else {
+
+                lastContinuationKey =
+                    ""
+            }
+
+            if (
+                normalizeCategory(
+                    chart.category
+                ) !=
+                "Other"
+            ) {
+
+                result.add(
+                    chart
+                )
+            }
+        }
+
+        return result
     }
 
 
@@ -1373,7 +1497,24 @@ class ChartRepository(
         String {
 
         val clean =
-            rawName.trim()
+            rawName
+                .replace(
+                    Regex(
+                        "\\s*\\[[^\\]]+\\]"
+                    ),
+                    ""
+                )
+                .replace(
+                    Regex(
+                        "\\s+"
+                    ),
+                    " "
+                )
+                .trim()
+                .trim(
+                    ','
+                )
+                .trim()
 
 
         if (
