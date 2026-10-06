@@ -35,6 +35,7 @@ import android.view.Gravity
 import android.view.MotionEvent
 import android.view.ViewGroup
 import android.view.View
+import android.view.ViewConfiguration
 import android.view.WindowManager
 import android.view.animation.DecelerateInterpolator
 import android.widget.EditText
@@ -5287,13 +5288,91 @@ private val locationPermissionLauncher =
     }
 
 
+    private fun setViewerChromeVisible(
+        view: View,
+        visible: Boolean
+    ) {
+
+        view.animate()
+            .cancel()
+
+        if (
+            visible
+        ) {
+
+            if (
+                view.visibility !=
+                View.VISIBLE
+            ) {
+
+                view.alpha =
+                    0f
+
+                view.visibility =
+                    View.VISIBLE
+            }
+
+            view.animate()
+                .alpha(
+                    1f
+                )
+                .setDuration(
+                    140L
+                )
+                .start()
+
+        } else {
+
+            if (
+                view.visibility ==
+                View.VISIBLE
+            ) {
+
+                view.animate()
+                    .alpha(
+                        0f
+                    )
+                    .setDuration(
+                        120L
+                    )
+                    .withEndAction {
+
+                        if (
+                            !controlsVisible
+                        ) {
+
+                            view.visibility =
+                                View.GONE
+
+                            view.alpha =
+                                1f
+                        }
+                    }
+                    .start()
+
+            } else {
+
+                view.visibility =
+                    View.GONE
+
+                view.alpha =
+                    1f
+            }
+        }
+    }
+
+
     private fun hideViewerControls() {
 
-        topToolbar.visibility =
-            View.GONE
+        setViewerChromeVisible(
+            topToolbar,
+            false
+        )
 
-        toolScroll.visibility =
-            View.GONE
+        setViewerChromeVisible(
+            toolScroll,
+            false
+        )
 
 
         if (
@@ -5318,8 +5397,10 @@ private val locationPermissionLauncher =
             ::chartTreePanel.isInitialized
         ) {
 
-            chartTreePanel.visibility =
-                View.GONE
+            setViewerChromeVisible(
+                chartTreePanel,
+                false
+            )
         }
 
 
@@ -5358,19 +5439,25 @@ private val locationPermissionLauncher =
 
     private fun showViewerControls() {
 
-        topToolbar.visibility =
-            View.VISIBLE
+        setViewerChromeVisible(
+            topToolbar,
+            true
+        )
 
-        toolScroll.visibility =
-            View.VISIBLE
+        setViewerChromeVisible(
+            toolScroll,
+            true
+        )
 
 
         if (
             ::chartTreePanel.isInitialized
         ) {
 
-            chartTreePanel.visibility =
-                View.VISIBLE
+            setViewerChromeVisible(
+                chartTreePanel,
+                true
+            )
         }
 
 
@@ -6582,6 +6669,12 @@ private val locationPermissionLauncher =
         View(
             context
         ) {
+
+        private val touchSlop =
+            ViewConfiguration
+                .get(this@PdfViewerActivity)
+                .scaledTouchSlop
+                .toFloat()
 
 
         private var bitmap:
@@ -8701,6 +8794,9 @@ private val locationPermissionLauncher =
                     swiping =
                         false
 
+                    swipeOffset =
+                        0f
+
 
                     if (
                         annotationTool ==
@@ -9065,14 +9161,17 @@ private val locationPermissionLauncher =
 
 
                     if (
-                        abs(
-                            event.x -
-                                downX
-                        ) > 10f ||
-                        abs(
-                            event.y -
-                                downY
-                        ) > 10f
+                        !moved &&
+                        (
+                            abs(
+                                event.x -
+                                    downX
+                            ) > touchSlop ||
+                            abs(
+                                event.y -
+                                    downY
+                            ) > touchSlop
+                        )
                     ) {
 
                         moved =
@@ -9117,7 +9216,8 @@ private val locationPermissionLauncher =
                             if (
                                 selectedTextIndex >=
                                 0 &&
-                                textDragActive
+                                textDragActive &&
+                                moved
                             ) {
 
                                 val current =
@@ -9172,6 +9272,13 @@ private val locationPermissionLauncher =
 
                                     saveAnnotationsForCurrentChart()
                                 }
+
+                            } else if (
+                                !moved
+                            ) {
+
+                                // Ignore tiny finger jitter during a tap.
+                                // A tap must not move the chart even by one pixel.
 
                             } else if (
                                 scale >
@@ -9370,6 +9477,18 @@ private val locationPermissionLauncher =
 
 
                             if (
+                                !moved
+                            ) {
+
+                                swiping =
+                                    false
+
+                                swipeOffset =
+                                    0f
+
+                                performClick()
+
+                            } else if (
                                 scale <=
                                 1.02f &&
                                 swiping
@@ -9411,14 +9530,6 @@ private val locationPermissionLauncher =
 
                                     returnToCenter()
                                 }
-
-                            } else if (
-                                !moved &&
-                                scale <=
-                                1.02f
-                            ) {
-
-                                performClick()
 
                             } else {
 
