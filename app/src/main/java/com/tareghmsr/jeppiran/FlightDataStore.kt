@@ -80,24 +80,155 @@ object FlightDataStore {
     }
 
     fun parseWind(metar: String): Wind? {
-        val match = Regex("""\b(VRB|\d{3})(\d{2,3})(?:G(\d{2,3}))?KT\b""")
-            .find(metar.uppercase(Locale.US)) ?: return null
+        val match = Regex(
+            """\b(VRB|\d{3})(\d{2,3})(?:G(\d{2,3}))?(KT|MPS)\b"""
+        ).find(metar.uppercase(Locale.US)) ?: return null
+
+        val factor =
+            if (
+                match.groupValues[4] == "MPS"
+            ) {
+                1.94384
+            } else {
+                1.0
+            }
+
+        fun toKnots(value: String): Int? =
+            value
+                .toIntOrNull()
+                ?.let {
+                    kotlin.math.round(
+                        it *
+                            factor
+                    )
+                        .toInt()
+                }
+
         return Wind(
             direction = match.groupValues[1].toIntOrNull(),
-            speedKt = match.groupValues[2].toInt(),
-            gustKt = match.groupValues[3].toIntOrNull()
+            speedKt = toKnots(match.groupValues[2]) ?: return null,
+            gustKt = toKnots(match.groupValues[3])
         )
     }
 
     fun visibilityMeters(metar: String): Int? {
         val upper = metar.uppercase(Locale.US)
-        if (Regex("""\b9999\b""").containsMatchIn(upper)) return 10000
-        Regex("""\b(\d{4})\b""").findAll(upper).forEach {
-            val value = it.groupValues[1].toIntOrNull() ?: return@forEach
-            if (value in 50..9998) return value
+
+        if (
+            Regex(
+                """\b(?:CAVOK|9999)\b"""
+            )
+                .containsMatchIn(
+                    upper
+                )
+        ) {
+            return 10000
         }
-        val sm = Regex("""\b(\d+(?:\.\d+)?)SM\b""").find(upper)?.groupValues?.get(1)?.toDoubleOrNull()
-        return sm?.let { (it * 1609.344).toInt() }
+
+        /*
+         * In ICAO METAR, prevailing visibility follows the wind group
+         * (and optional variable-direction group). Anchoring the match here
+         * prevents a four-digit QNH value from being mistaken for visibility.
+         */
+        val metric =
+            Regex(
+                """\b(?:VRB|\d{3})\d{2,3}(?:G\d{2,3})?(?:KT|MPS)(?:\s+\d{3}V\d{3})?\s+(\d{4})\b"""
+            )
+                .find(
+                    upper
+                )
+                ?.groupValues
+                ?.getOrNull(
+                    1
+                )
+                ?.toIntOrNull()
+
+        if (
+            metric != null
+        ) {
+            return metric
+        }
+
+        val sm =
+            Regex(
+                """\b(?:(\d+)\s+)?(\d+\/\d+|\d+(?:\.\d+)?)SM\b"""
+            )
+                .find(
+                    upper
+                )
+
+        if (
+            sm != null
+        ) {
+
+            val whole =
+                sm.groupValues[
+                    1
+                ]
+                    .toDoubleOrNull()
+                    ?: 0.0
+
+            val fractionRaw =
+                sm.groupValues[
+                    2
+                ]
+
+            val fraction =
+                if (
+                    "/" in
+                        fractionRaw
+                ) {
+
+                    val parts =
+                        fractionRaw
+                            .split(
+                                "/"
+                            )
+
+                    val numerator =
+                        parts
+                            .getOrNull(
+                                0
+                            )
+                            ?.toDoubleOrNull()
+
+                    val denominator =
+                        parts
+                            .getOrNull(
+                                1
+                            )
+                            ?.toDoubleOrNull()
+
+                    if (
+                        numerator != null &&
+                        denominator != null &&
+                        denominator >
+                            0.0
+                    ) {
+                        numerator /
+                            denominator
+                    } else {
+                        0.0
+                    }
+
+                } else {
+
+                    fractionRaw
+                        .toDoubleOrNull()
+                        ?: 0.0
+                }
+
+            return (
+                (
+                    whole +
+                        fraction
+                    ) *
+                    1609.344
+                )
+                .toInt()
+        }
+
+        return null
     }
 
     fun ceilingFeet(metar: String): Int? {
