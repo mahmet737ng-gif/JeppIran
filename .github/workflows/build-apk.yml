@@ -134,16 +134,29 @@ jobs:
             docs/georeferencing/georef-audit.json
 
       - name: Publish permanent Chrome download
-        if: github.ref == 'refs/heads/main'
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/experimental-pilot-intelligence'
         env:
           GH_TOKEN: ${{ github.token }}
         shell: bash
         run: |
           set -euo pipefail
-          cp app/build/outputs/apk/debug/app-debug.apk JeppIran-latest-debug.apk
 
-          if ! gh release view jeppiran-test >/dev/null 2>&1; then
-            gh release create jeppiran-test               --title "JEPPIRAN Test APK"               --notes "Latest signed installable JEPPIRAN Android test build."
+          if [ "${GITHUB_REF}" = "refs/heads/experimental-pilot-intelligence" ]; then
+            TAG="jeppiran-experimental"
+            TITLE="JEPPIRAN Experimental Pilot Intelligence APK"
+            ASSET="JeppIran-experimental.apk"
+            NOTES="Experimental signed JEPPIRAN build for Pilot Intelligence feature testing."
+          else
+            TAG="jeppiran-test"
+            TITLE="JEPPIRAN Test APK"
+            ASSET="JeppIran-latest-debug.apk"
+            NOTES="Latest signed installable JEPPIRAN Android test build."
           fi
 
-          gh release upload jeppiran-test             JeppIran-latest-debug.apk             --clobber
+          cp app/build/outputs/apk/debug/app-debug.apk "$ASSET"
+
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
+            gh release create "$TAG" --title "$TITLE" --notes "$NOTES"
+          fi
+
+          gh release upload "$TAG" "$ASSET" --clobber
