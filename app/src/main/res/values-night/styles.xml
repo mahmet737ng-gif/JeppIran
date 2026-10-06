@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
- <style name="Theme.JeppIran" parent="Theme.Material3.DayNight.NoActionBar">
-  <item name="android:fontFamily">sans</item><item name="colorPrimary">@color/jeppiran_accent</item>
-  <item name="colorSecondary">@color/jeppiran_blue</item><item name="colorTertiary">@color/jeppiran_magenta</item>
-  <item name="android:colorBackground">@color/jeppiran_background</item><item name="colorSurface">@color/jeppiran_surface</item>
-  <item name="colorOnSurface">@color/jeppiran_text</item><item name="colorOnSurfaceVariant">@color/jeppiran_text_secondary</item>
-  <item name="android:windowLightStatusBar">false</item><item name="android:statusBarColor">@android:color/transparent</item>
-  <item name="android:navigationBarColor">@color/jeppiran_background</item><item name="android:windowActionModeOverlay">true</item>
- </style>
+    <style name="Theme.JeppIran" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="colorPrimary">@color/jeppiran_accent</item>
+        <item name="colorSecondary">@color/jeppiran_blue</item>
+        <item name="colorTertiary">@color/jeppiran_magenta</item>
+        <item name="android:colorBackground">@color/jeppiran_background</item>
+        <item name="colorSurface">@color/jeppiran_surface</item>
+        <item name="colorOnSurface">@color/jeppiran_text</item>
+        <item name="colorOnSurfaceVariant">@color/jeppiran_text_secondary</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/jeppiran_background</item>
+        <item name="android:windowLightNavigationBar">false</item>
+        <item name="android:windowActionModeOverlay">true</item>
+    </style>
 </resources>
