@@ -13,6 +13,9 @@ object ChartUpdateStore {
     private const val ACTIVE_VERSION =
         "active_version"
 
+    private const val PREVIOUS_DIR =
+        "previous"
+
     private const val ROOT_DIR =
         "chart-data"
 
@@ -24,6 +27,9 @@ object ChartUpdateStore {
 
     private const val GEOREF =
         "chart-georef.json"
+
+    private const val CHANGES =
+        "chart-changes.json"
 
 
     fun activeVersion(
@@ -138,13 +144,90 @@ object ChartUpdateStore {
             ?.readText()
 
 
+    fun readChanges(
+        context: Context
+    ): String? =
+        activeDirectory(
+            context
+        )
+            ?.let {
+                File(
+                    it,
+                    CHANGES
+                )
+            }
+            ?.takeIf {
+                it.isFile
+            }
+            ?.readText()
+
+
+    private fun previousDirectory(
+        context: Context
+    ):
+        File =
+        File(
+            File(
+                context.filesDir,
+                ROOT_DIR
+            ),
+            PREVIOUS_DIR
+        )
+
+
+    fun readPreviousManifest(
+        context: Context
+    ): String? =
+        File(
+            previousDirectory(
+                context
+            ),
+            MANIFEST
+        )
+            .takeIf {
+                it.isFile
+            }
+            ?.readText()
+
+
+    fun readPreviousCharts(
+        context: Context
+    ): String? =
+        File(
+            previousDirectory(
+                context
+            ),
+            CHARTS
+        )
+            .takeIf {
+                it.isFile
+            }
+            ?.readText()
+
+
+    fun readPreviousChanges(
+        context: Context
+    ): String? =
+        File(
+            previousDirectory(
+                context
+            ),
+            CHANGES
+        )
+            .takeIf {
+                it.isFile
+            }
+            ?.readText()
+
+
     @Synchronized
     fun activate(
         context: Context,
         version: String,
         manifestRaw: String,
         chartsRaw: String,
-        georefRaw: String
+        georefRaw: String,
+        changesRaw: String = ""
     ) {
 
         val normalized =
@@ -172,6 +255,17 @@ object ChartUpdateStore {
             normalized,
             georefRaw
         )
+
+
+        if (
+            changesRaw.isNotBlank()
+        ) {
+
+            validateChanges(
+                normalized,
+                changesRaw
+            )
+        }
 
 
         val root =
@@ -232,6 +326,20 @@ object ChartUpdateStore {
                 )
 
 
+            if (
+                changesRaw.isNotBlank()
+            ) {
+
+                File(
+                    stage,
+                    CHANGES
+                )
+                    .writeText(
+                        changesRaw
+                    )
+            }
+
+
             validateManifest(
                 normalized,
                 File(
@@ -254,6 +362,23 @@ object ChartUpdateStore {
                     GEOREF
                 ).readText()
             )
+
+
+            File(
+                stage,
+                CHANGES
+            )
+                .takeIf {
+                    it.isFile
+                }
+                ?.let {
+                    file ->
+
+                    validateChanges(
+                        normalized,
+                        file.readText()
+                    )
+                }
 
 
             val target =
@@ -313,6 +438,17 @@ object ChartUpdateStore {
             ) {
                 "Staged update is incomplete"
             }
+
+
+            /*
+             * Preserve the complete currently-active metadata before the
+             * pointer moves. The Changes/Diff viewer uses this snapshot to
+             * compare the old and new cycles, including the very first update
+             * from the bundled asset set.
+             */
+            snapshotCurrentAsPrevious(
+                context
+            )
 
 
             /*
@@ -449,6 +585,126 @@ object ChartUpdateStore {
                 version
         ) {
             "Georeference version mismatch"
+        }
+    }
+
+
+    private fun snapshotCurrentAsPrevious(
+        context: Context
+    ) {
+
+        val directory =
+            previousDirectory(
+                context
+            )
+
+        if (
+            directory.exists()
+        ) {
+
+            directory.deleteRecursively()
+        }
+
+        directory.mkdirs()
+
+
+        fun write(
+            fileName: String,
+            active: String?,
+            assetName: String
+        ) {
+
+            val raw =
+                active
+                    ?: runCatching {
+
+                        context.assets
+                            .open(
+                                assetName
+                            )
+                            .bufferedReader()
+                            .use {
+                                it.readText()
+                            }
+                    }
+                        .getOrNull()
+                    ?: return
+
+            File(
+                directory,
+                fileName
+            )
+                .writeText(
+                    raw
+                )
+        }
+
+
+        write(
+            MANIFEST,
+            readManifest(
+                context
+            ),
+            "charts-manifest.json"
+        )
+
+        write(
+            CHARTS,
+            readCharts(
+                context
+            ),
+            "charts-current.json"
+        )
+
+        write(
+            GEOREF,
+            readGeoref(
+                context
+            ),
+            "chart-georef.json"
+        )
+
+        write(
+            CHANGES,
+            readChanges(
+                context
+            ),
+            "chart-changes.json"
+        )
+    }
+
+
+    private fun validateChanges(
+        version: String,
+        raw: String
+    ) {
+
+        val root =
+            JSONObject(
+                raw
+            )
+
+        require(
+            root.optInt(
+                "version",
+                -1
+            ) >=
+                1
+        ) {
+            "Change metadata version is invalid"
+        }
+
+        val dataVersion =
+            root.optString(
+                "chartDataVersion"
+            )
+
+        require(
+            dataVersion.isBlank() ||
+                dataVersion ==
+                    version
+        ) {
+            "Change metadata chart version mismatch"
         }
     }
 
