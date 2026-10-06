@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="JEPPIRAN">
+<defs>
+ <linearGradient id="b" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#00e6ef"/><stop offset=".58" stop-color="#087ce9"/><stop offset="1" stop-color="#0a46b9"/></linearGradient>
+ <linearGradient id="w" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#fff"/><stop offset="1" stop-color="#dff5ff"/></linearGradient>
+</defs>
+<rect width="512" height="512" rx="92" fill="#000"/>
+<path d="M34 256 474 76 314 263 150 286Z" fill="url(#w)"/>
+<path d="M158 294 474 76 308 340c-40 65-57 102-94 109-30 6-80-19-147-58 81-18 132-42 171-78Z" fill="url(#b)"/>
+<path d="M173 294 338 229 274 383 238 313Z" fill="#dff8ff" opacity=".92"/>
+<path d="M154 286 474 76 210 302Z" fill="#073f99" opacity=".95"/>
+</svg>

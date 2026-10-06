@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=yes">
+  <meta name="theme-color" content="#07121b">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="JEPPIRAN">
+  <title>JEPPIRAN V2620</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./logo.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./logo.svg">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <button class="brand" data-route="home" aria-label="Home">
+        <img src="./logo.svg" alt="">
+        <span>
+          <strong>JEPPIRAN</strong>
+          <small>V2620 • iPad Web</small>
+        </span>
+      </button>
+      <div class="top-actions">
+        <button id="installHelpBtn" class="icon-btn">Install</button>
+        <button id="themeBtn" class="icon-btn" aria-label="Toggle theme">◐</button>
+      </div>
+    </header>
+
+    <main id="homeView" class="view active">
+      <section class="hero">
+        <img src="./logo.svg" alt="JEPPIRAN">
+        <div>
+          <h1>JEPPIRAN</h1>
+          <p>Aviation charts and weather, optimized for iPad.</p>
+          <span class="version-pill">V2620</span>
+        </div>
+      </section>
+
+      <section class="cards">
+        <button class="home-card" data-route="charts">
+          <span class="card-icon">▤</span>
+          <span><b>Charts</b><small>Airport chart library</small></span>
+        </button>
+        <button class="home-card" data-route="wx">
+          <span class="card-icon">☀︎</span>
+          <span><b>WX</b><small>METAR / TAF / Decoded</small></span>
+        </button>
+        <button class="home-card" id="updateCard">
+          <span class="card-icon">↻</span>
+          <span><b>Update</b><small id="updateSubtitle">Check chart cycle</small></span>
+        </button>
+        <button class="home-card" id="infoCard">
+          <span class="card-icon">i</span>
+          <span><b>Info</b><small>JEPPIRAN web build</small></span>
+        </button>
+      </section>
+
+      <section class="ipad-tip">
+        <b>Install on iPad</b>
+        <span>Open this page in Safari → Share → Add to Home Screen.</span>
+      </section>
+    </main>
+
+    <main id="chartsView" class="view charts-layout">
+      <aside class="airport-pane panel">
+        <div class="pane-head">
+          <button class="back-btn" data-route="home">‹ Home</button>
+          <h2>Airports</h2>
+        </div>
+        <input id="airportSearch" class="search" type="search" placeholder="Search ICAO / airport / city">
+        <div id="airportList" class="airport-list"></div>
+      </aside>
+
+      <section class="viewer-pane">
+        <div class="viewer-toolbar">
+          <div class="viewer-title">
+            <strong id="viewerAirport">Select an airport</strong>
+            <small id="viewerChart">Choose a chart from the tree</small>
+          </div>
+          <div class="viewer-actions">
+            <button id="openPdfBtn" class="icon-btn" disabled>Open PDF</button>
+            <button id="fullscreenBtn" class="icon-btn">Fullscreen</button>
+          </div>
+        </div>
+        <div id="pdfStage" class="pdf-stage">
+          <div class="empty-state">
+            <img src="./logo.svg" alt="">
+            <b>Select an airport and chart</b>
+            <span>The selected airport PDF will appear here.</span>
+          </div>
+        </div>
+      </section>
+
+      <aside id="chartTreePane" class="chart-tree panel">
+        <div class="pane-head">
+          <h2>Charts</h2>
+          <small id="treeAirport"></small>
+        </div>
+        <div id="chartTree" class="tree-content"></div>
+      </aside>
+    </main>
+
+    <main id="wxView" class="view">
+      <section class="wx-shell panel">
+        <div class="pane-head">
+          <button class="back-btn" data-route="home">‹ Home</button>
+          <h2>WX</h2>
+        </div>
+
+        <label class="field-label" for="icaoInput">Insert ICAO Code</label>
+        <div class="wx-entry">
+          <input id="icaoInput" maxlength="4" autocomplete="off" autocapitalize="characters" placeholder="Type ICAO code">
+          <button id="getWxBtn">GET DATA</button>
+        </div>
+
+        <div class="wx-options">
+          <label><input id="metarCheck" type="checkbox" checked> METAR</label>
+          <label><input id="tafCheck" type="checkbox"> TAF</label>
+          <label><input id="decodedCheck" type="checkbox"> DECODED</label>
+        </div>
+
+        <div id="wxStatus" class="status"></div>
+
+        <article id="metarBlock" class="wx-block hidden">
+          <h3>METAR</h3><pre id="metarText"></pre>
+        </article>
+        <article id="tafBlock" class="wx-block hidden">
+          <h3>TAF</h3><pre id="tafText"></pre>
+        </article>
+        <article id="decodedBlock" class="wx-block hidden">
+          <h3>DECODED</h3><div id="decodedText" class="decoded"></div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="messageDialog">
+    <div class="dialog-body">
+      <h3 id="dialogTitle">JEPPIRAN</h3>
+      <p id="dialogText"></p>
+      <button id="dialogClose">OK</button>
+    </div>
+  </dialog>
+
+  <script src="./app.js" defer></script>
+</body>
+</html>
