@@ -1378,11 +1378,14 @@ private val locationPermissionLauncher =
             ).apply {
 
                 text =
-                    chartTitle.ifBlank {
-                        "JeppIran Chart"
-                    }
+                    "JEPPIRAN\n" +
+                        currentIcao +
+                        " • " +
+                        chartTitle.ifBlank {
+                            "Chart"
+                        }
 
-                textSize = 17f
+                textSize = 14f
 
                 typeface =
                     Typeface.DEFAULT_BOLD
@@ -1940,7 +1943,7 @@ private val locationPermissionLauncher =
             ).apply {
 
                 text =
-                    "CHARTS • " +
+                    "BOOKMARKS • " +
                         currentIcao
 
                 textSize =
@@ -2127,6 +2130,34 @@ private val locationPermissionLauncher =
                             8.dp,
                             9.dp
                         )
+
+                        background =
+                            roundedBackground(
+                                if (
+                                    expanded
+                                ) {
+
+                                    Color.rgb(
+                                        6,
+                                        55,
+                                        95
+                                    )
+
+                                } else {
+
+                                    Color.rgb(
+                                        3,
+                                        24,
+                                        52
+                                    )
+                                },
+                                Color.rgb(
+                                    23,
+                                    108,
+                                    181
+                                ),
+                                9
+                            )
 
                         setOnClickListener {
 
@@ -2952,9 +2983,12 @@ private val locationPermissionLauncher =
 
 
         titleText.text =
-            chartTitle.ifBlank {
-                "JeppIran Chart"
-            }
+            "JEPPIRAN\n" +
+                currentIcao +
+                " • " +
+                chartTitle.ifBlank {
+                    "Chart"
+                }
 
 
         pageText.text =
@@ -6521,9 +6555,9 @@ private val locationPermissionLauncher =
                 ) {
 
                     Color.rgb(
-                        80,
-                        225,
-                        135
+                        47,
+                        217,
+                        255
                     )
 
                 } else {
@@ -6541,6 +6575,47 @@ private val locationPermissionLauncher =
                     .valueOf(
                         tint
                     )
+
+            view.background =
+                roundedBackground(
+                    if (
+                        active
+                    ) {
+
+                        Color.rgb(
+                            8,
+                            89,
+                            154
+                        )
+
+                    } else {
+
+                        Color.rgb(
+                            5,
+                            38,
+                            68
+                        )
+                    },
+                    if (
+                        active
+                    ) {
+
+                        Color.rgb(
+                            47,
+                            217,
+                            255
+                        )
+
+                    } else {
+
+                        Color.rgb(
+                            23,
+                            108,
+                            181
+                        )
+                    },
+                    10
+                )
         }
 
 
@@ -6559,9 +6634,9 @@ private val locationPermissionLauncher =
             ) {
 
                 Color.rgb(
-                    80,
-                    225,
-                    135
+                    47,
+                    217,
+                    255
                 )
 
             } else {
@@ -6569,6 +6644,34 @@ private val locationPermissionLauncher =
                 Color.WHITE
             }
         )
+
+        button.background =
+            roundedBackground(
+                if (
+                    active
+                ) {
+
+                    Color.rgb(
+                        8,
+                        89,
+                        154
+                    )
+
+                } else {
+
+                    Color.rgb(
+                        5,
+                        38,
+                        68
+                    )
+                },
+                Color.rgb(
+                    47,
+                    217,
+                    255
+                ),
+                18
+            )
     }
 
 
@@ -6630,6 +6733,21 @@ private val locationPermissionLauncher =
                 Color.WHITE
             )
 
+            background =
+                roundedBackground(
+                    Color.rgb(
+                        5,
+                        38,
+                        68
+                    ),
+                    Color.rgb(
+                        47,
+                        217,
+                        255
+                    ),
+                    18
+                )
+
             isClickable =
                 true
 
@@ -6675,6 +6793,21 @@ private val locationPermissionLauncher =
 
             tag =
                 tool
+
+            background =
+                roundedBackground(
+                    Color.rgb(
+                        5,
+                        38,
+                        68
+                    ),
+                    Color.rgb(
+                        23,
+                        108,
+                        181
+                    ),
+                    10
+                )
 
             isClickable =
                 true
@@ -6730,8 +6863,19 @@ private val locationPermissionLauncher =
 
         return LinearLayout.LayoutParams(
             width,
-            LinearLayout.LayoutParams.MATCH_PARENT
-        )
+            42.dp
+        ).apply {
+
+            gravity =
+                Gravity.CENTER_VERTICAL
+
+            setMargins(
+                2.dp,
+                0,
+                2.dp,
+                0
+            )
+        }
     }
 
 
@@ -6742,8 +6886,19 @@ private val locationPermissionLauncher =
 
         return LinearLayout.LayoutParams(
             width,
-            LinearLayout.LayoutParams.MATCH_PARENT
-        )
+            42.dp
+        ).apply {
+
+            gravity =
+                Gravity.CENTER_VERTICAL
+
+            setMargins(
+                3.dp,
+                0,
+                3.dp,
+                0
+            )
+        }
     }
 
 
