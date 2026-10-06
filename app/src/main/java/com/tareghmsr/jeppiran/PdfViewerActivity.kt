@@ -231,6 +231,10 @@ private val locationPermissionLauncher =
     private lateinit var metarBanner:
         TextView
 
+    private var taxiRouteBanner:
+        TextView? =
+        null
+
     private lateinit var metarIcon:
         TextView
 
@@ -1260,6 +1264,8 @@ private val locationPermissionLauncher =
         buildChartTreePanel()
 
         buildMetarBanner()
+
+        buildTaxiRouteBanner()
 
 
         setContentView(
@@ -2430,6 +2436,95 @@ private val locationPermissionLauncher =
 
 
         updateOverlayInsets()
+    }
+
+
+    private fun buildTaxiRouteBanner() {
+
+        if (
+            !intent.getBooleanExtra(
+                "TAXI_MODE",
+                false
+            )
+        ) {
+            return
+        }
+
+        val route =
+            intent
+                .getStringExtra(
+                    "TAXI_ROUTE"
+                )
+                .orEmpty()
+                .trim()
+
+        taxiRouteBanner =
+            TextView(
+                this
+            ).apply {
+
+                text =
+                    if (
+                        route.isBlank()
+                    ) {
+                        "TAXI MODE • FOLLOW ATC CLEARANCE"
+                    } else {
+                        "TAXI ROUTE  •  " + route
+                    }
+
+                textSize =
+                    12f
+
+                typeface =
+                    Typeface.DEFAULT_BOLD
+
+                setTextColor(
+                    primaryTextColor()
+                )
+
+                gravity =
+                    Gravity.CENTER_VERTICAL
+
+                setPadding(
+                    14.dp,
+                    10.dp,
+                    14.dp,
+                    10.dp
+                )
+
+                background =
+                    viewerPanelBackground(
+                        16,
+                        true
+                    )
+
+                elevation =
+                    15.dp.toFloat()
+
+                maxLines =
+                    3
+            }
+
+        root.addView(
+            taxiRouteBanner,
+            FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+
+                gravity =
+                    Gravity.BOTTOM
+
+                leftMargin =
+                    12.dp
+
+                rightMargin =
+                    12.dp
+
+                bottomMargin =
+                    18.dp
+            }
+        )
     }
 
 
