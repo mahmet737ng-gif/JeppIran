@@ -10,6 +10,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
@@ -171,6 +172,30 @@ private val locationPermissionLauncher =
 
     private lateinit var eraserModeBar:
         LinearLayout
+
+    private lateinit var annotationContextBar:
+        LinearLayout
+
+    private lateinit var chartTreePanel:
+        LinearLayout
+
+    private lateinit var chartTreeScroll:
+        ScrollView
+
+    private lateinit var chartTreeContent:
+        LinearLayout
+
+    private val expandedChartCategories =
+        mutableSetOf<String>()
+
+    private var penWidth =
+        5f
+
+    private var highlightWidth =
+        22f
+
+    private var textDefaultSize =
+        20f
 
     private var insetLeft =
         0
@@ -376,6 +401,10 @@ private val locationPermissionLauncher =
         super.onCreate(
             savedInstanceState
         )
+
+
+        requestedOrientation =
+            ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED
 
 
         repository =
@@ -1194,71 +1223,9 @@ private val locationPermissionLauncher =
 
         buildToolToolbar()
 
+        buildChartTreePanel()
+
         buildMetarBanner()
-
-
-        gpsText =
-            TextView(
-                this
-            ).apply {
-
-                text =
-                    "GPS • WAITING"
-
-                textSize =
-                    11f
-
-                setTextColor(
-                    Color.WHITE
-                )
-
-                gravity =
-                    Gravity.CENTER
-
-                setPadding(
-                    10.dp,
-                    6.dp,
-                    10.dp,
-                    6.dp
-                )
-
-                background =
-                    roundedBackground(
-                        Color.argb(
-                            190,
-                            12,
-                            20,
-                            28
-                        ),
-                        Color.argb(
-                            100,
-                            255,
-                            255,
-                            255
-                        ),
-                        12
-                    )
-            }
-
-
-        root.addView(
-            gpsText,
-            FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.WRAP_CONTENT,
-                FrameLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-
-                gravity =
-                    Gravity.BOTTOM or
-                        Gravity.END
-
-                rightMargin =
-                    12.dp
-
-                bottomMargin =
-                    12.dp
-            }
-        )
 
 
         setContentView(
@@ -1690,36 +1657,6 @@ private val locationPermissionLauncher =
         )
 
 
-        val color =
-            toolbarButton(
-                "",
-                11f
-            ).apply {
-
-                contentDescription =
-                    "Annotation colors"
-
-                setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.ic_palette,
-                    0,
-                    0,
-                    0
-                )
-
-                setOnClickListener {
-                    showAnnotationColorDialog()
-                }
-            }
-
-
-        tools.addView(
-            color,
-            toolButtonParams(
-                50.dp
-            )
-        )
-
-
         val clear =
             toolbarButton(
                 "",
@@ -1860,7 +1797,510 @@ private val locationPermissionLauncher =
         )
 
 
+        annotationContextBar =
+            LinearLayout(
+                this
+            ).apply {
+
+                orientation =
+                    LinearLayout.VERTICAL
+
+                gravity =
+                    Gravity.CENTER_VERTICAL
+
+                setPadding(
+                    8.dp,
+                    4.dp,
+                    8.dp,
+                    4.dp
+                )
+
+                setBackgroundColor(
+                    Color.rgb(
+                        17,
+                        25,
+                        33
+                    )
+                )
+
+                visibility =
+                    View.GONE
+            }
+
+
+        root.addView(
+            annotationContextBar,
+            FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                92.dp
+            ).apply {
+
+                gravity =
+                    Gravity.TOP
+
+                topMargin =
+                    106.dp
+            }
+        )
+
+
         updateToolButtonStates()
+    }
+
+
+    private fun buildChartTreePanel() {
+
+        chartTreePanel =
+            LinearLayout(
+                this
+            ).apply {
+
+                orientation =
+                    LinearLayout.VERTICAL
+
+                setBackgroundColor(
+                    Color.argb(
+                        245,
+                        16,
+                        24,
+                        32
+                    )
+                )
+
+                elevation =
+                    10.dp.toFloat()
+            }
+
+
+        chartTreePanel.addView(
+            TextView(
+                this
+            ).apply {
+
+                text =
+                    "CHARTS • " +
+                        currentIcao
+
+                textSize =
+                    13f
+
+                typeface =
+                    Typeface.DEFAULT_BOLD
+
+                setTextColor(
+                    Color.WHITE
+                )
+
+                gravity =
+                    Gravity.CENTER_VERTICAL
+
+                setPadding(
+                    12.dp,
+                    0,
+                    10.dp,
+                    0
+                )
+            },
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                38.dp
+            )
+        )
+
+
+        chartTreeScroll =
+            ScrollView(
+                this
+            ).apply {
+
+                isFillViewport =
+                    true
+            }
+
+
+        chartTreeContent =
+            LinearLayout(
+                this
+            ).apply {
+
+                orientation =
+                    LinearLayout.VERTICAL
+
+                setPadding(
+                    6.dp,
+                    4.dp,
+                    6.dp,
+                    8.dp
+                )
+            }
+
+
+        chartTreeScroll.addView(
+            chartTreeContent,
+            ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
+        )
+
+
+        chartTreePanel.addView(
+            chartTreeScroll,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                0,
+                1f
+            )
+        )
+
+
+        root.addView(
+            chartTreePanel
+        )
+
+
+        if (
+            expandedChartCategories.isEmpty()
+        ) {
+
+            expandedChartCategories.add(
+                category.ifBlank {
+                    "Airport"
+                }
+            )
+        }
+
+
+        refreshChartTree()
+
+        updateChartTreeLayout()
+    }
+
+
+    private fun refreshChartTree() {
+
+        if (
+            !::chartTreeContent.isInitialized
+        ) {
+            return
+        }
+
+
+        chartTreeContent.removeAllViews()
+
+
+        listOf(
+            "Airport",
+            "STAR",
+            "SID",
+            "Approach",
+            "Other"
+        )
+            .forEach {
+                group ->
+
+                val items =
+                    airportCharts
+                        .withIndex()
+                        .filter {
+                            indexed ->
+
+                            indexed.value.category ==
+                                group
+                        }
+
+
+                if (
+                    items.isEmpty()
+                ) {
+                    return@forEach
+                }
+
+
+                val expanded =
+                    group in
+                        expandedChartCategories
+
+
+                chartTreeContent.addView(
+                    TextView(
+                        this
+                    ).apply {
+
+                        text =
+                            (
+                                if (
+                                    expanded
+                                ) {
+
+                                    "▼ "
+
+                                } else {
+
+                                    "▶ "
+                                }
+                                ) +
+                                group +
+                                "  (" +
+                                items.size +
+                                ")"
+
+                        textSize =
+                            12f
+
+                        typeface =
+                            Typeface.DEFAULT_BOLD
+
+                        setTextColor(
+                            Color.rgb(
+                                220,
+                                228,
+                                235
+                            )
+                        )
+
+                        setPadding(
+                            10.dp,
+                            9.dp,
+                            8.dp,
+                            9.dp
+                        )
+
+                        setOnClickListener {
+
+                            if (
+                                group in
+                                expandedChartCategories
+                            ) {
+
+                                expandedChartCategories
+                                    .remove(
+                                        group
+                                    )
+
+                            } else {
+
+                                expandedChartCategories
+                                    .add(
+                                        group
+                                    )
+                            }
+
+
+                            refreshChartTree()
+                        }
+                    }
+                )
+
+
+                if (
+                    !expanded
+                ) {
+                    return@forEach
+                }
+
+
+                items.forEach {
+                    indexed ->
+
+                    val chart =
+                        indexed.value
+
+
+                    val selected =
+                        indexed.index ==
+                            currentChartIndex
+
+
+                    val row =
+                        TextView(
+                            this
+                        ).apply {
+
+                            text =
+                                listOf(
+                                    chart.chartNumber,
+                                    chart.name.ifBlank {
+                                        "Chart " +
+                                            chart.page
+                                    }
+                                )
+                                    .filter {
+                                        value ->
+
+                                        value.isNotBlank()
+                                    }
+                                    .joinToString(
+                                        "  •  "
+                                    )
+
+                            textSize =
+                                12f
+
+                            maxLines =
+                                2
+
+                            setTextColor(
+                                if (
+                                    selected
+                                ) {
+
+                                    Color.WHITE
+
+                                } else {
+
+                                    Color.rgb(
+                                        201,
+                                        211,
+                                        219
+                                    )
+                                }
+                            )
+
+                            setPadding(
+                                18.dp,
+                                8.dp,
+                                8.dp,
+                                8.dp
+                            )
+
+                            background =
+                                roundedBackground(
+                                    if (
+                                        selected
+                                    ) {
+
+                                        Color.rgb(
+                                            112,
+                                            28,
+                                            80
+                                        )
+
+                                    } else {
+
+                                        Color.TRANSPARENT
+                                    },
+                                    if (
+                                        selected
+                                    ) {
+
+                                        Color.rgb(
+                                            244,
+                                            51,
+                                            156
+                                        )
+
+                                    } else {
+
+                                        Color.TRANSPARENT
+                                    },
+                                    8
+                                )
+
+                            setOnClickListener {
+
+                                if (
+                                    indexed.index !=
+                                    currentChartIndex
+                                ) {
+
+                                    currentChartIndex =
+                                        indexed.index
+
+                                    chartView.resetView()
+
+                                    showCurrentChart(
+                                        false
+                                    )
+                                }
+                            }
+                        }
+
+
+                    chartTreeContent.addView(
+                        row,
+                        LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                        ).apply {
+
+                            setMargins(
+                                3.dp,
+                                2.dp,
+                                3.dp,
+                                2.dp
+                            )
+                        }
+                    )
+                }
+            }
+    }
+
+
+    private fun updateChartTreeLayout() {
+
+        if (
+            !::chartTreePanel.isInitialized
+        ) {
+            return
+        }
+
+
+        val landscapeDevice =
+            resources.configuration.orientation ==
+                Configuration.ORIENTATION_LANDSCAPE
+
+
+        chartTreePanel.layoutParams =
+            FrameLayout.LayoutParams(
+                if (
+                    landscapeDevice
+                ) {
+
+                    270.dp
+
+                } else {
+
+                    FrameLayout.LayoutParams.MATCH_PARENT
+                },
+                if (
+                    landscapeDevice
+                ) {
+
+                    FrameLayout.LayoutParams.MATCH_PARENT
+
+                } else {
+
+                    245.dp
+                }
+            ).apply {
+
+                gravity =
+                    if (
+                        landscapeDevice
+                    ) {
+
+                        Gravity.START or
+                            Gravity.TOP
+
+                    } else {
+
+                        Gravity.BOTTOM
+                    }
+            }
+
+
+        if (
+            ::chartView.isInitialized
+        ) {
+
+            chartView.setLandscapeMode(
+                landscapeDevice
+            )
+        }
+
+
+        updateOverlayInsets()
     }
 
 
@@ -2068,10 +2508,51 @@ private val locationPermissionLauncher =
         }
 
 
+        if (
+            !controlsVisible
+        ) {
+
+            chartView.setContentInsets(
+                0,
+                0,
+                0,
+                0
+            )
+
+            return
+        }
+
+
         val eraserVisible =
             ::eraserModeBar.isInitialized &&
                 eraserModeBar.visibility ==
                     View.VISIBLE
+
+
+        val annotationOptionsVisible =
+            ::annotationContextBar.isInitialized &&
+                annotationContextBar.visibility ==
+                    View.VISIBLE
+
+
+        val optionsHeight =
+            when {
+
+                annotationOptionsVisible ->
+                    92.dp
+
+                eraserVisible ->
+                    44.dp
+
+                else ->
+                    0
+            }
+
+
+        val topInset =
+            insetTop +
+                106.dp +
+                optionsHeight
 
 
         if (
@@ -2084,18 +2565,8 @@ private val locationPermissionLauncher =
 
 
             metarParams.topMargin =
-                insetTop +
-                    if (
-                        eraserVisible
-                    ) {
-
-                        158.dp
-
-                    } else {
-
-                        114.dp
-                    }
-
+                topInset +
+                    8.dp
 
             metarParams.leftMargin =
                 insetLeft +
@@ -2111,44 +2582,90 @@ private val locationPermissionLauncher =
         }
 
 
+        val landscapeDevice =
+            resources.configuration.orientation ==
+                Configuration.ORIENTATION_LANDSCAPE
+
+
+        val treeLeft =
+            if (
+                landscapeDevice &&
+                ::chartTreePanel.isInitialized &&
+                chartTreePanel.visibility ==
+                    View.VISIBLE
+            ) {
+
+                270.dp
+
+            } else {
+
+                0
+            }
+
+
+        val treeBottom =
+            if (
+                !landscapeDevice &&
+                ::chartTreePanel.isInitialized &&
+                chartTreePanel.visibility ==
+                    View.VISIBLE
+            ) {
+
+                245.dp
+
+            } else {
+
+                0
+            }
+
+
         chartView.setContentInsets(
-            insetLeft,
-            insetTop +
-                if (
-                    eraserVisible
-                ) {
-
-                    150.dp
-
-                } else {
-
-                    106.dp
-                },
+            insetLeft +
+                treeLeft,
+            topInset,
             insetRight,
-            insetBottom
+            insetBottom +
+                treeBottom
         )
 
 
         if (
-            ::gpsText.isInitialized
+            ::chartTreePanel.isInitialized
         ) {
 
-            val gpsParams =
-                gpsText.layoutParams
+            val params =
+                chartTreePanel.layoutParams
                     as FrameLayout.LayoutParams
 
 
-            gpsParams.rightMargin =
-                insetRight +
-                    12.dp
+            if (
+                landscapeDevice
+            ) {
 
-            gpsParams.bottomMargin =
-                insetBottom +
-                    12.dp
+                params.topMargin =
+                    topInset
+
+                params.bottomMargin =
+                    insetBottom
+
+                params.leftMargin =
+                    insetLeft
+
+            } else {
+
+                params.bottomMargin =
+                    insetBottom
+
+                params.leftMargin =
+                    insetLeft
+
+                params.rightMargin =
+                    insetRight
+            }
 
 
-            gpsText.layoutParams =
-                gpsParams
+            chartTreePanel.layoutParams =
+                params
         }
     }
 
@@ -2335,6 +2852,12 @@ private val locationPermissionLauncher =
 
 
         updateGpsLabel()
+
+        expandedChartCategories.add(
+            category
+        )
+
+        refreshChartTree()
     }
 
 
@@ -2342,56 +2865,59 @@ private val locationPermissionLauncher =
         localPage: Int
     ) {
 
-        val pdf =
-            renderer
-                ?: return
-
-
-        if (
-            localPage < 0 ||
-            localPage >=
-                pdf.pageCount
-        ) {
-            return
-        }
-
-
-        val page =
-            pdf.openPage(
-                localPage
-            )
-
-
-        val landscape =
-            page.width >
-                page.height
-
-
-        page.close()
-
-
         requestedOrientation =
-            if (
-                landscape
-            ) {
-
-                ActivityInfo
-                    .SCREEN_ORIENTATION_LANDSCAPE
-
-            } else {
-
-                ActivityInfo
-                    .SCREEN_ORIENTATION_PORTRAIT
-            }
+            ActivityInfo
+                .SCREEN_ORIENTATION_UNSPECIFIED
 
 
         if (
-            ::chartView
-                .isInitialized
+            ::chartView.isInitialized
         ) {
 
             chartView.setLandscapeMode(
-                landscape
+                resources.configuration.orientation ==
+                    Configuration.ORIENTATION_LANDSCAPE
+            )
+        }
+    }
+
+
+    override fun onConfigurationChanged(
+        newConfig: Configuration
+    ) {
+
+        super.onConfigurationChanged(
+            newConfig
+        )
+
+
+        if (
+            ::chartTreePanel.isInitialized
+        ) {
+
+            updateChartTreeLayout()
+        }
+
+
+        if (
+            ::chartView.isInitialized
+        ) {
+
+            chartView.setLandscapeMode(
+                newConfig.orientation ==
+                    Configuration.ORIENTATION_LANDSCAPE
+            )
+
+            chartView.invalidate()
+        }
+
+
+        if (
+            ::root.isInitialized
+        ) {
+
+            ViewCompat.requestApplyInsets(
+                root
             )
         }
     }
@@ -2710,7 +3236,7 @@ private val locationPermissionLauncher =
                 ?: -1
 
 
-        return "$chartPosition  •  Page $globalPage  •  PDF $localPage"
+        return "$chartPosition  •  $category"
     }
 
 
@@ -4160,11 +4686,39 @@ private val locationPermissionLauncher =
         toolScroll.visibility =
             View.GONE
 
+
         if (
             ::eraserModeBar.isInitialized
         ) {
 
             eraserModeBar.visibility =
+                View.GONE
+        }
+
+
+        if (
+            ::annotationContextBar.isInitialized
+        ) {
+
+            annotationContextBar.visibility =
+                View.GONE
+        }
+
+
+        if (
+            ::chartTreePanel.isInitialized
+        ) {
+
+            chartTreePanel.visibility =
+                View.GONE
+        }
+
+
+        if (
+            ::metarBanner.isInitialized
+        ) {
+
+            metarBanner.visibility =
                 View.GONE
         }
 
@@ -4201,7 +4755,19 @@ private val locationPermissionLauncher =
         toolScroll.visibility =
             View.VISIBLE
 
-        updateEraserModeBar()
+
+        if (
+            ::chartTreePanel.isInitialized
+        ) {
+
+            chartTreePanel.visibility =
+                View.VISIBLE
+        }
+
+
+        updateToolOptions()
+
+        updateChartTreeLayout()
 
 
         WindowInsetsControllerCompat(
@@ -4220,15 +4786,6 @@ private val locationPermissionLauncher =
 
 
     private fun toggleViewerControls() {
-
-        if (
-            annotationMode &&
-            annotationTool != null
-        ) {
-
-            return
-        }
-
 
         controlsVisible =
             !controlsVisible
