@@ -1122,13 +1122,7 @@ private val locationPermissionLauncher =
                 this
             ).apply {
 
-                setBackgroundColor(
-                    Color.rgb(
-                        14,
-                        18,
-                        23
-                    )
-                )
+                setBackgroundColor(if (isDarkTheme()) Color.rgb(2, 11, 26) else Color.rgb(230, 240, 249))
             }
 
 
@@ -1234,13 +1228,7 @@ private val locationPermissionLauncher =
                 this
             ).apply {
 
-                setBackgroundColor(
-                    Color.rgb(
-                        14,
-                        18,
-                        23
-                    )
-                )
+                setBackgroundColor(if (isDarkTheme()) Color.rgb(2, 11, 26) else Color.rgb(230, 240, 249))
             }
 
 
@@ -1289,13 +1277,7 @@ private val locationPermissionLauncher =
                 orientation =
                     LinearLayout.VERTICAL
 
-                setBackgroundColor(
-                    Color.rgb(
-                        3,
-                        18,
-                        42
-                    )
-                )
+                setBackgroundColor(skinSurface())
 
                 elevation =
                     8.dp.toFloat()
@@ -1418,9 +1400,7 @@ private val locationPermissionLauncher =
                 gravity =
                     Gravity.CENTER_VERTICAL
 
-                setTextColor(
-                    Color.WHITE
-                )
+                setTextColor(skinInk())
 
                 setPadding(
                     8.dp,
@@ -1468,13 +1448,7 @@ private val locationPermissionLauncher =
                     2.dp
                 )
 
-                setBackgroundColor(
-                    Color.rgb(
-                        4,
-                        22,
-                        49
-                    )
-                )
+                setBackgroundColor(skinSurfaceAlt())
             }
 
 
@@ -1495,13 +1469,7 @@ private val locationPermissionLauncher =
                 gravity =
                     Gravity.CENTER_VERTICAL
 
-                setTextColor(
-                    Color.rgb(
-                        180,
-                        190,
-                        200
-                    )
-                )
+                setTextColor(skinMuted())
 
                 setPadding(
                     8.dp,
@@ -1768,13 +1736,7 @@ private val locationPermissionLauncher =
                 isFillViewport =
                     true
 
-                setBackgroundColor(
-                    Color.rgb(
-                        5,
-                        24,
-                        52
-                    )
-                )
+                setBackgroundColor(skinSurfaceAlt())
             }
 
 
@@ -2465,9 +2427,7 @@ private val locationPermissionLauncher =
                 typeface =
                     Typeface.DEFAULT_BOLD
 
-                setTextColor(
-                    Color.WHITE
-                )
+                setTextColor(skinInk())
 
                 gravity =
                     Gravity.CENTER_VERTICAL
@@ -2481,16 +2441,8 @@ private val locationPermissionLauncher =
 
                 background =
                     roundedBackground(
-                        Color.rgb(
-                            5,
-                            38,
-                            68
-                        ),
-                        Color.rgb(
-                            47,
-                            217,
-                            255
-                        ),
+                        skinButton(),
+                        skinAccent(),
                         14
                     )
 
@@ -5168,13 +5120,14 @@ private val locationPermissionLauncher =
         lastMetarIcao =
             currentIcao
 
-        lastMetarValue =
-            ""
+        val cached = AirportWeather.cached(currentIcao)
+        lastMetarValue = cached?.raw.orEmpty()
+        if (cached != null) showMetarBanner(cached.raw)
 
 
         requestMetar(
             currentIcao,
-            false
+            cached == null
         )
     }
 
@@ -5281,11 +5234,14 @@ private val locationPermissionLauncher =
                         parsed != null
                     ) {
 
+                        val changed = lastMetarValue.isNotBlank() &&
+                            lastMetarValue != parsed
                         lastMetarValue =
                             parsed
 
                         if (
                             showLoading ||
+                            changed ||
                             (
                                 ::metarBanner.isInitialized &&
                                 metarBanner.visibility ==
@@ -5474,6 +5430,11 @@ private val locationPermissionLauncher =
         }
 
 
+        metarBanner.animate().cancel()
+        metarBanner.translationX = 0f
+        metarBanner.translationY = 0f
+        metarBanner.scaleX = 1f
+        metarBanner.scaleY = 1f
         metarBanner.text = value
         metarBanner.visibility =
             View.VISIBLE
@@ -5522,16 +5483,28 @@ private val locationPermissionLauncher =
             animated
         ) {
 
+            val bannerPosition = IntArray(2)
+            val iconPosition = IntArray(2)
+            metarBanner.getLocationOnScreen(bannerPosition)
+            metarIcon.getLocationOnScreen(iconPosition)
+            val targetX = (iconPosition[0] + metarIcon.width / 2 -
+                bannerPosition[0] - metarBanner.width / 2).toFloat()
+            val targetY = (iconPosition[1] + metarIcon.height / 2 -
+                bannerPosition[1] - metarBanner.height / 2).toFloat()
+
             metarBanner
                 .animate()
                 .alpha(
                     0f
                 )
+                .translationX(targetX)
                 .translationY(
-                    -20.dp.toFloat()
+                    targetY
                 )
+                .scaleX(0.35f)
+                .scaleY(0.35f)
                 .setDuration(
-                    160L
+                    420L
                 )
                 .withEndAction {
 
@@ -5541,7 +5514,10 @@ private val locationPermissionLauncher =
                     metarBanner.alpha =
                         1f
 
+                    metarBanner.translationX = 0f
                     metarBanner.translationY = 0f
+                    metarBanner.scaleX = 1f
+                    metarBanner.scaleY = 1f
                 }
                 .start()
 
@@ -5963,15 +5939,11 @@ private val locationPermissionLauncher =
                     active
                 ) {
 
-                    Color.rgb(
-                        47,
-                        217,
-                        255
-                    )
+                    skinAccent()
 
                 } else {
 
-                    Color.WHITE
+                    skinInk()
                 }
 
 
@@ -5991,37 +5963,21 @@ private val locationPermissionLauncher =
                         active
                     ) {
 
-                        Color.rgb(
-                            8,
-                            89,
-                            154
-                        )
+                        if (isDarkTheme()) Color.rgb(8, 89, 154) else Color.rgb(209, 236, 252)
 
                     } else {
 
-                        Color.rgb(
-                            5,
-                            38,
-                            68
-                        )
+                        skinButton()
                     },
                     if (
                         active
                     ) {
 
-                        Color.rgb(
-                            47,
-                            217,
-                            255
-                        )
+                        skinAccent()
 
                     } else {
 
-                        Color.rgb(
-                            23,
-                            108,
-                            181
-                        )
+                        skinAccent()
                     },
                     10
                 )
@@ -6042,15 +5998,11 @@ private val locationPermissionLauncher =
                 active
             ) {
 
-                Color.rgb(
-                    47,
-                    217,
-                    255
-                )
+                skinAccent()
 
             } else {
 
-                Color.WHITE
+                skinInk()
             }
         )
 
@@ -6060,25 +6012,13 @@ private val locationPermissionLauncher =
                     active
                 ) {
 
-                    Color.rgb(
-                        8,
-                        89,
-                        154
-                    )
+                    if (isDarkTheme()) Color.rgb(8, 89, 154) else Color.rgb(209, 236, 252)
 
                 } else {
 
-                    Color.rgb(
-                        5,
-                        38,
-                        68
-                    )
+                    skinButton()
                 },
-                Color.rgb(
-                    47,
-                    217,
-                    255
-                ),
+                skinAccent(),
                 18
             )
     }
@@ -6138,22 +6078,12 @@ private val locationPermissionLauncher =
             gravity =
                 Gravity.CENTER
 
-            setTextColor(
-                Color.WHITE
-            )
+            setTextColor(skinInk())
 
             background =
                 roundedBackground(
-                    Color.rgb(
-                        5,
-                        38,
-                        68
-                    ),
-                    Color.rgb(
-                        47,
-                        217,
-                        255
-                    ),
+                    skinButton(),
+                    skinAccent(),
                     18
                 )
 
@@ -6186,9 +6116,8 @@ private val locationPermissionLauncher =
             gravity =
                 Gravity.CENTER
 
-            setTextColor(
-                Color.WHITE
-            )
+            setTextColor(skinInk())
+            compoundDrawableTintList = android.content.res.ColorStateList.valueOf(skinInk())
 
             setCompoundDrawablesWithIntrinsicBounds(
                 iconRes,
@@ -6205,16 +6134,8 @@ private val locationPermissionLauncher =
 
             background =
                 roundedBackground(
-                    Color.rgb(
-                        5,
-                        38,
-                        68
-                    ),
-                    Color.rgb(
-                        23,
-                        108,
-                        181
-                    ),
+                    skinButton(),
+                    skinAccent(),
                     10
                 )
 
@@ -6434,6 +6355,13 @@ private val locationPermissionLauncher =
         }
     }
 
+
+    private fun skinSurface() = if (isDarkTheme()) Color.rgb(3, 18, 42) else Color.rgb(243, 249, 255)
+    private fun skinSurfaceAlt() = if (isDarkTheme()) Color.rgb(4, 22, 49) else Color.rgb(227, 240, 251)
+    private fun skinButton() = if (isDarkTheme()) Color.rgb(5, 38, 68) else Color.rgb(255, 255, 255)
+    private fun skinInk() = if (isDarkTheme()) Color.WHITE else Color.rgb(9, 35, 66)
+    private fun skinMuted() = if (isDarkTheme()) Color.rgb(180, 190, 200) else Color.rgb(55, 84, 111)
+    private fun skinAccent() = if (isDarkTheme()) Color.rgb(47, 217, 255) else Color.rgb(0, 111, 177)
 
     private fun isDarkTheme():
         Boolean {

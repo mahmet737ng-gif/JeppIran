@@ -982,8 +982,10 @@ class AirportChartsActivity :
             )
         }
 
-        val firstCategory =
-            categories.firstOrNull()
+        val requestedCategory = intent.getStringExtra("SELECT_CATEGORY")
+            ?.let(ChartRepository::normalizeCategory)
+        val firstCategory = categories.firstOrNull { it == requestedCategory }
+            ?: categories.firstOrNull()
 
         if (
             firstCategory != null

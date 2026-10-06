@@ -5,6 +5,8 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.TypedValue
@@ -37,6 +39,33 @@ class ChartsActivity :
 
     private var allAirports =
         emptyList<ChartRepository.AirportInfo>()
+
+    private val repository by lazy { ChartRepository(this) }
+    private var sortField = "ICAO"
+    private var region = "ALL"
+    private val sortFields = listOf("ICAO", "NAME", "CITY", "COUNTRY")
+    private val regions = listOf("ALL", "MIDDLE EAST", "EAST EUROPE", "WEST EUROPE")
+    private val weatherViews = mutableMapOf<String, TextView>()
+    private val metarViews = mutableMapOf<String, TextView>()
+    private var descending = false
+    private val weatherHandler = Handler(Looper.getMainLooper())
+    private val weatherRefresh = object : Runnable {
+        override fun run() {
+            weatherViews.keys.toList().forEach { icao -> refreshWeather(icao) }
+            weatherHandler.postDelayed(this, 300_000L)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        weatherHandler.removeCallbacks(weatherRefresh)
+        weatherHandler.post(weatherRefresh)
+    }
+
+    override fun onPause() {
+        weatherHandler.removeCallbacks(weatherRefresh)
+        super.onPause()
+    }
 
     override fun onCreate(
         savedInstanceState: Bundle?
@@ -287,6 +316,51 @@ class ChartsActivity :
             }
         )
 
+        val filters = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            setPadding(16.dp, 2.dp, 16.dp, 4.dp)
+        }
+        fun filterButton(label: String, onClick: () -> Unit): TextView =
+            TextView(this).apply {
+                text = label
+                textSize = 12f
+                setTextColor(getColor(R.color.jeppiran_text))
+                gravity = Gravity.CENTER
+                background = createSearchBackground()
+                setOnClickListener { onClick() }
+            }
+        val sortButton = filterButton("SORT: ICAO  ▾") {}
+        sortButton.setOnClickListener {
+            val next = (sortFields.indexOf(sortField) + 1) % sortFields.size
+            sortField = sortFields[next]
+            sortButton.text = "SORT: $sortField  ▾"
+            displayAirports(searchBox.text.toString())
+        }
+        sortButton.setOnLongClickListener {
+            descending = !descending
+            sortButton.text = "SORT: $sortField  ${if (descending) "Z–A" else "A–Z"}"
+            displayAirports(searchBox.text.toString())
+            true
+        }
+        val regionButton = filterButton("REGION: ALL  ▾") {}
+        regionButton.setOnClickListener {
+            val next = (regions.indexOf(region) + 1) % regions.size
+            region = regions[next]
+            regionButton.text = "REGION: $region  ▾"
+            displayAirports(searchBox.text.toString())
+        }
+        filters.addView(sortButton, LinearLayout.LayoutParams(0, 42.dp, 1f).apply { marginEnd = 6.dp })
+        filters.addView(regionButton, LinearLayout.LayoutParams(0, 42.dp, 1f))
+        val directionButton = filterButton("A–Z") {}
+        directionButton.contentDescription = "Reverse airport sort order"
+        directionButton.setOnClickListener {
+            descending = !descending
+            directionButton.text = if (descending) "Z–A" else "A–Z"
+            displayAirports(searchBox.text.toString())
+        }
+        filters.addView(directionButton, LinearLayout.LayoutParams(50.dp, 42.dp).apply { marginStart = 6.dp })
+        root.addView(filters)
+
         resultCount =
             TextView(
                 this
@@ -427,50 +501,34 @@ class ChartsActivity :
     ) {
 
         listContainer.removeAllViews()
+        weatherViews.clear()
+        metarViews.clear()
 
         val normalized =
             query
                 .trim()
                 .lowercase()
 
-        val results =
-            if (
-                normalized.isBlank()
-            ) {
-
-                allAirports
-
-            } else {
-
-                allAirports.filter {
-                    airport ->
-
-                    airport.icao
-                        .lowercase()
-                        .contains(
-                            normalized
-                        ) ||
-
-                    airport.airportName
-                        .lowercase()
-                        .contains(
-                            normalized
-                        ) ||
-
-                    airport.city
-                        .lowercase()
-                        .contains(
-                            normalized
-                        )
-                }
+        val results = allAirports.filter { airport ->
+            (region == "ALL" || airportRegion(airport.icao) == region) &&
+                (normalized.isBlank() || listOf(airport.icao, airport.airportName,
+                    airport.city, airportCountry(airport.icao), airportRegion(airport.icao))
+                    .any { it.lowercase().contains(normalized) })
+        }.sortedWith(compareBy<ChartRepository.AirportInfo> { airport ->
+            when (sortField) {
+                "NAME" -> airport.airportName
+                "CITY" -> airport.city
+                "COUNTRY" -> airportCountry(airport.icao)
+                else -> airport.icao
             }
+        }.let { comparator -> if (descending) comparator.reversed() else comparator })
 
         resultCount.text =
             if (
                 normalized.isBlank()
             ) {
 
-                "${allAirports.size} airports"
+                "${results.size} airports"
 
             } else {
 
@@ -687,6 +745,49 @@ class ChartsActivity :
             )
         )
 
+        val country = airportCountry(airport.icao)
+        val weather = TextView(this).apply {
+            text = "${countryFlag(country)}  $country  ·  WX —"
+            textSize = 11f
+            setTextColor(getColor(R.color.jeppiran_text_secondary))
+            maxLines = 1
+            setPadding(0, 3.dp, 0, 3.dp)
+        }
+        info.addView(weather)
+        weatherViews[airport.icao] = weather
+        val metar = TextView(this).apply {
+            text = "METAR loading…"
+            textSize = 10f
+            maxLines = 1
+            ellipsize = android.text.TextUtils.TruncateAt.END
+            setTextColor(getColor(R.color.jeppiran_text_secondary))
+        }
+        info.addView(metar)
+        metarViews[airport.icao] = metar
+        refreshWeather(airport.icao)
+
+        val categories = LinearLayout(this).apply { orientation = LinearLayout.HORIZONTAL }
+        val airportCharts = repository.getDisplayChartsForAirport(airport.icao)
+        listOf("STAR", "SID", "AIRPORT", "APP").forEach { label ->
+            val count = airportCharts.count {
+                ChartRepository.displayCategory(it.category) == label
+            }
+            val chip = TextView(this).apply {
+                text = "$label $count"
+                textSize = 10f
+                gravity = Gravity.CENTER
+                maxLines = 1
+                setTextColor(getColor(R.color.jeppiran_accent))
+                setPadding(2.dp, 4.dp, 2.dp, 4.dp)
+                isClickable = true
+                contentDescription = "Open $count $label charts for ${airport.icao}"
+                setOnClickListener { openAirport(airport, label) }
+            }
+            categories.addView(chip, LinearLayout.LayoutParams(0,
+                LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+        }
+        info.addView(categories)
+
         card.addView(
             info,
             LinearLayout.LayoutParams(
@@ -839,8 +940,28 @@ class ChartsActivity :
         )
     }
 
+    private fun refreshWeather(icao: String) {
+        AirportWeather.get(this, icao) { report ->
+            if (isFinishing || isDestroyed) return@get
+            val weather = weatherViews[icao] ?: return@get
+            metarViews[icao]?.text = report?.raw ?: "METAR unavailable"
+            val country = airportCountry(icao)
+            val category = report?.category ?: "WX —"
+            weather.text = "${countryFlag(country)}  $country  ·  $category"
+            weather.setTextColor(when (category) {
+                "VFR" -> Color.rgb(28, 184, 97)
+                "MVFR" -> Color.rgb(232, 181, 32)
+                "IFR" -> Color.rgb(55, 141, 245)
+                "LIFR" -> Color.rgb(236, 64, 78)
+                else -> getColor(R.color.jeppiran_text_secondary)
+            })
+            weather.contentDescription = "$icao $category. ${report?.raw.orEmpty()}"
+        }
+    }
+
     private fun openAirport(
-        airport: ChartRepository.AirportInfo
+        airport: ChartRepository.AirportInfo,
+        category: String? = null
     ) {
 
         val intent =
@@ -864,9 +985,37 @@ class ChartsActivity :
             airport.city
         )
 
+        category?.let { intent.putExtra("SELECT_CATEGORY", it) }
+
         startActivity(
             intent
         )
+    }
+
+    private fun airportCountry(icao: String): String = when {
+        icao.startsWith("OI") -> "Iran"
+        icao.startsWith("LT") -> "Türkiye"
+        icao.startsWith("OM") -> if (icao == "OMDB") "UAE" else "Oman"
+        icao.startsWith("OR") -> "Iraq"
+        icao.startsWith("UD") -> "Armenia"
+        icao.startsWith("UG") -> "Georgia"
+        else -> "Unknown"
+    }
+
+    private fun airportRegion(icao: String): String = when {
+        icao.startsWith("UD") || icao.startsWith("UG") -> "EAST EUROPE"
+        else -> "MIDDLE EAST"
+    }
+
+    private fun countryFlag(country: String): String = when (country) {
+        "Iran" -> "🇮🇷"
+        "Türkiye" -> "🇹🇷"
+        "UAE" -> "🇦🇪"
+        "Oman" -> "🇴🇲"
+        "Iraq" -> "🇮🇶"
+        "Armenia" -> "🇦🇲"
+        "Georgia" -> "🇬🇪"
+        else -> "🌐"
     }
 
     private fun showEmptyResult() {
