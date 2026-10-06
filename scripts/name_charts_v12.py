@@ -229,73 +229,86 @@ def get_approach_name(text):
 
     lines = get_lines(text)
 
-    # Jeppesen chart title is normally in the header. Search the first
-    # lines first so missed-approach instructions do not become the name.
-    candidates = lines[:35] + lines[35:]
-
-    title_patterns = [
-        r"\bILS\s+([XYZ])\s+OR\s+LOC\s+\1\s+RWY\s+([0-9]{1,2}[LRC]?)\b",
-        r"\bILS\s+OR\s+LOC\s+RWY\s+([0-9]{1,2}[LRC]?)\b",
-        r"\bILS\s+([XYZ])\s+RWY\s+([0-9]{1,2}[LRC]?)\b",
-        r"\bILS\s+RWY\s+([0-9]{1,2}[LRC]?)\b",
-        r"\b(VOR(?:\s+DME)?(?:\s+[XYZ])?)\s+RWY\s+([0-9]{1,2}[LRC]?)\b",
-        r"\b(NDB(?:\s+[XYZ])?)\s+RWY\s+([0-9]{1,2}[LRC]?)\b",
-        r"\b(RNAV|RNP|GLS|SRA|LDA)(?:\s+\([A-Z]+\))?(?:\s+[XYZ])?\s+RWY\s+([0-9]{1,2}[LRC]?)\b",
-        r"\bVOR\s+([A-Z])\b",
-        r"\bNDB\s+([A-Z])\b",
-    ]
-
-    for line in candidates:
+    # Use header lines only. Category qualifiers count only when they occur
+    # on the same header line as the procedure title.
+    for line in lines[:30]:
 
         upper = line.upper()
 
-        # ILS X OR LOC X RWY 30
-        m = re.search(title_patterns[0], upper)
+        cat = ""
+        cat_match = re.search(
+            r"\bCAT\s+([ABCD])\s*&\s*([ABCD])\b",
+            upper
+        )
+        if cat_match:
+            cat = f" CAT {cat_match.group(1)} & {cat_match.group(2)}"
+
+        m = re.search(
+            r"\bILS\s+([XYZ])\s+OR\s+LOC\s+\1\s+RWY\s+([0-9]{1,2}[LRC]?)\b",
+            upper
+        )
         if m:
-            name = f"ILS {m.group(1)} OR LOC {m.group(1)} RWY {m.group(2)}"
-        else:
-            m = re.search(title_patterns[1], upper)
-            if m:
-                name = f"ILS OR LOC RWY {m.group(1)}"
-            else:
-                m = re.search(title_patterns[2], upper)
-                if m:
-                    name = f"ILS {m.group(1)} RWY {m.group(2)}"
-                else:
-                    m = re.search(title_patterns[3], upper)
-                    if m:
-                        name = f"ILS RWY {m.group(1)}"
-                    else:
-                        m = re.search(title_patterns[4], upper)
-                        if m:
-                            name = f"{clean_spaces(m.group(1))} RWY {m.group(2)}"
-                        else:
-                            m = re.search(title_patterns[5], upper)
-                            if m:
-                                name = f"{clean_spaces(m.group(1))} RWY {m.group(2)}"
-                            else:
-                                m = re.search(title_patterns[6], upper)
-                                if m:
-                                    name = f"{m.group(1)} RWY {m.group(2)}"
-                                else:
-                                    m = re.search(title_patterns[7], upper)
-                                    if m:
-                                        name = f"VOR {m.group(1)}"
-                                    else:
-                                        m = re.search(title_patterns[8], upper)
-                                        if m:
-                                            name = f"NDB {m.group(1)}"
-                                        else:
-                                            continue
+            return f"ILS {m.group(1)} OR LOC {m.group(1)} RWY {m.group(2)}{cat}"
 
-        # Preserve an aircraft-category qualifier when Jeppesen puts it
-        # in the header for a distinct version of the procedure.
-        header_window = " ".join(lines[:25]).upper()
-        cat = re.search(r"\bCAT\s+([ABCD])\s*&\s*([ABCD])\b", header_window)
-        if cat and "CAT " not in name:
-            name += f" CAT {cat.group(1)} & {cat.group(2)}"
+        m = re.search(
+            r"\bILS\s+([XYZ])\s+RWY\s+([0-9]{1,2}[LRC]?)\b",
+            upper
+        )
+        if m:
+            prefix = "CAT II/III " if "CAT II/III" in upper else ""
+            return f"{prefix}ILS {m.group(1)} RWY {m.group(2)}{cat}"
 
-        return clean_spaces(name)
+        m = re.search(
+            r"\bILS\s+RWY\s+([0-9]{1,2}[LRC]?)\b",
+            upper
+        )
+        if m:
+            prefix = "CAT II/III " if "CAT II/III" in upper else ""
+            return f"{prefix}ILS RWY {m.group(1)}{cat}"
+
+        m = re.search(
+            r"\bLOC\s+([XYZ])\s+RWY\s+([0-9]{1,2}[LRC]?)\b",
+            upper
+        )
+        if m:
+            return f"LOC {m.group(1)} RWY {m.group(2)}{cat}"
+
+        m = re.search(
+            r"\bLOC\s+RWY\s+([0-9]{1,2}[LRC]?)\b",
+            upper
+        )
+        if m:
+            return f"LOC RWY {m.group(1)}{cat}"
+
+        m = re.search(
+            r"\b(VOR(?:\s+DME)?(?:\s+[XYZ])?)\s+RWY\s+([0-9]{1,2}[LRC]?)\b",
+            upper
+        )
+        if m:
+            return f"{clean_spaces(m.group(1))} RWY {m.group(2)}{cat}"
+
+        m = re.search(
+            r"\b(NDB(?:\s+[XYZ])?)\s+RWY\s+([0-9]{1,2}[LRC]?)\b",
+            upper
+        )
+        if m:
+            return f"{clean_spaces(m.group(1))} RWY {m.group(2)}{cat}"
+
+        m = re.search(
+            r"\b(RNAV|RNP|GLS|SRA|LDA)(?:\s+\([A-Z]+\))?(?:\s+([XYZ]))?\s+RWY\s+([0-9]{1,2}[LRC]?)\b",
+            upper
+        )
+        if m:
+            variant = f" {m.group(2)}" if m.group(2) else ""
+            return f"{m.group(1)}{variant} RWY {m.group(3)}{cat}"
+
+        m = re.search(r"\bVOR\s+([A-Z])\b", upper)
+        if m:
+            return f"VOR {m.group(1)}"
+
+        m = re.search(r"\bNDB\s+([A-Z])\b", upper)
+        if m:
+            return f"NDB {m.group(1)}"
 
     return ""
 
@@ -307,22 +320,33 @@ def get_airport_name(text):
 
     upper = text.upper()
     lines = get_lines(text)
-    joined = " ".join(lines)
+    joined = " ".join(lines).upper()
 
-    if "AIRPORT INFORMATION" in upper:
-        return "AIRPORT INFORMATION"
-
-    if "AERODROME INFORMATION" in upper:
-        return "AIRPORT INFORMATION"
+    # More specific page families must be tested before generic
+    # AIRPORT INFORMATION substrings.
+    if "AIRPORT QUALIFICATION" in upper:
+        return "AIRPORT QUALIFICATION"
 
     if "AIRPORT BRIEFING" in upper:
         return "AIRPORT BRIEFING"
 
-    if "AIRPORT QUALIFICATION" in upper:
-        return "AIRPORT QUALIFICATION"
-
     if "RADAR MINIMUM ALTITUDES" in upper:
         return "RADAR MINIMUM ALTITUDES"
+
+    if "ADDITIONAL RUNWAY INFORMATION" in upper:
+        return "ADDITIONAL RUNWAY INFORMATION"
+
+    if "HOT SPOTS" in upper and "STRAIGHT-IN RWY" not in upper:
+        return "HOT SPOTS"
+
+    if "PUSHBACK PROCEDURES" in upper:
+        return "PUSHBACK PROCEDURES"
+
+    if "REMOTE PARK AREA HOLDING PROCEDURE" in upper:
+        return "REMOTE PARK AREA HOLDING PROCEDURE"
+
+    if "TWY RESTRICTIONS" in upper or "TAXIWAY RESTRICTIONS" in upper:
+        return "TAXIWAY RESTRICTIONS"
 
     if "INS COORDINATES" in upper:
         return "INS COORDINATES"
@@ -330,32 +354,25 @@ def get_airport_name(text):
     if "PARKING STANDS" in upper and "COORD" in upper:
         return "PARKING STANDS & COORDS"
 
-    if (
-        "PARKING/DOCKING" in upper
-        or "PARKING / DOCKING" in upper
-        or "DOCKING CHART" in upper
-    ):
+    if "PARKING/DOCKING" in upper or "PARKING / DOCKING" in upper or "DOCKING CHART" in upper:
         return "PARKING/DOCKING CHART (PDC)"
 
-    m = re.search(
+    taxi = re.search(
         r"\bTAXI\s+ROUTES?\s+(ARRIVAL|DEPARTURE)"
         r"(?:\s+RWYS?\s+[0-9LRC, &/()A-Z.-]+)?",
-        joined.upper()
+        joined,
     )
-    if m:
-        name = clean_spaces(m.group(0))
-        return name.rstrip(" .,-")
+    if taxi:
+        return clean_spaces(taxi.group(0)).rstrip(" .,-")
 
-    if (
-        "STRAIGHT-IN RWY" in upper
-        or "TAKE-OFF" in upper and "ADEQUATE VIS REF" in upper
-    ):
+    if "AIRPORT INFORMATION" in upper or "AERODROME INFORMATION" in upper:
+        return "AIRPORT INFORMATION"
+
+    if "STRAIGHT-IN RWY" in upper:
         return "MINIMUMS"
 
-    # The main airport plan is the ADC. Specific apron/parking pages above
-    # are detected before this fallback.
     if "AIRPORT CHART" in upper or "AERODROME CHART" in upper:
-        return "AIRPORT DIAGRAM CHART (ADC)"
+        return "Airport Diagram Chart (ADC)"
 
     return ""
 
@@ -440,12 +457,31 @@ def build_chart_name(
 
         upper = text.upper()
 
-        # Jeppesen airport-plan conventions when a title is not text-extractable.
-        if re.search(r"\b(?:10|20|30)-9S\w*\b", upper):
+        chart_number_match = re.search(
+            r"\b(?:10|20|30)-(?:1|4|9)[A-Z0-9]*\b",
+            "\n".join(
+                line for line in get_lines(text)[:18]
+                if "TERMINAL CHART DATA CYCLE" not in line.upper()
+            ).upper()
+        )
+
+        chart_number = (
+            chart_number_match.group(0)
+            if chart_number_match
+            else ""
+        )
+
+        if re.fullmatch(r"(?:10|20|30)-9", chart_number):
+            return "Airport Diagram Chart (ADC)"
+
+        if re.fullmatch(r"(?:10|20|30)-9S[A-Z0-9]*", chart_number):
             return "MINIMUMS"
 
-        if re.search(r"\b(?:10|20|30)-9\b", upper):
-            return "AIRPORT DIAGRAM CHART (ADC)"
+        if re.fullmatch(r"(?:10|20|30)-1P[A-Z0-9]*", chart_number):
+            return "AIRPORT BRIEFING"
+
+        if re.fullmatch(r"(?:10|20|30)-1R[A-Z0-9]*", chart_number):
+            return "RADAR MINIMUM ALTITUDES"
 
         return "AIRPORT CHART"
 
