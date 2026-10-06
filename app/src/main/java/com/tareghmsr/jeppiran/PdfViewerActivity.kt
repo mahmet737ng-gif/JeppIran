@@ -91,7 +91,7 @@ private val locationPermissionLauncher =
         } else {
 
             updateGpsText(
-                "GPS: permission denied"
+                "GPS • PERMISSION DENIED"
             )
         }
     }
@@ -116,7 +116,7 @@ private val locationPermissionLauncher =
             5 * 60 * 1000L
 
         private const val METAR_DISPLAY_DURATION =
-            8000L
+            30000L
 
         private const val TOP_CROP_PERCENT =
             0.014f
@@ -1190,7 +1190,7 @@ private val locationPermissionLauncher =
             ).apply {
 
                 text =
-                    "GPS: waiting..."
+                    "GPS • WAITING"
 
                 textSize =
                     11f
@@ -1449,6 +1449,34 @@ private val locationPermissionLauncher =
         )
 
 
+        metarIcon =
+            toolbarButton(
+                "",
+                10f
+            ).apply {
+                contentDescription =
+                    "Show cached weather"
+
+                setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.ic_weather,
+                    0,
+                    0,
+                    0
+                )
+
+                setOnClickListener {
+                    toggleCachedMetarBanner()
+                }
+            }
+
+        topToolbar.addView(
+            metarIcon,
+            toolbarButtonParams(
+                42.dp
+            )
+        )
+
+
         aircraftPositionButton =
             toolbarButton(
                 "✈",
@@ -1603,68 +1631,108 @@ private val locationPermissionLauncher =
 
         tools.addView(
             toolButton(
-                "✎  PEN",
-                Tool.PEN
+                "PEN",
+                Tool.PEN,
+                R.drawable.ic_pen
             ),
             toolButtonParams(
-                62.dp
+                72.dp
             )
         )
 
 
         tools.addView(
             toolButton(
-                "▰  HIGHLIGHT",
-                Tool.HIGHLIGHT
+                "HIGHLIGHT",
+                Tool.HIGHLIGHT,
+                R.drawable.ic_highlight
             ),
             toolButtonParams(
-                94.dp
+                108.dp
             )
         )
 
 
         tools.addView(
             toolButton(
-                "T  TEXT",
-                Tool.TEXT
+                "TEXT",
+                Tool.TEXT,
+                R.drawable.ic_text
             ),
             toolButtonParams(
-                62.dp
+                72.dp
             )
         )
 
 
         tools.addView(
             toolButton(
-                "⌫  ERASER",
-                Tool.ERASER
+                "ERASER",
+                Tool.ERASER,
+                R.drawable.ic_eraser
             ),
             toolButtonParams(
-                78.dp
+                88.dp
+            )
+        )
+
+
+        val color =
+            toolbarButton(
+                "",
+                11f
+            ).apply {
+
+                contentDescription =
+                    "Annotation colors"
+
+                setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.ic_palette,
+                    0,
+                    0,
+                    0
+                )
+
+                setOnClickListener {
+                    showAnnotationColorDialog()
+                }
+            }
+
+
+        tools.addView(
+            color,
+            toolButtonParams(
+                50.dp
             )
         )
 
 
         val clear =
             toolbarButton(
-                "CLR",
+                "",
                 11f
-            )
+            ).apply {
 
+                contentDescription =
+                    "Clear all annotations"
 
-        clear.contentDescription =
-            "Clear all annotations"
+                setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.ic_clear,
+                    0,
+                    0,
+                    0
+                )
 
-
-        clear.setOnClickListener {
-            showClearAllDialog()
-        }
+                setOnClickListener {
+                    showClearAllDialog()
+                }
+            }
 
 
         tools.addView(
             clear,
-            toolbarButtonParams(
-                52.dp
+            toolButtonParams(
+                50.dp
             )
         )
 
@@ -1699,29 +1767,6 @@ private val locationPermissionLauncher =
 
 
     private fun buildMetarBanner() {
-
-        metarIcon = TextView(this).apply {
-            text = "☁︎☀"
-            textSize = 20f
-            gravity = Gravity.CENTER
-            setTextColor(Color.WHITE)
-            background = roundedBackground(
-                Color.argb(210, 22, 44, 56),
-                Color.argb(130, 75, 205, 205),
-                18
-            )
-            visibility = View.GONE
-            setOnClickListener { requestMetarIfAirportChanged(true) }
-        }
-
-        root.addView(
-            metarIcon,
-            FrameLayout.LayoutParams(54.dp, 46.dp).apply {
-                gravity = Gravity.TOP or Gravity.END
-                topMargin = 116.dp
-                rightMargin = 12.dp
-            }
-        )
 
         metarBanner =
             TextView(
@@ -3948,7 +3993,7 @@ private val locationPermissionLauncher =
     }
 
 
-    private fun requestMetarIfAirportChanged(force: Boolean = false) {
+    private fun requestMetarIfAirportChanged() {
 
         if (
             currentIcao.isBlank()
@@ -3957,18 +4002,24 @@ private val locationPermissionLauncher =
         }
 
 
-        if (!force && lastMetarIcao == currentIcao) {
+        if (
+            lastMetarIcao ==
+            currentIcao
+        ) {
             return
         }
 
 
-        lastMetarIcao = currentIcao
-        if (::metarIcon.isInitialized) metarIcon.visibility = View.GONE
+        lastMetarIcao =
+            currentIcao
+
+        lastMetarValue =
+            ""
 
 
         requestMetar(
             currentIcao,
-            true
+            false
         )
     }
 
@@ -4072,21 +4123,33 @@ private val locationPermissionLauncher =
 
 
                     if (
-                        parsed == null
+                        parsed != null
                     ) {
 
-                        hideMetarBanner(
-                            false
-                        )
+                        lastMetarValue =
+                            parsed
 
-                    } else {
+                        if (
+                            showLoading ||
+                            (
+                                ::metarBanner.isInitialized &&
+                                metarBanner.visibility ==
+                                    View.VISIBLE
+                            )
+                        ) {
 
-                        if (parsed != lastMetarValue) {
-                            lastMetarValue = parsed
-                            showMetarBanner(parsed)
-                        } else if (showLoading) {
-                            hideMetarBanner(false)
+                            showMetarBanner(
+                                parsed
+                            )
                         }
+
+                    } else if (
+                        showLoading
+                    ) {
+
+                        showMetarBanner(
+                            "$airportIcao METAR • no report available"
+                        )
                     }
                 }
 
@@ -4098,7 +4161,8 @@ private val locationPermissionLauncher =
 
                     if (
                         requestId ==
-                        metarRequestId
+                        metarRequestId &&
+                        showLoading
                     ) {
 
                         hideMetarBanner(
@@ -4195,6 +4259,47 @@ private val locationPermissionLauncher =
     }
 
 
+    private fun toggleCachedMetarBanner() {
+
+        if (
+            !::metarBanner.isInitialized
+        ) {
+            return
+        }
+
+
+        if (
+            metarBanner.visibility ==
+            View.VISIBLE
+        ) {
+
+            hideMetarBanner(
+                true
+            )
+
+            return
+        }
+
+
+        val cached =
+            lastMetarValue
+
+
+        showMetarBanner(
+            if (
+                cached.isBlank()
+            ) {
+
+                "$currentIcao METAR • no cached report yet"
+
+            } else {
+
+                cached
+            }
+        )
+    }
+
+
     private fun showMetarBanner(
         value: String
     ) {
@@ -4215,9 +4320,6 @@ private val locationPermissionLauncher =
 
 
         metarBanner.text = value
-        if (::metarIcon.isInitialized) metarIcon.visibility = View.GONE
-
-
         metarBanner.visibility =
             View.VISIBLE
 
@@ -4285,14 +4387,12 @@ private val locationPermissionLauncher =
                         1f
 
                     metarBanner.translationY = 0f
-                    if (::metarIcon.isInitialized) metarIcon.visibility = View.VISIBLE
                 }
                 .start()
 
         } else {
 
             metarBanner.visibility = View.GONE
-            if (::metarIcon.isInitialized) metarIcon.visibility = View.VISIBLE
         }
     }
 
@@ -4442,7 +4542,7 @@ private val locationPermissionLauncher =
         ) {
 
             updateGpsText(
-                "GPS: location services are off"
+                "GPS • LOCATION OFF"
             )
 
             return
@@ -4516,109 +4616,90 @@ private val locationPermissionLauncher =
     }
 
     private fun updateGpsLabel() {
-        if (!positionResumed || !AircraftPositionStore.isEnabled(this)) return
+
+        if (
+            !positionResumed ||
+            !AircraftPositionStore.isEnabled(
+                this
+            )
+        ) {
+            return
+        }
+
 
         if (
             SimulatorLocationStore.isConnected()
         ) {
+
             updateSimulatorLabel()
+
             return
         }
-
-        val location =
-            lastGpsLocation
 
 
         if (
-            location == null
+            lastGpsLocation == null
         ) {
 
             updateGpsText(
-                "GPS: waiting..."
+                "GPS • WAITING"
             )
 
             return
         }
 
 
-        val lat =
-            String.format(
-                Locale.US,
-                "%.6f",
-                location.latitude
-            )
-
-
-        val lon =
-            String.format(
-                Locale.US,
-                "%.6f",
-                location.longitude
-            )
-
-
         updateGpsText(
-            "GPS: $lat, $lon"
+            "GPS • ACTIVE"
         )
 
-        if (::chartView.isInitialized) {
+
+        if (
+            ::chartView.isInitialized
+        ) {
+
             chartView.invalidate()
         }
     }
 
 
     private fun updateSimulatorLabel() {
-        if (!positionResumed || !AircraftPositionStore.isEnabled(this)) return
+
+        if (
+            !positionResumed ||
+            !AircraftPositionStore.isEnabled(
+                this
+            )
+        ) {
+            return
+        }
+
 
         val position =
             SimulatorLocationStore.getPosition()
 
+
         if (
             position == null
         ) {
+
             updateGpsText(
-                "SIM: waiting..."
+                "SIM • WAITING"
             )
+
             return
         }
 
-        val lat =
-            String.format(
-                Locale.US,
-                "%.6f",
-                position.latitude
-            )
-
-        val lon =
-            String.format(
-                Locale.US,
-                "%.6f",
-                position.longitude
-            )
-
-        val altitude =
-            position.altitudeMeters?.let {
-                String.format(
-                    Locale.US,
-                    "  ALT %.0f m",
-                    it
-                )
-            }.orEmpty()
-
-        val heading =
-            position.headingDegrees?.let {
-                String.format(
-                    Locale.US,
-                    "  HDG %.0f°",
-                    it
-                )
-            }.orEmpty()
 
         updateGpsText(
-            "SIM: $lat, $lon$altitude$heading"
+            "SIM • ACTIVE"
         )
 
-        if (::chartView.isInitialized) {
+
+        if (
+            ::chartView.isInitialized
+        ) {
+
             chartView.invalidate()
         }
     }
@@ -4642,8 +4723,7 @@ private val locationPermissionLauncher =
     private fun updateToolButtonStates() {
 
         if (
-            !::toolScroll
-                .isInitialized
+            !::toolScroll.isInitialized
         ) {
             return
         }
@@ -4669,44 +4749,17 @@ private val locationPermissionLauncher =
                     ?: continue
 
 
-            val label =
-                view.text
-                    .toString()
-                    .uppercase(
-                        Locale.US
-                    )
+            val tool =
+                view.tag as? Tool
+                    ?: continue
 
 
             val active =
-                when (
-                    label
-                ) {
-
-                    "SELECT" ->
-                        annotationTool == null
-
-                    "PEN" ->
-                        annotationTool ==
-                            Tool.PEN
-
-                    "HIGHLIGHT" ->
-                        annotationTool ==
-                            Tool.HIGHLIGHT
-
-                    "TEXT" ->
-                        annotationTool ==
-                            Tool.TEXT
-
-                    "ERASER" ->
-                        annotationTool ==
-                            Tool.ERASER
-
-                    else ->
-                        false
-                }
+                annotationTool ==
+                    tool
 
 
-            view.setTextColor(
+            val tint =
                 if (
                     active
                 ) {
@@ -4721,7 +4774,17 @@ private val locationPermissionLauncher =
 
                     Color.WHITE
                 }
+
+
+            view.setTextColor(
+                tint
             )
+
+            view.compoundDrawableTintList =
+                android.content.res.ColorStateList
+                    .valueOf(
+                        tint
+                    )
         }
     }
 
@@ -4819,7 +4882,8 @@ private val locationPermissionLauncher =
 
     private fun toolButton(
         label: String,
-        tool: Tool
+        tool: Tool,
+        iconRes: Int
     ):
         TextView {
 
@@ -4840,6 +4904,19 @@ private val locationPermissionLauncher =
                 Color.WHITE
             )
 
+            setCompoundDrawablesWithIntrinsicBounds(
+                iconRes,
+                0,
+                0,
+                0
+            )
+
+            compoundDrawablePadding =
+                4.dp
+
+            tag =
+                tool
+
             isClickable =
                 true
 
@@ -4848,14 +4925,43 @@ private val locationPermissionLauncher =
 
 
             setOnClickListener {
-                if (annotationTool == tool) {
-                    annotationTool = null
-                    annotationMode = false
-                } else {
-                    annotationTool = tool
-                    annotationMode = true
+
+                if (
+                    tool ==
+                    Tool.ERASER &&
+                    annotationTool !=
+                    Tool.ERASER
+                ) {
+
+                    showEraserModeDialog()
+
+                    return@setOnClickListener
                 }
+
+
+                if (
+                    annotationTool ==
+                    tool
+                ) {
+
+                    annotationTool =
+                        null
+
+                    annotationMode =
+                        false
+
+                } else {
+
+                    annotationTool =
+                        tool
+
+                    annotationMode =
+                        true
+                }
+
+
                 updateToolButtonStates()
+
                 chartView.invalidate()
             }
         }

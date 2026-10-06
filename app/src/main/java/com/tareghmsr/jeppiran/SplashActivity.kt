@@ -25,7 +25,7 @@ import kotlin.math.sin
 
 class SplashActivity : AppCompatActivity() {
 
-    private val splashDuration = 3000L
+    private val splashDuration = 4000L
 
     override fun onCreate(
         savedInstanceState: Bundle?
@@ -176,7 +176,7 @@ class SplashActivity : AppCompatActivity() {
                 ).apply {
 
                     duration =
-                        2850L
+                        3850L
 
                     interpolator =
                         DecelerateInterpolator(
@@ -1200,7 +1200,7 @@ class SplashActivity : AppCompatActivity() {
                 )
 
             canvas.drawText(
-                "VERSION 1.0.0",
+                "VERSION 1.0.1",
                 width / 2f,
                 height - 30f,
                 textPaint
