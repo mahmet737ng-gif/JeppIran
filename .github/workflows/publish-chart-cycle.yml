@@ -8,7 +8,7 @@ on:
         required: false
         default: ""
       data_version:
-        description: "Optional data version, e.g. 26-21"
+        description: "Optional data version, e.g. V2621"
         required: false
         default: ""
       cycle:
@@ -78,9 +78,7 @@ jobs:
           VERSION="$INPUT_VERSION"
           if [ -z "$VERSION" ]; then
             if echo "$CYCLE" | grep -Eq "^[0-9]{4}$"; then
-              YY=${CYCLE:0:2}
-              NN=${CYCLE:2:2}
-              VERSION="${YY}-${NN}"
+              VERSION="V$CYCLE"
             else
               VERSION="$CYCLE"
             fi
