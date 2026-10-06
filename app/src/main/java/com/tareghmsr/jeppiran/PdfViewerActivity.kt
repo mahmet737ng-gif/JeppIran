@@ -131,6 +131,15 @@ private val locationPermissionLauncher =
 
         private const val SWIPE_THRESHOLD =
             0.22f
+
+        private const val DOUBLE_TAP_TIMEOUT_MS =
+            280L
+
+        private const val DOUBLE_TAP_ZOOM =
+            2.0f
+
+        private const val VIEWER_TRANSITION_MS =
+            220L
     }
 
 
@@ -283,6 +292,20 @@ private val locationPermissionLauncher =
     private var controlsVisible =
         true
 
+    private var chartTreeOpen =
+        false
+
+    private var viewerChromeTransitioning =
+        false
+
+    private var lastVisibleChartInsets =
+        intArrayOf(
+            0,
+            0,
+            0,
+            0
+        )
+
 
     private var annotationMode =
         false
@@ -316,6 +339,9 @@ private val locationPermissionLauncher =
         null
 
     private lateinit var aircraftPositionButton:
+        TextView
+
+    private lateinit var chartTreeButton:
         TextView
 
 
@@ -1300,6 +1326,28 @@ private val locationPermissionLauncher =
         )
 
 
+        chartTreeButton =
+            toolbarButton(
+                "☰",
+                19f
+            ).apply {
+
+                contentDescription =
+                    "Bookmarks"
+
+                setOnClickListener {
+                    toggleChartTree()
+                }
+            }
+
+        topToolbar.addView(
+            chartTreeButton,
+            toolbarButtonParams(
+                44.dp
+            )
+        )
+
+
         val search =
             toolbarButton(
                 "⌕",
@@ -1880,6 +1928,9 @@ private val locationPermissionLauncher =
 
                 elevation =
                     10.dp.toFloat()
+
+                visibility =
+                    View.GONE
             }
 
 
@@ -2248,6 +2299,62 @@ private val locationPermissionLauncher =
     }
 
 
+    private fun toggleChartTree() {
+
+        if (
+            !controlsVisible
+        ) {
+            return
+        }
+
+        chartTreeOpen =
+            !chartTreeOpen
+
+        if (
+            chartTreeOpen
+        ) {
+
+            setViewerChromeVisible(
+                chartTreePanel,
+                true
+            )
+
+        } else {
+
+            setViewerChromeVisible(
+                chartTreePanel,
+                false
+            )
+        }
+
+        chartTreeButton.background =
+            roundedBackground(
+                if (
+                    chartTreeOpen
+                ) {
+
+                    Color.rgb(
+                        8,
+                        89,
+                        154
+                    )
+
+                } else {
+
+                    Color.TRANSPARENT
+                },
+                Color.rgb(
+                    47,
+                    217,
+                    255
+                ),
+                18
+            )
+
+        updateOverlayInsets()
+    }
+
+
     private fun updateChartTreeLayout() {
 
         if (
@@ -2514,6 +2621,12 @@ private val locationPermissionLauncher =
 
         if (
             !::chartView.isInitialized
+        ) {
+            return
+        }
+
+        if (
+            viewerChromeTransitioning
         ) {
             return
         }
@@ -5454,10 +5567,20 @@ private val locationPermissionLauncher =
             ::chartTreePanel.isInitialized
         ) {
 
-            setViewerChromeVisible(
-                chartTreePanel,
-                true
-            )
+            if (
+                chartTreeOpen
+            ) {
+
+                setViewerChromeVisible(
+                    chartTreePanel,
+                    true
+                )
+
+            } else {
+
+                chartTreePanel.visibility =
+                    View.GONE
+            }
         }
 
 
