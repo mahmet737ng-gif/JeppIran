@@ -968,11 +968,7 @@ class ChartsActivity :
                     dark
                 ) {
 
-                    Color.rgb(
-                        25,
-                        35,
-                        45
-                    )
+                    getColor(R.color.jeppiran_surface)
 
                 } else {
 
@@ -986,19 +982,11 @@ class ChartsActivity :
                     dark
                 ) {
 
-                    Color.rgb(
-                        55,
-                        70,
-                        84
-                    )
+                    getColor(R.color.jeppiran_card_stroke)
 
                 } else {
 
-                    Color.rgb(
-                        224,
-                        230,
-                        236
-                    )
+                    getColor(R.color.jeppiran_card_stroke)
                 }
             )
         }
@@ -1015,13 +1003,7 @@ class ChartsActivity :
             cornerRadius =
                 12.dp.toFloat()
 
-            setColor(
-                Color.rgb(
-                    25,
-                    115,
-                    125
-                )
-            )
+            setColor(getColor(R.color.jeppiran_accent))
         }
     }
 

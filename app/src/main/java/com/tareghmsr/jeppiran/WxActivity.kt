@@ -135,10 +135,10 @@ class WxActivity : AppCompatActivity() {
             ).apply {
 
                 text =
-                    "WX"
+                    "AVIATION WEATHER"
 
                 textSize =
-                    27f
+                    25f
 
                 typeface =
                     Typeface.DEFAULT_BOLD
@@ -1920,11 +1920,7 @@ class WxActivity : AppCompatActivity() {
                         isDarkTheme()
                     ) {
 
-                        Color.rgb(
-                            25,
-                            35,
-                            45
-                        )
+                        getColor(R.color.jeppiran_surface)
 
                     } else {
 
@@ -1938,19 +1934,11 @@ class WxActivity : AppCompatActivity() {
                         isDarkTheme()
                     ) {
 
-                        Color.rgb(
-                            55,
-                            70,
-                            84
-                        )
+                        getColor(R.color.jeppiran_card_stroke)
 
                     } else {
 
-                        Color.rgb(
-                            224,
-                            230,
-                            236
-                        )
+                        getColor(R.color.jeppiran_card_stroke)
                     }
                 )
             }
@@ -1961,19 +1949,11 @@ class WxActivity : AppCompatActivity() {
             isDarkTheme()
         ) {
 
-            Color.rgb(
-                14,
-                22,
-                30
-            )
+            getColor(R.color.jeppiran_background)
 
         } else {
 
-            Color.rgb(
-                244,
-                247,
-                250
-            )
+            getColor(R.color.jeppiran_background)
         }
 
 
@@ -1982,19 +1962,11 @@ class WxActivity : AppCompatActivity() {
             isDarkTheme()
         ) {
 
-            Color.rgb(
-                241,
-                245,
-                248
-            )
+            getColor(R.color.jeppiran_text)
 
         } else {
 
-            Color.rgb(
-                18,
-                32,
-                48
-            )
+            getColor(R.color.jeppiran_text)
         }
 
 
@@ -2003,19 +1975,11 @@ class WxActivity : AppCompatActivity() {
             isDarkTheme()
         ) {
 
-            Color.rgb(
-                158,
-                174,
-                187
-            )
+            getColor(R.color.jeppiran_text_secondary)
 
         } else {
 
-            Color.rgb(
-                91,
-                107,
-                122
-            )
+            getColor(R.color.jeppiran_text_secondary)
         }
 
 

@@ -2,6 +2,7 @@ package com.tareghmsr.jeppiran
 
 import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.view.Gravity
 import android.widget.LinearLayout
@@ -164,6 +165,9 @@ class SettingsActivity :
                     textColor()
                 )
 
+                background =
+                    roundedSurface()
+
                 gravity =
                     Gravity.CENTER_VERTICAL
 
@@ -246,6 +250,9 @@ class SettingsActivity :
                 setTextColor(
                     textColor()
                 )
+
+                background =
+                    roundedSurface()
 
                 gravity =
                     Gravity.CENTER_VERTICAL
@@ -361,6 +368,9 @@ class SettingsActivity :
                     textColor()
                 )
 
+                background =
+                    roundedSurface()
+
                 gravity =
                     Gravity.CENTER_VERTICAL
 
@@ -399,23 +409,39 @@ class SettingsActivity :
         )
     }
 
+    private fun roundedSurface() =
+        GradientDrawable().apply {
+
+            shape =
+                GradientDrawable.RECTANGLE
+
+            cornerRadius =
+                16.dp.toFloat()
+
+            setColor(
+                getColor(
+                    R.color.jeppiran_surface
+                )
+            )
+
+            setStroke(
+                1.dp,
+                getColor(
+                    R.color.jeppiran_card_stroke
+                )
+            )
+        }
+
+
     private fun backgroundColor():
         Int {
 
         return if (
             isDarkTheme()
         ) {
-            Color.rgb(
-                14,
-                22,
-                30
-            )
+            getColor(R.color.jeppiran_background)
         } else {
-            Color.rgb(
-                244,
-                247,
-                250
-            )
+            getColor(R.color.jeppiran_background)
         }
     }
 
@@ -425,17 +451,9 @@ class SettingsActivity :
         return if (
             isDarkTheme()
         ) {
-            Color.rgb(
-                241,
-                245,
-                248
-            )
+            getColor(R.color.jeppiran_text)
         } else {
-            Color.rgb(
-                18,
-                32,
-                48
-            )
+            getColor(R.color.jeppiran_text)
         }
     }
 
@@ -445,17 +463,9 @@ class SettingsActivity :
         return if (
             isDarkTheme()
         ) {
-            Color.rgb(
-                158,
-                174,
-                187
-            )
+            getColor(R.color.jeppiran_text_secondary)
         } else {
-            Color.rgb(
-                91,
-                107,
-                122
-            )
+            getColor(R.color.jeppiran_text_secondary)
         }
     }
 

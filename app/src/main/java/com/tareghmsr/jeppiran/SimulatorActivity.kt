@@ -72,7 +72,7 @@ class SimulatorActivity : AppCompatActivity() {
         })
 
         content.addView(TextView(this).apply {
-            text = "Use simulator aircraft position instead of the Android GPS."
+            text = "Use simulator aircraft position in the chart viewer instead of the Android GPS."
             textSize = 13f
             setTextColor(secondaryTextColor())
             setPadding(0, 6.dp, 0, 18.dp)
@@ -319,21 +319,21 @@ class SimulatorActivity : AppCompatActivity() {
 
     private fun roundedSurface() = android.graphics.drawable.GradientDrawable().apply {
         cornerRadius = 14.dp.toFloat()
-        setColor(if (isDarkTheme()) Color.rgb(25, 35, 45) else Color.WHITE)
-        setStroke(1.dp, if (isDarkTheme()) Color.rgb(55, 70, 84) else Color.rgb(224, 230, 236))
+        setColor(if (isDarkTheme()) getColor(R.color.jeppiran_surface) else Color.WHITE)
+        setStroke(1.dp, if (isDarkTheme()) getColor(R.color.jeppiran_card_stroke) else getColor(R.color.jeppiran_card_stroke))
     }
 
     private fun lp(height: Int, l: Int = 0, t: Int = 4, r: Int = 0, b: Int = 4) =
         LinearLayout.LayoutParams(-1, height.dp).apply { setMargins(l.dp, t.dp, r.dp, b.dp) }
 
     private fun backgroundColor() =
-        if (isDarkTheme()) Color.rgb(14, 22, 30) else Color.rgb(244, 247, 250)
+        if (isDarkTheme()) getColor(R.color.jeppiran_background) else getColor(R.color.jeppiran_background)
 
     private fun textColor() =
-        if (isDarkTheme()) Color.rgb(241, 245, 248) else Color.rgb(18, 32, 48)
+        if (isDarkTheme()) getColor(R.color.jeppiran_text) else getColor(R.color.jeppiran_text)
 
     private fun secondaryTextColor() =
-        if (isDarkTheme()) Color.rgb(158, 174, 187) else Color.rgb(91, 107, 122)
+        if (isDarkTheme()) getColor(R.color.jeppiran_text_secondary) else getColor(R.color.jeppiran_text_secondary)
 
     private fun isDarkTheme() =
         (resources.configuration.uiMode and android.content.res.Configuration.UI_MODE_NIGHT_MASK) ==

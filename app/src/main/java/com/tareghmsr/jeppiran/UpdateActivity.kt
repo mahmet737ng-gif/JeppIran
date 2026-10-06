@@ -809,11 +809,7 @@ class UpdateActivity : AppCompatActivity() {
                         isDarkTheme()
                     ) {
 
-                        Color.rgb(
-                            25,
-                            35,
-                            45
-                        )
+                        getColor(R.color.jeppiran_surface)
 
                     } else {
 
@@ -827,19 +823,11 @@ class UpdateActivity : AppCompatActivity() {
                         isDarkTheme()
                     ) {
 
-                        Color.rgb(
-                            55,
-                            70,
-                            84
-                        )
+                        getColor(R.color.jeppiran_card_stroke)
 
                     } else {
 
-                        Color.rgb(
-                            224,
-                            230,
-                            236
-                        )
+                        getColor(R.color.jeppiran_card_stroke)
                     }
                 )
             }
@@ -850,19 +838,11 @@ class UpdateActivity : AppCompatActivity() {
             isDarkTheme()
         ) {
 
-            Color.rgb(
-                14,
-                22,
-                30
-            )
+            getColor(R.color.jeppiran_background)
 
         } else {
 
-            Color.rgb(
-                244,
-                247,
-                250
-            )
+            getColor(R.color.jeppiran_background)
         }
 
 
@@ -871,19 +851,11 @@ class UpdateActivity : AppCompatActivity() {
             isDarkTheme()
         ) {
 
-            Color.rgb(
-                241,
-                245,
-                248
-            )
+            getColor(R.color.jeppiran_text)
 
         } else {
 
-            Color.rgb(
-                18,
-                32,
-                48
-            )
+            getColor(R.color.jeppiran_text)
         }
 
 
@@ -892,19 +864,11 @@ class UpdateActivity : AppCompatActivity() {
             isDarkTheme()
         ) {
 
-            Color.rgb(
-                158,
-                174,
-                187
-            )
+            getColor(R.color.jeppiran_text_secondary)
 
         } else {
 
-            Color.rgb(
-                91,
-                107,
-                122
-            )
+            getColor(R.color.jeppiran_text_secondary)
         }
 
 
