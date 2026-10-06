@@ -32,7 +32,7 @@ object ThemeManager {
                 )
                 .getString(
                     KEY_THEME,
-                    SYSTEM
+                    DARK
                 )
 
         AppCompatDelegate.setDefaultNightMode(
@@ -93,7 +93,7 @@ object ThemeManager {
             )
             .getString(
                 KEY_THEME,
-                SYSTEM
+                DARK
             )
             ?: SYSTEM
     }
