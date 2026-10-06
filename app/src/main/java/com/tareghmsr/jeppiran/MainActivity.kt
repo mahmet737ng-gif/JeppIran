@@ -94,6 +94,10 @@ class MainActivity :
             insets
         }
 
+        findViewById<android.widget.TextView>(
+            R.id.versionText
+        ).text = AppVersion.name(this)
+
         findViewById<android.view.View>(
             R.id.cardCharts
         ).setOnClickListener {
@@ -159,7 +163,7 @@ class MainActivity :
 
             Toast.makeText(
                 this,
-                "JeppIran\nDeveloper: Taregh Msr",
+                "JEPPIRAN " + AppVersion.name(this) + "\nDeveloper: Taregh Msr",
                 Toast.LENGTH_SHORT
             ).show()
         }

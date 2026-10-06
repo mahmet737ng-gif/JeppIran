@@ -126,7 +126,7 @@ private val locationPermissionLauncher =
         private const val NEIGHBOR_RENDER_QUALITY = 3.0f
 
         private const val MAX_ZOOM =
-            3.0f
+            3.5f
 
         private const val SWIPE_THRESHOLD =
             0.22f

@@ -20,14 +20,16 @@
         android:allowBackup="true"
         android:icon="@drawable/ic_jeppiran_launcher"
         android:roundIcon="@drawable/ic_jeppiran_launcher"
-        android:label="JeppIran"
+        android:label="JEPPIRAN"
         android:supportsRtl="true"
         android:theme="@style/Theme.JeppIran">
 
 
         <activity
             android:name=".SplashActivity"
-            android:exported="true">
+            android:exported="true"
+            android:configChanges="orientation|screenSize|screenLayout"
+            android:screenOrientation="unspecified">
 
             <intent-filter>
 

@@ -300,7 +300,7 @@ class SettingsActivity :
             TextView(this).apply {
 
                 text =
-                    "JeppIran  •  Application Settings"
+                    "JEPPIRAN  •  " + AppVersion.name(this@SettingsActivity)
 
                 textSize =
                     11f
