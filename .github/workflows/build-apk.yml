@@ -81,13 +81,7 @@ jobs:
         run: |
           set -euo pipefail
           python -m pip install -r scripts/requirements-georef.txt
-          REVIEWED_PAGES="$(python - <<'PY'
-import json
-from pathlib import Path
-data=json.loads(Path('docs/georeferencing/reviewed-pages.json').read_text())
-print(','.join(str(x) for x in data.get('pages', [])))
-PY
-)"
+          REVIEWED_PAGES="$(python -c "import json; from pathlib import Path; d=json.loads(Path('docs/georeferencing/reviewed-pages.json').read_text()); print(','.join(str(x) for x in d.get('pages', [])))")"
           python scripts/extract_chart_georef.py \
             --pdf Iran2620.pdf \
             --index app/src/main/assets/charts-current.json \
