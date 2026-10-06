@@ -34,7 +34,7 @@
                     android:layout_height="82dp"
                     android:contentDescription="JEPPIRAN logo"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/ic_jeppiran_launcher" />
+                    android:src="@drawable/jeppiran_logo" />
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
