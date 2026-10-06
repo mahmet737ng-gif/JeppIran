@@ -81,7 +81,15 @@ jobs:
         run: |
           set -euo pipefail
           python -m pip install -r scripts/requirements-georef.txt
-          python scripts/extract_chart_georef.py             --pdf Iran2620.pdf             --index app/src/main/assets/charts-current.json             --output app/src/main/assets/chart-georef.json             --audit docs/georeferencing/georef-audit.json             --data-version v18             --cycle 2026-20
+          REVIEWED_PAGES="$(python -c 'import json; print(",".join(str(p) for p in json.load(open("docs/georeferencing/reviewed-pages.json"))["pages"]))')"
+          python scripts/extract_chart_georef.py \
+            --pdf Iran2620.pdf \
+            --index app/src/main/assets/charts-current.json \
+            --reviewed-pages "$REVIEWED_PAGES" \
+            --output app/src/main/assets/chart-georef.json \
+            --audit docs/georeferencing/georef-audit.json \
+            --data-version v18 \
+            --cycle 2026-20
           python scripts/validate_chart_georef.py
 
       - name: Test and build signed APK
