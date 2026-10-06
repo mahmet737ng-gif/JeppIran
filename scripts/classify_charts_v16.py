@@ -376,42 +376,43 @@ def detect_chart_number(
 
     existing = text_value(
         existing
-    ).upper()
+    ).upper().strip()
 
-    patterns = [
-        r"\b(?:10|20|30)-9[A-Z0-9]*\b",
-        r"\b10-3[A-Z0-9]*\b",
-        r"\b10-2[A-Z0-9]*\b",
-        r"\b10-1[A-Z0-9]*\b",
-        r"\b19-[0-9A-Z]+\b",
-        r"\b20-[0-9A-Z]+\b",
-        r"\b(?:11|13|14|15|16|17)-[A-Z0-9]*\b",
-    ]
-
-    for pattern in patterns:
-
+    if existing and existing != "20-2026":
         match = re.search(
-            pattern,
+            r"\b(?:10|11|12|13|14|15|16|17|18|19|20|30|31|32)-[0-9A-Z]+\b",
             existing,
         )
-
         if match:
             return match.group(0)
 
-    upper = text.upper()
-
-    for pattern in patterns:
-
-        match = re.search(
-            pattern,
-            upper,
+    # Only inspect the Jeppesen header area. Explicitly ignore the generated
+    # JeppView print line so terminal-data-cycle strings such as 20-2026 can
+    # never be mistaken for a chart index.
+    lines = [
+        clean
+        for clean in (
+            re.sub(r"\s+", " ", line).strip()
+            for line in text.splitlines()
         )
+        if clean
+        and "PRINTED FROM JEPPVIEW" not in clean.upper()
+        and "TERMINAL CHART DATA CYCLE" not in clean.upper()
+    ]
 
-        if match:
-            return match.group(0)
+    header = "\n".join(lines[:18]).upper()
+
+    candidates = re.findall(
+        r"\b(?:10|11|12|13|14|15|16|17|18|19|20|30|31|32)-[0-9A-Z]+\b",
+        header,
+    )
+
+    for candidate in candidates:
+        if candidate == "20-2026":
+            continue
+        return candidate
 
     return ""
-
 
 # ============================================================
 # PAGE SIGNALS
@@ -560,46 +561,19 @@ def classify(
 
         cn = chart_number.upper()
 
-        # Main airport diagrams / minima / parking pages.
-        if re.fullmatch(
-            r"(?:10|20|30)-9[A-Z0-9]*",
-            cn,
-        ):
-            return "Airport"
-
-        # 10-2 = STAR
-        if re.fullmatch(
-            r"10-2[A-Z0-9]*",
-            cn,
-        ):
+        if re.fullmatch(r"10-2[A-Z0-9]*", cn):
             return "STAR"
 
-        # 10-3 = SID
-        if re.fullmatch(
-            r"10-3[A-Z0-9]*",
-            cn,
-        ):
+        if re.fullmatch(r"10-3[A-Z0-9]*", cn):
             return "SID"
 
-        # 10-1 pages are airport briefing / radar / operational support.
-        if re.fullmatch(
-            r"10-1[A-Z0-9]*",
-            cn,
-        ):
+        if re.fullmatch(r"(?:10|20|30)-(?:1|4|9)[A-Z0-9]*", cn):
             return "Airport"
 
-        # 19-/20- airport qualification and airport support pages.
-        if re.fullmatch(
-            r"(?:19|20)-[A-Z0-9]+",
-            cn,
-        ):
+        if re.fullmatch(r"19-[A-Z0-9]+", cn):
             return "Airport"
 
-        # Approach
-        if re.fullmatch(
-            r"(?:11|13|14|15|16|17)-[A-Z0-9]*",
-            cn,
-        ):
+        if re.fullmatch(r"(?:11|12|13|14|15|16|17|18|31|32)-[A-Z0-9]+", cn):
             return "Approach"
 
     # --------------------------------------------------------
