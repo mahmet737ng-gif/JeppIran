@@ -6662,6 +6662,13 @@ private val locationPermissionLauncher =
         private var selectedTextIndex =
             -1
 
+        private var textDragActive =
+            false
+
+        private var textGestureStartCenter:
+            PointF? =
+            null
+
 
         private var textStartScale =
             1f
@@ -6978,7 +6985,11 @@ private val locationPermissionLauncher =
             points:
                 List<PointF>,
             highlight:
-                Boolean
+                Boolean,
+            color:
+                Int,
+            width:
+                Float
         ) {
 
             if (
@@ -6995,7 +7006,12 @@ private val locationPermissionLauncher =
                                 )
                             }
                             .toMutableList(),
-                        highlight
+                        highlight,
+                        color,
+                        width.coerceIn(
+                            1f,
+                            64f
+                        )
                     )
                 )
             }
@@ -7009,7 +7025,8 @@ private val locationPermissionLauncher =
             scale: Float,
             rotation: Float,
             align: TextAlign,
-            size: Float
+            size: Float,
+            color: Int
         ) {
 
             if (
@@ -7037,15 +7054,16 @@ private val locationPermissionLauncher =
                     safe.x,
                     safe.y,
                     scale.coerceIn(
-                        0.35f,
-                        MAX_ZOOM
+                        0.25f,
+                        8f
                     ),
                     rotation,
                     align,
                     size.coerceIn(
                         10f,
                         100f
-                    )
+                    ),
+                    color
                 )
             )
         }
@@ -7065,8 +7083,18 @@ private val locationPermissionLauncher =
                 1f,
                 0f,
                 align,
-                20f
+                textDefaultSize,
+                textColor
             )
+        }
+
+
+        fun selectLastText() {
+
+            selectedTextIndex =
+                texts.lastIndex
+
+            invalidate()
         }
 
 
@@ -7241,8 +7269,28 @@ private val locationPermissionLauncher =
                 drawPoints(
                     canvas,
                     it,
-                    annotationTool ==
+                    if (
+                        annotationTool ==
                         Tool.HIGHLIGHT
+                    ) {
+
+                        highlightColor
+
+                    } else {
+
+                        penColor
+                    },
+                    if (
+                        annotationTool ==
+                        Tool.HIGHLIGHT
+                    ) {
+
+                        highlightWidth
+
+                    } else {
+
+                        penWidth
+                    }
                 )
             }
 
@@ -7658,7 +7706,8 @@ private val locationPermissionLauncher =
                 drawPoints(
                     canvas,
                     stroke.points,
-                    stroke.highlight
+                    stroke.color,
+                    stroke.width
                 )
             }
 
@@ -7687,7 +7736,7 @@ private val locationPermissionLauncher =
                 )
 
 
-                textPaint.color = textColor
+                textPaint.color = item.color
                 textPaint.textSize = item.size
 
 
@@ -7754,7 +7803,8 @@ private val locationPermissionLauncher =
         private fun drawPoints(
             canvas: Canvas,
             points: List<PointF>,
-            highlight: Boolean
+            color: Int,
+            width: Float
         ) {
 
             if (
@@ -7765,20 +7815,11 @@ private val locationPermissionLauncher =
             }
 
 
-            strokePaint.color = if (highlight) highlightColor else penColor
-
+            strokePaint.color =
+                color
 
             strokePaint.strokeWidth =
-                if (
-                    highlight
-                ) {
-
-                    22f
-
-                } else {
-
-                    5f
-                }
+                width
 
 
             val path =
@@ -8393,7 +8434,9 @@ private val locationPermissionLauncher =
                             rebuilt.add(
                                 StoredStroke(
                                     segment,
-                                    stroke.highlight
+                                    stroke.highlight,
+                                    stroke.color,
+                                    stroke.width
                                 )
                             )
                         }
@@ -8657,20 +8700,40 @@ private val locationPermissionLauncher =
                         false
 
 
-                    selectedTextIndex =
-                        if (
-                            annotationTool == null
-                        ) {
+                    if (
+                        annotationTool ==
+                        null
+                    ) {
 
+                        val hit =
                             findTextAt(
                                 event.x,
                                 event.y
                             )
 
+
+                        if (
+                            hit >=
+                            0
+                        ) {
+
+                            selectedTextIndex =
+                                hit
+
+                            textDragActive =
+                                true
+
                         } else {
 
-                            -1
+                            textDragActive =
+                                false
                         }
+
+                    } else {
+
+                        textDragActive =
+                            false
+                    }
 
 
                     when (
@@ -8811,6 +8874,19 @@ private val locationPermissionLauncher =
 
                         textStartY =
                             item.y
+
+
+                        val gestureCenter =
+                            pointerCenter(
+                                event
+                            )
+
+
+                        textGestureStartCenter =
+                            screenToImage(
+                                gestureCenter.x,
+                                gestureCenter.y
+                            )
                     }
 
 
@@ -8865,8 +8941,8 @@ private val locationPermissionLauncher =
                                             textStartDistance
                                         )
                                         .coerceIn(
-                                            0.35f,
-                                            MAX_ZOOM
+                                            0.25f,
+                                            8f
                                         )
                             }
 
@@ -8888,10 +8964,7 @@ private val locationPermissionLauncher =
 
 
                             val start =
-                                screenToImage(
-                                    downX,
-                                    downY
-                                )
+                                textGestureStartCenter
 
 
                             val current =
@@ -9041,7 +9114,8 @@ private val locationPermissionLauncher =
 
                             if (
                                 selectedTextIndex >=
-                                0
+                                0 &&
+                                textDragActive
                             ) {
 
                                 val current =
@@ -9217,7 +9291,29 @@ private val locationPermissionLauncher =
                                             }
                                             .toMutableList(),
                                         annotationTool ==
+                                            Tool.HIGHLIGHT,
+                                        if (
+                                            annotationTool ==
                                             Tool.HIGHLIGHT
+                                        ) {
+
+                                            highlightColor
+
+                                        } else {
+
+                                            penColor
+                                        },
+                                        if (
+                                            annotationTool ==
+                                            Tool.HIGHLIGHT
+                                        ) {
+
+                                            highlightWidth
+
+                                        } else {
+
+                                            penWidth
+                                        }
                                     )
                                 )
 
@@ -9242,6 +9338,7 @@ private val locationPermissionLauncher =
                             if (
                                 selectedTextIndex >=
                                 0 &&
+                                textDragActive &&
                                 !moved
                             ) {
 
@@ -9249,6 +9346,22 @@ private val locationPermissionLauncher =
                                     selectedTextIndex
                                 )
 
+
+                                return true
+                            }
+
+
+                            if (
+                                selectedTextIndex >=
+                                0 &&
+                                !textDragActive &&
+                                !moved
+                            ) {
+
+                                selectedTextIndex =
+                                    -1
+
+                                invalidate()
 
                                 return true
                             }
