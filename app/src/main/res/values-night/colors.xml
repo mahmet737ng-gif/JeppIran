@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
- <color name="jeppiran_background">#07121B</color>
- <color name="jeppiran_surface">#101D28</color>
- <color name="jeppiran_surface_alt">#162632</color>
- <color name="jeppiran_text">#F1F6F9</color>
- <color name="jeppiran_text_secondary">#9EB0BF</color>
- <color name="jeppiran_card_stroke">#2C4252</color>
- <color name="jeppiran_accent">#25D7EC</color>
- <color name="jeppiran_blue">#3D8BFF</color>
- <color name="jeppiran_magenta">#FF3CA4</color>
+    <color name="jeppiran_background">#020B1A</color>
+    <color name="jeppiran_surface">#071A31</color>
+    <color name="jeppiran_surface_alt">#0A2442</color>
+    <color name="jeppiran_text">#F7FAFF</color>
+    <color name="jeppiran_text_secondary">#A6B6CE</color>
+    <color name="jeppiran_card_stroke">#176CB5</color>
+    <color name="jeppiran_accent">#2FD9FF</color>
+    <color name="jeppiran_blue">#1677FF</color>
+    <color name="jeppiran_magenta">#FF36B9</color>
 </resources>
