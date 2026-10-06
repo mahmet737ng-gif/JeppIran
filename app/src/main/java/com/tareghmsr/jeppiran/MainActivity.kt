@@ -511,4 +511,11 @@ class MainActivity :
                 }
             }
     }
+    private val Int.dp: Int
+        get() =
+            (
+                this *
+                    resources.displayMetrics.density
+                ).toInt()
+
 }
