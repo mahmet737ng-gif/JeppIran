@@ -119,7 +119,10 @@ private val locationPermissionLauncher =
             30000L
 
         private const val TOP_CROP_PERCENT =
-            0.014f
+            0f
+
+        private const val PRINT_NOTICE_MASK_PERCENT =
+            0.021f
 
         private const val ACTIVE_RENDER_QUALITY =
             3.0f
@@ -1933,11 +1936,20 @@ private val locationPermissionLauncher =
             "Airport",
             "STAR",
             "SID",
-            "Approach",
-            "Other"
+            "Approach"
         )
             .forEach {
                 group ->
+
+                val displayPages =
+                    repository
+                        .getDisplayChartsForAirport(
+                            currentIcao
+                        )
+                        .map {
+                            it.page
+                        }
+                        .toSet()
 
                 val items =
                     airportCharts
@@ -1946,7 +1958,9 @@ private val locationPermissionLauncher =
                             indexed ->
 
                             indexed.value.category ==
-                                group
+                                group &&
+                                indexed.value.page in
+                                    displayPages
                         }
 
 
@@ -2086,21 +2100,10 @@ private val locationPermissionLauncher =
                         ).apply {
 
                             text =
-                                listOf(
-                                    chart.chartNumber,
-                                    chart.name.ifBlank {
-                                        "Chart " +
-                                            chart.page
-                                    }
-                                )
-                                    .filter {
-                                        value ->
-
-                                        value.isNotBlank()
-                                    }
-                                    .joinToString(
-                                        "  •  "
-                                    )
+                                chart.name.ifBlank {
+                                    "Chart " +
+                                        chart.page
+                                }
 
                             textSize =
                                 12f
@@ -2858,12 +2861,26 @@ private val locationPermissionLauncher =
 
 
         titleText.text =
-            "JEPPIRAN\n" +
+            if (
+                resources.configuration.orientation ==
+                    Configuration.ORIENTATION_LANDSCAPE
+            ) {
+
                 currentIcao +
-                " • " +
-                chartTitle.ifBlank {
-                    "Chart"
-                }
+                    " • " +
+                    chartTitle.ifBlank {
+                        "Chart"
+                    }
+
+            } else {
+
+                "JEPPIRAN\n" +
+                    currentIcao +
+                    " • " +
+                    chartTitle.ifBlank {
+                        "Chart"
+                    }
+            }
 
 
         pageText.text =
@@ -3050,6 +3067,28 @@ private val locationPermissionLauncher =
                     null,
                     PdfRenderer.Page
                         .RENDER_MODE_FOR_DISPLAY
+                )
+
+
+                /*
+                 * JeppView injects a print/cycle notice into the source page.
+                 * Do not crop the PDF: masking preserves page geometry and all
+                 * georeference coordinates exactly.
+                 */
+                Canvas(
+                    bitmap
+                ).drawRect(
+                    0f,
+                    0f,
+                    bitmap.width.toFloat(),
+                    bitmap.height *
+                        PRINT_NOTICE_MASK_PERCENT,
+                    Paint().apply {
+                        color =
+                            Color.WHITE
+                        style =
+                            Paint.Style.FILL
+                    }
                 )
 
 
