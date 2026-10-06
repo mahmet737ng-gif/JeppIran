@@ -83,6 +83,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".ChangesAirportsActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".ChartChangesActivity"
             android:exported="false" />
 
