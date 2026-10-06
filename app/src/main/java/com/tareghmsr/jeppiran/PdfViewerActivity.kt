@@ -1264,9 +1264,9 @@ private val locationPermissionLauncher =
 
                 setBackgroundColor(
                     Color.rgb(
-                        17,
-                        25,
-                        33
+                        3,
+                        18,
+                        42
                     )
                 )
 
@@ -1591,9 +1591,9 @@ private val locationPermissionLauncher =
 
                 setBackgroundColor(
                     Color.rgb(
-                        21,
-                        30,
-                        39
+                        5,
+                        24,
+                        52
                     )
                 )
             }
@@ -1742,9 +1742,9 @@ private val locationPermissionLauncher =
 
                 setBackgroundColor(
                     Color.rgb(
-                        17,
-                        25,
-                        33
+                        3,
+                        18,
+                        42
                     )
                 )
 
@@ -1827,9 +1827,9 @@ private val locationPermissionLauncher =
 
                 setBackgroundColor(
                     Color.rgb(
-                        17,
-                        25,
-                        33
+                        3,
+                        18,
+                        42
                     )
                 )
 
@@ -1871,9 +1871,9 @@ private val locationPermissionLauncher =
                 setBackgroundColor(
                     Color.argb(
                         245,
-                        16,
-                        24,
-                        32
+                        3,
+                        17,
+                        38
                     )
                 )
 
@@ -2050,7 +2050,7 @@ private val locationPermissionLauncher =
                                     "▶ "
                                 }
                                 ) +
-                                group +
+                                (if (group == "Approach") "APP" else group) +
                                 "  (" +
                                 items.size +
                                 ")"
@@ -2181,9 +2181,9 @@ private val locationPermissionLauncher =
                                     ) {
 
                                         Color.rgb(
-                                            112,
-                                            28,
-                                            80
+                                            8,
+                                            89,
+                                            154
                                         )
 
                                     } else {
@@ -2195,9 +2195,9 @@ private val locationPermissionLauncher =
                                     ) {
 
                                         Color.rgb(
-                                            244,
-                                            51,
-                                            156
+                                            47,
+                                            217,
+                                            255
                                         )
 
                                     } else {
@@ -2344,14 +2344,14 @@ private val locationPermissionLauncher =
                 background =
                     roundedBackground(
                         Color.rgb(
-                            22,
-                            44,
-                            56
+                            5,
+                            38,
+                            68
                         ),
                         Color.rgb(
-                            75,
-                            205,
-                            205
+                            47,
+                            217,
+                            255
                         ),
                         14
                     )
