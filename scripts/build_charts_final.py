@@ -133,25 +133,52 @@ def canonical_airport_name(text, chart_number, existing):
 
     # Taxi-route diagrams often contain HOT SPOTS legends; the route title is
     # the primary page identity and must win over that secondary legend.
-    if "TAXI ROUTES ARRIVAL" in joined or "TAXI ROUTE ARRIVAL" in joined:
-        m = re.search(
-            r"\bTAXI\s+ROUTES?\s+ARRIVAL"
-            r"(?:\s+RWYS?\s+[0-9]{1,2}[LRC]?"
+    def taxi_route_title(kind):
+        marker = f"TAXI ROUTES {kind}"
+        pos = joined.find(marker)
+        if pos < 0:
+            marker = f"TAXI ROUTE {kind}"
+            pos = joined.find(marker)
+        if pos < 0:
+            return ""
+
+        snippet = joined[pos:pos + 280]
+
+        rwys = re.search(
+            r"\b(RWYS?)\s+"
+            r"((?:[0-9]{1,2}[LRC]?"
             r"(?:\s*,\s*[0-9]{1,2}[LRC]?)*"
-            r"(?:\s*\([0-9A-Z, /-]+\))?)?",
-            joined,
+            r")(?:\s*\([0-9A-Z, /-]+\))?)",
+            snippet,
         )
-        return clean(m.group(0)) if m else "TAXI ROUTES ARRIVAL"
+
+        if rwys:
+            return f"TAXI ROUTES {kind} {rwys.group(1)} {clean(rwys.group(2))}"
+
+        # Text extraction on dense diagrams can move the word RWYS away from
+        # the runway pair. Recover the first unmistakable runway+route code.
+        pair = re.search(
+            r"\b([0-9]{1,2}[LRC]?\s*,\s*[0-9]{1,2}[LRC]?"
+            r"\s*\([0-9A-Z, /-]+\))",
+            snippet,
+        )
+        if pair:
+            return f"TAXI ROUTES {kind} RWYS {clean(pair.group(1))}"
+
+        single = re.search(
+            r"\b([0-9]{1,2}[LRC]?\s*\([0-9A-Z, /-]+\))",
+            snippet,
+        )
+        if single:
+            return f"TAXI ROUTES {kind} RWY {clean(single.group(1))}"
+
+        return f"TAXI ROUTES {kind}"
+
+    if "TAXI ROUTES ARRIVAL" in joined or "TAXI ROUTE ARRIVAL" in joined:
+        return taxi_route_title("ARRIVAL")
 
     if "TAXI ROUTES DEPARTURE" in joined or "TAXI ROUTE DEPARTURE" in joined:
-        m = re.search(
-            r"\bTAXI\s+ROUTES?\s+DEPARTURE"
-            r"(?:\s+RWYS?\s+[0-9]{1,2}[LRC]?"
-            r"(?:\s*,\s*[0-9]{1,2}[LRC]?)*"
-            r"(?:\s*\([0-9A-Z, /-]+\))?)?",
-            joined,
-        )
-        return clean(m.group(0)) if m else "TAXI ROUTES DEPARTURE"
+        return taxi_route_title("DEPARTURE")
 
     if "HOT SPOTS" in upper and "STRAIGHT-IN RWY" not in upper:
         return "HOT SPOTS"
