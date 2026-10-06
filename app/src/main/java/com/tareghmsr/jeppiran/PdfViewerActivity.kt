@@ -8465,7 +8465,9 @@ private val locationPermissionLauncher =
                     rebuilt.add(
                         StoredStroke(
                             segment,
-                            stroke.highlight
+                            stroke.highlight,
+                            stroke.color,
+                            stroke.width
                         )
                     )
                 }
