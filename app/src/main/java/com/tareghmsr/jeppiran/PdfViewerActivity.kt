@@ -1287,10 +1287,7 @@ private val locationPermissionLauncher =
             ).apply {
 
                 orientation =
-                    LinearLayout.HORIZONTAL
-
-                gravity =
-                    Gravity.CENTER_VERTICAL
+                    LinearLayout.VERTICAL
 
                 setBackgroundColor(
                     Color.rgb(
@@ -1305,23 +1302,42 @@ private val locationPermissionLauncher =
             }
 
 
+        val primaryRow =
+            LinearLayout(
+                this
+            ).apply {
+
+                orientation =
+                    LinearLayout.HORIZONTAL
+
+                gravity =
+                    Gravity.CENTER_VERTICAL
+
+                setPadding(
+                    4.dp,
+                    2.dp,
+                    4.dp,
+                    2.dp
+                )
+            }
+
+
         val back =
             toolbarButton(
                 "‹",
                 24f
-            )
+            ).apply {
+
+                contentDescription =
+                    "Back"
+
+                setOnClickListener {
+                    finish()
+                }
+            }
 
 
-        back.contentDescription =
-            "Back"
-
-
-        back.setOnClickListener {
-            finish()
-        }
-
-
-        topToolbar.addView(
+        primaryRow.addView(
             back,
             toolbarButtonParams(
                 44.dp
@@ -1343,7 +1359,8 @@ private val locationPermissionLauncher =
                 }
             }
 
-        topToolbar.addView(
+
+        primaryRow.addView(
             chartTreeButton,
             toolbarButtonParams(
                 44.dp
@@ -1355,19 +1372,18 @@ private val locationPermissionLauncher =
             toolbarButton(
                 "⌕",
                 22f
-            )
+            ).apply {
+
+                contentDescription =
+                    "Search"
+
+                setOnClickListener {
+                    showSearchDialog()
+                }
+            }
 
 
-        search.contentDescription =
-            "Search"
-
-
-        search.setOnClickListener {
-            showSearchDialog()
-        }
-
-
-        topToolbar.addView(
+        primaryRow.addView(
             search,
             toolbarButtonParams(
                 44.dp
@@ -1381,20 +1397,23 @@ private val locationPermissionLauncher =
             ).apply {
 
                 text =
-                    "JEPPIRAN\n" +
-                        currentIcao +
+                    currentIcao +
                         " • " +
                         chartTitle.ifBlank {
                             "Chart"
                         }
 
-                textSize = 14f
+                textSize =
+                    13f
 
                 typeface =
                     Typeface.DEFAULT_BOLD
 
                 maxLines =
                     2
+
+                ellipsize =
+                    android.text.TextUtils.TruncateAt.END
 
                 gravity =
                     Gravity.CENTER_VERTICAL
@@ -1404,15 +1423,15 @@ private val locationPermissionLauncher =
                 )
 
                 setPadding(
-                    4.dp,
+                    8.dp,
                     0,
-                    4.dp,
+                    8.dp,
                     0
                 )
             }
 
 
-        topToolbar.addView(
+        primaryRow.addView(
             titleText,
             LinearLayout.LayoutParams(
                 0,
@@ -1422,19 +1441,59 @@ private val locationPermissionLauncher =
         )
 
 
+        topToolbar.addView(
+            primaryRow,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                58.dp
+            )
+        )
+
+
+        val actionRow =
+            LinearLayout(
+                this
+            ).apply {
+
+                orientation =
+                    LinearLayout.HORIZONTAL
+
+                gravity =
+                    Gravity.CENTER_VERTICAL
+
+                setPadding(
+                    6.dp,
+                    0,
+                    6.dp,
+                    2.dp
+                )
+
+                setBackgroundColor(
+                    Color.rgb(
+                        4,
+                        22,
+                        49
+                    )
+                )
+            }
+
+
         pageText =
             TextView(
                 this
             ).apply {
 
                 textSize =
-                    10f
+                    11f
 
                 maxLines =
-                    2
+                    1
+
+                ellipsize =
+                    android.text.TextUtils.TruncateAt.END
 
                 gravity =
-                    Gravity.CENTER
+                    Gravity.CENTER_VERTICAL
 
                 setTextColor(
                     Color.rgb(
@@ -1443,26 +1502,45 @@ private val locationPermissionLauncher =
                         200
                     )
                 )
+
+                setPadding(
+                    8.dp,
+                    0,
+                    6.dp,
+                    0
+                )
             }
 
 
-        val previous =
-            toolbarButton("‹", 25f)
-
-
-        previous.contentDescription =
-            "Previous chart"
-
-
-        previous.setOnClickListener {
-
-            navigateWithinAirport(
-                -1
+        actionRow.addView(
+            pageText,
+            LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                1f
             )
-        }
+        )
 
 
-        topToolbar.addView(
+        val previous =
+            toolbarButton(
+                "‹",
+                25f
+            ).apply {
+
+                contentDescription =
+                    "Previous chart"
+
+                setOnClickListener {
+
+                    navigateWithinAirport(
+                        -1
+                    )
+                }
+            }
+
+
+        actionRow.addView(
             previous,
             toolbarButtonParams(
                 42.dp
@@ -1471,22 +1549,24 @@ private val locationPermissionLauncher =
 
 
         val next =
-            toolbarButton("›", 25f)
+            toolbarButton(
+                "›",
+                25f
+            ).apply {
+
+                contentDescription =
+                    "Next chart"
+
+                setOnClickListener {
+
+                    navigateWithinAirport(
+                        1
+                    )
+                }
+            }
 
 
-        next.contentDescription =
-            "Next chart"
-
-
-        next.setOnClickListener {
-
-            navigateWithinAirport(
-                1
-            )
-        }
-
-
-        topToolbar.addView(
+        actionRow.addView(
             next,
             toolbarButtonParams(
                 42.dp
@@ -1499,6 +1579,7 @@ private val locationPermissionLauncher =
                 "",
                 10f
             ).apply {
+
                 contentDescription =
                     "Show cached weather"
 
@@ -1514,7 +1595,8 @@ private val locationPermissionLauncher =
                 }
             }
 
-        topToolbar.addView(
+
+        actionRow.addView(
             metarIcon,
             toolbarButtonParams(
                 42.dp
@@ -1526,45 +1608,75 @@ private val locationPermissionLauncher =
             toolbarButton(
                 "✈",
                 18f
-            )
+            ).apply {
 
-        aircraftPositionButton.contentDescription =
-            "Aircraft position"
+                contentDescription =
+                    "Aircraft position"
+            }
+
 
         updateToggleButton(
             aircraftPositionButton,
-            AircraftPositionStore.isEnabled(this)
+            AircraftPositionStore.isEnabled(
+                this
+            )
         )
 
+
         aircraftPositionButton.setOnClickListener {
+
             val enabled =
-                !AircraftPositionStore.isEnabled(this)
+                !AircraftPositionStore.isEnabled(
+                    this
+                )
+
 
             AircraftPositionStore.setEnabled(
                 this,
                 enabled
             )
 
+
             updateToggleButton(
                 aircraftPositionButton,
                 enabled
             )
 
-            if (enabled) {
-                locationPermissionRequested = false
+
+            if (
+                enabled
+            ) {
+
+                locationPermissionRequested =
+                    false
+
                 startGps()
+
                 updateGpsLabel()
+
             } else {
+
                 stopGps()
-                handler.removeCallbacks(simulatorUpdateRunnable)
-                updateGpsText("Aircraft position OFF")
-                if (::chartView.isInitialized) {
+
+                handler.removeCallbacks(
+                    simulatorUpdateRunnable
+                )
+
+                updateGpsText(
+                    "Aircraft position OFF"
+                )
+
+                if (
+                    ::chartView.isInitialized
+                ) {
+
                     chartView.invalidate()
                 }
             }
         }
 
-        topToolbar.addView(
+
+        actionRow.addView(
             aircraftPositionButton,
             toolbarButtonParams(
                 42.dp
@@ -1580,11 +1692,11 @@ private val locationPermissionLauncher =
                 toolbarButton(
                     "◐",
                     18f
-                )
+                ).apply {
 
-
-            invert.contentDescription =
-                "Invert chart"
+                    contentDescription =
+                        "Invert chart"
+                }
 
 
             updateToggleButton(
@@ -1611,7 +1723,7 @@ private val locationPermissionLauncher =
             }
 
 
-            topToolbar.addView(
+            actionRow.addView(
                 invert,
                 toolbarButtonParams(
                     42.dp
@@ -1620,11 +1732,20 @@ private val locationPermissionLauncher =
         }
 
 
+        topToolbar.addView(
+            actionRow,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                46.dp
+            )
+        )
+
+
         root.addView(
             topToolbar,
             FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
-                58.dp
+                104.dp
             ).apply {
 
                 gravity =
@@ -1729,7 +1850,7 @@ private val locationPermissionLauncher =
                     Gravity.TOP
 
                 topMargin =
-                    58.dp
+                    104.dp
             }
         )
 
@@ -1754,7 +1875,7 @@ private val locationPermissionLauncher =
                     Gravity.TOP
 
                 topMargin =
-                    106.dp
+                    152.dp
             }
         )
 
@@ -2423,7 +2544,7 @@ private val locationPermissionLauncher =
                     10.dp
 
                 topMargin =
-                    114.dp
+                    160.dp
             }
         )
     }
@@ -2480,7 +2601,7 @@ private val locationPermissionLauncher =
 
             toolsParams.topMargin =
                 insetTop +
-                    58.dp
+                    104.dp
 
             toolsParams.leftMargin =
                 insetLeft
@@ -2500,7 +2621,7 @@ private val locationPermissionLauncher =
 
             eraserParams.topMargin =
                 insetTop +
-                    106.dp
+                    152.dp
 
             eraserParams.leftMargin =
                 insetLeft
@@ -2861,26 +2982,11 @@ private val locationPermissionLauncher =
 
 
         titleText.text =
-            if (
-                resources.configuration.orientation ==
-                    Configuration.ORIENTATION_LANDSCAPE
-            ) {
-
-                currentIcao +
-                    " • " +
-                    chartTitle.ifBlank {
-                        "Chart"
-                    }
-
-            } else {
-
-                "JEPPIRAN\n" +
-                    currentIcao +
-                    " • " +
-                    chartTitle.ifBlank {
-                        "Chart"
-                    }
-            }
+            currentIcao +
+                " • " +
+                chartTitle.ifBlank {
+                    "Chart"
+                }
 
 
         pageText.text =
