@@ -34,67 +34,163 @@ def page_text(item):
     return str(item.get("text") or item.get("raw_text") or item.get("content") or "")
 
 
+def chart_number_from_text(text, existing=""):
+    current = clean(existing).upper()
+    if current and current != "20-2026":
+        return current
+
+    lines = [
+        clean(line)
+        for line in text.splitlines()
+        if clean(line)
+        and "PRINTED FROM JEPPVIEW" not in line.upper()
+        and "TERMINAL CHART DATA CYCLE" not in line.upper()
+    ]
+
+    # Some large airport diagrams place the Jeppesen index away from the
+    # normal text header, so inspect the whole extracted page after excluding
+    # the injected cycle notice.
+    body = "\n".join(lines).upper()
+
+    matches = re.findall(
+        r"\b(?:10|11|12|13|14|15|16|17|18|19|20|30|31|32)-[0-9A-Z]+\b",
+        body,
+    )
+
+    for value in matches:
+        if value != "20-2026":
+            return value
+
+    return ""
+
+
 def canonical_airport_name(text, chart_number, existing):
     upper = text.upper()
     joined = clean(text).upper()
-    number = (chart_number or "").upper()
+    number = clean(chart_number).upper()
 
-    if "AIRPORT INFORMATION" in upper or "AERODROME INFORMATION" in upper:
-        return "AIRPORT INFORMATION"
-    if "AIRPORT BRIEFING" in upper:
-        return "AIRPORT BRIEFING"
-    if "AIRPORT QUALIFICATION" in upper:
-        return "AIRPORT QUALIFICATION"
-    if "RADAR MINIMUM ALTITUDES" in upper:
-        return "RADAR MINIMUM ALTITUDES"
-    if "INS COORDINATES" in upper:
-        return "INS COORDINATES"
-    if "PARKING STANDS" in upper and "COORD" in upper:
-        return "PARKING STANDS & COORDS"
-    if "PARKING/DOCKING" in upper or "PARKING / DOCKING" in upper or "DOCKING CHART" in upper:
-        return "PARKING/DOCKING CHART (PDC)"
+    # Jeppesen index is authoritative for the base airport diagram/minima.
+    if re.fullmatch(r"(?:10|20|30)-9", number):
+        return "Airport Diagram Chart (ADC)"
 
-    taxi = re.search(
-        r"\bTAXI\s+ROUTES?\s+(?:ARRIVAL|DEPARTURE)"
-        r"(?:\s+RWYS?\s+[0-9LRC, &/()A-Z.-]+)?",
-        joined,
-    )
-    if taxi:
-        return taxi.group(0).rstrip(" .,-")
-
-    if "STRAIGHT-IN RWY" in upper or (
-        "TAKE-OFF" in upper and "ADEQUATE VIS REF" in upper
-    ) or re.fullmatch(r"(?:10|20|30)-9S[A-Z0-9]*", number):
+    if re.fullmatch(r"(?:10|20|30)-9S[A-Z0-9]*", number):
         return "MINIMUMS"
+
+    if re.fullmatch(r"(?:10|20|30)-1P[A-Z0-9]*", number):
+        return "AIRPORT BRIEFING"
+
+    if re.fullmatch(r"(?:10|20|30)-1R[A-Z0-9]*", number):
+        return "RADAR MINIMUM ALTITUDES"
 
     if re.fullmatch(r"19-[A-Z0-9]+", number):
         return "AIRPORT QUALIFICATION"
 
-    if re.fullmatch(r"10-1P[A-Z0-9]*", number):
+    if number == "30-4":
+        return "NOISE"
+
+    if re.fullmatch(r"30-9B|30-9C", number):
+        return "PARKING/DOCKING CHART (PDC)"
+
+    if re.fullmatch(r"30-9D|30-9E", number):
+        return "INS COORDINATES"
+
+    if re.fullmatch(r"30-9H", number):
+        return "TAXIWAY RESTRICTIONS"
+
+    if re.fullmatch(r"30-9J[A-Z0-9]*", number):
+        return "PUSHBACK PROCEDURES"
+
+    if re.fullmatch(r"30-9U[A-Z0-9]*", number):
+        return "REMOTE PARK AREA HOLDING PROCEDURE"
+
+    if number == "30-9K" and "FOR CODE F ONLY" in upper:
+        return "Airport Diagram Chart (ADC) - CODE F"
+
+    if re.fullmatch(r"30-9A1", number):
+        return "HOT SPOTS"
+
+    if re.fullmatch(r"30-9A", number) and "ADDITIONAL RUNWAY INFORMATION" in upper:
+        return "ADDITIONAL RUNWAY INFORMATION"
+
+    # Dotted Jeppesen extracted headings are common (.AIRPORT.BRIEFING.).
+    if re.search(r"AIRPORT[.\s]+QUALIFICATION", upper):
+        return "AIRPORT QUALIFICATION"
+
+    if re.search(r"AIRPORT[.\s]+BRIEFING", upper):
         return "AIRPORT BRIEFING"
 
-    if re.fullmatch(r"10-1R[A-Z0-9]*", number):
+    if re.search(r"RADAR[.\s]+MINIMUM[.\s]+ALTITUDES", upper):
         return "RADAR MINIMUM ALTITUDES"
 
-    if re.fullmatch(r"(?:10|20|30)-9", number):
-        return "AIRPORT DIAGRAM CHART (ADC)"
+    if "ADDITIONAL RUNWAY INFORMATION" in upper:
+        return "ADDITIONAL RUNWAY INFORMATION"
 
-    # Preserve a specific extracted airport-page title if it is useful.
-    e = clean(existing).upper()
-    if e and e not in {"AIRPORT CHART", "AERODROME CHART"} and not e.startswith("CHART PAGE"):
-        return e
+    if "HOT SPOTS" in upper and "STRAIGHT-IN RWY" not in upper:
+        return "HOT SPOTS"
 
-    # Most lettered *-9 apron pages are detailed parking/docking pages when no
-    # stronger title was extractable. Keep a conservative generic label.
-    if re.fullmatch(r"(?:10|20|30)-9[A-Z][A-Z0-9]*", number):
+    if "PUSHBACK PROCEDURES" in upper:
+        return "PUSHBACK PROCEDURES"
+
+    if "REMOTE PARK AREA HOLDING PROCEDURE" in upper:
+        return "REMOTE PARK AREA HOLDING PROCEDURE"
+
+    if "TWY RESTRICTIONS" in upper or "TAXIWAY RESTRICTIONS" in upper:
+        return "TAXIWAY RESTRICTIONS"
+
+    # On the 10-9A format the plan view plus stand-coordinate table is the
+    # page referenced by the ADC as PARKING STANDS & COORDS.
+    if number == "10-9A" and "INS COORDINATES" in upper and "APRON" in upper:
+        return "PARKING STANDS & COORDS"
+
+    if "PARKING STANDS" in upper and "COORD" in upper:
+        return "PARKING STANDS & COORDS"
+
+    if "INS COORDINATES" in upper:
+        return "INS COORDINATES"
+
+    if (
+        "PARKING/DOCKING" in upper
+        or "PARKING / DOCKING" in upper
+        or "DOCKING CHART" in upper
+    ):
         return "PARKING/DOCKING CHART (PDC)"
+
+    taxi = re.search(
+        r"\bTAXI\s+ROUTES?\s+(ARRIVAL|DEPARTURE)"
+        r"(?:\s+RWYS?\s+[0-9]{1,2}[LRC]?"
+        r"(?:\s*,\s*[0-9]{1,2}[LRC]?)*"
+        r"(?:\s*\([0-9A-Z, /-]+\))?)?",
+        joined,
+    )
+    if taxi:
+        return clean(taxi.group(0)).rstrip(" .,-")
+
+    if "AIRPORT INFORMATION" in upper or "AERODROME INFORMATION" in upper:
+        return "AIRPORT INFORMATION"
+
+    if "STRAIGHT-IN RWY" in upper:
+        return "MINIMUMS"
+
+    if "AIRPORT CHART" in upper or "AERODROME CHART" in upper:
+        return "Airport Diagram Chart (ADC)"
+
+    e = clean(existing)
+    if (
+        e
+        and not e.upper().startswith("CHART PAGE")
+        and "JEPPVIEW" not in e.upper()
+        and "20-2026" not in e.upper()
+    ):
+        return e
 
     return "AIRPORT CHART"
 
-
 def canonical_name(item, category):
     text = page_text(item)
-    number = clean(item.get("chart_number"))
+    number = chart_number_from_text(
+        text,
+        item.get("chart_number")
+    )
     raw = clean(item.get("name"))
     raw = BRACKET.sub("", raw)
     raw = clean(raw).strip(" ,")
@@ -118,31 +214,66 @@ def canonical_name(item, category):
 
 
 def infer_category(item):
-    category = clean(item.get("category"))
-    text = page_text(item).upper()
-    number = clean(item.get("chart_number")).upper()
+    existing = clean(item.get("category"))
+    text = page_text(item)
+    upper = text.upper()
+    number = chart_number_from_text(
+        text,
+        item.get("chart_number")
+    ).upper()
 
-    if category in {"Airport", "STAR", "SID", "Approach"}:
-        return category
+    # Airport-support index ranges take priority over accidental approach
+    # signals such as VOR frequency labels printed on airport diagrams.
+    if re.fullmatch(r"(?:10|20|30)-(?:1|4|9)[A-Z0-9]*", number):
+        return "Airport"
+
+    if re.fullmatch(r"19-[A-Z0-9]+", number):
+        return "Airport"
+
+    if re.fullmatch(r"(?:31|32)-[A-Z0-9]+", number):
+        return "Approach"
+
+    if re.fullmatch(r"10-2[A-Z0-9]*", number):
+        return "STAR"
+
+    if re.fullmatch(r"10-3[A-Z0-9]*", number):
+        return "SID"
+
+    # For complex LTFM 30-2/30-3 sequences use the explicit STAR/SID label
+    # already resolved by the classifier instead of guessing from the index.
+    if existing in {"STAR", "SID"}:
+        return existing
+
+    if existing in {"Airport", "Approach"}:
+        return existing
 
     if (
-        "AIRPORT BRIEFING" in text
-        or "AIRPORT QUALIFICATION" in text
-        or "RADAR MINIMUM ALTITUDES" in text
-        or "INS COORDINATES" in text
-        or "PARKING STANDS" in text
-        or "PARKING/DOCKING" in text
-        or "TAXI ROUTES ARRIVAL" in text
-        or "TAXI ROUTES DEPARTURE" in text
-        or "STRAIGHT-IN RWY" in text
-        or re.fullmatch(r"10-1[A-Z0-9]*", number)
-        or re.fullmatch(r"(?:19|20)-[A-Z0-9]+", number)
-        or re.fullmatch(r"(?:10|20|30)-9[A-Z0-9]*", number)
+        re.search(r"AIRPORT[.\s]+BRIEFING", upper)
+        or re.search(r"AIRPORT[.\s]+QUALIFICATION", upper)
+        or re.search(r"RADAR[.\s]+MINIMUM[.\s]+ALTITUDES", upper)
+        or "INS COORDINATES" in upper
+        or "PARKING STANDS" in upper
+        or "PARKING/DOCKING" in upper
+        or "PUSHBACK PROCEDURES" in upper
+        or "REMOTE PARK AREA HOLDING PROCEDURE" in upper
+        or "TWY RESTRICTIONS" in upper
+        or "TAXIWAY RESTRICTIONS" in upper
+        or "TAXI ROUTES ARRIVAL" in upper
+        or "TAXI ROUTES DEPARTURE" in upper
+        or "STRAIGHT-IN RWY" in upper
     ):
         return "Airport"
 
-    return ""
+    if (
+        "MISSED APCH" in upper
+        or "MISSED APPROACH" in upper
+    ) and (
+        "RWY" in upper
+        or "Rwy" in text
+    ):
+        return "Approach"
 
+    return ""
 
 def is_change_page(text):
     upper = text.upper()
@@ -280,7 +411,10 @@ def main():
             "airport": icao,
             "country": clean(item.get("country")),
             "category": category,
-            "chart_number": clean(item.get("chart_number")),
+            "chart_number": chart_number_from_text(
+                text,
+                item.get("chart_number")
+            ),
             "name": name,
             "pdf_page": pdf_page,
         })
