@@ -36,6 +36,33 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Prepare stable JEPPIRAN signing
+        env:
+          JEPPIRAN_KEYSTORE_B64: ${{ secrets.JEPPIRAN_TEST_KEYSTORE_B64 }}
+          JEPPIRAN_STORE_PASSWORD_SECRET: ${{ secrets.JEPPIRAN_TEST_STORE_PASSWORD }}
+          JEPPIRAN_KEY_ALIAS_SECRET: ${{ secrets.JEPPIRAN_TEST_KEY_ALIAS }}
+          JEPPIRAN_KEY_PASSWORD_SECRET: ${{ secrets.JEPPIRAN_TEST_KEY_PASSWORD }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if [ -z "${JEPPIRAN_KEYSTORE_B64:-}" ] ||              [ -z "${JEPPIRAN_STORE_PASSWORD_SECRET:-}" ] ||              [ -z "${JEPPIRAN_KEY_ALIAS_SECRET:-}" ] ||              [ -z "${JEPPIRAN_KEY_PASSWORD_SECRET:-}" ]; then
+            echo "::error::Stable JEPPIRAN signing secrets are not configured. Refusing to create an APK that cannot update the installed app."
+            exit 1
+          fi
+
+          KEYSTORE_PATH="$RUNNER_TEMP/jeppiran-test.jks"
+          printf '%s' "$JEPPIRAN_KEYSTORE_B64" | base64 --decode > "$KEYSTORE_PATH"
+
+          echo "JEPPIRAN_KEYSTORE_PATH=$KEYSTORE_PATH" >> "$GITHUB_ENV"
+          echo "JEPPIRAN_KEYSTORE_PASSWORD=$JEPPIRAN_STORE_PASSWORD_SECRET" >> "$GITHUB_ENV"
+          echo "JEPPIRAN_KEY_ALIAS=$JEPPIRAN_KEY_ALIAS_SECRET" >> "$GITHUB_ENV"
+          echo "JEPPIRAN_KEY_PASSWORD=$JEPPIRAN_KEY_PASSWORD_SECRET" >> "$GITHUB_ENV"
+
+          VERSION_CODE=$((262000 + GITHUB_RUN_NUMBER))
+          echo "JEPPIRAN_VERSION_CODE=$VERSION_CODE" >> "$GITHUB_ENV"
+          echo "JEPPIRAN_VERSION_NAME=V2620-test.$GITHUB_RUN_NUMBER" >> "$GITHUB_ENV"
+
       - name: Build Debug APK
         run: gradle assembleDebug
 
@@ -53,7 +80,7 @@ jobs:
         run: |
           set -euo pipefail
 
-          cp app/build/outputs/apk/debug/app-debug.apk             JeppIran-latest-debug.apk
+          cp app/build/outputs/apk/debug/app-debug.apk JeppIran-latest-debug.apk
 
           if ! gh release view jeppiran-test >/dev/null 2>&1; then
             gh release create jeppiran-test               --title "JEPPIRAN Test APK"               --notes "Latest installable JEPPIRAN Android test build."
