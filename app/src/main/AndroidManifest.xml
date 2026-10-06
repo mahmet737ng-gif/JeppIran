@@ -103,6 +103,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".PilotIntelligenceActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".PilotToolsSettingsActivity"
             android:exported="false" />
 
