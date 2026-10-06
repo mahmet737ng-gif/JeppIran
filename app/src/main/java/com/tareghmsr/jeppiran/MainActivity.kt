@@ -7,9 +7,50 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.activity.result.contract.ActivityResultContracts
+import android.content.pm.PackageManager
+import android.os.Build
 
 class MainActivity :
     AppCompatActivity() {
+
+    private var pendingUpdateNotice:
+        ChartUpdateNotifier.UpdateNotice? =
+        null
+
+    private val notificationPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { granted ->
+
+            val notice =
+                pendingUpdateNotice
+
+            pendingUpdateNotice =
+                null
+
+            if (
+                granted &&
+                notice != null
+            ) {
+
+                ChartUpdateNotifier
+                    .postNotification(
+                        this,
+                        notice
+                    )
+
+            } else if (
+                notice != null
+            ) {
+
+                ChartUpdateNotifier
+                    .showInAppNotice(
+                        this,
+                        notice
+                    )
+            }
+        }
 
     override fun onCreate(
         savedInstanceState: Bundle?
@@ -122,5 +163,87 @@ class MainActivity :
                 Toast.LENGTH_SHORT
             ).show()
         }
+
+
+        ChartUpdateNotifier
+            .check(
+                this
+            ) { notice ->
+
+                if (
+                    notice ==
+                    null
+                ) {
+                    return@check
+                }
+
+                runOnUiThread {
+
+                    if (
+                        Build.VERSION.SDK_INT >=
+                        33 &&
+                        checkSelfPermission(
+                            android.Manifest
+                                .permission
+                                .POST_NOTIFICATIONS
+                        ) !=
+                        PackageManager.PERMISSION_GRANTED
+                    ) {
+
+                        pendingUpdateNotice =
+                            notice
+
+                        val prefs =
+                            getSharedPreferences(
+                                "jeppiran_update_notifications",
+                                MODE_PRIVATE
+                            )
+
+                        val asked =
+                            prefs.getBoolean(
+                                "permission_asked",
+                                false
+                            )
+
+                        if (
+                            !asked
+                        ) {
+
+                            prefs.edit()
+                                .putBoolean(
+                                    "permission_asked",
+                                    true
+                                )
+                                .apply()
+
+                            notificationPermissionLauncher
+                                .launch(
+                                    android.Manifest
+                                        .permission
+                                        .POST_NOTIFICATIONS
+                                )
+
+                        } else {
+
+                            pendingUpdateNotice =
+                                null
+
+                            ChartUpdateNotifier
+                                .showInAppNotice(
+                                    this,
+                                    notice
+                                )
+                        }
+
+                    } else {
+
+                        ChartUpdateNotifier
+                            .postNotification(
+                                this,
+                                notice
+                            )
+                    }
+                }
+            }
     }
 }
