@@ -7,6 +7,7 @@ on:
       - main
       - work-no-build
       - pilot-ops-suite
+      - efb-lab-v1
 
 permissions:
   contents: write
@@ -96,6 +97,10 @@ jobs:
             --pdf Iran2620.pdf \
             --index app/src/main/assets/charts-current.json \
             --output app/src/main/assets/approach-briefings.json
+          python scripts/build_airport_hotspots.py \
+            --pdf Iran2620.pdf \
+            --index app/src/main/assets/charts-current.json \
+            --output app/src/main/assets/airport-hotspots.json
 
       - name: Test and build signed APK
         run: gradle testDebugUnitTest assembleDebug --stacktrace
