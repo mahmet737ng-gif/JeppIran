@@ -103,6 +103,10 @@
             android:exported="false" />
 
         <activity
+            android:name=".EfbLabActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".PilotToolsSettingsActivity"
             android:exported="false" />
 
