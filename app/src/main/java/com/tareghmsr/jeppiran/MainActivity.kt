@@ -113,12 +113,12 @@ class MainActivity :
         findViewById<android.view.View>(
             R.id.cardEnroute
         ).setOnClickListener {
-
-            Toast.makeText(
-                this,
-                "En-route Charts",
-                Toast.LENGTH_SHORT
-            ).show()
+            startActivity(
+                Intent(
+                    this,
+                    EnrouteActivity::class.java
+                )
+            )
         }
 
         findViewById<android.view.View>(
@@ -160,12 +160,12 @@ class MainActivity :
         findViewById<android.view.View>(
             R.id.cardInfo
         ).setOnClickListener {
-
-            Toast.makeText(
-                this,
-                "JEPPIRAN " + AppVersion.name(this) + "\nDeveloper: Taregh Msr",
-                Toast.LENGTH_SHORT
-            ).show()
+            startActivity(
+                Intent(
+                    this,
+                    InfoActivity::class.java
+                )
+            )
         }
 
 
