@@ -125,6 +125,33 @@ def canonical_airport_name(text, chart_number, existing):
     if "ADDITIONAL RUNWAY INFORMATION" in upper:
         return "ADDITIONAL RUNWAY INFORMATION"
 
+    # 10-9A plan-view + stand table is the page the ADC references as
+    # PARKING STANDS & COORDS. It can also contain hot-spot symbols.
+    if number == "10-9A" and "INS COORDINATES" in upper and "APRON" in upper:
+        return "PARKING STANDS & COORDS"
+
+    # Taxi-route diagrams often contain HOT SPOTS legends; the route title is
+    # the primary page identity and must win over that secondary legend.
+    if "TAXI ROUTES ARRIVAL" in joined or "TAXI ROUTE ARRIVAL" in joined:
+        m = re.search(
+            r"\bTAXI\s+ROUTES?\s+ARRIVAL"
+            r"(?:\s+RWYS?\s+[0-9]{1,2}[LRC]?"
+            r"(?:\s*,\s*[0-9]{1,2}[LRC]?)*"
+            r"(?:\s*\([0-9A-Z, /-]+\))?)?",
+            joined,
+        )
+        return clean(m.group(0)) if m else "TAXI ROUTES ARRIVAL"
+
+    if "TAXI ROUTES DEPARTURE" in joined or "TAXI ROUTE DEPARTURE" in joined:
+        m = re.search(
+            r"\bTAXI\s+ROUTES?\s+DEPARTURE"
+            r"(?:\s+RWYS?\s+[0-9]{1,2}[LRC]?"
+            r"(?:\s*,\s*[0-9]{1,2}[LRC]?)*"
+            r"(?:\s*\([0-9A-Z, /-]+\))?)?",
+            joined,
+        )
+        return clean(m.group(0)) if m else "TAXI ROUTES DEPARTURE"
+
     if "HOT SPOTS" in upper and "STRAIGHT-IN RWY" not in upper:
         return "HOT SPOTS"
 
@@ -136,11 +163,6 @@ def canonical_airport_name(text, chart_number, existing):
 
     if "TWY RESTRICTIONS" in upper or "TAXIWAY RESTRICTIONS" in upper:
         return "TAXIWAY RESTRICTIONS"
-
-    # On the 10-9A format the plan view plus stand-coordinate table is the
-    # page referenced by the ADC as PARKING STANDS & COORDS.
-    if number == "10-9A" and "INS COORDINATES" in upper and "APRON" in upper:
-        return "PARKING STANDS & COORDS"
 
     if "PARKING STANDS" in upper and "COORD" in upper:
         return "PARKING STANDS & COORDS"
@@ -154,16 +176,6 @@ def canonical_airport_name(text, chart_number, existing):
         or "DOCKING CHART" in upper
     ):
         return "PARKING/DOCKING CHART (PDC)"
-
-    taxi = re.search(
-        r"\bTAXI\s+ROUTES?\s+(ARRIVAL|DEPARTURE)"
-        r"(?:\s+RWYS?\s+[0-9]{1,2}[LRC]?"
-        r"(?:\s*,\s*[0-9]{1,2}[LRC]?)*"
-        r"(?:\s*\([0-9A-Z, /-]+\))?)?",
-        joined,
-    )
-    if taxi:
-        return clean(taxi.group(0)).rstrip(" .,-")
 
     if "AIRPORT INFORMATION" in upper or "AERODROME INFORMATION" in upper:
         return "AIRPORT INFORMATION"
