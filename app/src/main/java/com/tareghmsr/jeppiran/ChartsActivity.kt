@@ -4114,7 +4114,8 @@ class ChartsActivity : AppCompatActivity() {
             )
 
             linePaint.strokeWidth =
-                1.4.dp.toFloat()
+                1.4f *
+                    resources.displayMetrics.density
 
             linePaint.color =
                 if (
