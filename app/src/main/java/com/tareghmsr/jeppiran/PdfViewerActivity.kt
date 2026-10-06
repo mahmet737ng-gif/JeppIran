@@ -1740,6 +1740,21 @@ private val locationPermissionLauncher =
                     View.GONE
             }
 
+        root.addView(
+            eraserModeBar,
+            FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                44.dp
+            ).apply {
+
+                gravity =
+                    Gravity.TOP
+
+                topMargin =
+                    106.dp
+            }
+        )
+
 
         annotationContextBar =
             LinearLayout(
@@ -1749,6 +1764,21 @@ private val locationPermissionLauncher =
                 visibility =
                     View.GONE
             }
+
+        root.addView(
+            annotationContextBar,
+            FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                92.dp
+            ).apply {
+
+                gravity =
+                    Gravity.TOP
+
+                topMargin =
+                    106.dp
+            }
+        )
 
 
         updateToolButtonStates()
