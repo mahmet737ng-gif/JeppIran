@@ -696,6 +696,103 @@ class ChartsActivity :
             )
         )
 
+        if (
+            ChartChangesStore.hasChanges(
+                this,
+                airport.icao
+            )
+        ) {
+
+            val changes =
+                ChartChangesStore.airport(
+                    this,
+                    airport.icao
+                )
+
+
+            card.addView(
+                TextView(
+                    this
+                ).apply {
+
+                    text =
+                        "Δ"
+
+                    textSize =
+                        18f
+
+                    gravity =
+                        Gravity.CENTER
+
+                    contentDescription =
+                        "Chart changes: " +
+                            changes.badgeText()
+
+                    setTextColor(
+                        Color.rgb(
+                            47,
+                            217,
+                            255
+                        )
+                    )
+
+                    background =
+                        GradientDrawable()
+                            .apply {
+
+                                shape =
+                                    GradientDrawable.OVAL
+
+                                setColor(
+                                    Color.rgb(
+                                        5,
+                                        38,
+                                        68
+                                    )
+                                )
+
+                                setStroke(
+                                    1.dp,
+                                    Color.rgb(
+                                        47,
+                                        217,
+                                        255
+                                    )
+                                )
+                            }
+
+                    isClickable =
+                        true
+
+                    isFocusable =
+                        true
+
+                    setOnClickListener {
+
+                        startActivity(
+                            Intent(
+                                this@ChartsActivity,
+                                ChartChangesActivity::class.java
+                            )
+                                .putExtra(
+                                    "ICAO",
+                                    airport.icao
+                                )
+                        )
+                    }
+                },
+                LinearLayout.LayoutParams(
+                    42.dp,
+                    42.dp
+                ).apply {
+
+                    marginEnd =
+                        5.dp
+                }
+            )
+        }
+
+
         val arrow =
             TextView(
                 this
