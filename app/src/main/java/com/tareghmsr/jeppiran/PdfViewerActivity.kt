@@ -104,9 +104,6 @@ private val locationPermissionLauncher =
         private const val ANNOTATION_PREFS =
             "jeppiran_annotations"
 
-        private const val CHART_DATA_VERSION =
-            "v18"
-
         private const val GPS_PERMISSION_REQUEST =
             7001
 
@@ -3816,7 +3813,7 @@ private val locationPermissionLauncher =
             )
             .putString(
                 "data_version",
-                CHART_DATA_VERSION
+                repository.getDataVersion()
             )
             .apply()
     }
@@ -3854,7 +3851,7 @@ private val locationPermissionLauncher =
 
         if (
             storedVersion !=
-            CHART_DATA_VERSION
+            repository.getDataVersion()
         ) {
 
             preferences
@@ -3862,7 +3859,7 @@ private val locationPermissionLauncher =
                 .clear()
                 .putString(
                     "data_version",
-                    CHART_DATA_VERSION
+                    repository.getDataVersion()
                 )
                 .apply()
 
@@ -4128,7 +4125,7 @@ private val locationPermissionLauncher =
             )
             .putString(
                 "data_version",
-                CHART_DATA_VERSION
+                repository.getDataVersion()
             )
             .apply()
 
@@ -6157,7 +6154,7 @@ private val locationPermissionLauncher =
                         position.second,
                         position.third
                             ?: 0.0,
-                        CHART_DATA_VERSION,
+                        repository.getDataVersion(),
                         geometry.pdfWidth,
                         geometry.pdfHeight,
                         geometry.fullWidth,

@@ -162,10 +162,34 @@ object ChartGeoreferenceStore {
     private val references = mutableMapOf<Int, GeoReference>()
 
     @Synchronized
+    fun reset() {
+        loaded = false
+        chartDataVersion = ""
+        references.clear()
+    }
+
+    @Synchronized
     private fun load(context: Context) {
         if (loaded) return
         try {
-            val root = JSONObject(context.assets.open(ASSET).bufferedReader().use { it.readText() })
+            val raw =
+                ChartUpdateStore
+                    .readGeoref(
+                        context
+                    )
+                    ?: context.assets
+                        .open(
+                            ASSET
+                        )
+                        .bufferedReader()
+                        .use {
+                            it.readText()
+                        }
+
+            val root =
+                JSONObject(
+                    raw
+                )
             if (root.optInt("version") != 2 || root.optString("coordinateSystem") != "WGS84" ||
                 root.optString("coordinateSpace") != "pdf_points" ||
                 root.optString("origin") != "top_left"
