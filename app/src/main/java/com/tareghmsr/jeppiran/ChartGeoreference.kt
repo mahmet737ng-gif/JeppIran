@@ -66,6 +66,22 @@ data class GeoReference(
         }
     }
 
+    fun containsPosition(latitude: Double, longitude: Double): Boolean =
+        project(latitude, longitude) != null
+
+    fun geographicFootprintScore(): Double? {
+        if (!isValid() || points.size < 4) return null
+        val minLat = points.minOf { it.latitude }
+        val maxLat = points.maxOf { it.latitude }
+        val minLon = points.minOf { it.longitude }
+        val maxLon = points.maxOf { it.longitude }
+        val latSpan = maxLat - minLat
+        val lonSpan = maxLon - minLon
+        if (!latSpan.isFinite() || !lonSpan.isFinite() || latSpan <= 0.0 || lonSpan <= 0.0) return null
+        val meanLat = points.map { it.latitude }.average()
+        return latSpan * lonSpan * kotlin.math.cos(Math.toRadians(meanLat)).coerceAtLeast(0.05)
+    }
+
     fun renderedHeading(latitude: Double, headingDegrees: Double,
                         bitmapWidth: Int, bitmapHeight: Int): Float? {
         if (!latitude.isFinite() || !headingDegrees.isFinite()) return null
@@ -242,6 +258,37 @@ object ChartGeoreferenceStore {
         } finally {
             loaded = true
         }
+    }
+
+    fun containsPosition(
+        context: Context,
+        page: Int,
+        latitude: Double,
+        longitude: Double,
+        dataVersion: String
+    ): Boolean {
+        load(context)
+        if (dataVersion != chartDataVersion) return false
+        return references[page]?.containsPosition(latitude, longitude) == true
+    }
+
+    fun geographicFootprintScore(
+        context: Context,
+        page: Int,
+        dataVersion: String
+    ): Double? {
+        load(context)
+        if (dataVersion != chartDataVersion) return null
+        return references[page]?.geographicFootprintScore()
+    }
+
+    fun hasReference(
+        context: Context,
+        page: Int,
+        dataVersion: String
+    ): Boolean {
+        load(context)
+        return dataVersion == chartDataVersion && references.containsKey(page)
     }
 
     /** Convert PDF points to the actually rendered, cropped bitmap. */
