@@ -246,8 +246,27 @@ class EfbLabActivity : AppCompatActivity() {
                     "No printed HOT SPOT / HS label was detected in the current airport-chart text. " +
                         "JEPPIRAN will not invent hotspot locations."
                 } else {
-                    hotspots.joinToString("\n\n") {
-                        it.label + " • " + it.chartName + "\n" + it.snippet
+                    hotspots.joinToString("\n\n") { item ->
+                        val proximity =
+                            if (
+                                lastLocation != null &&
+                                item.latitude != null &&
+                                item.longitude != null
+                            ) {
+                                val nm = AirportGeoStore.distanceNm(
+                                    lastLocation!!.latitude,
+                                    lastLocation!!.longitude,
+                                    AirportGeoStore.Point(item.latitude, item.longitude)
+                                )
+                                if (nm < 0.4) {
+                                    "  ⚠ HOTSPOT NEARBY " + "%.2f NM".format(nm)
+                                } else {
+                                    "  •  " + "%.2f NM".format(nm)
+                                }
+                            } else {
+                                ""
+                            }
+                        item.label + proximity + " • " + item.chartName + "\n" + item.snippet
                     }
                 }
             body.addView(card(text).apply {
