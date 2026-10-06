@@ -109,8 +109,10 @@ def main():
             if transform is not None:
                 rects = page.search_for(match.group(0))
                 if rects:
-                    center = rects[0].center
-                    result = inverse_project(transform, center.x, center.y)
+                    rect = rects[0]
+                    center_x = (rect.x0 + rect.x1) / 2.0
+                    center_y = (rect.y0 + rect.y1) / 2.0
+                    result = inverse_project(transform, center_x, center_y)
                     if result:
                         lat, lon = result
 
