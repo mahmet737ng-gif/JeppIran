@@ -2363,26 +2363,160 @@ class ChartsActivity : AppCompatActivity() {
         View(
             context
         ) {
+
         private val paint =
             Paint(
                 Paint.ANTI_ALIAS_FLAG
             )
 
+        private val linePaint =
+            Paint(
+                Paint.ANTI_ALIAS_FLAG
+            ).apply {
+                style = Paint.Style.STROKE
+                strokeCap = Paint.Cap.ROUND
+            }
+
+        /*
+         * Each ICAO gets a deterministic visual seed. There are eighteen
+         * main composition families and then airport-specific variations
+         * inside each family, so cards do not repeat in obvious batches.
+         */
+        private val seed =
+            abs(
+                icao
+                    .uppercase(
+                        Locale.US
+                    )
+                    .hashCode()
+            )
+
+        private fun value(
+            slot: Int,
+            minValue: Float,
+            maxValue: Float
+        ): Float {
+
+            val mixed =
+                (
+                    seed *
+                        (
+                            31 +
+                                slot *
+                                    17
+                            ) +
+                        slot *
+                            7919
+                    ) and
+                    0x7fffffff
+
+            val ratio =
+                (
+                    mixed %
+                        1000
+                    ) /
+                    999f
+
+            return minValue +
+                (
+                    maxValue -
+                        minValue
+                    ) *
+                    ratio
+        }
+
+        private fun terrain():
+            String {
+
+            val mountain =
+                setOf(
+                    "OICC",
+                    "OICI",
+                    "OIHH",
+                    "OIIE",
+                    "OIII",
+                    "OIIP",
+                    "OIMN",
+                    "OISS",
+                    "OITL",
+                    "OITR",
+                    "OITT",
+                    "OOMS",
+                    "UDYZ",
+                    "UGSB",
+                    "UGTB"
+                )
+
+            val coastal =
+                setOf(
+                    "OIAM",
+                    "OIBB",
+                    "OIBK",
+                    "OIBP",
+                    "OIZC",
+                    "OMDB",
+                    "UGSB"
+                )
+
+            val green =
+                setOf(
+                    "OIGG",
+                    "OING",
+                    "OINZ"
+                )
+
+            val desert =
+                setOf(
+                    "OIFM",
+                    "OIKK",
+                    "OIMB",
+                    "OIMS",
+                    "OIYY",
+                    "OIZH",
+                    "ORNI"
+                )
+
+            return when {
+
+                icao in
+                    coastal ->
+                    "COAST"
+
+                icao in
+                    mountain ->
+                    "MOUNTAIN"
+
+                icao in
+                    green ->
+                    "GREEN"
+
+                icao in
+                    desert ->
+                    "DESERT"
+
+                else ->
+                    "CITY"
+            }
+        }
+
         override fun onDraw(
             canvas: Canvas
         ) {
+
             super.onDraw(
                 canvas
             )
 
             val widthValue =
-                width.toFloat()
+                width
+                    .toFloat()
                     .coerceAtLeast(
                         1f
                     )
 
             val heightValue =
-                height.toFloat()
+                height
+                    .toFloat()
                     .coerceAtLeast(
                         1f
                     )
@@ -2390,46 +2524,119 @@ class ChartsActivity : AppCompatActivity() {
             val dark =
                 isDarkTheme()
 
+            val scene =
+                seed %
+                    18
+
+            drawSky(
+                canvas,
+                widthValue,
+                heightValue,
+                dark,
+                scene
+            )
+
+            drawTerrain(
+                canvas,
+                widthValue,
+                heightValue,
+                dark
+            )
+
+            drawAirportBuildings(
+                canvas,
+                widthValue,
+                heightValue,
+                dark,
+                scene
+            )
+
+            drawRunway(
+                canvas,
+                widthValue,
+                heightValue,
+                dark,
+                scene
+            )
+
+            if (
+                scene %
+                    3 ==
+                    0 ||
+                scene %
+                    5 ==
+                    1
+            ) {
+
+                drawAircraft(
+                    canvas,
+                    widthValue,
+                    heightValue,
+                    dark,
+                    scene
+                )
+            }
+
+            /*
+             * Light/dark readability scrim. It is intentionally asymmetric
+             * because ICAO/name/weather content sits toward the left and top.
+             */
             paint.shader =
                 LinearGradient(
                     0f,
                     0f,
                     widthValue,
-                    heightValue,
-                    if (dark) {
+                    0f,
+                    if (
+                        dark
+                    ) {
                         intArrayOf(
                             Color.argb(
-                                115,
-                                0,
-                                96,
-                                158
+                                148,
+                                1,
+                                13,
+                                31
                             ),
                             Color.argb(
-                                20,
-                                0,
-                                26,
-                                50
+                                64,
+                                2,
+                                17,
+                                38
                             ),
-                            Color.TRANSPARENT
+                            Color.argb(
+                                16,
+                                0,
+                                0,
+                                0
+                            )
                         )
                     } else {
                         intArrayOf(
                             Color.argb(
-                                105,
-                                69,
-                                173,
-                                226
+                                136,
+                                245,
+                                251,
+                                255
                             ),
                             Color.argb(
-                                22,
+                                56,
+                                238,
+                                248,
+                                255
+                            ),
+                            Color.argb(
+                                8,
                                 255,
                                 255,
                                 255
-                            ),
-                            Color.TRANSPARENT
+                            )
                         )
                     },
-                    null,
+                    floatArrayOf(
+                        0f,
+                        .48f,
+                        1f
+                    ),
                     Shader.TileMode.CLAMP
                 )
 
@@ -2447,109 +2654,1020 @@ class ChartsActivity : AppCompatActivity() {
 
             paint.shader =
                 null
+        }
 
-            paint.color =
-                if (dark) {
-                    Color.argb(
-                        170,
-                        106,
-                        186,
-                        229
+        private fun drawSky(
+            canvas: Canvas,
+            widthValue: Float,
+            heightValue: Float,
+            dark: Boolean,
+            scene: Int
+        ) {
+
+            val palettes =
+                if (
+                    dark
+                ) {
+                    arrayOf(
+                        intArrayOf(
+                            Color.rgb(
+                                1,
+                                20,
+                                47
+                            ),
+                            Color.rgb(
+                                10,
+                                72,
+                                113
+                            ),
+                            Color.rgb(
+                                33,
+                                126,
+                                167
+                            )
+                        ),
+                        intArrayOf(
+                            Color.rgb(
+                                8,
+                                25,
+                                48
+                            ),
+                            Color.rgb(
+                                44,
+                                74,
+                                111
+                            ),
+                            Color.rgb(
+                                128,
+                                87,
+                                96
+                            )
+                        ),
+                        intArrayOf(
+                            Color.rgb(
+                                0,
+                                31,
+                                49
+                            ),
+                            Color.rgb(
+                                11,
+                                94,
+                                109
+                            ),
+                            Color.rgb(
+                                74,
+                                150,
+                                155
+                            )
+                        ),
+                        intArrayOf(
+                            Color.rgb(
+                                20,
+                                25,
+                                54
+                            ),
+                            Color.rgb(
+                                74,
+                                71,
+                                112
+                            ),
+                            Color.rgb(
+                                151,
+                                92,
+                                109
+                            )
+                        ),
+                        intArrayOf(
+                            Color.rgb(
+                                3,
+                                25,
+                                57
+                            ),
+                            Color.rgb(
+                                29,
+                                83,
+                                139
+                            ),
+                            Color.rgb(
+                                100,
+                                160,
+                                198
+                            )
+                        ),
+                        intArrayOf(
+                            Color.rgb(
+                                18,
+                                32,
+                                45
+                            ),
+                            Color.rgb(
+                                62,
+                                82,
+                                98
+                            ),
+                            Color.rgb(
+                                142,
+                                130,
+                                111
+                            )
+                        )
                     )
                 } else {
-                    Color.argb(
-                        180,
-                        36,
-                        111,
-                        155
+                    arrayOf(
+                        intArrayOf(
+                            Color.rgb(
+                                163,
+                                218,
+                                248
+                            ),
+                            Color.rgb(
+                                206,
+                                237,
+                                252
+                            ),
+                            Color.rgb(
+                                247,
+                                251,
+                                253
+                            )
+                        ),
+                        intArrayOf(
+                            Color.rgb(
+                                176,
+                                207,
+                                238
+                            ),
+                            Color.rgb(
+                                229,
+                                223,
+                                237
+                            ),
+                            Color.rgb(
+                                255,
+                                239,
+                                220
+                            )
+                        ),
+                        intArrayOf(
+                            Color.rgb(
+                                151,
+                                218,
+                                224
+                            ),
+                            Color.rgb(
+                                211,
+                                240,
+                                239
+                            ),
+                            Color.rgb(
+                                250,
+                                251,
+                                244
+                            )
+                        ),
+                        intArrayOf(
+                            Color.rgb(
+                                186,
+                                196,
+                                232
+                            ),
+                            Color.rgb(
+                                235,
+                                220,
+                                237
+                            ),
+                            Color.rgb(
+                                255,
+                                236,
+                                224
+                            )
+                        ),
+                        intArrayOf(
+                            Color.rgb(
+                                158,
+                                209,
+                                248
+                            ),
+                            Color.rgb(
+                                216,
+                                240,
+                                255
+                            ),
+                            Color.rgb(
+                                249,
+                                252,
+                                255
+                            )
+                        ),
+                        intArrayOf(
+                            Color.rgb(
+                                193,
+                                209,
+                                217
+                            ),
+                            Color.rgb(
+                                231,
+                                231,
+                                221
+                            ),
+                            Color.rgb(
+                                255,
+                                244,
+                                220
+                            )
+                        )
                     )
                 }
 
-            val baseX =
-                38.dp.toFloat()
+            val palette =
+                palettes[
+                    scene %
+                        palettes.size
+                ]
+
+            paint.shader =
+                LinearGradient(
+                    0f,
+                    0f,
+                    0f,
+                    heightValue,
+                    palette,
+                    null,
+                    Shader.TileMode.CLAMP
+                )
+
+            canvas.drawRoundRect(
+                RectF(
+                    0f,
+                    0f,
+                    widthValue,
+                    heightValue
+                ),
+                22.dp.toFloat(),
+                22.dp.toFloat(),
+                paint
+            )
+
+            val sunX =
+                widthValue *
+                    value(
+                        1,
+                        .56f,
+                        .91f
+                    )
+
+            val sunY =
+                heightValue *
+                    value(
+                        2,
+                        .13f,
+                        .34f
+                    )
+
+            paint.shader =
+                RadialGradient(
+                    sunX,
+                    sunY,
+                    widthValue *
+                        .12f,
+                    if (
+                        dark
+                    ) {
+                        Color.argb(
+                            82,
+                            255,
+                            203,
+                            121
+                        )
+                    } else {
+                        Color.argb(
+                            110,
+                            255,
+                            221,
+                            144
+                        )
+                    },
+                    Color.TRANSPARENT,
+                    Shader.TileMode.CLAMP
+                )
+
+            canvas.drawCircle(
+                sunX,
+                sunY,
+                widthValue *
+                    .12f,
+                paint
+            )
+
+            paint.shader =
+                null
+        }
+
+        private fun drawTerrain(
+            canvas: Canvas,
+            widthValue: Float,
+            heightValue: Float,
+            dark: Boolean
+        ) {
+
+            val horizon =
+                heightValue *
+                    value(
+                        3,
+                        .48f,
+                        .60f
+                    )
+
+            when (
+                terrain()
+            ) {
+
+                "MOUNTAIN" -> {
+
+                    val back =
+                        Path().apply {
+
+                            moveTo(
+                                0f,
+                                heightValue
+                            )
+
+                            moveTo(
+                                0f,
+                                horizon +
+                                    22.dp
+                            )
+
+                            var x =
+                                0f
+
+                            var step =
+                                0
+
+                            while (
+                                x <=
+                                widthValue +
+                                    120.dp
+                            ) {
+
+                                val peak =
+                                    horizon -
+                                        value(
+                                            20 +
+                                                step,
+                                            18.dp.toFloat(),
+                                            78.dp.toFloat()
+                                        )
+
+                                lineTo(
+                                    x,
+                                    peak
+                                )
+
+                                x +=
+                                    value(
+                                        40 +
+                                            step,
+                                        78.dp.toFloat(),
+                                        150.dp.toFloat()
+                                    )
+
+                                step++
+                            }
+
+                            lineTo(
+                                widthValue,
+                                heightValue
+                            )
+
+                            lineTo(
+                                0f,
+                                heightValue
+                            )
+
+                            close()
+                        }
+
+                    paint.color =
+                        if (
+                            dark
+                        ) {
+                            Color.argb(
+                                196,
+                                18,
+                                39,
+                                55
+                            )
+                        } else {
+                            Color.argb(
+                                175,
+                                108,
+                                143,
+                                160
+                            )
+                        }
+
+                    canvas.drawPath(
+                        back,
+                        paint
+                    )
+                }
+
+                "COAST" -> {
+
+                    paint.color =
+                        if (
+                            dark
+                        ) {
+                            Color.argb(
+                                195,
+                                4,
+                                62,
+                                91
+                            )
+                        } else {
+                            Color.argb(
+                                150,
+                                49,
+                                153,
+                                192
+                            )
+                        }
+
+                    canvas.drawRect(
+                        0f,
+                        horizon,
+                        widthValue,
+                        heightValue,
+                        paint
+                    )
+
+                    linePaint.color =
+                        if (
+                            dark
+                        ) {
+                            Color.argb(
+                                74,
+                                141,
+                                226,
+                                255
+                            )
+                        } else {
+                            Color.argb(
+                                85,
+                                255,
+                                255,
+                                255
+                            )
+                        }
+
+                    linePaint.strokeWidth =
+                        1.dp.toFloat()
+
+                    repeat(
+                        6
+                    ) {
+                        index ->
+
+                        val y =
+                            horizon +
+                                (
+                                    10 +
+                                        index *
+                                            11
+                                    )
+                                    .dp
+
+                        canvas.drawLine(
+                            0f,
+                            y.toFloat(),
+                            widthValue,
+                            y.toFloat(),
+                            linePaint
+                        )
+                    }
+                }
+
+                "GREEN" -> {
+
+                    val hill =
+                        Path().apply {
+
+                            moveTo(
+                                0f,
+                                heightValue
+                            )
+
+                            lineTo(
+                                0f,
+                                horizon +
+                                    24.dp
+                            )
+
+                            cubicTo(
+                                widthValue *
+                                    .22f,
+                                horizon -
+                                    14.dp,
+                                widthValue *
+                                    .40f,
+                                horizon +
+                                    14.dp,
+                                widthValue *
+                                    .58f,
+                                horizon -
+                                    10.dp
+                            )
+
+                            cubicTo(
+                                widthValue *
+                                    .76f,
+                                horizon -
+                                    28.dp,
+                                widthValue *
+                                    .88f,
+                                horizon +
+                                    18.dp,
+                                widthValue,
+                                horizon
+                            )
+
+                            lineTo(
+                                widthValue,
+                                heightValue
+                            )
+
+                            close()
+                        }
+
+                    paint.color =
+                        if (
+                            dark
+                        ) {
+                            Color.argb(
+                                185,
+                                24,
+                                67,
+                                54
+                            )
+                        } else {
+                            Color.argb(
+                                150,
+                                94,
+                                155,
+                                119
+                            )
+                        }
+
+                    canvas.drawPath(
+                        hill,
+                        paint
+                    )
+                }
+
+                "DESERT" -> {
+
+                    val dunes =
+                        Path().apply {
+
+                            moveTo(
+                                0f,
+                                heightValue
+                            )
+
+                            lineTo(
+                                0f,
+                                horizon +
+                                    12.dp
+                            )
+
+                            cubicTo(
+                                widthValue *
+                                    .22f,
+                                horizon -
+                                    12.dp,
+                                widthValue *
+                                    .34f,
+                                horizon +
+                                    26.dp,
+                                widthValue *
+                                    .52f,
+                                horizon +
+                                    4.dp
+                            )
+
+                            cubicTo(
+                                widthValue *
+                                    .72f,
+                                horizon -
+                                    18.dp,
+                                widthValue *
+                                    .84f,
+                                horizon +
+                                    20.dp,
+                                widthValue,
+                                horizon +
+                                    6.dp
+                            )
+
+                            lineTo(
+                                widthValue,
+                                heightValue
+                            )
+
+                            close()
+                        }
+
+                    paint.color =
+                        if (
+                            dark
+                        ) {
+                            Color.argb(
+                                178,
+                                91,
+                                66,
+                                45
+                            )
+                        } else {
+                            Color.argb(
+                                155,
+                                205,
+                                171,
+                                123
+                            )
+                        }
+
+                    canvas.drawPath(
+                        dunes,
+                        paint
+                    )
+                }
+
+                else -> {
+
+                    paint.color =
+                        if (
+                            dark
+                        ) {
+                            Color.argb(
+                                175,
+                                20,
+                                37,
+                                51
+                            )
+                        } else {
+                            Color.argb(
+                                152,
+                                135,
+                                164,
+                                181
+                            )
+                        }
+
+                    canvas.drawRect(
+                        0f,
+                        horizon,
+                        widthValue,
+                        heightValue,
+                        paint
+                    )
+                }
+            }
+        }
+
+        private fun drawAirportBuildings(
+            canvas: Canvas,
+            widthValue: Float,
+            heightValue: Float,
+            dark: Boolean,
+            scene: Int
+        ) {
 
             val baseY =
-                heightValue -
-                    26.dp
+                heightValue *
+                    .68f
 
-            canvas.drawRect(
-                baseX -
-                    13.dp,
-                baseY -
-                    6.dp,
-                baseX +
-                    16.dp,
-                baseY,
-                paint
-            )
-
-            canvas.drawRect(
-                baseX -
-                    6.dp,
-                baseY -
-                    40.dp,
-                baseX +
-                    6.dp,
-                baseY -
-                    6.dp,
-                paint
-            )
-
-            canvas.drawOval(
-                RectF(
-                    baseX -
-                        12.dp,
-                    baseY -
-                        50.dp,
-                    baseX +
-                        12.dp,
-                    baseY -
-                        36.dp
-                ),
-                paint
-            )
-
-            paint.style =
-                Paint.Style.STROKE
-
-            paint.strokeWidth =
-                2.dp.toFloat()
-
-            canvas.drawLine(
-                0f,
-                heightValue -
-                    22.dp,
-                96.dp.toFloat(),
-                heightValue -
-                    42.dp,
-                paint
-            )
-
-            canvas.drawLine(
-                0f,
-                heightValue -
-                    14.dp,
-                96.dp.toFloat(),
-                heightValue -
-                    27.dp,
-                paint
-            )
-
-            paint.style =
-                Paint.Style.FILL
-
-            paint.color =
-                if (dark) {
-                    Color.rgb(
-                        43,
-                        213,
-                        255
+            val buildingColor =
+                if (
+                    dark
+                ) {
+                    Color.argb(
+                        224,
+                        11,
+                        29,
+                        43
                     )
                 } else {
-                    Color.rgb(
-                        13,
-                        135,
-                        205
+                    Color.argb(
+                        205,
+                        78,
+                        106,
+                        124
+                    )
+                }
+
+            paint.color =
+                buildingColor
+
+            /*
+             * Terminal roof family. Six genuinely different silhouettes are
+             * mixed with ICAO-specific width/height/position values.
+             */
+            val terminalX =
+                widthValue *
+                    value(
+                        70,
+                        .12f,
+                        .31f
+                    )
+
+            val terminalWidth =
+                widthValue *
+                    value(
+                        71,
+                        .30f,
+                        .47f
+                    )
+
+            val terminalHeight =
+                heightValue *
+                    value(
+                        72,
+                        .20f,
+                        .35f
+                    )
+
+            when (
+                scene %
+                    6
+            ) {
+
+                0 -> {
+
+                    canvas.drawRoundRect(
+                        RectF(
+                            terminalX,
+                            baseY -
+                                terminalHeight,
+                            terminalX +
+                                terminalWidth,
+                            baseY
+                        ),
+                        10.dp.toFloat(),
+                        10.dp.toFloat(),
+                        paint
+                    )
+
+                    val roof =
+                        Path().apply {
+                            moveTo(
+                                terminalX,
+                                baseY -
+                                    terminalHeight
+                            )
+                            lineTo(
+                                terminalX +
+                                    terminalWidth *
+                                        .48f,
+                                baseY -
+                                    terminalHeight -
+                                    18.dp
+                            )
+                            lineTo(
+                                terminalX +
+                                    terminalWidth,
+                                baseY -
+                                    terminalHeight
+                            )
+                            close()
+                        }
+
+                    canvas.drawPath(
+                        roof,
+                        paint
+                    )
+                }
+
+                1 -> {
+
+                    canvas.drawRect(
+                        terminalX,
+                        baseY -
+                            terminalHeight +
+                            9.dp,
+                        terminalX +
+                            terminalWidth,
+                        baseY,
+                        paint
+                    )
+
+                    repeat(
+                        5
+                    ) {
+                        index ->
+
+                        val left =
+                            terminalX +
+                                terminalWidth *
+                                    index /
+                                    5f
+
+                        val right =
+                            terminalX +
+                                terminalWidth *
+                                    (
+                                        index +
+                                            1
+                                        ) /
+                                    5f
+
+                        val roof =
+                            Path().apply {
+                                moveTo(
+                                    left,
+                                    baseY -
+                                        terminalHeight +
+                                        9.dp
+                                )
+                                lineTo(
+                                    (
+                                        left +
+                                            right
+                                        ) /
+                                        2f,
+                                    baseY -
+                                        terminalHeight -
+                                        8.dp
+                                )
+                                lineTo(
+                                    right,
+                                    baseY -
+                                        terminalHeight +
+                                        9.dp
+                                )
+                                close()
+                            }
+
+                        canvas.drawPath(
+                            roof,
+                            paint
+                        )
+                    }
+                }
+
+                2 -> {
+
+                    canvas.drawRoundRect(
+                        RectF(
+                            terminalX,
+                            baseY -
+                                terminalHeight,
+                            terminalX +
+                                terminalWidth,
+                            baseY +
+                                14.dp
+                        ),
+                        terminalHeight /
+                            2f,
+                        terminalHeight /
+                            2f,
+                        paint
+                    )
+                }
+
+                3 -> {
+
+                    val terminal =
+                        Path().apply {
+                            moveTo(
+                                terminalX,
+                                baseY
+                            )
+                            lineTo(
+                                terminalX +
+                                    10.dp,
+                                baseY -
+                                    terminalHeight *
+                                        .82f
+                            )
+                            lineTo(
+                                terminalX +
+                                    terminalWidth *
+                                        .38f,
+                                baseY -
+                                    terminalHeight -
+                                    12.dp
+                            )
+                            lineTo(
+                                terminalX +
+                                    terminalWidth,
+                                baseY -
+                                    terminalHeight *
+                                        .72f
+                            )
+                            lineTo(
+                                terminalX +
+                                    terminalWidth,
+                                baseY
+                            )
+                            close()
+                        }
+
+                    canvas.drawPath(
+                        terminal,
+                        paint
+                    )
+                }
+
+                4 -> {
+
+                    canvas.drawRect(
+                        terminalX,
+                        baseY -
+                            terminalHeight *
+                                .72f,
+                        terminalX +
+                            terminalWidth,
+                        baseY,
+                        paint
+                    )
+
+                    canvas.drawOval(
+                        RectF(
+                            terminalX,
+                            baseY -
+                                terminalHeight -
+                                8.dp,
+                            terminalX +
+                                terminalWidth,
+                            baseY -
+                                terminalHeight *
+                                    .45f
+                        ),
+                        paint
+                    )
+                }
+
+                else -> {
+
+                    val terminal =
+                        Path().apply {
+                            moveTo(
+                                terminalX,
+                                baseY
+                            )
+                            lineTo(
+                                terminalX +
+                                    18.dp,
+                                baseY -
+                                    terminalHeight
+                            )
+                            lineTo(
+                                terminalX +
+                                    terminalWidth *
+                                        .70f,
+                                baseY -
+                                    terminalHeight -
+                                    8.dp
+                            )
+                            lineTo(
+                                terminalX +
+                                    terminalWidth,
+                                baseY -
+                                    terminalHeight *
+                                        .35f
+                            )
+                            lineTo(
+                                terminalX +
+                                    terminalWidth,
+                                baseY
+                            )
+                            close()
+                        }
+
+                    canvas.drawPath(
+                        terminal,
+                        paint
+                    )
+                }
+            }
+
+            paint.color =
+                if (
+                    dark
+                ) {
+                    Color.argb(
+                        125,
+                        114,
+                        209,
+                        244
+                    )
+                } else {
+                    Color.argb(
+                        115,
+                        232,
+                        249,
+                        255
                     )
                 }
 
@@ -2558,24 +3676,777 @@ class ChartsActivity : AppCompatActivity() {
             ) {
                 index ->
 
-                canvas.drawCircle(
-                    (
-                        8 +
-                            index *
-                                13
-                        )
-                        .dp
-                        .toFloat(),
-                    (
-                        heightValue -
-                            18.dp
-                        ) -
-                        index *
-                            1.6f,
-                    1.2f * resources.displayMetrics.density,
+                val x =
+                    terminalX +
+                        terminalWidth *
+                            (
+                                .10f +
+                                    index *
+                                        .12f
+                                )
+
+                canvas.drawRect(
+                    x,
+                    baseY -
+                        terminalHeight *
+                            .56f,
+                    x +
+                        terminalWidth *
+                            .06f,
+                    baseY -
+                        terminalHeight *
+                            .42f,
                     paint
                 )
             }
+
+            drawTower(
+                canvas,
+                widthValue,
+                heightValue,
+                dark,
+                scene
+            )
+
+            if (
+                icao ==
+                    "OMDB"
+            ) {
+
+                paint.color =
+                    if (
+                        dark
+                    ) {
+                        Color.argb(
+                            155,
+                            82,
+                            145,
+                            181
+                        )
+                    } else {
+                        Color.argb(
+                            150,
+                            82,
+                            121,
+                            145
+                        )
+                    }
+
+                val x =
+                    widthValue *
+                        .92f
+
+                canvas.drawRect(
+                    x -
+                        2.dp,
+                    heightValue *
+                        .29f,
+                    x +
+                        2.dp,
+                    baseY,
+                    paint
+                )
+
+                val spire =
+                    Path().apply {
+                        moveTo(
+                            x,
+                            heightValue *
+                                .10f
+                        )
+                        lineTo(
+                            x -
+                                8.dp,
+                            heightValue *
+                                .29f
+                        )
+                        lineTo(
+                            x +
+                                8.dp,
+                            heightValue *
+                                .29f
+                        )
+                        close()
+                    }
+
+                canvas.drawPath(
+                    spire,
+                    paint
+                )
+            }
+        }
+
+        private fun drawTower(
+            canvas: Canvas,
+            widthValue: Float,
+            heightValue: Float,
+            dark: Boolean,
+            scene: Int
+        ) {
+
+            val x =
+                widthValue *
+                    value(
+                        90,
+                        .66f,
+                        .90f
+                    )
+
+            val bottom =
+                heightValue *
+                    .68f
+
+            val towerHeight =
+                heightValue *
+                    value(
+                        91,
+                        .31f,
+                        .52f
+                    )
+
+            val shaftHalf =
+                widthValue *
+                    value(
+                        92,
+                        .010f,
+                        .018f
+                    )
+
+            paint.color =
+                if (
+                    dark
+                ) {
+                    Color.argb(
+                        232,
+                        9,
+                        27,
+                        42
+                    )
+                } else {
+                    Color.argb(
+                        214,
+                        72,
+                        102,
+                        121
+                    )
+                }
+
+            val shaft =
+                Path().apply {
+                    moveTo(
+                        x -
+                            shaftHalf,
+                        bottom
+                    )
+                    lineTo(
+                        x +
+                            shaftHalf,
+                        bottom
+                    )
+                    lineTo(
+                        x +
+                            shaftHalf *
+                                .56f,
+                        bottom -
+                            towerHeight *
+                                .72f
+                    )
+                    lineTo(
+                        x -
+                            shaftHalf *
+                                .56f,
+                        bottom -
+                            towerHeight *
+                                .72f
+                    )
+                    close()
+                }
+
+            canvas.drawPath(
+                shaft,
+                paint
+            )
+
+            val cabHalf =
+                widthValue *
+                    value(
+                        93,
+                        .025f,
+                        .043f
+                    )
+
+            val cabTop =
+                bottom -
+                    towerHeight
+
+            val cabBottom =
+                cabTop +
+                    heightValue *
+                        value(
+                            94,
+                            .07f,
+                            .11f
+                        )
+
+            when (
+                scene /
+                    6
+            ) {
+
+                0 -> {
+
+                    canvas.drawRoundRect(
+                        RectF(
+                            x -
+                                cabHalf,
+                            cabTop,
+                            x +
+                                cabHalf,
+                            cabBottom
+                        ),
+                        4.dp.toFloat(),
+                        4.dp.toFloat(),
+                        paint
+                    )
+                }
+
+                1 -> {
+
+                    val cab =
+                        Path().apply {
+                            moveTo(
+                                x -
+                                    cabHalf *
+                                        .70f,
+                                cabTop
+                            )
+                            lineTo(
+                                x +
+                                    cabHalf *
+                                        .70f,
+                                cabTop
+                            )
+                            lineTo(
+                                x +
+                                    cabHalf,
+                                cabBottom
+                            )
+                            lineTo(
+                                x -
+                                    cabHalf,
+                                cabBottom
+                            )
+                            close()
+                        }
+
+                    canvas.drawPath(
+                        cab,
+                        paint
+                    )
+                }
+
+                else -> {
+
+                    canvas.drawOval(
+                        RectF(
+                            x -
+                                cabHalf,
+                            cabTop,
+                            x +
+                                cabHalf,
+                            cabBottom
+                        ),
+                        paint
+                    )
+                }
+            }
+
+            paint.color =
+                if (
+                    dark
+                ) {
+                    Color.argb(
+                        145,
+                        117,
+                        219,
+                        255
+                    )
+                } else {
+                    Color.argb(
+                        150,
+                        224,
+                        248,
+                        255
+                    )
+                }
+
+            canvas.drawRect(
+                x -
+                    cabHalf *
+                        .68f,
+                cabTop +
+                    (
+                        cabBottom -
+                            cabTop
+                        ) *
+                        .34f,
+                x +
+                    cabHalf *
+                        .68f,
+                cabTop +
+                    (
+                        cabBottom -
+                            cabTop
+                        ) *
+                        .67f,
+                paint
+            )
+        }
+
+        private fun drawRunway(
+            canvas: Canvas,
+            widthValue: Float,
+            heightValue: Float,
+            dark: Boolean,
+            scene: Int
+        ) {
+
+            val farY =
+                heightValue *
+                    value(
+                        110,
+                        .60f,
+                        .70f
+                    )
+
+            val center =
+                widthValue *
+                    value(
+                        111,
+                        .43f,
+                        .61f
+                    )
+
+            val direction =
+                when (
+                    scene %
+                        3
+                ) {
+
+                    0 ->
+                        -1f
+
+                    1 ->
+                        0f
+
+                    else ->
+                        1f
+                }
+
+            val nearCenter =
+                center +
+                    direction *
+                        widthValue *
+                        .10f
+
+            val farHalf =
+                widthValue *
+                    value(
+                        112,
+                        .035f,
+                        .065f
+                    )
+
+            val nearHalf =
+                widthValue *
+                    value(
+                        113,
+                        .30f,
+                        .46f
+                    )
+
+            val runway =
+                Path().apply {
+                    moveTo(
+                        center -
+                            farHalf,
+                        farY
+                    )
+                    lineTo(
+                        center +
+                            farHalf,
+                        farY
+                    )
+                    lineTo(
+                        nearCenter +
+                            nearHalf,
+                        heightValue
+                    )
+                    lineTo(
+                        nearCenter -
+                            nearHalf,
+                        heightValue
+                    )
+                    close()
+                }
+
+            paint.color =
+                if (
+                    dark
+                ) {
+                    Color.argb(
+                        230,
+                        15,
+                        23,
+                        31
+                    )
+                } else {
+                    Color.argb(
+                        220,
+                        78,
+                        85,
+                        91
+                    )
+                }
+
+            canvas.drawPath(
+                runway,
+                paint
+            )
+
+            linePaint.strokeWidth =
+                1.4.dp.toFloat()
+
+            linePaint.color =
+                if (
+                    dark
+                ) {
+                    Color.argb(
+                        165,
+                        230,
+                        241,
+                        247
+                    )
+                } else {
+                    Color.argb(
+                        178,
+                        255,
+                        255,
+                        255
+                    )
+                }
+
+            canvas.drawLine(
+                center -
+                    farHalf,
+                farY,
+                nearCenter -
+                    nearHalf,
+                heightValue,
+                linePaint
+            )
+
+            canvas.drawLine(
+                center +
+                    farHalf,
+                farY,
+                nearCenter +
+                    nearHalf,
+                heightValue,
+                linePaint
+            )
+
+            repeat(
+                8
+            ) {
+                index ->
+
+                if (
+                    index %
+                        2 ==
+                        1
+                ) {
+                    return@repeat
+                }
+
+                val t0 =
+                    index /
+                        8f
+
+                val t1 =
+                    (
+                        index +
+                            .50f
+                        ) /
+                        8f
+
+                val y0 =
+                    farY +
+                        (
+                            heightValue -
+                                farY
+                            ) *
+                            t0
+
+                val y1 =
+                    farY +
+                        (
+                            heightValue -
+                                farY
+                            ) *
+                            t1
+
+                val x0 =
+                    center +
+                        (
+                            nearCenter -
+                                center
+                            ) *
+                            t0
+
+                val x1 =
+                    center +
+                        (
+                            nearCenter -
+                                center
+                            ) *
+                            t1
+
+                linePaint.strokeWidth =
+                    (
+                        1.2f +
+                            index *
+                                .42f
+                        )
+                        .dp
+
+                canvas.drawLine(
+                    x0,
+                    y0,
+                    x1,
+                    y1,
+                    linePaint
+                )
+            }
+
+            paint.color =
+                if (
+                    dark
+                ) {
+                    Color.rgb(
+                        53,
+                        220,
+                        255
+                    )
+                } else {
+                    Color.rgb(
+                        0,
+                        153,
+                        218
+                    )
+                }
+
+            repeat(
+                10
+            ) {
+                index ->
+
+                val t =
+                    index /
+                        9f
+
+                val y =
+                    farY +
+                        (
+                            heightValue -
+                                farY
+                            ) *
+                            t
+
+                val currentCenter =
+                    center +
+                        (
+                            nearCenter -
+                                center
+                            ) *
+                            t
+
+                val half =
+                    farHalf +
+                        (
+                            nearHalf -
+                                farHalf
+                            ) *
+                            t
+
+                val radius =
+                    (
+                        .8f +
+                            t *
+                                1.8f
+                        )
+                        .dp
+
+                canvas.drawCircle(
+                    currentCenter -
+                        half,
+                    y,
+                    radius,
+                    paint
+                )
+
+                canvas.drawCircle(
+                    currentCenter +
+                        half,
+                    y,
+                    radius,
+                    paint
+                )
+            }
+        }
+
+        private fun drawAircraft(
+            canvas: Canvas,
+            widthValue: Float,
+            heightValue: Float,
+            dark: Boolean,
+            scene: Int
+        ) {
+
+            val x =
+                widthValue *
+                    value(
+                        130,
+                        .48f,
+                        .76f
+                    )
+
+            val y =
+                heightValue *
+                    value(
+                        131,
+                        .20f,
+                        .38f
+                    )
+
+            val scale =
+                value(
+                    132,
+                    .68f,
+                    1.12f
+                )
+
+            paint.color =
+                if (
+                    dark
+                ) {
+                    Color.argb(
+                        118,
+                        223,
+                        242,
+                        252
+                    )
+                } else {
+                    Color.argb(
+                        128,
+                        70,
+                        110,
+                        137
+                    )
+                }
+
+            val airplane =
+                Path().apply {
+
+                    moveTo(
+                        x,
+                        y -
+                            18.dp *
+                            scale
+                    )
+
+                    lineTo(
+                        x +
+                            5.dp *
+                            scale,
+                        y
+                    )
+
+                    lineTo(
+                        x +
+                            37.dp *
+                            scale,
+                        y +
+                            6.dp *
+                            scale
+                    )
+
+                    lineTo(
+                        x +
+                            6.dp *
+                            scale,
+                        y +
+                            10.dp *
+                            scale
+                    )
+
+                    lineTo(
+                        x +
+                            4.dp *
+                            scale,
+                        y +
+                            28.dp *
+                            scale
+                    )
+
+                    lineTo(
+                        x,
+                        y +
+                            23.dp *
+                            scale
+                    )
+
+                    lineTo(
+                        x -
+                            4.dp *
+                            scale,
+                        y +
+                            28.dp *
+                            scale
+                    )
+
+                    lineTo(
+                        x -
+                            6.dp *
+                            scale,
+                        y +
+                            10.dp *
+                            scale
+                    )
+
+                    lineTo(
+                        x -
+                            37.dp *
+                            scale,
+                        y +
+                            6.dp *
+                            scale
+                    )
+
+                    lineTo(
+                        x -
+                            5.dp *
+                            scale,
+                        y
+                    )
+
+                    close()
+                }
+
+            canvas.drawPath(
+                airplane,
+                paint
+            )
         }
     }
 
