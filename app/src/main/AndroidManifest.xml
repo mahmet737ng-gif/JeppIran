@@ -83,6 +83,14 @@
             android:exported="false" />
 
         <activity
+            android:name=".ChartChangesActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".ChartDiffActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".EnrouteActivity"
             android:exported="false" />
 
