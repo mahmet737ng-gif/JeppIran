@@ -2,6 +2,14 @@ name: Analyze Iran Charts V16
 
 on:
   workflow_dispatch:
+  push:
+    branches:
+      - work-no-build
+    paths:
+      - 'scripts/name_charts_v12.py'
+      - 'scripts/classify_charts_v16.py'
+      - 'scripts/build_charts_final.py'
+      - '.github/workflows/analyze-charts-v9.yml'
 
 jobs:
   analyze:
@@ -607,7 +615,12 @@ jobs:
       # UPLOAD RESULTS
       # ========================================================
 
-      - name: Upload V16 results
+      - name: Build final JEPPIRAN chart index
+        shell: bash
+        run: |
+          python scripts/build_charts_final.py
+
+      - name: Upload V16 + final results
         uses: actions/upload-artifact@v4
         with:
           name: JeppIran-V16-results
@@ -618,3 +631,5 @@ jobs:
             charts-index-v16.json
             charts-app-v16.json
             charts-summary-v16.json
+            charts-current-final.json
+            chart-changes-final.json
