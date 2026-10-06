@@ -121,11 +121,7 @@ class PilotBriefingActivity : AppCompatActivity() {
         statusText.text = "Updating weather and NOTAM data…"
         Thread {
             val weather = runCatching { FlightDataStore.fetch(this, icao) }
-            val notams = if (NotamStore.configured(this)) {
-                runCatching { NotamStore.fetch(this, icao) }
-            } else {
-                Result.success(NotamStore.cached(this, icao))
-            }
+            val notams = runCatching { NotamStore.fetch(this, icao) }
 
             runOnUiThread {
                 val weatherValue = weather.getOrNull() ?: FlightDataStore.cached(this, icao)
@@ -137,11 +133,7 @@ class PilotBriefingActivity : AppCompatActivity() {
 
                 val messages = mutableListOf<String>()
                 weather.exceptionOrNull()?.message?.let { messages += "WX: " + it }
-                if (!NotamStore.configured(this)) {
-                    messages += "NOTAM API key not configured"
-                } else {
-                    notams.exceptionOrNull()?.message?.let { messages += "NOTAM: " + it }
-                }
+                notams.exceptionOrNull()?.message?.let { messages += "NOTAM: " + it }
 
                 statusText.text = if (messages.isEmpty()) {
                     "Updated " + DateFormat.getTimeInstance(DateFormat.SHORT).format(Date())
@@ -229,10 +221,10 @@ class PilotBriefingActivity : AppCompatActivity() {
 
     private fun renderNotams(snapshot: NotamStore.Snapshot?) {
         notamContainer.removeAllViews()
-        if (!NotamStore.configured(this)) {
+        snapshot?.let {
             notamContainer.addView(infoCard(
-                "LIVE NOTAMS NOT CONFIGURED\nAdd an ICAO Data Service API key under DATA. " +
-                    "Cached NOTAMs remain available if previously downloaded."
+                "SOURCE  " + it.source + "\nICAO  " + it.icao +
+                    "  •  " + it.items.size + " active result(s)"
             ))
         }
         val items = snapshot?.items.orEmpty()
