@@ -160,6 +160,43 @@ def extract_plain_procedures(lines):
 
 
 # ---------------------------------------------------------
+# Printed STAR / SID names immediately before ARINC/FMS codes
+#
+# Example:
+# EGVAX 1X [EGVA1X] -> EGVAX 1X
+# KUSSA 1A [KUSA1A] -> KUSSA 1A
+#
+# The bracket value is the database identifier and is deliberately
+# NOT used as the display title.
+# ---------------------------------------------------------
+
+def extract_printed_procedures(lines):
+
+    results = []
+    seen = set()
+
+    pattern = re.compile(
+        r"\b([A-Z][A-Z0-9]{1,8}\s+[0-9]{1,2}[A-Z])\s*"
+        r"\[[A-Z0-9][A-Z0-9.~-]{2,20}\]",
+        re.IGNORECASE
+    )
+
+    for line in lines:
+
+        upper = line.upper()
+
+        for match in pattern.findall(upper):
+
+            name = clean_spaces(match)
+
+            if name not in seen:
+                seen.add(name)
+                results.append(name)
+
+    return results
+
+
+# ---------------------------------------------------------
 # STAR / SID
 # ---------------------------------------------------------
 
@@ -167,15 +204,15 @@ def get_star_sid_name(text):
 
     lines = get_lines(text)
 
-    # FIRST:
-    # use ALL bracket codes on the page
-    bracket_codes = extract_bracket_codes(lines)
+    # FIRST: use the visible Jeppesen procedure names outside [ ].
+    printed = extract_printed_procedures(lines)
 
-    if bracket_codes:
-        return ", ".join(bracket_codes)
+    if printed:
+        return ", ".join(printed)
 
-    # FALLBACK:
-    # pages without bracket notation
+    # Never expose ARINC/FMS identifiers from [ ] as the primary title.
+    # For charts where text extraction separated the printed label from its
+    # bracket code, fall back to visible procedure-like names on the page.
     plain = extract_plain_procedures(lines)
 
     if plain:
@@ -192,134 +229,75 @@ def get_approach_name(text):
 
     lines = get_lines(text)
 
-    results = []
-    seen = set()
+    # Jeppesen chart title is normally in the header. Search the first
+    # lines first so missed-approach instructions do not become the name.
+    candidates = lines[:35] + lines[35:]
 
-    patterns = [
-
-        re.compile(
-            r"\bILS\s+([XYZ])?\s*(?:OR\s+LOC\s+([XYZ])?)?"
-            r"\s*RWY\s+([0-9]{1,2}[LRC]?(?:/[0-9]{1,2}[LRC]?)?)",
-            re.IGNORECASE
-        ),
-
-        re.compile(
-            r"\bVOR(?:\s+DME)?(?:\s+[0-9A-Z]+)?"
-            r"\s+RWY\s+([0-9]{1,2}[LRC]?(?:/[0-9]{1,2}[LRC]?)?)",
-            re.IGNORECASE
-        ),
-
-        re.compile(
-            r"\bNDB\s+RWY\s+([0-9]{1,2}[LRC]?(?:/[0-9]{1,2}[LRC]?)?)",
-            re.IGNORECASE
-        ),
-
-        re.compile(
-            r"\b(?:RNAV|RNP|SRA|LDA|GLS)"
-            r"(?:\s+[A-Z0-9]+)*"
-            r"\s+RWY\s+([0-9]{1,2}[LRC]?(?:/[0-9]{1,2}[LRC]?)?)",
-            re.IGNORECASE
-        ),
+    title_patterns = [
+        r"\bILS\s+([XYZ])\s+OR\s+LOC\s+\1\s+RWY\s+([0-9]{1,2}[LRC]?)\b",
+        r"\bILS\s+OR\s+LOC\s+RWY\s+([0-9]{1,2}[LRC]?)\b",
+        r"\bILS\s+([XYZ])\s+RWY\s+([0-9]{1,2}[LRC]?)\b",
+        r"\bILS\s+RWY\s+([0-9]{1,2}[LRC]?)\b",
+        r"\b(VOR(?:\s+DME)?(?:\s+[XYZ])?)\s+RWY\s+([0-9]{1,2}[LRC]?)\b",
+        r"\b(NDB(?:\s+[XYZ])?)\s+RWY\s+([0-9]{1,2}[LRC]?)\b",
+        r"\b(RNAV|RNP|GLS|SRA|LDA)(?:\s+\([A-Z]+\))?(?:\s+[XYZ])?\s+RWY\s+([0-9]{1,2}[LRC]?)\b",
+        r"\bVOR\s+([A-Z])\b",
+        r"\bNDB\s+([A-Z])\b",
     ]
 
-    for line in lines:
+    for line in candidates:
 
         upper = line.upper()
 
-        # -------------------------------------------------
-        # ILS / LOC
-        # -------------------------------------------------
-
-        m = re.search(
-            r"\bILS\s+([XYZ])?"
-            r"(?:\s+OR\s+LOC\s+([XYZ])?)?"
-            r"\s+RWY\s+([0-9]{1,2}[LRC]?(?:/[0-9]{1,2}[LRC]?)?)",
-            upper
-        )
-
+        # ILS X OR LOC X RWY 30
+        m = re.search(title_patterns[0], upper)
         if m:
-
-            ils_variant = m.group(1)
-
-            if ils_variant:
-                name = f"ILS {ils_variant} OR LOC {ils_variant} RWY {m.group(3)}"
+            name = f"ILS {m.group(1)} OR LOC {m.group(1)} RWY {m.group(2)}"
+        else:
+            m = re.search(title_patterns[1], upper)
+            if m:
+                name = f"ILS OR LOC RWY {m.group(1)}"
             else:
-                name = f"ILS OR LOC RWY {m.group(3)}"
+                m = re.search(title_patterns[2], upper)
+                if m:
+                    name = f"ILS {m.group(1)} RWY {m.group(2)}"
+                else:
+                    m = re.search(title_patterns[3], upper)
+                    if m:
+                        name = f"ILS RWY {m.group(1)}"
+                    else:
+                        m = re.search(title_patterns[4], upper)
+                        if m:
+                            name = f"{clean_spaces(m.group(1))} RWY {m.group(2)}"
+                        else:
+                            m = re.search(title_patterns[5], upper)
+                            if m:
+                                name = f"{clean_spaces(m.group(1))} RWY {m.group(2)}"
+                            else:
+                                m = re.search(title_patterns[6], upper)
+                                if m:
+                                    name = f"{m.group(1)} RWY {m.group(2)}"
+                                else:
+                                    m = re.search(title_patterns[7], upper)
+                                    if m:
+                                        name = f"VOR {m.group(1)}"
+                                    else:
+                                        m = re.search(title_patterns[8], upper)
+                                        if m:
+                                            name = f"NDB {m.group(1)}"
+                                        else:
+                                            continue
 
-            if name not in seen:
-                seen.add(name)
-                results.append(name)
+        # Preserve an aircraft-category qualifier when Jeppesen puts it
+        # in the header for a distinct version of the procedure.
+        header_window = " ".join(lines[:25]).upper()
+        cat = re.search(r"\bCAT\s+([ABCD])\s*&\s*([ABCD])\b", header_window)
+        if cat and "CAT " not in name:
+            name += f" CAT {cat.group(1)} & {cat.group(2)}"
 
-            continue
+        return clean_spaces(name)
 
-        # -------------------------------------------------
-        # VOR / VOR DME
-        # -------------------------------------------------
-
-        m = re.search(
-            r"\b(VOR(?:\s+DME)?(?:\s+[0-9A-Z]+)?)"
-            r"\s+RWY\s+([0-9]{1,2}[LRC]?(?:/[0-9]{1,2}[LRC]?)?)",
-            upper
-        )
-
-        if m:
-
-            name = (
-                f"{clean_spaces(m.group(1))}"
-                f" RWY {m.group(2)}"
-            )
-
-            if name not in seen:
-                seen.add(name)
-                results.append(name)
-
-            continue
-
-        # -------------------------------------------------
-        # NDB
-        # -------------------------------------------------
-
-        m = re.search(
-            r"\bNDB\s+RWY\s+"
-            r"([0-9]{1,2}[LRC]?(?:/[0-9]{1,2}[LRC]?)?)",
-            upper
-        )
-
-        if m:
-
-            name = f"NDB RWY {m.group(1)}"
-
-            if name not in seen:
-                seen.add(name)
-                results.append(name)
-
-            continue
-
-        # -------------------------------------------------
-        # RNAV / RNP / SRA / LDA / GLS
-        # -------------------------------------------------
-
-        m = re.search(
-            r"\b(RNAV|RNP|SRA|LDA|GLS)"
-            r"(?:\s+[A-Z0-9]+)*"
-            r"\s+RWY\s+"
-            r"([0-9]{1,2}[LRC]?(?:/[0-9]{1,2}[LRC]?)?)",
-            upper
-        )
-
-        if m:
-
-            name = (
-                f"{m.group(1)} "
-                f"RWY {m.group(2)}"
-            )
-
-            if name not in seen:
-                seen.add(name)
-                results.append(name)
-
-    return ", ".join(results)
-
+    return ""
 
 # ---------------------------------------------------------
 # Airport
@@ -328,21 +306,58 @@ def get_approach_name(text):
 def get_airport_name(text):
 
     upper = text.upper()
+    lines = get_lines(text)
+    joined = " ".join(lines)
 
     if "AIRPORT INFORMATION" in upper:
         return "AIRPORT INFORMATION"
 
     if "AERODROME INFORMATION" in upper:
-        return "AERODROME INFORMATION"
+        return "AIRPORT INFORMATION"
 
-    if "AIRPORT CHART" in upper:
-        return "AIRPORT CHART"
+    if "AIRPORT BRIEFING" in upper:
+        return "AIRPORT BRIEFING"
 
-    if "AERODROME CHART" in upper:
-        return "AERODROME CHART"
+    if "AIRPORT QUALIFICATION" in upper:
+        return "AIRPORT QUALIFICATION"
 
-    return "AIRPORT CHART"
+    if "RADAR MINIMUM ALTITUDES" in upper:
+        return "RADAR MINIMUM ALTITUDES"
 
+    if "INS COORDINATES" in upper:
+        return "INS COORDINATES"
+
+    if "PARKING STANDS" in upper and "COORD" in upper:
+        return "PARKING STANDS & COORDS"
+
+    if (
+        "PARKING/DOCKING" in upper
+        or "PARKING / DOCKING" in upper
+        or "DOCKING CHART" in upper
+    ):
+        return "PARKING/DOCKING CHART (PDC)"
+
+    m = re.search(
+        r"\bTAXI\s+ROUTES?\s+(ARRIVAL|DEPARTURE)"
+        r"(?:\s+RWYS?\s+[0-9LRC, &/()A-Z.-]+)?",
+        joined.upper()
+    )
+    if m:
+        name = clean_spaces(m.group(0))
+        return name.rstrip(" .,-")
+
+    if (
+        "STRAIGHT-IN RWY" in upper
+        or "TAKE-OFF" in upper and "ADEQUATE VIS REF" in upper
+    ):
+        return "MINIMUMS"
+
+    # The main airport plan is the ADC. Specific apron/parking pages above
+    # are detected before this fallback.
+    if "AIRPORT CHART" in upper or "AERODROME CHART" in upper:
+        return "AIRPORT DIAGRAM CHART (ADC)"
+
+    return ""
 
 # ---------------------------------------------------------
 # Other
@@ -416,9 +431,23 @@ def build_chart_name(
 
     if category == "Airport":
 
-        return get_airport_name(
+        name = get_airport_name(
             text
         )
+
+        if name:
+            return name
+
+        upper = text.upper()
+
+        # Jeppesen airport-plan conventions when a title is not text-extractable.
+        if re.search(r"\b(?:10|20|30)-9S\w*\b", upper):
+            return "MINIMUMS"
+
+        if re.search(r"\b(?:10|20|30)-9\b", upper):
+            return "AIRPORT DIAGRAM CHART (ADC)"
+
+        return "AIRPORT CHART"
 
     return get_other_name(
         text,
