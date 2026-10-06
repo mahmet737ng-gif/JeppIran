@@ -26,13 +26,9 @@ object OfflineBriefingStore {
             .onSuccess { weather = true }
             .onFailure { notes += "WX: " + (it.message ?: "failed") }
 
-        if (NotamStore.configured(context)) {
-            runCatching { NotamStore.fetch(context, key) }
-                .onSuccess { notams = true }
-                .onFailure { notes += "NOTAM: " + (it.message ?: "failed") }
-        } else {
-            notes += "NOTAM: API key not configured"
-        }
+        runCatching { NotamStore.fetch(context, key) }
+            .onSuccess { notams = true }
+            .onFailure { notes += "NOTAM: " + (it.message ?: "failed") }
 
         runCatching {
             val repository = ChartRepository(context)
