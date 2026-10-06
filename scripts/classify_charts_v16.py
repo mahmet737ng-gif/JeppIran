@@ -379,10 +379,12 @@ def detect_chart_number(
     ).upper()
 
     patterns = [
-        r"\b10-9[A-Z0-9]*\b",
+        r"\b(?:10|20|30)-9[A-Z0-9]*\b",
         r"\b10-3[A-Z0-9]*\b",
         r"\b10-2[A-Z0-9]*\b",
         r"\b10-1[A-Z0-9]*\b",
+        r"\b19-[0-9A-Z]+\b",
+        r"\b20-[0-9A-Z]+\b",
         r"\b(?:11|13|14|15|16|17)-[A-Z0-9]*\b",
     ]
 
@@ -445,6 +447,27 @@ def airport_chart(text):
             upper,
         )
     )
+
+
+def airport_support_text(text):
+
+    upper = text.upper()
+
+    signals = [
+        "AIRPORT BRIEFING",
+        "AIRPORT QUALIFICATION",
+        "RADAR MINIMUM ALTITUDES",
+        "INS COORDINATES",
+        "PARKING STANDS",
+        "PARKING/DOCKING",
+        "DOCKING CHART",
+        "TAXI ROUTES ARRIVAL",
+        "TAXI ROUTE ARRIVAL",
+        "TAXI ROUTES DEPARTURE",
+        "STRAIGHT-IN RWY",
+    ]
+
+    return any(signal in upper for signal in signals)
 
 
 def star_text(text):
@@ -537,9 +560,9 @@ def classify(
 
         cn = chart_number.upper()
 
-        # 10-9 = Airport
+        # Main airport diagrams / minima / parking pages.
         if re.fullmatch(
-            r"10-9[A-Z0-9]*",
+            r"(?:10|20|30)-9[A-Z0-9]*",
             cn,
         ):
             return "Airport"
@@ -558,12 +581,19 @@ def classify(
         ):
             return "SID"
 
-        # 10-1 = Other
+        # 10-1 pages are airport briefing / radar / operational support.
         if re.fullmatch(
             r"10-1[A-Z0-9]*",
             cn,
         ):
-            return "Other"
+            return "Airport"
+
+        # 19-/20- airport qualification and airport support pages.
+        if re.fullmatch(
+            r"(?:19|20)-[A-Z0-9]+",
+            cn,
+        ):
+            return "Airport"
 
         # Approach
         if re.fullmatch(
@@ -594,7 +624,14 @@ def classify(
         return "Airport"
 
     # --------------------------------------------------------
-    # 6. Approach fallback
+    # 6. Airport support pages
+    # --------------------------------------------------------
+
+    if airport_support_text(upper):
+        return "Airport"
+
+    # --------------------------------------------------------
+    # 7. Approach fallback
     # --------------------------------------------------------
 
     if approach_text(upper):
