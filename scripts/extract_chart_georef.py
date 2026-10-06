@@ -262,6 +262,9 @@ def main():
     parser.add_argument("--pages", default="all", help="all, or comma-separated source page numbers")
     parser.add_argument("--output", default="app/src/main/assets/chart-georef.json")
     parser.add_argument("--audit", default="docs/georeferencing/georef-audit.json")
+    parser.add_argument("--data-version", default="v18")
+    parser.add_argument("--cycle", default="2026-20")
+    parser.add_argument("--disable-independent-check", action="store_true")
     args = parser.parse_args()
     pdf_path = Path(args.pdf)
     digest = hashlib.sha256(pdf_path.read_bytes()).hexdigest()
@@ -310,11 +313,11 @@ def main():
              "x": 261.48, "y": 295.56, "coordinateSourcePage": 32,
              "symbolSourcePage": 42, "tolerancePdfPoints": 1.6}
     chart42 = next((c for c in charts if c["page"] == 42), None)
-    if chart42:
+    if chart42 and not args.disable_independent_check:
         check_projection(chart42, check)
         chart42["validation"]["independentChecks"] = [check]
     source = {"file": pdf_path.name, "sha256": digest, "pageCount": len(doc),
-              "chartDataVersion": "v18", "cycle": "2026-20"}
+              "chartDataVersion": args.data_version, "cycle": args.cycle}
     root = {"version": 2, "coordinateSystem": "WGS84", "coordinateSpace": "pdf_points",
             "origin": "top_left", "source": source, "charts": charts}
     airports = []

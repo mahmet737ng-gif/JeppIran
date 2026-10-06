@@ -54,7 +54,7 @@ class ChartRepository(
     companion object {
 
         private const val APP_FILE =
-            "charts-app-v18.json"
+            "charts-current.json"
 
         private const val MANIFEST_FILE =
             "charts-manifest.json"
