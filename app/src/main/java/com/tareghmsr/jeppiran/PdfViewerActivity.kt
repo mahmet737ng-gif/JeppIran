@@ -6112,18 +6112,41 @@ private val locationPermissionLauncher =
     private val simulatorUpdateRunnable =
         object : Runnable {
             override fun run() {
-                if (!positionResumed || !AircraftPositionStore.isEnabled(this@PdfViewerActivity)) {
+                if (
+                    !positionResumed ||
+                    !AircraftPositionStore.isEnabled(
+                        this@PdfViewerActivity
+                    )
+                ) {
                     return
                 }
+
                 updateSimulatorLabel()
 
-                if (
-                    SimulatorLocationStore.isConnected()
-                ) {
-                    handler.postDelayed(
-                        this,
-                        500L
-                    )
+                when {
+
+                    SimulatorLocationStore.isConnected() -> {
+
+                        stopGps()
+
+                        handler.postDelayed(
+                            this,
+                            500L
+                        )
+                    }
+
+                    SimulatorLocationStore.isConnecting() -> {
+
+                        handler.postDelayed(
+                            this,
+                            500L
+                        )
+                    }
+
+                    else -> {
+
+                        startGps()
+                    }
                 }
             }
         }
@@ -6160,6 +6183,15 @@ private val locationPermissionLauncher =
         handler.removeCallbacks(
             simulatorUpdateRunnable
         )
+
+        if (
+            SimulatorLocationStore.isConnecting()
+        ) {
+
+            handler.post(
+                simulatorUpdateRunnable
+            )
+        }
 
         // Remove any previous listener before registering a new one.
         stopGps()
@@ -6383,6 +6415,18 @@ private val locationPermissionLauncher =
                 this
             )
         ) {
+            return
+        }
+
+
+        if (
+            SimulatorLocationStore.isConnecting()
+        ) {
+
+            updateGpsText(
+                "SIM • TESTING"
+            )
+
             return
         }
 
