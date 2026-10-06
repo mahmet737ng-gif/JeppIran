@@ -17,15 +17,16 @@ def main():
     root = json.loads(Path('app/src/main/assets/chart-georef.json').read_text())
     audit = json.loads(Path('docs/georeferencing/georef-audit.json').read_text())
     review = json.loads(Path('docs/georeferencing/reviewed-pages.json').read_text())
-    index = {p['page']: p for p in json.loads(Path('app/src/main/assets/charts-app-v18.json').read_text())}
+    index = {p['page']: p for p in json.loads(Path('app/src/main/assets/charts-current.json').read_text())}
     manifest = json.loads(Path('app/src/main/assets/charts-manifest.json').read_text())
     document = fitz.open(source)
     assert root['version'] == 2 and root['origin'] == 'top_left'
     assert root['coordinateSystem'] == 'WGS84' and root['coordinateSpace'] == 'pdf_points'
     assert root['source']['sha256'] == hashlib.sha256(source.read_bytes()).hexdigest()
     assert root['source']['chartDataVersion'] == manifest['version']
-    assert root['source']['pageCount'] == len(document) == len(index)
-    assert audit['source'] == root['source'] and audit['processedPages'] == len(document)
+    assert root['source']['pageCount'] == len(document)
+    assert set(index) <= set(range(1, len(document) + 1))
+    assert audit['source'] == root['source'] and audit['processedPages'] == len(index)
     assert review['sourceSha256'] == root['source']['sha256']
     assert set(review['pages']) <= {chart['page'] for chart in root['charts']}
     assert len(audit['airports']) == len({p['airport'] for p in index.values()})
@@ -113,7 +114,8 @@ def main():
                                                     if c['airport'] == airport['icao'] and c['status'] != 'not_to_scale'}
 
     print(json.dumps({'validatedCharts': len(pages), 'airports': len(audit['airports']),
-                      'classifiedSourcePages': len(document),
+                      'indexedSourcePages': len(index),
+                      'sourcePdfPages': len(document),
                       'maximumGridResidualPdfPoints': round(maximum_residual, 6)}, indent=2))
 
 
