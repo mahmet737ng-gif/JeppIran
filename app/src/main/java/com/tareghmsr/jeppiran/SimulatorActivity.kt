@@ -55,7 +55,7 @@ class SimulatorActivity : AppCompatActivity() {
 
         root = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setBackgroundColor(backgroundColor())
+            background = getDrawable(R.drawable.bg_flight_deck)
         }
 
         val scroll = ScrollView(this)
