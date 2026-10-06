@@ -314,7 +314,7 @@ private val locationPermissionLauncher =
     private var annotationTool: Tool? = null
 
 
-    private var eraserMode = EraserMode.OBJECT
+    private var eraserMode = EraserMode.PIXEL
 
     private var penColor = Color.rgb(255, 60, 130)
     private var highlightColor = Color.argb(105, 255, 220, 0)
@@ -1641,6 +1641,9 @@ private val locationPermissionLauncher =
                 isHorizontalScrollBarEnabled =
                     false
 
+                isFillViewport =
+                    true
+
                 setBackgroundColor(
                     Color.rgb(
                         5,
@@ -1660,12 +1663,12 @@ private val locationPermissionLauncher =
                     LinearLayout.HORIZONTAL
 
                 gravity =
-                    Gravity.CENTER_VERTICAL
+                    Gravity.CENTER
 
                 setPadding(
-                    4.dp,
+                    8.dp,
                     3.dp,
-                    4.dp,
+                    8.dp,
                     3.dp
                 )
             }
@@ -1673,78 +1676,32 @@ private val locationPermissionLauncher =
 
         tools.addView(
             toolButton(
-                "PEN",
+                "",
                 Tool.PEN,
                 R.drawable.ic_pen
-            ),
-            toolButtonParams(
-                72.dp
-            )
-        )
-
-
-        tools.addView(
-            toolButton(
-                "HIGHLIGHT",
-                Tool.HIGHLIGHT,
-                R.drawable.ic_highlight
-            ),
-            toolButtonParams(
-                108.dp
-            )
-        )
-
-
-        tools.addView(
-            toolButton(
-                "TEXT",
-                Tool.TEXT,
-                R.drawable.ic_text
-            ),
-            toolButtonParams(
-                72.dp
-            )
-        )
-
-
-        tools.addView(
-            toolButton(
-                "ERASER",
-                Tool.ERASER,
-                R.drawable.ic_eraser
-            ),
-            toolButtonParams(
-                88.dp
-            )
-        )
-
-
-        val clear =
-            toolbarButton(
-                "",
-                11f
             ).apply {
 
                 contentDescription =
-                    "Clear all annotations"
-
-                setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.ic_clear,
-                    0,
-                    0,
-                    0
-                )
-
-                setOnClickListener {
-                    showClearAllDialog()
-                }
-            }
+                    "Pencil"
+            },
+            toolButtonParams(
+                58.dp
+            )
+        )
 
 
         tools.addView(
-            clear,
+            toolButton(
+                "",
+                Tool.ERASER,
+                R.drawable.ic_eraser
+            ).apply {
+
+                contentDescription =
+                    "Pixel eraser"
+            },
             toolButtonParams(
-                50.dp
+                58.dp
             )
         )
 
@@ -1752,7 +1709,7 @@ private val locationPermissionLauncher =
         toolScroll.addView(
             tools,
             ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
             )
         )
@@ -1779,84 +1736,9 @@ private val locationPermissionLauncher =
                 this
             ).apply {
 
-                orientation =
-                    LinearLayout.HORIZONTAL
-
-                gravity =
-                    Gravity.CENTER
-
-                setPadding(
-                    8.dp,
-                    4.dp,
-                    8.dp,
-                    4.dp
-                )
-
-                setBackgroundColor(
-                    Color.rgb(
-                        3,
-                        18,
-                        42
-                    )
-                )
-
                 visibility =
                     View.GONE
             }
-
-
-        eraserModeBar.addView(
-            eraserModeButton(
-                "OBJECT ERASER",
-                EraserMode.OBJECT
-            ),
-            LinearLayout.LayoutParams(
-                148.dp,
-                LinearLayout.LayoutParams.MATCH_PARENT
-            ).apply {
-                setMargins(
-                    4.dp,
-                    0,
-                    4.dp,
-                    0
-                )
-            }
-        )
-
-
-        eraserModeBar.addView(
-            eraserModeButton(
-                "PIXEL ERASER",
-                EraserMode.PIXEL
-            ),
-            LinearLayout.LayoutParams(
-                148.dp,
-                LinearLayout.LayoutParams.MATCH_PARENT
-            ).apply {
-                setMargins(
-                    4.dp,
-                    0,
-                    4.dp,
-                    0
-                )
-            }
-        )
-
-
-        root.addView(
-            eraserModeBar,
-            FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                44.dp
-            ).apply {
-
-                gravity =
-                    Gravity.TOP
-
-                topMargin =
-                    106.dp
-            }
-        )
 
 
         annotationContextBar =
@@ -1864,46 +1746,9 @@ private val locationPermissionLauncher =
                 this
             ).apply {
 
-                orientation =
-                    LinearLayout.VERTICAL
-
-                gravity =
-                    Gravity.CENTER_VERTICAL
-
-                setPadding(
-                    8.dp,
-                    4.dp,
-                    8.dp,
-                    4.dp
-                )
-
-                setBackgroundColor(
-                    Color.rgb(
-                        3,
-                        18,
-                        42
-                    )
-                )
-
                 visibility =
                     View.GONE
             }
-
-
-        root.addView(
-            annotationContextBar,
-            FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                92.dp
-            ).apply {
-
-                gravity =
-                    Gravity.TOP
-
-                topMargin =
-                    106.dp
-            }
-        )
 
 
         updateToolButtonStates()
@@ -3963,113 +3808,15 @@ private val locationPermissionLauncher =
 
     private fun updateEraserModeBar() {
 
+        eraserMode =
+            EraserMode.PIXEL
+
         if (
-            !::eraserModeBar.isInitialized
+            ::eraserModeBar.isInitialized
         ) {
-            return
-        }
 
-
-        val shouldShow =
-            controlsVisible &&
-                annotationTool ==
-                    Tool.ERASER
-
-
-        eraserModeBar.visibility =
-            if (
-                shouldShow
-            ) {
-
-                View.VISIBLE
-
-            } else {
-
+            eraserModeBar.visibility =
                 View.GONE
-            }
-
-
-        for (
-            i in
-                0 until
-                eraserModeBar.childCount
-        ) {
-
-            val button =
-                eraserModeBar.getChildAt(
-                    i
-                ) as? TextView
-                    ?: continue
-
-
-            val mode =
-                button.tag as? EraserMode
-                    ?: continue
-
-
-            val selected =
-                mode ==
-                    eraserMode
-
-
-            button.setTextColor(
-                if (
-                    selected
-                ) {
-
-                    Color.WHITE
-
-                } else {
-
-                    Color.rgb(
-                        205,
-                        214,
-                        222
-                    )
-                }
-            )
-
-
-            button.background =
-                roundedBackground(
-                    if (
-                        selected
-                    ) {
-
-                        Color.rgb(
-                            117,
-                            28,
-                            82
-                        )
-
-                    } else {
-
-                        Color.rgb(
-                            31,
-                            41,
-                            51
-                        )
-                    },
-                    if (
-                        selected
-                    ) {
-
-                        Color.rgb(
-                            245,
-                            55,
-                            159
-                        )
-
-                    } else {
-
-                        Color.rgb(
-                            76,
-                            91,
-                            105
-                        )
-                    },
-                    12
-                )
         }
     }
 
@@ -4077,527 +3824,14 @@ private val locationPermissionLauncher =
     private fun updateAnnotationContextBar() {
 
         if (
-            !::annotationContextBar.isInitialized
+            ::annotationContextBar.isInitialized
         ) {
-            return
-        }
 
-
-        val tool =
-            annotationTool
-
-
-        val show =
-            controlsVisible &&
-                (
-                    tool ==
-                        Tool.PEN ||
-                    tool ==
-                        Tool.HIGHLIGHT ||
-                    tool ==
-                        Tool.TEXT
-                    )
-
-
-        annotationContextBar.visibility =
-            if (
-                show
-            ) {
-
-                View.VISIBLE
-
-            } else {
-
+            annotationContextBar.visibility =
                 View.GONE
-            }
 
-
-        annotationContextBar.removeAllViews()
-
-
-        if (
-            !show ||
-            tool ==
-                null
-        ) {
-
-            updateOverlayInsets()
-
-            return
+            annotationContextBar.removeAllViews()
         }
-
-
-        val colors =
-            intArrayOf(
-                Color.rgb(
-                    245,
-                    51,
-                    156
-                ),
-                Color.rgb(
-                    255,
-                    215,
-                    0
-                ),
-                Color.rgb(
-                    60,
-                    160,
-                    255
-                ),
-                Color.rgb(
-                    80,
-                    225,
-                    135
-                ),
-                Color.WHITE
-            )
-
-
-        val currentColor =
-            when (
-                tool
-            ) {
-
-                Tool.PEN ->
-                    penColor
-
-                Tool.HIGHLIGHT ->
-                    Color.rgb(
-                        Color.red(
-                            highlightColor
-                        ),
-                        Color.green(
-                            highlightColor
-                        ),
-                        Color.blue(
-                            highlightColor
-                        )
-                    )
-
-                Tool.TEXT ->
-                    textColor
-
-                else ->
-                    Color.WHITE
-            }
-
-
-        val colorRow =
-            LinearLayout(
-                this
-            ).apply {
-
-                orientation =
-                    LinearLayout.HORIZONTAL
-
-                gravity =
-                    Gravity.CENTER_VERTICAL
-            }
-
-
-        colorRow.addView(
-            TextView(
-                this
-            ).apply {
-
-                text =
-                    "COLOR"
-
-                textSize =
-                    10f
-
-                typeface =
-                    Typeface.DEFAULT_BOLD
-
-                setTextColor(
-                    Color.rgb(
-                        180,
-                        192,
-                        202
-                    )
-                )
-
-                gravity =
-                    Gravity.CENTER_VERTICAL
-            },
-            LinearLayout.LayoutParams(
-                56.dp,
-                36.dp
-            )
-        )
-
-
-        colors.forEach {
-            color ->
-
-            val selected =
-                currentColor ==
-                    color
-
-
-            colorRow.addView(
-                View(
-                    this
-                ).apply {
-
-                    contentDescription =
-                        "Annotation color"
-
-                    background =
-                        android.graphics.drawable
-                            .GradientDrawable()
-                            .apply {
-
-                                shape =
-                                    android.graphics.drawable
-                                        .GradientDrawable
-                                        .OVAL
-
-                                setColor(
-                                    color
-                                )
-
-                                setStroke(
-                                    if (
-                                        selected
-                                    ) {
-
-                                        3.dp
-
-                                    } else {
-
-                                        1.dp
-                                    },
-                                    if (
-                                        selected
-                                    ) {
-
-                                        Color.rgb(
-                                            245,
-                                            51,
-                                            156
-                                        )
-
-                                    } else {
-
-                                        Color.rgb(
-                                            110,
-                                            123,
-                                            134
-                                        )
-                                    }
-                                )
-                            }
-
-
-                    setOnClickListener {
-
-                        when (
-                            tool
-                        ) {
-
-                            Tool.PEN ->
-                                penColor =
-                                    color
-
-                            Tool.HIGHLIGHT ->
-                                highlightColor =
-                                    Color.argb(
-                                        105,
-                                        Color.red(
-                                            color
-                                        ),
-                                        Color.green(
-                                            color
-                                        ),
-                                        Color.blue(
-                                            color
-                                        )
-                                    )
-
-                            Tool.TEXT ->
-                                textColor =
-                                    color
-
-                            else ->
-                                Unit
-                        }
-
-
-                        updateAnnotationContextBar()
-
-                        chartView.invalidate()
-                    }
-                },
-                LinearLayout.LayoutParams(
-                    28.dp,
-                    28.dp
-                ).apply {
-
-                    setMargins(
-                        5.dp,
-                        3.dp,
-                        5.dp,
-                        3.dp
-                    )
-                }
-            )
-        }
-
-
-        annotationContextBar.addView(
-            colorRow,
-            LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                40.dp
-            )
-        )
-
-
-        val sizeRow =
-            LinearLayout(
-                this
-            ).apply {
-
-                orientation =
-                    LinearLayout.HORIZONTAL
-
-                gravity =
-                    Gravity.CENTER_VERTICAL
-            }
-
-
-        sizeRow.addView(
-            TextView(
-                this
-            ).apply {
-
-                text =
-                    if (
-                        tool ==
-                        Tool.TEXT
-                    ) {
-
-                        "SIZE"
-
-                    } else {
-
-                        "WIDTH"
-                    }
-
-                textSize =
-                    10f
-
-                typeface =
-                    Typeface.DEFAULT_BOLD
-
-                setTextColor(
-                    Color.rgb(
-                        180,
-                        192,
-                        202
-                    )
-                )
-
-                gravity =
-                    Gravity.CENTER_VERTICAL
-            },
-            LinearLayout.LayoutParams(
-                56.dp,
-                36.dp
-            )
-        )
-
-
-        val sizes =
-            when (
-                tool
-            ) {
-
-                Tool.PEN ->
-                    floatArrayOf(
-                        3f,
-                        5f,
-                        8f,
-                        12f,
-                        18f
-                    )
-
-                Tool.HIGHLIGHT ->
-                    floatArrayOf(
-                        12f,
-                        18f,
-                        24f,
-                        32f,
-                        44f
-                    )
-
-                Tool.TEXT ->
-                    floatArrayOf(
-                        14f,
-                        18f,
-                        24f,
-                        32f,
-                        44f
-                    )
-
-                else ->
-                    floatArrayOf()
-            }
-
-
-        val selectedSize =
-            when (
-                tool
-            ) {
-
-                Tool.PEN ->
-                    penWidth
-
-                Tool.HIGHLIGHT ->
-                    highlightWidth
-
-                Tool.TEXT ->
-                    textDefaultSize
-
-                else ->
-                    0f
-            }
-
-
-        sizes.forEachIndexed {
-            index,
-            value ->
-
-            val selected =
-                abs(
-                    selectedSize -
-                        value
-                ) <
-                    0.1f
-
-
-            sizeRow.addView(
-                TextView(
-                    this
-                ).apply {
-
-                    text =
-                        "●"
-
-                    textSize =
-                        (
-                            8f +
-                                index *
-                                3f
-                            )
-
-                    gravity =
-                        Gravity.CENTER
-
-                    setTextColor(
-                        if (
-                            selected
-                        ) {
-
-                            Color.rgb(
-                                245,
-                                51,
-                                156
-                            )
-
-                        } else {
-
-                            Color.WHITE
-                        }
-                    )
-
-                    background =
-                        roundedBackground(
-                            if (
-                                selected
-                            ) {
-
-                                Color.rgb(
-                                    70,
-                                    34,
-                                    60
-                                )
-
-                            } else {
-
-                                Color.TRANSPARENT
-                            },
-                            if (
-                                selected
-                            ) {
-
-                                Color.rgb(
-                                    245,
-                                    51,
-                                    156
-                                )
-
-                            } else {
-
-                                Color.TRANSPARENT
-                            },
-                            10
-                        )
-
-
-                    setOnClickListener {
-
-                        when (
-                            tool
-                        ) {
-
-                            Tool.PEN ->
-                                penWidth =
-                                    value
-
-                            Tool.HIGHLIGHT ->
-                                highlightWidth =
-                                    value
-
-                            Tool.TEXT ->
-                                textDefaultSize =
-                                    value
-
-                            else ->
-                                Unit
-                        }
-
-
-                        updateAnnotationContextBar()
-                    }
-                },
-                LinearLayout.LayoutParams(
-                    45.dp,
-                    36.dp
-                ).apply {
-
-                    setMargins(
-                        3.dp,
-                        0,
-                        3.dp,
-                        0
-                    )
-                }
-            )
-        }
-
-
-        annotationContextBar.addView(
-            sizeRow,
-            LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                40.dp
-            )
-        )
-
-
-        updateOverlayInsets()
     }
 
 
@@ -6843,7 +6077,7 @@ private val locationPermissionLauncher =
                     ) {
 
                         eraserMode =
-                            EraserMode.OBJECT
+                            EraserMode.PIXEL
                     }
                 }
 
@@ -7147,6 +6381,9 @@ private val locationPermissionLauncher =
 
         private var pinchDistance =
             0f
+
+        private var pinchGestureActive =
+            false
 
 
         private var selectedTextIndex =
@@ -9756,6 +8993,38 @@ private val locationPermissionLauncher =
 
                     if (
                         event.pointerCount >=
+                        2
+                    ) {
+
+                        pinchGestureActive =
+                            true
+
+                        moved =
+                            true
+
+                        swiping =
+                            false
+
+                        swipeOffset =
+                            0f
+
+                        pendingSingleTap
+                            ?.let {
+                                handler.removeCallbacks(
+                                    it
+                                )
+                            }
+
+                        pendingSingleTap =
+                            null
+
+                        lastTapUpTime =
+                            0L
+                    }
+
+
+                    if (
+                        event.pointerCount >=
                         2 &&
                         annotationTool == null &&
                         selectedTextIndex >=
@@ -9824,7 +9093,48 @@ private val locationPermissionLauncher =
                 }
 
 
+                MotionEvent.ACTION_POINTER_UP -> {
+
+                    if (
+                        pinchGestureActive
+                    ) {
+
+                        pinchDistance =
+                            0f
+
+                        activePoints =
+                            null
+
+                        swiping =
+                            false
+
+                        swipeOffset =
+                            0f
+
+                        moved =
+                            true
+
+                        invalidate()
+                    }
+
+                    return true
+                }
+
+
                 MotionEvent.ACTION_MOVE -> {
+
+                    if (
+                        pinchGestureActive &&
+                        event.pointerCount <
+                        2
+                    ) {
+
+                        // After a pinch, one finger usually leaves the glass a few
+                        // milliseconds later. Ignore that residual single touch so
+                        // the chart cannot pan or jump toward the remaining finger.
+                        return true
+                    }
+
 
                     if (
                         event.pointerCount >=
@@ -10169,23 +9479,10 @@ private val locationPermissionLauncher =
 
                         Tool.ERASER -> {
 
-                            if (
-                                eraserMode ==
-                                EraserMode.OBJECT
-                            ) {
-
-                                eraseObjectAt(
-                                    event.x,
-                                    event.y
-                                )
-
-                            } else {
-
-                                erasePixelAt(
-                                    event.x,
-                                    event.y
-                                )
-                            }
+                            erasePixelAt(
+                                event.x,
+                                event.y
+                            )
                         }
 
 
@@ -10206,6 +9503,39 @@ private val locationPermissionLauncher =
 
 
                 MotionEvent.ACTION_UP -> {
+
+                    if (
+                        pinchGestureActive
+                    ) {
+
+                        pinchGestureActive =
+                            false
+
+                        pinchDistance =
+                            0f
+
+                        moved =
+                            false
+
+                        swiping =
+                            false
+
+                        swipeOffset =
+                            0f
+
+                        activePoints =
+                            null
+
+                        textGestureStartCenter =
+                            null
+
+                        constrainPan()
+
+                        invalidate()
+
+                        return true
+                    }
+
 
                     when (
                         annotationTool
@@ -10394,6 +9724,12 @@ private val locationPermissionLauncher =
 
 
                 MotionEvent.ACTION_CANCEL -> {
+
+                    pinchGestureActive =
+                        false
+
+                    pinchDistance =
+                        0f
 
                     activePoints =
                         null
