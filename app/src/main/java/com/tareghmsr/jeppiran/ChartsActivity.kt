@@ -4217,8 +4217,8 @@ class ChartsActivity : AppCompatActivity() {
                         1.2f +
                             index *
                                 .42f
-                        )
-                        .dp
+                        ) *
+                        resources.displayMetrics.density
 
                 canvas.drawLine(
                     x0,
@@ -4284,8 +4284,8 @@ class ChartsActivity : AppCompatActivity() {
                         .8f +
                             t *
                                 1.8f
-                        )
-                        .dp
+                        ) *
+                        resources.displayMetrics.density
 
                 canvas.drawCircle(
                     currentCenter -
