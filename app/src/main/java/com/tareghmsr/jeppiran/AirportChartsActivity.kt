@@ -1393,9 +1393,9 @@ class AirportChartsActivity :
                     isDarkTheme()
                 ) {
                     Color.rgb(
-                        25,
-                        35,
-                        45
+                        7,
+                        26,
+                        49
                     )
                 } else {
                     Color.WHITE
@@ -1441,18 +1441,18 @@ class AirportChartsActivity :
 
                 setColor(
                     Color.rgb(
-                        25,
-                        115,
-                        125
+                        9,
+                        105,
+                        181
                     )
                 )
 
                 setStroke(
                     1.dp,
                     Color.rgb(
-                        25,
-                        115,
-                        125
+                        9,
+                        105,
+                        181
                     )
                 )
 
@@ -1505,9 +1505,9 @@ class AirportChartsActivity :
             isDarkTheme()
         ) {
             Color.rgb(
-                14,
-                22,
-                30
+                2,
+                11,
+                26
             )
         } else {
             Color.rgb(
@@ -1525,9 +1525,9 @@ class AirportChartsActivity :
             isDarkTheme()
         ) {
             Color.rgb(
-                18,
-                28,
-                37
+                7,
+                26,
+                49
             )
         } else {
             Color.WHITE
