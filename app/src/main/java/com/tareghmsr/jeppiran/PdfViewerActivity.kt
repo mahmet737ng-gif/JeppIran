@@ -368,7 +368,11 @@ private val locationPermissionLauncher =
         val points:
             MutableList<PointF>,
         val highlight:
-            Boolean
+            Boolean,
+        val color:
+            Int,
+        val width:
+            Float
     )
 
 
@@ -386,7 +390,13 @@ private val locationPermissionLauncher =
         var align:
             TextAlign,
         var size:
-            Float = 20f
+            Float = 20f,
+        var color:
+            Int = Color.rgb(
+                255,
+                60,
+                130
+            )
     )
 
 
@@ -3913,7 +3923,541 @@ private val locationPermissionLauncher =
                     12
                 )
         }
+    }
 
+
+    private fun updateAnnotationContextBar() {
+
+        if (
+            !::annotationContextBar.isInitialized
+        ) {
+            return
+        }
+
+
+        val tool =
+            annotationTool
+
+
+        val show =
+            controlsVisible &&
+                (
+                    tool ==
+                        Tool.PEN ||
+                    tool ==
+                        Tool.HIGHLIGHT ||
+                    tool ==
+                        Tool.TEXT
+                    )
+
+
+        annotationContextBar.visibility =
+            if (
+                show
+            ) {
+
+                View.VISIBLE
+
+            } else {
+
+                View.GONE
+            }
+
+
+        annotationContextBar.removeAllViews()
+
+
+        if (
+            !show ||
+            tool ==
+                null
+        ) {
+
+            updateOverlayInsets()
+
+            return
+        }
+
+
+        val colors =
+            intArrayOf(
+                Color.rgb(
+                    245,
+                    51,
+                    156
+                ),
+                Color.rgb(
+                    255,
+                    215,
+                    0
+                ),
+                Color.rgb(
+                    60,
+                    160,
+                    255
+                ),
+                Color.rgb(
+                    80,
+                    225,
+                    135
+                ),
+                Color.WHITE
+            )
+
+
+        val currentColor =
+            when (
+                tool
+            ) {
+
+                Tool.PEN ->
+                    penColor
+
+                Tool.HIGHLIGHT ->
+                    Color.rgb(
+                        Color.red(
+                            highlightColor
+                        ),
+                        Color.green(
+                            highlightColor
+                        ),
+                        Color.blue(
+                            highlightColor
+                        )
+                    )
+
+                Tool.TEXT ->
+                    textColor
+
+                else ->
+                    Color.WHITE
+            }
+
+
+        val colorRow =
+            LinearLayout(
+                this
+            ).apply {
+
+                orientation =
+                    LinearLayout.HORIZONTAL
+
+                gravity =
+                    Gravity.CENTER_VERTICAL
+            }
+
+
+        colorRow.addView(
+            TextView(
+                this
+            ).apply {
+
+                text =
+                    "COLOR"
+
+                textSize =
+                    10f
+
+                typeface =
+                    Typeface.DEFAULT_BOLD
+
+                setTextColor(
+                    Color.rgb(
+                        180,
+                        192,
+                        202
+                    )
+                )
+
+                gravity =
+                    Gravity.CENTER_VERTICAL
+            },
+            LinearLayout.LayoutParams(
+                56.dp,
+                36.dp
+            )
+        )
+
+
+        colors.forEach {
+            color ->
+
+            val selected =
+                currentColor ==
+                    color
+
+
+            colorRow.addView(
+                View(
+                    this
+                ).apply {
+
+                    contentDescription =
+                        "Annotation color"
+
+                    background =
+                        android.graphics.drawable
+                            .GradientDrawable()
+                            .apply {
+
+                                shape =
+                                    android.graphics.drawable
+                                        .GradientDrawable
+                                        .OVAL
+
+                                setColor(
+                                    color
+                                )
+
+                                setStroke(
+                                    if (
+                                        selected
+                                    ) {
+
+                                        3.dp
+
+                                    } else {
+
+                                        1.dp
+                                    },
+                                    if (
+                                        selected
+                                    ) {
+
+                                        Color.rgb(
+                                            245,
+                                            51,
+                                            156
+                                        )
+
+                                    } else {
+
+                                        Color.rgb(
+                                            110,
+                                            123,
+                                            134
+                                        )
+                                    }
+                                )
+                            }
+
+
+                    setOnClickListener {
+
+                        when (
+                            tool
+                        ) {
+
+                            Tool.PEN ->
+                                penColor =
+                                    color
+
+                            Tool.HIGHLIGHT ->
+                                highlightColor =
+                                    Color.argb(
+                                        105,
+                                        Color.red(
+                                            color
+                                        ),
+                                        Color.green(
+                                            color
+                                        ),
+                                        Color.blue(
+                                            color
+                                        )
+                                    )
+
+                            Tool.TEXT ->
+                                textColor =
+                                    color
+
+                            else ->
+                                Unit
+                        }
+
+
+                        updateAnnotationContextBar()
+
+                        chartView.invalidate()
+                    }
+                },
+                LinearLayout.LayoutParams(
+                    28.dp,
+                    28.dp
+                ).apply {
+
+                    setMargins(
+                        5.dp,
+                        3.dp,
+                        5.dp,
+                        3.dp
+                    )
+                }
+            )
+        }
+
+
+        annotationContextBar.addView(
+            colorRow,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                40.dp
+            )
+        )
+
+
+        val sizeRow =
+            LinearLayout(
+                this
+            ).apply {
+
+                orientation =
+                    LinearLayout.HORIZONTAL
+
+                gravity =
+                    Gravity.CENTER_VERTICAL
+            }
+
+
+        sizeRow.addView(
+            TextView(
+                this
+            ).apply {
+
+                text =
+                    if (
+                        tool ==
+                        Tool.TEXT
+                    ) {
+
+                        "SIZE"
+
+                    } else {
+
+                        "WIDTH"
+                    }
+
+                textSize =
+                    10f
+
+                typeface =
+                    Typeface.DEFAULT_BOLD
+
+                setTextColor(
+                    Color.rgb(
+                        180,
+                        192,
+                        202
+                    )
+                )
+
+                gravity =
+                    Gravity.CENTER_VERTICAL
+            },
+            LinearLayout.LayoutParams(
+                56.dp,
+                36.dp
+            )
+        )
+
+
+        val sizes =
+            when (
+                tool
+            ) {
+
+                Tool.PEN ->
+                    floatArrayOf(
+                        3f,
+                        5f,
+                        8f,
+                        12f,
+                        18f
+                    )
+
+                Tool.HIGHLIGHT ->
+                    floatArrayOf(
+                        12f,
+                        18f,
+                        24f,
+                        32f,
+                        44f
+                    )
+
+                Tool.TEXT ->
+                    floatArrayOf(
+                        14f,
+                        18f,
+                        24f,
+                        32f,
+                        44f
+                    )
+
+                else ->
+                    floatArrayOf()
+            }
+
+
+        val selectedSize =
+            when (
+                tool
+            ) {
+
+                Tool.PEN ->
+                    penWidth
+
+                Tool.HIGHLIGHT ->
+                    highlightWidth
+
+                Tool.TEXT ->
+                    textDefaultSize
+
+                else ->
+                    0f
+            }
+
+
+        sizes.forEachIndexed {
+            index,
+            value ->
+
+            val selected =
+                abs(
+                    selectedSize -
+                        value
+                ) <
+                    0.1f
+
+
+            sizeRow.addView(
+                TextView(
+                    this
+                ).apply {
+
+                    text =
+                        "●"
+
+                    textSize =
+                        (
+                            8f +
+                                index *
+                                3f
+                            )
+
+                    gravity =
+                        Gravity.CENTER
+
+                    setTextColor(
+                        if (
+                            selected
+                        ) {
+
+                            Color.rgb(
+                                245,
+                                51,
+                                156
+                            )
+
+                        } else {
+
+                            Color.WHITE
+                        }
+                    )
+
+                    background =
+                        roundedBackground(
+                            if (
+                                selected
+                            ) {
+
+                                Color.rgb(
+                                    70,
+                                    34,
+                                    60
+                                )
+
+                            } else {
+
+                                Color.TRANSPARENT
+                            },
+                            if (
+                                selected
+                            ) {
+
+                                Color.rgb(
+                                    245,
+                                    51,
+                                    156
+                                )
+
+                            } else {
+
+                                Color.TRANSPARENT
+                            },
+                            10
+                        )
+
+
+                    setOnClickListener {
+
+                        when (
+                            tool
+                        ) {
+
+                            Tool.PEN ->
+                                penWidth =
+                                    value
+
+                            Tool.HIGHLIGHT ->
+                                highlightWidth =
+                                    value
+
+                            Tool.TEXT ->
+                                textDefaultSize =
+                                    value
+
+                            else ->
+                                Unit
+                        }
+
+
+                        updateAnnotationContextBar()
+                    }
+                },
+                LinearLayout.LayoutParams(
+                    45.dp,
+                    36.dp
+                ).apply {
+
+                    setMargins(
+                        3.dp,
+                        0,
+                        3.dp,
+                        0
+                    )
+                }
+            )
+        }
+
+
+        annotationContextBar.addView(
+            sizeRow,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                40.dp
+            )
+        )
+
+
+        updateOverlayInsets()
+    }
+
+
+    private fun updateToolOptions() {
+
+        updateEraserModeBar()
+
+        updateAnnotationContextBar()
 
         updateOverlayInsets()
     }
@@ -4070,7 +4614,7 @@ private val locationPermissionLauncher =
                                 1f,
                                 0f,
                                 TextAlign.LEFT,
-                                20f
+                                textDefaultSize
                             )
 
 
@@ -4080,6 +4624,9 @@ private val locationPermissionLauncher =
                         safe.y,
                         TextAlign.LEFT
                     )
+
+
+                    chartView.selectLastText()
 
 
                     saveAnnotationsForCurrentChart()
@@ -4267,6 +4814,14 @@ private val locationPermissionLauncher =
                             stroke.highlight
                         )
                         .put(
+                            "color",
+                            stroke.color
+                        )
+                        .put(
+                            "width",
+                            stroke.width
+                        )
+                        .put(
                             "points",
                             points
                         )
@@ -4312,6 +4867,10 @@ private val locationPermissionLauncher =
                         .put(
                             "size",
                             item.size
+                        )
+                        .put(
+                            "color",
+                            item.color
                         )
                 )
             }
@@ -4491,13 +5050,55 @@ private val locationPermissionLauncher =
                         2
                     ) {
 
-                        chartView.addStoredStroke(
-                            points,
+                        val highlight =
                             strokeObject
                                 .optBoolean(
                                     "highlight",
                                     false
                                 )
+
+
+                        chartView.addStoredStroke(
+                            points,
+                            highlight,
+                            strokeObject
+                                .optInt(
+                                    "color",
+                                    if (
+                                        highlight
+                                    ) {
+
+                                        Color.argb(
+                                            105,
+                                            255,
+                                            220,
+                                            0
+                                        )
+
+                                    } else {
+
+                                        Color.rgb(
+                                            255,
+                                            60,
+                                            130
+                                        )
+                                    }
+                                ),
+                            strokeObject
+                                .optDouble(
+                                    "width",
+                                    if (
+                                        highlight
+                                    ) {
+
+                                        22.0
+
+                                    } else {
+
+                                        5.0
+                                    }
+                                )
+                                .toFloat()
                         )
                     }
                 }
@@ -4614,7 +5215,15 @@ private val locationPermissionLauncher =
                         scale,
                         rotation,
                         align,
-                        size
+                        size,
+                        item.optInt(
+                            "color",
+                            Color.rgb(
+                                255,
+                                60,
+                                130
+                            )
+                        )
                     )
                 }
             }
@@ -5627,7 +6236,7 @@ private val locationPermissionLauncher =
         }
 
 
-        updateEraserModeBar()
+        updateToolOptions()
     }
 
 
