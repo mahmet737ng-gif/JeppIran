@@ -289,6 +289,45 @@ class SettingsActivity :
             }
         )
 
+        val pilotTitle =
+            TextView(this).apply {
+                text = "PILOT DATA & LIMITS"
+                textSize = 12f
+                typeface = Typeface.DEFAULT_BOLD
+                setTextColor(secondaryTextColor())
+                setPadding(20.dp, 18.dp, 20.dp, 10.dp)
+            }
+
+        root.addView(pilotTitle)
+
+        val pilotOption =
+            TextView(this).apply {
+                text = "     NOTAM source • Wind limits • Briefing data"
+                textSize = 17f
+                setTextColor(textColor())
+                background = roundedSurface()
+                gravity = Gravity.CENTER_VERTICAL
+                setPadding(24.dp, 18.dp, 24.dp, 18.dp)
+                setOnClickListener {
+                    startActivity(
+                        android.content.Intent(
+                            this@SettingsActivity,
+                            PilotToolsSettingsActivity::class.java
+                        )
+                    )
+                }
+            }
+
+        root.addView(
+            pilotOption,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                60.dp
+            ).apply {
+                setMargins(16.dp, 4.dp, 16.dp, 4.dp)
+            }
+        )
+
         val spacer =
             LinearLayout(this)
 
