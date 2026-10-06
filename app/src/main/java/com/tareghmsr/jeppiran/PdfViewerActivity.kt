@@ -5430,7 +5430,7 @@ private val locationPermissionLauncher =
                     1f
                 )
                 .setDuration(
-                    140L
+                    VIEWER_TRANSITION_MS
                 )
                 .start()
 
@@ -5476,6 +5476,13 @@ private val locationPermissionLauncher =
 
 
     private fun hideViewerControls() {
+
+        viewerChromeTransitioning =
+            true
+
+        lastVisibleChartInsets =
+            chartView.currentContentInsets()
+
 
         setViewerChromeVisible(
             topToolbar,
@@ -5526,12 +5533,17 @@ private val locationPermissionLauncher =
         }
 
 
-        chartView.setContentInsets(
+        chartView.animateContentInsetsTo(
             0,
             0,
             0,
-            0
-        )
+            0,
+            VIEWER_TRANSITION_MS
+        ) {
+
+            viewerChromeTransitioning =
+                false
+        }
 
 
         WindowInsetsControllerCompat(
@@ -5551,6 +5563,19 @@ private val locationPermissionLauncher =
 
 
     private fun showViewerControls() {
+
+        viewerChromeTransitioning =
+            true
+
+
+        WindowInsetsControllerCompat(
+            window,
+            window.decorView
+        )
+            .show(
+                WindowInsetsCompat.Type.systemBars()
+            )
+
 
         setViewerChromeVisible(
             topToolbar,
@@ -5589,22 +5614,51 @@ private val locationPermissionLauncher =
         updateChartTreeLayout()
 
 
-        WindowInsetsControllerCompat(
-            window,
-            window.decorView
-        )
-            .show(
-                WindowInsetsCompat.Type.systemBars()
+        val target =
+            lastVisibleChartInsets
+
+
+        chartView.animateContentInsetsTo(
+            target.getOrElse(
+                0
+            ) {
+                0
+            },
+            target.getOrElse(
+                1
+            ) {
+                0
+            },
+            target.getOrElse(
+                2
+            ) {
+                0
+            },
+            target.getOrElse(
+                3
+            ) {
+                0
+            },
+            VIEWER_TRANSITION_MS
+        ) {
+
+            viewerChromeTransitioning =
+                false
+
+            ViewCompat.requestApplyInsets(
+                root
             )
-
-
-        ViewCompat.requestApplyInsets(
-            root
-        )
+        }
     }
 
 
     private fun toggleViewerControls() {
+
+        if (
+            viewerChromeTransitioning
+        ) {
+            return
+        }
 
         controlsVisible =
             !controlsVisible
