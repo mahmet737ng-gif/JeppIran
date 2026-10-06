@@ -6,9 +6,12 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.Gravity
 import android.view.ViewGroup
 import android.view.View
+import android.widget.EditText
 import android.widget.HorizontalScrollView
 import android.widget.LinearLayout
 import android.widget.ScrollView
@@ -32,6 +35,9 @@ class AirportChartsActivity :
 
     private lateinit var categoryTitle:
         TextView
+
+    private lateinit var searchBox:
+        EditText
 
     private lateinit var categoryContainer:
         LinearLayout
@@ -278,6 +284,148 @@ class AirportChartsActivity :
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
+        )
+
+        val searchContainer =
+            LinearLayout(
+                this
+            ).apply {
+
+                orientation =
+                    LinearLayout.HORIZONTAL
+
+                gravity =
+                    Gravity.CENTER_VERTICAL
+
+                background =
+                    createSearchBackground()
+
+                setPadding(
+                    12.dp,
+                    0,
+                    12.dp,
+                    0
+                )
+            }
+
+        searchContainer.addView(
+            TextView(
+                this
+            ).apply {
+
+                text =
+                    "⌕"
+
+                textSize =
+                    22f
+
+                gravity =
+                    Gravity.CENTER
+
+                setTextColor(
+                    secondaryTextColor()
+                )
+
+                contentDescription =
+                    "Search procedures"
+            },
+            LinearLayout.LayoutParams(
+                34.dp,
+                LinearLayout.LayoutParams.MATCH_PARENT
+            )
+        )
+
+        searchBox =
+            EditText(
+                this
+            ).apply {
+
+                hint =
+                    "Search chart / procedure name"
+
+                isSingleLine =
+                    true
+
+                textSize =
+                    15f
+
+                background =
+                    null
+
+                setTextColor(
+                    primaryTextColor()
+                )
+
+                setHintTextColor(
+                    secondaryTextColor()
+                )
+
+                setPadding(
+                    8.dp,
+                    0,
+                    0,
+                    0
+                )
+
+                importantForAutofill =
+                    View.IMPORTANT_FOR_AUTOFILL_NO
+
+                addTextChangedListener(
+                    object :
+                        TextWatcher {
+
+                        override fun beforeTextChanged(
+                            s: CharSequence?,
+                            start: Int,
+                            count: Int,
+                            after: Int
+                        ) = Unit
+
+                        override fun onTextChanged(
+                            s: CharSequence?,
+                            start: Int,
+                            before: Int,
+                            count: Int
+                        ) {
+
+                            if (
+                                selectedCategory.isNotBlank()
+                            ) {
+
+                                refreshSelectedCategory()
+                            }
+                        }
+
+                        override fun afterTextChanged(
+                            s: Editable?
+                        ) = Unit
+                    }
+                )
+            }
+
+        searchContainer.addView(
+            searchBox,
+            LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                1f
+            )
+        )
+
+        root.addView(
+            searchContainer,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                50.dp
+            ).apply {
+
+                setMargins(
+                    16.dp,
+                    2.dp,
+                    16.dp,
+                    8.dp
+                )
+            }
         )
 
         categoryTitle =
@@ -989,7 +1137,35 @@ class AirportChartsActivity :
                     category
                 )
 
-        val charts =
+        searchBox.hint =
+            "Search " +
+                ChartRepository
+                    .displayCategory(
+                        selectedCategory
+                    ) +
+                " chart / procedure"
+
+        refreshSelectedCategory()
+
+        refreshCategoryButtons()
+
+        chartScrollView.post {
+
+            chartScrollView.fullScroll(
+                View.FOCUS_UP
+            )
+        }
+    }
+
+    private fun refreshSelectedCategory() {
+
+        if (
+            selectedCategory.isBlank()
+        ) {
+            return
+        }
+
+        val categoryCharts =
             repository
                 .getDisplayChartsForAirport(
                     icao
@@ -1005,30 +1181,75 @@ class AirportChartsActivity :
                     it.page
                 }
 
+        val query =
+            if (
+                ::searchBox.isInitialized
+            ) {
+
+                searchBox.text
+                    ?.toString()
+                    .orEmpty()
+                    .trim()
+
+            } else {
+
+                ""
+            }
+
+        val charts =
+            if (
+                query.isBlank()
+            ) {
+
+                categoryCharts
+
+            } else {
+
+                categoryCharts.filter {
+                    it.name.contains(
+                        query,
+                        ignoreCase =
+                            true
+                    )
+                }
+            }
+
         categoryTitle.text =
             ChartRepository
                 .displayCategory(
                     selectedCategory
                 ) +
-                "  •  " +
-                charts.size +
-                " CHARTS"
+                if (
+                    query.isBlank()
+                ) {
+
+                    "  •  " +
+                        categoryCharts.size +
+                        " CHARTS"
+
+                } else {
+
+                    "  •  " +
+                        charts.size +
+                        " OF " +
+                        categoryCharts.size
+                }
 
         listContainer.removeAllViews()
 
-        charts.forEach {
-            addChartRow(
-                it
-            )
-        }
+        if (
+            charts.isEmpty()
+        ) {
 
-        refreshCategoryButtons()
+            showNoChartsMessage()
 
-        chartScrollView.post {
+        } else {
 
-            chartScrollView.fullScroll(
-                View.FOCUS_UP
-            )
+            charts.forEach {
+                addChartRow(
+                    it
+                )
+            }
         }
     }
 
@@ -1188,7 +1409,10 @@ class AirportChartsActivity :
             ).apply {
 
                 text =
-                    "${chart.category}  •  PDF Page ${chart.page}"
+                    ChartRepository
+                        .displayCategory(
+                            chart.category
+                        )
 
                 textSize =
                     12f
@@ -1384,6 +1608,52 @@ class AirportChartsActivity :
             .ifBlank {
                 "Airport charts"
             }
+    }
+
+    private fun createSearchBackground():
+        GradientDrawable {
+
+        return GradientDrawable().apply {
+
+            shape =
+                GradientDrawable.RECTANGLE
+
+            cornerRadius =
+                15.dp.toFloat()
+
+            setColor(
+                if (
+                    isDarkTheme()
+                ) {
+                    Color.rgb(
+                        5,
+                        22,
+                        42
+                    )
+                } else {
+                    Color.WHITE
+                }
+            )
+
+            setStroke(
+                1.dp,
+                if (
+                    isDarkTheme()
+                ) {
+                    Color.rgb(
+                        32,
+                        105,
+                        158
+                    )
+                } else {
+                    Color.rgb(
+                        205,
+                        216,
+                        226
+                    )
+                }
+            )
+        }
     }
 
     private fun createChartBackground():
