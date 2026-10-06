@@ -8,16 +8,16 @@ on:
         required: false
         default: ""
       data_version:
-        description: "Optional data version; auto-generated when blank"
+        description: "Optional data version, e.g. 26-21"
         required: false
         default: ""
       cycle:
-        description: "Optional cycle; auto-derived from filename when blank"
+        description: "Optional cycle, e.g. 2621"
         required: false
         default: ""
   push:
     paths:
-      - 'Iran*.pdf'
+      - "Iran*.pdf"
 
 permissions:
   contents: write
@@ -40,7 +40,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.12'
+          python-version: "3.12"
 
       - name: Install PDF tools
         run: |
@@ -59,16 +59,12 @@ jobs:
           set -euo pipefail
 
           SOURCE="$INPUT_SOURCE"
-
           if [ -z "$SOURCE" ]; then
-            SOURCE=$(git diff-tree --no-commit-id --name-only -r "${GITHUB_SHA}" |
-              grep -E '^Iran[^/]*\.pdf$' | head -n 1 || true)
+            SOURCE=$(git diff-tree --no-commit-id --name-only -r "$GITHUB_SHA" | grep -E "^Iran[^/]*\.pdf$" | head -n 1 || true)
           fi
-
           if [ -z "$SOURCE" ]; then
             SOURCE=$(ls -1t Iran*.pdf 2>/dev/null | head -n 1 || true)
           fi
-
           if [ -z "$SOURCE" ] || [ ! -f "$SOURCE" ]; then
             echo "No source PDF found"
             exit 1
@@ -76,125 +72,15 @@ jobs:
 
           CYCLE="$INPUT_CYCLE"
           if [ -z "$CYCLE" ]; then
-            CYCLE=$(basename "$SOURCE" .pdf | sed 's/^Iran//')
+            CYCLE=$(basename "$SOURCE" .pdf | sed "s/^Iran//")
           fi
 
           VERSION="$INPUT_VERSION"
           if [ -z "$VERSION" ]; then
-            if echo "$CYCLE" | grep -Eq '^[0-9]{4}
-
-          echo "source=$SOURCE" >> "$GITHUB_OUTPUT"
-          echo "cycle=$CYCLE" >> "$GITHUB_OUTPUT"
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
-
-          echo "Source: $SOURCE"
-          echo "Cycle: $CYCLE"
-          echo "Version: $VERSION"
-          echo "Release: $TAG"
-
-      - name: Extract source PDF text
-        shell: bash
-        run: |
-          set -euo pipefail
-          SOURCE="${{ steps.cycle.outputs.source }}"
-          rm -rf pdf-text
-          mkdir -p pdf-text
-          PAGES=$(pdfinfo "$SOURCE" | awk '/Pages:/ {print $2}')
-          test "$PAGES" -gt 0
-
-          for page in $(seq 1 "$PAGES"); do
-            pdftotext -f "$page" -l "$page" -layout               "$SOURCE" "pdf-text/page-$page.txt"
-          done
-
-      - name: Rebuild chart classification
-        run: |
-          python scripts/build_base_index.py             --pdf-text pdf-text             --output charts-index-v9.json
-          python scripts/name_charts_v12.py
-          python scripts/classify_charts_v16.py
-
-      - name: Build airport PDFs and manifest
-        run: |
-          python scripts/build_chart_cycle.py             --pdf "${{ steps.cycle.outputs.source }}"             --charts charts-app-v16.json             --version "${{ steps.cycle.outputs.version }}"             --cycle "${{ steps.cycle.outputs.cycle }}"             --release-tag "${{ steps.cycle.outputs.tag }}"             --repo "${{ github.repository }}"             --out-dir cycle-build             --previous-manifest app/src/main/assets/charts-manifest.json
-
-      - name: Rebuild chart georeferencing
-        run: |
-          python scripts/extract_chart_georef.py             --pdf "${{ steps.cycle.outputs.source }}"             --index cycle-build/charts-current.json             --output cycle-build/chart-georef.json             --audit cycle-build/georef-audit.json             --data-version "${{ steps.cycle.outputs.version }}"             --cycle "${{ steps.cycle.outputs.cycle }}"             --disable-independent-check
-
-      - name: Validate bundle
-        shell: bash
-        run: |
-          python - <<'PY'
-          import json
-          from pathlib import Path
-
-          manifest = json.loads(Path("cycle-build/manifest.json").read_text())
-          charts = json.loads(Path("cycle-build/charts-current.json").read_text())
-          georef = json.loads(Path("cycle-build/chart-georef.json").read_text())
-
-          assert manifest["version"]
-          assert manifest["release_tag"]
-          assert manifest["airports"]
-          assert len(charts) > 0
-          assert georef["source"]["chartDataVersion"] == manifest["version"]
-
-          pages = [int(c["page"]) for c in charts]
-          assert len(pages) == len(set(pages))
-          assert all(int(c["pdf_page"]) > 0 for c in charts)
-
-          print("Validated", len(charts), "charts across",
-                len(manifest["airports"]), "airports")
-          PY
-
-      - name: Publish airport PDFs
-        env:
-          GH_TOKEN: ${{ github.token }}
-        shell: bash
-        run: |
-          set -euo pipefail
-          TAG="${{ steps.cycle.outputs.tag }}"
-
-          if ! gh release view "$TAG" >/dev/null 2>&1; then
-            gh release create "$TAG"               --title "JeppIran Chart Data ${{ steps.cycle.outputs.cycle }}"               --notes "Automated JEPPIRAN chart-cycle release."
-          fi
-
-          gh release upload "$TAG"             cycle-build/airports/*.pdf             --clobber
-
-      - name: Atomically publish current metadata
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          cp cycle-build/manifest.json             app/src/main/assets/charts-manifest.json
-
-          cp cycle-build/charts-current.json             app/src/main/assets/charts-current.json
-
-          cp cycle-build/chart-georef.json             app/src/main/assets/chart-georef.json
-
-          cp cycle-build/changed-airports.json             app/src/main/assets/changed-airports.json
-
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add             app/src/main/assets/charts-manifest.json             app/src/main/assets/charts-current.json             app/src/main/assets/chart-georef.json             app/src/main/assets/changed-airports.json
-
-          if git diff --cached --quiet; then
-            echo "Metadata is already current."
-          else
-            git commit -m "Publish chart cycle ${{ steps.cycle.outputs.cycle }}"
-            git push origin HEAD:main
-          fi
-
-      - name: Upload cycle report
-        uses: actions/upload-artifact@v4
-        with:
-          name: JeppIran-cycle-${{ steps.cycle.outputs.cycle }}
-          path: |
-            cycle-build/manifest.json
-            cycle-build/changed-airports.json
-            cycle-build/georef-audit.json
-; then
-              VERSION="${CYCLE:0:2}-${CYCLE:2:2}"
+            if echo "$CYCLE" | grep -Eq "^[0-9]{4}$"; then
+              YY=${CYCLE:0:2}
+              NN=${CYCLE:2:2}
+              VERSION="${YY}-${NN}"
             else
               VERSION="$CYCLE"
             fi
@@ -207,11 +93,6 @@ jobs:
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
-          echo "Source: $SOURCE"
-          echo "Cycle: $CYCLE"
-          echo "Version: $VERSION"
-          echo "Release: $TAG"
-
       - name: Extract source PDF text
         shell: bash
         run: |
@@ -221,24 +102,38 @@ jobs:
           mkdir -p pdf-text
           PAGES=$(pdfinfo "$SOURCE" | awk '/Pages:/ {print $2}')
           test "$PAGES" -gt 0
-
           for page in $(seq 1 "$PAGES"); do
-            pdftotext -f "$page" -l "$page" -layout               "$SOURCE" "pdf-text/page-$page.txt"
+            pdftotext -f "$page" -l "$page" -layout "$SOURCE" "pdf-text/page-$page.txt"
           done
 
       - name: Rebuild chart classification
         run: |
-          python scripts/build_base_index.py             --pdf-text pdf-text             --output charts-index-v9.json
+          python scripts/build_base_index.py --pdf-text pdf-text --output charts-index-v9.json
           python scripts/name_charts_v12.py
           python scripts/classify_charts_v16.py
 
       - name: Build airport PDFs and manifest
         run: |
-          python scripts/build_chart_cycle.py             --pdf "${{ steps.cycle.outputs.source }}"             --charts charts-app-v16.json             --version "${{ steps.cycle.outputs.version }}"             --cycle "${{ steps.cycle.outputs.cycle }}"             --release-tag "${{ steps.cycle.outputs.tag }}"             --repo "${{ github.repository }}"             --out-dir cycle-build             --previous-manifest app/src/main/assets/charts-manifest.json
+          python scripts/build_chart_cycle.py \
+            --pdf "${{ steps.cycle.outputs.source }}" \
+            --charts charts-app-v16.json \
+            --version "${{ steps.cycle.outputs.version }}" \
+            --cycle "${{ steps.cycle.outputs.cycle }}" \
+            --release-tag "${{ steps.cycle.outputs.tag }}" \
+            --repo "${{ github.repository }}" \
+            --out-dir cycle-build \
+            --previous-manifest app/src/main/assets/charts-manifest.json
 
       - name: Rebuild chart georeferencing
         run: |
-          python scripts/extract_chart_georef.py             --pdf "${{ steps.cycle.outputs.source }}"             --index cycle-build/charts-current.json             --output cycle-build/chart-georef.json             --audit cycle-build/georef-audit.json             --data-version "${{ steps.cycle.outputs.version }}"             --cycle "${{ steps.cycle.outputs.cycle }}"             --disable-independent-check
+          python scripts/extract_chart_georef.py \
+            --pdf "${{ steps.cycle.outputs.source }}" \
+            --index cycle-build/charts-current.json \
+            --output cycle-build/chart-georef.json \
+            --audit cycle-build/georef-audit.json \
+            --data-version "${{ steps.cycle.outputs.version }}" \
+            --cycle "${{ steps.cycle.outputs.cycle }}" \
+            --disable-independent-check
 
       - name: Validate bundle
         shell: bash
@@ -246,23 +141,18 @@ jobs:
           python - <<'PY'
           import json
           from pathlib import Path
-
           manifest = json.loads(Path("cycle-build/manifest.json").read_text())
           charts = json.loads(Path("cycle-build/charts-current.json").read_text())
           georef = json.loads(Path("cycle-build/chart-georef.json").read_text())
-
           assert manifest["version"]
           assert manifest["release_tag"]
           assert manifest["airports"]
           assert len(charts) > 0
           assert georef["source"]["chartDataVersion"] == manifest["version"]
-
           pages = [int(c["page"]) for c in charts]
           assert len(pages) == len(set(pages))
           assert all(int(c["pdf_page"]) > 0 for c in charts)
-
-          print("Validated", len(charts), "charts across",
-                len(manifest["airports"]), "airports")
+          print("Validated", len(charts), "charts across", len(manifest["airports"]), "airports")
           PY
 
       - name: Publish airport PDFs
@@ -272,42 +162,33 @@ jobs:
         run: |
           set -euo pipefail
           TAG="${{ steps.cycle.outputs.tag }}"
-
           if ! gh release view "$TAG" >/dev/null 2>&1; then
-            gh release create "$TAG"               --title "JeppIran Chart Data ${{ steps.cycle.outputs.cycle }}"               --notes "Automated JEPPIRAN chart-cycle release."
+            gh release create "$TAG" --title "JeppIran Chart Data ${{ steps.cycle.outputs.version }}" --notes "Automated JEPPIRAN chart-cycle release."
           fi
-
-          gh release upload "$TAG"             cycle-build/airports/*.pdf             --clobber
+          gh release upload "$TAG" cycle-build/airports/*.pdf --clobber
 
       - name: Atomically publish current metadata
         shell: bash
         run: |
           set -euo pipefail
-
-          cp cycle-build/manifest.json             app/src/main/assets/charts-manifest.json
-
-          cp cycle-build/charts-current.json             app/src/main/assets/charts-current.json
-
-          cp cycle-build/chart-georef.json             app/src/main/assets/chart-georef.json
-
-          cp cycle-build/changed-airports.json             app/src/main/assets/changed-airports.json
-
+          cp cycle-build/manifest.json app/src/main/assets/charts-manifest.json
+          cp cycle-build/charts-current.json app/src/main/assets/charts-current.json
+          cp cycle-build/chart-georef.json app/src/main/assets/chart-georef.json
+          cp cycle-build/changed-airports.json app/src/main/assets/changed-airports.json
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
-          git add             app/src/main/assets/charts-manifest.json             app/src/main/assets/charts-current.json             app/src/main/assets/chart-georef.json             app/src/main/assets/changed-airports.json
-
+          git add app/src/main/assets/charts-manifest.json app/src/main/assets/charts-current.json app/src/main/assets/chart-georef.json app/src/main/assets/changed-airports.json
           if git diff --cached --quiet; then
             echo "Metadata is already current."
           else
-            git commit -m "Publish chart cycle ${{ steps.cycle.outputs.cycle }}"
+            git commit -m "Publish chart cycle ${{ steps.cycle.outputs.version }}"
             git push origin HEAD:main
           fi
 
       - name: Upload cycle report
         uses: actions/upload-artifact@v4
         with:
-          name: JeppIran-cycle-${{ steps.cycle.outputs.cycle }}
+          name: JeppIran-cycle-${{ steps.cycle.outputs.version }}
           path: |
             cycle-build/manifest.json
             cycle-build/changed-airports.json
