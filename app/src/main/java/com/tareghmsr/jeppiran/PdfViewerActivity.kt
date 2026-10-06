@@ -1233,11 +1233,7 @@ private val locationPermissionLauncher =
             ).apply {
 
                 setBackgroundColor(
-                    Color.rgb(
-                        14,
-                        18,
-                        23
-                    )
+                    viewerCanvasColor()
                 )
             }
 
@@ -1749,15 +1745,16 @@ private val locationPermissionLauncher =
                     false
 
                 isFillViewport =
-                    true
+                    false
 
-                setBackgroundColor(
-                    Color.rgb(
-                        5,
-                        24,
-                        52
+                background =
+                    viewerPanelBackground(
+                        20,
+                        true
                     )
-                )
+
+                elevation =
+                    12.dp.toFloat()
             }
 
 
@@ -1773,10 +1770,10 @@ private val locationPermissionLauncher =
                     Gravity.CENTER
 
                 setPadding(
-                    8.dp,
-                    3.dp,
-                    8.dp,
-                    3.dp
+                    7.dp,
+                    4.dp,
+                    7.dp,
+                    4.dp
                 )
             }
 
@@ -1792,7 +1789,7 @@ private val locationPermissionLauncher =
                     "Pencil"
             },
             toolButtonParams(
-                58.dp
+                62.dp
             )
         )
 
@@ -1808,7 +1805,7 @@ private val locationPermissionLauncher =
                     "Pixel eraser"
             },
             toolButtonParams(
-                58.dp
+                62.dp
             )
         )
 
@@ -1816,7 +1813,7 @@ private val locationPermissionLauncher =
         toolScroll.addView(
             tools,
             ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.MATCH_PARENT
             )
         )
@@ -1825,12 +1822,13 @@ private val locationPermissionLauncher =
         root.addView(
             toolScroll,
             FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                48.dp
+                154.dp,
+                52.dp
             ).apply {
 
                 gravity =
-                    Gravity.TOP
+                    Gravity.TOP or
+                        Gravity.CENTER_HORIZONTAL
 
                 topMargin =
                     104.dp
@@ -1842,23 +1840,21 @@ private val locationPermissionLauncher =
             LinearLayout(
                 this
             ).apply {
-
                 visibility =
                     View.GONE
             }
 
+
         root.addView(
             eraserModeBar,
             FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                44.dp
+                1.dp,
+                1.dp
             ).apply {
-
                 gravity =
                     Gravity.TOP
-
                 topMargin =
-                    152.dp
+                    156.dp
             }
         )
 
@@ -1867,23 +1863,21 @@ private val locationPermissionLauncher =
             LinearLayout(
                 this
             ).apply {
-
                 visibility =
                     View.GONE
             }
 
+
         root.addView(
             annotationContextBar,
             FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                92.dp
+                1.dp,
+                1.dp
             ).apply {
-
                 gravity =
                     Gravity.TOP
-
                 topMargin =
-                    106.dp
+                    156.dp
             }
         )
 
@@ -2443,46 +2437,40 @@ private val locationPermissionLauncher =
             ).apply {
 
                 textSize =
-                    12f
+                    12.5f
 
                 typeface =
                     Typeface.DEFAULT_BOLD
 
                 setTextColor(
-                    Color.WHITE
+                    primaryTextColor()
                 )
 
                 gravity =
                     Gravity.CENTER_VERTICAL
 
                 setPadding(
-                    14.dp,
-                    9.dp,
-                    14.dp,
-                    9.dp
+                    16.dp,
+                    11.dp,
+                    16.dp,
+                    11.dp
                 )
 
                 background =
-                    roundedBackground(
-                        Color.rgb(
-                            5,
-                            38,
-                            68
-                        ),
-                        Color.rgb(
-                            47,
-                            217,
-                            255
-                        ),
-                        14
+                    viewerPanelBackground(
+                        18,
+                        true
                     )
+
+                elevation =
+                    14.dp.toFloat()
 
                 visibility =
                     View.GONE
 
-
                 setOnTouchListener {
-                        _, event ->
+                        _,
+                        event ->
 
                     when (
                         event.actionMasked
@@ -2495,6 +2483,9 @@ private val locationPermissionLauncher =
                             true
 
                         MotionEvent.ACTION_UP -> {
+
+                            autoMetarTransitionPending =
+                                false
 
                             hideMetarBanner(
                                 true
@@ -2521,13 +2512,13 @@ private val locationPermissionLauncher =
                     Gravity.TOP
 
                 leftMargin =
-                    10.dp
+                    12.dp
 
                 rightMargin =
-                    10.dp
+                    12.dp
 
                 topMargin =
-                    160.dp
+                    166.dp
             }
         )
     }
@@ -2587,10 +2578,10 @@ private val locationPermissionLauncher =
                     104.dp
 
             toolsParams.leftMargin =
-                insetLeft
+                0
 
             toolsParams.rightMargin =
-                insetRight
+                0
 
 
             toolScroll.layoutParams =
@@ -5154,10 +5145,13 @@ private val locationPermissionLauncher =
         lastMetarValue =
             ""
 
+        autoMetarTransitionPending =
+            true
+
 
         requestMetar(
             currentIcao,
-            false
+            true
         )
     }
 
@@ -5173,7 +5167,8 @@ private val locationPermissionLauncher =
 
         if (showLoading) {
             showMetarBanner(
-                "$airportIcao METAR: loading..."
+                "$airportIcao METAR: loading...",
+                false
             )
         }
 
@@ -5439,12 +5434,12 @@ private val locationPermissionLauncher =
 
 
     private fun showMetarBanner(
-        value: String
+        value: String,
+        scheduleDismiss: Boolean = true
     ) {
 
         if (
-            !::metarBanner
-                .isInitialized
+            !::metarBanner.isInitialized
         ) {
             return
         }
@@ -5457,28 +5452,249 @@ private val locationPermissionLauncher =
         }
 
 
-        metarBanner.text = value
+        metarBanner
+            .animate()
+            .cancel()
+
+        metarBanner.text =
+            value
+
+        metarBanner.alpha =
+            0f
+
+        metarBanner.translationY =
+            12.dp.toFloat()
+
+        metarBanner.translationX =
+            0f
+
+        metarBanner.scaleX =
+            .96f
+
+        metarBanner.scaleY =
+            .96f
+
         metarBanner.visibility =
             View.VISIBLE
 
 
-        metarBanner.alpha =
-            1f
+        metarBanner
+            .animate()
+            .alpha(
+                1f
+            )
+            .translationY(
+                0f
+            )
+            .scaleX(
+                1f
+            )
+            .scaleY(
+                1f
+            )
+            .setDuration(
+                260L
+            )
+            .setInterpolator(
+                android.view.animation
+                    .DecelerateInterpolator()
+            )
+            .start()
+
+
+        if (
+            !scheduleDismiss
+        ) {
+            return
+        }
+
+
+        val autoCollapse =
+            autoMetarTransitionPending
 
 
         metarRemoveRunnable =
             Runnable {
 
-                hideMetarBanner(
-                    true
-                )
+                if (
+                    autoCollapse &&
+                    autoMetarTransitionPending
+                ) {
+
+                    collapseMetarToWeatherIcon()
+
+                } else {
+
+                    hideMetarBanner(
+                        true
+                    )
+                }
             }
 
 
         handler.postDelayed(
             metarRemoveRunnable!!,
-            METAR_DISPLAY_DURATION
+            if (
+                autoCollapse
+            ) {
+                4800L
+            } else {
+                METAR_DISPLAY_DURATION
+            }
         )
+    }
+
+
+    private fun collapseMetarToWeatherIcon() {
+
+        if (
+            !::metarBanner.isInitialized ||
+            !::metarIcon.isInitialized ||
+            metarBanner.visibility !=
+                View.VISIBLE
+        ) {
+
+            autoMetarTransitionPending =
+                false
+
+            return
+        }
+
+
+        val bannerLocation =
+            IntArray(
+                2
+            )
+
+        val iconLocation =
+            IntArray(
+                2
+            )
+
+
+        metarBanner.getLocationOnScreen(
+            bannerLocation
+        )
+
+        metarIcon.getLocationOnScreen(
+            iconLocation
+        )
+
+
+        val bannerCenterX =
+            bannerLocation[
+                0
+            ] +
+                metarBanner.width /
+                    2f
+
+        val bannerCenterY =
+            bannerLocation[
+                1
+            ] +
+                metarBanner.height /
+                    2f
+
+        val iconCenterX =
+            iconLocation[
+                0
+            ] +
+                metarIcon.width /
+                    2f
+
+        val iconCenterY =
+            iconLocation[
+                1
+            ] +
+                metarIcon.height /
+                    2f
+
+
+        val deltaX =
+            iconCenterX -
+                bannerCenterX
+
+        val deltaY =
+            iconCenterY -
+                bannerCenterY
+
+
+        metarBanner
+            .animate()
+            .translationX(
+                deltaX
+            )
+            .translationY(
+                deltaY
+            )
+            .scaleX(
+                .12f
+            )
+            .scaleY(
+                .12f
+            )
+            .alpha(
+                .08f
+            )
+            .setDuration(
+                560L
+            )
+            .setInterpolator(
+                android.view.animation
+                    .AccelerateDecelerateInterpolator()
+            )
+            .withEndAction {
+
+                metarBanner.visibility =
+                    View.GONE
+
+                metarBanner.alpha =
+                    1f
+
+                metarBanner.translationX =
+                    0f
+
+                metarBanner.translationY =
+                    0f
+
+                metarBanner.scaleX =
+                    1f
+
+                metarBanner.scaleY =
+                    1f
+
+                autoMetarTransitionPending =
+                    false
+
+                metarIcon
+                    .animate()
+                    .scaleX(
+                        1.16f
+                    )
+                    .scaleY(
+                        1.16f
+                    )
+                    .setDuration(
+                        130L
+                    )
+                    .withEndAction {
+
+                        metarIcon
+                            .animate()
+                            .scaleX(
+                                1f
+                            )
+                            .scaleY(
+                                1f
+                            )
+                            .setDuration(
+                                150L
+                            )
+                            .start()
+                    }
+                    .start()
+            }
+            .start()
     }
 
 
@@ -5487,8 +5703,7 @@ private val locationPermissionLauncher =
     ) {
 
         if (
-            !::metarBanner
-                .isInitialized
+            !::metarBanner.isInitialized
         ) {
             return
         }
@@ -5511,10 +5726,10 @@ private val locationPermissionLauncher =
                     0f
                 )
                 .translationY(
-                    -20.dp.toFloat()
+                    -12.dp.toFloat()
                 )
                 .setDuration(
-                    160L
+                    190L
                 )
                 .withEndAction {
 
@@ -5524,13 +5739,15 @@ private val locationPermissionLauncher =
                     metarBanner.alpha =
                         1f
 
-                    metarBanner.translationY = 0f
+                    metarBanner.translationY =
+                        0f
                 }
                 .start()
 
         } else {
 
-            metarBanner.visibility = View.GONE
+            metarBanner.visibility =
+                View.GONE
         }
     }
 
