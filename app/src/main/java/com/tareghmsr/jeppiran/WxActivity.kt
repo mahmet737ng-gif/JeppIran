@@ -780,21 +780,31 @@ class WxActivity : AppCompatActivity() {
                     true
 
 
-                val failed =
+                val metarFailed =
+                    needMetar &&
+                        metarResult?.isFailure ==
+                            true
+
+
+                val tafFailed =
+                    needTaf &&
+                        tafResult?.isFailure ==
+                            true
+
+
+                val allRequestedFailed =
                     (
-                        metarResult !=
-                            null &&
-                        metarResult.isFailure
+                        !needMetar ||
+                            metarFailed
                         ) &&
                         (
-                            tafResult ==
-                                null ||
-                            tafResult.isFailure
+                            !needTaf ||
+                                tafFailed
                             )
 
 
                 if (
-                    failed
+                    allRequestedFailed
                 ) {
 
                     statusText.text =
@@ -812,22 +822,39 @@ class WxActivity : AppCompatActivity() {
                 }
 
 
-                metarText.text =
-                    metar.ifBlank {
-                        "No METAR available."
-                    }
+                if (
+                    rawMetar &&
+                    !metarFailed
+                ) {
+
+                    metarText.text =
+                        metar.ifBlank {
+                            "No METAR available."
+                        }
+                }
 
 
-                tafText.text =
-                    taf.ifBlank {
-                        "No TAF available."
-                    }
+                if (
+                    rawTaf &&
+                    !tafFailed
+                ) {
+
+                    tafText.text =
+                        taf.ifBlank {
+                            "No TAF available."
+                        }
+                }
 
 
-                decodedText.text =
-                    decodedValue.ifBlank {
-                        "No decoded data available."
-                    }
+                if (
+                    decoded
+                ) {
+
+                    decodedText.text =
+                        decodedValue.ifBlank {
+                            "No decoded data available."
+                        }
+                }
 
 
                 setResultVisibility(
@@ -838,11 +865,22 @@ class WxActivity : AppCompatActivity() {
 
 
                 statusText.text =
-                    icao +
-                        " • " +
-                        formatTime(
-                            now
-                        )
+                    if (
+                        metarFailed ||
+                        tafFailed
+                    ) {
+
+                        icao +
+                            " • partial update • unavailable data kept from cache"
+
+                    } else {
+
+                        icao +
+                            " • " +
+                            formatTime(
+                                now
+                            )
+                    }
             }
         }
     }
