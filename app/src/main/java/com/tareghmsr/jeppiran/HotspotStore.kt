@@ -9,7 +9,9 @@ object HotspotStore {
         val page: Int,
         val chartName: String,
         val label: String,
-        val snippet: String
+        val snippet: String,
+        val latitude: Double?,
+        val longitude: Double?
     )
 
     fun forAirport(context: Context, icao: String): List<Hotspot> {
@@ -28,7 +30,9 @@ object HotspotStore {
                 page = obj.optInt("page"),
                 chartName = obj.optString("chart_name"),
                 label = obj.optString("label"),
-                snippet = obj.optString("snippet")
+                snippet = obj.optString("snippet"),
+                latitude = obj.optDouble("lat", Double.NaN).takeIf { it.isFinite() },
+                longitude = obj.optDouble("lon", Double.NaN).takeIf { it.isFinite() }
             )
         }
         return result
