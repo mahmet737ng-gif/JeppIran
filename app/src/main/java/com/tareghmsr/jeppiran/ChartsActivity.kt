@@ -2349,7 +2349,7 @@ class ChartsActivity : AppCompatActivity() {
                 canvas.drawCircle(
                     x,
                     y,
-                    1.5.dp.toFloat(),
+                    1.5f * resources.displayMetrics.density,
                     paint
                 )
             }
@@ -2572,7 +2572,7 @@ class ChartsActivity : AppCompatActivity() {
                         ) -
                         index *
                             1.6f,
-                    1.2.dp.toFloat(),
+                    1.2f * resources.displayMetrics.density,
                     paint
                 )
             }
