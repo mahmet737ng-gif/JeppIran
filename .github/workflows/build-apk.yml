@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - work-no-build
 
 permissions:
   contents: write
