@@ -6136,14 +6136,14 @@ private val locationPermissionLauncher =
 
 
         for (
-            i in
+            index in
                 0 until
                 box.childCount
         ) {
 
             val view =
                 box.getChildAt(
-                    i
+                    index
                 ) as? TextView
                     ?: continue
 
@@ -6162,16 +6162,13 @@ private val locationPermissionLauncher =
                 if (
                     active
                 ) {
-
                     Color.rgb(
                         47,
                         217,
                         255
                     )
-
                 } else {
-
-                    Color.WHITE
+                    primaryTextColor()
                 }
 
 
@@ -6179,51 +6176,77 @@ private val locationPermissionLauncher =
                 tint
             )
 
+
             view.compoundDrawableTintList =
                 android.content.res.ColorStateList
                     .valueOf(
                         tint
                     )
 
+
             view.background =
                 roundedBackground(
                     if (
                         active
                     ) {
-
-                        Color.rgb(
-                            8,
-                            89,
-                            154
-                        )
-
+                        if (
+                            isDarkTheme()
+                        ) {
+                            Color.rgb(
+                                8,
+                                89,
+                                154
+                            )
+                        } else {
+                            Color.rgb(
+                                209,
+                                240,
+                                255
+                            )
+                        }
                     } else {
-
-                        Color.rgb(
-                            5,
-                            38,
-                            68
-                        )
+                        if (
+                            isDarkTheme()
+                        ) {
+                            Color.rgb(
+                                5,
+                                38,
+                                68
+                            )
+                        } else {
+                            Color.rgb(
+                                247,
+                                252,
+                                255
+                            )
+                        }
                     },
                     if (
                         active
                     ) {
-
                         Color.rgb(
                             47,
                             217,
                             255
                         )
-
                     } else {
-
-                        Color.rgb(
-                            23,
-                            108,
-                            181
-                        )
+                        if (
+                            isDarkTheme()
+                        ) {
+                            Color.rgb(
+                                23,
+                                108,
+                                181
+                            )
+                        } else {
+                            Color.rgb(
+                                92,
+                                164,
+                                215
+                            )
+                        }
                     },
-                    10
+                    13
                 )
         }
 
@@ -6241,38 +6264,53 @@ private val locationPermissionLauncher =
             if (
                 active
             ) {
-
                 Color.rgb(
                     47,
                     217,
                     255
                 )
-
             } else {
-
-                Color.WHITE
+                primaryTextColor()
             }
         )
+
 
         button.background =
             roundedBackground(
                 if (
                     active
                 ) {
-
-                    Color.rgb(
-                        8,
-                        89,
-                        154
-                    )
-
+                    if (
+                        isDarkTheme()
+                    ) {
+                        Color.rgb(
+                            8,
+                            89,
+                            154
+                        )
+                    } else {
+                        Color.rgb(
+                            211,
+                            240,
+                            255
+                        )
+                    }
                 } else {
-
-                    Color.rgb(
-                        5,
-                        38,
-                        68
-                    )
+                    if (
+                        isDarkTheme()
+                    ) {
+                        Color.rgb(
+                            5,
+                            38,
+                            68
+                        )
+                    } else {
+                        Color.rgb(
+                            246,
+                            251,
+                            255
+                        )
+                    }
                 },
                 Color.rgb(
                     47,
@@ -6339,23 +6377,46 @@ private val locationPermissionLauncher =
                 Gravity.CENTER
 
             setTextColor(
-                Color.WHITE
+                primaryTextColor()
             )
 
             background =
                 roundedBackground(
-                    Color.rgb(
-                        5,
-                        38,
-                        68
-                    ),
-                    Color.rgb(
-                        47,
-                        217,
-                        255
-                    ),
+                    if (
+                        isDarkTheme()
+                    ) {
+                        Color.rgb(
+                            5,
+                            38,
+                            68
+                        )
+                    } else {
+                        Color.rgb(
+                            247,
+                            252,
+                            255
+                        )
+                    },
+                    if (
+                        isDarkTheme()
+                    ) {
+                        Color.rgb(
+                            47,
+                            217,
+                            255
+                        )
+                    } else {
+                        Color.rgb(
+                            67,
+                            158,
+                            219
+                        )
+                    },
                     18
                 )
+
+            elevation =
+                4.dp.toFloat()
 
             isClickable =
                 true
@@ -6387,7 +6448,7 @@ private val locationPermissionLauncher =
                 Gravity.CENTER
 
             setTextColor(
-                Color.WHITE
+                primaryTextColor()
             )
 
             setCompoundDrawablesWithIntrinsicBounds(
@@ -6397,6 +6458,12 @@ private val locationPermissionLauncher =
                 0
             )
 
+            compoundDrawableTintList =
+                android.content.res.ColorStateList
+                    .valueOf(
+                        primaryTextColor()
+                    )
+
             compoundDrawablePadding =
                 4.dp
 
@@ -6405,18 +6472,41 @@ private val locationPermissionLauncher =
 
             background =
                 roundedBackground(
-                    Color.rgb(
-                        5,
-                        38,
-                        68
-                    ),
-                    Color.rgb(
-                        23,
-                        108,
-                        181
-                    ),
-                    10
+                    if (
+                        isDarkTheme()
+                    ) {
+                        Color.rgb(
+                            5,
+                            38,
+                            68
+                        )
+                    } else {
+                        Color.rgb(
+                            247,
+                            252,
+                            255
+                        )
+                    },
+                    if (
+                        isDarkTheme()
+                    ) {
+                        Color.rgb(
+                            23,
+                            108,
+                            181
+                        )
+                    } else {
+                        Color.rgb(
+                            92,
+                            164,
+                            215
+                        )
+                    },
+                    13
                 )
+
+            elevation =
+                5.dp.toFloat()
 
             isClickable =
                 true
@@ -6429,7 +6519,7 @@ private val locationPermissionLauncher =
 
                 if (
                     annotationTool ==
-                    tool
+                        tool
                 ) {
 
                     annotationTool =
@@ -6448,9 +6538,8 @@ private val locationPermissionLauncher =
 
                     if (
                         tool ==
-                        Tool.ERASER
+                            Tool.ERASER
                     ) {
-
                         eraserMode =
                             EraserMode.PIXEL
                     }
@@ -6506,6 +6595,187 @@ private val locationPermissionLauncher =
                 0,
                 3.dp,
                 0
+            )
+        }
+    }
+
+
+    private fun viewerBackground():
+        android.graphics.drawable.GradientDrawable {
+
+        return android.graphics.drawable
+            .GradientDrawable().apply {
+
+                orientation =
+                    android.graphics.drawable
+                        .GradientDrawable
+                        .Orientation
+                        .TL_BR
+
+                colors =
+                    if (
+                        isDarkTheme()
+                    ) {
+                        intArrayOf(
+                            Color.rgb(
+                                0,
+                                20,
+                                49
+                            ),
+                            Color.rgb(
+                                1,
+                                11,
+                                28
+                            ),
+                            Color.rgb(
+                                1,
+                                7,
+                                18
+                            )
+                        )
+                    } else {
+                        intArrayOf(
+                            Color.rgb(
+                                224,
+                                242,
+                                255
+                            ),
+                            Color.rgb(
+                                248,
+                                252,
+                                255
+                            ),
+                            Color.rgb(
+                                232,
+                                246,
+                                255
+                            )
+                        )
+                    }
+            }
+    }
+
+
+    private fun viewerPanelBackground(
+        radius: Int,
+        strong: Boolean
+    ):
+        android.graphics.drawable.GradientDrawable {
+
+        return android.graphics.drawable
+            .GradientDrawable().apply {
+
+                shape =
+                    android.graphics.drawable
+                        .GradientDrawable
+                        .RECTANGLE
+
+                cornerRadius =
+                    radius.dp.toFloat()
+
+                orientation =
+                    android.graphics.drawable
+                        .GradientDrawable
+                        .Orientation
+                        .TL_BR
+
+                colors =
+                    if (
+                        isDarkTheme()
+                    ) {
+                        intArrayOf(
+                            Color.argb(
+                                if (
+                                    strong
+                                ) {
+                                    245
+                                } else {
+                                    226
+                                },
+                                4,
+                                31,
+                                68
+                            ),
+                            Color.argb(
+                                if (
+                                    strong
+                                ) {
+                                    248
+                                } else {
+                                    230
+                                },
+                                2,
+                                15,
+                                37
+                            )
+                        )
+                    } else {
+                        intArrayOf(
+                            Color.argb(
+                                if (
+                                    strong
+                                ) {
+                                    253
+                                } else {
+                                    242
+                                },
+                                255,
+                                255,
+                                255
+                            ),
+                            Color.argb(
+                                if (
+                                    strong
+                                ) {
+                                    250
+                                } else {
+                                    235
+                                },
+                                225,
+                                242,
+                                255
+                            )
+                        )
+                    }
+
+                setStroke(
+                    1.dp,
+                    if (
+                        isDarkTheme()
+                    ) {
+                        Color.rgb(
+                            0,
+                            180,
+                            255
+                        )
+                    } else {
+                        Color.rgb(
+                            83,
+                            164,
+                            219
+                        )
+                    }
+                )
+            }
+    }
+
+
+    private fun viewerCanvasColor():
+        Int {
+
+        return if (
+            isDarkTheme()
+        ) {
+            Color.rgb(
+                4,
+                13,
+                24
+            )
+        } else {
+            Color.rgb(
+                225,
+                239,
+                248
             )
         }
     }
