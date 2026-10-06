@@ -57,6 +57,9 @@ class UpdateActivity : AppCompatActivity() {
     private lateinit var checkButton:
         Button
 
+    private lateinit var viewChangesButton:
+        Button
+
     private var remoteManifestRaw =
         ""
 
@@ -269,6 +272,46 @@ class UpdateActivity : AppCompatActivity() {
 
                 topMargin =
                     14.dp
+            }
+        )
+
+
+        viewChangesButton =
+            Button(
+                this
+            ).apply {
+
+                text =
+                    "VIEW ACTIVE CYCLE CHANGES"
+
+                isEnabled =
+                    ChartChangesStore
+                        .allChangedAirports(
+                            this@UpdateActivity
+                        )
+                        .isNotEmpty()
+
+                setOnClickListener {
+
+                    startActivity(
+                        android.content.Intent(
+                            this@UpdateActivity,
+                            ChangesAirportsActivity::class.java
+                        )
+                    )
+                }
+            }
+
+
+        content.addView(
+            viewChangesButton,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                54.dp
+            ).apply {
+
+                topMargin =
+                    8.dp
             }
         )
 
@@ -507,6 +550,13 @@ class UpdateActivity : AppCompatActivity() {
                     checkButton.isEnabled =
                         true
 
+                    viewChangesButton.isEnabled =
+                        ChartChangesStore
+                            .allChangedAirports(
+                                this@UpdateActivity
+                            )
+                            .isNotEmpty()
+
 
                     if (
                         version ==
@@ -717,6 +767,13 @@ class UpdateActivity : AppCompatActivity() {
 
                     installButton.isEnabled =
                         false
+
+                    viewChangesButton.isEnabled =
+                        ChartChangesStore
+                            .allChangedAirports(
+                                this@UpdateActivity
+                            )
+                            .isNotEmpty()
                 }
 
 
