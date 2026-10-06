@@ -285,6 +285,37 @@ class AirportChartsActivity :
             )
         )
 
+        header.addView(
+            TextView(
+                this
+            ).apply {
+                text = "✈  OPERATIONAL BRIEF"
+                textSize = 13f
+                typeface = Typeface.DEFAULT_BOLD
+                gravity = Gravity.CENTER
+                setTextColor(Color.WHITE)
+                setPadding(14.dp, 0, 14.dp, 0)
+                background = GradientDrawable().apply {
+                    cornerRadius = 14.dp.toFloat()
+                    setColor(getColor(R.color.jeppiran_blue))
+                }
+                setOnClickListener {
+                    startActivity(
+                        Intent(
+                            this@AirportChartsActivity,
+                            PilotBriefingActivity::class.java
+                        ).putExtra("ICAO", icao)
+                    )
+                }
+            },
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                42.dp
+            ).apply {
+                setMargins(0, 12.dp, 0, 0)
+            }
+        )
+
         root.addView(
             header,
             LinearLayout.LayoutParams(
