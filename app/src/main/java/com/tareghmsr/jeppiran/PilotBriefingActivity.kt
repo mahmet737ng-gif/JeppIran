@@ -76,6 +76,12 @@ class PilotBriefingActivity : AppCompatActivity() {
         actions.addView(action("DATA") {
             startActivity(Intent(this, PilotToolsSettingsActivity::class.java))
         }, actionParams())
+        actions.addView(action("LAB") {
+            startActivity(
+                Intent(this, PilotIntelligenceActivity::class.java)
+                    .putExtra("ICAO", icao)
+            )
+        }, actionParams())
         body.addView(actions, LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             50.dp
