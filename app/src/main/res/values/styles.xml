@@ -1,36 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
- <style name="Theme.JeppIran" parent="Theme.Material3.DayNight.NoActionBar">
-  <item name="android:fontFamily">sans</item><item name="colorPrimary">@color/jeppiran_accent</item>
-  <item name="colorSecondary">@color/jeppiran_blue</item><item name="colorTertiary">@color/jeppiran_magenta</item>
-  <item name="android:colorBackground">@color/jeppiran_background</item><item name="colorSurface">@color/jeppiran_surface</item>
-  <item name="colorOnSurface">@color/jeppiran_text</item><item name="colorOnSurfaceVariant">@color/jeppiran_text_secondary</item>
-  <item name="android:windowLightStatusBar">true</item><item name="android:statusBarColor">@android:color/transparent</item>
-  <item name="android:navigationBarColor">@color/jeppiran_background</item><item name="android:windowActionModeOverlay">true</item>
- </style>
- <style name="JeppIranMenuCard" parent="">
-  <item name="android:layout_width">0dp</item><item name="android:layout_height">142dp</item>
-  <item name="android:layout_columnWeight">1</item><item name="android:layout_margin">6dp</item>
-  <item name="android:clickable">true</item><item name="android:focusable">true</item>
-  <item name="android:foreground">?attr/selectableItemBackground</item><item name="cardBackgroundColor">@color/jeppiran_surface</item>
-  <item name="cardCornerRadius">20dp</item><item name="cardElevation">0dp</item>
-  <item name="strokeColor">@color/jeppiran_card_stroke</item><item name="strokeWidth">1dp</item>
- </style>
- <style name="JeppIranMenuCardContent" parent="">
-  <item name="android:layout_width">match_parent</item><item name="android:layout_height">match_parent</item>
-  <item name="android:gravity">center</item><item name="android:orientation">vertical</item><item name="android:padding">16dp</item>
- </style>
- <style name="JeppIranMenuIcon" parent="">
-  <item name="android:layout_width">34dp</item><item name="android:layout_height">34dp</item><item name="android:tint">@color/jeppiran_accent</item>
- </style>
- <style name="JeppIranMenuTitle" parent="">
-  <item name="android:layout_width">wrap_content</item><item name="android:layout_height">wrap_content</item>
-  <item name="android:layout_marginTop">11dp</item><item name="android:textColor">@color/jeppiran_text</item>
-  <item name="android:textSize">17sp</item><item name="android:textStyle">bold</item>
- </style>
- <style name="JeppIranMenuSubtitle" parent="">
-  <item name="android:layout_width">wrap_content</item><item name="android:layout_height">wrap_content</item>
-  <item name="android:layout_marginTop">3dp</item><item name="android:textColor">@color/jeppiran_text_secondary</item>
-  <item name="android:textSize">11sp</item>
- </style>
+    <style name="Theme.JeppIran" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="android:fontFamily">sans</item>
+        <item name="colorPrimary">@color/jeppiran_accent</item>
+        <item name="colorSecondary">@color/jeppiran_blue</item>
+        <item name="colorTertiary">@color/jeppiran_magenta</item>
+        <item name="android:colorBackground">@color/jeppiran_background</item>
+        <item name="colorSurface">@color/jeppiran_surface</item>
+        <item name="colorOnSurface">@color/jeppiran_text</item>
+        <item name="colorOnSurfaceVariant">@color/jeppiran_text_secondary</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@color/jeppiran_background</item>
+        <item name="android:windowActionModeOverlay">true</item>
+    </style>
+
+    <style name="JeppIranMenuCard" parent="">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">178dp</item>
+        <item name="android:layout_columnWeight">1</item>
+        <item name="android:layout_margin">6dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:foreground">?attr/selectableItemBackground</item>
+        <item name="cardBackgroundColor">@color/jeppiran_surface</item>
+        <item name="cardCornerRadius">22dp</item>
+        <item name="cardElevation">1dp</item>
+        <item name="strokeColor">@color/jeppiran_card_stroke</item>
+        <item name="strokeWidth">1dp</item>
+    </style>
+
+    <style name="JeppIranMenuIcon" parent="">
+        <item name="android:layout_width">56dp</item>
+        <item name="android:layout_height">56dp</item>
+    </style>
+
+    <style name="JeppIranMenuTitle" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">11dp</item>
+        <item name="android:textColor">@color/jeppiran_text</item>
+        <item name="android:textSize">21sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="JeppIranMenuSubtitle" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:textColor">@color/jeppiran_text_secondary</item>
+        <item name="android:textSize">11.5sp</item>
+        <item name="android:lineSpacingExtra">1dp</item>
+    </style>
 </resources>
