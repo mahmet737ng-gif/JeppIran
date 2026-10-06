@@ -28,6 +28,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.ParcelFileDescriptor
+import android.os.SystemClock
 import android.text.InputType
 import android.view.Gravity
 import android.view.MotionEvent
@@ -170,6 +171,21 @@ private val locationPermissionLauncher =
 
     private lateinit var toolScroll:
         HorizontalScrollView
+
+    private lateinit var eraserModeBar:
+        LinearLayout
+
+    private var insetLeft =
+        0
+
+    private var insetTop =
+        0
+
+    private var insetRight =
+        0
+
+    private var insetBottom =
+        0
 
     private lateinit var titleText:
         TextView
@@ -1762,6 +1778,91 @@ private val locationPermissionLauncher =
         )
 
 
+        eraserModeBar =
+            LinearLayout(
+                this
+            ).apply {
+
+                orientation =
+                    LinearLayout.HORIZONTAL
+
+                gravity =
+                    Gravity.CENTER
+
+                setPadding(
+                    8.dp,
+                    4.dp,
+                    8.dp,
+                    4.dp
+                )
+
+                setBackgroundColor(
+                    Color.rgb(
+                        17,
+                        25,
+                        33
+                    )
+                )
+
+                visibility =
+                    View.GONE
+            }
+
+
+        eraserModeBar.addView(
+            eraserModeButton(
+                "OBJECT ERASER",
+                EraserMode.OBJECT
+            ),
+            LinearLayout.LayoutParams(
+                148.dp,
+                LinearLayout.LayoutParams.MATCH_PARENT
+            ).apply {
+                setMargins(
+                    4.dp,
+                    0,
+                    4.dp,
+                    0
+                )
+            }
+        )
+
+
+        eraserModeBar.addView(
+            eraserModeButton(
+                "PIXEL ERASER",
+                EraserMode.PIXEL
+            ),
+            LinearLayout.LayoutParams(
+                148.dp,
+                LinearLayout.LayoutParams.MATCH_PARENT
+            ).apply {
+                setMargins(
+                    4.dp,
+                    0,
+                    4.dp,
+                    0
+                )
+            }
+        )
+
+
+        root.addView(
+            eraserModeBar,
+            FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                44.dp
+            ).apply {
+
+                gravity =
+                    Gravity.TOP
+
+                topMargin =
+                    106.dp
+            }
+        )
+
+
         updateToolButtonStates()
     }
 
@@ -1876,21 +1977,32 @@ private val locationPermissionLauncher =
                 )
 
 
+            insetLeft =
+                bars.left
+
+            insetTop =
+                bars.top
+
+            insetRight =
+                bars.right
+
+            insetBottom =
+                bars.bottom
+
+
             val topParams =
                 topToolbar.layoutParams
                     as FrameLayout.LayoutParams
 
 
             topParams.topMargin =
-                bars.top
-
+                insetTop
 
             topParams.leftMargin =
-                bars.left
-
+                insetLeft
 
             topParams.rightMargin =
-                bars.right
+                insetRight
 
 
             topToolbar.layoutParams =
@@ -1903,72 +2015,41 @@ private val locationPermissionLauncher =
 
 
             toolsParams.topMargin =
-                bars.top +
+                insetTop +
                     58.dp
 
-
             toolsParams.leftMargin =
-                bars.left
-
+                insetLeft
 
             toolsParams.rightMargin =
-                bars.right
+                insetRight
 
 
             toolScroll.layoutParams =
                 toolsParams
 
 
-            val metarParams =
-                metarBanner.layoutParams
+            val eraserParams =
+                eraserModeBar.layoutParams
                     as FrameLayout.LayoutParams
 
 
-            metarParams.topMargin =
-                bars.top +
-                    114.dp
+            eraserParams.topMargin =
+                insetTop +
+                    106.dp
+
+            eraserParams.leftMargin =
+                insetLeft
+
+            eraserParams.rightMargin =
+                insetRight
 
 
-            metarParams.leftMargin =
-                bars.left +
-                    10.dp
+            eraserModeBar.layoutParams =
+                eraserParams
 
 
-            metarParams.rightMargin =
-                bars.right +
-                    10.dp
-
-
-            metarBanner.layoutParams =
-                metarParams
-
-
-            chartView.setContentInsets(
-                bars.left,
-                bars.top +
-                    106.dp,
-                bars.right,
-                bars.bottom
-            )
-
-
-            val gpsParams =
-                gpsText.layoutParams
-                    as FrameLayout.LayoutParams
-
-
-            gpsParams.rightMargin =
-                bars.right +
-                    12.dp
-
-
-            gpsParams.bottomMargin =
-                bars.bottom +
-                    12.dp
-
-
-            gpsText.layoutParams =
-                gpsParams
+            updateOverlayInsets()
 
 
             insets
@@ -1978,6 +2059,100 @@ private val locationPermissionLauncher =
         ViewCompat.requestApplyInsets(
             root
         )
+    }
+
+
+    private fun updateOverlayInsets() {
+
+        if (
+            !::chartView.isInitialized
+        ) {
+            return
+        }
+
+
+        val eraserVisible =
+            ::eraserModeBar.isInitialized &&
+                eraserModeBar.visibility ==
+                    View.VISIBLE
+
+
+        if (
+            ::metarBanner.isInitialized
+        ) {
+
+            val metarParams =
+                metarBanner.layoutParams
+                    as FrameLayout.LayoutParams
+
+
+            metarParams.topMargin =
+                insetTop +
+                    if (
+                        eraserVisible
+                    ) {
+
+                        158.dp
+
+                    } else {
+
+                        114.dp
+                    }
+
+
+            metarParams.leftMargin =
+                insetLeft +
+                    10.dp
+
+            metarParams.rightMargin =
+                insetRight +
+                    10.dp
+
+
+            metarBanner.layoutParams =
+                metarParams
+        }
+
+
+        chartView.setContentInsets(
+            insetLeft,
+            insetTop +
+                if (
+                    eraserVisible
+                ) {
+
+                    150.dp
+
+                } else {
+
+                    106.dp
+                },
+            insetRight,
+            insetBottom
+        )
+
+
+        if (
+            ::gpsText.isInitialized
+        ) {
+
+            val gpsParams =
+                gpsText.layoutParams
+                    as FrameLayout.LayoutParams
+
+
+            gpsParams.rightMargin =
+                insetRight +
+                    12.dp
+
+            gpsParams.bottomMargin =
+                insetBottom +
+                    12.dp
+
+
+            gpsText.layoutParams =
+                gpsParams
+        }
     }
 
 
@@ -3105,71 +3280,171 @@ private val locationPermissionLauncher =
     }
 
 
-    private fun showEraserModeDialog() {
+    private fun updateEraserModeBar() {
 
-        val options =
-            arrayOf(
-                "Object eraser",
-                "Pixel eraser"
-            )
+        if (
+            !::eraserModeBar.isInitialized
+        ) {
+            return
+        }
 
 
-        AlertDialog.Builder(
-            this
-        )
-            .setTitle(
-                "Eraser mode"
-            )
-            .setSingleChoiceItems(
-                options,
+        val shouldShow =
+            controlsVisible &&
+                annotationTool ==
+                    Tool.ERASER
+
+
+        eraserModeBar.visibility =
+            if (
+                shouldShow
+            ) {
+
+                View.VISIBLE
+
+            } else {
+
+                View.GONE
+            }
+
+
+        for (
+            i in
+                0 until
+                eraserModeBar.childCount
+        ) {
+
+            val button =
+                eraserModeBar.getChildAt(
+                    i
+                ) as? TextView
+                    ?: continue
+
+
+            val mode =
+                button.tag as? EraserMode
+                    ?: continue
+
+
+            val selected =
+                mode ==
+                    eraserMode
+
+
+            button.setTextColor(
                 if (
-                    eraserMode ==
-                    EraserMode.OBJECT
+                    selected
                 ) {
 
-                    0
+                    Color.WHITE
 
                 } else {
 
-                    1
+                    Color.rgb(
+                        205,
+                        214,
+                        222
+                    )
                 }
+            )
 
-            ) { dialog, which ->
 
-                eraserMode =
+            button.background =
+                roundedBackground(
                     if (
-                        which == 0
+                        selected
                     ) {
 
-                        EraserMode.OBJECT
+                        Color.rgb(
+                            117,
+                            28,
+                            82
+                        )
 
                     } else {
 
-                        EraserMode.PIXEL
-                    }
+                        Color.rgb(
+                            31,
+                            41,
+                            51
+                        )
+                    },
+                    if (
+                        selected
+                    ) {
 
+                        Color.rgb(
+                            245,
+                            55,
+                            159
+                        )
+
+                    } else {
+
+                        Color.rgb(
+                            76,
+                            91,
+                            105
+                        )
+                    },
+                    12
+                )
+        }
+
+
+        updateOverlayInsets()
+    }
+
+
+    private fun eraserModeButton(
+        label: String,
+        mode: EraserMode
+    ):
+        TextView {
+
+        return TextView(
+            this
+        ).apply {
+
+            text =
+                label
+
+            textSize =
+                11f
+
+            typeface =
+                Typeface.DEFAULT_BOLD
+
+            gravity =
+                Gravity.CENTER
+
+            tag =
+                mode
+
+            isClickable =
+                true
+
+            isFocusable =
+                true
+
+            setOnClickListener {
+
+                eraserMode =
+                    mode
 
                 annotationTool =
                     Tool.ERASER
 
-
                 annotationMode =
                     true
 
+                updateEraserModeBar()
 
                 updateToolButtonStates()
 
-
                 chartView.invalidate()
-
-
-                dialog.dismiss()
             }
-            .setNegativeButton(
-                "Cancel",
-                null
-            )
-            .show()
+        }
     }
 
 
@@ -3888,6 +4163,14 @@ private val locationPermissionLauncher =
         toolScroll.visibility =
             View.GONE
 
+        if (
+            ::eraserModeBar.isInitialized
+        ) {
+
+            eraserModeBar.visibility =
+                View.GONE
+        }
+
 
         chartView.setContentInsets(
             0,
@@ -3920,6 +4203,8 @@ private val locationPermissionLauncher =
 
         toolScroll.visibility =
             View.VISIBLE
+
+        updateEraserModeBar()
 
 
         WindowInsetsControllerCompat(
@@ -4786,6 +5071,9 @@ private val locationPermissionLauncher =
                         tint
                     )
         }
+
+
+        updateEraserModeBar()
     }
 
 
@@ -4927,19 +5215,6 @@ private val locationPermissionLauncher =
             setOnClickListener {
 
                 if (
-                    tool ==
-                    Tool.ERASER &&
-                    annotationTool !=
-                    Tool.ERASER
-                ) {
-
-                    showEraserModeDialog()
-
-                    return@setOnClickListener
-                }
-
-
-                if (
                     annotationTool ==
                     tool
                 ) {
@@ -4957,6 +5232,15 @@ private val locationPermissionLauncher =
 
                     annotationMode =
                         true
+
+                    if (
+                        tool ==
+                        Tool.ERASER
+                    ) {
+
+                        eraserMode =
+                            EraserMode.OBJECT
+                    }
                 }
 
 
@@ -5802,7 +6086,8 @@ private val locationPermissionLauncher =
 
             drawAircraftPosition(
                 canvas,
-                image
+                image,
+                finalScale
             )
 
             canvas.restore()
@@ -5813,80 +6098,351 @@ private val locationPermissionLauncher =
 
         private fun drawAircraftPosition(
             canvas: Canvas,
-            image: Bitmap
+            image: Bitmap,
+            displayScale: Float
         ) {
-            if (!positionResumed || !AircraftPositionStore.isEnabled(this@PdfViewerActivity)) {
+
+            if (
+                !positionResumed ||
+                !AircraftPositionStore.isEnabled(
+                    this@PdfViewerActivity
+                )
+            ) {
                 return
             }
 
-            val position = if (SimulatorLocationStore.isConnected()) {
-                SimulatorLocationStore.getPosition()?.let {
-                    Triple(it.latitude, it.longitude, it.headingDegrees)
-                }
-            } else {
-                lastGpsLocation?.let {
-                    Triple(it.latitude, it.longitude, it.bearing.toDouble())
-                }
-            } ?: return
 
-            val geometry = renderGeometries[image] ?: return
-            val point = ChartGeoreferenceStore.renderedPoint(
-                this@PdfViewerActivity, currentChartGlobalPage(), position.first, position.second, position.third ?: 0.0,
-                CHART_DATA_VERSION, geometry.pdfWidth, geometry.pdfHeight,
-                geometry.fullWidth, geometry.fullHeight, geometry.cropTop, image.width, image.height
-            ) ?: return
-            val x = point.x
-            val y = point.y
+            val position =
+                if (
+                    SimulatorLocationStore.isConnected()
+                ) {
 
-            val heading = point.headingDegrees
-            val size = min(image.width, image.height) * 0.018f
+                    SimulatorLocationStore
+                        .getPosition()
+                        ?.let {
+
+                            Triple(
+                                it.latitude,
+                                it.longitude,
+                                it.headingDegrees
+                            )
+                        }
+
+                } else {
+
+                    lastGpsLocation
+                        ?.let {
+
+                            Triple(
+                                it.latitude,
+                                it.longitude,
+                                it.bearing.toDouble()
+                            )
+                        }
+                }
+                    ?: return
+
+
+            val geometry =
+                renderGeometries[image]
+                    ?: return
+
+
+            val point =
+                ChartGeoreferenceStore
+                    .renderedPoint(
+                        this@PdfViewerActivity,
+                        currentChartGlobalPage(),
+                        position.first,
+                        position.second,
+                        position.third
+                            ?: 0.0,
+                        CHART_DATA_VERSION,
+                        geometry.pdfWidth,
+                        geometry.pdfHeight,
+                        geometry.fullWidth,
+                        geometry.fullHeight,
+                        geometry.cropTop,
+                        image.width,
+                        image.height
+                    )
+                    ?: return
+
+
+            val safeScale =
+                displayScale
+                    .coerceAtLeast(
+                        0.01f
+                    )
+
+
+            /*
+             * Keep the marker a nearly constant on-screen size.
+             * This prevents it from covering critical chart data
+             * when the user zooms deeply into an approach plate.
+             */
+            val markerHalf =
+                10.5f *
+                    resources
+                        .displayMetrics
+                        .density /
+                    safeScale
+
+
+            val outlineWidth =
+                1.35f *
+                    resources
+                        .displayMetrics
+                        .density /
+                    safeScale
+
+
+            val phase =
+                (
+                    SystemClock.uptimeMillis() %
+                        1800L
+                    )
+                    .toFloat() /
+                    1800f
+
+
+            val pulseProgress =
+                (
+                    0.5f -
+                        0.5f *
+                        kotlin.math.cos(
+                            phase *
+                                2f *
+                                Math.PI
+                                    .toFloat()
+                        )
+                    )
+
+
+            val pulseRadius =
+                markerHalf *
+                    (
+                        1.28f +
+                            0.42f *
+                            pulseProgress
+                        )
+
+
+            val pulsePaint =
+                Paint(
+                    Paint.ANTI_ALIAS_FLAG
+                ).apply {
+
+                    color =
+                        Color.argb(
+                            (
+                                54 -
+                                    28 *
+                                    pulseProgress
+                                )
+                                .toInt()
+                                .coerceIn(
+                                    18,
+                                    54
+                                ),
+                            255,
+                            47,
+                            157
+                        )
+
+                    style =
+                        Paint.Style.FILL
+                }
+
+
+            val pulseStroke =
+                Paint(
+                    Paint.ANTI_ALIAS_FLAG
+                ).apply {
+
+                    color =
+                        Color.argb(
+                            (
+                                145 -
+                                    85 *
+                                    pulseProgress
+                                )
+                                .toInt()
+                                .coerceIn(
+                                    45,
+                                    145
+                                ),
+                            255,
+                            54,
+                            166
+                        )
+
+                    style =
+                        Paint.Style.STROKE
+
+                    strokeWidth =
+                        outlineWidth
+                }
+
+
+            canvas.drawCircle(
+                point.x,
+                point.y,
+                pulseRadius,
+                pulsePaint
+            )
+
+
+            canvas.drawCircle(
+                point.x,
+                point.y,
+                pulseRadius,
+                pulseStroke
+            )
+
+
+            val markerPath =
+                Path().apply {
+
+                    moveTo(
+                        0f,
+                        -markerHalf
+                    )
+
+                    lineTo(
+                        markerHalf *
+                            0.62f,
+                        markerHalf *
+                            0.82f
+                    )
+
+                    lineTo(
+                        0f,
+                        markerHalf *
+                            0.40f
+                    )
+
+                    lineTo(
+                        -markerHalf *
+                            0.62f,
+                        markerHalf *
+                            0.82f
+                    )
+
+                    close()
+                }
+
 
             val shadowPaint =
-                Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                    color = Color.argb(210, 0, 0, 0)
-                    style = Paint.Style.FILL
+                Paint(
+                    Paint.ANTI_ALIAS_FLAG
+                ).apply {
+
+                    color =
+                        Color.argb(
+                            120,
+                            5,
+                            16,
+                            26
+                        )
+
+                    style =
+                        Paint.Style.FILL
                 }
 
-            val aircraftPaint =
-                Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                    color = Color.WHITE
-                    style = Paint.Style.FILL
+
+            val markerPaint =
+                Paint(
+                    Paint.ANTI_ALIAS_FLAG
+                ).apply {
+
+                    color =
+                        Color.rgb(
+                            244,
+                            39,
+                            151
+                        )
+
+                    style =
+                        Paint.Style.FILL
                 }
 
-            val outlinePaint =
-                Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                    color = Color.BLACK
-                    style = Paint.Style.STROKE
-                    strokeWidth = max(2f, size * 0.10f)
-                    strokeJoin = Paint.Join.ROUND
+
+            val whiteOutline =
+                Paint(
+                    Paint.ANTI_ALIAS_FLAG
+                ).apply {
+
+                    color =
+                        Color.argb(
+                            245,
+                            255,
+                            255,
+                            255
+                        )
+
+                    style =
+                        Paint.Style.STROKE
+
+                    strokeWidth =
+                        outlineWidth
+
+                    strokeJoin =
+                        Paint.Join.ROUND
                 }
 
-            val path = Path().apply {
-                moveTo(0f, -size)
-                lineTo(size * 0.24f, size * 0.25f)
-                lineTo(size * 0.85f, size * 0.52f)
-                lineTo(size * 0.72f, size * 0.72f)
-                lineTo(size * 0.20f, size * 0.48f)
-                lineTo(0f, size * 0.95f)
-                lineTo(-size * 0.20f, size * 0.48f)
-                lineTo(-size * 0.72f, size * 0.72f)
-                lineTo(-size * 0.85f, size * 0.52f)
-                lineTo(-size * 0.24f, size * 0.25f)
-                close()
-            }
 
             canvas.save()
-            canvas.translate(x, y)
-            canvas.rotate(heading.toFloat())
+
+            canvas.translate(
+                point.x,
+                point.y
+            )
+
+            canvas.rotate(
+                point.headingDegrees
+            )
+
 
             canvas.save()
-            canvas.translate(size * 0.08f, size * 0.08f)
-            canvas.drawPath(path, shadowPaint)
+
+            canvas.translate(
+                markerHalf *
+                    0.10f,
+                markerHalf *
+                    0.12f
+            )
+
+            canvas.drawPath(
+                markerPath,
+                shadowPaint
+            )
+
             canvas.restore()
 
-            canvas.drawPath(path, aircraftPaint)
-            canvas.drawPath(path, outlinePaint)
+
+            canvas.drawPath(
+                markerPath,
+                markerPaint
+            )
+
+            canvas.drawPath(
+                markerPath,
+                whiteOutline
+            )
+
+
             canvas.restore()
+
+
+            /*
+             * A gentle 12.5 fps pulse is enough to communicate live
+             * position without burning battery or making the chart
+             * feel visually busy.
+             */
+            postInvalidateDelayed(
+                80L
+            )
         }
 
 
