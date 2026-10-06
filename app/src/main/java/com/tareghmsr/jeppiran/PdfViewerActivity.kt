@@ -328,6 +328,9 @@ private val locationPermissionLauncher =
     private var lastMetarIcao =
         ""
 
+    private var autoMetarTransitionPending =
+        false
+
 
     private var metarRequestId =
         0
@@ -1122,13 +1125,8 @@ private val locationPermissionLauncher =
                 this
             ).apply {
 
-                setBackgroundColor(
-                    Color.rgb(
-                        14,
-                        18,
-                        23
-                    )
-                )
+                background =
+                    viewerBackground()
             }
 
 
@@ -1289,16 +1287,14 @@ private val locationPermissionLauncher =
                 orientation =
                     LinearLayout.VERTICAL
 
-                setBackgroundColor(
-                    Color.rgb(
-                        3,
-                        18,
-                        42
+                background =
+                    viewerPanelBackground(
+                        0,
+                        true
                     )
-                )
 
                 elevation =
-                    8.dp.toFloat()
+                    10.dp.toFloat()
             }
 
 
@@ -1314,18 +1310,18 @@ private val locationPermissionLauncher =
                     Gravity.CENTER_VERTICAL
 
                 setPadding(
-                    4.dp,
+                    5.dp,
                     2.dp,
-                    4.dp,
+                    5.dp,
                     2.dp
                 )
             }
 
 
-        val back =
+        primaryRow.addView(
             toolbarButton(
                 "‹",
-                24f
+                25f
             ).apply {
 
                 contentDescription =
@@ -1334,11 +1330,7 @@ private val locationPermissionLauncher =
                 setOnClickListener {
                     finish()
                 }
-            }
-
-
-        primaryRow.addView(
-            back,
+            },
             toolbarButtonParams(
                 44.dp
             )
@@ -1368,7 +1360,7 @@ private val locationPermissionLauncher =
         )
 
 
-        val search =
+        primaryRow.addView(
             toolbarButton(
                 "⌕",
                 22f
@@ -1380,11 +1372,7 @@ private val locationPermissionLauncher =
                 setOnClickListener {
                     showSearchDialog()
                 }
-            }
-
-
-        primaryRow.addView(
-            search,
+            },
             toolbarButtonParams(
                 44.dp
             )
@@ -1398,13 +1386,13 @@ private val locationPermissionLauncher =
 
                 text =
                     currentIcao +
-                        " • " +
+                        " / " +
                         chartTitle.ifBlank {
                             "Chart"
                         }
 
                 textSize =
-                    13f
+                    13.5f
 
                 typeface =
                     Typeface.DEFAULT_BOLD
@@ -1413,19 +1401,21 @@ private val locationPermissionLauncher =
                     2
 
                 ellipsize =
-                    android.text.TextUtils.TruncateAt.END
+                    android.text.TextUtils
+                        .TruncateAt
+                        .END
 
                 gravity =
                     Gravity.CENTER_VERTICAL
 
                 setTextColor(
-                    Color.WHITE
+                    primaryTextColor()
                 )
 
                 setPadding(
-                    8.dp,
+                    9.dp,
                     0,
-                    8.dp,
+                    9.dp,
                     0
                 )
             }
@@ -1462,19 +1452,17 @@ private val locationPermissionLauncher =
                     Gravity.CENTER_VERTICAL
 
                 setPadding(
-                    6.dp,
+                    7.dp,
                     0,
-                    6.dp,
+                    7.dp,
                     2.dp
                 )
 
-                setBackgroundColor(
-                    Color.rgb(
-                        4,
-                        22,
-                        49
+                background =
+                    viewerPanelBackground(
+                        0,
+                        false
                     )
-                )
             }
 
 
@@ -1490,21 +1478,19 @@ private val locationPermissionLauncher =
                     1
 
                 ellipsize =
-                    android.text.TextUtils.TruncateAt.END
+                    android.text.TextUtils
+                        .TruncateAt
+                        .END
 
                 gravity =
                     Gravity.CENTER_VERTICAL
 
                 setTextColor(
-                    Color.rgb(
-                        180,
-                        190,
-                        200
-                    )
+                    secondaryTextColor()
                 )
 
                 setPadding(
-                    8.dp,
+                    9.dp,
                     0,
                     6.dp,
                     0
@@ -1522,7 +1508,7 @@ private val locationPermissionLauncher =
         )
 
 
-        val previous =
+        actionRow.addView(
             toolbarButton(
                 "‹",
                 25f
@@ -1532,23 +1518,18 @@ private val locationPermissionLauncher =
                     "Previous chart"
 
                 setOnClickListener {
-
                     navigateWithinAirport(
                         -1
                     )
                 }
-            }
-
-
-        actionRow.addView(
-            previous,
+            },
             toolbarButtonParams(
                 42.dp
             )
         )
 
 
-        val next =
+        actionRow.addView(
             toolbarButton(
                 "›",
                 25f
@@ -1558,16 +1539,11 @@ private val locationPermissionLauncher =
                     "Next chart"
 
                 setOnClickListener {
-
                     navigateWithinAirport(
                         1
                     )
                 }
-            }
-
-
-        actionRow.addView(
-            next,
+            },
             toolbarButtonParams(
                 42.dp
             )
@@ -1581,7 +1557,7 @@ private val locationPermissionLauncher =
             ).apply {
 
                 contentDescription =
-                    "Show cached weather"
+                    "Weather"
 
                 setCompoundDrawablesWithIntrinsicBounds(
                     R.drawable.ic_weather,
@@ -1617,63 +1593,62 @@ private val locationPermissionLauncher =
 
         updateToggleButton(
             aircraftPositionButton,
-            AircraftPositionStore.isEnabled(
-                this
-            )
+            AircraftPositionStore
+                .isEnabled(
+                    this
+                )
         )
 
 
-        aircraftPositionButton.setOnClickListener {
+        aircraftPositionButton
+            .setOnClickListener {
 
-            val enabled =
-                !AircraftPositionStore.isEnabled(
-                    this
-                )
+                val enabled =
+                    !AircraftPositionStore
+                        .isEnabled(
+                            this
+                        )
 
+                AircraftPositionStore
+                    .setEnabled(
+                        this,
+                        enabled
+                    )
 
-            AircraftPositionStore.setEnabled(
-                this,
-                enabled
-            )
-
-
-            updateToggleButton(
-                aircraftPositionButton,
-                enabled
-            )
-
-
-            if (
-                enabled
-            ) {
-
-                locationPermissionRequested =
-                    false
-
-                startGps()
-
-                updateGpsLabel()
-
-            } else {
-
-                stopGps()
-
-                handler.removeCallbacks(
-                    simulatorUpdateRunnable
-                )
-
-                updateGpsText(
-                    "Aircraft position OFF"
+                updateToggleButton(
+                    aircraftPositionButton,
+                    enabled
                 )
 
                 if (
-                    ::chartView.isInitialized
+                    enabled
                 ) {
 
-                    chartView.invalidate()
+                    locationPermissionRequested =
+                        false
+
+                    startGps()
+                    updateGpsLabel()
+
+                } else {
+
+                    stopGps()
+
+                    handler.removeCallbacks(
+                        simulatorUpdateRunnable
+                    )
+
+                    updateGpsText(
+                        "Aircraft position OFF"
+                    )
+
+                    if (
+                        ::chartView.isInitialized
+                    ) {
+                        chartView.invalidate()
+                    }
                 }
             }
-        }
 
 
         actionRow.addView(
@@ -1684,52 +1659,60 @@ private val locationPermissionLauncher =
         )
 
 
-        if (
-            isDarkTheme()
-        ) {
+        actionRow.addView(
+            toolbarButton(
+                "⛶",
+                18f
+            ).apply {
 
-            val invert =
-                toolbarButton(
-                    "◐",
-                    18f
-                ).apply {
+                contentDescription =
+                    "Fullscreen"
 
-                    contentDescription =
-                        "Invert chart"
+                setOnClickListener {
+                    toggleViewerControls()
                 }
-
-
-            updateToggleButton(
-                invert,
-                invertChart
+            },
+            toolbarButtonParams(
+                42.dp
             )
+        )
 
 
-            invert.setOnClickListener {
+        actionRow.addView(
+            toolbarButton(
+                if (
+                    isDarkTheme()
+                ) {
+                    "☾"
+                } else {
+                    "☀"
+                },
+                18f
+            ).apply {
 
-                invertChart =
-                    !invertChart
+                contentDescription =
+                    "Theme"
 
+                setOnClickListener {
 
-                chartView.setInverted(
-                    invertChart
-                )
+                    ThemeManager.setTheme(
+                        this@PdfViewerActivity,
+                        if (
+                            isDarkTheme()
+                        ) {
+                            ThemeManager.LIGHT
+                        } else {
+                            ThemeManager.DARK
+                        }
+                    )
 
-
-                updateToggleButton(
-                    invert,
-                    invertChart
-                )
-            }
-
-
-            actionRow.addView(
-                invert,
-                toolbarButtonParams(
-                    42.dp
-                )
+                    recreate()
+                }
+            },
+            toolbarButtonParams(
+                42.dp
             )
-        }
+        )
 
 
         topToolbar.addView(
