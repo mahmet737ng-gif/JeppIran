@@ -80,11 +80,12 @@ class MainActivity :
             R.id.cardWx
         ).setOnClickListener {
 
-            Toast.makeText(
-                this,
-                "WX",
-                Toast.LENGTH_SHORT
-            ).show()
+            startActivity(
+                Intent(
+                    this,
+                    WxActivity::class.java
+                )
+            )
         }
 
         findViewById<android.view.View>(
