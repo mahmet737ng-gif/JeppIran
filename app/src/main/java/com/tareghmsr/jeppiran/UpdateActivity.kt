@@ -37,6 +37,10 @@ class UpdateActivity : AppCompatActivity() {
             REMOTE_ROOT +
                 "chart-georef.json"
 
+        private const val REMOTE_CHANGES =
+            REMOTE_ROOT +
+                "chart-changes.json"
+
         private const val TIMEOUT =
             20000
     }
@@ -659,13 +663,26 @@ class UpdateActivity : AppCompatActivity() {
                     )
 
 
+                val changesRaw =
+                    runCatching {
+
+                        fetchText(
+                            REMOTE_CHANGES
+                        )
+                    }
+                        .getOrDefault(
+                            ""
+                        )
+
+
                 ChartUpdateStore
                     .activate(
                         this,
                         remoteVersion,
                         remoteManifestRaw,
                         chartsRaw,
-                        georefRaw
+                        georefRaw,
+                        changesRaw
                     )
 
 
