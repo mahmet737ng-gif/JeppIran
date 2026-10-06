@@ -210,8 +210,12 @@ class SimulatorActivity : AppCompatActivity() {
     }
 
     private fun toggleConnection() {
-        if (SimulatorLocationStore.isConnected()) {
+        if (
+            SimulatorLocationStore.isConnected() ||
+            SimulatorLocationStore.isConnecting()
+        ) {
             SimulatorLocationStore.disconnect()
+            refreshStatus()
             return
         }
 
@@ -235,6 +239,7 @@ class SimulatorActivity : AppCompatActivity() {
                 return
             }
 
+            statusText.text = "Testing connection..."
             SimulatorLocationStore.connect(
                 this,
                 selectedType,
@@ -242,6 +247,7 @@ class SimulatorActivity : AppCompatActivity() {
                 port
             )
         } else {
+            statusText.text = "Testing connection..."
             SimulatorLocationStore.connect(
                 this,
                 selectedType,
@@ -253,8 +259,27 @@ class SimulatorActivity : AppCompatActivity() {
 
     private fun refreshStatus() {
         val connected = SimulatorLocationStore.isConnected()
-        connectButton.text = if (connected) "DISCONNECT" else "CONNECT"
-        statusText.text = SimulatorLocationStore.getStatus()
+        val connecting = SimulatorLocationStore.isConnecting()
+
+        connectButton.text =
+            when {
+                connected -> "DISCONNECT"
+                connecting -> "CANCEL TEST"
+                else -> "CONNECT"
+            }
+
+        val status = SimulatorLocationStore.getStatus()
+        statusText.text = status
+        statusText.setTextColor(
+            when {
+                connected -> Color.rgb(90, 230, 150)
+                connecting -> Color.rgb(47, 217, 255)
+                status.startsWith("Connection failed") ||
+                    status.startsWith("Disconnected:") ->
+                    Color.rgb(255, 115, 125)
+                else -> secondaryTextColor()
+            }
+        )
 
         val p = SimulatorLocationStore.getPosition()
         positionText.text = if (p == null) {
