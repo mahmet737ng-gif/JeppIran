@@ -92,11 +92,12 @@ class MainActivity :
             R.id.cardUpdate
         ).setOnClickListener {
 
-            Toast.makeText(
-                this,
-                "Update",
-                Toast.LENGTH_SHORT
-            ).show()
+            startActivity(
+                Intent(
+                    this,
+                    UpdateActivity::class.java
+                )
+            )
         }
 
         findViewById<android.view.View>(

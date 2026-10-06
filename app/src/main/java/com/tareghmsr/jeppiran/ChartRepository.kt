@@ -413,6 +413,12 @@ class ChartRepository(
     private var manifestLoaded =
         false
 
+    private var dataVersion =
+        "v18"
+
+    private var releaseTag =
+        FALLBACK_RELEASE_TAG
+
 
     private val chartList =
         mutableListOf<ChartInfo>()
@@ -432,6 +438,32 @@ class ChartRepository(
         ensureLoaded()
 
         return chartList.toList()
+    }
+
+
+    @Synchronized
+    fun getAirports():
+        List<AirportInfo> {
+
+        ensureLoaded()
+
+        return chartList
+            .map {
+                it.icao
+            }
+            .distinct()
+            .sorted()
+            .map { icao ->
+
+                airport(
+                    icao
+                )
+                    ?: AirportInfo(
+                        icao,
+                        icao,
+                        ""
+                    )
+            }
     }
 
 
@@ -584,43 +616,16 @@ class ChartRepository(
 
         ensureManifestLoaded()
 
-        val first =
-            airportPdfList.values
-                .firstOrNull()
+        return releaseTag
+    }
 
 
-        if (
-            first != null &&
-            first.url.isNotBlank()
-        ) {
+    fun getDataVersion():
+        String {
 
-            val marker =
-                "/releases/download/"
+        ensureManifestLoaded()
 
-            val index =
-                first.url.indexOf(
-                    marker
-                )
-
-
-            if (
-                index >= 0
-            ) {
-
-                val rest =
-                    first.url.substring(
-                        index +
-                            marker.length
-                    )
-
-
-                return rest
-                    .substringBefore("/")
-            }
-        }
-
-
-        return FALLBACK_RELEASE_TAG
+        return dataVersion
     }
 
 
@@ -884,6 +889,12 @@ class ChartRepository(
         manifestLoaded =
             false
 
+        dataVersion =
+            "v18"
+
+        releaseTag =
+            FALLBACK_RELEASE_TAG
+
         chartList.clear()
 
         airportPdfList.clear()
@@ -908,14 +919,20 @@ class ChartRepository(
         try {
 
             val raw =
-                context.assets
-                    .open(
-                        APP_FILE
-                    )
-                    .bufferedReader()
-                    .use {
-                        it.readText()
-                    }
+                (
+                    ChartUpdateStore
+                        .readCharts(
+                            context
+                        )
+                        ?: context.assets
+                            .open(
+                                APP_FILE
+                            )
+                            .bufferedReader()
+                            .use {
+                                it.readText()
+                            }
+                )
                     .trim()
 
 
@@ -994,14 +1011,20 @@ class ChartRepository(
         try {
 
             val raw =
-                context.assets
-                    .open(
-                        MANIFEST_FILE
-                    )
-                    .bufferedReader()
-                    .use {
-                        it.readText()
-                    }
+                (
+                    ChartUpdateStore
+                        .readManifest(
+                            context
+                        )
+                        ?: context.assets
+                            .open(
+                                MANIFEST_FILE
+                            )
+                            .bufferedReader()
+                            .use {
+                                it.readText()
+                            }
+                )
                     .trim()
 
 
@@ -1009,6 +1032,26 @@ class ChartRepository(
                 JSONObject(
                     raw
                 )
+
+
+            dataVersion =
+                root.optString(
+                    "version",
+                    "v18"
+                )
+                    .ifBlank {
+                        "v18"
+                    }
+
+
+            releaseTag =
+                root.optString(
+                    "release_tag",
+                    FALLBACK_RELEASE_TAG
+                )
+                    .ifBlank {
+                        FALLBACK_RELEASE_TAG
+                    }
 
 
             val airportsObject =

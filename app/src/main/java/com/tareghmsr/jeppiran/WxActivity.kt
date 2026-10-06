@@ -72,9 +72,14 @@ class WxActivity : AppCompatActivity() {
             setPadding(0, 4.dp, 0, 18.dp)
         })
 
-        val airports = ChartRepository.airports().sortedBy { airport ->
-            airport.icao
-        }
+        val airports =
+            ChartRepository(
+                this
+            )
+                .getAirports()
+                .sortedBy { airport ->
+                    airport.icao
+                }
 
         val airportLabels = airports.map { airport ->
             airport.icao + "   " + airport.airportName

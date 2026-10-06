@@ -53,8 +53,10 @@ class ChartsActivity :
         enableEdgeToEdge()
 
         allAirports =
-            ChartRepository
-                .airports()
+            ChartRepository(
+                this
+            )
+                .getAirports()
                 .sortedBy {
                     it.icao
                 }
