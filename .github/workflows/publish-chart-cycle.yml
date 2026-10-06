@@ -105,16 +105,19 @@ jobs:
           done
 
       - name: Rebuild chart classification
+        env:
+          JEPPIRAN_DATA_VERSION: ${{ steps.cycle.outputs.version }}
         run: |
           python scripts/build_base_index.py --pdf-text pdf-text --output charts-index-v9.json
           python scripts/name_charts_v12.py
           python scripts/classify_charts_v16.py
+          python scripts/build_charts_final.py
 
       - name: Build airport PDFs and manifest
         run: |
           python scripts/build_chart_cycle.py \
             --pdf "${{ steps.cycle.outputs.source }}" \
-            --charts charts-app-v16.json \
+            --charts charts-current-final.json \
             --version "${{ steps.cycle.outputs.version }}" \
             --cycle "${{ steps.cycle.outputs.cycle }}" \
             --release-tag "${{ steps.cycle.outputs.tag }}" \
@@ -174,6 +177,7 @@ jobs:
           cp cycle-build/manifest.json app/src/main/assets/charts-manifest.json
           cp cycle-build/charts-current.json app/src/main/assets/charts-current.json
           cp cycle-build/chart-georef.json app/src/main/assets/chart-georef.json
+          cp chart-changes-final.json app/src/main/assets/chart-changes.json
           cp cycle-build/changed-airports.json app/src/main/assets/changed-airports.json
 
           python - <<'PY'
@@ -207,7 +211,7 @@ jobs:
 
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add app/src/main/assets/charts-manifest.json app/src/main/assets/charts-current.json app/src/main/assets/chart-georef.json app/src/main/assets/changed-airports.json app/build.gradle.kts
+          git add app/src/main/assets/charts-manifest.json app/src/main/assets/charts-current.json app/src/main/assets/chart-georef.json app/src/main/assets/chart-changes.json app/src/main/assets/changed-airports.json app/build.gradle.kts
           if git diff --cached --quiet; then
             echo "Metadata is already current."
           else
