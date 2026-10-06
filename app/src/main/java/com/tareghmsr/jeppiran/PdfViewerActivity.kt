@@ -369,6 +369,18 @@ private val locationPermissionLauncher =
         Location? =
         null
 
+    private var surfaceAutoNavigationActive =
+        false
+
+    private var surfaceCandidatePage =
+        -1
+
+    private var surfaceCandidateSince =
+        0L
+
+    private var surfaceLastSwitchMillis =
+        0L
+
 
     private var pdfRequestId =
         0
@@ -582,6 +594,31 @@ private val locationPermissionLauncher =
         }
 
 
+        surfaceAutoNavigationActive =
+            savedInstanceState
+                ?.getBoolean(
+                    "SURFACE_AUTO",
+                    false
+                )
+                ?: (
+                    intent.getBooleanExtra(
+                        "TAXI_MODE",
+                        false
+                    ) ||
+                        airportCharts
+                            .getOrNull(
+                                currentChartIndex
+                            )
+                            ?.let {
+                                SurfaceChartNavigator
+                                    .isPrimaryAdc(
+                                        it
+                                    )
+                            } ==
+                        true
+                    )
+
+
         WindowCompat.setDecorFitsSystemWindows(
             window,
             false
@@ -641,6 +678,11 @@ private val locationPermissionLauncher =
         outState.putInt(
             "GLOBAL_PAGE",
             currentChartGlobalPage()
+        )
+
+        outState.putBoolean(
+            "SURFACE_AUTO",
+            surfaceAutoNavigationActive
         )
 
         super.onSaveInstanceState(
@@ -1626,6 +1668,22 @@ private val locationPermissionLauncher =
                     enabled
                 ) {
 
+                    airportCharts
+                        .getOrNull(
+                            currentChartIndex
+                        )
+                        ?.let {
+                            if (
+                                SurfaceChartNavigator
+                                    .isPrimaryAdc(
+                                        it
+                                    )
+                            ) {
+                                surfaceAutoNavigationActive =
+                                    true
+                            }
+                        }
+
                     locationPermissionRequested =
                         false
 
@@ -2285,6 +2343,18 @@ private val locationPermissionLauncher =
 
                                     currentChartIndex =
                                         indexed.index
+
+                                    surfaceAutoNavigationActive =
+                                        intent.getBooleanExtra(
+                                            "TAXI_MODE",
+                                            false
+                                        ) ||
+                                            SurfaceChartNavigator
+                                                .isPrimaryAdc(
+                                                    chart
+                                                )
+
+                                    resetSurfaceCandidate()
 
                                     chartView.resetView()
 
@@ -3445,6 +3515,20 @@ private val locationPermissionLauncher =
         currentChartIndex =
             target
 
+        surfaceAutoNavigationActive =
+            intent.getBooleanExtra(
+                "TAXI_MODE",
+                false
+            ) ||
+                SurfaceChartNavigator
+                    .isPrimaryAdc(
+                        airportCharts[
+                            target
+                        ]
+                    )
+
+        resetSurfaceCandidate()
+
 
         chartView.resetView()
 
@@ -3487,7 +3571,27 @@ private val locationPermissionLauncher =
                 ?: -1
 
 
-        return "$chartPosition  •  $category"
+        val surfaceMode =
+            if (
+                surfaceAutoNavigationActive &&
+                airportCharts
+                    .getOrNull(
+                        currentChartIndex
+                    )
+                    ?.let {
+                        SurfaceChartNavigator
+                            .isSurfaceChart(
+                                it
+                            )
+                    } ==
+                true
+            ) {
+                "  •  AUTO SURFACE"
+            } else {
+                ""
+            }
+
+        return "$chartPosition  •  $category$surfaceMode"
     }
 
 
@@ -5919,6 +6023,15 @@ private val locationPermissionLauncher =
 
                 updateSimulatorLabel()
 
+                SimulatorLocationStore
+                    .getPosition()
+                    ?.let {
+                        maybeAutoSwitchSurfaceChart(
+                            it.latitude,
+                            it.longitude
+                        )
+                    }
+
                 when {
 
                     SimulatorLocationStore.isConnected() -> {
@@ -6107,6 +6220,11 @@ private val locationPermissionLauncher =
                     lastGpsLocation =
                         location
 
+                    maybeAutoSwitchSurfaceChart(
+                        location.latitude,
+                        location.longitude
+                    )
+
                     updateGpsLabel()
                 }
             }
@@ -6190,7 +6308,13 @@ private val locationPermissionLauncher =
 
 
         updateGpsText(
-            "GPS • ACTIVE"
+            if (
+                surfaceAutoNavigationActive
+            ) {
+                "GPS • ACTIVE • AUTO SURFACE"
+            } else {
+                "GPS • ACTIVE"
+            }
         )
 
 
@@ -6244,7 +6368,13 @@ private val locationPermissionLauncher =
 
 
         updateGpsText(
-            "SIM • ACTIVE"
+            if (
+                surfaceAutoNavigationActive
+            ) {
+                "SIM • ACTIVE • AUTO SURFACE"
+            } else {
+                "SIM • ACTIVE"
+            }
         )
 
 
@@ -6254,6 +6384,136 @@ private val locationPermissionLauncher =
 
             chartView.invalidate()
         }
+    }
+
+
+    private fun resetSurfaceCandidate() {
+        surfaceCandidatePage =
+            -1
+        surfaceCandidateSince =
+            0L
+    }
+
+
+    private fun maybeAutoSwitchSurfaceChart(
+        latitude: Double,
+        longitude: Double
+    ) {
+
+        if (
+            !surfaceAutoNavigationActive ||
+            !positionResumed ||
+            !AircraftPositionStore
+                .isEnabled(
+                    this
+                ) ||
+            airportCharts.isEmpty()
+        ) {
+            resetSurfaceCandidate()
+            return
+        }
+
+        val current =
+            airportCharts
+                .getOrNull(
+                    currentChartIndex
+                )
+                ?: return
+
+        if (
+            !SurfaceChartNavigator
+                .isSurfaceChart(
+                    current
+                )
+        ) {
+            return
+        }
+
+        val selection =
+            SurfaceChartNavigator
+                .choose(
+                    this,
+                    airportCharts,
+                    latitude,
+                    longitude,
+                    repository.getDataVersion()
+                )
+                ?: run {
+                    resetSurfaceCandidate()
+                    return
+                }
+
+        if (
+            selection.chart.page ==
+            current.page
+        ) {
+            resetSurfaceCandidate()
+            return
+        }
+
+        val now =
+            SystemClock.uptimeMillis()
+
+        if (
+            surfaceCandidatePage !=
+            selection.chart.page
+        ) {
+            surfaceCandidatePage =
+                selection.chart.page
+            surfaceCandidateSince =
+                now
+            return
+        }
+
+        if (
+            now -
+                surfaceCandidateSince <
+            1200L ||
+            now -
+                surfaceLastSwitchMillis <
+            2000L
+        ) {
+            return
+        }
+
+        val target =
+            airportCharts
+                .indexOfFirst {
+                    it.page ==
+                        selection.chart.page
+                }
+
+        if (
+            target < 0 ||
+            target ==
+                currentChartIndex
+        ) {
+            resetSurfaceCandidate()
+            return
+        }
+
+        currentChartIndex =
+            target
+
+        surfaceLastSwitchMillis =
+            now
+
+        resetSurfaceCandidate()
+
+        chartView.resetView()
+
+        showCurrentChart(
+            true
+        )
+
+        Toast
+            .makeText(
+                this,
+                "AUTO SURFACE • " +
+                    selection.reason,
+                Toast.LENGTH_SHORT
+            )
+            .show()
     }
 
 
