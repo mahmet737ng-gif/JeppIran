@@ -146,9 +146,8 @@ class AirportChartsActivity :
                 orientation =
                     LinearLayout.VERTICAL
 
-                setBackgroundColor(
-                    backgroundColor()
-                )
+                background =
+                    pageBackground()
             }
 
         val header =
@@ -1636,21 +1635,45 @@ class AirportChartsActivity :
                 GradientDrawable.RECTANGLE
 
             cornerRadius =
-                15.dp.toFloat()
+                18.dp.toFloat()
 
-            setColor(
+            orientation =
+                GradientDrawable
+                    .Orientation
+                    .TL_BR
+
+            colors =
                 if (
                     isDarkTheme()
                 ) {
-                    Color.rgb(
-                        5,
-                        22,
-                        42
+                    intArrayOf(
+                        Color.argb(
+                            242,
+                            4,
+                            31,
+                            68
+                        ),
+                        Color.argb(
+                            246,
+                            2,
+                            17,
+                            40
+                        )
                     )
                 } else {
-                    Color.WHITE
+                    intArrayOf(
+                        Color.rgb(
+                            255,
+                            255,
+                            255
+                        ),
+                        Color.rgb(
+                            232,
+                            246,
+                            255
+                        )
+                    )
                 }
-            )
 
             setStroke(
                 1.dp,
@@ -1658,20 +1681,21 @@ class AirportChartsActivity :
                     isDarkTheme()
                 ) {
                     Color.rgb(
-                        32,
-                        105,
-                        158
+                        0,
+                        185,
+                        255
                     )
                 } else {
                     Color.rgb(
-                        205,
-                        216,
-                        226
+                        82,
+                        160,
+                        214
                     )
                 }
             )
         }
     }
+
 
     private fun createChartBackground():
         GradientDrawable {
@@ -1682,21 +1706,45 @@ class AirportChartsActivity :
                 GradientDrawable.RECTANGLE
 
             cornerRadius =
-                16.dp.toFloat()
+                19.dp.toFloat()
 
-            setColor(
+            orientation =
+                GradientDrawable
+                    .Orientation
+                    .TL_BR
+
+            colors =
                 if (
                     isDarkTheme()
                 ) {
-                    Color.rgb(
-                        7,
-                        26,
-                        49
+                    intArrayOf(
+                        Color.argb(
+                            246,
+                            4,
+                            27,
+                            58
+                        ),
+                        Color.argb(
+                            248,
+                            2,
+                            15,
+                            36
+                        )
                     )
                 } else {
-                    Color.WHITE
+                    intArrayOf(
+                        Color.rgb(
+                            255,
+                            255,
+                            255
+                        ),
+                        Color.rgb(
+                            235,
+                            247,
+                            255
+                        )
+                    )
                 }
-            )
 
             setStroke(
                 1.dp,
@@ -1704,20 +1752,21 @@ class AirportChartsActivity :
                     isDarkTheme()
                 ) {
                     Color.rgb(
-                        55,
-                        70,
-                        84
+                        0,
+                        180,
+                        255
                     )
                 } else {
                     Color.rgb(
-                        224,
-                        230,
-                        236
+                        89,
+                        163,
+                        214
                     )
                 }
             )
         }
     }
+
 
     private fun createCategoryBackground(
         selected: Boolean
@@ -1729,70 +1778,142 @@ class AirportChartsActivity :
                 GradientDrawable.RECTANGLE
 
             cornerRadius =
-                12.dp.toFloat()
+                14.dp.toFloat()
 
-            if (
-                selected
-            ) {
+            orientation =
+                GradientDrawable
+                    .Orientation
+                    .TL_BR
 
-                setColor(
-                    Color.rgb(
-                        9,
-                        105,
-                        181
+            colors =
+                if (
+                    selected
+                ) {
+                    intArrayOf(
+                        Color.rgb(
+                            0,
+                            183,
+                            255
+                        ),
+                        Color.rgb(
+                            0,
+                            91,
+                            204
+                        )
                     )
-                )
-
-                setStroke(
-                    1.dp,
-                    Color.rgb(
-                        9,
-                        105,
-                        181
+                } else if (
+                    isDarkTheme()
+                ) {
+                    intArrayOf(
+                        Color.rgb(
+                            8,
+                            39,
+                            70
+                        ),
+                        Color.rgb(
+                            4,
+                            26,
+                            50
+                        )
                     )
-                )
+                } else {
+                    intArrayOf(
+                        Color.rgb(
+                            250,
+                            253,
+                            255
+                        ),
+                        Color.rgb(
+                            227,
+                            242,
+                            252
+                        )
+                    )
+                }
 
-            } else {
-
-                setColor(
-                    if (
-                        isDarkTheme()
-                    ) {
-                        Color.rgb(
-                            31,
-                            43,
-                            55
-                        )
-                    } else {
-                        Color.rgb(
-                            239,
-                            243,
-                            247
-                        )
-                    }
-                )
-
-                setStroke(
-                    1.dp,
-                    if (
-                        isDarkTheme()
-                    ) {
-                        Color.rgb(
-                            60,
-                            76,
-                            91
-                        )
-                    } else {
-                        Color.rgb(
-                            215,
-                            223,
-                            231
-                        )
-                    }
-                )
-            }
+            setStroke(
+                1.dp,
+                if (
+                    selected
+                ) {
+                    Color.rgb(
+                        89,
+                        229,
+                        255
+                    )
+                } else if (
+                    isDarkTheme()
+                ) {
+                    Color.rgb(
+                        36,
+                        135,
+                        196
+                    )
+                } else {
+                    Color.rgb(
+                        100,
+                        169,
+                        214
+                    )
+                }
+            )
         }
     }
+
+
+    private fun pageBackground():
+        GradientDrawable {
+
+        return GradientDrawable().apply {
+
+            orientation =
+                GradientDrawable
+                    .Orientation
+                    .TL_BR
+
+            colors =
+                if (
+                    isDarkTheme()
+                ) {
+                    intArrayOf(
+                        Color.rgb(
+                            0,
+                            20,
+                            49
+                        ),
+                        Color.rgb(
+                            1,
+                            11,
+                            28
+                        ),
+                        Color.rgb(
+                            1,
+                            7,
+                            18
+                        )
+                    )
+                } else {
+                    intArrayOf(
+                        Color.rgb(
+                            225,
+                            243,
+                            255
+                        ),
+                        Color.rgb(
+                            249,
+                            252,
+                            255
+                        ),
+                        Color.rgb(
+                            235,
+                            247,
+                            255
+                        )
+                    )
+                }
+        }
+    }
+
 
     private fun backgroundColor():
         Int {
@@ -1801,18 +1922,19 @@ class AirportChartsActivity :
             isDarkTheme()
         ) {
             Color.rgb(
-                2,
-                11,
-                26
+                1,
+                10,
+                25
             )
         } else {
             Color.rgb(
-                244,
-                247,
-                250
+                239,
+                248,
+                255
             )
         }
     }
+
 
     private fun surfaceColor():
         Int {
@@ -1821,14 +1943,19 @@ class AirportChartsActivity :
             isDarkTheme()
         ) {
             Color.rgb(
-                7,
+                5,
                 26,
-                49
+                55
             )
         } else {
-            Color.WHITE
+            Color.rgb(
+                248,
+                253,
+                255
+            )
         }
     }
+
 
     private fun primaryTextColor():
         Int {
