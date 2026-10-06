@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - work-no-build
+      - pilot-ops-suite
 
 permissions:
   contents: write
@@ -91,6 +92,10 @@ jobs:
             --data-version v18 \
             --cycle 2026-20
           python scripts/validate_chart_georef.py
+          python scripts/build_approach_briefings.py \
+            --pdf Iran2620.pdf \
+            --index app/src/main/assets/charts-current.json \
+            --output app/src/main/assets/approach-briefings.json
 
       - name: Test and build signed APK
         run: gradle testDebugUnitTest assembleDebug --stacktrace

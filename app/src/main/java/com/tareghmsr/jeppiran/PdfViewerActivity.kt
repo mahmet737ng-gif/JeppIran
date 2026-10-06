@@ -231,6 +231,10 @@ private val locationPermissionLauncher =
     private lateinit var metarBanner:
         TextView
 
+    private var taxiRouteBanner:
+        TextView? =
+        null
+
     private lateinit var metarIcon:
         TextView
 
@@ -1261,6 +1265,8 @@ private val locationPermissionLauncher =
 
         buildMetarBanner()
 
+        buildTaxiRouteBanner()
+
 
         setContentView(
             root
@@ -1840,19 +1846,23 @@ private val locationPermissionLauncher =
             LinearLayout(
                 this
             ).apply {
-                visibility =
-                    View.GONE
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER
+                setPadding(6.dp, 3.dp, 6.dp, 3.dp)
+                background = viewerPanelBackground(16, true)
+                elevation = 10.dp.toFloat()
+                visibility = View.GONE
             }
 
 
         root.addView(
             eraserModeBar,
             FrameLayout.LayoutParams(
-                1.dp,
-                1.dp
+                230.dp,
+                44.dp
             ).apply {
                 gravity =
-                    Gravity.TOP
+                    Gravity.TOP or Gravity.CENTER_HORIZONTAL
                 topMargin =
                     156.dp
             }
@@ -2426,6 +2436,95 @@ private val locationPermissionLauncher =
 
 
         updateOverlayInsets()
+    }
+
+
+    private fun buildTaxiRouteBanner() {
+
+        if (
+            !intent.getBooleanExtra(
+                "TAXI_MODE",
+                false
+            )
+        ) {
+            return
+        }
+
+        val route =
+            intent
+                .getStringExtra(
+                    "TAXI_ROUTE"
+                )
+                .orEmpty()
+                .trim()
+
+        taxiRouteBanner =
+            TextView(
+                this
+            ).apply {
+
+                text =
+                    if (
+                        route.isBlank()
+                    ) {
+                        "TAXI MODE • FOLLOW ATC CLEARANCE"
+                    } else {
+                        "TAXI ROUTE  •  " + route
+                    }
+
+                textSize =
+                    12f
+
+                typeface =
+                    Typeface.DEFAULT_BOLD
+
+                setTextColor(
+                    primaryTextColor()
+                )
+
+                gravity =
+                    Gravity.CENTER_VERTICAL
+
+                setPadding(
+                    14.dp,
+                    10.dp,
+                    14.dp,
+                    10.dp
+                )
+
+                background =
+                    viewerPanelBackground(
+                        16,
+                        true
+                    )
+
+                elevation =
+                    15.dp.toFloat()
+
+                maxLines =
+                    3
+            }
+
+        root.addView(
+            taxiRouteBanner,
+            FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+
+                gravity =
+                    Gravity.BOTTOM
+
+                leftMargin =
+                    12.dp
+
+                rightMargin =
+                    12.dp
+
+                bottomMargin =
+                    18.dp
+            }
+        )
     }
 
 
@@ -3957,16 +4056,70 @@ private val locationPermissionLauncher =
 
     private fun updateEraserModeBar() {
 
-        eraserMode =
-            EraserMode.PIXEL
+        eraserMode = EraserMode.PIXEL
+
+        if (!::eraserModeBar.isInitialized) {
+            return
+        }
+
+        eraserModeBar.removeAllViews()
 
         if (
-            ::eraserModeBar.isInitialized
+            annotationTool != Tool.ERASER ||
+            !controlsVisible
         ) {
-
-            eraserModeBar.visibility =
-                View.GONE
+            eraserModeBar.visibility = View.GONE
+            return
         }
+
+        val hint =
+            TextView(this).apply {
+                text = "PIXEL ERASER"
+                textSize = 10.5f
+                typeface = Typeface.DEFAULT_BOLD
+                gravity = Gravity.CENTER
+                setTextColor(primaryTextColor())
+            }
+
+        eraserModeBar.addView(
+            hint,
+            LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                1f
+            )
+        )
+
+        val clear =
+            TextView(this).apply {
+                text = "CLEAR"
+                textSize = 11f
+                typeface = Typeface.DEFAULT_BOLD
+                gravity = Gravity.CENTER
+                setTextColor(Color.WHITE)
+                background = roundedBackground(
+                    if (isDarkTheme()) Color.rgb(152, 28, 62) else Color.rgb(199, 48, 74),
+                    Color.rgb(255, 110, 140),
+                    12
+                )
+                isClickable = true
+                isFocusable = true
+                setOnClickListener {
+                    showClearAllDialog()
+                }
+            }
+
+        eraserModeBar.addView(
+            clear,
+            LinearLayout.LayoutParams(
+                82.dp,
+                LinearLayout.LayoutParams.MATCH_PARENT
+            ).apply {
+                setMargins(6.dp, 0, 0, 0)
+            }
+        )
+
+        eraserModeBar.visibility = View.VISIBLE
     }
 
 

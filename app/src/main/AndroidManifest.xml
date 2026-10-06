@@ -99,6 +99,18 @@
             android:exported="false" />
 
         <activity
+            android:name=".PilotBriefingActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".PilotToolsSettingsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".TaxiModeActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".InfoActivity"
             android:exported="false" />
 
