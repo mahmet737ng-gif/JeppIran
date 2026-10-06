@@ -6822,6 +6822,27 @@ private val locationPermissionLauncher =
         private var offsetY =
             0f
 
+        private var insetAnimator:
+            ValueAnimator? =
+            null
+
+        private var zoomAnimator:
+            ValueAnimator? =
+            null
+
+        private var pendingSingleTap:
+            Runnable? =
+            null
+
+        private var lastTapUpTime =
+            0L
+
+        private var lastTapX =
+            0f
+
+        private var lastTapY =
+            0f
+
 
         private var swipeOffset =
             0f
@@ -7128,6 +7149,142 @@ private val locationPermissionLauncher =
 
 
             invalidate()
+        }
+
+
+        fun currentContentInsets():
+            IntArray =
+            intArrayOf(
+                contentLeft,
+                contentTop,
+                contentRight,
+                contentBottom
+            )
+
+
+        fun animateContentInsetsTo(
+            left: Int,
+            top: Int,
+            right: Int,
+            bottom: Int,
+            durationMs: Long,
+            endAction: (() -> Unit)? = null
+        ) {
+
+            insetAnimator
+                ?.cancel()
+
+            val startLeft =
+                contentLeft
+
+            val startTop =
+                contentTop
+
+            val startRight =
+                contentRight
+
+            val startBottom =
+                contentBottom
+
+
+            insetAnimator =
+                ValueAnimator
+                    .ofFloat(
+                        0f,
+                        1f
+                    )
+                    .apply {
+
+                        duration =
+                            durationMs
+
+                        interpolator =
+                            DecelerateInterpolator()
+
+                        addUpdateListener {
+                            value ->
+
+                            val fraction =
+                                value.animatedValue
+                                    as Float
+
+                            contentLeft =
+                                (
+                                    startLeft +
+                                        (
+                                            left -
+                                                startLeft
+                                            ) *
+                                            fraction
+                                    )
+                                    .toInt()
+
+                            contentTop =
+                                (
+                                    startTop +
+                                        (
+                                            top -
+                                                startTop
+                                            ) *
+                                            fraction
+                                    )
+                                    .toInt()
+
+                            contentRight =
+                                (
+                                    startRight +
+                                        (
+                                            right -
+                                                startRight
+                                            ) *
+                                            fraction
+                                    )
+                                    .toInt()
+
+                            contentBottom =
+                                (
+                                    startBottom +
+                                        (
+                                            bottom -
+                                                startBottom
+                                            ) *
+                                            fraction
+                                    )
+                                    .toInt()
+
+                            invalidate()
+                        }
+
+                        addListener(
+                            object :
+                                AnimatorListenerAdapter() {
+
+                                override fun onAnimationEnd(
+                                    animation: Animator
+                                ) {
+
+                                    contentLeft =
+                                        left
+
+                                    contentTop =
+                                        top
+
+                                    contentRight =
+                                        right
+
+                                    contentBottom =
+                                        bottom
+
+                                    invalidate()
+
+                                    endAction
+                                        ?.invoke()
+                                }
+                            }
+                        )
+
+                        start()
+                    }
         }
 
 
@@ -8797,6 +8954,295 @@ private val locationPermissionLauncher =
         }
 
 
+        private fun handleChartTap(
+            x: Float,
+            y: Float
+        ) {
+
+            val now =
+                SystemClock.uptimeMillis()
+
+            val doubleTapDistance =
+                48.dp.toFloat()
+
+            val isDoubleTap =
+                lastTapUpTime >
+                    0L &&
+                    now -
+                        lastTapUpTime <=
+                        DOUBLE_TAP_TIMEOUT_MS &&
+                    abs(
+                        x -
+                            lastTapX
+                    ) <=
+                        doubleTapDistance &&
+                    abs(
+                        y -
+                            lastTapY
+                    ) <=
+                        doubleTapDistance
+
+
+            if (
+                isDoubleTap
+            ) {
+
+                pendingSingleTap
+                    ?.let {
+                        handler.removeCallbacks(
+                            it
+                        )
+                    }
+
+                pendingSingleTap =
+                    null
+
+                lastTapUpTime =
+                    0L
+
+                animateDoubleTapZoom(
+                    x,
+                    y
+                )
+
+                return
+            }
+
+
+            lastTapUpTime =
+                now
+
+            lastTapX =
+                x
+
+            lastTapY =
+                y
+
+
+            val runnable =
+                Runnable {
+
+                    pendingSingleTap =
+                        null
+
+                    if (
+                        annotationTool ==
+                        null
+                    ) {
+
+                        performClick()
+                    }
+                }
+
+
+            pendingSingleTap =
+                runnable
+
+            handler.postDelayed(
+                runnable,
+                DOUBLE_TAP_TIMEOUT_MS
+            )
+        }
+
+
+        private fun animateDoubleTapZoom(
+            focusX: Float,
+            focusY: Float
+        ) {
+
+            val image =
+                bitmap
+                    ?: return
+
+            zoomAnimator
+                ?.cancel()
+
+
+            val startScale =
+                scale
+
+            val startOffsetX =
+                offsetX
+
+            val startOffsetY =
+                offsetY
+
+
+            val targetScale =
+                if (
+                    scale <
+                    1.5f
+                ) {
+
+                    DOUBLE_TAP_ZOOM
+
+                } else {
+
+                    1f
+                }
+
+
+            var targetOffsetX =
+                0f
+
+            var targetOffsetY =
+                0f
+
+
+            if (
+                targetScale >
+                1f
+            ) {
+
+                val viewport =
+                    viewportRect()
+
+                val ratio =
+                    targetScale /
+                        startScale
+
+                targetOffsetX =
+                    (
+                        focusX -
+                            viewport.centerX()
+                        ) *
+                        (
+                            1f -
+                                ratio
+                            ) +
+                        startOffsetX *
+                            ratio
+
+                targetOffsetY =
+                    (
+                        focusY -
+                            viewport.centerY()
+                        ) *
+                        (
+                            1f -
+                                ratio
+                            ) +
+                        startOffsetY *
+                            ratio
+
+
+                val savedScale =
+                    scale
+
+                val savedX =
+                    offsetX
+
+                val savedY =
+                    offsetY
+
+
+                scale =
+                    targetScale
+
+                offsetX =
+                    targetOffsetX
+
+                offsetY =
+                    targetOffsetY
+
+                constrainPan()
+
+
+                targetOffsetX =
+                    offsetX
+
+                targetOffsetY =
+                    offsetY
+
+
+                scale =
+                    savedScale
+
+                offsetX =
+                    savedX
+
+                offsetY =
+                    savedY
+            }
+
+
+            zoomAnimator =
+                ValueAnimator
+                    .ofFloat(
+                        0f,
+                        1f
+                    )
+                    .apply {
+
+                        duration =
+                            180L
+
+                        interpolator =
+                            DecelerateInterpolator()
+
+                        addUpdateListener {
+                            value ->
+
+                            val fraction =
+                                value.animatedValue
+                                    as Float
+
+                            scale =
+                                startScale +
+                                    (
+                                        targetScale -
+                                            startScale
+                                        ) *
+                                        fraction
+
+                            offsetX =
+                                startOffsetX +
+                                    (
+                                        targetOffsetX -
+                                            startOffsetX
+                                        ) *
+                                        fraction
+
+                            offsetY =
+                                startOffsetY +
+                                    (
+                                        targetOffsetY -
+                                            startOffsetY
+                                        ) *
+                                        fraction
+
+                            invalidate()
+                        }
+
+                        addListener(
+                            object :
+                                AnimatorListenerAdapter() {
+
+                                override fun onAnimationEnd(
+                                    animation: Animator
+                                ) {
+
+                                    scale =
+                                        targetScale
+
+                                    offsetX =
+                                        targetOffsetX
+
+                                    offsetY =
+                                        targetOffsetY
+
+                                    constrainPan()
+
+                                    invalidate()
+                                }
+                            }
+                        )
+
+                        start()
+                    }
+        }
+
+
         private fun constrainPan() {
 
             val image =
@@ -9299,6 +9745,19 @@ private val locationPermissionLauncher =
 
                         moved =
                             true
+
+                        pendingSingleTap
+                            ?.let {
+                                handler.removeCallbacks(
+                                    it
+                                )
+                            }
+
+                        pendingSingleTap =
+                            null
+
+                        lastTapUpTime =
+                            0L
                     }
 
 
@@ -9609,7 +10068,10 @@ private val locationPermissionLauncher =
                                 swipeOffset =
                                     0f
 
-                                performClick()
+                                handleChartTap(
+                                    event.x,
+                                    event.y
+                                )
 
                             } else if (
                                 scale <=
