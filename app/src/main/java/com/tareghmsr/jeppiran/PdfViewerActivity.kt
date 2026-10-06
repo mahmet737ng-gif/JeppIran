@@ -887,7 +887,7 @@ private val locationPermissionLauncher =
 
                 connection.setRequestProperty(
                     "User-Agent",
-                    "JEPPIRAN/" + BuildConfig.VERSION_NAME
+                    "JEPPIRAN/" + AppVersion.name(this@PdfViewerActivity)
                 )
 
 

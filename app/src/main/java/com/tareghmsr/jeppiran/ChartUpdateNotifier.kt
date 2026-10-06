@@ -506,7 +506,7 @@ object ChartUpdateNotifier {
 
             connection.setRequestProperty(
                 "User-Agent",
-                "JEPPIRAN/" + BuildConfig.VERSION_NAME + " update notifier"
+                "JEPPIRAN/" + AppVersion.name(context) + " update notifier"
             )
 
 
