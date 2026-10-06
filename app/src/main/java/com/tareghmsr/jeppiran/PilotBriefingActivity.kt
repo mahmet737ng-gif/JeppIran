@@ -81,6 +81,23 @@ class PilotBriefingActivity : AppCompatActivity() {
             50.dp
         ))
 
+        body.addView(
+            action("EFB LAB • 10 EXPERIMENTAL MODULES") {
+                startActivity(
+                    Intent(
+                        this,
+                        EfbLabActivity::class.java
+                    ).putExtra("ICAO", icao)
+                )
+            },
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                46.dp
+            ).apply {
+                setMargins(3.dp, 8.dp, 3.dp, 2.dp)
+            }
+        )
+
         body.addView(sectionTitle("WEATHER NOW"))
         weatherText = sectionCard()
         body.addView(weatherText, cardParams())
