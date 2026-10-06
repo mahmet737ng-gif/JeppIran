@@ -784,7 +784,7 @@ class AirportChartsActivity :
 
         val charts =
             repository
-                .getChartsForAirport(
+                .getDisplayChartsForAirport(
                     icao
                 )
 
@@ -971,7 +971,10 @@ class AirportChartsActivity :
     ): String {
 
         val label =
-            category.uppercase()
+            ChartRepository
+                .displayCategory(
+                    category
+                )
 
         return "$label\n$count"
     }
@@ -988,7 +991,7 @@ class AirportChartsActivity :
 
         val charts =
             repository
-                .getChartsForAirport(
+                .getDisplayChartsForAirport(
                     icao
                 )
                 .filter {
@@ -1003,7 +1006,13 @@ class AirportChartsActivity :
                 }
 
         categoryTitle.text =
-            "${selectedCategory.uppercase()}  •  ${charts.size} CHARTS"
+            ChartRepository
+                .displayCategory(
+                    selectedCategory
+                ) +
+                "  •  " +
+                charts.size +
+                " CHARTS"
 
         listContainer.removeAllViews()
 
