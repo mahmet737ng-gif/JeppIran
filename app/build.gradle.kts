@@ -10,8 +10,8 @@ android {
         applicationId = "com.tareghmsr.jeppiran"
         minSdk = 24
         targetSdk = 36
-        versionCode = 2
-        versionName = "1.0.1"
+        versionCode = 2620
+        versionName = "26-20"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

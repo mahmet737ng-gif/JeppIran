@@ -1200,7 +1200,7 @@ class SplashActivity : AppCompatActivity() {
                 )
 
             canvas.drawText(
-                "VERSION 1.0.1",
+                "VERSION 26-20",
                 width / 2f,
                 height - 30f,
                 textPaint
