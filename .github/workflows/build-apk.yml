@@ -16,6 +16,9 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          lfs: true
+          fetch-depth: 1
 
       - name: Set up JDK 17
         uses: actions/setup-java@v5
@@ -36,41 +39,84 @@ jobs:
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Prepare stable JEPPIRAN signing
-        env:
-          JEPPIRAN_KEYSTORE_B64: ${{ secrets.JEPPIRAN_TEST_KEYSTORE_B64 }}
-          JEPPIRAN_STORE_PASSWORD_SECRET: ${{ secrets.JEPPIRAN_TEST_STORE_PASSWORD }}
-          JEPPIRAN_KEY_ALIAS_SECRET: ${{ secrets.JEPPIRAN_TEST_KEY_ALIAS }}
-          JEPPIRAN_KEY_PASSWORD_SECRET: ${{ secrets.JEPPIRAN_TEST_KEY_PASSWORD }}
+      - name: Restore persistent JEPPIRAN test signing key
+        id: signing-cache
+        uses: actions/cache@v4
+        with:
+          path: ${{ runner.temp }}/jeppiran-signing
+          key: jeppiran-test-signing-v1
+
+      - name: Create signing key on first run
+        if: steps.signing-cache.outputs.cache-hit != 'true'
         shell: bash
         run: |
           set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/jeppiran-signing"
+          keytool -genkeypair             -keystore "$RUNNER_TEMP/jeppiran-signing/jeppiran-test.jks"             -storepass android             -alias androiddebugkey             -keypass android             -keyalg RSA             -keysize 2048             -validity 10000             -dname "CN=JEPPIRAN Test, OU=Taregh Msr, O=JEPPIRAN, C=IR"
 
-          if [ -z "${JEPPIRAN_KEYSTORE_B64:-}" ] ||              [ -z "${JEPPIRAN_STORE_PASSWORD_SECRET:-}" ] ||              [ -z "${JEPPIRAN_KEY_ALIAS_SECRET:-}" ] ||              [ -z "${JEPPIRAN_KEY_PASSWORD_SECRET:-}" ]; then
-            echo "::error::Stable JEPPIRAN signing secrets are not configured. Refusing to create an APK that cannot update the installed app."
-            exit 1
-          fi
+      - name: Configure stable signing and version
+        shell: bash
+        run: |
+          set -euo pipefail
+          KEYSTORE="$RUNNER_TEMP/jeppiran-signing/jeppiran-test.jks"
+          test -s "$KEYSTORE"
 
-          KEYSTORE_PATH="$RUNNER_TEMP/jeppiran-test.jks"
-          printf '%s' "$JEPPIRAN_KEYSTORE_B64" | base64 --decode > "$KEYSTORE_PATH"
-
-          echo "JEPPIRAN_KEYSTORE_PATH=$KEYSTORE_PATH" >> "$GITHUB_ENV"
-          echo "JEPPIRAN_KEYSTORE_PASSWORD=$JEPPIRAN_STORE_PASSWORD_SECRET" >> "$GITHUB_ENV"
-          echo "JEPPIRAN_KEY_ALIAS=$JEPPIRAN_KEY_ALIAS_SECRET" >> "$GITHUB_ENV"
-          echo "JEPPIRAN_KEY_PASSWORD=$JEPPIRAN_KEY_PASSWORD_SECRET" >> "$GITHUB_ENV"
+          echo "JEPPIRAN_KEYSTORE_PATH=$KEYSTORE" >> "$GITHUB_ENV"
+          echo "JEPPIRAN_KEYSTORE_PASSWORD=android" >> "$GITHUB_ENV"
+          echo "JEPPIRAN_KEY_ALIAS=androiddebugkey" >> "$GITHUB_ENV"
+          echo "JEPPIRAN_KEY_PASSWORD=android" >> "$GITHUB_ENV"
 
           VERSION_CODE=$((262000 + GITHUB_RUN_NUMBER))
           echo "JEPPIRAN_VERSION_CODE=$VERSION_CODE" >> "$GITHUB_ENV"
           echo "JEPPIRAN_VERSION_NAME=V2620-test.$GITHUB_RUN_NUMBER" >> "$GITHUB_ENV"
 
-      - name: Build Debug APK
-        run: gradle assembleDebug
+      - name: Set up Python for georeferencing
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Generate validated chart georeferencing
+        shell: bash
+        run: |
+          set -euo pipefail
+          python -m pip install -r scripts/requirements-georef.txt
+          python scripts/extract_chart_georef.py             --pdf Iran2620.pdf             --index app/src/main/assets/charts-current.json             --output app/src/main/assets/chart-georef.json             --audit docs/georeferencing/georef-audit.json             --data-version v18             --cycle 2026-20
+          python scripts/validate_chart_georef.py
+
+      - name: Test and build signed APK
+        run: gradle testDebugUnitTest assembleDebug --stacktrace
+
+      - name: Verify APK signing
+        shell: bash
+        run: |
+          set -euo pipefail
+          apksigner verify --verbose --print-certs app/build/outputs/apk/debug/app-debug.apk
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: JeppIran-debug
+          name: JeppIran-final-apk
           path: app/build/outputs/apk/debug/app-debug.apk
+
+      - name: Package final project
+        shell: bash
+        run: |
+          set -euo pipefail
+          zip -r JeppIran-final-project.zip .             -x '.git/*'             -x '.gradle/*'             -x 'app/build/*'             -x 'build/*'             -x '*.jks'             -x '*.keystore'
+
+      - name: Upload final project
+        uses: actions/upload-artifact@v4
+        with:
+          name: JeppIran-final-project
+          path: JeppIran-final-project.zip
+
+      - name: Upload georeferencing audit
+        uses: actions/upload-artifact@v4
+        with:
+          name: JeppIran-final-georef-audit
+          path: |
+            app/src/main/assets/chart-georef.json
+            docs/georeferencing/georef-audit.json
 
       - name: Publish permanent Chrome download
         if: github.ref == 'refs/heads/main'
@@ -79,11 +125,10 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-
           cp app/build/outputs/apk/debug/app-debug.apk JeppIran-latest-debug.apk
 
           if ! gh release view jeppiran-test >/dev/null 2>&1; then
-            gh release create jeppiran-test               --title "JEPPIRAN Test APK"               --notes "Latest installable JEPPIRAN Android test build."
+            gh release create jeppiran-test               --title "JEPPIRAN Test APK"               --notes "Latest signed installable JEPPIRAN Android test build."
           fi
 
           gh release upload jeppiran-test             JeppIran-latest-debug.apk             --clobber
