@@ -14,6 +14,7 @@ kept out of the normal chart tree and are parsed into the Changes data source.
 """
 
 import json
+import os
 import re
 from pathlib import Path
 
@@ -406,9 +407,28 @@ def main():
             continue
 
         location = mapping.get(page)
-        if not location:
+
+        item_icao = clean(
+            item.get("airport") or item.get("icao")
+        ).upper()
+
+        if location:
+            mapped_icao, mapped_pdf_page = location
+        else:
+            mapped_icao, mapped_pdf_page = "", 0
+
+        icao = item_icao or mapped_icao
+        if not icao:
             continue
-        icao, pdf_page = location
+
+        # For the bundled/current cycle preserve exact per-airport local page
+        # mapping. A future cycle may contain added/shifted pages; the cycle
+        # builder recalculates pdf_page after this canonical index is produced.
+        pdf_page = (
+            mapped_pdf_page
+            if mapped_icao == icao
+            else 0
+        )
 
         category = infer_category(item)
         if not category:
@@ -435,7 +455,10 @@ def main():
 
     change_root = {
         "version": 1,
-        "chartDataVersion": manifest.get("version", ""),
+        "chartDataVersion": os.environ.get(
+            "JEPPIRAN_DATA_VERSION",
+            manifest.get("version", "")
+        ),
         "source": manifest.get("source", ""),
         "airports": changes,
     }
