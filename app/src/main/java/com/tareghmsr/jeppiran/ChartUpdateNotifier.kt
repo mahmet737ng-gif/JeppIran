@@ -265,8 +265,65 @@ object ChartUpdateNotifier {
                 count > 0
             ) {
 
-                count.toString() +
-                    " airport(s) changed. Tap to review and update."
+                buildString {
+
+                    append(
+                        "Updated: "
+                    )
+
+                    notice.changedAirports
+                        .forEachIndexed {
+                            index,
+                            icao ->
+
+                            if (
+                                index >
+                                0
+                            ) {
+
+                                append(
+                                    "\n"
+                                )
+                            }
+
+
+                            val airportName =
+                                ChartRepository
+                                    .airport(
+                                        icao
+                                    )
+                                    ?.airportName
+                                    .orEmpty()
+
+
+                            append(
+                                "• "
+                            )
+
+                            append(
+                                icao
+                            )
+
+
+                            if (
+                                airportName.isNotBlank()
+                            ) {
+
+                                append(
+                                    " — "
+                                )
+
+                                append(
+                                    airportName
+                                )
+                            }
+                        }
+
+
+                    append(
+                        "\nTap to update."
+                    )
+                }
 
             } else {
 
@@ -305,7 +362,27 @@ object ChartUpdateNotifier {
                 R.drawable.ic_jeppiran_launcher
             )
             .setContentTitle(
-                "JEPPIRAN chart update"
+                if (
+                    count ==
+                    1
+                ) {
+
+                    notice.changedAirports
+                        .firstOrNull()
+                        ?.let {
+                            icao ->
+
+                            icao +
+                                " chart updated"
+                        }
+                        ?: "JEPPIRAN chart update"
+
+                } else {
+
+                    "JEPPIRAN • " +
+                        count +
+                        " airports updated"
+                }
             )
             .setContentText(
                 text
@@ -373,8 +450,14 @@ object ChartUpdateNotifier {
                 count > 0
             ) {
 
-                count.toString() +
-                    " airport chart update(s) available. Open Update."
+                notice.changedAirports
+                    .joinToString(
+                        prefix =
+                            "Updated: ",
+                        separator =
+                            ", "
+                    ) +
+                    ". Open Update."
 
             } else {
 
