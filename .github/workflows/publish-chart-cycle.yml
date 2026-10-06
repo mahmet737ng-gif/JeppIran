@@ -125,6 +125,21 @@ jobs:
             --out-dir cycle-build \
             --previous-manifest app/src/main/assets/charts-manifest.json
 
+      - name: Build per-chart cycle changes
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python scripts/build_chart_changes.py \
+            --current-charts cycle-build/charts-current.json \
+            --current-airports-dir cycle-build/airports \
+            --previous-charts app/src/main/assets/charts-current.json \
+            --previous-manifest app/src/main/assets/charts-manifest.json \
+            --changed-airports cycle-build/changed-airports.json \
+            --version "${{ steps.cycle.outputs.version }}" \
+            --source "${{ steps.cycle.outputs.source }}" \
+            --official chart-changes-final.json \
+            --output cycle-build/chart-changes.json
+
       - name: Rebuild chart georeferencing
         run: |
           python scripts/extract_chart_georef.py \
@@ -145,11 +160,13 @@ jobs:
           manifest = json.loads(Path("cycle-build/manifest.json").read_text())
           charts = json.loads(Path("cycle-build/charts-current.json").read_text())
           georef = json.loads(Path("cycle-build/chart-georef.json").read_text())
+          changes = json.loads(Path("cycle-build/chart-changes.json").read_text())
           assert manifest["version"]
           assert manifest["release_tag"]
           assert manifest["airports"]
           assert len(charts) > 0
           assert georef["source"]["chartDataVersion"] == manifest["version"]
+          assert changes["chartDataVersion"] == manifest["version"]
           pages = [int(c["page"]) for c in charts]
           assert len(pages) == len(set(pages))
           assert all(int(c["pdf_page"]) > 0 for c in charts)
@@ -177,7 +194,7 @@ jobs:
           cp cycle-build/manifest.json app/src/main/assets/charts-manifest.json
           cp cycle-build/charts-current.json app/src/main/assets/charts-current.json
           cp cycle-build/chart-georef.json app/src/main/assets/chart-georef.json
-          cp chart-changes-final.json app/src/main/assets/chart-changes.json
+          cp cycle-build/chart-changes.json app/src/main/assets/chart-changes.json
           cp cycle-build/changed-airports.json app/src/main/assets/changed-airports.json
 
           python - <<'PY'
@@ -227,3 +244,4 @@ jobs:
             cycle-build/manifest.json
             cycle-build/changed-airports.json
             cycle-build/georef-audit.json
+            cycle-build/chart-changes.json
