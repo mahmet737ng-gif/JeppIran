@@ -35,9 +35,12 @@ object OfflineBriefingStore {
         }
 
         runCatching {
-            val info = ChartRepository(context).getAirportPdfInfo(key)
-            val dir = File(context.filesDir, "offline-airports").apply { mkdirs() }
-            val target = File(dir, key + ".pdf")
+            val repository = ChartRepository(context)
+            val info = repository.getAirportPdfInfo(key)
+            val target = File(
+                context.filesDir,
+                "airport_" + key + "_" + repository.getReleaseTag() + ".pdf"
+            )
             val connection = URL(info.url).openConnection() as HttpURLConnection
             try {
                 connection.connectTimeout = 12000
