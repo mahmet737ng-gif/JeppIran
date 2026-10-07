@@ -111,6 +111,67 @@ jobs:
             --output app/src/main/assets/approach-briefings.json
           test -s app/src/main/assets/approach-briefings.json
 
+      - name: Validate moving-map georeferences
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+
+          charts = json.loads(Path("app/src/main/assets/charts-current.json").read_text())
+          georef = json.loads(Path("app/src/main/assets/chart-georef.json").read_text())
+
+          assert georef.get("version") == 2
+          assert georef.get("coordinateSystem") == "WGS84"
+          assert georef.get("coordinateSpace") == "pdf_points"
+          assert georef.get("origin") == "top_left"
+
+          references = georef.get("charts") or []
+          assert references, "No calibrated moving-map charts were published"
+
+          supported = {
+              "paired_printed_graticule_vector_ticks",
+              "single_axis_plus_conformal_scale",
+          }
+
+          pages = set()
+          for item in references:
+              page = int(item.get("page", -1))
+              assert page > 0
+              assert page not in pages, f"Duplicate georeference page {page}"
+              pages.add(page)
+
+              method = (item.get("validation") or {}).get("method")
+              assert method in supported, f"Unsupported georeference method: {method}"
+
+              points = item.get("points") or []
+              assert len(points) >= 4, f"Insufficient control points on page {page}"
+
+          # Current-cycle regression guard for the chart used to validate
+          # aircraft-position display during testing. If the chart is present
+          # in this cycle, it must retain a calibrated moving-map reference.
+          targets = [
+              row for row in charts
+              if row.get("airport") == "OIAW"
+              and "ILS Z" in str(row.get("name", "")).upper()
+              and "RWY 30" in str(row.get("name", "")).upper()
+          ]
+
+          if targets:
+              for row in targets:
+                  page = int(row["page"])
+                  assert page in pages, (
+                      "OIAW ILS Z RWY 30 lost moving-map georeferencing "
+                      f"(page {page})"
+                  )
+
+          print(
+              f"Validated {len(references)} calibrated moving-map charts; "
+              f"OIAW ILS Z RWY 30 references: {len(targets)}"
+          )
+          PY
+
       - name: Test and build signed APK
         run: gradle testDebugUnitTest assembleDebug --stacktrace
 
