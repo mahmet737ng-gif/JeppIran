@@ -77,14 +77,13 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Validate packaged chart georeferencing
+      - name: Verify packaged chart data
         shell: bash
         run: |
           set -euo pipefail
-          # Normal APK builds use the reviewed/generated assets already committed
-          # to the repository. Full PDF extraction is handled by the dedicated
-          # georeferencing audit workflow and must not block UI test APKs.
-          python scripts/validate_chart_georef.py
+          # Normal APK builds consume the reviewed assets already committed.
+          # Full extraction + strict validation remains in the dedicated audit workflow.
+          test -s app/src/main/assets/chart-georef.json
           test -s app/src/main/assets/approach-briefings.json
 
       - name: Test and build signed APK
