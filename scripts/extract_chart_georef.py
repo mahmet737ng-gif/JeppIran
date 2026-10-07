@@ -305,21 +305,50 @@ def extract(page, number, index_entry, anchor, fingerprint=None):
                          else measured_scale * physical_ratio)
         lower = bounds['left'] if singleton['pixelAxis'] == 'x' else bounds['top']
         upper = bounds['right'] if singleton['pixelAxis'] == 'x' else bounds['bottom']
+        # Preserve geographic handedness. PDF y grows downward, so an
+        # unmirrored chart transform from (east, north) into page (x, y)
+        # must have a negative determinant. The measured orthogonal axis
+        # establishes its positive page direction; the derived axis must
+        # use the opposite page-direction sign.
+        measured_by_degrees = sorted(measured, key=lambda item: item['degrees'])
+        measured_geo_delta = (
+            measured_by_degrees[-1]['degrees'] -
+            measured_by_degrees[0]['degrees']
+        )
+        measured_pdf_delta = (
+            measured_by_degrees[-1]['pdfPoint'] -
+            measured_by_degrees[0]['pdfPoint']
+        )
+        if abs(measured_geo_delta) <= 1e-12 or abs(measured_pdf_delta) <= 1e-9:
+            raise ValueError('Measured axis direction is indeterminate')
+
+        measured_page_sign = (
+            1 if measured_pdf_delta / measured_geo_delta > 0 else -1
+        )
+        derived_page_sign = -measured_page_sign
+
         candidate = None
+        preferred_geo_directions = (
+            (-1, 1) if derived_name == 'latitude' else (1, -1)
+        )
         for wanted_step in (10 / 60, 5 / 60, 2 / 60, 1 / 60):
             step = min(delta_geo, wanted_step)
-            for direction in ((-1, 1) if derived_name == 'latitude' else (1, -1)):
-                pixel = singleton['pdfPoint'] + direction * derived_scale * step
+            for geo_direction in preferred_geo_directions:
+                pixel_direction = geo_direction * derived_page_sign
+                pixel = (
+                    singleton['pdfPoint'] +
+                    pixel_direction * derived_scale * step
+                )
                 if lower <= pixel <= upper:
-                    candidate = (step, direction, pixel)
+                    candidate = (step, geo_direction, pixel)
                     break
             if candidate:
                 break
         if not candidate:
             raise ValueError('Conformal scale derivation falls outside the plan view')
-        step, direction, candidate_pixel = candidate
+        step, geo_direction, candidate_pixel = candidate
         derived = dict(singleton)
-        derived['degrees'] = singleton['degrees'] + direction * step
+        derived['degrees'] = singleton['degrees'] + geo_direction * step
         derived['pdfPoint'] = candidate_pixel
         derived['label'] = None
         derived['labelBounds'] = None
@@ -346,10 +375,17 @@ def extract(page, number, index_entry, anchor, fingerprint=None):
     residual = float(np.max(np.linalg.norm(a @ coefficients - xy, axis=1)))
     east_vector, north_vector = coefficients[0], coefficients[1]
     physical_ratio = np.cos(np.deg2rad(mean[1]))
+    orientation_determinant = (
+        east_vector[0] * north_vector[1] -
+        east_vector[1] * north_vector[0]
+    )
     if (np.linalg.norm(north_vector) < 1 or
             abs(np.linalg.norm(east_vector) / np.linalg.norm(north_vector) / physical_ratio - 1) > .03 or
-            abs(np.dot(east_vector, north_vector)) / (np.linalg.norm(east_vector) * np.linalg.norm(north_vector)) > .03):
-        raise ValueError('Printed grid has an inconsistent geographic scale or axis angle')
+            abs(np.dot(east_vector, north_vector)) / (np.linalg.norm(east_vector) * np.linalg.norm(north_vector)) > .03 or
+            orientation_determinant >= 0):
+        raise ValueError(
+            'Printed grid has an inconsistent scale, angle, or mirrored orientation'
+        )
     if rank != 3 or residual > .75:
         raise ValueError(f"Invalid affine fit: rank {rank}, residual {residual:.3f}")
     return {"page": number, "airport": index_entry["airport"], "name": index_entry.get("name", ""),

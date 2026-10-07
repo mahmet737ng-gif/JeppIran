@@ -145,6 +145,25 @@ data class GeoReference(
         val fitted = Transform(meanLon, meanLat, meanX, meanY,
             (bb * lx - lb * bx) / determinant, (ll * bx - lb * lx) / determinant,
             (bb * ly - lb * latY) / determinant, (ll * latY - lb * ly) / determinant)
+
+        /*
+         * PDF y coordinates increase downward. A valid, non-mirrored map
+         * transform from geographic (east, north) to page (x, y) therefore
+         * has a negative determinant. Reject mirrored calibration data before
+         * it can place the aircraft on the wrong side of a latitude/longitude
+         * line.
+         */
+        val orientationDeterminant =
+            fitted.xLon * fitted.yLat -
+                fitted.xLat * fitted.yLon
+
+        if (
+            !orientationDeterminant.isFinite() ||
+            orientationDeterminant >= 0.0
+        ) {
+            return null
+        }
+
         if (points.any {
                 val p = fitted.project(it.latitude, it.longitude)
                 !p.first.isFinite() || !p.second.isFinite() ||

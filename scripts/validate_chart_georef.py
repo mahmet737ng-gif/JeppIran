@@ -122,6 +122,14 @@ def main():
         residual = float(np.max(np.linalg.norm(design @ matrix - xy, axis=1)))
         assert residual <= chart['maxResidualPdfPoints'] <= .75
         assert abs(residual - chart['validation']['gridMaxResidualPdfPoints']) < .00001
+        east_vector, north_vector = matrix[0], matrix[1]
+        orientation_determinant = (
+            east_vector[0] * north_vector[1] -
+            east_vector[1] * north_vector[0]
+        )
+        assert orientation_determinant < 0, (
+            f"Mirrored georeference on page {chart['page']}"
+        )
         maximum_residual = max(maximum_residual, residual)
         for check in chart['validation'].get('independentChecks', []):
             actual = np.array([check['lon'] - mean[0], check['lat'] - mean[1], 1]) @ matrix

@@ -104,6 +104,11 @@ jobs:
           set -euo pipefail
           test -s app/src/main/assets/chart-georef.json
 
+          # Repair legacy single-axis records before packaging. This is
+          # idempotent and leaves already-correct georeferences unchanged.
+          python scripts/repair_georef_orientation.py \
+            app/src/main/assets/chart-georef.json
+
           python -m pip install --quiet PyMuPDF
           python scripts/build_approach_briefings.py \
             --pdf Iran2620.pdf \
@@ -135,6 +140,17 @@ jobs:
               "single_axis_plus_conformal_scale",
           }
 
+          def axis_vector(values):
+              ordered = sorted(values, key=lambda item: item["degrees"])
+              first, last = ordered[0], ordered[-1]
+              delta = last["degrees"] - first["degrees"]
+              assert abs(delta) > 1e-12
+              slope = (last["pdfPoint"] - first["pdfPoint"]) / delta
+              if first["pixelAxis"] == "x":
+                  return (slope, 0.0)
+              assert first["pixelAxis"] == "y"
+              return (0.0, slope)
+
           pages = set()
           for item in references:
               page = int(item.get("page", -1))
@@ -147,6 +163,17 @@ jobs:
 
               points = item.get("points") or []
               assert len(points) >= 4, f"Insufficient control points on page {page}"
+
+              axes = item.get("gridAxes") or {}
+              east = axis_vector(axes["longitude"])
+              north = axis_vector(axes["latitude"])
+              determinant = (
+                  east[0] * north[1] -
+                  east[1] * north[0]
+              )
+              assert determinant < 0, (
+                  f"Mirrored moving-map georeference on page {page}"
+              )
 
           # Current-cycle regression guard for the chart used to validate
           # aircraft-position display during testing. If the chart is present

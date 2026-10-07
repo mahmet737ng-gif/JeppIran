@@ -14,7 +14,9 @@ This pipeline changes only georeferencing scripts, audit files and
    relationship. Derived points are explicitly marked; they are never recorded
    as measured ticks.
 4. Fit the complete transform and reject residual, angle, geographic-scale,
-   bounds or source-evidence failures.
+   bounds, source-evidence or mirrored-orientation failures. Because PDF y
+   increases downward, the east/north-to-page transform must have a negative
+   determinant.
 5. A page containing `NOT TO SCALE` is withheld even when a candidate fit is
    found. It becomes active only through a review decision bound to the exact
    canonical page fingerprint, or by unchanged reuse of a previously accepted
