@@ -3473,18 +3473,54 @@ private val locationPermissionLauncher =
 
 
     private fun showCurrentChartBriefing() {
+        val restoreControls = controlsVisible
+
+        if (::topToolbar.isInitialized) {
+            topToolbar.visibility = View.GONE
+        }
+        if (::toolScroll.isInitialized) {
+            toolScroll.visibility = View.GONE
+        }
+        if (::eraserModeBar.isInitialized) {
+            eraserModeBar.visibility = View.GONE
+        }
+        if (::annotationContextBar.isInitialized) {
+            annotationContextBar.visibility = View.GONE
+        }
+        if (::chartTreePanel.isInitialized) {
+            chartTreePanel.visibility = View.GONE
+        }
+        if (::metarBanner.isInitialized) {
+            metarBanner.visibility = View.GONE
+        }
+        taxiRouteBanner?.visibility = View.GONE
+
         val brief = ChartBriefingEngine.build(
             context = this,
             icao = currentIcao,
             category = category,
             chartTitle = chartTitle,
-            page = currentChartGlobalPage()
+            page = currentChartGlobalPage(),
+            metar = lastMetarValue
         )
+
         ChartBriefingPanel(
             activity = this,
             root = root,
             brief = brief,
-            onClose = {}
+            onClose = {
+                if (restoreControls) {
+                    controlsVisible = true
+                    showViewerControls()
+                } else {
+                    controlsVisible = false
+                    hideViewerControls()
+                }
+                if (::metarBanner.isInitialized) {
+                    metarBanner.visibility = View.GONE
+                }
+                taxiRouteBanner?.visibility = View.GONE
+            }
         ).show()
     }
 
