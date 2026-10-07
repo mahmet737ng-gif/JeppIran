@@ -1598,6 +1598,24 @@ private val locationPermissionLauncher =
             )
         )
 
+        actionRow.addView(
+            toolbarButton(
+                "INV",
+                9.5f
+            ).apply {
+                contentDescription = "Invert chart"
+                typeface = Typeface.DEFAULT_BOLD
+                setOnClickListener {
+                    invertChart = !invertChart
+                    chartView.setInverted(invertChart)
+                    text = if (invertChart) "INV✓" else "INV"
+                }
+            },
+            toolbarButtonParams(
+                44.dp
+            )
+        )
+
 
         aircraftPositionButton =
             toolbarButton(
@@ -5120,6 +5138,10 @@ private val locationPermissionLauncher =
         viewerChromeTransitioning =
             true
 
+        root.setBackgroundColor(
+            if (invertChart) Color.WHITE else Color.BLACK
+        )
+
         lastVisibleChartInsets =
             chartView.currentContentInsets()
 
@@ -5206,6 +5228,8 @@ private val locationPermissionLauncher =
 
         viewerChromeTransitioning =
             true
+
+        root.setBackgroundColor(viewerCanvasColor())
 
 
         WindowInsetsControllerCompat(
@@ -7850,20 +7874,7 @@ private val locationPermissionLauncher =
 
 
             canvas.drawColor(
-                if (
-                    inverted
-                ) {
-
-                    Color.WHITE
-
-                } else {
-
-                    Color.rgb(
-                        14,
-                        18,
-                        23
-                    )
-                }
+                if (inverted) Color.WHITE else Color.BLACK
             )
 
 
