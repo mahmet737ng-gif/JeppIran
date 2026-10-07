@@ -1,0 +1,22 @@
+JEPPIRAN En-route Development Dataset
+
+This regional development dataset is derived from the public x-plane-navdata
+dataset maintained at:
+https://github.com/mcantsin/x-plane-navdata
+
+Upstream data header:
+License GPL v.3 - Luther Blissett
+http://github.com/mcantsin/x-plane-navdata
+
+The upstream repository states that the X-Plane navigation data is published
+under the GNU General Public License version 3 and includes global nav-aids,
+fixes and airways.
+
+JEPPIRAN subset:
+- Geographic development window: latitude 24..41 N, longitude 43..64 E
+- Source cycle: 2012.08
+- Purpose: development/testing of the vector en-route renderer
+- NOT FOR OPERATIONAL NAVIGATION
+
+When replacing this development dataset, preserve the license and attribution
+requirements of the replacement source.
