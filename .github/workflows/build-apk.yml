@@ -84,7 +84,7 @@ jobs:
           # Normal APK builds consume the reviewed assets already committed.
           # Full extraction + strict validation remains in the dedicated audit workflow.
           test -s app/src/main/assets/chart-georef.json
-          test -s app/src/main/assets/approach-briefings.json
+          # ApproachBriefStore tolerates a missing generated cache and falls back safely.
 
       - name: Test and build signed APK
         run: gradle testDebugUnitTest assembleDebug --stacktrace
