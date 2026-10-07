@@ -7,6 +7,9 @@
         android:name="android.permission.INTERNET" />
 
     <uses-permission
+        android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+    <uses-permission
         android:name="android.permission.ACCESS_WIFI_STATE" />
 
     <uses-permission
@@ -21,7 +24,6 @@
     <uses-permission
         android:name="android.permission.POST_NOTIFICATIONS" />
 
-
     <application
         android:allowBackup="true"
         android:icon="@drawable/jeppiran_logo"
@@ -30,7 +32,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.JeppIran">
 
-
         <activity
             android:name=".SplashActivity"
             android:exported="true"
@@ -38,39 +39,28 @@
             android:screenOrientation="unspecified">
 
             <intent-filter>
-
-                <action
-                    android:name="android.intent.action.MAIN" />
-
-                <category
-                    android:name="android.intent.category.LAUNCHER" />
-
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
         </activity>
-
 
         <activity
             android:name=".MainActivity"
             android:exported="false" />
 
-
         <activity
             android:name=".ChartsActivity"
             android:exported="false" />
 
-
         <activity
             android:name=".AirportChartsActivity"
             android:exported="false" />
-
 
         <activity
             android:name=".PdfViewerActivity"
             android:exported="false"
             android:configChanges="orientation|screenSize|screenLayout"
             android:screenOrientation="unspecified" />
-
 
         <activity
             android:name=".SettingsActivity"
@@ -120,6 +110,16 @@
             android:name=".InfoActivity"
             android:exported="false" />
 
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/update_file_paths" />
+        </provider>
 
     </application>
 

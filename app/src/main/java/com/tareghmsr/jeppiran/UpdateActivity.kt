@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.Gravity
 import android.widget.Button
 import android.widget.LinearLayout
@@ -25,354 +26,147 @@ class UpdateActivity : AppCompatActivity() {
         private const val REMOTE_ROOT =
             "https://raw.githubusercontent.com/mahmet737ng-gif/JeppIran/main/app/src/main/assets/"
 
-        private const val REMOTE_MANIFEST =
-            REMOTE_ROOT +
-                "charts-manifest.json"
-
-        private const val REMOTE_CHARTS =
-            REMOTE_ROOT +
-                "charts-current.json"
-
-        private const val REMOTE_GEOREF =
-            REMOTE_ROOT +
-                "chart-georef.json"
-
-        private const val REMOTE_CHANGES =
-            REMOTE_ROOT +
-                "chart-changes.json"
-
-        private const val TIMEOUT =
-            20000
+        private const val REMOTE_MANIFEST = REMOTE_ROOT + "charts-manifest.json"
+        private const val REMOTE_CHARTS = REMOTE_ROOT + "charts-current.json"
+        private const val REMOTE_GEOREF = REMOTE_ROOT + "chart-georef.json"
+        private const val REMOTE_CHANGES = REMOTE_ROOT + "chart-changes.json"
+        private const val TIMEOUT = 20000
     }
 
-    private lateinit var status:
-        TextView
+    private lateinit var dataStatus: TextView
+    private lateinit var dataDetails: TextView
+    private lateinit var dataUpdateButton: Button
 
-    private lateinit var changedText:
-        TextView
+    private lateinit var appStatus: TextView
+    private lateinit var appDetails: TextView
+    private lateinit var appUpdateButton: Button
 
-    private lateinit var installButton:
-        Button
+    private lateinit var viewChangesButton: Button
+    private lateinit var checkButton: Button
 
-    private lateinit var checkButton:
-        Button
+    private var remoteManifestRaw = ""
+    private var remoteDataVersion = ""
+    private var changedAirports = emptyList<String>()
+    private var remoteAppInfo: AppUpdateManager.UpdateInfo? = null
 
-    private lateinit var viewChangesButton:
-        Button
-
-    private var remoteManifestRaw =
-        ""
-
-    private var remoteVersion =
-        ""
-
-    private var changedAirports =
-        emptyList<String>()
-
-
-    override fun onCreate(
-        savedInstanceState: Bundle?
-    ) {
-
-        ThemeManager.apply(
-            this
-        )
-
-        super.onCreate(
-            savedInstanceState
-        )
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        ThemeManager.apply(this)
+        super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
         buildUi()
-
-        checkForUpdate()
+        checkAllUpdates()
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        if (::appStatus.isInitialized &&
+            remoteAppInfo != null &&
+            AppUpdateManager.canInstallPackages(this)
+        ) {
+            appStatus.text = "Ready to install app update"
+            appUpdateButton.isEnabled = true
+        }
+    }
 
     private fun buildUi() {
+        val root = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            background = getDrawable(R.drawable.bg_flight_deck)
+        }
 
-        val root =
-            LinearLayout(
-                this
-            ).apply {
+        val scroll = ScrollView(this)
+        val content = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(20.dp, 18.dp, 20.dp, 32.dp)
+        }
 
-                orientation =
-                    LinearLayout.VERTICAL
+        content.addView(TextView(this).apply {
+            text = "UPDATES"
+            textSize = 27f
+            typeface = Typeface.DEFAULT_BOLD
+            setTextColor(primaryTextColor())
+        })
 
-                background = getDrawable(R.drawable.bg_flight_deck)
-            }
+        content.addView(TextView(this).apply {
+            text = "Chart-cycle data and the JEPPIRAN application are updated independently."
+            textSize = 13f
+            setTextColor(secondaryTextColor())
+            setPadding(0, 5.dp, 0, 18.dp)
+        })
 
+        addSectionTitle(content, "DATA CYCLE")
 
-        val scroll =
-            ScrollView(
-                this
-            )
+        dataStatus = statusCard("Checking chart data…")
+        content.addView(dataStatus)
 
-
-        val content =
-            LinearLayout(
-                this
-            ).apply {
-
-                orientation =
-                    LinearLayout.VERTICAL
-
-                setPadding(
-                    20.dp,
-                    18.dp,
-                    20.dp,
-                    32.dp
-                )
-            }
-
-
+        dataDetails = detailCard()
         content.addView(
-            TextView(
-                this
-            ).apply {
-
-                text =
-                    "CHART UPDATES"
-
-                textSize =
-                    25f
-
-                typeface =
-                    Typeface.DEFAULT_BOLD
-
-                setTextColor(
-                    primaryTextColor()
-                )
-            }
-        )
-
-
-        content.addView(
-            TextView(
-                this
-            ).apply {
-
-                text =
-                    "New chart data is validated in a staging area before it becomes active."
-
-                textSize =
-                    13f
-
-                setTextColor(
-                    secondaryTextColor()
-                )
-
-                setPadding(
-                    0,
-                    5.dp,
-                    0,
-                    18.dp
-                )
-            }
-        )
-
-
-        status =
-            TextView(
-                this
-            ).apply {
-
-                text =
-                    "Checking…"
-
-                textSize =
-                    16f
-
-                typeface =
-                    Typeface.DEFAULT_BOLD
-
-                setTextColor(
-                    primaryTextColor()
-                )
-
-                setPadding(
-                    16.dp,
-                    16.dp,
-                    16.dp,
-                    16.dp
-                )
-
-                background =
-                    cardBackground()
-            }
-
-
-        content.addView(
-            status
-        )
-
-
-        changedText =
-            TextView(
-                this
-            ).apply {
-
-                textSize =
-                    14f
-
-                setTextColor(
-                    primaryTextColor()
-                )
-
-                setPadding(
-                    16.dp,
-                    16.dp,
-                    16.dp,
-                    16.dp
-                )
-
-                background =
-                    cardBackground()
-            }
-
-
-        content.addView(
-            changedText,
+            dataDetails,
             LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-
-                topMargin =
-                    12.dp
-            }
+            ).apply { topMargin = 10.dp }
         )
 
+        dataUpdateButton = actionButton("UPDATE DATA CYCLE") {
+            installDataUpdate()
+        }.apply {
+            isEnabled = false
+        }
+        content.addView(dataUpdateButton, buttonParams(12))
 
-        installButton =
-            Button(
-                this
-            ).apply {
-
-                text =
-                    "INSTALL UPDATE"
-
-                isEnabled =
-                    false
-
-                setOnClickListener {
-
-                    installUpdate()
-                }
-            }
-
-
-        content.addView(
-            installButton,
-            LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                54.dp
-            ).apply {
-
-                topMargin =
-                    14.dp
-            }
-        )
-
-
-        viewChangesButton =
-            Button(
-                this
-            ).apply {
-
-                text =
-                    "VIEW ACTIVE CYCLE CHANGES"
-
-                isEnabled =
-                    ChartChangesStore
-                        .allChangedAirports(
-                            this@UpdateActivity
-                        )
-                        .isNotEmpty()
-
-                setOnClickListener {
-
-                    startActivity(
-                        android.content.Intent(
-                            this@UpdateActivity,
-                            ChangesAirportsActivity::class.java
-                        )
-                    )
-                }
-            }
-
-
-        content.addView(
-            viewChangesButton,
-            LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                54.dp
-            ).apply {
-
-                topMargin =
-                    8.dp
-            }
-        )
-
-
-        checkButton =
-            Button(
-                this
-            ).apply {
-
-                text =
-                    "CHECK AGAIN"
-
-                setOnClickListener {
-
-                    checkForUpdate()
-                }
-            }
-
-
-        content.addView(
-            checkButton,
-            LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                54.dp
-            ).apply {
-
-                topMargin =
-                    8.dp
-            }
-        )
-
-
-        content.addView(
-            TextView(
-                this
-            ).apply {
-
-                text =
-                    "Airport PDF files use release-specific filenames. The previous cycle remains available until the new metadata bundle has been fully validated and activated."
-
-                textSize =
-                    12f
-
-                setTextColor(
-                    secondaryTextColor()
+        viewChangesButton = actionButton("VIEW ACTIVE CYCLE CHANGES") {
+            startActivity(
+                android.content.Intent(
+                    this@UpdateActivity,
+                    ChangesAirportsActivity::class.java
                 )
+            )
+        }.apply {
+            isEnabled =
+                ChartChangesStore
+                    .allChangedAirports(this@UpdateActivity)
+                    .isNotEmpty()
+        }
+        content.addView(viewChangesButton, buttonParams(8))
 
-                setPadding(
-                    4.dp,
-                    20.dp,
-                    4.dp,
-                    0
-                )
-            }
+        addSectionTitle(content, "APPLICATION", 24)
+
+        appStatus = statusCard("Checking application version…")
+        content.addView(appStatus)
+
+        appDetails = detailCard()
+        content.addView(
+            appDetails,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { topMargin = 10.dp }
         )
 
+        appUpdateButton = actionButton("UPDATE APP") {
+            installAppUpdate()
+        }.apply {
+            isEnabled = false
+        }
+        content.addView(appUpdateButton, buttonParams(12))
 
-        scroll.addView(
-            content
-        )
+        checkButton = actionButton("CHECK ALL UPDATES") {
+            checkAllUpdates()
+        }
+        content.addView(checkButton, buttonParams(22))
 
+        content.addView(TextView(this).apply {
+            text =
+                "Data Cycle updates chart metadata, georeferencing and cycle-change data without reinstalling the app. " +
+                "Update App downloads a signed JEPPIRAN APK, verifies its SHA-256 checksum, then opens the Android installer."
+            textSize = 12f
+            setTextColor(secondaryTextColor())
+            setPadding(4.dp, 18.dp, 4.dp, 0)
+        })
+
+        scroll.addView(content)
         root.addView(
             scroll,
             LinearLayout.LayoutParams(
@@ -382,19 +176,11 @@ class UpdateActivity : AppCompatActivity() {
             )
         )
 
-        setContentView(
-            root
-        )
+        setContentView(root)
 
-
-        ViewCompat.setOnApplyWindowInsetsListener(
-            root
-        ) { view, insets ->
-
+        ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
             val bars =
-                insets.getInsets(
-                    WindowInsetsCompat.Type.systemBars()
-                )
+                insets.getInsets(WindowInsetsCompat.Type.systemBars())
 
             view.setPadding(
                 bars.left,
@@ -402,566 +188,496 @@ class UpdateActivity : AppCompatActivity() {
                 bars.right,
                 bars.bottom
             )
-
             insets
         }
 
-
-        ViewCompat.requestApplyInsets(
-            root
-        )
+        ViewCompat.requestApplyInsets(root)
     }
 
+    private fun checkAllUpdates() {
+        checkButton.isEnabled = false
+        checkDataUpdate()
+        checkAppUpdate()
+    }
 
-    private fun checkForUpdate() {
+    private fun checkDataUpdate() {
+        dataUpdateButton.isEnabled = false
+        dataStatus.text = "Checking chart data…"
+        dataDetails.text = ""
 
-        checkButton.isEnabled =
-            false
-
-        installButton.isEnabled =
-            false
-
-        status.text =
-            "Checking chart data…"
-
-        changedText.text =
-            ""
-
-
-        thread(
-            name =
-                "JeppIran-UpdateCheck"
-        ) {
-
+        thread(name = "JeppIran-DataUpdateCheck") {
             try {
+                val manifestRaw = fetchText(REMOTE_MANIFEST)
+                val root = JSONObject(manifestRaw)
+                val version = root.optString("version").trim()
 
-                val manifestRaw =
-                    fetchText(
-                        REMOTE_MANIFEST
-                    )
-
-
-                val root =
-                    JSONObject(
-                        manifestRaw
-                    )
-
-
-                val version =
-                    root.optString(
-                        "version"
-                    )
-                        .trim()
-
-
-                require(
-                    version.isNotBlank()
-                ) {
-                    "Remote version is missing"
+                require(version.isNotBlank()) {
+                    "Remote data version is missing"
                 }
 
-
                 val airports =
-                    root.optJSONObject(
-                        "airports"
-                    )
-                        ?: error(
-                            "Remote airport manifest is missing"
-                        )
+                    root.optJSONObject("airports")
+                        ?: error("Remote airport manifest is missing")
 
+                val repository = ChartRepository(this)
+                val changed = mutableListOf<String>()
+                val keys = airports.keys()
 
-                val repository =
-                    ChartRepository(
-                        this
-                    )
-
-
-                val changed =
-                    mutableListOf<String>()
-
-
-                val keys =
-                    airports.keys()
-
-
-                while (
-                    keys.hasNext()
-                ) {
-
+                while (keys.hasNext()) {
                     val icao =
                         keys.next()
                             .trim()
-                            .uppercase(
-                                Locale.US
-                            )
-
+                            .uppercase(Locale.US)
 
                     val remote =
-                        airports.optJSONObject(
-                            icao
-                        )
+                        airports.optJSONObject(icao)
                             ?: continue
 
-
                     val remoteSha =
-                        remote.optString(
-                            "sha256"
-                        )
-
+                        remote.optString("sha256")
 
                     val localSha =
                         repository
-                            .getAirportPdfInfo(
-                                icao
-                            )
+                            .getAirportPdfInfo(icao)
                             .sha256
-
 
                     if (
                         remoteSha.isBlank() ||
                         localSha.isBlank() ||
-                        remoteSha !=
-                            localSha
+                        remoteSha != localSha
                     ) {
-
-                        changed.add(
-                            icao
-                        )
+                        changed.add(icao)
                     }
                 }
 
-
-                remoteManifestRaw =
-                    manifestRaw
-
-                remoteVersion =
-                    version
-
-                changedAirports =
-                    changed.sorted()
-
+                remoteManifestRaw = manifestRaw
+                remoteDataVersion = version
+                changedAirports = changed.sorted()
 
                 val localVersion =
                     repository.getDataVersion()
 
-
                 runOnUiThread {
-
-                    checkButton.isEnabled =
-                        true
-
-                    viewChangesButton.isEnabled =
-                        ChartChangesStore
-                            .allChangedAirports(
-                                this@UpdateActivity
-                            )
-                            .isNotEmpty()
-
-
                     if (
-                        version ==
-                            localVersion &&
+                        version == localVersion &&
                         changed.isEmpty()
                     ) {
+                        dataStatus.text =
+                            "Up to date • " + localVersion
 
-                        status.text =
-                            "Up to date • " +
-                                localVersion
+                        dataDetails.text =
+                            "No chart-cycle update is available."
 
-                        changedText.text =
-                            "No airport chart changes are available."
-
-                        installButton.isEnabled =
-                            false
-
+                        dataUpdateButton.isEnabled = false
                     } else {
-
-                        status.text =
-                            "Update available • " +
+                        dataStatus.text =
+                            "Data update available • " +
                                 localVersion +
                                 " → " +
                                 version
 
-                        changedText.text =
-                            if (
-                                changed.isEmpty()
-                            ) {
-
-                                "Metadata update available."
-
+                        dataDetails.text =
+                            if (changed.isEmpty()) {
+                                "New chart metadata is available."
                             } else {
-
                                 buildString {
+                                    append(changed.size)
+                                    append(" airport(s) changed:\n\n")
 
-                                    append(
-                                        changed.size
-                                    )
-
-                                    append(
-                                        " airport(s) changed:\n\n"
-                                    )
-
-                                    changed.forEach {
-                                        icao ->
+                                    changed.sorted().forEach { icao ->
+                                        append("• ")
+                                        append(icao)
 
                                         val name =
                                             ChartRepository
-                                                .airport(
-                                                    icao
-                                                )
+                                                .airport(icao)
                                                 ?.airportName
                                                 .orEmpty()
 
-
-                                        append(
-                                            "• "
-                                        )
-
-                                        append(
-                                            icao
-                                        )
-
-                                        if (
-                                            name.isNotBlank()
-                                        ) {
-
-                                            append(
-                                                "  "
-                                            )
-
-                                            append(
-                                                name
-                                            )
+                                        if (name.isNotBlank()) {
+                                            append("  ")
+                                            append(name)
                                         }
 
-                                        append(
-                                            "\n"
-                                        )
+                                        append("\n")
                                     }
                                 }
                             }
 
-
-                        installButton.isEnabled =
-                            true
+                        dataUpdateButton.isEnabled = true
                     }
+
+                    refreshCheckButton()
                 }
-
-
-            } catch (
-                error: Throwable
-            ) {
-
+            } catch (error: Throwable) {
                 runOnUiThread {
-
-                    checkButton.isEnabled =
-                        true
-
-                    status.text =
-                        "Unable to check updates"
-
-                    changedText.text =
-                        error.message
-                            ?: "Network error"
+                    dataStatus.text = "Unable to check data cycle"
+                    dataDetails.text =
+                        error.message ?: "Network error"
+                    refreshCheckButton()
                 }
             }
         }
     }
 
+    private fun checkAppUpdate() {
+        appUpdateButton.isEnabled = false
+        appStatus.text = "Checking application version…"
+        appDetails.text = ""
 
-    private fun installUpdate() {
+        thread(name = "JeppIran-AppUpdateCheck") {
+            try {
+                val result =
+                    AppUpdateManager.check(this)
 
+                remoteAppInfo = result.remote
+
+                runOnUiThread {
+                    if (
+                        result.updateAvailable &&
+                        result.remote != null
+                    ) {
+                        appStatus.text =
+                            "App update available • " +
+                                result.currentVersionName +
+                                " → " +
+                                result.remote.versionName
+
+                        appDetails.text =
+                            "A newer signed JEPPIRAN build is ready. " +
+                                "Tap Update App to download, verify and install it."
+
+                        appUpdateButton.isEnabled = true
+                    } else {
+                        appStatus.text =
+                            "App up to date • " +
+                                result.currentVersionName
+
+                        appDetails.text =
+                            "You already have the newest JEPPIRAN build."
+
+                        appUpdateButton.isEnabled = false
+                    }
+
+                    refreshCheckButton()
+                }
+            } catch (error: Throwable) {
+                runOnUiThread {
+                    appStatus.text = "Unable to check app version"
+                    appDetails.text =
+                        (error.message ?: "Network error") +
+                            "\n\nIf this is the first updater-enabled build, install it once manually; future builds will update from here."
+
+                    refreshCheckButton()
+                }
+            }
+        }
+    }
+
+    private fun installDataUpdate() {
         if (
             remoteManifestRaw.isBlank() ||
-            remoteVersion.isBlank()
+            remoteDataVersion.isBlank()
         ) {
-
-            checkForUpdate()
-
+            checkDataUpdate()
             return
         }
 
-
-        installButton.isEnabled =
-            false
-
-        checkButton.isEnabled =
-            false
-
-        status.text =
+        dataUpdateButton.isEnabled = false
+        checkButton.isEnabled = false
+        dataStatus.text =
             "Downloading and validating " +
-                remoteVersion +
+                remoteDataVersion +
                 "…"
 
-
-        thread(
-            name =
-                "JeppIran-UpdateInstall"
-        ) {
-
+        thread(name = "JeppIran-DataUpdateInstall") {
             try {
-
-                val chartsRaw =
-                    fetchText(
-                        REMOTE_CHARTS
-                    )
-
-
-                val georefRaw =
-                    fetchText(
-                        REMOTE_GEOREF
-                    )
-
-
+                val chartsRaw = fetchText(REMOTE_CHARTS)
+                val georefRaw = fetchText(REMOTE_GEOREF)
                 val changesRaw =
                     runCatching {
+                        fetchText(REMOTE_CHANGES)
+                    }.getOrDefault("")
 
-                        fetchText(
-                            REMOTE_CHANGES
-                        )
-                    }
-                        .getOrDefault(
-                            ""
-                        )
-
-
-                ChartUpdateStore
-                    .activate(
-                        this,
-                        remoteVersion,
-                        remoteManifestRaw,
-                        chartsRaw,
-                        georefRaw,
-                        changesRaw
-                    )
-
+                ChartUpdateStore.activate(
+                    this,
+                    remoteDataVersion,
+                    remoteManifestRaw,
+                    chartsRaw,
+                    georefRaw,
+                    changesRaw
+                )
 
                 val repository =
-                    ChartRepository(
-                        this
-                    )
+                    ChartRepository(this)
 
                 repository.reload()
 
-
                 runOnUiThread {
-
-                    status.text =
+                    dataStatus.text =
                         "Installed • " +
                             repository.getDataVersion()
 
-                    changedText.text =
-                        if (
-                            changedAirports.isEmpty()
-                        ) {
-
+                    dataDetails.text =
+                        if (changedAirports.isEmpty()) {
                             "Chart metadata updated successfully."
-
                         } else {
-
-                            "Updated airports are ready. Their new PDF is downloaded only when you open that airport, so old chart files cannot be overwritten mid-update."
+                            "The new cycle is active. Updated airport PDFs are downloaded when needed."
                         }
 
-                    checkButton.isEnabled =
-                        true
-
-                    installButton.isEnabled =
-                        false
-
+                    dataUpdateButton.isEnabled = false
                     viewChangesButton.isEnabled =
                         ChartChangesStore
-                            .allChangedAirports(
-                                this@UpdateActivity
-                            )
+                            .allChangedAirports(this)
                             .isNotEmpty()
+
+                    refreshCheckButton()
                 }
-
-
-            } catch (
-                error: Throwable
-            ) {
-
+            } catch (error: Throwable) {
                 runOnUiThread {
+                    dataStatus.text =
+                        "Data update not installed"
 
-                    status.text =
-                        "Update not installed"
-
-                    changedText.text =
-                        (
-                            error.message
-                                ?: "Validation failed"
-                            ) +
+                    dataDetails.text =
+                        (error.message ?: "Validation failed") +
                             "\n\nThe previous chart cycle is still active."
 
-                    checkButton.isEnabled =
-                        true
-
-                    installButton.isEnabled =
-                        true
+                    dataUpdateButton.isEnabled = true
+                    refreshCheckButton()
                 }
             }
         }
     }
 
+    private fun installAppUpdate() {
+        val info = remoteAppInfo
 
-    private fun fetchText(
-        address: String
-    ): String {
+        if (info == null) {
+            checkAppUpdate()
+            return
+        }
 
-        var connection:
-            HttpURLConnection? =
-            null
+        if (!AppUpdateManager.canInstallPackages(this)) {
+            appStatus.text = "Installation permission required"
+            appDetails.text =
+                "Enable “Allow from this source” for JEPPIRAN, return here, then tap Update App again."
+
+            AppUpdateManager.openInstallPermission(this)
+            return
+        }
+
+        appUpdateButton.isEnabled = false
+        checkButton.isEnabled = false
+        appStatus.text =
+            "Downloading " +
+                info.versionName +
+                "…"
+
+        thread(name = "JeppIran-AppUpdateInstall") {
+            try {
+                val apk =
+                    AppUpdateManager.downloadAndVerify(
+                        this,
+                        info
+                    ) { progress ->
+                        runOnUiThread {
+                            appStatus.text =
+                                "Downloading " +
+                                    info.versionName +
+                                    " • " +
+                                    progress +
+                                    "%"
+                        }
+                    }
+
+                runOnUiThread {
+                    appStatus.text =
+                        "Verified • opening Android installer"
+
+                    appDetails.text =
+                        "SHA-256 verified. Android will now ask you to install the update."
+
+                    AppUpdateManager.launchInstaller(
+                        this,
+                        apk
+                    )
+
+                    refreshCheckButton()
+                }
+            } catch (error: Throwable) {
+                runOnUiThread {
+                    appStatus.text =
+                        "App update failed"
+
+                    appDetails.text =
+                        error.message ?: "Unable to install update"
+
+                    appUpdateButton.isEnabled = true
+                    refreshCheckButton()
+                }
+            }
+        }
+    }
+
+    private fun refreshCheckButton() {
+        checkButton.isEnabled = true
+    }
+
+    private fun fetchText(address: String): String {
+        var connection: HttpURLConnection? = null
 
         try {
-
             connection =
-                URL(
-                    address
-                )
+                URL(address)
                     .openConnection()
                     as HttpURLConnection
 
-
-            connection.connectTimeout =
-                TIMEOUT
-
-            connection.readTimeout =
-                TIMEOUT
-
-            connection.requestMethod =
-                "GET"
-
+            connection.instanceFollowRedirects = true
+            connection.connectTimeout = TIMEOUT
+            connection.readTimeout = TIMEOUT
+            connection.requestMethod = "GET"
             connection.setRequestProperty(
                 "User-Agent",
-                "JEPPIRAN/" + AppVersion.name(this) + " chart updater"
+                "JEPPIRAN data-updater"
             )
 
+            val code = connection.responseCode
 
-            val code =
-                connection.responseCode
-
-
-            if (
-                code !in
-                200..299
-            ) {
-
-                error(
-                    "HTTP " +
-                        code
-                )
+            require(code in 200..299) {
+                "HTTP " + code
             }
-
 
             return connection
                 .inputStream
                 .bufferedReader()
-                .use {
-                    reader ->
-
-                    reader.readText()
-                }
-
+                .use { it.readText() }
         } finally {
-
             connection?.disconnect()
         }
     }
 
-
-    private fun cardBackground() =
-        GradientDrawable()
-            .apply {
-
-                cornerRadius =
-                    14.dp.toFloat()
-
-                setColor(
-                    if (
-                        isDarkTheme()
-                    ) {
-
-                        getColor(R.color.jeppiran_surface)
-
-                    } else {
-
-                        Color.WHITE
-                    }
-                )
-
-                setStroke(
-                    1.dp,
-                    if (
-                        isDarkTheme()
-                    ) {
-
-                        getColor(R.color.jeppiran_card_stroke)
-
-                    } else {
-
-                        getColor(R.color.jeppiran_card_stroke)
-                    }
+    private fun addSectionTitle(
+        parent: LinearLayout,
+        title: String,
+        topMarginDp: Int = 0
+    ) {
+        parent.addView(
+            TextView(this).apply {
+                text = title
+                textSize = 15f
+                typeface = Typeface.DEFAULT_BOLD
+                setTextColor(primaryTextColor())
+                setPadding(
+                    4.dp,
+                    topMarginDp.dp,
+                    4.dp,
+                    8.dp
                 )
             }
+        )
+    }
 
-
-    private fun backgroundColor() =
-        if (
-            isDarkTheme()
-        ) {
-
-            getColor(R.color.jeppiran_background)
-
-        } else {
-
-            getColor(R.color.jeppiran_background)
+    private fun statusCard(textValue: String): TextView =
+        TextView(this).apply {
+            text = textValue
+            textSize = 16f
+            typeface = Typeface.DEFAULT_BOLD
+            setTextColor(primaryTextColor())
+            setPadding(16.dp, 16.dp, 16.dp, 16.dp)
+            background = cardBackground()
         }
 
-
-    private fun primaryTextColor() =
-        if (
-            isDarkTheme()
-        ) {
-
-            getColor(R.color.jeppiran_text)
-
-        } else {
-
-            getColor(R.color.jeppiran_text)
+    private fun detailCard(): TextView =
+        TextView(this).apply {
+            textSize = 14f
+            setTextColor(primaryTextColor())
+            setPadding(16.dp, 16.dp, 16.dp, 16.dp)
+            background = cardBackground()
         }
 
-
-    private fun secondaryTextColor() =
-        if (
-            isDarkTheme()
-        ) {
-
-            getColor(R.color.jeppiran_text_secondary)
-
-        } else {
-
-            getColor(R.color.jeppiran_text_secondary)
+    private fun actionButton(
+        label: String,
+        action: () -> Unit
+    ): Button =
+        Button(this).apply {
+            text = label
+            gravity = Gravity.CENTER
+            setOnClickListener { action() }
         }
 
+    private fun buttonParams(topMarginDp: Int):
+        LinearLayout.LayoutParams =
+        LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            54.dp
+        ).apply {
+            topMargin = topMarginDp.dp
+        }
 
-    private fun isDarkTheme() =
-        (
-            resources.configuration.uiMode and
-                android.content.res.Configuration
-                    .UI_MODE_NIGHT_MASK
-            ) ==
-            android.content.res.Configuration
-                .UI_MODE_NIGHT_YES
+    private fun primaryTextColor(): Int =
+        resolveColor(
+            android.R.attr.textColorPrimary,
+            Color.WHITE
+        )
 
+    private fun secondaryTextColor(): Int =
+        resolveColor(
+            android.R.attr.textColorSecondary,
+            Color.LTGRAY
+        )
 
-    private val Int.dp:
-        Int
-        get() =
-            (
-                this *
-                    resources
-                        .displayMetrics
-                        .density
+    private fun resolveColor(
+        attr: Int,
+        fallback: Int
+    ): Int {
+        val value = TypedValue()
+
+        return if (
+            theme.resolveAttribute(
+                attr,
+                value,
+                true
+            )
+        ) {
+            value.data
+        } else {
+            fallback
+        }
+    }
+
+    private fun cardBackground(): GradientDrawable =
+        GradientDrawable().apply {
+            shape = GradientDrawable.RECTANGLE
+            cornerRadius = 14.dp.toFloat()
+
+            val base =
+                resolveColor(
+                    android.R.attr.colorBackground,
+                    Color.DKGRAY
                 )
+
+            setColor(
+                Color.argb(
+                    220,
+                    Color.red(base),
+                    Color.green(base),
+                    Color.blue(base)
+                )
+            )
+
+            setStroke(
+                1.dp,
+                Color.argb(
+                    55,
+                    255,
+                    255,
+                    255
+                )
+            )
+        }
+
+    private val Int.dp: Int
+        get() =
+            (this * resources.displayMetrics.density)
                 .toInt()
 }
