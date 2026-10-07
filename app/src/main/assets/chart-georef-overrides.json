@@ -1,0 +1,182 @@
+{
+  "schema": 1,
+  "chartDataVersion": "v18",
+  "sourceSha256": "ee439abb9c582a42020eec738a370db9742c84f4aa198d7181ef0c5fe34933b4",
+  "charts": [
+    {
+      "page": 45,
+      "airport": "OIAW",
+      "name": "VOR Y RWY 12",
+      "chartKey": "OIAW|APPROACH|13-2|VOR Y RWY 12",
+      "sourceFingerprint": "37c7202a040b712d82b72c9686273d0b18ff8068258a11f1ebe6d05a42f0fb02",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.96,
+        "top": 168.48,
+        "right": 531.84,
+        "bottom": 503.52
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 31.333333333333332,
+          "lon": 48.5,
+          "x": 169.9199981689453,
+          "y": 410.6400146484375,
+          "source": "Printed grid 31-20 / 48-30"
+        },
+        {
+          "lat": 31.333333333333332,
+          "lon": 48.666666666666664,
+          "x": 328.79998779296875,
+          "y": 410.6400146484375,
+          "source": "Printed grid 31-20 / 48-40"
+        },
+        {
+          "lat": 31.333333333333332,
+          "lon": 48.833333333333336,
+          "x": 487.67999267578125,
+          "y": 410.6400146484375,
+          "source": "Printed grid 31-20 / 48-50"
+        },
+        {
+          "lat": 31.5,
+          "lon": 48.5,
+          "x": 169.9199981689453,
+          "y": 241.67999267578125,
+          "source": "Printed grid 31-30 / 48-30"
+        },
+        {
+          "lat": 31.5,
+          "lon": 48.666666666666664,
+          "x": 328.79998779296875,
+          "y": 241.67999267578125,
+          "source": "Printed grid 31-30 / 48-40"
+        },
+        {
+          "lat": 31.5,
+          "lon": 48.833333333333336,
+          "x": 487.67999267578125,
+          "y": 241.67999267578125,
+          "source": "Printed grid 31-30 / 48-50"
+        }
+      ],
+      "gridAxes": {
+        "latitude": [
+          {
+            "label": "31-20",
+            "degrees": 31.333333333333332,
+            "pdfPoint": 410.6400146484375,
+            "pixelAxis": "y",
+            "labelBounds": [
+              96.24,
+              409.8865,
+              112.1158,
+              418.5264
+            ],
+            "tickSegment": [
+              86.4,
+              410.64,
+              90.9599,
+              410.64
+            ]
+          },
+          {
+            "label": "31-30",
+            "degrees": 31.5,
+            "pdfPoint": 241.67999267578125,
+            "pixelAxis": "y",
+            "labelBounds": [
+              97.44,
+              239.2465,
+              113.3158,
+              247.8864
+            ],
+            "tickSegment": [
+              90.9599,
+              241.68,
+              94.56,
+              241.68
+            ]
+          }
+        ],
+        "longitude": [
+          {
+            "label": "48-30",
+            "degrees": 48.5,
+            "pdfPoint": 169.9199981689453,
+            "pixelAxis": "x",
+            "labelBounds": [
+              162.48,
+              492.9265,
+              178.3558,
+              501.5663
+            ],
+            "tickSegment": [
+              169.92,
+              503.52,
+              169.92,
+              499.68
+            ]
+          },
+          {
+            "label": "48-40",
+            "degrees": 48.666666666666664,
+            "pdfPoint": 328.79998779296875,
+            "pixelAxis": "x",
+            "labelBounds": [
+              321.36,
+              492.9265,
+              337.2358,
+              501.5663
+            ],
+            "tickSegment": [
+              328.8,
+              503.52,
+              328.8,
+              499.68
+            ]
+          },
+          {
+            "label": "48-50",
+            "degrees": 48.833333333333336,
+            "pdfPoint": 487.67999267578125,
+            "pixelAxis": "x",
+            "labelBounds": [
+              480.48,
+              492.9265,
+              496.3558,
+              501.5663
+            ],
+            "tickSegment": [
+              487.68,
+              503.52,
+              487.68,
+              499.68
+            ]
+          }
+        ]
+      },
+      "airportAnchor": {
+        "sourcePage": 27,
+        "lat": 31.336666666666666,
+        "lon": 48.76
+      },
+      "maxResidualPdfPoints": 0.75,
+      "validation": {
+        "gridMaxResidualPdfPoints": 0.000005,
+        "controlPointCount": 6,
+        "method": "paired_printed_graticule_vector_ticks",
+        "measuredAxisValueCounts": {
+          "latitude": 2,
+          "longitude": 3
+        },
+        "notToScaleTextPresentElsewhereOnPage": false,
+        "visualReview": true
+      }
+    }
+  ]
+}

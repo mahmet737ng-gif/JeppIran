@@ -109,6 +109,10 @@ jobs:
           python scripts/repair_georef_orientation.py \
             app/src/main/assets/chart-georef.json
 
+          python scripts/apply_georef_overrides.py \
+            app/src/main/assets/chart-georef.json \
+            app/src/main/assets/chart-georef-overrides.json
+
           python -m pip install --quiet PyMuPDF
           python scripts/build_approach_briefings.py \
             --pdf Iran2620.pdf \
@@ -175,27 +179,36 @@ jobs:
                   f"Mirrored moving-map georeference on page {page}"
               )
 
-          # Current-cycle regression guard for the chart used to validate
-          # aircraft-position display during testing. If the chart is present
-          # in this cycle, it must retain a calibrated moving-map reference.
-          targets = [
-              row for row in charts
-              if row.get("airport") == "OIAW"
-              and "ILS Z" in str(row.get("name", "")).upper()
-              and "RWY 30" in str(row.get("name", "")).upper()
+          # Current-cycle regression guards for the Ahwaz charts that are
+          # repeatedly used to compare the same live aircraft position.
+          required = [
+              ("ILS Z", "RWY 30"),
+              ("VOR Y", "RWY 12"),
+              ("NDB", "RWY 30"),
           ]
 
-          if targets:
+          matched = 0
+          for procedure, runway in required:
+              targets = [
+                  row for row in charts
+                  if row.get("airport") == "OIAW"
+                  and procedure in str(row.get("name", "")).upper()
+                  and runway in str(row.get("name", "")).upper()
+              ]
+              assert targets, (
+                  f"Required OIAW chart not found: {procedure} {runway}"
+              )
               for row in targets:
                   page = int(row["page"])
                   assert page in pages, (
-                      "OIAW ILS Z RWY 30 lost moving-map georeferencing "
-                      f"(page {page})"
+                      f"OIAW {procedure} {runway} lost moving-map "
+                      f"georeferencing (page {page})"
                   )
+                  matched += 1
 
           print(
               f"Validated {len(references)} calibrated moving-map charts; "
-              f"OIAW ILS Z RWY 30 references: {len(targets)}"
+              f"OIAW regression references: {matched}"
           )
           PY
 

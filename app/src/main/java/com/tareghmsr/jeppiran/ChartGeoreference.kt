@@ -21,8 +21,17 @@ data class GeoReferenceBounds(
     val right: Double,
     val bottom: Double
 ) {
-    fun contains(x: Double, y: Double): Boolean =
-        x.isFinite() && y.isFinite() && x in left..right && y in top..bottom
+    fun contains(
+        x: Double,
+        y: Double,
+        tolerance: Double = 0.0
+    ): Boolean =
+        x.isFinite() &&
+            y.isFinite() &&
+            tolerance.isFinite() &&
+            tolerance >= 0.0 &&
+            x in (left - tolerance)..(right + tolerance) &&
+            y in (top - tolerance)..(bottom + tolerance)
 }
 
 data class RenderedAircraftPosition(val x: Float, val y: Float, val headingDegrees: Float)
@@ -36,6 +45,10 @@ data class GeoReference(
     val maxResidualPdfPoints: Double = 0.75,
     val excludedBounds: List<GeoReferenceBounds> = emptyList()
 ) {
+    private companion object {
+        const val OUTER_EDGE_TOLERANCE_PDF_POINTS = 6.0
+    }
+
     private data class Transform(
         val meanLon: Double, val meanLat: Double,
         val meanX: Double, val meanY: Double,
@@ -60,9 +73,20 @@ data class GeoReference(
         ) return null
         val projected = transform?.project(latitude, longitude) ?: return null
         return projected.takeIf {
-            bounds.contains(it.first, it.second) && excludedBounds.none { area ->
-                area.contains(it.first, it.second)
-            }
+            /*
+             * Keep the aircraft visible while its centre crosses only the
+             * outer edge of the printed plan view. This avoids a one-frame
+             * disappearance at the border. Profile/minimums inset masks stay
+             * strict and are never expanded.
+             */
+            bounds.contains(
+                it.first,
+                it.second,
+                OUTER_EDGE_TOLERANCE_PDF_POINTS
+            ) &&
+                excludedBounds.none { area ->
+                    area.contains(it.first, it.second)
+                }
         }
     }
 

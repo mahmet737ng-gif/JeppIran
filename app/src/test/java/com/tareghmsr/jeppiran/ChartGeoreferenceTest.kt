@@ -61,4 +61,43 @@ class ChartGeoreferenceTest {
         assertEquals(-90.0, rotated.renderedHeading(31.3, 0.0, 792, 612)!!.toDouble(), .001)
         assertEquals(0.0, rotated.renderedHeading(31.3, 90.0, 792, 612)!!.toDouble(), .001)
     }
+    @Test fun smallOuterEdgeCrossingKeepsAircraftVisible() {
+        val ref = ahwaz()
+        val longitudeScale =
+            (327.60 - 168.72) / (10.0 / 60.0)
+        val leftLongitude =
+            48 + 40.0 / 60 +
+                (ref.bounds.left - 168.72) / longitudeScale
+
+        assertNotNull(
+            ref.project(
+                31.25,
+                leftLongitude - 3.0 / longitudeScale
+            )
+        )
+
+        assertNull(
+            ref.project(
+                31.25,
+                leftLongitude - 9.0 / longitudeScale
+            )
+        )
+    }
+
+    @Test fun mirroredTransformIsRejectedExplicitly() {
+        val ref = ahwaz()
+        val mirrored =
+            ref.copy(
+                points = ref.points.map { point ->
+                    point.copy(
+                        y = ref.bounds.top +
+                            ref.bounds.bottom -
+                            point.y
+                    )
+                }
+            )
+
+        assertFalse(mirrored.isValid())
+    }
+
 }

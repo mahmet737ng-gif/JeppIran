@@ -379,10 +379,24 @@ def extract(page, number, index_entry, anchor, fingerprint=None):
         east_vector[0] * north_vector[1] -
         east_vector[1] * north_vector[0]
     )
+    scale_error = abs(
+        np.linalg.norm(east_vector) /
+        np.linalg.norm(north_vector) /
+        physical_ratio - 1
+    )
+    angle_error = abs(
+        np.dot(east_vector, north_vector)
+    ) / (np.linalg.norm(east_vector) * np.linalg.norm(north_vector))
+
+    # When both latitude and longitude axes are directly measured from the
+    # printed grid, the affine fit itself is authoritative. Some approach
+    # plates intentionally use slightly different horizontal/vertical scales
+    # to fit the procedure. Conformal scale is required only when we had to
+    # derive one axis from the other.
     if (np.linalg.norm(north_vector) < 1 or
-            abs(np.linalg.norm(east_vector) / np.linalg.norm(north_vector) / physical_ratio - 1) > .03 or
-            abs(np.dot(east_vector, north_vector)) / (np.linalg.norm(east_vector) * np.linalg.norm(north_vector)) > .03 or
-            orientation_determinant >= 0):
+            angle_error > .03 or
+            orientation_determinant >= 0 or
+            (method == 'single_axis_plus_conformal_scale' and scale_error > .03)):
         raise ValueError(
             'Printed grid has an inconsistent scale, angle, or mirrored orientation'
         )
