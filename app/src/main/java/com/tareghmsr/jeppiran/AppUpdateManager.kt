@@ -175,54 +175,45 @@ object AppUpdateManager {
                 info.patches
             )
 
-        if (
+        require(
             chain !=
-            null &&
-            chain.isNotEmpty()
+                null &&
+                chain.isNotEmpty()
         ) {
-
-            val installedApk =
-                File(
-                    context.applicationInfo
-                        .sourceDir
-                )
-
-            val installedSha =
-                sha256(
-                    installedApk
-                )
-
-            if (
-                installedSha.equals(
-                    chain.first()
-                        .fromSha256,
-                    ignoreCase =
-                        true
-                )
-            ) {
-
-                return applyPatchChain(
-                    context =
-                        context,
-                    info =
-                        info,
-                    installedApk =
-                        installedApk,
-                    chain =
-                        chain,
-                    directory =
-                        dir,
-                    onProgress =
-                        onProgress
-                )
-            }
+            "Delta update package is unavailable for this installed version. Full APK download was not started."
         }
 
-        return downloadFullApk(
+        val installedApk =
+            File(
+                context.applicationInfo
+                    .sourceDir
+            )
+
+        val installedSha =
+            sha256(
+                installedApk
+            )
+
+        require(
+            installedSha.equals(
+                chain.first()
+                    .fromSha256,
+                ignoreCase =
+                    true
+            )
+        ) {
+            "Installed APK does not match the delta base. Full APK download was not started."
+        }
+
+        return applyPatchChain(
             context =
                 context,
             info =
                 info,
+            installedApk =
+                installedApk,
+            chain =
+                chain,
             directory =
                 dir,
             onProgress =
