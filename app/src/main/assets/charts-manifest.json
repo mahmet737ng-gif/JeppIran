@@ -3,6 +3,9 @@
   "release_tag": "charts-v18",
   "base_url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-v18/",
   "source": "Iran2620.pdf",
+  "cycle": "2620",
+  "effective_from": "2026-09-25",
+  "effective_to": "2026-10-08",
   "generated_at": "2026-10-05T18:00:29.853823+00:00",
   "pages": 991,
   "airports": {

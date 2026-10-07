@@ -36,7 +36,8 @@ object AppUpdateManager {
 
     fun check(context: Context): CheckResult {
         val local = localVersion(context)
-        val remote = JSONObject(fetchText(UPDATE_INFO_URL)).let { root ->
+        val metadataUrl = UPDATE_INFO_URL + "?t=" + System.currentTimeMillis()
+        val remote = JSONObject(fetchText(metadataUrl)).let { root ->
             UpdateInfo(
                 versionCode = root.getLong("versionCode"),
                 versionName = root.getString("versionName"),
@@ -94,6 +95,7 @@ object AppUpdateManager {
         try {
             connection = URL(info.apkUrl).openConnection() as HttpURLConnection
             connection.instanceFollowRedirects = true
+            connection.useCaches = false
             connection.connectTimeout = TIMEOUT_MS
             connection.readTimeout = TIMEOUT_MS
             connection.requestMethod = "GET"
@@ -101,6 +103,8 @@ object AppUpdateManager {
                 "User-Agent",
                 "JEPPIRAN/" + localVersion(context).second + " app-updater"
             )
+            connection.setRequestProperty("Cache-Control", "no-cache")
+            connection.setRequestProperty("Pragma", "no-cache")
 
             val code = connection.responseCode
             require(code in 200..299) {
@@ -208,6 +212,7 @@ object AppUpdateManager {
         try {
             connection = URL(address).openConnection() as HttpURLConnection
             connection.instanceFollowRedirects = true
+            connection.useCaches = false
             connection.connectTimeout = TIMEOUT_MS
             connection.readTimeout = TIMEOUT_MS
             connection.requestMethod = "GET"
@@ -215,6 +220,8 @@ object AppUpdateManager {
                 "User-Agent",
                 "JEPPIRAN app-updater"
             )
+            connection.setRequestProperty("Cache-Control", "no-cache")
+            connection.setRequestProperty("Pragma", "no-cache")
 
             val code = connection.responseCode
             require(code in 200..299) {

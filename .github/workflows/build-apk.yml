@@ -151,7 +151,7 @@ jobs:
           set -euo pipefail
 
           APK_SOURCE="app/build/outputs/apk/debug/app-debug.apk"
-          APK_RELEASE="JeppIran-latest-debug.apk"
+          APK_RELEASE="JeppIran-${JEPPIRAN_VERSION_NAME}.apk"
           UPDATE_JSON="app-update.json"
 
           cp "$APK_SOURCE" "$APK_RELEASE"
@@ -163,7 +163,7 @@ jobs:
           {
             "versionCode": ${JEPPIRAN_VERSION_CODE},
             "versionName": "${JEPPIRAN_VERSION_NAME}",
-            "apkUrl": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/jeppiran-test/JeppIran-latest-debug.apk",
+            "apkUrl": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/jeppiran-test/${APK_RELEASE}",
             "sha256": "${APK_SHA256}",
             "publishedAt": "${PUBLISHED_AT}"
           }
@@ -177,5 +177,8 @@ jobs:
 
           gh release upload jeppiran-test \
             "$APK_RELEASE" \
+            --clobber
+
+          gh release upload jeppiran-test \
             "$UPDATE_JSON" \
             --clobber
