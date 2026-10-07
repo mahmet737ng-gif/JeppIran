@@ -1,11 +1,12 @@
 package com.tareghmsr.jeppiran
 
 import android.graphics.Typeface
-import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.Gravity
+import android.widget.Button
 import android.widget.LinearLayout
-import android.widget.ScrollView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
@@ -13,49 +14,73 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 
 class EnrouteActivity : AppCompatActivity() {
+    private lateinit var map: EnrouteMapView
+    private lateinit var status: TextView
+    private val handler = Handler(Looper.getMainLooper())
+
+    private val positionTick = object : Runnable {
+        override fun run() {
+            val sim = if (SimulatorLocationStore.isConnected()) SimulatorLocationStore.getPosition() else null
+            map.setAircraftPosition(sim)
+            handler.postDelayed(this, 500L)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         ThemeManager.apply(this)
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
+        val data = EnrouteRepository.load(this)
         val root = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            background = getDrawable(R.drawable.bg_flight_deck)
+            setBackgroundColor(0xFF11171E.toInt())
         }
-        val scroll = ScrollView(this)
-        val content = LinearLayout(this).apply {
+
+        val header = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(20.dp, 20.dp, 20.dp, 32.dp)
+            setPadding(16.dp, 12.dp, 16.dp, 8.dp)
+        }
+        header.addView(TextView(this).apply {
+            text = "EN-ROUTE"
+            textSize = 24f
+            typeface = Typeface.DEFAULT_BOLD
+            setTextColor(0xFFF2F5F8.toInt())
+        })
+
+        status = TextView(this).apply {
+            text = "${data.cycle}  •  ${data.airways.size} airway segments  •  ${data.fixes.size + data.navaids.size} nav points"
+            textSize = 11f
+            setTextColor(0xFFA9B6C5.toInt())
+        }
+        header.addView(status)
+
+        val toolbar = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            setPadding(10.dp, 4.dp, 10.dp, 8.dp)
         }
 
-        content.addView(TextView(this).apply {
-            text = "EN-ROUTE"
-            textSize = 28f
-            typeface = Typeface.DEFAULT_BOLD
-            setTextColor(getColor(R.color.jeppiran_text))
-        })
-        content.addView(TextView(this).apply {
-            text = "Airways, airspace, SIGMETs and navigation data"
-            textSize = 13f
-            setTextColor(getColor(R.color.jeppiran_text_secondary))
-            setPadding(0, 4.dp, 0, 18.dp)
-        })
+        fun button(label: String, action: () -> Unit): Button =
+            Button(this).apply {
+                text = label
+                textSize = 11f
+                setOnClickListener { action() }
+            }
 
-        addCard(content, "LOW ALTITUDE IFR", "En-route low-level structure and airway layer")
-        addCard(content, "HIGH ALTITUDE IFR", "Upper routes and high-level navigation layer")
-        addCard(content, "SIGMET / AIRSPACE", "Operational airspace and significant weather layer")
-        addCard(content, "NAVIGATION", "Navaids, fixes and route planning workspace")
+        toolbar.addView(button("LOW") { map.setLevel(EnrouteMapView.Level.LOW) }, LinearLayout.LayoutParams(0, 48.dp, 1f))
+        toolbar.addView(button("HIGH") { map.setLevel(EnrouteMapView.Level.HIGH) }, LinearLayout.LayoutParams(0, 48.dp, 1f))
+        toolbar.addView(button("BOTH") { map.setLevel(EnrouteMapView.Level.BOTH) }, LinearLayout.LayoutParams(0, 48.dp, 1f))
+        toolbar.addView(button("OWN SHIP") { map.centerOnAircraft() }, LinearLayout.LayoutParams(0, 48.dp, 1f))
 
-        content.addView(TextView(this).apply {
-            text = "EN-ROUTE DATA USES THE ACTIVE JEPPIRAN CYCLE"
-            textSize = 10f
-            gravity = Gravity.CENTER
-            setTextColor(getColor(R.color.jeppiran_text_secondary))
-            setPadding(0, 20.dp, 0, 0)
-        })
+        map = EnrouteMapView(this).apply {
+            setDataset(data)
+            setLevel(EnrouteMapView.Level.LOW)
+        }
 
-        scroll.addView(content)
-        root.addView(scroll, LinearLayout.LayoutParams(-1, 0, 1f))
+        root.addView(header)
+        root.addView(toolbar)
+        root.addView(map, LinearLayout.LayoutParams(-1, 0, 1f))
         setContentView(root)
 
         ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
@@ -65,31 +90,15 @@ class EnrouteActivity : AppCompatActivity() {
         }
     }
 
-    private fun addCard(parent: LinearLayout, title: String, subtitle: String) {
-        val box = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(18.dp, 18.dp, 18.dp, 18.dp)
-            background = cardBackground()
-        }
-        box.addView(TextView(this).apply {
-            text = title
-            textSize = 17f
-            typeface = Typeface.DEFAULT_BOLD
-            setTextColor(getColor(R.color.jeppiran_text))
-        })
-        box.addView(TextView(this).apply {
-            text = subtitle
-            textSize = 13f
-            setTextColor(getColor(R.color.jeppiran_text_secondary))
-            setPadding(0, 6.dp, 0, 0)
-        })
-        parent.addView(box, LinearLayout.LayoutParams(-1, 88.dp).apply { setMargins(0, 5.dp, 0, 5.dp) })
+    override fun onResume() {
+        super.onResume()
+        handler.removeCallbacks(positionTick)
+        handler.post(positionTick)
     }
 
-    private fun cardBackground() = GradientDrawable().apply {
-        cornerRadius = 20.dp.toFloat()
-        setColor(getColor(R.color.jeppiran_surface))
-        setStroke(1.dp, getColor(R.color.jeppiran_card_stroke))
+    override fun onPause() {
+        handler.removeCallbacks(positionTick)
+        super.onPause()
     }
 
     private val Int.dp: Int get() = (this * resources.displayMetrics.density).toInt()
