@@ -76,9 +76,22 @@ jobs:
           echo "JEPPIRAN_KEY_ALIAS=androiddebugkey" >> "$GITHUB_ENV"
           echo "JEPPIRAN_KEY_PASSWORD=android" >> "$GITHUB_ENV"
 
+          # Build JeppIran APK run 279 is public version 1.0. Every later
+          # workflow run advances the visible decimal sequence:
+          # 1.0 ... 1.9, 2.0 ... 2.9, and so on.
+          VERSION_ORDINAL=$((GITHUB_RUN_NUMBER - 279))
+          if [ "$VERSION_ORDINAL" -lt 0 ]; then
+            echo "Unexpected workflow run number: $GITHUB_RUN_NUMBER" >&2
+            exit 1
+          fi
+          VERSION_MAJOR=$((1 + VERSION_ORDINAL / 10))
+          VERSION_MINOR=$((VERSION_ORDINAL % 10))
+          VERSION_NAME="${VERSION_MAJOR}.${VERSION_MINOR}"
+
           VERSION_CODE=$((262000 + GITHUB_RUN_NUMBER))
           echo "JEPPIRAN_VERSION_CODE=$VERSION_CODE" >> "$GITHUB_ENV"
-          echo "JEPPIRAN_VERSION_NAME=V2620-test.$GITHUB_RUN_NUMBER" >> "$GITHUB_ENV"
+          echo "JEPPIRAN_VERSION_NAME=$VERSION_NAME" >> "$GITHUB_ENV"
+          echo "JEPPIRAN_APK_PATH=app/build/outputs/apk/debug/${VERSION_NAME}.apk" >> "$GITHUB_ENV"
 
       - name: Set up Python for georeferencing
         uses: actions/setup-python@v5
@@ -110,11 +123,18 @@ jobs:
             --print-certs \
             app/build/outputs/apk/debug/app-debug.apk
 
+      - name: Apply numeric APK filename
+        shell: bash
+        run: |
+          set -euo pipefail
+          cp app/build/outputs/apk/debug/app-debug.apk "$JEPPIRAN_APK_PATH"
+          test -s "$JEPPIRAN_APK_PATH"
+
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: JeppIran-final-apk
-          path: app/build/outputs/apk/debug/app-debug.apk
+          name: apk-${{ env.JEPPIRAN_VERSION_NAME }}
+          path: ${{ env.JEPPIRAN_APK_PATH }}
 
       - name: Package final project
         shell: bash
@@ -150,8 +170,8 @@ jobs:
         run: |
           set -euo pipefail
 
-          APK_SOURCE="app/build/outputs/apk/debug/app-debug.apk"
-          APK_RELEASE="JeppIran-${JEPPIRAN_VERSION_NAME}.apk"
+          APK_SOURCE="$JEPPIRAN_APK_PATH"
+          APK_RELEASE="${JEPPIRAN_VERSION_NAME}.apk"
           UPDATE_JSON="app-update.json"
           PREVIOUS_DIR="$RUNNER_TEMP/jeppiran-previous-update"
           PREVIOUS_JSON="$PREVIOUS_DIR/app-update.json"

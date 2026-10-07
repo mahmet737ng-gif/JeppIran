@@ -157,6 +157,18 @@ data class GeoReference(
 
 object ChartGeoreferenceStore {
     private const val ASSET = "chart-georef.json"
+    private val SUPPORTED_METHODS =
+        setOf(
+            "paired_printed_graticule_vector_ticks",
+            "single_axis_plus_conformal_scale"
+        )
+
+    private data class ParsedGeoreferences(
+        val chartDataVersion: String,
+        val sourceSha256: String,
+        val references: Map<Int, GeoReference>
+    )
+
     @Volatile private var loaded = false
     private var chartDataVersion = ""
     private val references = mutableMapOf<Int, GeoReference>()
@@ -172,76 +184,141 @@ object ChartGeoreferenceStore {
     private fun load(context: Context) {
         if (loaded) return
         try {
-            val raw =
+            val active =
                 ChartUpdateStore
-                    .readGeoref(
-                        context
-                    )
-                    ?: context.assets
-                        .open(
-                            ASSET
-                        )
-                        .bufferedReader()
-                        .use {
-                            it.readText()
-                        }
+                    .readGeoref(context)
+                    ?.let { raw ->
+                        runCatching { parse(raw) }
+                            .getOrNull()
+                    }
 
-            val root =
-                JSONObject(
-                    raw
-                )
-            if (root.optInt("version") != 2 || root.optString("coordinateSystem") != "WGS84" ||
-                root.optString("coordinateSpace") != "pdf_points" ||
-                root.optString("origin") != "top_left"
-            ) return
-            chartDataVersion = root.optJSONObject("source")?.optString("chartDataVersion") ?: ""
-            if (chartDataVersion.isEmpty()) return
-            val charts = root.optJSONArray("charts") ?: return
-            val duplicatePages = mutableSetOf<Int>()
-            for (i in 0 until charts.length()) {
-                val item = charts.optJSONObject(i) ?: continue
-                val page = item.optInt("page", -1)
-                if (page <= 0 || item.optString("coordinateSpace") != "pdf_points" ||
-                    item.optString("origin") != "top_left" ||
-                    item.optJSONObject("validation")?.optString("method") != "paired_printed_graticule_vector_ticks"
-                ) continue
-                val area = item.optJSONObject("bounds") ?: continue
-                val bounds = GeoReferenceBounds(area.optDouble("left", Double.NaN),
-                    area.optDouble("top", Double.NaN), area.optDouble("right", Double.NaN),
-                    area.optDouble("bottom", Double.NaN))
-                val pointsJson = item.optJSONArray("points") ?: continue
-                val excludedJson = item.optJSONArray("excludedBounds")
-                val excludedBounds = (0 until (excludedJson?.length() ?: 0)).map { j ->
-                    val area = excludedJson?.optJSONObject(j)
-                    GeoReferenceBounds(area?.optDouble("left", Double.NaN) ?: Double.NaN,
-                        area?.optDouble("top", Double.NaN) ?: Double.NaN,
-                        area?.optDouble("right", Double.NaN) ?: Double.NaN,
-                        area?.optDouble("bottom", Double.NaN) ?: Double.NaN)
+            val bundled =
+                runCatching {
+                    context.assets
+                        .open(ASSET)
+                        .bufferedReader()
+                        .use { it.readText() }
+                        .let(::parse)
                 }
-                val points = (0 until pointsJson.length()).map { j ->
-                    val p = pointsJson.optJSONObject(j)
-                    GeoReferencePoint(p?.optDouble("x", Double.NaN) ?: Double.NaN,
-                        p?.optDouble("y", Double.NaN) ?: Double.NaN,
-                        p?.optDouble("lat", Double.NaN) ?: Double.NaN,
-                        p?.optDouble("lon", Double.NaN) ?: Double.NaN)
+                    .getOrNull()
+
+            val selected =
+                when {
+                    active == null -> bundled
+                    bundled == null -> active
+                    active.chartDataVersion == bundled.chartDataVersion &&
+                        active.sourceSha256 == bundled.sourceSha256 -> {
+                        // A data-cycle download may have persisted an older
+                        // georeference set for the exact same PDF. Keep any
+                        // active-only pages, but let the newer app asset repair
+                        // or extend matching page records.
+                        ParsedGeoreferences(
+                            chartDataVersion = bundled.chartDataVersion,
+                            sourceSha256 = bundled.sourceSha256,
+                            references = active.references + bundled.references
+                        )
+                    }
+                    else -> active
                 }
-                val ref = GeoReference(page, item.optDouble("width", Double.NaN),
-                    item.optDouble("height", Double.NaN), bounds, points,
-                    item.optDouble("maxResidualPdfPoints", 0.75), excludedBounds)
-                // Duplicate page identifiers are ambiguous, so disable them.
-                if (page in duplicatePages) continue
-                if (references.containsKey(page)) {
-                    references.remove(page)
-                    duplicatePages.add(page)
-                    continue
-                }
-                if (ref.isValid()) references[page] = ref
-            }
+                    ?: return
+
+            chartDataVersion = selected.chartDataVersion
+            references.putAll(selected.references)
         } catch (_: Exception) {
             references.clear()
         } finally {
             loaded = true
         }
+    }
+
+    private fun parse(raw: String): ParsedGeoreferences? {
+        val root = JSONObject(raw)
+        if (root.optInt("version") != 2 ||
+            root.optString("coordinateSystem") != "WGS84" ||
+            root.optString("coordinateSpace") != "pdf_points" ||
+            root.optString("origin") != "top_left"
+        ) return null
+
+        val source = root.optJSONObject("source") ?: return null
+        val dataVersion = source.optString("chartDataVersion")
+        val sourceSha256 = source.optString("sha256")
+        if (dataVersion.isBlank() ||
+            !sourceSha256.matches(Regex("[0-9a-f]{64}"))
+        ) return null
+
+        val parsed = mutableMapOf<Int, GeoReference>()
+        val duplicatePages = mutableSetOf<Int>()
+        val charts = root.optJSONArray("charts") ?: return null
+
+        for (i in 0 until charts.length()) {
+            val item = charts.optJSONObject(i) ?: continue
+            val page = item.optInt("page", -1)
+            val method =
+                item.optJSONObject("validation")
+                    ?.optString("method")
+                    .orEmpty()
+
+            if (page <= 0 ||
+                item.optString("coordinateSpace") != "pdf_points" ||
+                item.optString("origin") != "top_left" ||
+                method !in SUPPORTED_METHODS
+            ) continue
+
+            val area = item.optJSONObject("bounds") ?: continue
+            val bounds =
+                GeoReferenceBounds(
+                    area.optDouble("left", Double.NaN),
+                    area.optDouble("top", Double.NaN),
+                    area.optDouble("right", Double.NaN),
+                    area.optDouble("bottom", Double.NaN)
+                )
+
+            val pointsJson = item.optJSONArray("points") ?: continue
+            val excludedJson = item.optJSONArray("excludedBounds")
+            val excludedBounds =
+                (0 until (excludedJson?.length() ?: 0)).map { j ->
+                    val excluded = excludedJson?.optJSONObject(j)
+                    GeoReferenceBounds(
+                        excluded?.optDouble("left", Double.NaN) ?: Double.NaN,
+                        excluded?.optDouble("top", Double.NaN) ?: Double.NaN,
+                        excluded?.optDouble("right", Double.NaN) ?: Double.NaN,
+                        excluded?.optDouble("bottom", Double.NaN) ?: Double.NaN
+                    )
+                }
+
+            val points =
+                (0 until pointsJson.length()).map { j ->
+                    val point = pointsJson.optJSONObject(j)
+                    GeoReferencePoint(
+                        point?.optDouble("x", Double.NaN) ?: Double.NaN,
+                        point?.optDouble("y", Double.NaN) ?: Double.NaN,
+                        point?.optDouble("lat", Double.NaN) ?: Double.NaN,
+                        point?.optDouble("lon", Double.NaN) ?: Double.NaN
+                    )
+                }
+
+            val reference =
+                GeoReference(
+                    page,
+                    item.optDouble("width", Double.NaN),
+                    item.optDouble("height", Double.NaN),
+                    bounds,
+                    points,
+                    item.optDouble("maxResidualPdfPoints", 0.75),
+                    excludedBounds
+                )
+
+            // Duplicate page identifiers are ambiguous within one source.
+            if (page in duplicatePages) continue
+            if (parsed.containsKey(page)) {
+                parsed.remove(page)
+                duplicatePages.add(page)
+                continue
+            }
+            if (reference.isValid()) parsed[page] = reference
+        }
+
+        return ParsedGeoreferences(dataVersion, sourceSha256, parsed)
     }
 
     /** Convert PDF points to the actually rendered, cropped bitmap. */

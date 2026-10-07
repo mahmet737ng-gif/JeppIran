@@ -23,6 +23,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.ScrollView
@@ -1111,17 +1112,6 @@ class ChartsActivity : AppCompatActivity() {
                 }
             }
 
-        card.addView(
-            AirportArtView(
-                this,
-                airport.icao
-            ),
-            FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                170.dp
-            )
-        )
-
         val overlay =
             LinearLayout(this).apply {
                 orientation = LinearLayout.VERTICAL
@@ -1140,14 +1130,7 @@ class ChartsActivity : AppCompatActivity() {
             }
 
         top.addView(
-            TextView(this).apply {
-                text = airport.icao
-                textSize = 18f
-                typeface = Typeface.DEFAULT_BOLD
-                gravity = Gravity.CENTER
-                setTextColor(Color.WHITE)
-                background = icaoBackground()
-            },
+            buildIcaoThumbnail(airport.icao),
             LinearLayout.LayoutParams(
                 82.dp,
                 58.dp
@@ -2209,6 +2192,81 @@ class ChartsActivity : AppCompatActivity() {
                     255
                 )
             )
+        }
+    }
+
+    private fun buildIcaoThumbnail(
+        icao: String
+    ): View {
+        return FrameLayout(this).apply {
+            background = icaoBackground()
+            clipToOutline = true
+
+            addView(
+                ImageView(this@ChartsActivity).apply {
+                    scaleType = ImageView.ScaleType.CENTER_CROP
+                    setImageResource(airportCardImage(icao))
+                    contentDescription = null
+                },
+                FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT
+                )
+            )
+
+            addView(
+                View(this@ChartsActivity).apply {
+                    background = GradientDrawable().apply {
+                        setColor(Color.argb(112, 1, 12, 26))
+                    }
+                },
+                FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT
+                )
+            )
+
+            addView(
+                TextView(this@ChartsActivity).apply {
+                    text = icao
+                    textSize = 18f
+                    typeface = Typeface.DEFAULT_BOLD
+                    gravity = Gravity.CENTER
+                    setTextColor(Color.WHITE)
+                    setShadowLayer(3f, 0f, 1f, Color.BLACK)
+                },
+                FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT
+                )
+            )
+        }
+    }
+
+    private fun airportCardImage(
+        icao: String
+    ): Int {
+        return when ((icao.hashCode() and Int.MAX_VALUE) % 20) {
+            0 -> R.drawable.airport_card_1
+            1 -> R.drawable.airport_card_2
+            2 -> R.drawable.airport_card_3
+            3 -> R.drawable.airport_card_4
+            4 -> R.drawable.airport_card_5
+            5 -> R.drawable.airport_card_6
+            6 -> R.drawable.airport_card_7
+            7 -> R.drawable.airport_card_8
+            8 -> R.drawable.airport_card_9
+            9 -> R.drawable.airport_card_10
+            10 -> R.drawable.airport_card_11
+            11 -> R.drawable.airport_card_12
+            12 -> R.drawable.airport_card_13
+            13 -> R.drawable.airport_card_14
+            14 -> R.drawable.airport_card_15
+            15 -> R.drawable.airport_card_16
+            16 -> R.drawable.airport_card_17
+            17 -> R.drawable.airport_card_18
+            18 -> R.drawable.airport_card_19
+            else -> R.drawable.airport_card_20
         }
     }
 
