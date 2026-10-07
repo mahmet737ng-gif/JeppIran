@@ -38,7 +38,6 @@ class UpdateActivity : AppCompatActivity() {
     private lateinit var dataUpdateButton: Button
 
     private lateinit var appStatus: TextView
-    private lateinit var appDetails: TextView
     private lateinit var appUpdateButton: Button
 
     private lateinit var viewChangesButton: Button
@@ -46,6 +45,9 @@ class UpdateActivity : AppCompatActivity() {
 
     private var remoteManifestRaw = ""
     private var remoteDataVersion = ""
+    private var remoteCycle = ""
+    private var remoteEffectiveFrom = ""
+    private var remoteEffectiveTo = ""
     private var changedAirports = emptyList<String>()
     private var remoteAppInfo: AppUpdateManager.UpdateInfo? = null
 
@@ -97,10 +99,10 @@ class UpdateActivity : AppCompatActivity() {
 
         addSectionTitle(content, "DATA CYCLE")
 
-        dataStatus = statusCard("Checking chart data…")
+        dataStatus = statusCard("Checking available Data Cycle…")
         content.addView(dataStatus)
 
-        dataDetails = detailCard()
+        dataDetails = detailCard("Checking cycle validity…")
         content.addView(
             dataDetails,
             LinearLayout.LayoutParams(
@@ -135,15 +137,6 @@ class UpdateActivity : AppCompatActivity() {
 
         appStatus = statusCard("Checking application version…")
         content.addView(appStatus)
-
-        appDetails = detailCard()
-        content.addView(
-            appDetails,
-            LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply { topMargin = 10.dp }
-        )
 
         appUpdateButton = actionButton("UPDATE APP") {
             installAppUpdate()
@@ -202,14 +195,40 @@ class UpdateActivity : AppCompatActivity() {
 
     private fun checkDataUpdate() {
         dataUpdateButton.isEnabled = false
-        dataStatus.text = "Checking chart data…"
-        dataDetails.text = ""
+        dataStatus.text = "Checking available Data Cycle…"
+        dataDetails.text = "Checking cycle validity…"
 
         thread(name = "JeppIran-DataUpdateCheck") {
             try {
                 val manifestRaw = fetchText(REMOTE_MANIFEST)
                 val root = JSONObject(manifestRaw)
                 val version = root.optString("version").trim()
+
+                val cycle =
+                    root.optString("cycle")
+                        .trim()
+                        .ifBlank {
+                            Regex("(\\d{4})")
+                                .find(
+                                    root.optString("source")
+                                )
+                                ?.groupValues
+                                ?.getOrNull(1)
+                                .orEmpty()
+                        }
+                        .ifBlank {
+                            version
+                                .removePrefix("v")
+                                .trim()
+                        }
+
+                val effectiveFrom =
+                    root.optString("effective_from")
+                        .trim()
+
+                val effectiveTo =
+                    root.optString("effective_to")
+                        .trim()
 
                 require(version.isNotBlank()) {
                     "Remote data version is missing"
@@ -252,56 +271,49 @@ class UpdateActivity : AppCompatActivity() {
 
                 remoteManifestRaw = manifestRaw
                 remoteDataVersion = version
+                remoteCycle = cycle
+                remoteEffectiveFrom = effectiveFrom
+                remoteEffectiveTo = effectiveTo
                 changedAirports = changed.sorted()
 
                 val localVersion =
                     repository.getDataVersion()
 
                 runOnUiThread {
+                    val cycleLabel =
+                        cycle.ifBlank {
+                            version
+                        }
+
+                    val validity =
+                        formatValidity(
+                            effectiveFrom,
+                            effectiveTo
+                        )
+
                     if (
                         version == localVersion &&
                         changed.isEmpty()
                     ) {
                         dataStatus.text =
-                            "Up to date • " + localVersion
+                            "Data Cycle " +
+                                cycleLabel +
+                                " • Up to date"
 
                         dataDetails.text =
-                            "No chart-cycle update is available."
+                            validity.ifBlank {
+                                "Validity dates not published"
+                            }
 
                         dataUpdateButton.isEnabled = false
                     } else {
                         dataStatus.text =
-                            "Data update available • " +
-                                localVersion +
-                                " → " +
-                                version
+                            "Available Data Cycle • " +
+                                cycleLabel
 
                         dataDetails.text =
-                            if (changed.isEmpty()) {
-                                "New chart metadata is available."
-                            } else {
-                                buildString {
-                                    append(changed.size)
-                                    append(" airport(s) changed:\n\n")
-
-                                    changed.sorted().forEach { icao ->
-                                        append("• ")
-                                        append(icao)
-
-                                        val name =
-                                            ChartRepository
-                                                .airport(icao)
-                                                ?.airportName
-                                                .orEmpty()
-
-                                        if (name.isNotBlank()) {
-                                            append("  ")
-                                            append(name)
-                                        }
-
-                                        append("\n")
-                                    }
-                                }
+                            validity.ifBlank {
+                                "Validity dates not published"
                             }
 
                         dataUpdateButton.isEnabled = true
@@ -311,9 +323,10 @@ class UpdateActivity : AppCompatActivity() {
                 }
             } catch (error: Throwable) {
                 runOnUiThread {
-                    dataStatus.text = "Unable to check data cycle"
+                    dataStatus.text = "Unable to check Data Cycle"
                     dataDetails.text =
-                        error.message ?: "Network error"
+                        "Validity unavailable • " +
+                            (error.message ?: "Network error")
                     refreshCheckButton()
                 }
             }
@@ -322,8 +335,7 @@ class UpdateActivity : AppCompatActivity() {
 
     private fun checkAppUpdate() {
         appUpdateButton.isEnabled = false
-        appStatus.text = "Checking application version…"
-        appDetails.text = ""
+        appStatus.text = "Checking JEPPIRAN version…"
 
         thread(name = "JeppIran-AppUpdateCheck") {
             try {
@@ -338,23 +350,14 @@ class UpdateActivity : AppCompatActivity() {
                         result.remote != null
                     ) {
                         appStatus.text =
-                            "App update available • " +
-                                result.currentVersionName +
-                                " → " +
+                            "Available version • " +
                                 result.remote.versionName
-
-                        appDetails.text =
-                            "A newer signed JEPPIRAN build is ready. " +
-                                "Tap Update App to download, verify and install it."
 
                         appUpdateButton.isEnabled = true
                     } else {
                         appStatus.text =
-                            "App up to date • " +
+                            "JEPPIRAN is up to date • " +
                                 result.currentVersionName
-
-                        appDetails.text =
-                            "You already have the newest JEPPIRAN build."
 
                         appUpdateButton.isEnabled = false
                     }
@@ -363,10 +366,9 @@ class UpdateActivity : AppCompatActivity() {
                 }
             } catch (error: Throwable) {
                 runOnUiThread {
-                    appStatus.text = "Unable to check app version"
-                    appDetails.text =
-                        (error.message ?: "Network error") +
-                            "\n\nIf this is the first updater-enabled build, install it once manually; future builds will update from here."
+                    appStatus.text =
+                        "Unable to check JEPPIRAN version • " +
+                            (error.message ?: "Network error")
 
                     refreshCheckButton()
                 }
@@ -415,14 +417,18 @@ class UpdateActivity : AppCompatActivity() {
 
                 runOnUiThread {
                     dataStatus.text =
-                        "Installed • " +
-                            repository.getDataVersion()
+                        "Data Cycle " +
+                            remoteCycle.ifBlank {
+                                repository.getDataVersion()
+                            } +
+                            " • Up to date"
 
                     dataDetails.text =
-                        if (changedAirports.isEmpty()) {
-                            "Chart metadata updated successfully."
-                        } else {
-                            "The new cycle is active. Updated airport PDFs are downloaded when needed."
+                        formatValidity(
+                            remoteEffectiveFrom,
+                            remoteEffectiveTo
+                        ).ifBlank {
+                            "Validity dates not published"
                         }
 
                     dataUpdateButton.isEnabled = false
@@ -458,9 +464,8 @@ class UpdateActivity : AppCompatActivity() {
         }
 
         if (!AppUpdateManager.canInstallPackages(this)) {
-            appStatus.text = "Installation permission required"
-            appDetails.text =
-                "Enable “Allow from this source” for JEPPIRAN, return here, then tap Update App again."
+            appStatus.text =
+                "Installation permission required • Allow JEPPIRAN from this source"
 
             AppUpdateManager.openInstallPermission(this)
             return
@@ -494,9 +499,6 @@ class UpdateActivity : AppCompatActivity() {
                     appStatus.text =
                         "Verified • opening Android installer"
 
-                    appDetails.text =
-                        "SHA-256 verified. Android will now ask you to install the update."
-
                     AppUpdateManager.launchInstaller(
                         this,
                         apk
@@ -507,10 +509,8 @@ class UpdateActivity : AppCompatActivity() {
             } catch (error: Throwable) {
                 runOnUiThread {
                     appStatus.text =
-                        "App update failed"
-
-                    appDetails.text =
-                        error.message ?: "Unable to install update"
+                        "App update failed • " +
+                            (error.message ?: "Unable to install update")
 
                     appUpdateButton.isEnabled = true
                     refreshCheckButton()
@@ -587,8 +587,11 @@ class UpdateActivity : AppCompatActivity() {
             background = cardBackground()
         }
 
-    private fun detailCard(): TextView =
+    private fun detailCard(
+        textValue: String
+    ): TextView =
         TextView(this).apply {
+            text = textValue
             textSize = 14f
             setTextColor(primaryTextColor())
             setPadding(16.dp, 16.dp, 16.dp, 16.dp)
@@ -613,6 +616,57 @@ class UpdateActivity : AppCompatActivity() {
         ).apply {
             topMargin = topMarginDp.dp
         }
+
+    private fun formatValidity(
+        from: String,
+        to: String
+    ): String {
+
+        if (
+            from.isBlank() ||
+            to.isBlank()
+        ) {
+            return ""
+        }
+
+        val input =
+            java.text.SimpleDateFormat(
+                "yyyy-MM-dd",
+                Locale.US
+            ).apply {
+                isLenient = false
+                timeZone =
+                    java.util.TimeZone
+                        .getTimeZone("UTC")
+            }
+
+        val output =
+            java.text.SimpleDateFormat(
+                "d MMM yyyy",
+                Locale.US
+            ).apply {
+                timeZone =
+                    java.util.TimeZone
+                        .getTimeZone("UTC")
+            }
+
+        return runCatching {
+            val start =
+                input.parse(from)
+                    ?: return@runCatching ""
+
+            val end =
+                input.parse(to)
+                    ?: return@runCatching ""
+
+            "Valid • " +
+                output.format(start) +
+                " – " +
+                output.format(end)
+        }
+            .getOrDefault("")
+    }
+
 
     private fun primaryTextColor(): Int =
         resolveColor(
