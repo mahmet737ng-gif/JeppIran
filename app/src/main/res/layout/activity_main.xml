@@ -102,246 +102,72 @@
         <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:columnCount="2"
+            android:columnCount="@integer/home_column_count"
             android:useDefaultMargins="false">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardCharts"
-                style="@style/JeppIranMenuCard">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="17dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            style="@style/JeppIranMenuIcon"
-                            android:contentDescription="Charts"
-                            android:src="@drawable/ic_home_charts" />
-
-                        <TextView
-                            style="@style/JeppIranMenuTitle"
-                            android:text="Charts" />
-
-                        <TextView
-                            style="@style/JeppIranMenuSubtitle"
-                            android:text="Approach, Departure&#10;&amp; Airport Charts" />
+            <com.google.android.material.card.MaterialCardView android:id="@+id/cardCharts" style="@style/JeppIranMenuCard">
+                <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent" android:padding="17dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+                        <ImageView style="@style/JeppIranMenuIcon" android:contentDescription="Charts" android:src="@drawable/ic_home_charts" />
+                        <TextView style="@style/JeppIranMenuTitle" android:text="Charts" />
+                        <TextView style="@style/JeppIranMenuSubtitle" android:text="Approach, Departure&#10;&amp; Airport Charts" />
                     </LinearLayout>
-
-                    <TextView
-                        android:layout_width="38dp"
-                        android:layout_height="38dp"
-                        android:layout_gravity="end|center_vertical"
-                        android:background="@drawable/bg_round_outline"
-                        android:gravity="center"
-                        android:text="›"
-                        android:textColor="@color/jeppiran_accent"
-                        android:textSize="27sp" />
+                    <TextView android:layout_width="38dp" android:layout_height="38dp" android:layout_gravity="end|center_vertical" android:background="@drawable/bg_round_outline" android:gravity="center" android:text="›" android:textColor="@color/jeppiran_accent" android:textSize="27sp" />
                 </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardEnroute"
-                style="@style/JeppIranMenuCard">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="17dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            style="@style/JeppIranMenuIcon"
-                            android:contentDescription="En-route"
-                            android:src="@drawable/ic_home_enroute" />
-
-                        <TextView
-                            style="@style/JeppIranMenuTitle"
-                            android:text="En-route" />
-
-                        <TextView
-                            style="@style/JeppIranMenuSubtitle"
-                            android:text="Airways, SIGMETs&#10;&amp; Navigation" />
+            <com.google.android.material.card.MaterialCardView android:id="@+id/cardEnroute" style="@style/JeppIranMenuCard">
+                <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent" android:padding="17dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+                        <ImageView style="@style/JeppIranMenuIcon" android:contentDescription="En-route" android:src="@drawable/ic_home_enroute" />
+                        <TextView style="@style/JeppIranMenuTitle" android:text="En-route" />
+                        <TextView style="@style/JeppIranMenuSubtitle" android:text="Airways, SIGMETs&#10;&amp; Navigation" />
                     </LinearLayout>
-
-                    <TextView
-                        android:layout_width="38dp"
-                        android:layout_height="38dp"
-                        android:layout_gravity="end|center_vertical"
-                        android:background="@drawable/bg_round_outline"
-                        android:gravity="center"
-                        android:text="›"
-                        android:textColor="@color/jeppiran_accent"
-                        android:textSize="27sp" />
+                    <TextView android:layout_width="38dp" android:layout_height="38dp" android:layout_gravity="end|center_vertical" android:background="@drawable/bg_round_outline" android:gravity="center" android:text="›" android:textColor="@color/jeppiran_accent" android:textSize="27sp" />
                 </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardWx"
-                style="@style/JeppIranMenuCard">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="17dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            style="@style/JeppIranMenuIcon"
-                            android:contentDescription="Weather"
-                            android:src="@drawable/ic_home_weather" />
-
-                        <TextView
-                            style="@style/JeppIranMenuTitle"
-                            android:text="WX" />
-
-                        <TextView
-                            style="@style/JeppIranMenuSubtitle"
-                            android:text="METAR, TAF,&#10;Radar &amp; Forecast" />
+            <com.google.android.material.card.MaterialCardView android:id="@+id/cardWx" style="@style/JeppIranMenuCard">
+                <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent" android:padding="17dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+                        <ImageView style="@style/JeppIranMenuIcon" android:contentDescription="Weather" android:src="@drawable/ic_home_weather" />
+                        <TextView style="@style/JeppIranMenuTitle" android:text="WX" />
+                        <TextView style="@style/JeppIranMenuSubtitle" android:text="METAR, TAF,&#10;Radar &amp; Forecast" />
                     </LinearLayout>
-
-                    <TextView
-                        android:layout_width="38dp"
-                        android:layout_height="38dp"
-                        android:layout_gravity="end|center_vertical"
-                        android:background="@drawable/bg_round_outline"
-                        android:gravity="center"
-                        android:text="›"
-                        android:textColor="@color/jeppiran_accent"
-                        android:textSize="27sp" />
+                    <TextView android:layout_width="38dp" android:layout_height="38dp" android:layout_gravity="end|center_vertical" android:background="@drawable/bg_round_outline" android:gravity="center" android:text="›" android:textColor="@color/jeppiran_accent" android:textSize="27sp" />
                 </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardUpdate"
-                style="@style/JeppIranMenuCard">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="17dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            style="@style/JeppIranMenuIcon"
-                            android:contentDescription="Update"
-                            android:src="@drawable/ic_home_update" />
-
-                        <TextView
-                            style="@style/JeppIranMenuTitle"
-                            android:text="Update" />
-
-                        <TextView
-                            style="@style/JeppIranMenuSubtitle"
-                            android:text="Charts, NavData&#10;&amp; Weather Data" />
+            <com.google.android.material.card.MaterialCardView android:id="@+id/cardUpdate" style="@style/JeppIranMenuCard">
+                <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent" android:padding="17dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+                        <ImageView style="@style/JeppIranMenuIcon" android:contentDescription="Update" android:src="@drawable/ic_home_update" />
+                        <TextView style="@style/JeppIranMenuTitle" android:text="Update" />
+                        <TextView style="@style/JeppIranMenuSubtitle" android:text="Charts, NavData&#10;&amp; Weather Data" />
                     </LinearLayout>
-
-                    <TextView
-                        android:layout_width="38dp"
-                        android:layout_height="38dp"
-                        android:layout_gravity="end|center_vertical"
-                        android:background="@drawable/bg_round_outline"
-                        android:gravity="center"
-                        android:text="›"
-                        android:textColor="@color/jeppiran_accent"
-                        android:textSize="27sp" />
+                    <TextView android:layout_width="38dp" android:layout_height="38dp" android:layout_gravity="end|center_vertical" android:background="@drawable/bg_round_outline" android:gravity="center" android:text="›" android:textColor="@color/jeppiran_accent" android:textSize="27sp" />
                 </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardSettings"
-                style="@style/JeppIranMenuCard">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="17dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            style="@style/JeppIranMenuIcon"
-                            android:contentDescription="Settings"
-                            android:src="@drawable/ic_home_settings" />
-
-                        <TextView
-                            style="@style/JeppIranMenuTitle"
-                            android:text="Settings" />
-
-                        <TextView
-                            style="@style/JeppIranMenuSubtitle"
-                            android:text="Preferences,&#10;Aircraft &amp; Units" />
+            <com.google.android.material.card.MaterialCardView android:id="@+id/cardSettings" style="@style/JeppIranMenuCard">
+                <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent" android:padding="17dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+                        <ImageView style="@style/JeppIranMenuIcon" android:contentDescription="Settings" android:src="@drawable/ic_home_settings" />
+                        <TextView style="@style/JeppIranMenuTitle" android:text="Settings" />
+                        <TextView style="@style/JeppIranMenuSubtitle" android:text="Preferences,&#10;Aircraft &amp; Units" />
                     </LinearLayout>
-
-                    <TextView
-                        android:layout_width="38dp"
-                        android:layout_height="38dp"
-                        android:layout_gravity="end|center_vertical"
-                        android:background="@drawable/bg_round_outline"
-                        android:gravity="center"
-                        android:text="›"
-                        android:textColor="@color/jeppiran_accent"
-                        android:textSize="27sp" />
+                    <TextView android:layout_width="38dp" android:layout_height="38dp" android:layout_gravity="end|center_vertical" android:background="@drawable/bg_round_outline" android:gravity="center" android:text="›" android:textColor="@color/jeppiran_accent" android:textSize="27sp" />
                 </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardInfo"
-                style="@style/JeppIranMenuCard">
-
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:padding="17dp">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
-
-                        <ImageView
-                            style="@style/JeppIranMenuIcon"
-                            android:contentDescription="Information"
-                            android:src="@drawable/ic_home_info" />
-
-                        <TextView
-                            style="@style/JeppIranMenuTitle"
-                            android:text="Info" />
-
-                        <TextView
-                            style="@style/JeppIranMenuSubtitle"
-                            android:text="About, Support&#10;&amp; Legal" />
+            <com.google.android.material.card.MaterialCardView android:id="@+id/cardInfo" style="@style/JeppIranMenuCard">
+                <FrameLayout android:layout_width="match_parent" android:layout_height="match_parent" android:padding="17dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
+                        <ImageView style="@style/JeppIranMenuIcon" android:contentDescription="Information" android:src="@drawable/ic_home_info" />
+                        <TextView style="@style/JeppIranMenuTitle" android:text="Info" />
+                        <TextView style="@style/JeppIranMenuSubtitle" android:text="About, Support&#10;&amp; Legal" />
                     </LinearLayout>
-
-                    <TextView
-                        android:layout_width="38dp"
-                        android:layout_height="38dp"
-                        android:layout_gravity="end|center_vertical"
-                        android:background="@drawable/bg_round_outline"
-                        android:gravity="center"
-                        android:text="›"
-                        android:textColor="@color/jeppiran_accent"
-                        android:textSize="27sp" />
+                    <TextView android:layout_width="38dp" android:layout_height="38dp" android:layout_gravity="end|center_vertical" android:background="@drawable/bg_round_outline" android:gravity="center" android:text="›" android:textColor="@color/jeppiran_accent" android:textSize="27sp" />
                 </FrameLayout>
             </com.google.android.material.card.MaterialCardView>
         </GridLayout>
