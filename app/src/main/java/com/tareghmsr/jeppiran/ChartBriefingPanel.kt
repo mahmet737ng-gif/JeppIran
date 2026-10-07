@@ -1,12 +1,16 @@
 package com.tareghmsr.jeppiran
 
 import android.app.Activity
+import android.app.Dialog
 import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Typeface
+import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.GradientDrawable
 import android.view.Gravity
 import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.ScrollView
@@ -14,6 +18,7 @@ import android.widget.TextView
 
 class ChartBriefingPanel(
     private val activity: Activity,
+    @Suppress("UNUSED_PARAMETER")
     private val root: FrameLayout,
     private val brief: ChartBriefingEngine.Brief,
     private val onClose: () -> Unit
@@ -80,30 +85,37 @@ class ChartBriefingPanel(
             activity.resources.configuration.orientation ==
                 Configuration.ORIENTATION_LANDSCAPE
 
-        val scrim =
+        val dialog = Dialog(activity).apply {
+            requestWindowFeature(Window.FEATURE_NO_TITLE)
+            setCancelable(true)
+            setCanceledOnTouchOutside(landscape)
+        }
+
+        var closed = false
+        fun closeOnce() {
+            if (!closed) {
+                closed = true
+                onClose()
+            }
+        }
+
+        val stage =
             FrameLayout(activity).apply {
                 setBackgroundColor(
                     if (landscape) {
-                        Color.argb(86, 0, 0, 0)
+                        Color.argb(112, 0, 0, 0)
                     } else {
                         panelColor()
                     }
                 )
-                isClickable = true
-                elevation = 120.dp().toFloat()
             }
 
         val panel =
             LinearLayout(activity).apply {
                 orientation = LinearLayout.VERTICAL
                 background = background(panelColor(), if (landscape) 18 else 0)
-                elevation = 122.dp().toFloat()
+                elevation = 24.dp().toFloat()
             }
-
-        fun closePanel() {
-            root.removeView(scrim)
-            onClose()
-        }
 
         val header =
             LinearLayout(activity).apply {
@@ -146,14 +158,14 @@ class ChartBriefingPanel(
         )
 
         header.addView(
-            text("×", 28f).apply {
+            text("×", 30f, false, primaryText()).apply {
                 gravity = Gravity.CENTER
                 contentDescription = "Close briefing"
                 setOnClickListener {
-                    closePanel()
+                    dialog.dismiss()
                 }
             },
-            LinearLayout.LayoutParams(50.dp(), 50.dp())
+            LinearLayout.LayoutParams(54.dp(), 54.dp())
         )
 
         panel.addView(header)
@@ -442,7 +454,7 @@ class ChartBriefingPanel(
 
             if (selected.isEmpty()) {
                 if (selectedKey == "airport") {
-                    val noImpact =
+                    addSection(
                         ChartBriefingEngine.Section(
                             key = "airport",
                             title = "OPERATIONAL NOTAMS",
@@ -453,7 +465,7 @@ class ChartBriefingPanel(
                                 )
                             )
                         )
-                    addSection(noImpact)
+                    )
                 }
             } else {
                 selected.forEach {
@@ -564,9 +576,14 @@ class ChartBriefingPanel(
 
         val footer =
             LinearLayout(activity).apply {
+                orientation = LinearLayout.VERTICAL
+                setPadding(8.dp(), 4.dp(), 8.dp(), 8.dp())
+            }
+
+        val actions =
+            LinearLayout(activity).apply {
                 orientation = LinearLayout.HORIZONTAL
                 gravity = Gravity.CENTER
-                setPadding(8.dp(), 6.dp(), 8.dp(), 10.dp())
             }
 
         val weatherButton =
@@ -591,25 +608,39 @@ class ChartBriefingPanel(
                 }
             }
 
-        footer.addView(
+        actions.addView(
             weatherButton,
             LinearLayout.LayoutParams(
                 0,
-                48.dp(),
+                46.dp(),
                 1f
             ).apply {
                 setMargins(0, 0, 4.dp(), 0)
             }
         )
 
-        footer.addView(
+        actions.addView(
             notamButton,
             LinearLayout.LayoutParams(
                 0,
-                48.dp(),
+                46.dp(),
                 1f
             ).apply {
                 setMargins(4.dp(), 0, 0, 0)
+            }
+        )
+
+        footer.addView(actions)
+
+        footer.addView(
+            text(
+                "JEPPIRAN BRIEF UI 2  •  " + AppVersion.name(activity),
+                9.5f,
+                false,
+                secondaryText()
+            ).apply {
+                gravity = Gravity.CENTER
+                setPadding(4.dp(), 6.dp(), 4.dp(), 0)
             }
         )
 
@@ -634,7 +665,7 @@ class ChartBriefingPanel(
                 FrameLayout.LayoutParams.MATCH_PARENT
             }
 
-        scrim.addView(
+        stage.addView(
             panel,
             FrameLayout.LayoutParams(
                 panelWidth,
@@ -646,27 +677,46 @@ class ChartBriefingPanel(
                     } else {
                         Gravity.CENTER
                     }
+            }
+        )
 
-                if (!landscape) {
-                    setMargins(0, 0, 0, 0)
+        if (landscape) {
+            stage.setOnClickListener {
+                if (it === stage) {
+                    dialog.dismiss()
                 }
             }
-        )
-
-        scrim.setOnClickListener {
-            if (it === scrim && landscape) {
-                closePanel()
-            }
+            panel.isClickable = true
         }
 
-        root.addView(
-            scrim,
-            FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.MATCH_PARENT
-            )
-        )
+        dialog.setContentView(stage)
 
-        scrim.bringToFront()
+        dialog.setOnDismissListener {
+            closeOnce()
+        }
+
+        dialog.setOnCancelListener {
+            closeOnce()
+        }
+
+        dialog.window?.apply {
+            setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            setLayout(
+                WindowManager.LayoutParams.MATCH_PARENT,
+                WindowManager.LayoutParams.MATCH_PARENT
+            )
+            addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            statusBarColor =
+                if (dark) Color.rgb(3, 20, 42) else Color.rgb(245, 249, 252)
+            navigationBarColor =
+                if (dark) Color.rgb(3, 20, 42) else Color.rgb(245, 249, 252)
+        }
+
+        dialog.show()
+
+        dialog.window?.setLayout(
+            WindowManager.LayoutParams.MATCH_PARENT,
+            WindowManager.LayoutParams.MATCH_PARENT
+        )
     }
 }
