@@ -1,5 +1,6 @@
 package com.tareghmsr.jeppiran
 
+import android.animation.ValueAnimator
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Canvas
@@ -56,6 +57,16 @@ class ChartsActivity : AppCompatActivity() {
     private lateinit var contentRoot: LinearLayout
     private lateinit var listContainer: LinearLayout
     private lateinit var searchBox: EditText
+    private lateinit var searchBarContainer: View
+    private lateinit var airportScrollView: ScrollView
+
+    private var searchBarExpandedHeight = 0
+    private var searchBarHidden = false
+    private var searchBarAnimation: ValueAnimator? = null
+    private var ignoreSearchBarScroll = false
+    private var lastAirportScrollY = 0
+    private var downwardScrollDistance = 0
+    private var upwardScrollDistance = 0
     private lateinit var airportCountText: TextView
     private lateinit var sortText: TextView
     private lateinit var regionText: TextView
@@ -112,6 +123,9 @@ class ChartsActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
+        searchBarAnimation
+            ?.cancel()
+
         weatherHandler.removeCallbacksAndMessages(null)
         super.onDestroy()
     }
@@ -142,10 +156,15 @@ class ChartsActivity : AppCompatActivity() {
 
         contentRoot.addView(buildTopBar())
         contentRoot.addView(buildTitleBlock())
-        contentRoot.addView(buildSearchBar())
+        searchBarContainer =
+            buildSearchBar()
+
+        contentRoot.addView(
+            searchBarContainer
+        )
         contentRoot.addView(buildSummaryBar())
 
-        val scroll =
+        airportScrollView =
             ScrollView(this).apply {
                 isFillViewport = true
                 overScrollMode = ScrollView.OVER_SCROLL_IF_CONTENT_SCROLLS
@@ -158,7 +177,7 @@ class ChartsActivity : AppCompatActivity() {
                 setPadding(14.dp, 4.dp, 14.dp, 20.dp)
             }
 
-        scroll.addView(
+        airportScrollView.addView(
             listContainer,
             ViewGroup.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
@@ -167,13 +186,15 @@ class ChartsActivity : AppCompatActivity() {
         )
 
         contentRoot.addView(
-            scroll,
+            airportScrollView,
             LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 0,
                 1f
             )
         )
+
+        installSearchBarScrollBehavior()
 
         setContentView(root)
 
@@ -445,7 +466,332 @@ class ChartsActivity : AppCompatActivity() {
                     60.dp
                 )
             )
+
+            post {
+                if (
+                    searchBarExpandedHeight <= 0
+                ) {
+                    searchBarExpandedHeight =
+                        height
+                }
+            }
         }
+    }
+
+    private fun installSearchBarScrollBehavior() {
+        airportScrollView
+            .viewTreeObserver
+            .addOnScrollChangedListener {
+                val currentY =
+                    airportScrollView.scrollY
+
+                if (
+                    ignoreSearchBarScroll ||
+                    searchBarAnimation
+                        ?.isRunning ==
+                        true
+                ) {
+                    lastAirportScrollY =
+                        currentY
+                    return@addOnScrollChangedListener
+                }
+
+                val dy =
+                    currentY -
+                        lastAirportScrollY
+
+                lastAirportScrollY =
+                    currentY
+
+                if (
+                    searchBox.hasFocus()
+                ) {
+                    downwardScrollDistance =
+                        0
+                    upwardScrollDistance =
+                        0
+
+                    if (
+                        searchBarHidden
+                    ) {
+                        setSearchBarVisible(
+                            true
+                        )
+                    }
+
+                    return@addOnScrollChangedListener
+                }
+
+                if (
+                    currentY <=
+                    4.dp
+                ) {
+                    downwardScrollDistance =
+                        0
+                    upwardScrollDistance =
+                        0
+
+                    if (
+                        searchBarHidden
+                    ) {
+                        setSearchBarVisible(
+                            true
+                        )
+                    }
+
+                    return@addOnScrollChangedListener
+                }
+
+                if (
+                    dy >
+                    0
+                ) {
+                    downwardScrollDistance +=
+                        dy
+
+                    upwardScrollDistance =
+                        0
+
+                    val fullHeight =
+                        searchBarExpandedHeight
+                            .takeIf {
+                                it >
+                                0
+                            }
+                            ?: 72.dp
+
+                    if (
+                        !searchBarHidden &&
+                        currentY >
+                            fullHeight +
+                                16.dp &&
+                        downwardScrollDistance >=
+                            18.dp
+                    ) {
+                        setSearchBarVisible(
+                            false
+                        )
+                    }
+
+                } else if (
+                    dy <
+                    0
+                ) {
+                    upwardScrollDistance +=
+                        -dy
+
+                    downwardScrollDistance =
+                        0
+
+                    if (
+                        searchBarHidden &&
+                        upwardScrollDistance >=
+                            12.dp
+                    ) {
+                        setSearchBarVisible(
+                            true
+                        )
+                    }
+                }
+            }
+
+        searchBox.setOnFocusChangeListener {
+                _,
+                hasFocus ->
+
+            if (
+                hasFocus &&
+                searchBarHidden
+            ) {
+                setSearchBarVisible(
+                    true
+                )
+            }
+        }
+    }
+
+    private fun setSearchBarVisible(
+        visible: Boolean
+    ) {
+        if (
+            !::searchBarContainer.isInitialized ||
+            !::airportScrollView.isInitialized
+        ) {
+            return
+        }
+
+        if (
+            visible ==
+            !searchBarHidden &&
+            searchBarAnimation
+                ?.isRunning !=
+                true
+        ) {
+            return
+        }
+
+        if (
+            searchBarExpandedHeight <=
+            0
+        ) {
+            searchBarExpandedHeight =
+                searchBarContainer.height
+                    .takeIf {
+                        it >
+                        0
+                    }
+                    ?: 72.dp
+        }
+
+        searchBarAnimation
+            ?.cancel()
+
+        val params =
+            searchBarContainer
+                .layoutParams
+
+        val currentHeight =
+            if (
+                params.height >=
+                0
+            ) {
+                params.height
+            } else {
+                searchBarContainer.height
+            }
+                .coerceAtLeast(
+                    0
+                )
+
+        val targetHeight =
+            if (
+                visible
+            ) {
+                searchBarExpandedHeight
+            } else {
+                0
+            }
+
+        if (
+            currentHeight ==
+            targetHeight
+        ) {
+            searchBarHidden =
+                !visible
+
+            searchBarContainer.alpha =
+                if (
+                    visible
+                ) {
+                    1f
+                } else {
+                    0f
+                }
+
+            return
+        }
+
+        downwardScrollDistance =
+            0
+
+        upwardScrollDistance =
+            0
+
+        var previousHeight =
+            currentHeight
+
+        searchBarHidden =
+            !visible
+
+        searchBarAnimation =
+            ValueAnimator
+                .ofInt(
+                    currentHeight,
+                    targetHeight
+                )
+                .apply {
+                    duration =
+                        170L
+
+                    interpolator =
+                        android.view.animation
+                            .DecelerateInterpolator()
+
+                    addUpdateListener {
+                        animator ->
+
+                        val newHeight =
+                            animator
+                                .animatedValue
+                                as Int
+
+                        val delta =
+                            newHeight -
+                                previousHeight
+
+                        previousHeight =
+                            newHeight
+
+                        params.height =
+                            newHeight
+
+                        searchBarContainer
+                            .layoutParams =
+                            params
+
+                        searchBarContainer.alpha =
+                            if (
+                                searchBarExpandedHeight >
+                                0
+                            ) {
+                                (
+                                    newHeight
+                                        .toFloat() /
+                                        searchBarExpandedHeight
+                                            .toFloat()
+                                    )
+                                    .coerceIn(
+                                        0f,
+                                        1f
+                                    )
+                            } else {
+                                if (
+                                    visible
+                                ) {
+                                    1f
+                                } else {
+                                    0f
+                                }
+                            }
+
+                        if (
+                            delta !=
+                            0
+                        ) {
+                            ignoreSearchBarScroll =
+                                true
+
+                            airportScrollView
+                                .scrollBy(
+                                    0,
+                                    delta
+                                )
+
+                            airportScrollView
+                                .post {
+                                    ignoreSearchBarScroll =
+                                        false
+
+                                    lastAirportScrollY =
+                                        airportScrollView
+                                            .scrollY
+                                }
+                        }
+                    }
+                }
+
+        searchBarAnimation
+            ?.start()
     }
 
     private fun buildSummaryBar(): View {

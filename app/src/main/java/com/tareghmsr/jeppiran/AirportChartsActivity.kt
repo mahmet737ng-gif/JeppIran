@@ -1,5 +1,6 @@
 package com.tareghmsr.jeppiran
 
+import android.animation.ValueAnimator
 import android.content.Intent
 import android.content.res.Configuration
 import android.graphics.Color
@@ -38,6 +39,28 @@ class AirportChartsActivity :
 
     private lateinit var searchBox:
         EditText
+
+    private lateinit var searchContainer:
+        LinearLayout
+
+    private var searchBarHidden =
+        false
+
+    private var searchBarAnimation:
+        ValueAnimator? =
+        null
+
+    private var ignoreSearchBarScroll =
+        false
+
+    private var lastChartScrollY =
+        0
+
+    private var downwardScrollDistance =
+        0
+
+    private var upwardScrollDistance =
+        0
 
     private lateinit var categoryContainer:
         LinearLayout
@@ -134,6 +157,14 @@ class AirportChartsActivity :
         buildUi()
 
         loadCharts()
+    }
+
+    override fun onDestroy() {
+
+        searchBarAnimation
+            ?.cancel()
+
+        super.onDestroy()
     }
 
     private fun buildUi() {
@@ -324,7 +355,7 @@ class AirportChartsActivity :
             )
         )
 
-        val searchContainer =
+        searchContainer =
             LinearLayout(
                 this
             ).apply {
@@ -612,6 +643,8 @@ class AirportChartsActivity :
             buildPortrait()
         }
 
+        installSearchBarScrollBehavior()
+
         setContentView(
             root
         )
@@ -639,6 +672,431 @@ class AirportChartsActivity :
             root
         )
     }
+
+    private fun installSearchBarScrollBehavior() {
+
+        chartScrollView
+            .viewTreeObserver
+            .addOnScrollChangedListener {
+
+                val currentY =
+                    chartScrollView.scrollY
+
+                if (
+                    ignoreSearchBarScroll ||
+                    searchBarAnimation
+                        ?.isRunning ==
+                        true
+                ) {
+
+                    lastChartScrollY =
+                        currentY
+
+                    return@addOnScrollChangedListener
+                }
+
+                val dy =
+                    currentY -
+                        lastChartScrollY
+
+                lastChartScrollY =
+                    currentY
+
+                if (
+                    searchBox.hasFocus()
+                ) {
+
+                    downwardScrollDistance =
+                        0
+
+                    upwardScrollDistance =
+                        0
+
+                    if (
+                        searchBarHidden
+                    ) {
+
+                        setSearchBarVisible(
+                            true
+                        )
+                    }
+
+                    return@addOnScrollChangedListener
+                }
+
+                if (
+                    currentY <=
+                    4.dp
+                ) {
+
+                    downwardScrollDistance =
+                        0
+
+                    upwardScrollDistance =
+                        0
+
+                    if (
+                        searchBarHidden
+                    ) {
+
+                        setSearchBarVisible(
+                            true
+                        )
+                    }
+
+                    return@addOnScrollChangedListener
+                }
+
+                if (
+                    dy >
+                    0
+                ) {
+
+                    downwardScrollDistance +=
+                        dy
+
+                    upwardScrollDistance =
+                        0
+
+                    if (
+                        !searchBarHidden &&
+                        currentY >
+                            76.dp &&
+                        downwardScrollDistance >=
+                            18.dp
+                    ) {
+
+                        setSearchBarVisible(
+                            false
+                        )
+                    }
+
+                } else if (
+                    dy <
+                    0
+                ) {
+
+                    upwardScrollDistance +=
+                        -dy
+
+                    downwardScrollDistance =
+                        0
+
+                    if (
+                        searchBarHidden &&
+                        upwardScrollDistance >=
+                            12.dp
+                    ) {
+
+                        setSearchBarVisible(
+                            true
+                        )
+                    }
+                }
+            }
+
+        searchBox
+            .setOnFocusChangeListener {
+                _,
+                hasFocus ->
+
+                if (
+                    hasFocus &&
+                    searchBarHidden
+                ) {
+
+                    setSearchBarVisible(
+                        true
+                    )
+                }
+            }
+    }
+
+
+    private fun setSearchBarVisible(
+        visible: Boolean
+    ) {
+
+        if (
+            !::searchContainer.isInitialized ||
+            !::chartScrollView.isInitialized
+        ) {
+
+            return
+        }
+
+        if (
+            visible ==
+            !searchBarHidden &&
+            searchBarAnimation
+                ?.isRunning !=
+                true
+        ) {
+
+            return
+        }
+
+        searchBarAnimation
+            ?.cancel()
+
+        val params =
+            searchContainer
+                .layoutParams
+                as?
+                LinearLayout.LayoutParams
+                ?: return
+
+        val fullHeight =
+            50.dp
+
+        val fullTopMargin =
+            2.dp
+
+        val fullBottomMargin =
+            8.dp
+
+        val currentHeight =
+            params.height
+                .coerceAtLeast(
+                    0
+                )
+
+        val currentTopMargin =
+            params.topMargin
+                .coerceAtLeast(
+                    0
+                )
+
+        val currentBottomMargin =
+            params.bottomMargin
+                .coerceAtLeast(
+                    0
+                )
+
+        val targetHeight =
+            if (
+                visible
+            ) {
+
+                fullHeight
+
+            } else {
+
+                0
+            }
+
+        val targetTopMargin =
+            if (
+                visible
+            ) {
+
+                fullTopMargin
+
+            } else {
+
+                0
+            }
+
+        val targetBottomMargin =
+            if (
+                visible
+            ) {
+
+                fullBottomMargin
+
+            } else {
+
+                0
+            }
+
+        val currentTotal =
+            currentHeight +
+                currentTopMargin +
+                currentBottomMargin
+
+        val targetTotal =
+            targetHeight +
+                targetTopMargin +
+                targetBottomMargin
+
+        if (
+            currentTotal ==
+            targetTotal
+        ) {
+
+            searchBarHidden =
+                !visible
+
+            searchContainer.alpha =
+                if (
+                    visible
+                ) {
+
+                    1f
+
+                } else {
+
+                    0f
+                }
+
+            return
+        }
+
+        downwardScrollDistance =
+            0
+
+        upwardScrollDistance =
+            0
+
+        searchBarHidden =
+            !visible
+
+        var previousTotal =
+            currentTotal
+
+        searchBarAnimation =
+            ValueAnimator
+                .ofFloat(
+                    0f,
+                    1f
+                )
+                .apply {
+
+                    duration =
+                        170L
+
+                    interpolator =
+                        android.view.animation
+                            .DecelerateInterpolator()
+
+                    addUpdateListener {
+                        animator ->
+
+                        val fraction =
+                            animator
+                                .animatedFraction
+
+                        val newHeight =
+                            (
+                                currentHeight +
+                                    (
+                                        targetHeight -
+                                            currentHeight
+                                        ) *
+                                    fraction
+                                )
+                                .toInt()
+
+                        val newTopMargin =
+                            (
+                                currentTopMargin +
+                                    (
+                                        targetTopMargin -
+                                            currentTopMargin
+                                        ) *
+                                    fraction
+                                )
+                                .toInt()
+
+                        val newBottomMargin =
+                            (
+                                currentBottomMargin +
+                                    (
+                                        targetBottomMargin -
+                                            currentBottomMargin
+                                        ) *
+                                    fraction
+                                )
+                                .toInt()
+
+                        val newTotal =
+                            newHeight +
+                                newTopMargin +
+                                newBottomMargin
+
+                        val delta =
+                            newTotal -
+                                previousTotal
+
+                        previousTotal =
+                            newTotal
+
+                        params.height =
+                            newHeight
+
+                        params.topMargin =
+                            newTopMargin
+
+                        params.bottomMargin =
+                            newBottomMargin
+
+                        searchContainer
+                            .layoutParams =
+                            params
+
+                        searchContainer.alpha =
+                            if (
+                                fullHeight >
+                                0
+                            ) {
+
+                                (
+                                    newHeight
+                                        .toFloat() /
+                                        fullHeight
+                                            .toFloat()
+                                    )
+                                    .coerceIn(
+                                        0f,
+                                        1f
+                                    )
+
+                            } else {
+
+                                if (
+                                    visible
+                                ) {
+
+                                    1f
+
+                                } else {
+
+                                    0f
+                                }
+                            }
+
+                        if (
+                            delta !=
+                            0
+                        ) {
+
+                            ignoreSearchBarScroll =
+                                true
+
+                            chartScrollView
+                                .scrollBy(
+                                    0,
+                                    delta
+                                )
+
+                            chartScrollView
+                                .post {
+
+                                    ignoreSearchBarScroll =
+                                        false
+
+                                    lastChartScrollY =
+                                        chartScrollView
+                                            .scrollY
+                                }
+                        }
+                    }
+                }
+
+        searchBarAnimation
+            ?.start()
+    }
+
 
     private fun buildPortrait() {
 
