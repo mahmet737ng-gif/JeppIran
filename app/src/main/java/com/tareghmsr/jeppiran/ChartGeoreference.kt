@@ -27,6 +27,8 @@ data class GeoReferenceBounds(
 
 data class RenderedAircraftPosition(val x: Float, val y: Float, val headingDegrees: Float)
 
+data class ChartGeoCoverage(val page: Int, val area: Double)
+
 data class GeoReference(
     val page: Int,
     val width: Double,
@@ -53,6 +55,22 @@ data class GeoReference(
     private val transform: Transform? by lazy { fit() }
 
     fun isValid(): Boolean = transform != null
+
+    fun contains(latitude: Double, longitude: Double): Boolean =
+        project(latitude, longitude) != null
+
+    fun geographicArea(): Double {
+        if (points.isEmpty()) return Double.POSITIVE_INFINITY
+        val minLat = points.minOf { it.latitude }
+        val maxLat = points.maxOf { it.latitude }
+        val minLon = points.minOf { it.longitude }
+        val maxLon = points.maxOf { it.longitude }
+        val meanLat = points.map { it.latitude }.average()
+        val lonScale = kotlin.math.abs(kotlin.math.cos(Math.toRadians(meanLat)))
+            .coerceAtLeast(0.01)
+        return kotlin.math.abs((maxLat - minLat) * (maxLon - minLon) * lonScale)
+            .coerceAtLeast(1e-12)
+    }
 
     fun project(latitude: Double, longitude: Double): Pair<Double, Double>? {
         if (!latitude.isFinite() || !longitude.isFinite() ||
@@ -242,6 +260,25 @@ object ChartGeoreferenceStore {
         } finally {
             loaded = true
         }
+    }
+
+    fun coveringPages(
+        context: Context,
+        pages: Collection<Int>,
+        latitude: Double,
+        longitude: Double,
+        dataVersion: String
+    ): List<ChartGeoCoverage> {
+        load(context)
+        if (dataVersion != chartDataVersion) return emptyList()
+        return pages
+            .distinct()
+            .mapNotNull { page ->
+                references[page]
+                    ?.takeIf { it.contains(latitude, longitude) }
+                    ?.let { ChartGeoCoverage(page, it.geographicArea()) }
+            }
+            .sortedBy { it.area }
     }
 
     /** Convert PDF points to the actually rendered, cropped bitmap. */
