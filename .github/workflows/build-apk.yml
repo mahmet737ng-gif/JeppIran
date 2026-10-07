@@ -142,7 +142,7 @@ jobs:
             app/src/main/assets/chart-georef.json
             docs/georeferencing/georef-audit.json
 
-      - name: Publish permanent in-app update
+      - name: Publish permanent in-app delta update
         if: github.ref == 'refs/heads/main'
         env:
           GH_TOKEN: ${{ github.token }}
@@ -153,21 +153,11 @@ jobs:
           APK_SOURCE="app/build/outputs/apk/debug/app-debug.apk"
           APK_RELEASE="JeppIran-${JEPPIRAN_VERSION_NAME}.apk"
           UPDATE_JSON="app-update.json"
+          PREVIOUS_DIR="$RUNNER_TEMP/jeppiran-previous-update"
+          PREVIOUS_JSON="$PREVIOUS_DIR/app-update.json"
+          PREVIOUS_APK="$PREVIOUS_DIR/previous.apk"
 
-          cp "$APK_SOURCE" "$APK_RELEASE"
-
-          APK_SHA256="$(sha256sum "$APK_RELEASE" | awk '{print $1}')"
-          PUBLISHED_AT="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
-
-          cat > "$UPDATE_JSON" <<EOF
-          {
-            "versionCode": ${JEPPIRAN_VERSION_CODE},
-            "versionName": "${JEPPIRAN_VERSION_NAME}",
-            "apkUrl": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/jeppiran-test/${APK_RELEASE}",
-            "sha256": "${APK_SHA256}",
-            "publishedAt": "${PUBLISHED_AT}"
-          }
-          EOF
+          mkdir -p "$PREVIOUS_DIR"
 
           if ! gh release view jeppiran-test >/dev/null 2>&1; then
             gh release create jeppiran-test \
@@ -175,9 +165,171 @@ jobs:
               --notes "Latest signed installable JEPPIRAN Android test build."
           fi
 
+          gh release download jeppiran-test \
+            --pattern "app-update.json" \
+            --dir "$PREVIOUS_DIR" \
+            --clobber >/dev/null 2>&1 || true
+
+          PREVIOUS_VERSION_CODE=""
+          PREVIOUS_APK_NAME=""
+
+          if [ -s "$PREVIOUS_JSON" ]; then
+            PREVIOUS_VERSION_CODE="$(python - "$PREVIOUS_JSON" <<'PY'
+          import json, sys
+          with open(sys.argv[1], "r", encoding="utf-8") as fh:
+              data = json.load(fh)
+          print(data.get("versionCode", ""))
+          PY
+          )"
+
+            PREVIOUS_APK_URL="$(python - "$PREVIOUS_JSON" <<'PY'
+          import json, sys
+          with open(sys.argv[1], "r", encoding="utf-8") as fh:
+              data = json.load(fh)
+          print(data.get("apkUrl", ""))
+          PY
+          )"
+
+            if [ -n "$PREVIOUS_APK_URL" ]; then
+              PREVIOUS_APK_NAME="$(basename "$PREVIOUS_APK_URL")"
+
+              gh release download jeppiran-test \
+                --pattern "$PREVIOUS_APK_NAME" \
+                --dir "$PREVIOUS_DIR" \
+                --clobber >/dev/null 2>&1 || true
+
+              if [ -s "$PREVIOUS_DIR/$PREVIOUS_APK_NAME" ]; then
+                cp "$PREVIOUS_DIR/$PREVIOUS_APK_NAME" "$PREVIOUS_APK"
+              fi
+            fi
+          fi
+
+          cp "$APK_SOURCE" "$APK_RELEASE"
+
+          APK_SHA256="$(sha256sum "$APK_RELEASE" | awk '{print $1}')"
+          PUBLISHED_AT="$(date -u +'%Y-%m-%dT%H:%M:%SZ')"
+          PATCH_NAME=""
+          PATCH_SHA256=""
+          PATCH_SIZE=""
+          PREVIOUS_SHA256=""
+
+          if [ -s "$PREVIOUS_APK" ] && \
+             [ -n "$PREVIOUS_VERSION_CODE" ] && \
+             [ "$PREVIOUS_VERSION_CODE" -lt "$JEPPIRAN_VERSION_CODE" ]; then
+
+            PREVIOUS_SHA256="$(sha256sum "$PREVIOUS_APK" | awk '{print $1}')"
+
+            sudo apt-get update -qq
+            sudo apt-get install -y -qq bsdiff
+
+            PATCH_NAME="JeppIran-${PREVIOUS_VERSION_CODE}-to-${JEPPIRAN_VERSION_CODE}.bsdiff"
+
+            bsdiff \
+              "$PREVIOUS_APK" \
+              "$APK_RELEASE" \
+              "$PATCH_NAME"
+
+            PATCH_SHA256="$(sha256sum "$PATCH_NAME" | awk '{print $1}')"
+            PATCH_SIZE="$(stat -c%s "$PATCH_NAME")"
+          fi
+
+          export APK_RELEASE
+          export APK_SHA256
+          export PUBLISHED_AT
+          export UPDATE_JSON
+          export PREVIOUS_JSON
+          export PREVIOUS_VERSION_CODE
+          export PREVIOUS_SHA256
+          export PATCH_NAME
+          export PATCH_SHA256
+          export PATCH_SIZE
+
+          python <<'PY'
+          import json
+          import os
+
+          update_json = os.environ["UPDATE_JSON"]
+          previous_json = os.environ["PREVIOUS_JSON"]
+
+          previous = {}
+          if os.path.isfile(previous_json):
+              try:
+                  with open(previous_json, "r", encoding="utf-8") as fh:
+                      previous = json.load(fh)
+              except Exception:
+                  previous = {}
+
+          patches = previous.get("patches", [])
+          if not isinstance(patches, list):
+              patches = []
+
+          from_code = os.environ.get("PREVIOUS_VERSION_CODE", "").strip()
+          from_sha = os.environ.get("PREVIOUS_SHA256", "").strip()
+          patch_name = os.environ.get("PATCH_NAME", "").strip()
+          patch_sha = os.environ.get("PATCH_SHA256", "").strip()
+          patch_size = os.environ.get("PATCH_SIZE", "").strip()
+
+          if from_code and from_sha and patch_name and patch_sha and patch_size:
+              new_record = {
+                  "fromVersionCode": int(from_code),
+                  "toVersionCode": int(os.environ["JEPPIRAN_VERSION_CODE"]),
+                  "fromSha256": from_sha,
+                  "toSha256": os.environ["APK_SHA256"],
+                  "patchUrl": (
+                      "https://github.com/mahmet737ng-gif/JeppIran/"
+                      "releases/download/jeppiran-test/" + patch_name
+                  ),
+                  "patchSha256": patch_sha,
+                  "patchSizeBytes": int(patch_size),
+              }
+
+              patches = [
+                  p for p in patches
+                  if not (
+                      isinstance(p, dict)
+                      and p.get("fromVersionCode") == new_record["fromVersionCode"]
+                      and p.get("toVersionCode") == new_record["toVersionCode"]
+                  )
+              ]
+              patches.append(new_record)
+
+          patches = sorted(
+              (
+                  p for p in patches
+                  if isinstance(p, dict)
+                  and isinstance(p.get("fromVersionCode"), int)
+                  and isinstance(p.get("toVersionCode"), int)
+              ),
+              key=lambda p: (p["fromVersionCode"], p["toVersionCode"]),
+          )
+
+          output = {
+              "versionCode": int(os.environ["JEPPIRAN_VERSION_CODE"]),
+              "versionName": os.environ["JEPPIRAN_VERSION_NAME"],
+              "apkUrl": (
+                  "https://github.com/mahmet737ng-gif/JeppIran/"
+                  "releases/download/jeppiran-test/" + os.environ["APK_RELEASE"]
+              ),
+              "sha256": os.environ["APK_SHA256"],
+              "publishedAt": os.environ["PUBLISHED_AT"],
+              "updateMode": "delta-preferred",
+              "patches": patches,
+          }
+
+          with open(update_json, "w", encoding="utf-8") as fh:
+              json.dump(output, fh, indent=2)
+              fh.write("\n")
+          PY
+
           gh release upload jeppiran-test \
             "$APK_RELEASE" \
             --clobber
+
+          if [ -n "$PATCH_NAME" ] && [ -s "$PATCH_NAME" ]; then
+            gh release upload jeppiran-test \
+              "$PATCH_NAME" \
+              --clobber
+          fi
 
           gh release upload jeppiran-test \
             "$UPDATE_JSON" \
