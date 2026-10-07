@@ -17,30 +17,30 @@
 
     <style name="JeppIranMenuCard" parent="">
         <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">178dp</item>
+        <item name="android:layout_height">146dp</item>
         <item name="android:layout_columnWeight">1</item>
         <item name="android:layout_margin">6dp</item>
         <item name="android:clickable">true</item>
         <item name="android:focusable">true</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>
-        <item name="cardBackgroundColor">@color/jeppiran_surface</item>
+        <item name="cardBackgroundColor">#D91A4C78</item>
         <item name="cardCornerRadius">22dp</item>
-        <item name="cardElevation">1dp</item>
+        <item name="cardElevation">4dp</item>
         <item name="strokeColor">@color/jeppiran_card_stroke</item>
         <item name="strokeWidth">1dp</item>
     </style>
 
     <style name="JeppIranMenuIcon" parent="">
-        <item name="android:layout_width">56dp</item>
-        <item name="android:layout_height">56dp</item>
+        <item name="android:layout_width">76dp</item>
+        <item name="android:layout_height">76dp</item>
     </style>
 
     <style name="JeppIranMenuTitle" parent="">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">11dp</item>
+        <item name="android:layout_marginTop">6dp</item>
         <item name="android:textColor">@color/jeppiran_text</item>
-        <item name="android:textSize">21sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 
