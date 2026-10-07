@@ -78,7 +78,7 @@ class MainActivity :
         }
     }
 
-    private fun showUsageNoticeIfNeeded() {
+    private fun showUsageNoticeIfNeeded(): Boolean {
 
         val prefs =
             getSharedPreferences(
@@ -95,7 +95,7 @@ class MainActivity :
                 -1L
             ) == versionCode
         ) {
-            return
+            return false
         }
 
         val dark =
@@ -304,10 +304,53 @@ class MainActivity :
                 }
 
                 dialog.dismiss()
+
+                requestUpdateNotificationPermissionIfNeeded()
             }
         }
 
         dialog.show()
+
+        return true
+    }
+
+
+    private fun requestUpdateNotificationPermissionIfNeeded() {
+
+        if (
+            Build.VERSION.SDK_INT < 33 ||
+            checkSelfPermission(
+                android.Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+
+        val prefs =
+            getSharedPreferences(
+                "jeppiran_update_notifications",
+                MODE_PRIVATE
+            )
+
+        if (
+            prefs.getBoolean(
+                "permission_asked",
+                false
+            )
+        ) {
+            return
+        }
+
+        prefs.edit()
+            .putBoolean(
+                "permission_asked",
+                true
+            )
+            .apply()
+
+        notificationPermissionLauncher.launch(
+            android.Manifest.permission.POST_NOTIFICATIONS
+        )
     }
 
 
@@ -329,7 +372,19 @@ class MainActivity :
             R.layout.activity_main
         )
 
-        showUsageNoticeIfNeeded()
+        val usageNoticeShown =
+            showUsageNoticeIfNeeded()
+
+        UpdateNotificationScheduler
+            .schedule(
+                this
+            )
+
+        if (
+            !usageNoticeShown
+        ) {
+            requestUpdateNotificationPermissionIfNeeded()
+        }
 
         val mainView =
             findViewById<android.view.View>(

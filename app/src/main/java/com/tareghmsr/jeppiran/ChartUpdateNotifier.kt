@@ -6,31 +6,37 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import android.widget.Toast
 import org.json.JSONObject
 import java.net.HttpURLConnection
 import java.net.URL
+import java.text.SimpleDateFormat
 import java.util.Locale
+import java.util.TimeZone
 import kotlin.concurrent.thread
 
 object ChartUpdateNotifier {
 
     data class UpdateNotice(
         val version: String,
+        val cycle: String,
+        val effectiveFrom: String,
+        val effectiveTo: String,
         val changedAirports: List<String>
     ) {
-        val signature:
-            String
+        val signature: String
             get() =
-                version +
-                    ":" +
-                    changedAirports
-                        .joinToString(
-                            ","
-                        )
+                listOf(
+                    "data",
+                    version,
+                    cycle,
+                    effectiveFrom,
+                    effectiveTo,
+                    changedAirports.joinToString(",")
+                ).joinToString(":")
     }
-
 
     private const val REMOTE_MANIFEST =
         "https://raw.githubusercontent.com/mahmet737ng-gif/JeppIran/main/app/src/main/assets/charts-manifest.json"
@@ -38,162 +44,154 @@ object ChartUpdateNotifier {
     private const val PREFS =
         "jeppiran_update_notifications"
 
-    private const val LAST_NOTICE =
-        "last_notice"
+    private const val LAST_DATA_NOTICE =
+        "last_data_notice"
+
+    private const val LAST_APP_NOTICE =
+        "last_app_notice"
 
     private const val CHANNEL =
-        "chart_updates"
+        "jeppiran_updates"
 
-    private const val NOTIFICATION_ID =
-        2620
+    private const val DATA_NOTIFICATION_ID =
+        26201
 
+    private const val APP_NOTIFICATION_ID =
+        26202
 
     fun check(
         context: Context,
         callback: (UpdateNotice?) -> Unit
     ) {
-
-        val appContext =
-            context.applicationContext
-
+        val appContext = context.applicationContext
 
         thread(
-            name =
-                "JeppIran-UpdateNotifier"
+            name = "JeppIran-DataUpdateNotifier"
         ) {
-
             val notice =
                 runCatching {
+                    checkSync(appContext)
+                }.getOrNull()
 
-                    val remote =
-                        JSONObject(
-                            fetchText(
-                                appContext,
-                                REMOTE_MANIFEST
-                            )
-                        )
-
-
-                    val version =
-                        remote.optString(
-                            "version"
-                        )
-                            .trim()
-
-
-                    if (
-                        version.isBlank()
-                    ) {
-                        return@runCatching null
-                    }
-
-
-                    val repository =
-                        ChartRepository(
-                            appContext
-                        )
-
-
-                    val remoteAirports =
-                        remote.optJSONObject(
-                            "airports"
-                        )
-                            ?: return@runCatching null
-
-
-                    val changed =
-                        mutableListOf<String>()
-
-
-                    val keys =
-                        remoteAirports.keys()
-
-
-                    while (
-                        keys.hasNext()
-                    ) {
-
-                        val icao =
-                            keys.next()
-                                .trim()
-                                .uppercase(
-                                    Locale.US
-                                )
-
-
-                        val remoteItem =
-                            remoteAirports
-                                .optJSONObject(
-                                    icao
-                                )
-                                    ?: continue
-
-
-                        val remoteSha =
-                            remoteItem
-                                .optString(
-                                    "sha256"
-                                )
-
-
-                        val localSha =
-                            repository
-                                .getAirportPdfInfo(
-                                    icao
-                                )
-                                .sha256
-
-
-                        if (
-                            remoteSha.isBlank() ||
-                            localSha.isBlank() ||
-                            remoteSha !=
-                                localSha
-                        ) {
-
-                            changed.add(
-                                icao
-                            )
-                        }
-                    }
-
-
-                    val localVersion =
-                        repository
-                            .getDataVersion()
-
-
-                    if (
-                        version ==
-                            localVersion &&
-                        changed.isEmpty()
-                    ) {
-
-                        null
-
-                    } else {
-
-                        UpdateNotice(
-                            version,
-                            changed.sorted()
-                        )
-                    }
-
-                }
-                    .getOrNull()
-
-
-            callback(
-                notice
-            )
+            callback(notice)
         }
     }
 
+    fun checkSync(
+        context: Context
+    ): UpdateNotice? {
+        val remote =
+            JSONObject(
+                fetchText(
+                    context,
+                    REMOTE_MANIFEST
+                )
+            )
+
+        val version =
+            remote.optString("version")
+                .trim()
+
+        if (version.isBlank()) {
+            return null
+        }
+
+        val cycle =
+            remote.optString("cycle")
+                .trim()
+                .ifBlank {
+                    extractCycle(
+                        remote.optString("source")
+                    )
+                }
+                .ifBlank {
+                    version.removePrefix("v")
+                }
+
+        val effectiveFrom =
+            remote.optString("effective_from")
+                .trim()
+
+        val effectiveTo =
+            remote.optString("effective_to")
+                .trim()
+
+        val repository =
+            ChartRepository(context)
+
+        val remoteAirports =
+            remote.optJSONObject("airports")
+                ?: return null
+
+        val changed =
+            mutableListOf<String>()
+
+        val keys =
+            remoteAirports.keys()
+
+        while (keys.hasNext()) {
+            val icao =
+                keys.next()
+                    .trim()
+                    .uppercase(Locale.US)
+
+            val remoteItem =
+                remoteAirports
+                    .optJSONObject(icao)
+                    ?: continue
+
+            val remoteSha =
+                remoteItem
+                    .optString("sha256")
+
+            val localSha =
+                repository
+                    .getAirportPdfInfo(icao)
+                    .sha256
+
+            if (
+                remoteSha.isBlank() ||
+                localSha.isBlank() ||
+                remoteSha != localSha
+            ) {
+                changed.add(icao)
+            }
+        }
+
+        val localVersion =
+            repository.getDataVersion()
+
+        if (
+            version == localVersion &&
+            changed.isEmpty()
+        ) {
+            return null
+        }
+
+        return UpdateNotice(
+            version = version,
+            cycle = cycle,
+            effectiveFrom = effectiveFrom,
+            effectiveTo = effectiveTo,
+            changedAirports = changed.sorted()
+        )
+    }
+
+    fun notificationsAllowed(
+        context: Context
+    ): Boolean =
+        Build.VERSION.SDK_INT < 33 ||
+            context.checkSelfPermission(
+                android.Manifest.permission.POST_NOTIFICATIONS
+            ) == PackageManager.PERMISSION_GRANTED
 
     fun postNotification(
         context: Context,
         notice: UpdateNotice
     ) {
+        if (!notificationsAllowed(context)) {
+            return
+        }
 
         val prefs =
             context.getSharedPreferences(
@@ -201,51 +199,173 @@ object ChartUpdateNotifier {
                 Context.MODE_PRIVATE
             )
 
-
         if (
             prefs.getString(
-                LAST_NOTICE,
+                LAST_DATA_NOTICE,
                 ""
-            ) ==
-            notice.signature
+            ) == notice.signature
         ) {
             return
         }
 
-
         val manager =
-            context.getSystemService(
-                Context.NOTIFICATION_SERVICE
+            notificationManager(context)
+
+        ensureChannel(manager)
+
+        val validity =
+            validityText(
+                notice.effectiveFrom,
+                notice.effectiveTo
             )
-                as NotificationManager
 
+        val title =
+            if (notice.cycle.isNotBlank()) {
+                "JEPPIRAN • Data Cycle " +
+                    notice.cycle
+            } else {
+                "JEPPIRAN • Data Cycle Update"
+            }
 
-        if (
-            Build.VERSION.SDK_INT >=
-            Build.VERSION_CODES.O
-        ) {
-
-            manager.createNotificationChannel(
-                NotificationChannel(
-                    CHANNEL,
-                    "Chart updates",
-                    NotificationManager
-                        .IMPORTANCE_DEFAULT
-                ).apply {
-
-                    description =
-                        "JEPPIRAN airport chart-cycle updates"
+        val text =
+            buildString {
+                if (notice.cycle.isNotBlank()) {
+                    append("Data Cycle ")
+                    append(notice.cycle)
+                    append(" is available")
+                } else {
+                    append("New chart data is available")
                 }
+
+                if (validity.isNotBlank()) {
+                    append(" • Valid ")
+                    append(validity)
+                }
+
+                append(". Tap to update.")
+            }
+
+        manager.notify(
+            DATA_NOTIFICATION_ID,
+            notificationBuilder(
+                context,
+                title,
+                text
+            ).build()
+        )
+
+        prefs.edit()
+            .putString(
+                LAST_DATA_NOTICE,
+                notice.signature
             )
+            .apply()
+    }
+
+    fun postAppNotification(
+        context: Context,
+        info: AppUpdateManager.UpdateInfo
+    ) {
+        if (!notificationsAllowed(context)) {
+            return
         }
 
+        val signature =
+            "app:" +
+                info.versionCode +
+                ":" +
+                info.versionName
 
+        val prefs =
+            context.getSharedPreferences(
+                PREFS,
+                Context.MODE_PRIVATE
+            )
+
+        if (
+            prefs.getString(
+                LAST_APP_NOTICE,
+                ""
+            ) == signature
+        ) {
+            return
+        }
+
+        val manager =
+            notificationManager(context)
+
+        ensureChannel(manager)
+
+        val title =
+            "JEPPIRAN • App Update"
+
+        val text =
+            "JEPPIRAN " +
+                info.versionName +
+                " is available. Tap to review and install the new app version."
+
+        manager.notify(
+            APP_NOTIFICATION_ID,
+            notificationBuilder(
+                context,
+                title,
+                text
+            ).build()
+        )
+
+        prefs.edit()
+            .putString(
+                LAST_APP_NOTICE,
+                signature
+            )
+            .apply()
+    }
+
+    fun showInAppNotice(
+        activity: Activity,
+        notice: UpdateNotice
+    ) {
+        val validity =
+            validityText(
+                notice.effectiveFrom,
+                notice.effectiveTo
+            )
+
+        val text =
+            buildString {
+                if (notice.cycle.isNotBlank()) {
+                    append("Data Cycle ")
+                    append(notice.cycle)
+                    append(" is available")
+                } else {
+                    append("New chart data is available")
+                }
+
+                if (validity.isNotBlank()) {
+                    append(" • Valid ")
+                    append(validity)
+                }
+
+                append(". Open Update.")
+            }
+
+        Toast.makeText(
+            activity,
+            text,
+            Toast.LENGTH_LONG
+        ).show()
+    }
+
+    private fun notificationBuilder(
+        context: Context,
+        title: String,
+        text: String
+    ): android.app.Notification.Builder {
         val intent =
             Intent(
                 context,
                 UpdateActivity::class.java
             )
-
 
         val pending =
             PendingIntent.getActivity(
@@ -256,246 +376,130 @@ object ChartUpdateNotifier {
                     PendingIntent.FLAG_IMMUTABLE
             )
 
-
-        val count =
-            notice.changedAirports.size
-
-
-        val text =
-            if (
-                count > 0
-            ) {
-
-                buildString {
-
-                    append(
-                        "Updated: "
-                    )
-
-                    notice.changedAirports
-                        .forEachIndexed {
-                            index,
-                            icao ->
-
-                            if (
-                                index >
-                                0
-                            ) {
-
-                                append(
-                                    "\n"
-                                )
-                            }
-
-
-                            val airportName =
-                                ChartRepository
-                                    .airport(
-                                        icao
-                                    )
-                                    ?.airportName
-                                    .orEmpty()
-
-
-                            append(
-                                "• "
-                            )
-
-                            append(
-                                icao
-                            )
-
-
-                            if (
-                                airportName.isNotBlank()
-                            ) {
-
-                                append(
-                                    " — "
-                                )
-
-                                append(
-                                    airportName
-                                )
-                            }
-                        }
-
-
-                    append(
-                        "\nTap to update."
-                    )
-                }
-
-            } else {
-
-                "New chart data " +
-                    notice.version +
-                    " is available."
-            }
-
-
         val builder =
             if (
                 Build.VERSION.SDK_INT >=
                 Build.VERSION_CODES.O
             ) {
-
                 android.app.Notification
                     .Builder(
                         context,
                         CHANNEL
                     )
-
             } else {
-
-                @Suppress(
-                    "DEPRECATION"
-                )
+                @Suppress("DEPRECATION")
                 android.app.Notification
-                    .Builder(
-                        context
-                    )
+                    .Builder(context)
             }
 
-
-        builder
+        return builder
             .setSmallIcon(
                 R.drawable.ic_jeppiran_launcher
             )
-            .setContentTitle(
-                if (
-                    count ==
-                    1
-                ) {
-
-                    notice.changedAirports
-                        .firstOrNull()
-                        ?.let {
-                            icao ->
-
-                            icao +
-                                " chart updated"
-                        }
-                        ?: "JEPPIRAN chart update"
-
-                } else {
-
-                    "JEPPIRAN • " +
-                        count +
-                        " airports updated"
-                }
-            )
-            .setContentText(
-                text
-            )
+            .setContentTitle(title)
+            .setContentText(text)
             .setStyle(
                 android.app.Notification
                     .BigTextStyle()
-                    .bigText(
-                        text
-                    )
+                    .bigText(text)
             )
-            .setAutoCancel(
-                true
-            )
-            .setContentIntent(
-                pending
-            )
-
-
-        manager.notify(
-            NOTIFICATION_ID,
-            builder.build()
-        )
-
-
-        prefs.edit()
-            .putString(
-                LAST_NOTICE,
-                notice.signature
-            )
-            .apply()
+            .setAutoCancel(true)
+            .setContentIntent(pending)
     }
 
+    private fun notificationManager(
+        context: Context
+    ): NotificationManager =
+        context.getSystemService(
+            Context.NOTIFICATION_SERVICE
+        ) as NotificationManager
 
-    fun showInAppNotice(
-        activity: Activity,
-        notice: UpdateNotice
+    private fun ensureChannel(
+        manager: NotificationManager
     ) {
-
-        val prefs =
-            activity.getSharedPreferences(
-                PREFS,
-                Context.MODE_PRIVATE
-            )
-
-
         if (
-            prefs.getString(
-                LAST_NOTICE,
-                ""
-            ) ==
-            notice.signature
+            Build.VERSION.SDK_INT >=
+            Build.VERSION_CODES.O
         ) {
-            return
+            manager.createNotificationChannel(
+                NotificationChannel(
+                    CHANNEL,
+                    "JEPPIRAN updates",
+                    NotificationManager.IMPORTANCE_DEFAULT
+                ).apply {
+                    description =
+                        "Application and chart data-cycle updates"
+                }
+            )
+        }
+    }
+
+    private fun extractCycle(
+        source: String
+    ): String =
+        Regex("(\\d{4})")
+            .find(source)
+            ?.groupValues
+            ?.getOrNull(1)
+            .orEmpty()
+
+    private fun validityText(
+        from: String,
+        to: String
+    ): String {
+        if (
+            from.isBlank() ||
+            to.isBlank()
+        ) {
+            return ""
         }
 
+        val input =
+            SimpleDateFormat(
+                "yyyy-MM-dd",
+                Locale.US
+            ).apply {
+                isLenient = false
+                timeZone =
+                    TimeZone.getTimeZone("UTC")
+            }
 
-        val count =
-            notice.changedAirports.size
+        val output =
+            SimpleDateFormat(
+                "d MMM",
+                Locale.US
+            ).apply {
+                timeZone =
+                    TimeZone.getTimeZone("UTC")
+            }
 
+        return runCatching {
+            val start =
+                input.parse(from)
+                    ?: return@runCatching ""
 
-        Toast.makeText(
-            activity,
-            if (
-                count > 0
-            ) {
+            val end =
+                input.parse(to)
+                    ?: return@runCatching ""
 
-                notice.changedAirports
-                    .joinToString(
-                        prefix =
-                            "Updated: ",
-                        separator =
-                            ", "
-                    ) +
-                    ". Open Update."
-
-            } else {
-
-                "New chart data available. Open Update."
-            },
-            Toast.LENGTH_LONG
-        ).show()
-
-
-        prefs.edit()
-            .putString(
-                LAST_NOTICE,
-                notice.signature
-            )
-            .apply()
+            output.format(start) +
+                "–" +
+                output.format(end)
+        }.getOrDefault("")
     }
-
 
     private fun fetchText(
         context: Context,
         address: String
     ): String {
-
-        var connection:
-            HttpURLConnection? =
+        var connection: HttpURLConnection? =
             null
 
-
         try {
-
             connection =
-                URL(
-                    address
-                )
+                URL(address)
                     .openConnection()
                     as HttpURLConnection
-
 
             connection.connectTimeout =
                 12000
@@ -508,37 +512,32 @@ object ChartUpdateNotifier {
 
             connection.setRequestProperty(
                 "User-Agent",
-                "JEPPIRAN/" + AppVersion.name(context) + " update notifier"
+                "JEPPIRAN/" +
+                    AppVersion.name(context) +
+                    " update notifier"
             )
-
 
             val code =
                 connection.responseCode
-
 
             if (
                 code !in
                 200..299
             ) {
-
                 error(
                     "HTTP " +
                         code
                 )
             }
 
-
             return connection
                 .inputStream
                 .bufferedReader()
                 .use {
                     reader ->
-
                     reader.readText()
                 }
-
         } finally {
-
             connection?.disconnect()
         }
     }

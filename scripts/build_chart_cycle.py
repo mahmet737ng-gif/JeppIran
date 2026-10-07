@@ -35,6 +35,8 @@ def main():
     parser.add_argument("--charts", required=True)
     parser.add_argument("--version", required=True)
     parser.add_argument("--cycle", required=True)
+    parser.add_argument("--effective-from", default="")
+    parser.add_argument("--effective-to", default="")
     parser.add_argument("--release-tag", required=True)
     parser.add_argument("--repo", default="mahmet737ng-gif/JeppIran")
     parser.add_argument("--out-dir", default="cycle-build")
@@ -139,6 +141,8 @@ def main():
         "source": pdf_path.name,
         "source_sha256": sha256_file(pdf_path),
         "cycle": args.cycle,
+        "effective_from": args.effective_from,
+        "effective_to": args.effective_to,
         "generated_at": generated,
         "pages": len(source),
         "airports": airports_manifest,
@@ -168,6 +172,8 @@ def main():
     change_report = {
         "version": args.version,
         "cycle": args.cycle,
+        "effective_from": args.effective_from,
+        "effective_to": args.effective_to,
         "changed_airports": sorted(changed),
         "removed_airports": removed,
         "changed_count": len(changed),
