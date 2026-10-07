@@ -7,7 +7,6 @@ import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.ScrollView
@@ -19,56 +18,655 @@ class ChartBriefingPanel(
     private val brief: ChartBriefingEngine.Brief,
     private val onClose: () -> Unit
 ) {
-    private val dark = (activity.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES
-    private val density = activity.resources.displayMetrics.density
-    private fun Int.dp()=(this*density).toInt()
-    private fun bg(color:Int,r:Int=12)=GradientDrawable().apply { setColor(color);cornerRadius=r.dp().toFloat();setStroke(1.dp(),if(dark) Color.rgb(42,73,101) else Color.rgb(205,216,226)) }
-    private fun text(s:String,size:Float=13f,bold:Boolean=false,color:Int=if(dark) Color.rgb(236,243,248) else Color.rgb(20,35,50))=TextView(activity).apply{
-        this.text=s;textSize=size;setTextColor(color);if(bold) typeface=Typeface.DEFAULT_BOLD;setPadding(10.dp(),7.dp(),10.dp(),7.dp())
-    }
+
+    private val dark =
+        (activity.resources.configuration.uiMode and
+            Configuration.UI_MODE_NIGHT_MASK) ==
+            Configuration.UI_MODE_NIGHT_YES
+
+    private val density =
+        activity.resources.displayMetrics.density
+
+    private fun Int.dp(): Int =
+        (this * density).toInt()
+
+    private fun panelColor(): Int =
+        if (dark) Color.rgb(3, 20, 42) else Color.rgb(245, 249, 252)
+
+    private fun cardColor(): Int =
+        if (dark) Color.rgb(7, 36, 63) else Color.WHITE
+
+    private fun primaryText(): Int =
+        if (dark) Color.rgb(239, 246, 250) else Color.rgb(19, 34, 49)
+
+    private fun secondaryText(): Int =
+        if (dark) Color.rgb(176, 195, 210) else Color.rgb(72, 92, 108)
+
+    private fun accent(): Int =
+        Color.rgb(35, 160, 238)
+
+    private fun border(): Int =
+        if (dark) Color.rgb(38, 74, 103) else Color.rgb(203, 216, 226)
+
+    private fun background(
+        color: Int,
+        radius: Int = 12,
+        strokeColor: Int = border()
+    ): GradientDrawable =
+        GradientDrawable().apply {
+            setColor(color)
+            cornerRadius = radius.dp().toFloat()
+            setStroke(1.dp(), strokeColor)
+        }
+
+    private fun text(
+        value: String,
+        size: Float = 13f,
+        bold: Boolean = false,
+        color: Int = primaryText()
+    ): TextView =
+        TextView(activity).apply {
+            text = value
+            textSize = size
+            setTextColor(color)
+            if (bold) {
+                typeface = Typeface.create("sans-serif-medium", Typeface.BOLD)
+            }
+            setPadding(10.dp(), 7.dp(), 10.dp(), 7.dp())
+        }
 
     fun show() {
-        val landscape=activity.resources.configuration.orientation==Configuration.ORIENTATION_LANDSCAPE
-        val scrim=FrameLayout(activity).apply { setBackgroundColor(Color.argb(110,0,0,0));isClickable=true }
-        val panel=LinearLayout(activity).apply {
-            orientation=LinearLayout.VERTICAL
-            background=bg(if(dark) Color.rgb(4,24,48) else Color.rgb(246,250,253),18)
-            elevation=20.dp().toFloat()
+        val landscape =
+            activity.resources.configuration.orientation ==
+                Configuration.ORIENTATION_LANDSCAPE
+
+        val scrim =
+            FrameLayout(activity).apply {
+                setBackgroundColor(
+                    if (landscape) {
+                        Color.argb(86, 0, 0, 0)
+                    } else {
+                        panelColor()
+                    }
+                )
+                isClickable = true
+                elevation = 120.dp().toFloat()
+            }
+
+        val panel =
+            LinearLayout(activity).apply {
+                orientation = LinearLayout.VERTICAL
+                background = background(panelColor(), if (landscape) 18 else 0)
+                elevation = 122.dp().toFloat()
+            }
+
+        fun closePanel() {
+            root.removeView(scrim)
+            onClose()
         }
-        val header=LinearLayout(activity).apply { orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL;setPadding(8.dp(),6.dp(),6.dp(),6.dp()) }
-        val titles=LinearLayout(activity).apply { orientation=LinearLayout.VERTICAL }
-        titles.addView(text(brief.title,19f,true))
-        titles.addView(text(brief.subtitle,11f,false,if(dark) Color.rgb(159,188,211) else Color.rgb(77,103,125)))
-        header.addView(titles,LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.WRAP_CONTENT,1f))
-        header.addView(text("×",28f).apply{gravity=Gravity.CENTER;contentDescription="Close briefing";setOnClickListener{root.removeView(scrim);onClose()}},
-            LinearLayout.LayoutParams(48.dp(),48.dp()))
+
+        val header =
+            LinearLayout(activity).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+                setPadding(10.dp(), 8.dp(), 6.dp(), 8.dp())
+            }
+
+        header.addView(
+            text("▣", 23f, true, accent()).apply {
+                gravity = Gravity.CENTER
+            },
+            LinearLayout.LayoutParams(42.dp(), 48.dp())
+        )
+
+        val titles =
+            LinearLayout(activity).apply {
+                orientation = LinearLayout.VERTICAL
+            }
+
+        titles.addView(
+            text(brief.title, 19f, true).apply {
+                setPadding(4.dp(), 3.dp(), 6.dp(), 0)
+            }
+        )
+
+        titles.addView(
+            text(brief.subtitle, 11.5f, false, secondaryText()).apply {
+                setPadding(4.dp(), 0, 6.dp(), 3.dp())
+            }
+        )
+
+        header.addView(
+            titles,
+            LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1f
+            )
+        )
+
+        header.addView(
+            text("×", 28f).apply {
+                gravity = Gravity.CENTER
+                contentDescription = "Close briefing"
+                setOnClickListener {
+                    closePanel()
+                }
+            },
+            LinearLayout.LayoutParams(50.dp(), 50.dp())
+        )
+
         panel.addView(header)
 
-        val tabs=LinearLayout(activity).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.CENTER_VERTICAL;setPadding(8.dp(),0,8.dp(),5.dp())}
-        val names=if(brief.phase==ChartBriefingEngine.Phase.APPROACH) listOf("Overview","Descent","Approach","Missed","Airport") else listOf("Overview","Route","Climb","Restrictions","Airport")
-        names.forEachIndexed{i,n->tabs.addView(text(n,11f,i==0,if(i==0) Color.rgb(38,155,255) else if(dark) Color.LTGRAY else Color.DKGRAY).apply{gravity=Gravity.CENTER;background=if(i==0) bg(if(dark) Color.rgb(8,51,88) else Color.rgb(230,244,255),7) else null},
-            LinearLayout.LayoutParams(0,42.dp(),1f))}
-        panel.addView(tabs)
+        val tabNames =
+            if (brief.phase == ChartBriefingEngine.Phase.APPROACH) {
+                linkedMapOf(
+                    "overview" to "Overview",
+                    "descent" to "Descent",
+                    "approach" to "Approach",
+                    "missed" to "Missed",
+                    "airport" to "Airport"
+                )
+            } else {
+                linkedMapOf(
+                    "overview" to "Overview",
+                    "route" to "Route",
+                    "climb" to "Climb",
+                    "restrictions" to "Restrictions",
+                    "airport" to "Airport"
+                )
+            }
 
-        val body=LinearLayout(activity).apply{orientation=LinearLayout.VERTICAL;setPadding(8.dp(),4.dp(),8.dp(),12.dp())}
-        brief.sections.forEach { sec ->
-            val card=LinearLayout(activity).apply{orientation=LinearLayout.VERTICAL;background=bg(if(dark) Color.rgb(8,35,61) else Color.WHITE,10)}
-            card.addView(text(sec.title,12f,true,if(dark) Color.rgb(151,205,247) else Color.rgb(15,86,143)))
-            sec.rows.forEach { row ->
-                val line=LinearLayout(activity).apply{orientation=LinearLayout.HORIZONTAL;gravity=Gravity.TOP}
-                line.addView(text(row.label,11f,true,if(dark) Color.rgb(181,197,210) else Color.rgb(70,87,102)),LinearLayout.LayoutParams(if(landscape) 150.dp() else 105.dp(),LinearLayout.LayoutParams.WRAP_CONTENT))
-                line.addView(text(row.value,12f,false,if(row.caution) Color.rgb(255,181,71) else if(dark) Color.WHITE else Color.rgb(20,35,50)),LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.WRAP_CONTENT,1f))
+        var selectedKey = "overview"
+
+        val tabStrip =
+            LinearLayout(activity).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+                setPadding(8.dp(), 0, 8.dp(), 6.dp())
+            }
+
+        val body =
+            LinearLayout(activity).apply {
+                orientation = LinearLayout.VERTICAL
+                setPadding(9.dp(), 5.dp(), 9.dp(), 14.dp())
+            }
+
+        val tabViews =
+            linkedMapOf<String, TextView>()
+
+        fun addWeatherCard() {
+            val weather = brief.weather
+
+            val card =
+                LinearLayout(activity).apply {
+                    orientation = LinearLayout.VERTICAL
+                    background = background(cardColor(), 10)
+                    setPadding(4.dp(), 2.dp(), 4.dp(), 4.dp())
+                }
+
+            card.addView(
+                text("CURRENT WEATHER", 12f, true, accent())
+            )
+
+            if (weather == null) {
+                card.addView(
+                    text(
+                        "No cached METAR yet. Use WX to refresh the current report.",
+                        12f,
+                        false,
+                        secondaryText()
+                    )
+                )
+            } else {
+                card.addView(
+                    text(
+                        weather.raw,
+                        11.5f,
+                        false,
+                        primaryText()
+                    )
+                )
+
+                val summary =
+                    LinearLayout(activity).apply {
+                        orientation = LinearLayout.HORIZONTAL
+                    }
+
+                summary.addView(
+                    text(
+                        "Ceiling",
+                        11f,
+                        true,
+                        secondaryText()
+                    ),
+                    LinearLayout.LayoutParams(
+                        90.dp(),
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+                )
+
+                summary.addView(
+                    text(
+                        weather.ceiling,
+                        11.5f,
+                        false,
+                        primaryText()
+                    ),
+                    LinearLayout.LayoutParams(
+                        0,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        1f
+                    )
+                )
+
+                card.addView(summary)
+
+                weather.visibility?.let { visibility ->
+                    val visRow =
+                        LinearLayout(activity).apply {
+                            orientation = LinearLayout.HORIZONTAL
+                        }
+
+                    visRow.addView(
+                        text(
+                            "Visibility",
+                            11f,
+                            true,
+                            secondaryText()
+                        ),
+                        LinearLayout.LayoutParams(
+                            90.dp(),
+                            LinearLayout.LayoutParams.WRAP_CONTENT
+                        )
+                    )
+
+                    visRow.addView(
+                        text(
+                            visibility,
+                            11.5f,
+                            false,
+                            Color.rgb(255, 184, 77)
+                        ),
+                        LinearLayout.LayoutParams(
+                            0,
+                            LinearLayout.LayoutParams.WRAP_CONTENT,
+                            1f
+                        )
+                    )
+
+                    card.addView(visRow)
+                }
+            }
+
+            body.addView(
+                card,
+                LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    setMargins(0, 0, 0, 8.dp())
+                }
+            )
+        }
+
+        fun addSection(section: ChartBriefingEngine.Section) {
+            val card =
+                LinearLayout(activity).apply {
+                    orientation = LinearLayout.VERTICAL
+                    background = background(cardColor(), 10)
+                    setPadding(4.dp(), 1.dp(), 4.dp(), 5.dp())
+                }
+
+            card.addView(
+                text(
+                    section.title,
+                    12f,
+                    true,
+                    if (dark) {
+                        Color.rgb(154, 207, 247)
+                    } else {
+                        Color.rgb(16, 88, 145)
+                    }
+                )
+            )
+
+            section.rows.forEach { row ->
+                val line =
+                    LinearLayout(activity).apply {
+                        orientation = LinearLayout.HORIZONTAL
+                        gravity = Gravity.TOP
+                    }
+
+                line.addView(
+                    text(
+                        row.label,
+                        11f,
+                        true,
+                        secondaryText()
+                    ),
+                    LinearLayout.LayoutParams(
+                        if (landscape) 150.dp() else 112.dp(),
+                        LinearLayout.LayoutParams.WRAP_CONTENT
+                    )
+                )
+
+                line.addView(
+                    text(
+                        row.value,
+                        12f,
+                        false,
+                        if (row.caution) {
+                            Color.rgb(255, 184, 77)
+                        } else {
+                            primaryText()
+                        }
+                    ),
+                    LinearLayout.LayoutParams(
+                        0,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        1f
+                    )
+                )
+
                 card.addView(line)
             }
-            body.addView(card,LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT).apply{setMargins(0,0,0,8.dp())})
+
+            body.addView(
+                card,
+                LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+                ).apply {
+                    setMargins(0, 0, 0, 8.dp())
+                }
+            )
         }
-        val scroll=ScrollView(activity).apply{addView(body)}
-        panel.addView(scroll,LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,0,1f))
-        scrim.addView(panel,FrameLayout.LayoutParams(if(landscape) 560.dp() else FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.MATCH_PARENT).apply{
-            gravity=if(landscape) Gravity.END else Gravity.CENTER
-            if(!landscape){setMargins(8.dp(),8.dp(),8.dp(),8.dp())}
-        })
-        scrim.setOnClickListener{ if(it===scrim){root.removeView(scrim);onClose()} }
-        root.addView(scrim,FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT,FrameLayout.LayoutParams.MATCH_PARENT))
+
+        fun updateTabs() {
+            tabViews.forEach { entry ->
+                val selected =
+                    entry.key == selectedKey
+
+                entry.value.apply {
+                    setTextColor(
+                        if (selected) {
+                            Color.WHITE
+                        } else {
+                            secondaryText()
+                        }
+                    )
+
+                    typeface =
+                        Typeface.create(
+                            "sans-serif-medium",
+                            if (selected) Typeface.BOLD else Typeface.NORMAL
+                        )
+
+                    background =
+                        if (selected) {
+                            background(
+                                if (dark) {
+                                    Color.rgb(0, 103, 163)
+                                } else {
+                                    Color.rgb(20, 132, 205)
+                                },
+                                8,
+                                accent()
+                            )
+                        } else {
+                            background(
+                                if (dark) {
+                                    Color.rgb(8, 33, 57)
+                                } else {
+                                    Color.rgb(238, 244, 248)
+                                },
+                                8
+                            )
+                        }
+                }
+            }
+        }
+
+        fun renderSelected() {
+            body.removeAllViews()
+
+            if (selectedKey == "overview" || selectedKey == "airport") {
+                addWeatherCard()
+            }
+
+            val selected =
+                brief.sections.filter {
+                    it.key == selectedKey
+                }
+
+            if (selected.isEmpty()) {
+                if (selectedKey == "airport") {
+                    val noImpact =
+                        ChartBriefingEngine.Section(
+                            key = "airport",
+                            title = "OPERATIONAL NOTAMS",
+                            rows = listOf(
+                                ChartBriefingEngine.Row(
+                                    "Status",
+                                    "No cached operational NOTAM affecting this chart."
+                                )
+                            )
+                        )
+                    addSection(noImpact)
+                }
+            } else {
+                selected.forEach {
+                    addSection(it)
+                }
+            }
+
+            if (selectedKey == "overview" && brief.notams.isNotEmpty()) {
+                val alert =
+                    LinearLayout(activity).apply {
+                        orientation = LinearLayout.HORIZONTAL
+                        gravity = Gravity.CENTER_VERTICAL
+                        background = background(
+                            if (dark) {
+                                Color.rgb(51, 39, 18)
+                            } else {
+                                Color.rgb(255, 247, 224)
+                            },
+                            10,
+                            Color.rgb(202, 143, 45)
+                        )
+                        setPadding(8.dp(), 4.dp(), 8.dp(), 4.dp())
+                    }
+
+                alert.addView(
+                    text(
+                        "⚠ " + brief.notams.size +
+                            " operational NOTAM" +
+                            if (brief.notams.size == 1) "" else "s",
+                        11.5f,
+                        true,
+                        Color.rgb(255, 184, 77)
+                    ),
+                    LinearLayout.LayoutParams(
+                        0,
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        1f
+                    )
+                )
+
+                alert.addView(
+                    text(
+                        "VIEW",
+                        11f,
+                        true,
+                        accent()
+                    ).apply {
+                        gravity = Gravity.CENTER
+                        setOnClickListener {
+                            selectedKey = "airport"
+                            updateTabs()
+                            renderSelected()
+                        }
+                    },
+                    LinearLayout.LayoutParams(
+                        64.dp(),
+                        42.dp()
+                    )
+                )
+
+                body.addView(alert)
+            }
+        }
+
+        tabNames.forEach { entry ->
+            val tab =
+                text(entry.value, 10.5f, false).apply {
+                    gravity = Gravity.CENTER
+                    setPadding(4.dp(), 0, 4.dp(), 0)
+                    setOnClickListener {
+                        selectedKey = entry.key
+                        updateTabs()
+                        renderSelected()
+                    }
+                }
+
+            tabViews[entry.key] = tab
+
+            tabStrip.addView(
+                tab,
+                LinearLayout.LayoutParams(
+                    0,
+                    42.dp(),
+                    1f
+                ).apply {
+                    setMargins(2.dp(), 0, 2.dp(), 0)
+                }
+            )
+        }
+
+        panel.addView(tabStrip)
+
+        val scroll =
+            ScrollView(activity).apply {
+                isFillViewport = true
+                overScrollMode = ScrollView.OVER_SCROLL_IF_CONTENT_SCROLLS
+                addView(body)
+            }
+
+        panel.addView(
+            scroll,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                0,
+                1f
+            )
+        )
+
+        val footer =
+            LinearLayout(activity).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER
+                setPadding(8.dp(), 6.dp(), 8.dp(), 10.dp())
+            }
+
+        val weatherButton =
+            text("☁  METAR / TAF", 11.5f, true).apply {
+                gravity = Gravity.CENTER
+                background = background(cardColor(), 9)
+                setOnClickListener {
+                    selectedKey = "overview"
+                    updateTabs()
+                    renderSelected()
+                }
+            }
+
+        val notamButton =
+            text("▤  NOTAM / INFO", 11.5f, true).apply {
+                gravity = Gravity.CENTER
+                background = background(cardColor(), 9)
+                setOnClickListener {
+                    selectedKey = "airport"
+                    updateTabs()
+                    renderSelected()
+                }
+            }
+
+        footer.addView(
+            weatherButton,
+            LinearLayout.LayoutParams(
+                0,
+                48.dp(),
+                1f
+            ).apply {
+                setMargins(0, 0, 4.dp(), 0)
+            }
+        )
+
+        footer.addView(
+            notamButton,
+            LinearLayout.LayoutParams(
+                0,
+                48.dp(),
+                1f
+            ).apply {
+                setMargins(4.dp(), 0, 0, 0)
+            }
+        )
+
+        panel.addView(footer)
+
+        updateTabs()
+        renderSelected()
+
+        val screenWidth =
+            activity.resources.displayMetrics.widthPixels
+
+        val panelWidth =
+            if (landscape) {
+                minOf(
+                    760.dp(),
+                    maxOf(
+                        520.dp(),
+                        (screenWidth * 0.56f).toInt()
+                    )
+                )
+            } else {
+                FrameLayout.LayoutParams.MATCH_PARENT
+            }
+
+        scrim.addView(
+            panel,
+            FrameLayout.LayoutParams(
+                panelWidth,
+                FrameLayout.LayoutParams.MATCH_PARENT
+            ).apply {
+                gravity =
+                    if (landscape) {
+                        Gravity.END
+                    } else {
+                        Gravity.CENTER
+                    }
+
+                if (!landscape) {
+                    setMargins(0, 0, 0, 0)
+                }
+            }
+        )
+
+        scrim.setOnClickListener {
+            if (it === scrim && landscape) {
+                closePanel()
+            }
+        }
+
+        root.addView(
+            scrim,
+            FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+            )
+        )
+
+        scrim.bringToFront()
     }
 }
