@@ -18,10 +18,12 @@ import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
+import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.FrameLayout
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.PopupMenu
 import android.widget.ScrollView
@@ -59,6 +61,7 @@ class ChartsActivity : AppCompatActivity() {
     private lateinit var airportCountText: TextView
     private lateinit var sortText: TextView
     private lateinit var regionText: TextView
+    private lateinit var bottomNavigation: View
 
     private lateinit var repository: ChartRepository
 
@@ -120,7 +123,16 @@ class ChartsActivity : AppCompatActivity() {
         root = FrameLayout(this)
 
         root.addView(
-            AviationBackdropView(this),
+            ImageView(this).apply {
+                scaleType = ImageView.ScaleType.FIT_XY
+                setImageResource(
+                    if (isDarkTheme()) {
+                        R.drawable.ref_airport_body_dark
+                    } else {
+                        R.drawable.ref_airport_body_light
+                    }
+                )
+            },
             FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
                 FrameLayout.LayoutParams.MATCH_PARENT
@@ -140,10 +152,8 @@ class ChartsActivity : AppCompatActivity() {
             )
         )
 
-        contentRoot.addView(buildTopBar())
-        contentRoot.addView(buildTitleBlock())
-        contentRoot.addView(buildSearchBar())
-        contentRoot.addView(buildSummaryBar())
+        contentRoot.addView(buildReferenceHeader())
+        contentRoot.addView(buildReferenceSearchPanel())
 
         val scroll =
             ScrollView(this).apply {
@@ -155,7 +165,7 @@ class ChartsActivity : AppCompatActivity() {
         listContainer =
             LinearLayout(this).apply {
                 orientation = LinearLayout.VERTICAL
-                setPadding(14.dp, 4.dp, 14.dp, 20.dp)
+                setPadding(14.dp, 4.dp, 14.dp, 92.dp)
             }
 
         scroll.addView(
@@ -177,6 +187,18 @@ class ChartsActivity : AppCompatActivity() {
 
         setContentView(root)
 
+        bottomNavigation = buildReferenceBottomNavigation()
+
+        root.addView(
+            bottomNavigation,
+            FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                gravity = Gravity.BOTTOM
+            }
+        )
+
         ViewCompat.setOnApplyWindowInsetsListener(root) { _, insets ->
             val bars =
                 insets.getInsets(
@@ -187,13 +209,164 @@ class ChartsActivity : AppCompatActivity() {
                 bars.left,
                 bars.top,
                 bars.right,
-                bars.bottom
+                0
             )
+
+            (bottomNavigation.layoutParams as FrameLayout.LayoutParams).apply {
+                leftMargin = bars.left
+                rightMargin = bars.right
+                bottomMargin = bars.bottom
+                bottomNavigation.layoutParams = this
+            }
 
             insets
         }
 
         ViewCompat.requestApplyInsets(root)
+    }
+
+    private fun buildReferenceHeader(): View {
+        return ImageView(this).apply {
+            adjustViewBounds = true
+            scaleType = ImageView.ScaleType.FIT_XY
+            setImageResource(
+                if (isDarkTheme()) {
+                    R.drawable.ref_airport_header_dark
+                } else {
+                    R.drawable.ref_airport_header_light
+                }
+            )
+
+            setOnTouchListener { view, event ->
+                if (event.action != MotionEvent.ACTION_UP) {
+                    return@setOnTouchListener true
+                }
+
+                val x = event.x / view.width.coerceAtLeast(1)
+                val y = event.y / view.height.coerceAtLeast(1)
+
+                when {
+                    x < .15f && y < .55f -> showTopMenu(view)
+                    x in .68f..0.79f && y < .55f ->
+                        startActivity(Intent(this@ChartsActivity, WxActivity::class.java))
+                    x in .79f..0.90f && y < .55f ->
+                        startActivity(Intent(this@ChartsActivity, SimulatorActivity::class.java))
+                    x > .90f && y < .55f -> {
+                        ThemeManager.setTheme(
+                            this@ChartsActivity,
+                            if (isDarkTheme()) ThemeManager.LIGHT else ThemeManager.DARK
+                        )
+                        recreate()
+                    }
+                }
+
+                true
+            }
+        }
+    }
+
+    private fun buildReferenceSearchPanel(): View {
+        searchBox = EditText(this).apply {
+            visibility = View.INVISIBLE
+            addTextChangedListener(
+                object : TextWatcher {
+                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+                    override fun afterTextChanged(s: Editable?) = Unit
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                        renderAirports()
+                    }
+                }
+            )
+        }
+
+        return FrameLayout(this).apply {
+            addView(
+                ImageView(this@ChartsActivity).apply {
+                    adjustViewBounds = true
+                    scaleType = ImageView.ScaleType.FIT_XY
+                    setImageResource(
+                        if (isDarkTheme()) {
+                            R.drawable.ref_airport_search_dark
+                        } else {
+                            R.drawable.ref_airport_search_light
+                        }
+                    )
+                },
+                FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT
+                )
+            )
+
+            addView(
+                searchBox,
+                FrameLayout.LayoutParams(1.dp, 1.dp)
+            )
+
+            setOnTouchListener { view, event ->
+                if (event.action != MotionEvent.ACTION_UP) {
+                    return@setOnTouchListener true
+                }
+
+                val x = event.x / view.width.coerceAtLeast(1)
+                val y = event.y / view.height.coerceAtLeast(1)
+
+                when {
+                    y < .55f && x > .84f -> showSortDialog()
+                    y < .55f -> showAirportSearchDialog()
+                    x > .67f -> showRegionDialog()
+                    x > .32f -> showSortDialog()
+                }
+
+                true
+            }
+        }
+    }
+
+    private fun showAirportSearchDialog() {
+        val input = EditText(this).apply {
+            hint = "Search ICAO / Airport / City / Country"
+            isSingleLine = true
+            setText(searchBox.text)
+            setSelection(text.length)
+        }
+
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("Search airport")
+            .setView(input)
+            .setPositiveButton("SEARCH") { _, _ ->
+                searchBox.setText(input.text?.toString().orEmpty())
+            }
+            .setNegativeButton("CLEAR") { _, _ ->
+                searchBox.setText("")
+            }
+            .show()
+    }
+
+    private fun buildReferenceBottomNavigation(): View {
+        return ImageView(this).apply {
+            adjustViewBounds = true
+            scaleType = ImageView.ScaleType.FIT_XY
+            setImageResource(
+                if (isDarkTheme()) {
+                    R.drawable.ref_airport_bottom_dark
+                } else {
+                    R.drawable.ref_airport_bottom_light
+                }
+            )
+
+            setOnTouchListener { view, event ->
+                if (event.action == MotionEvent.ACTION_UP) {
+                    val x = event.x / view.width.coerceAtLeast(1)
+                    when {
+                        x > .75f -> showTopMenu(view)
+                        x in .25f..0.50f ->
+                            startActivity(Intent(this@ChartsActivity, EnrouteActivity::class.java))
+                    }
+                }
+                true
+            }
+        }
     }
 
     private fun buildTopBar(): View {
@@ -749,6 +922,11 @@ class ChartsActivity : AppCompatActivity() {
                 airport.icao
             ].orEmpty()
 
+        val airportImage =
+            airportReferenceImage(
+                airport.icao
+            )
+
         val card =
             FrameLayout(this).apply {
                 background = cardBackground()
@@ -765,25 +943,29 @@ class ChartsActivity : AppCompatActivity() {
                 }
             }
 
-        card.addView(
-            AirportArtView(
-                this,
-                airport.icao
-            ),
-            FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                170.dp
+        if (airportImage != 0) {
+            card.addView(
+                ImageView(this).apply {
+                    scaleType = ImageView.ScaleType.FIT_XY
+                    setImageResource(airportImage)
+                },
+                FrameLayout.LayoutParams(
+                    104.dp,
+                    112.dp
+                ).apply {
+                    gravity = Gravity.START or Gravity.TOP
+                }
             )
-        )
+        }
 
         val overlay =
             LinearLayout(this).apply {
                 orientation = LinearLayout.VERTICAL
                 setPadding(
-                    12.dp,
-                    10.dp,
-                    12.dp,
-                    9.dp
+                    7.dp,
+                    6.dp,
+                    7.dp,
+                    5.dp
                 )
             }
 
@@ -793,20 +975,33 @@ class ChartsActivity : AppCompatActivity() {
                 gravity = Gravity.CENTER_VERTICAL
             }
 
-        top.addView(
-            TextView(this).apply {
-                text = airport.icao
-                textSize = 18f
-                typeface = Typeface.DEFAULT_BOLD
-                gravity = Gravity.CENTER
-                setTextColor(Color.WHITE)
-                background = icaoBackground()
-            },
-            LinearLayout.LayoutParams(
-                82.dp,
-                58.dp
+        if (airportImage != 0) {
+            top.addView(
+                View(this),
+                LinearLayout.LayoutParams(
+                    104.dp,
+                    48.dp
+                )
             )
-        )
+        } else {
+            top.addView(
+                TextView(this).apply {
+                    text = airport.icao
+                    textSize = 16f
+                    typeface = Typeface.DEFAULT_BOLD
+                    gravity = Gravity.CENTER
+                    setTextColor(Color.WHITE)
+                    background = icaoBackground()
+                },
+                LinearLayout.LayoutParams(
+                    78.dp,
+                    48.dp
+                ).apply {
+                    marginStart = 12.dp
+                    marginEnd = 14.dp
+                }
+            )
+        }
 
         val names =
             LinearLayout(this).apply {
@@ -814,15 +1009,15 @@ class ChartsActivity : AppCompatActivity() {
                 setPadding(
                     12.dp,
                     0,
-                    6.dp,
+                    4.dp,
                     0
                 )
 
                 addView(
                     TextView(this@ChartsActivity).apply {
                         text = airport.airportName
-                        textSize = 16f
-                        maxLines = 2
+                        textSize = 13.5f
+                        maxLines = 1
                         typeface = Typeface.DEFAULT_BOLD
                         setTextColor(primaryText())
                     }
@@ -836,7 +1031,7 @@ class ChartsActivity : AppCompatActivity() {
                                 airport.city.titleCase() +
                                 " • " +
                                 meta.country
-                        textSize = 12f
+                        textSize = 10f
                         setTextColor(secondaryText())
                         setPadding(
                             0,
@@ -852,7 +1047,7 @@ class ChartsActivity : AppCompatActivity() {
             names,
             LinearLayout.LayoutParams(
                 0,
-                64.dp,
+                48.dp,
                 1f
             )
         )
@@ -863,8 +1058,8 @@ class ChartsActivity : AppCompatActivity() {
                 category
             ),
             LinearLayout.LayoutParams(
-                42.dp,
-                42.dp
+                32.dp,
+                32.dp
             )
         )
 
@@ -877,7 +1072,7 @@ class ChartsActivity : AppCompatActivity() {
                         category
                     }
 
-                textSize = 12f
+                textSize = 10f
                 typeface = Typeface.DEFAULT_BOLD
                 gravity = Gravity.CENTER
                 setTextColor(
@@ -891,10 +1086,10 @@ class ChartsActivity : AppCompatActivity() {
                     )
             },
             LinearLayout.LayoutParams(
-                64.dp,
-                34.dp
+                54.dp,
+                26.dp
             ).apply {
-                marginStart = 6.dp
+                marginStart = 4.dp
             }
         )
 
@@ -922,8 +1117,8 @@ class ChartsActivity : AppCompatActivity() {
                             }
                     }
 
-                maxLines = 2
-                textSize = 10.5f
+                maxLines = 1
+                textSize = 8.5f
 
                 setTextColor(
                     if (isDarkTheme()) {
@@ -942,10 +1137,10 @@ class ChartsActivity : AppCompatActivity() {
                 )
 
                 setPadding(
-                    94.dp,
+                    106.dp,
+                    0,
                     2.dp,
-                    2.dp,
-                    5.dp
+                    2.dp
                 )
             }
         )
@@ -981,8 +1176,8 @@ class ChartsActivity : AppCompatActivity() {
                 orientation = LinearLayout.HORIZONTAL
                 gravity = Gravity.CENTER
                 setPadding(
-                    82.dp,
-                    4.dp,
+                    102.dp,
+                    0,
                     0,
                     0
                 )
@@ -998,7 +1193,7 @@ class ChartsActivity : AppCompatActivity() {
             ),
             LinearLayout.LayoutParams(
                 0,
-                52.dp,
+                32.dp,
                 1f
             )
         )
@@ -1013,7 +1208,7 @@ class ChartsActivity : AppCompatActivity() {
             ),
             LinearLayout.LayoutParams(
                 0,
-                52.dp,
+                32.dp,
                 1f
             )
         )
@@ -1028,7 +1223,7 @@ class ChartsActivity : AppCompatActivity() {
             ),
             LinearLayout.LayoutParams(
                 0,
-                52.dp,
+                32.dp,
                 1f
             )
         )
@@ -1043,7 +1238,7 @@ class ChartsActivity : AppCompatActivity() {
             ),
             LinearLayout.LayoutParams(
                 0,
-                52.dp,
+                32.dp,
                 1f
             )
         )
@@ -1051,13 +1246,13 @@ class ChartsActivity : AppCompatActivity() {
         countRow.addView(
             TextView(this).apply {
                 text = "›"
-                textSize = 28f
+                textSize = 22f
                 gravity = Gravity.CENTER
                 setTextColor(primaryText())
             },
             LinearLayout.LayoutParams(
-                32.dp,
-                52.dp
+                24.dp,
+                32.dp
             )
         )
 
@@ -1067,7 +1262,7 @@ class ChartsActivity : AppCompatActivity() {
             overlay,
             FrameLayout.LayoutParams(
                 FrameLayout.LayoutParams.MATCH_PARENT,
-                170.dp
+                112.dp
             )
         )
 
@@ -1097,13 +1292,13 @@ class ChartsActivity : AppCompatActivity() {
             addView(
                 TextView(this@ChartsActivity).apply {
                     text = icon
-                    textSize = 18f
+                    textSize = 14f
                     setTextColor(accent())
                     gravity = Gravity.CENTER
                 },
                 LinearLayout.LayoutParams(
-                    28.dp,
-                    44.dp
+                    21.dp,
+                    28.dp
                 )
             )
 
@@ -1114,17 +1309,32 @@ class ChartsActivity : AppCompatActivity() {
                             "\n" +
                             count.toString()
 
-                    textSize = 9.5f
+                    textSize = 8f
                     typeface = Typeface.DEFAULT_BOLD
                     gravity = Gravity.CENTER_VERTICAL
                     setTextColor(primaryText())
                 },
                 LinearLayout.LayoutParams(
                     0,
-                    44.dp,
+                    28.dp,
                     1f
                 )
             )
+        }
+    }
+
+    private fun airportReferenceImage(
+        icao: String
+    ): Int {
+        val dark = isDarkTheme()
+
+        return when (icao.uppercase(Locale.US)) {
+            "OIAW" -> if (dark) R.drawable.ref_airport_oiaw_dark else R.drawable.ref_airport_oiaw_light
+            "OIII" -> if (dark) R.drawable.ref_airport_oiii_dark else R.drawable.ref_airport_oiii_light
+            "OITT" -> if (dark) R.drawable.ref_airport_oitt_dark else R.drawable.ref_airport_oitt_light
+            "LTFM" -> if (dark) R.drawable.ref_airport_ltfm_dark else R.drawable.ref_airport_ltfm_light
+            "UGTB" -> if (dark) R.drawable.ref_airport_ugtb_dark else R.drawable.ref_airport_ugtb_light
+            else -> 0
         }
     }
 

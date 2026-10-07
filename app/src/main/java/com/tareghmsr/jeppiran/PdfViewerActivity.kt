@@ -41,6 +41,7 @@ import android.view.animation.DecelerateInterpolator
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.HorizontalScrollView
+import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.ScrollView
@@ -182,6 +183,12 @@ private val locationPermissionLauncher =
 
     private lateinit var toolScroll:
         HorizontalScrollView
+
+    private lateinit var bottomToolbar:
+        LinearLayout
+
+    private lateinit var zoomLevelText:
+        TextView
 
     private lateinit var eraserModeBar:
         LinearLayout
@@ -1238,6 +1245,18 @@ private val locationPermissionLauncher =
             }
 
 
+        root.addView(
+            ImageView(this).apply {
+                scaleType = ImageView.ScaleType.FIT_XY
+                setImageResource(R.drawable.ref_viewer_body_dark)
+            },
+            FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+            )
+        )
+
+
         chartView =
             ChartView(
                 this
@@ -1253,13 +1272,15 @@ private val locationPermissionLauncher =
         )
 
 
-        buildTopToolbar()
+        buildReferenceTopToolbar()
 
         buildToolToolbar()
 
         buildChartTreePanel()
 
         buildMetarBanner()
+
+        buildReferenceBottomToolbar()
 
 
         setContentView(
@@ -1270,6 +1291,348 @@ private val locationPermissionLauncher =
         applyInsets()
 
         startMetarPolling()
+    }
+
+
+    private fun buildReferenceTopToolbar() {
+
+        topToolbar =
+            LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                setBackgroundColor(Color.TRANSPARENT)
+            }
+
+
+        val headerFrame =
+            FrameLayout(this).apply {
+                addView(
+                    ImageView(this@PdfViewerActivity).apply {
+                        scaleType = ImageView.ScaleType.FIT_XY
+                        setImageResource(R.drawable.ref_viewer_header_dark)
+
+                        setOnTouchListener { view, event ->
+                            if (event.action != MotionEvent.ACTION_UP) {
+                                return@setOnTouchListener true
+                            }
+
+                            val x = event.x / view.width.coerceAtLeast(1)
+
+                            when {
+                                x < .12f -> finish()
+                                x < .25f -> toggleChartTree()
+                                x in .68f..0.79f -> toggleCachedMetarBanner()
+                                x in .79f..0.90f -> toggleAircraftPositionFromHeader()
+                                x > .90f -> {
+                                    ThemeManager.setTheme(
+                                        this@PdfViewerActivity,
+                                        if (isDarkTheme()) ThemeManager.LIGHT else ThemeManager.DARK
+                                    )
+                                    recreate()
+                                }
+                            }
+
+                            true
+                        }
+                    },
+                    FrameLayout.LayoutParams(
+                        FrameLayout.LayoutParams.MATCH_PARENT,
+                        FrameLayout.LayoutParams.MATCH_PARENT
+                    )
+                )
+
+                metarIcon =
+                    TextView(this@PdfViewerActivity).apply {
+                        text = ""
+                        background = null
+                        setOnClickListener {
+                            toggleCachedMetarBanner()
+                        }
+                    }
+
+                addView(
+                    metarIcon,
+                    FrameLayout.LayoutParams(
+                        52.dp,
+                        52.dp
+                    ).apply {
+                        gravity = Gravity.END or Gravity.CENTER_VERTICAL
+                        rightMargin = 104.dp
+                    }
+                )
+            }
+
+
+        topToolbar.addView(
+            headerFrame,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                56.dp
+            )
+        )
+
+
+        val titleFrame =
+            FrameLayout(this).apply {
+                setPadding(6.dp, 2.dp, 6.dp, 2.dp)
+            }
+
+
+        val titleRow =
+            LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+                background = viewerPanelBackground(18, true)
+                elevation = 8.dp.toFloat()
+                setPadding(5.dp, 2.dp, 5.dp, 2.dp)
+            }
+
+
+        titleRow.addView(
+            toolbarButton("‹", 28f).apply {
+                contentDescription = "Previous chart"
+                setOnClickListener { navigateWithinAirport(-1) }
+            },
+            toolbarButtonParams(46.dp)
+        )
+
+
+        titleText =
+            TextView(this).apply {
+                text = currentIcao + " • " + chartTitle.ifBlank { "Chart" }
+                textSize = 14.5f
+                typeface = Typeface.DEFAULT_BOLD
+                maxLines = 2
+                ellipsize = android.text.TextUtils.TruncateAt.END
+                gravity = Gravity.CENTER
+                setTextColor(Color.WHITE)
+                setPadding(9.dp, 0, 9.dp, 0)
+            }
+
+
+        titleRow.addView(
+            titleText,
+            LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                1f
+            )
+        )
+
+
+        titleRow.addView(
+            toolbarButton("›", 28f).apply {
+                contentDescription = "Next chart"
+                setOnClickListener { navigateWithinAirport(1) }
+            },
+            toolbarButtonParams(46.dp)
+        )
+
+
+        titleFrame.addView(
+            titleRow,
+            FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT
+            )
+        )
+
+
+        topToolbar.addView(
+            titleFrame,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                56.dp
+            )
+        )
+
+
+        root.addView(
+            topToolbar,
+            FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                112.dp
+            ).apply {
+                gravity = Gravity.TOP
+            }
+        )
+    }
+
+
+    private fun toggleAircraftPositionFromHeader() {
+        val enabled = !AircraftPositionStore.isEnabled(this)
+        AircraftPositionStore.setEnabled(this, enabled)
+
+        if (enabled) {
+            locationPermissionRequested = false
+            startGps()
+            updateGpsLabel()
+        } else {
+            stopGps()
+            handler.removeCallbacks(simulatorUpdateRunnable)
+            updateGpsText("Aircraft position OFF")
+            if (::chartView.isInitialized) chartView.invalidate()
+        }
+    }
+
+
+    private fun buildReferenceBottomToolbar() {
+
+        bottomToolbar =
+            LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+                setPadding(6.dp, 4.dp, 6.dp, 4.dp)
+                background = viewerPanelBackground(18, true)
+                elevation = 12.dp.toFloat()
+            }
+
+
+        bottomToolbar.addView(
+            toolbarButton("▰", 19f).apply {
+                contentDescription = "Chart layers"
+                setOnClickListener { toggleChartTree() }
+            },
+            toolbarButtonParams(48.dp)
+        )
+
+
+        pageText =
+            TextView(this).apply {
+                textSize = 10f
+                maxLines = 2
+                ellipsize = android.text.TextUtils.TruncateAt.END
+                gravity = Gravity.CENTER_VERTICAL
+                setTextColor(Color.WHITE)
+                setPadding(6.dp, 0, 4.dp, 0)
+            }
+
+
+        bottomToolbar.addView(
+            pageText,
+            LinearLayout.LayoutParams(
+                88.dp,
+                LinearLayout.LayoutParams.MATCH_PARENT
+            )
+        )
+
+
+        val zoomBox =
+            LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER
+                background = viewerPanelBackground(16, false)
+            }
+
+
+        zoomBox.addView(
+            toolbarButton("−", 22f).apply {
+                setOnClickListener {
+                    chartView.adjustZoom(-.25f)
+                    zoomLevelText.text = chartView.zoomPercent() + "%"
+                }
+            },
+            toolbarButtonParams(42.dp)
+        )
+
+
+        zoomLevelText =
+            TextView(this).apply {
+                text = "100%"
+                textSize = 14f
+                typeface = Typeface.DEFAULT_BOLD
+                gravity = Gravity.CENTER
+                setTextColor(Color.rgb(47, 217, 255))
+            }
+
+
+        zoomBox.addView(
+            zoomLevelText,
+            LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                1f
+            )
+        )
+
+
+        zoomBox.addView(
+            toolbarButton("+", 22f).apply {
+                setOnClickListener {
+                    chartView.adjustZoom(.25f)
+                    zoomLevelText.text = chartView.zoomPercent() + "%"
+                }
+            },
+            toolbarButtonParams(42.dp)
+        )
+
+
+        bottomToolbar.addView(
+            zoomBox,
+            LinearLayout.LayoutParams(
+                0,
+                48.dp,
+                1f
+            ).apply {
+                marginStart = 4.dp
+                marginEnd = 4.dp
+            }
+        )
+
+
+        bottomToolbar.addView(
+            toolbarButton("⛶", 18f).apply {
+                contentDescription = "Fullscreen"
+                setOnClickListener { toggleViewerControls() }
+            },
+            toolbarButtonParams(48.dp)
+        )
+
+
+        bottomToolbar.addView(
+            toolbarButton("•••", 17f).apply {
+                contentDescription = "More"
+                setOnClickListener { showReferenceViewerMenu(this) }
+            },
+            toolbarButtonParams(48.dp)
+        )
+
+
+        root.addView(
+            bottomToolbar,
+            FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                58.dp
+            ).apply {
+                gravity = Gravity.BOTTOM
+                leftMargin = 8.dp
+                rightMargin = 8.dp
+                bottomMargin = 5.dp
+            }
+        )
+    }
+
+
+    private fun showReferenceViewerMenu(anchor: View) {
+        android.widget.PopupMenu(this, anchor).apply {
+            menu.add("Invert chart")
+            menu.add("Reset view")
+            menu.add("Search")
+            setOnMenuItemClickListener { item ->
+                when (item.title.toString()) {
+                    "Invert chart" -> {
+                        invertChart = !invertChart
+                        chartView.setInverted(invertChart)
+                    }
+                    "Reset view" -> {
+                        chartView.resetView()
+                        zoomLevelText.text = "100%"
+                    }
+                    "Search" -> showSearchDialog()
+                }
+                true
+            }
+            show()
+        }
     }
 
 
@@ -1827,11 +2190,11 @@ private val locationPermissionLauncher =
             ).apply {
 
                 gravity =
-                    Gravity.TOP or
+                    Gravity.BOTTOM or
                         Gravity.CENTER_HORIZONTAL
 
-                topMargin =
-                    104.dp
+                bottomMargin =
+                    64.dp
             }
         )
 
@@ -2573,9 +2936,16 @@ private val locationPermissionLauncher =
                     as FrameLayout.LayoutParams
 
 
+            toolsParams.gravity =
+                Gravity.BOTTOM or
+                    Gravity.CENTER_HORIZONTAL
+
             toolsParams.topMargin =
-                insetTop +
-                    104.dp
+                0
+
+            toolsParams.bottomMargin =
+                insetBottom +
+                    64.dp
 
             toolsParams.leftMargin =
                 0
@@ -2586,6 +2956,28 @@ private val locationPermissionLauncher =
 
             toolScroll.layoutParams =
                 toolsParams
+
+
+            val bottomParams =
+                bottomToolbar.layoutParams
+                    as FrameLayout.LayoutParams
+
+
+            bottomParams.leftMargin =
+                insetLeft +
+                    8.dp
+
+            bottomParams.rightMargin =
+                insetRight +
+                    8.dp
+
+            bottomParams.bottomMargin =
+                insetBottom +
+                    5.dp
+
+
+            bottomToolbar.layoutParams =
+                bottomParams
 
 
             val eraserParams =
@@ -2679,7 +3071,7 @@ private val locationPermissionLauncher =
 
         val topInset =
             insetTop +
-                106.dp +
+                114.dp +
                 optionsHeight
 
 
@@ -2753,6 +3145,7 @@ private val locationPermissionLauncher =
             topInset,
             insetRight,
             insetBottom +
+                66.dp +
                 treeBottom
         )
 
@@ -4911,6 +5304,11 @@ private val locationPermissionLauncher =
             false
         )
 
+        setViewerChromeVisible(
+            bottomToolbar,
+            false
+        )
+
 
         if (
             ::eraserModeBar.isInitialized
@@ -5001,6 +5399,11 @@ private val locationPermissionLauncher =
 
         setViewerChromeVisible(
             toolScroll,
+            true
+        )
+
+        setViewerChromeVisible(
+            bottomToolbar,
             true
         )
 
@@ -7458,6 +7861,26 @@ private val locationPermissionLauncher =
         }
 
 
+        fun adjustZoom(delta: Float) {
+
+            scale =
+                (scale + delta)
+                    .coerceIn(
+                        1f,
+                        MAX_ZOOM
+                    )
+
+            constrainPan()
+            invalidate()
+        }
+
+
+        fun zoomPercent(): String =
+            (scale * 100f)
+                .toInt()
+                .toString()
+
+
         fun getStrokes():
             List<StoredStroke> {
 
@@ -7626,22 +8049,9 @@ private val locationPermissionLauncher =
             )
 
 
-            canvas.drawColor(
-                if (
-                    inverted
-                ) {
-
-                    Color.WHITE
-
-                } else {
-
-                    Color.rgb(
-                        14,
-                        18,
-                        23
-                    )
-                }
-            )
+            if (inverted) {
+                canvas.drawColor(Color.WHITE)
+            }
 
 
             val image =
