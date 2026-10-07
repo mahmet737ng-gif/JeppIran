@@ -1582,6 +1582,23 @@ private val locationPermissionLauncher =
         )
 
 
+        actionRow.addView(
+            toolbarButton(
+                "BRIEF",
+                9.5f
+            ).apply {
+                contentDescription = "Chart briefing"
+                typeface = Typeface.DEFAULT_BOLD
+                setOnClickListener {
+                    showCurrentChartBriefing()
+                }
+            },
+            toolbarButtonParams(
+                54.dp
+            )
+        )
+
+
         aircraftPositionButton =
             toolbarButton(
                 "✈",
@@ -3452,6 +3469,23 @@ private val locationPermissionLauncher =
         showCurrentChart(
             false
         )
+    }
+
+
+    private fun showCurrentChartBriefing() {
+        val brief = ChartBriefingEngine.build(
+            context = this,
+            icao = currentIcao,
+            category = category,
+            chartTitle = chartTitle,
+            page = currentChartGlobalPage()
+        )
+        ChartBriefingPanel(
+            activity = this,
+            root = root,
+            brief = brief,
+            onClose = {}
+        ).show()
     }
 
 
