@@ -41,6 +41,9 @@ object ChartUpdateNotifier {
     private const val REMOTE_MANIFEST =
         "https://raw.githubusercontent.com/mahmet737ng-gif/JeppIran/main/app/src/main/assets/charts-manifest.json"
 
+    private const val REMOTE_ENROUTE_MANIFEST =
+        "https://raw.githubusercontent.com/mahmet737ng-gif/JeppIran/main/app/src/main/assets/enroute-manifest.json"
+
     private const val PREFS =
         "jeppiran_update_notifications"
 
@@ -50,6 +53,9 @@ object ChartUpdateNotifier {
     private const val LAST_APP_NOTICE =
         "last_app_notice"
 
+    private const val LAST_ENROUTE_NOTICE =
+        "last_enroute_notice"
+
     private const val CHANNEL =
         "jeppiran_updates"
 
@@ -58,6 +64,9 @@ object ChartUpdateNotifier {
 
     private const val APP_NOTIFICATION_ID =
         26202
+
+    private const val ENROUTE_NOTIFICATION_ID =
+        26203
 
     fun check(
         context: Context,
@@ -177,6 +186,169 @@ object ChartUpdateNotifier {
         )
     }
 
+    fun checkEnrouteSync(
+        context: Context
+    ): EnrouteUpdateStore.ManifestInfo? {
+
+        val raw =
+            fetchText(
+                context,
+                REMOTE_ENROUTE_MANIFEST
+            )
+
+        val info =
+            EnrouteUpdateStore
+                .parseInfo(
+                    raw
+                )
+
+        if (
+            !info.published ||
+            info.fileCount <=
+                0
+        ) {
+            return null
+        }
+
+        val activeCycle =
+            EnrouteUpdateStore
+                .activeCycle(
+                    context
+                )
+
+        return if (
+            activeCycle ==
+                info.cycle
+        ) {
+            null
+        } else {
+            info
+        }
+    }
+
+
+    fun postEnrouteNotification(
+        context: Context,
+        info: EnrouteUpdateStore.ManifestInfo
+    ) {
+        if (
+            !notificationsAllowed(
+                context
+            )
+        ) {
+            return
+        }
+
+        val signature =
+            listOf(
+                "enroute",
+                info.cycle,
+                info.products,
+                info.effectiveFrom,
+                info.effectiveTo
+            )
+                .joinToString(
+                    ":"
+                )
+
+        val prefs =
+            context
+                .getSharedPreferences(
+                    PREFS,
+                    Context.MODE_PRIVATE
+                )
+
+        if (
+            prefs.getString(
+                LAST_ENROUTE_NOTICE,
+                ""
+            ) ==
+            signature
+        ) {
+            return
+        }
+
+        val manager =
+            notificationManager(
+                context
+            )
+
+        ensureChannel(
+            manager
+        )
+
+        val validity =
+            validityText(
+                info.effectiveFrom,
+                info.effectiveTo
+            )
+
+        val title =
+            "JEPPIRAN • Enroute Data " +
+                info.cycle
+
+        val text =
+            buildString {
+                append(
+                    "Enroute Data "
+                )
+
+                append(
+                    info.cycle
+                )
+
+                if (
+                    info.products.isNotBlank()
+                ) {
+                    append(
+                        " • "
+                    )
+
+                    append(
+                        info.products
+                    )
+                }
+
+                append(
+                    " is available"
+                )
+
+                if (
+                    validity.isNotBlank()
+                ) {
+                    append(
+                        " • Valid "
+                    )
+
+                    append(
+                        validity
+                    )
+                }
+
+                append(
+                    ". Tap to update."
+                )
+            }
+
+        manager.notify(
+            ENROUTE_NOTIFICATION_ID,
+            notificationBuilder(
+                context,
+                title,
+                text
+            )
+                .build()
+        )
+
+        prefs.edit()
+            .putString(
+                LAST_ENROUTE_NOTICE,
+                signature
+            )
+            .apply()
+    }
+
+
     fun notificationsAllowed(
         context: Context
     ): Boolean =
@@ -221,20 +393,20 @@ object ChartUpdateNotifier {
 
         val title =
             if (notice.cycle.isNotBlank()) {
-                "JEPPIRAN • Data Cycle " +
+                "JEPPIRAN • Terminal Charts " +
                     notice.cycle
             } else {
-                "JEPPIRAN • Data Cycle Update"
+                "JEPPIRAN • Terminal Charts Update"
             }
 
         val text =
             buildString {
                 if (notice.cycle.isNotBlank()) {
-                    append("Data Cycle ")
+                    append("Terminal Charts ")
                     append(notice.cycle)
                     append(" is available")
                 } else {
-                    append("New chart data is available")
+                    append("New Terminal Charts data is available")
                 }
 
                 if (validity.isNotBlank()) {

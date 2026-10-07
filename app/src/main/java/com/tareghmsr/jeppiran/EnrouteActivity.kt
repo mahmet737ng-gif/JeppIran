@@ -46,8 +46,58 @@ class EnrouteActivity : AppCompatActivity() {
         addCard(content, "SIGMET / AIRSPACE", "Operational airspace and significant weather layer")
         addCard(content, "NAVIGATION", "Navaids, fixes and route planning workspace")
 
+        val enrouteInfo =
+            EnrouteUpdateStore
+                .bundledManifest(
+                    this
+                )
+
+        val activeCycle =
+            EnrouteUpdateStore
+                .activeCycle(
+                    this
+                )
+                .ifBlank {
+                    enrouteInfo
+                        ?.cycle
+                        .orEmpty()
+                }
+
         content.addView(TextView(this).apply {
-            text = "EN-ROUTE DATA USES THE ACTIVE JEPPIRAN CYCLE"
+            text =
+                buildString {
+                    append(
+                        "EN-ROUTE DATA"
+                    )
+
+                    if (
+                        activeCycle.isNotBlank()
+                    ) {
+                        append(
+                            " • "
+                        )
+
+                        append(
+                            activeCycle
+                        )
+                    }
+
+                    enrouteInfo
+                        ?.products
+                        ?.takeIf {
+                            it.isNotBlank()
+                        }
+                        ?.let {
+                            append(
+                                " • "
+                            )
+
+                            append(
+                                it
+                            )
+                        }
+                }
+
             textSize = 10f
             gravity = Gravity.CENTER
             setTextColor(getColor(R.color.jeppiran_text_secondary))

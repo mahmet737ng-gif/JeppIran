@@ -30,12 +30,17 @@ class UpdateActivity : AppCompatActivity() {
         private const val REMOTE_CHARTS = REMOTE_ROOT + "charts-current.json"
         private const val REMOTE_GEOREF = REMOTE_ROOT + "chart-georef.json"
         private const val REMOTE_CHANGES = REMOTE_ROOT + "chart-changes.json"
+        private const val REMOTE_ENROUTE_MANIFEST = REMOTE_ROOT + "enroute-manifest.json"
         private const val TIMEOUT = 20000
     }
 
     private lateinit var dataStatus: TextView
     private lateinit var dataDetails: TextView
     private lateinit var dataUpdateButton: Button
+
+    private lateinit var enrouteStatus: TextView
+    private lateinit var enrouteDetails: TextView
+    private lateinit var enrouteUpdateButton: Button
 
     private lateinit var appStatus: TextView
     private lateinit var appUpdateButton: Button
@@ -49,6 +54,10 @@ class UpdateActivity : AppCompatActivity() {
     private var remoteEffectiveFrom = ""
     private var remoteEffectiveTo = ""
     private var changedAirports = emptyList<String>()
+
+    private var remoteEnrouteManifestRaw = ""
+    private var remoteEnrouteInfo: EnrouteUpdateStore.ManifestInfo? = null
+
     private var remoteAppInfo: AppUpdateManager.UpdateInfo? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,9 +106,9 @@ class UpdateActivity : AppCompatActivity() {
             setPadding(0, 5.dp, 0, 18.dp)
         })
 
-        addSectionTitle(content, "DATA CYCLE")
+        addSectionTitle(content, "TERMINAL CHARTS")
 
-        dataStatus = statusCard("Checking available Data Cycle…")
+        dataStatus = statusCard("Checking available Terminal Charts…")
         content.addView(dataStatus)
 
         dataDetails = detailCard("Checking cycle validity…")
@@ -111,7 +120,7 @@ class UpdateActivity : AppCompatActivity() {
             ).apply { topMargin = 10.dp }
         )
 
-        dataUpdateButton = actionButton("UPDATE DATA CYCLE") {
+        dataUpdateButton = actionButton("UPDATE TERMINAL CHARTS") {
             installDataUpdate()
         }.apply {
             isEnabled = false
@@ -133,6 +142,48 @@ class UpdateActivity : AppCompatActivity() {
         }
         content.addView(viewChangesButton, buttonParams(8))
 
+        addSectionTitle(content, "ENROUTE DATA", 24)
+
+        enrouteStatus =
+            statusCard(
+                "Checking available Enroute Data…"
+            )
+
+        content.addView(
+            enrouteStatus
+        )
+
+        enrouteDetails =
+            detailCard(
+                "Checking Enroute validity…"
+            )
+
+        content.addView(
+            enrouteDetails,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                topMargin =
+                    10.dp
+            }
+        )
+
+        enrouteUpdateButton =
+            actionButton(
+                "UPDATE ENROUTE DATA"
+            ) {
+                installEnrouteUpdate()
+            }.apply {
+                isEnabled =
+                    false
+            }
+
+        content.addView(
+            enrouteUpdateButton,
+            buttonParams(12)
+        )
+
         addSectionTitle(content, "APPLICATION", 24)
 
         appStatus = statusCard("Checking application version…")
@@ -152,8 +203,9 @@ class UpdateActivity : AppCompatActivity() {
 
         content.addView(TextView(this).apply {
             text =
-                "Data Cycle updates chart metadata, georeferencing and cycle-change data without reinstalling the app. " +
-                "Update App downloads a signed JEPPIRAN APK, verifies its SHA-256 checksum, then opens the Android installer."
+                "Terminal Charts updates airport chart data and georeferencing. " +
+                "Enroute Data updates the separate FD / FS/M Enroute package. " +
+                "Update App downloads and verifies the signed JEPPIRAN APK."
             textSize = 12f
             setTextColor(secondaryTextColor())
             setPadding(4.dp, 18.dp, 4.dp, 0)
@@ -190,6 +242,7 @@ class UpdateActivity : AppCompatActivity() {
     private fun checkAllUpdates() {
         checkButton.isEnabled = false
         checkDataUpdate()
+        checkEnrouteUpdate()
         checkAppUpdate()
     }
 
@@ -296,7 +349,7 @@ class UpdateActivity : AppCompatActivity() {
                         changed.isEmpty()
                     ) {
                         dataStatus.text =
-                            "Data Cycle " +
+                            "Terminal Charts " +
                                 cycleLabel +
                                 " • Up to date"
 
@@ -308,7 +361,7 @@ class UpdateActivity : AppCompatActivity() {
                         dataUpdateButton.isEnabled = false
                     } else {
                         dataStatus.text =
-                            "Available Data Cycle • " +
+                            "Available Terminal Charts • " +
                                 cycleLabel
 
                         dataDetails.text =
@@ -323,7 +376,7 @@ class UpdateActivity : AppCompatActivity() {
                 }
             } catch (error: Throwable) {
                 runOnUiThread {
-                    dataStatus.text = "Unable to check Data Cycle"
+                    dataStatus.text = "Unable to check Terminal Charts"
                     dataDetails.text =
                         "Validity unavailable • " +
                             (error.message ?: "Network error")
@@ -332,6 +385,140 @@ class UpdateActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun checkEnrouteUpdate() {
+        enrouteUpdateButton.isEnabled =
+            false
+
+        enrouteStatus.text =
+            "Checking available Enroute Data…"
+
+        enrouteDetails.text =
+            "Checking Enroute validity…"
+
+        thread(
+            name =
+                "JeppIran-EnrouteUpdateCheck"
+        ) {
+            try {
+                val manifestRaw =
+                    fetchText(
+                        REMOTE_ENROUTE_MANIFEST
+                    )
+
+                val info =
+                    EnrouteUpdateStore
+                        .parseInfo(
+                            manifestRaw
+                        )
+
+                remoteEnrouteManifestRaw =
+                    manifestRaw
+
+                remoteEnrouteInfo =
+                    info
+
+                val activeCycle =
+                    EnrouteUpdateStore
+                        .activeCycle(
+                            this
+                        )
+
+                val validity =
+                    formatValidity(
+                        info.effectiveFrom,
+                        info.effectiveTo
+                    )
+
+                runOnUiThread {
+                    val productSuffix =
+                        info.products
+                            .takeIf {
+                                it.isNotBlank()
+                            }
+                            ?.let {
+                                " • " + it
+                            }
+                            .orEmpty()
+
+                    when {
+                        !info.published ||
+                            info.fileCount <=
+                                0 -> {
+
+                            enrouteStatus.text =
+                                "Enroute Data " +
+                                    info.cycle +
+                                    productSuffix
+
+                            enrouteDetails.text =
+                                validity.ifBlank {
+                                    "Validity dates not published"
+                                } +
+                                    " • Package not published"
+
+                            enrouteUpdateButton.isEnabled =
+                                false
+                        }
+
+                        activeCycle ==
+                            info.cycle -> {
+
+                            enrouteStatus.text =
+                                "Enroute Data " +
+                                    info.cycle +
+                                    productSuffix +
+                                    " • Up to date"
+
+                            enrouteDetails.text =
+                                validity.ifBlank {
+                                    "Validity dates not published"
+                                }
+
+                            enrouteUpdateButton.isEnabled =
+                                false
+                        }
+
+                        else -> {
+
+                            enrouteStatus.text =
+                                "Available Enroute Data • " +
+                                    info.cycle +
+                                    productSuffix
+
+                            enrouteDetails.text =
+                                validity.ifBlank {
+                                    "Validity dates not published"
+                                }
+
+                            enrouteUpdateButton.isEnabled =
+                                true
+                        }
+                    }
+
+                    refreshCheckButton()
+                }
+
+            } catch (
+                error: Throwable
+            ) {
+                runOnUiThread {
+                    enrouteStatus.text =
+                        "Unable to check Enroute Data"
+
+                    enrouteDetails.text =
+                        error.message
+                            ?: "Network error"
+
+                    enrouteUpdateButton.isEnabled =
+                        false
+
+                    refreshCheckButton()
+                }
+            }
+        }
+    }
+
 
     private fun checkAppUpdate() {
         appUpdateButton.isEnabled = false
@@ -454,6 +641,119 @@ class UpdateActivity : AppCompatActivity() {
             }
         }
     }
+
+    private fun installEnrouteUpdate() {
+        val info =
+            remoteEnrouteInfo
+
+        if (
+            info == null ||
+            remoteEnrouteManifestRaw.isBlank()
+        ) {
+            checkEnrouteUpdate()
+            return
+        }
+
+        if (
+            !info.published ||
+            info.fileCount <=
+                0
+        ) {
+            enrouteStatus.text =
+                "Enroute Data " +
+                    info.cycle +
+                    " • Package not published"
+
+            enrouteUpdateButton.isEnabled =
+                false
+
+            return
+        }
+
+        enrouteUpdateButton.isEnabled =
+            false
+
+        checkButton.isEnabled =
+            false
+
+        enrouteStatus.text =
+            "Downloading Enroute Data " +
+                info.cycle +
+                "…"
+
+        thread(
+            name =
+                "JeppIran-EnrouteUpdateInstall"
+        ) {
+            try {
+                EnrouteUpdateStore
+                    .activate(
+                        this,
+                        remoteEnrouteManifestRaw
+                    ) {
+                        progress ->
+
+                        runOnUiThread {
+                            enrouteStatus.text =
+                                "Downloading Enroute Data " +
+                                    info.cycle +
+                                    " • " +
+                                    progress +
+                                    "%"
+                        }
+                    }
+
+                runOnUiThread {
+                    val productSuffix =
+                        info.products
+                            .takeIf {
+                                it.isNotBlank()
+                            }
+                            ?.let {
+                                " • " + it
+                            }
+                            .orEmpty()
+
+                    enrouteStatus.text =
+                        "Enroute Data " +
+                            info.cycle +
+                            productSuffix +
+                            " • Up to date"
+
+                    enrouteDetails.text =
+                        formatValidity(
+                            info.effectiveFrom,
+                            info.effectiveTo
+                        ).ifBlank {
+                            "Validity dates not published"
+                        }
+
+                    enrouteUpdateButton.isEnabled =
+                        false
+
+                    refreshCheckButton()
+                }
+
+            } catch (
+                error: Throwable
+            ) {
+                runOnUiThread {
+                    enrouteStatus.text =
+                        "Enroute update failed"
+
+                    enrouteDetails.text =
+                        error.message
+                            ?: "Unable to install Enroute package"
+
+                    enrouteUpdateButton.isEnabled =
+                        true
+
+                    refreshCheckButton()
+                }
+            }
+        }
+    }
+
 
     private fun installAppUpdate() {
         val info = remoteAppInfo

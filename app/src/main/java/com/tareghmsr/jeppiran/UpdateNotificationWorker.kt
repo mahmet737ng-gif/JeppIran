@@ -57,6 +57,30 @@ class UpdateNotificationWorker(
         }
 
         try {
+            val enrouteNotice =
+                ChartUpdateNotifier
+                    .checkEnrouteSync(
+                        applicationContext
+                    )
+
+            if (
+                enrouteNotice !=
+                null
+            ) {
+                ChartUpdateNotifier
+                    .postEnrouteNotification(
+                        applicationContext,
+                        enrouteNotice
+                    )
+            }
+        } catch (
+            _: Throwable
+        ) {
+            temporaryFailure =
+                true
+        }
+
+        try {
             val appResult =
                 AppUpdateManager
                     .check(
