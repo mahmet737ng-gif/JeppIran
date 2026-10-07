@@ -1,0 +1,9 @@
+{
+  "schema": 1,
+  "cycle": "UNSET",
+  "source": "No bundled navigation data. Import a permitted dataset with scripts/import_enroute_geojson.py.",
+  "fixes": [],
+  "navaids": [],
+  "airways": [],
+  "airspaces": []
+}
