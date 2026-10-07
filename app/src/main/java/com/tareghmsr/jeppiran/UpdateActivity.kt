@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
-import android.util.TypedValue
 import android.view.Gravity
 import android.widget.Button
 import android.widget.LinearLayout
@@ -12,6 +11,7 @@ import android.widget.ScrollView
 import android.widget.TextView
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import org.json.JSONObject
@@ -669,63 +669,34 @@ class UpdateActivity : AppCompatActivity() {
 
 
     private fun primaryTextColor(): Int =
-        resolveColor(
-            android.R.attr.textColorPrimary,
-            Color.WHITE
+        ContextCompat.getColor(
+            this,
+            R.color.jeppiran_text
         )
 
     private fun secondaryTextColor(): Int =
-        resolveColor(
-            android.R.attr.textColorSecondary,
-            Color.LTGRAY
+        ContextCompat.getColor(
+            this,
+            R.color.jeppiran_text_secondary
         )
-
-    private fun resolveColor(
-        attr: Int,
-        fallback: Int
-    ): Int {
-        val value = TypedValue()
-
-        return if (
-            theme.resolveAttribute(
-                attr,
-                value,
-                true
-            )
-        ) {
-            value.data
-        } else {
-            fallback
-        }
-    }
 
     private fun cardBackground(): GradientDrawable =
         GradientDrawable().apply {
             shape = GradientDrawable.RECTANGLE
             cornerRadius = 14.dp.toFloat()
 
-            val base =
-                resolveColor(
-                    android.R.attr.colorBackground,
-                    Color.DKGRAY
-                )
-
             setColor(
-                Color.argb(
-                    220,
-                    Color.red(base),
-                    Color.green(base),
-                    Color.blue(base)
+                ContextCompat.getColor(
+                    this@UpdateActivity,
+                    R.color.jeppiran_surface
                 )
             )
 
             setStroke(
                 1.dp,
-                Color.argb(
-                    55,
-                    255,
-                    255,
-                    255
+                ContextCompat.getColor(
+                    this@UpdateActivity,
+                    R.color.jeppiran_card_stroke
                 )
             )
         }
