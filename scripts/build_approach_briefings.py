@@ -25,14 +25,22 @@ def frequencies(text: str):
     return values[:10]
 
 
-def final_course(text: str) -> str:
+def final_course(text: str, chart_name: str = "") -> str:
     patterns = [
-        r"(?:Final\s+Apch\s+Crs|Final\s+Approach\s+Course)\s*[:\-]?\s*(\d{3})(?:°|\b)",
-        r"(?:LOC|ILS)\s+COURSE\s*[:\-]?\s*(\d{3})(?:°|\b)",
-        r"FINAL\s+COURSE\s*[:\-]?\s*(\d{3})(?:°|\b)",
+        r"(?:Final\s+Apch\s+Crs|Final\s+Approach\s+Course)\s*[:\-]?\s*(\d{3})(?:°|\^|\b)",
+        r"(?:LOC|ILS)\s+COURSE\s*[:\-]?\s*(\d{3})(?:°|\^|\b)",
+        r"FINAL\s+COURSE\s*[:\-]?\s*(\d{3})(?:°|\^|\b)",
     ]
     for pattern in patterns:
         m = re.search(pattern, text, flags=re.I)
+        if m:
+            return m.group(1) + "°"
+
+    # JeppView text extraction can split the briefing-strip columns.  For VOR
+    # procedures the published radial is a safer literal fallback than
+    # inventing a course.
+    if "VOR" in chart_name.upper():
+        m = re.search(r"\bR[- ]?(\d{3})\b", text, flags=re.I)
         if m:
             return m.group(1) + "°"
     return ""
@@ -56,18 +64,47 @@ def section_after(text: str, labels, max_chars: int) -> str:
 
 
 def minima_summary(text: str) -> str:
-    # Keep a short, literal source fragment rather than attempting operational
-    # interpretation of Jeppesen minima tables.
-    for label in [
-        r"STRAIGHT-IN\s+LANDING",
-        r"DA\(H\)",
-        r"MDA\(H\)",
-        r"MINIMUMS",
-    ]:
-        m = re.search(label, text, flags=re.I)
-        if m:
-            start = max(0, m.start() - 24)
-            return clean(text[start:start + 320])
+    # JeppView often extracts the minima table out of visual order.  Keep only
+    # literal numeric values instead of returning a long polluted text block.
+    tail = text[-2600:]
+    pairs = []
+    for m in re.finditer(r"(?<!\d)(\d{3,4})'\s*\((\d{2,4})'\)", tail):
+        altitude = int(m.group(1))
+        height = int(m.group(2))
+        if 100 <= altitude <= 9999 and 20 <= height <= 5000:
+            pairs.append((altitude, height))
+    if not pairs:
+        return ""
+
+    altitude, height = min(pairs, key=lambda x: x[0])
+    visibility = ""
+    rvr = re.findall(r"\bR\s*(\d{3,4})\s*m\b", tail, flags=re.I)
+    if rvr:
+        visibility = f" • RVR {min(int(x) for x in rvr)} m"
+    else:
+        vis = re.findall(r"\bV\s*(\d{3,4})\s*m\b", tail, flags=re.I)
+        if vis:
+            visibility = f" • VIS {min(int(x) for x in vis)} m"
+
+    return f"Published {altitude}' ({height}')"+visibility
+
+
+def missed_approach_summary(text: str) -> str:
+    lines = [clean(x) for x in text.splitlines() if clean(x)]
+    starters = ("CLIMB ", "PROCEED ", "CONTINUE CLIMB ", "TURN ")
+    for i, line in enumerate(lines):
+        if not line.upper().startswith(starters):
+            continue
+        # A missed-approach instruction almost always includes a climb/turn and
+        # an altitude/fix.  Collect only until the first complete sentence.
+        chunk = line
+        for j in range(i + 1, min(i + 5, len(lines))):
+            if "." in chunk:
+                break
+            chunk += " " + lines[j]
+        chunk = clean(chunk)
+        if len(chunk) >= 24 and ("CLIMB" in chunk.upper() or "MISSED" in chunk.upper()):
+            return chunk[:420]
     return ""
 
 
@@ -96,12 +133,12 @@ def main():
                 "chart_number": chart.get("chart_number", ""),
                 "name": chart.get("name", ""),
                 "frequencies": frequencies(text),
-                "course": final_course(text),
+                "course": final_course(text, chart.get("name", "")),
                 "minimums": minima_summary(text),
-                "missed_approach": section_after(
+                "missed_approach": missed_approach_summary(text) or section_after(
                     text,
                     [r"MISSED\s+APCH\s*:", r"MISSED\s+APPROACH\s*:"],
-                    520,
+                    300,
                 ),
             }
         )
