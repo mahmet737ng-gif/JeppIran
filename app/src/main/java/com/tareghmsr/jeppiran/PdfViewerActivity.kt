@@ -234,6 +234,24 @@ private val locationPermissionLauncher =
     private lateinit var metarIcon:
         TextView
 
+    private var chartSuggestionBar:
+        LinearLayout? =
+        null
+
+    private var chartSuggestionText:
+        TextView? =
+        null
+
+    private var suggestedChartPage =
+        -1
+
+    private var lastCoveragePages:
+        Set<Int> =
+        emptySet()
+
+    private val dismissedSuggestionPages =
+        mutableSetOf<Int>()
+
     private lateinit var gpsText:
         TextView
 
@@ -1260,6 +1278,8 @@ private val locationPermissionLauncher =
         buildChartTreePanel()
 
         buildMetarBanner()
+
+        buildChartSuggestionBar()
 
 
         setContentView(
@@ -2429,6 +2449,192 @@ private val locationPermissionLauncher =
     }
 
 
+    private fun buildChartSuggestionBar() {
+        val bar =
+            LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+                setPadding(10.dp, 6.dp, 6.dp, 6.dp)
+                background = viewerPanelBackground(16, true)
+                elevation = 16.dp.toFloat()
+                visibility = View.GONE
+            }
+
+        val icon =
+            TextView(this).apply {
+                text = "▣"
+                textSize = 20f
+                gravity = Gravity.CENTER
+                setTextColor(Color.rgb(47, 217, 255))
+                contentDescription = "Chart available"
+            }
+
+        val label =
+            TextView(this).apply {
+                textSize = 12.5f
+                typeface = Typeface.DEFAULT_BOLD
+                setTextColor(primaryTextColor())
+                maxLines = 2
+                ellipsize = android.text.TextUtils.TruncateAt.END
+                setPadding(8.dp, 0, 8.dp, 0)
+            }
+
+        val close =
+            TextView(this).apply {
+                text = "×"
+                textSize = 22f
+                gravity = Gravity.CENTER
+                setTextColor(secondaryTextColor())
+                contentDescription = "Dismiss chart suggestion"
+                setOnClickListener {
+                    if (suggestedChartPage > 0) {
+                        dismissedSuggestionPages.add(suggestedChartPage)
+                    }
+                    hideChartSuggestion()
+                }
+            }
+
+        bar.addView(
+            icon,
+            LinearLayout.LayoutParams(
+                34.dp,
+                LinearLayout.LayoutParams.MATCH_PARENT
+            )
+        )
+
+        bar.addView(
+            label,
+            LinearLayout.LayoutParams(
+                0,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                1f
+            )
+        )
+
+        bar.addView(
+            close,
+            LinearLayout.LayoutParams(
+                38.dp,
+                LinearLayout.LayoutParams.MATCH_PARENT
+            )
+        )
+
+        bar.setOnClickListener {
+            val page = suggestedChartPage
+            if (page <= 0) return@setOnClickListener
+            val target = airportCharts.indexOfFirst { it.page == page }
+            if (target < 0 || target == currentChartIndex) {
+                hideChartSuggestion()
+                return@setOnClickListener
+            }
+            currentChartIndex = target
+            chartView.resetView()
+            hideChartSuggestion()
+            lastCoveragePages = emptySet()
+            showCurrentChart(false)
+        }
+
+        chartSuggestionBar = bar
+        chartSuggestionText = label
+
+        root.addView(
+            bar,
+            FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                54.dp
+            ).apply {
+                gravity = Gravity.TOP
+                leftMargin = 12.dp
+                rightMargin = 12.dp
+                topMargin = 110.dp
+            }
+        )
+    }
+
+    private fun hideChartSuggestion() {
+        suggestedChartPage = -1
+        chartSuggestionBar?.visibility = View.GONE
+    }
+
+    private fun showChartSuggestion(chart: ChartRepository.ChartInfo) {
+        if (chart.page == currentChartGlobalPage() || chart.page in dismissedSuggestionPages) {
+            hideChartSuggestion()
+            return
+        }
+        suggestedChartPage = chart.page
+        val shortName = chart.chartNumber.ifBlank { chart.name }
+        chartSuggestionText?.text =
+            "CHART AVAILABLE  •  " + shortName + "\nTap to open " + chart.name
+        chartSuggestionBar?.visibility = View.VISIBLE
+    }
+
+    private fun evaluateChartPerimeter(latitude: Double, longitude: Double) {
+        if (
+            !positionResumed ||
+            !AircraftPositionStore.isEnabled(this) ||
+            currentIcao.isBlank()
+        ) {
+            hideChartSuggestion()
+            return
+        }
+
+        val airportPages =
+            airportCharts
+                .filter {
+                    ChartRepository.normalizeCategory(it.category) == "Airport"
+                }
+                .map { it.page }
+
+        if (airportPages.isEmpty()) {
+            hideChartSuggestion()
+            return
+        }
+
+        val coverage =
+            ChartGeoreferenceStore.coveringPages(
+                this,
+                airportPages,
+                latitude,
+                longitude,
+                repository.getDataVersion()
+            )
+
+        val coveringPages = coverage.map { it.page }.toSet()
+        dismissedSuggestionPages.retainAll(coveringPages)
+
+        val currentPage = currentChartGlobalPage()
+        val currentArea = coverage.firstOrNull { it.page == currentPage }?.area
+        val newlyEntered = coveringPages - lastCoveragePages
+        lastCoveragePages = coveringPages
+
+        val candidateCoverage =
+            if (currentArea == null) {
+                coverage.firstOrNull { it.page != currentPage }
+            } else {
+                coverage.firstOrNull {
+                    it.page != currentPage &&
+                        it.area < currentArea * 0.90 &&
+                        (it.page in newlyEntered || suggestedChartPage == it.page)
+                }
+            }
+
+        val candidatePage = candidateCoverage?.page
+
+        if (candidatePage == null || candidatePage in dismissedSuggestionPages) {
+            if (suggestedChartPage !in coveringPages) {
+                hideChartSuggestion()
+            }
+            return
+        }
+
+        val chart =
+            airportCharts.firstOrNull { it.page == candidatePage }
+                ?: return
+
+        showChartSuggestion(chart)
+    }
+
+
     private fun buildMetarBanner() {
 
         metarBanner =
@@ -2981,6 +3187,8 @@ private val locationPermissionLauncher =
         }
 
 
+        hideChartSuggestion()
+        lastCoveragePages = emptySet()
         updateGpsLabel()
 
         expandedChartCategories.add(
@@ -6040,6 +6248,13 @@ private val locationPermissionLauncher =
             "GPS • ACTIVE"
         )
 
+        lastGpsLocation?.let {
+            evaluateChartPerimeter(
+                it.latitude,
+                it.longitude
+            )
+        }
+
 
         if (
             ::chartView.isInitialized
@@ -6092,6 +6307,11 @@ private val locationPermissionLauncher =
 
         updateGpsText(
             "SIM • ACTIVE"
+        )
+
+        evaluateChartPerimeter(
+            position.latitude,
+            position.longitude
         )
 
 
