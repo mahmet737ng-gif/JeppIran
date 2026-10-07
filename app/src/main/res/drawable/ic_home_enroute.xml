@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android" android:width="56dp" android:height="56dp" android:viewportWidth="56" android:viewportHeight="56">
-    <path android:fillColor="@android:color/transparent" android:strokeColor="#2FD9FF" android:strokeWidth="4" android:strokeLineCap="round" android:strokeLineJoin="round" android:pathData="M8,42 L20,31 L31,32 L43,20"/>
-    <path android:fillColor="#071A31" android:strokeColor="#F7FAFF" android:strokeWidth="3" android:pathData="M8,37 A5,5 0,1 0,8,47 A5,5 0,1 0,8,37"/>
-    <path android:fillColor="#071A31" android:strokeColor="#F7FAFF" android:strokeWidth="3" android:pathData="M20,27 A4,4 0,1 0,20,35 A4,4 0,1 0,20,27"/>
-    <path android:fillColor="#F7FAFF" android:pathData="M33,23 L47,7 L50,9 L45,22 L54,27 L52,30 L42,27 L35,34 L31,33 L36,26 Z"/>
+    <path android:fillColor="@android:color/transparent" android:strokeColor="@color/jeppiran_icon_primary" android:strokeWidth="4" android:strokeLineCap="round" android:strokeLineJoin="round" android:pathData="M8,42 L20,31 L31,32 L43,20"/>
+    <path android:fillColor="@color/jeppiran_icon_dark" android:strokeColor="@color/jeppiran_icon_light" android:strokeWidth="3" android:pathData="M8,37 A5,5 0,1 0,8,47 A5,5 0,1 0,8,37"/>
+    <path android:fillColor="@color/jeppiran_icon_dark" android:strokeColor="@color/jeppiran_icon_light" android:strokeWidth="3" android:pathData="M20,27 A4,4 0,1 0,20,35 A4,4 0,1 0,20,27"/>
+    <path android:fillColor="@color/jeppiran_icon_light" android:pathData="M33,23 L47,7 L50,9 L45,22 L54,27 L52,30 L42,27 L35,34 L31,33 L36,26 Z"/>
 </vector>
