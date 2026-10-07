@@ -4,19 +4,32 @@
     "sha256": "ee439abb9c582a42020eec738a370db9742c84f4aa198d7181ef0c5fe34933b4",
     "pageCount": 991,
     "chartDataVersion": "v18",
-    "cycle": "2026-20"
+    "cycle": "2620"
   },
   "processedPages": 991,
   "airportCount": 36,
-  "calibratedPageCount": 314,
+  "reusedUnchangedPageCount": 0,
+  "newlyExtractedPageCount": 533,
+  "calibratedPageCount": 533,
   "airports": [
     {
       "icao": "LTFM",
       "pageCount": 175,
       "calibratedPages": [
+        822,
+        823,
         825,
         828,
+        829,
+        830,
         831,
+        832,
+        835,
+        836,
+        837,
+        838,
+        839,
+        840,
         841,
         842,
         843,
@@ -24,6 +37,7 @@
         845,
         846,
         847,
+        848,
         849,
         850,
         851,
@@ -58,6 +72,9 @@
         880,
         881,
         882,
+        884,
+        885,
+        889,
         891,
         894,
         898,
@@ -84,22 +101,32 @@
         919,
         933,
         935,
+        936,
+        937,
         940,
+        941,
         943,
+        944,
         945,
+        946,
         947,
+        948,
         949,
         950,
         951,
         954,
+        955,
         956,
         959,
         960,
         961,
         962,
         963,
+        966,
         967,
+        968,
         969,
+        970,
         971,
         972,
         973,
@@ -109,17 +136,7 @@
         979,
         980
       ],
-      "notToScalePages": [
-        826,
-        833,
-        834,
-        938,
-        939,
-        942,
-        957,
-        958,
-        981
-      ],
+      "notToScalePages": [],
       "otherExcludedPages": [
         809,
         810,
@@ -134,27 +151,15 @@
         819,
         820,
         821,
-        822,
-        823,
         824,
+        826,
         827,
-        829,
-        830,
-        832,
-        835,
-        836,
-        837,
-        838,
-        839,
-        840,
-        848,
+        833,
+        834,
         883,
-        884,
-        885,
         886,
         887,
         888,
-        889,
         890,
         892,
         893,
@@ -175,22 +180,18 @@
         931,
         932,
         934,
-        936,
-        937,
-        941,
-        944,
-        946,
-        948,
+        938,
+        939,
+        942,
         952,
         953,
-        955,
+        957,
+        958,
         964,
         965,
-        966,
-        968,
-        970,
         977,
         978,
+        981,
         982,
         983
       ]
@@ -200,9 +201,12 @@
       "pageCount": 22,
       "calibratedPages": [
         9,
+        10,
         11,
+        13,
         14,
         15,
+        16,
         17
       ],
       "notToScalePages": [
@@ -212,15 +216,12 @@
         5,
         6,
         7,
-        8,
-        12,
-        18
+        8
       ],
       "otherExcludedPages": [
         1,
-        10,
-        13,
-        16,
+        12,
+        18,
         984,
         985,
         986,
@@ -250,11 +251,14 @@
       "pageCount": 25,
       "calibratedPages": [
         38,
+        41,
         42,
+        43,
         44,
         46,
         47,
         48,
+        49,
         50,
         51
       ],
@@ -274,10 +278,7 @@
         28,
         39,
         40,
-        41,
-        43,
-        45,
-        49
+        45
       ]
     },
     {
@@ -316,23 +317,12 @@
       "icao": "OIBK",
       "pageCount": 23,
       "calibratedPages": [
-        84,
-        85,
-        87
-      ],
-      "notToScalePages": [],
-      "otherExcludedPages": [
-        74,
-        75,
-        76,
-        77,
-        78,
         79,
         80,
         81,
-        82,
-        83,
-        86,
+        84,
+        85,
+        87,
         88,
         89,
         90,
@@ -342,6 +332,17 @@
         94,
         95,
         96
+      ],
+      "notToScalePages": [],
+      "otherExcludedPages": [
+        74,
+        75,
+        76,
+        77,
+        78,
+        82,
+        83,
+        86
       ]
     },
     {
@@ -356,33 +357,23 @@
         107,
         108,
         109,
-        110
+        111
       ],
       "notToScalePages": [
-        98,
         100,
         101
       ],
       "otherExcludedPages": [
         97,
+        98,
         102,
-        111
+        110
       ]
     },
     {
       "icao": "OICC",
       "pageCount": 27,
       "calibratedPages": [
-        128,
-        129,
-        132,
-        133,
-        136
-      ],
-      "notToScalePages": [],
-      "otherExcludedPages": [
-        112,
-        113,
         114,
         115,
         116,
@@ -397,33 +388,43 @@
         125,
         126,
         127,
-        130,
-        131,
+        128,
+        129,
+        132,
+        133,
         134,
         135,
+        136,
         137,
         138
+      ],
+      "notToScalePages": [],
+      "otherExcludedPages": [
+        112,
+        113,
+        130,
+        131
       ]
     },
     {
       "icao": "OICI",
       "pageCount": 11,
       "calibratedPages": [
+        141,
+        143,
         148,
         149
       ],
       "notToScalePages": [
         140,
-        142,
-        145,
-        147
+        142
       ],
       "otherExcludedPages": [
         139,
-        141,
-        143,
         144,
-        146
+        145,
+        146,
+        147
       ]
     },
     {
@@ -431,64 +432,53 @@
       "pageCount": 39,
       "calibratedPages": [
         154,
+        155,
+        156,
+        157,
+        158,
+        159,
         160,
+        162,
+        164,
+        166,
+        168,
         174,
         175,
         177,
         178,
         179,
-        181,
         182,
         183,
         184,
         187,
         188
       ],
-      "notToScalePages": [
-        161,
-        163,
-        165,
-        167,
-        173,
-        176,
-        180,
-        185,
-        186
-      ],
+      "notToScalePages": [],
       "otherExcludedPages": [
         150,
         151,
         152,
         153,
-        155,
-        156,
-        157,
-        158,
-        159,
-        162,
-        164,
-        166,
-        168,
+        161,
+        163,
+        165,
+        167,
         169,
         170,
         171,
-        172
+        172,
+        173,
+        176,
+        180,
+        181,
+        185,
+        186
       ]
     },
     {
       "icao": "OIGG",
       "pageCount": 31,
       "calibratedPages": [
-        208,
-        210,
-        213
-      ],
-      "notToScalePages": [],
-      "otherExcludedPages": [
-        189,
-        190,
-        191,
-        192,
         193,
         194,
         195,
@@ -503,16 +493,26 @@
         204,
         205,
         206,
-        207,
-        209,
+        208,
+        210,
         211,
         212,
+        213,
         214,
         215,
         216,
         217,
         218,
         219
+      ],
+      "notToScalePages": [],
+      "otherExcludedPages": [
+        189,
+        190,
+        191,
+        192,
+        207,
+        209
       ]
     },
     {
@@ -542,29 +542,6 @@
       "icao": "OIIE",
       "pageCount": 35,
       "calibratedPages": [
-        254,
-        256,
-        257,
-        264,
-        265,
-        266,
-        267
-      ],
-      "notToScalePages": [
-        239,
-        243,
-        253,
-        260,
-        261,
-        262,
-        263
-      ],
-      "otherExcludedPages": [
-        233,
-        234,
-        235,
-        236,
-        237,
         238,
         240,
         241,
@@ -575,12 +552,35 @@
         247,
         248,
         249,
-        250,
         251,
         252,
+        254,
+        256,
+        257,
+        264,
+        265,
+        266,
+        267
+      ],
+      "notToScalePages": [
+        253,
+        260,
+        262
+      ],
+      "otherExcludedPages": [
+        233,
+        234,
+        235,
+        236,
+        237,
+        239,
+        243,
+        250,
         255,
         258,
-        259
+        259,
+        261,
+        263
       ]
     },
     {
@@ -589,24 +589,27 @@
       "calibratedPages": [
         281,
         282,
+        283,
+        284,
+        285,
+        286,
+        287,
+        288,
+        289,
+        290,
         291,
         292,
+        293,
+        295,
+        297,
+        302,
+        303,
         304,
-        306,
-        309,
-        310,
+        311,
         312,
-        313,
         314
       ],
-      "notToScalePages": [
-        294,
-        296,
-        298,
-        299,
-        300,
-        301
-      ],
+      "notToScalePages": [],
       "otherExcludedPages": [
         268,
         269,
@@ -621,23 +624,19 @@
         278,
         279,
         280,
-        283,
-        284,
-        285,
-        286,
-        287,
-        288,
-        289,
-        290,
-        293,
-        295,
-        297,
-        302,
-        303,
+        294,
+        296,
+        298,
+        299,
+        300,
+        301,
         305,
+        306,
         307,
         308,
-        311
+        309,
+        310,
+        313
       ]
     },
     {
@@ -646,6 +645,7 @@
       "calibratedPages": [
         323,
         325,
+        326,
         327,
         328,
         329
@@ -661,16 +661,20 @@
       ],
       "otherExcludedPages": [
         315,
-        324,
-        326
+        324
       ]
     },
     {
       "icao": "OIKK",
       "pageCount": 17,
       "calibratedPages": [
+        332,
+        333,
+        334,
         341,
         343,
+        344,
+        345,
         346
       ],
       "notToScalePages": [
@@ -679,17 +683,12 @@
       "otherExcludedPages": [
         330,
         331,
-        332,
-        333,
-        334,
         335,
         336,
         337,
         338,
         340,
-        342,
-        344,
-        345
+        342
       ]
     },
     {
@@ -722,22 +721,23 @@
       "calibratedPages": [
         365,
         370,
-        372,
         374,
+        375,
         376,
+        380,
+        382,
+        390,
         392,
+        394,
         398,
+        399,
         400,
         401,
         402,
         403
       ],
       "notToScalePages": [
-        366,
-        367,
-        368,
         369,
-        373,
         377,
         378,
         379,
@@ -748,25 +748,24 @@
         386,
         387,
         388,
-        389,
-        395,
-        396,
-        397
+        389
       ],
       "otherExcludedPages": [
         361,
         362,
         363,
         364,
+        366,
+        367,
+        368,
         371,
-        375,
-        380,
-        382,
-        390,
+        372,
+        373,
         391,
         393,
-        394,
-        399
+        395,
+        396,
+        397
       ]
     },
     {
@@ -797,7 +796,6 @@
       "pageCount": 10,
       "calibratedPages": [
         421,
-        423,
         424,
         425,
         426
@@ -809,89 +807,57 @@
       ],
       "otherExcludedPages": [
         417,
-        422
+        422,
+        423
       ]
     },
     {
       "icao": "OING",
       "pageCount": 13,
       "calibratedPages": [
+        429,
+        431,
+        432,
         433,
         434,
         435,
         436,
         437,
+        438,
         439
       ],
       "notToScalePages": [],
       "otherExcludedPages": [
         427,
         428,
-        429,
-        430,
-        431,
-        432,
-        438
+        430
       ]
     },
     {
       "icao": "OINZ",
       "pageCount": 10,
       "calibratedPages": [
-        446
+        442,
+        443,
+        444,
+        445,
+        446,
+        448,
+        449
       ],
       "notToScalePages": [],
       "otherExcludedPages": [
         440,
         441,
-        442,
-        443,
-        444,
-        445,
-        447,
-        448,
-        449
+        447
       ]
     },
     {
       "icao": "OISS",
       "pageCount": 44,
       "calibratedPages": [
-        456,
-        484,
-        486,
-        489,
-        490,
-        493
-      ],
-      "notToScalePages": [
-        459,
-        463,
-        464,
-        465,
-        466,
-        467,
-        468,
-        469,
-        470,
-        471,
-        472,
-        475,
-        476,
-        477,
-        478,
-        479,
-        480,
-        481,
-        482
-      ],
-      "otherExcludedPages": [
-        450,
-        451,
-        452,
-        453,
-        454,
         455,
+        456,
         457,
         458,
         460,
@@ -899,12 +865,45 @@
         462,
         473,
         474,
-        483,
-        485,
+        484,
+        486,
         487,
         488,
+        489,
+        490,
         491,
-        492
+        492,
+        493
+      ],
+      "notToScalePages": [
+        463,
+        464,
+        469,
+        477
+      ],
+      "otherExcludedPages": [
+        450,
+        451,
+        452,
+        453,
+        454,
+        459,
+        465,
+        466,
+        467,
+        468,
+        470,
+        471,
+        472,
+        475,
+        476,
+        478,
+        479,
+        480,
+        481,
+        482,
+        483,
+        485
       ]
     },
     {
@@ -919,7 +918,8 @@
         517,
         518,
         519,
-        520
+        520,
+        521
       ],
       "notToScalePages": [
         496,
@@ -935,14 +935,13 @@
         506,
         507,
         508,
-        509,
-        511
+        509
       ],
       "otherExcludedPages": [
         494,
         495,
         510,
-        521
+        511
       ]
     },
     {
@@ -954,6 +953,7 @@
         536,
         537,
         538,
+        539,
         540,
         541,
         542
@@ -972,8 +972,7 @@
       "otherExcludedPages": [
         522,
         533,
-        534,
-        539
+        534
       ]
     },
     {
@@ -985,7 +984,8 @@
         555,
         556,
         558,
-        559
+        559,
+        560
       ],
       "notToScalePages": [
         545,
@@ -1001,7 +1001,6 @@
         544,
         554,
         557,
-        560,
         988,
         989,
         990,
@@ -1012,11 +1011,25 @@
       "icao": "OIYY",
       "pageCount": 26,
       "calibratedPages": [
+        563,
+        564,
+        565,
+        566,
+        567,
+        568,
+        570,
+        573,
+        574,
+        575,
         576,
+        578,
         579,
         580,
         581,
+        582,
+        583,
         584,
+        585,
         586
       ],
       "notToScalePages": [
@@ -1025,29 +1038,20 @@
       "otherExcludedPages": [
         561,
         562,
-        563,
-        564,
-        565,
-        566,
-        567,
-        568,
         569,
-        570,
         572,
-        573,
-        574,
-        575,
-        577,
-        578,
-        582,
-        583,
-        585
+        577
       ]
     },
     {
       "icao": "OIZC",
       "pageCount": 15,
       "calibratedPages": [
+        589,
+        590,
+        591,
+        592,
+        593,
         594,
         597,
         598,
@@ -1059,11 +1063,6 @@
       "otherExcludedPages": [
         587,
         588,
-        589,
-        590,
-        591,
-        592,
-        593,
         595,
         596
       ]
@@ -1072,6 +1071,20 @@
       "icao": "OIZH",
       "pageCount": 31,
       "calibratedPages": [
+        604,
+        605,
+        606,
+        607,
+        608,
+        609,
+        610,
+        611,
+        612,
+        613,
+        616,
+        617,
+        618,
+        619,
         622,
         624,
         625,
@@ -1091,21 +1104,7 @@
       "otherExcludedPages": [
         602,
         603,
-        604,
-        605,
-        606,
-        607,
-        608,
-        609,
-        610,
-        611,
-        612,
-        613,
         615,
-        616,
-        617,
-        618,
-        619,
         623
       ]
     },
@@ -1114,7 +1113,15 @@
       "pageCount": 56,
       "calibratedPages": [
         708,
+        710,
+        713,
+        714,
+        716,
         717,
+        718,
+        719,
+        720,
+        721,
         724,
         726,
         727,
@@ -1123,18 +1130,16 @@
         732,
         733,
         734,
+        739,
+        740,
+        741,
         742,
+        746,
         747,
-        750
+        748,
+        749
       ],
-      "notToScalePages": [
-        711,
-        737,
-        738,
-        743,
-        744,
-        745
-      ],
+      "notToScalePages": [],
       "otherExcludedPages": [
         695,
         696,
@@ -1150,16 +1155,9 @@
         706,
         707,
         709,
-        710,
+        711,
         712,
-        713,
-        714,
         715,
-        716,
-        718,
-        719,
-        720,
-        721,
         722,
         723,
         725,
@@ -1167,12 +1165,12 @@
         729,
         735,
         736,
-        739,
-        740,
-        741,
-        746,
-        748,
-        749
+        737,
+        738,
+        743,
+        744,
+        745,
+        750
       ]
     },
     {
@@ -1180,43 +1178,43 @@
       "pageCount": 34,
       "calibratedPages": [
         665,
-        674,
-        676,
-        683,
-        684,
-        685,
-        686,
-        693,
-        694
-      ],
-      "notToScalePages": [
-        678,
-        679,
-        680,
-        682,
-        687,
-        688,
-        689,
-        690
-      ],
-      "otherExcludedPages": [
-        661,
-        662,
-        663,
-        664,
         666,
         667,
         668,
         669,
         670,
         671,
-        672,
         673,
+        674,
+        676,
+        681,
+        683,
+        684,
+        685,
+        686,
+        692,
+        693,
+        694
+      ],
+      "notToScalePages": [
+        687
+      ],
+      "otherExcludedPages": [
+        661,
+        662,
+        663,
+        664,
+        672,
         675,
         677,
-        681,
-        691,
-        692
+        678,
+        679,
+        680,
+        682,
+        688,
+        689,
+        690,
+        691
       ]
     },
     {
@@ -1228,18 +1226,18 @@
         643
       ],
       "notToScalePages": [
-        635,
-        640,
-        641,
-        644,
-        645
+        635
       ],
       "otherExcludedPages": [
         633,
         634,
         637,
         638,
-        639
+        639,
+        640,
+        641,
+        644,
+        645
       ]
     },
     {
@@ -1249,22 +1247,21 @@
         648,
         649,
         652,
-        653
+        653,
+        659,
+        660
       ],
-      "notToScalePages": [
+      "notToScalePages": [],
+      "otherExcludedPages": [
+        646,
+        647,
         650,
         651,
+        654,
         655,
         656,
         657,
         658
-      ],
-      "otherExcludedPages": [
-        646,
-        647,
-        654,
-        659,
-        660
       ]
     },
     {
@@ -1272,28 +1269,28 @@
       "pageCount": 20,
       "calibratedPages": [
         752,
+        753,
+        754,
+        756,
+        757,
         758,
+        759,
         761,
         762,
-        763,
+        764,
         765,
-        767
+        770
       ],
       "notToScalePages": [],
       "otherExcludedPages": [
         751,
-        753,
-        754,
         755,
-        756,
-        757,
-        759,
         760,
-        764,
+        763,
         766,
+        767,
         768,
-        769,
-        770
+        769
       ]
     },
     {
@@ -1301,21 +1298,20 @@
       "pageCount": 12,
       "calibratedPages": [
         799,
-        804
+        800,
+        804,
+        805,
+        808
       ],
-      "notToScalePages": [
-        801
-      ],
+      "notToScalePages": [],
       "otherExcludedPages": [
         797,
         798,
-        800,
+        801,
         802,
         803,
-        805,
         806,
-        807,
-        808
+        807
       ]
     },
     {
@@ -1323,13 +1319,25 @@
       "pageCount": 26,
       "calibratedPages": [
         775,
+        776,
+        777,
+        780,
         782,
         783,
-        793
+        793,
+        794
       ],
       "notToScalePages": [
-        778,
+        778
+      ],
+      "otherExcludedPages": [
+        771,
+        772,
+        773,
+        774,
         779,
+        781,
+        784,
         785,
         786,
         787,
@@ -1337,19 +1345,7 @@
         789,
         790,
         791,
-        792
-      ],
-      "otherExcludedPages": [
-        771,
-        772,
-        773,
-        774,
-        776,
-        777,
-        780,
-        781,
-        784,
-        794,
+        792,
         795,
         796
       ]
@@ -1405,34 +1401,20 @@
       "status": "not_to_scale"
     },
     {
-      "page": 10,
-      "airport": "OIAA",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
       "page": 12,
       "airport": "OIAA",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
-    },
-    {
-      "page": 13,
-      "airport": "OIAA",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 16,
-      "airport": "OIAA",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
+      "sourceFingerprint": "0ce7126c10234a9427681b88ec57ba48435998cc6c659350eb71a39ec35ec523",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 18,
       "airport": "OIAA",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "ef608ef7685683a8f828d9adb79f94b4a97afb3d634d68a9f5d78c59d8007b86",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 19,
@@ -1531,27 +1513,9 @@
       "status": "no_graticule"
     },
     {
-      "page": 41,
-      "airport": "OIAW",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 43,
-      "airport": "OIAW",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
       "page": 45,
       "airport": "OIAW",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 49,
-      "airport": "OIAW",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "Printed grid has an inconsistent geographic scale or axis angle",
       "status": "needs_additional_control_points_or_review"
     },
     {
@@ -1651,27 +1615,9 @@
       "status": "no_graticule"
     },
     {
-      "page": 79,
-      "airport": "OIBK",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 80,
-      "airport": "OIBK",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 81,
-      "airport": "OIBK",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
       "page": 82,
       "airport": "OIBK",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
@@ -1687,60 +1633,6 @@
       "status": "no_graticule"
     },
     {
-      "page": 88,
-      "airport": "OIBK",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 89,
-      "airport": "OIBK",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 90,
-      "airport": "OIBK",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 91,
-      "airport": "OIBK",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 92,
-      "airport": "OIBK",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 93,
-      "airport": "OIBK",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 94,
-      "airport": "OIBK",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 95,
-      "airport": "OIBK",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 96,
-      "airport": "OIBK",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
       "page": 97,
       "airport": "OIBP",
       "reason": "No printed graticule labels",
@@ -1749,19 +1641,21 @@
     {
       "page": 98,
       "airport": "OIBP",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "1e3ef64703c8e14dc72cc7a7e9b533bf462c6ea2ae899a69ed9b472bb715e86e",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
     },
     {
       "page": 100,
       "airport": "OIBP",
-      "reason": "NOT TO SCALE printed on source page",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "not_to_scale"
     },
     {
       "page": 101,
       "airport": "OIBP",
-      "reason": "NOT TO SCALE printed on source page",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "not_to_scale"
     },
     {
@@ -1771,9 +1665,9 @@
       "status": "needs_additional_control_points_or_review"
     },
     {
-      "page": 111,
+      "page": 110,
       "airport": "OIBP",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "Invalid affine fit: rank 3, residual 0.806",
       "status": "needs_additional_control_points_or_review"
     },
     {
@@ -1789,90 +1683,6 @@
       "status": "no_graticule"
     },
     {
-      "page": 114,
-      "airport": "OICC",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 115,
-      "airport": "OICC",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 116,
-      "airport": "OICC",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 117,
-      "airport": "OICC",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 118,
-      "airport": "OICC",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 119,
-      "airport": "OICC",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 120,
-      "airport": "OICC",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 121,
-      "airport": "OICC",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 122,
-      "airport": "OICC",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 123,
-      "airport": "OICC",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 124,
-      "airport": "OICC",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 125,
-      "airport": "OICC",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 126,
-      "airport": "OICC",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 127,
-      "airport": "OICC",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
       "page": 130,
       "airport": "OICC",
       "reason": "No printed graticule labels",
@@ -1881,31 +1691,7 @@
     {
       "page": 131,
       "airport": "OICC",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 134,
-      "airport": "OICC",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 135,
-      "airport": "OICC",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 137,
-      "airport": "OICC",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 138,
-      "airport": "OICC",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "Printed grid has an inconsistent geographic scale or axis angle",
       "status": "needs_additional_control_points_or_review"
     },
     {
@@ -1921,22 +1707,10 @@
       "status": "not_to_scale"
     },
     {
-      "page": 141,
-      "airport": "OICI",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
       "page": 142,
       "airport": "OICI",
       "reason": "NOT TO SCALE printed on source page",
       "status": "not_to_scale"
-    },
-    {
-      "page": 143,
-      "airport": "OICI",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 144,
@@ -1947,8 +1721,10 @@
     {
       "page": 145,
       "airport": "OICI",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "a17041c97fb60a6403e4fbbc1e595d1db162ef24a837f63e3f70f906d8bd43b1",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 146,
@@ -1959,8 +1735,10 @@
     {
       "page": 147,
       "airport": "OICI",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "df8c2b6c6831debe8d505d1b34d10c8533bb318a7e13e662a8c987279ade32d5",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 150,
@@ -1983,91 +1761,45 @@
     {
       "page": 153,
       "airport": "OIFM",
-      "reason": "Invalid affine fit: rank 3, residual 1.056",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 155,
-      "airport": "OIFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 156,
-      "airport": "OIFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 157,
-      "airport": "OIFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 158,
-      "airport": "OIFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 159,
-      "airport": "OIFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "Invalid affine fit: rank 3, residual 0.772",
       "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 161,
       "airport": "OIFM",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
-    },
-    {
-      "page": 162,
-      "airport": "OIFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
+      "sourceFingerprint": "d7656c580fd3c81b54505a115a3e968b2aa89d35baac60c3395fb6264038f9ac",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 163,
       "airport": "OIFM",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
-    },
-    {
-      "page": 164,
-      "airport": "OIFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
+      "sourceFingerprint": "0df37631bf566cf0624881ccce81dd3634b2aeccbad974fd421bb997830264da",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 165,
       "airport": "OIFM",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
-    },
-    {
-      "page": 166,
-      "airport": "OIFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
+      "sourceFingerprint": "829cb97aff05b312c72c4b629548d0f2f2b68db11dab2bce4970a11846660301",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 167,
       "airport": "OIFM",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
-    },
-    {
-      "page": 168,
-      "airport": "OIFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
+      "sourceFingerprint": "b2f4e6aa752eeea979e4426b8fa5cfc5d2b333891e4e32becf411e558f6beaab",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 169,
       "airport": "OIFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
@@ -2091,32 +1823,48 @@
     {
       "page": 173,
       "airport": "OIFM",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "acb70392bf95114623b9acfcda996dd2548bf87adfc125f4894234c962b04ce8",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 176,
       "airport": "OIFM",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "ddb94c5f6ef9617a3a3c6b2d218c2ac9836f7859d16687f28ea3436fa0d57af8",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 180,
       "airport": "OIFM",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "4ee1a5d7c8bd484cee16c1d38b19995b16f536eaafa577b4e78a4b0be37fc767",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
+    },
+    {
+      "page": 181,
+      "airport": "OIFM",
+      "reason": "Printed grid has an inconsistent geographic scale or axis angle",
+      "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 185,
       "airport": "OIFM",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "9407a94b69f1a41691e0f2fdc29bb9bffb8b62c93a4e5400e0691748c673ad36",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 186,
       "airport": "OIFM",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "d02013629381db49c02f79b7bc8c247bd2570c423507700a4cc44c18c503eaa8",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 189,
@@ -2133,103 +1881,19 @@
     {
       "page": 191,
       "airport": "OIGG",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 192,
       "airport": "OIGG",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 193,
-      "airport": "OIGG",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 194,
-      "airport": "OIGG",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 195,
-      "airport": "OIGG",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 196,
-      "airport": "OIGG",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 197,
-      "airport": "OIGG",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 198,
-      "airport": "OIGG",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 199,
-      "airport": "OIGG",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 200,
-      "airport": "OIGG",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 201,
-      "airport": "OIGG",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 202,
-      "airport": "OIGG",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 203,
-      "airport": "OIGG",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 204,
-      "airport": "OIGG",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 205,
-      "airport": "OIGG",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 206,
-      "airport": "OIGG",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 207,
       "airport": "OIGG",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
@@ -2237,54 +1901,6 @@
       "airport": "OIGG",
       "reason": "No printed graticule labels",
       "status": "no_graticule"
-    },
-    {
-      "page": 211,
-      "airport": "OIGG",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 212,
-      "airport": "OIGG",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 214,
-      "airport": "OIGG",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 215,
-      "airport": "OIGG",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 216,
-      "airport": "OIGG",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 217,
-      "airport": "OIGG",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 218,
-      "airport": "OIGG",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 219,
-      "airport": "OIGG",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 220,
@@ -2325,7 +1941,7 @@
     {
       "page": 226,
       "airport": "OIHH",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "Conformal scale derivation falls outside the plan view",
       "status": "needs_additional_control_points_or_review"
     },
     {
@@ -2365,99 +1981,31 @@
       "status": "no_graticule"
     },
     {
-      "page": 238,
-      "airport": "OIIE",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
       "page": 239,
       "airport": "OIIE",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
-    },
-    {
-      "page": 240,
-      "airport": "OIIE",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 241,
-      "airport": "OIIE",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 242,
-      "airport": "OIIE",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
+      "sourceFingerprint": "c0f77708f206ea6f07c1424f555ae1c3d307a788c0c1cb3e7f472e0530aa6a23",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 243,
       "airport": "OIIE",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
-    },
-    {
-      "page": 244,
-      "airport": "OIIE",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 245,
-      "airport": "OIIE",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 246,
-      "airport": "OIIE",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 247,
-      "airport": "OIIE",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 248,
-      "airport": "OIIE",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 249,
-      "airport": "OIIE",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
+      "sourceFingerprint": "9e9a7bee9b25daab076c004692e33002269a6494209b8d2b4b76d72fa6b6d64a",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
     },
     {
       "page": 250,
       "airport": "OIIE",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 251,
-      "airport": "OIIE",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 252,
-      "airport": "OIIE",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 253,
       "airport": "OIIE",
-      "reason": "NOT TO SCALE printed on source page",
+      "reason": "Invalid affine fit: rank 3, residual 1.399",
       "status": "not_to_scale"
     },
     {
@@ -2481,26 +2029,30 @@
     {
       "page": 260,
       "airport": "OIIE",
-      "reason": "NOT TO SCALE printed on source page",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "not_to_scale"
     },
     {
       "page": 261,
       "airport": "OIIE",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "18906b48f4c8a7abb74d3c452b4fe3d15b52c38f19137c4a5ab8f710eb578676",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
     },
     {
       "page": 262,
       "airport": "OIIE",
-      "reason": "NOT TO SCALE printed on source page",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "not_to_scale"
     },
     {
       "page": 263,
       "airport": "OIIE",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "28e3c8746973bea85866702105e91afa73b8bd4aac5093d5e91ed5b852ba61af",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
     },
     {
       "page": 268,
@@ -2581,124 +2133,64 @@
       "status": "no_graticule"
     },
     {
-      "page": 283,
-      "airport": "OIII",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 284,
-      "airport": "OIII",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 285,
-      "airport": "OIII",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 286,
-      "airport": "OIII",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 287,
-      "airport": "OIII",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 288,
-      "airport": "OIII",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 289,
-      "airport": "OIII",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 290,
-      "airport": "OIII",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 293,
-      "airport": "OIII",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
       "page": 294,
       "airport": "OIII",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
-    },
-    {
-      "page": 295,
-      "airport": "OIII",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
+      "sourceFingerprint": "8d81c951a40849fb92b83ceba45a75c3763a5752a93ee1c6797c23259922ddaf",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
     },
     {
       "page": 296,
       "airport": "OIII",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
-    },
-    {
-      "page": 297,
-      "airport": "OIII",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
+      "sourceFingerprint": "d576f336d78955445294816b316da013736a98960e3a3fd4e1ac80efc8ef9cc8",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
     },
     {
       "page": 298,
       "airport": "OIII",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "cf12f121278cae290fd7d7532abe2fa31219e56b39e7fc04aa5599df97539b73",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
     },
     {
       "page": 299,
       "airport": "OIII",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "bbd37bab7a62cd91d95baf2e64d0663fa04ec323e74d9f0cf90decd0e3e8d254",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 300,
       "airport": "OIII",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "66b698eaee6e469e6389251625a23210fe03a8178186c59ddacf3474047f3d4d",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
     },
     {
       "page": 301,
       "airport": "OIII",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
-    },
-    {
-      "page": 302,
-      "airport": "OIII",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 303,
-      "airport": "OIII",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
+      "sourceFingerprint": "d5d4e12ff18dcdd28b1e3e650223e7614a82dca16758b0050ab2eee31ca8c5fc",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
     },
     {
       "page": 305,
       "airport": "OIII",
       "reason": "No printed graticule labels",
       "status": "no_graticule"
+    },
+    {
+      "page": 306,
+      "airport": "OIII",
+      "reason": "No measured latitude/longitude grid could be resolved",
+      "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 307,
@@ -2713,9 +2205,21 @@
       "status": "no_graticule"
     },
     {
-      "page": 311,
+      "page": 309,
       "airport": "OIII",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "Invalid affine fit: rank 3, residual 1.284",
+      "status": "needs_additional_control_points_or_review"
+    },
+    {
+      "page": 310,
+      "airport": "OIII",
+      "reason": "Invalid affine fit: rank 3, residual 1.282",
+      "status": "needs_additional_control_points_or_review"
+    },
+    {
+      "page": 313,
+      "airport": "OIII",
+      "reason": "Invalid affine fit: rank 3, residual 1.442",
       "status": "needs_additional_control_points_or_review"
     },
     {
@@ -2773,12 +2277,6 @@
       "status": "no_graticule"
     },
     {
-      "page": 326,
-      "airport": "OIIP",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
       "page": 330,
       "airport": "OIKK",
       "reason": "No printed graticule labels",
@@ -2791,57 +2289,39 @@
       "status": "no_graticule"
     },
     {
-      "page": 332,
-      "airport": "OIKK",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 333,
-      "airport": "OIKK",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 334,
-      "airport": "OIKK",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
       "page": 335,
       "airport": "OIKK",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 336,
       "airport": "OIKK",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 337,
       "airport": "OIKK",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 338,
       "airport": "OIKK",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 339,
       "airport": "OIKK",
-      "reason": "NOT TO SCALE printed on source page",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "not_to_scale"
     },
     {
       "page": 340,
       "airport": "OIKK",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
@@ -2849,18 +2329,6 @@
       "airport": "OIKK",
       "reason": "No printed graticule labels",
       "status": "no_graticule"
-    },
-    {
-      "page": 344,
-      "airport": "OIKK",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 345,
-      "airport": "OIKK",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 347,
@@ -2949,128 +2417,118 @@
     {
       "page": 366,
       "airport": "OIMM",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "c2a0fa058fa0ef9dbe6ecf1f258295f758479c3f6369e26e96c500824dde1813",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 367,
       "airport": "OIMM",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "aaa6a19365da268a5b362c8eb099c743e8c4963c5fea7c9b4e151ad1272017c2",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 368,
       "airport": "OIMM",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "ed1504331f4fb000ad2df602b005464f31b94c876b7038a2328460177f597744",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 369,
       "airport": "OIMM",
-      "reason": "NOT TO SCALE printed on source page",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "not_to_scale"
     },
     {
       "page": 371,
       "airport": "OIMM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "Invalid affine fit: rank 3, residual 2.001",
+      "status": "needs_additional_control_points_or_review"
+    },
+    {
+      "page": 372,
+      "airport": "OIMM",
+      "reason": "Invalid affine fit: rank 3, residual 2.002",
       "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 373,
       "airport": "OIMM",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
-    },
-    {
-      "page": 375,
-      "airport": "OIMM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
+      "sourceFingerprint": "215079f441da0105087986a62ca338c97c29c625961394a3a90033ba80040257",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 377,
       "airport": "OIMM",
-      "reason": "NOT TO SCALE printed on source page",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "not_to_scale"
     },
     {
       "page": 378,
       "airport": "OIMM",
-      "reason": "NOT TO SCALE printed on source page",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "not_to_scale"
     },
     {
       "page": 379,
       "airport": "OIMM",
-      "reason": "NOT TO SCALE printed on source page",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "not_to_scale"
-    },
-    {
-      "page": 380,
-      "airport": "OIMM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 381,
       "airport": "OIMM",
-      "reason": "NOT TO SCALE printed on source page",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "not_to_scale"
-    },
-    {
-      "page": 382,
-      "airport": "OIMM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 383,
       "airport": "OIMM",
-      "reason": "NOT TO SCALE printed on source page",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "not_to_scale"
     },
     {
       "page": 384,
       "airport": "OIMM",
-      "reason": "NOT TO SCALE printed on source page",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "not_to_scale"
     },
     {
       "page": 385,
       "airport": "OIMM",
-      "reason": "NOT TO SCALE printed on source page",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "not_to_scale"
     },
     {
       "page": 386,
       "airport": "OIMM",
-      "reason": "NOT TO SCALE printed on source page",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "not_to_scale"
     },
     {
       "page": 387,
       "airport": "OIMM",
-      "reason": "NOT TO SCALE printed on source page",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "not_to_scale"
     },
     {
       "page": 388,
       "airport": "OIMM",
-      "reason": "NOT TO SCALE printed on source page",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "not_to_scale"
     },
     {
       "page": 389,
       "airport": "OIMM",
-      "reason": "NOT TO SCALE printed on source page",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "not_to_scale"
-    },
-    {
-      "page": 390,
-      "airport": "OIMM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 391,
@@ -3085,34 +2543,28 @@
       "status": "no_graticule"
     },
     {
-      "page": 394,
-      "airport": "OIMM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
       "page": 395,
       "airport": "OIMM",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "a42256a5c1e1bac113fb980fb11a1be7e3544873b4f13aa7858cffb6573baa32",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 396,
       "airport": "OIMM",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "5faea2cf01221adf1868ed7cfef02d59171644dcb4e5ceb1081e0e08f05866ae",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
     },
     {
       "page": 397,
       "airport": "OIMM",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
-    },
-    {
-      "page": 399,
-      "airport": "OIMM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
+      "sourceFingerprint": "9fbe5d6ec51f1536d324ff2b382eec7ec51a45bf414ef1099304e48021e63821",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
     },
     {
       "page": 404,
@@ -3159,7 +2611,7 @@
     {
       "page": 411,
       "airport": "OIMN",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
@@ -3193,6 +2645,12 @@
       "status": "no_graticule"
     },
     {
+      "page": 423,
+      "airport": "OIMS",
+      "reason": "Invalid affine fit: rank 3, residual 0.804",
+      "status": "needs_additional_control_points_or_review"
+    },
+    {
       "page": 427,
       "airport": "OING",
       "reason": "No printed graticule labels",
@@ -3205,33 +2663,9 @@
       "status": "no_graticule"
     },
     {
-      "page": 429,
-      "airport": "OING",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
       "page": 430,
       "airport": "OING",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 431,
-      "airport": "OING",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 432,
-      "airport": "OING",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 438,
-      "airport": "OING",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
@@ -3247,46 +2681,10 @@
       "status": "no_graticule"
     },
     {
-      "page": 442,
-      "airport": "OINZ",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 443,
-      "airport": "OINZ",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 444,
-      "airport": "OINZ",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 445,
-      "airport": "OINZ",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
       "page": 447,
       "airport": "OINZ",
       "reason": "No printed graticule labels",
       "status": "no_graticule"
-    },
-    {
-      "page": 448,
-      "airport": "OINZ",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 449,
-      "airport": "OINZ",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 450,
@@ -3319,171 +2717,153 @@
       "status": "needs_additional_control_points_or_review"
     },
     {
-      "page": 455,
-      "airport": "OISS",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 457,
-      "airport": "OISS",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 458,
-      "airport": "OISS",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
       "page": 459,
       "airport": "OISS",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
-    },
-    {
-      "page": 460,
-      "airport": "OISS",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 461,
-      "airport": "OISS",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 462,
-      "airport": "OISS",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
+      "sourceFingerprint": "685c6a24ebb66e23c2cba764977d2d242929845dea548ad56f3cf72c000ed6ea",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 463,
       "airport": "OISS",
-      "reason": "NOT TO SCALE printed on source page",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "not_to_scale"
     },
     {
       "page": 464,
       "airport": "OISS",
-      "reason": "NOT TO SCALE printed on source page",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "not_to_scale"
     },
     {
       "page": 465,
       "airport": "OISS",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "eab99cd7d9c5c5f229a5b6ff423058e915c1bb518493fd6aa64fac08f60a857c",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
     },
     {
       "page": 466,
       "airport": "OISS",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "7f84db1ded0bfdd1d8aa991940ecd35bbe829f77aeb0f956cb9177e000f988a3",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
     },
     {
       "page": 467,
       "airport": "OISS",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "4e83e6edc2101fb295dd627fde91a558b0ed7092cf1a04444f28a07adceaee31",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
     },
     {
       "page": 468,
       "airport": "OISS",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "024a51393b2ca01cb37eae0b67feee9c7e235c1bf31aaf8b2fb23f8eb418c73d",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
     },
     {
       "page": 469,
       "airport": "OISS",
-      "reason": "NOT TO SCALE printed on source page",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "not_to_scale"
     },
     {
       "page": 470,
       "airport": "OISS",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "af4ada12b5bc1d209d491f94baafcb662ce77db2352a878bf1674a089c5526c2",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
     },
     {
       "page": 471,
       "airport": "OISS",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "d3f854140c0f367143be832cb02bf3ffb4d01414caf6da8a7f79c4365ee4a564",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 472,
       "airport": "OISS",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
-    },
-    {
-      "page": 473,
-      "airport": "OISS",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 474,
-      "airport": "OISS",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
+      "sourceFingerprint": "3731d757fd4c723c07cc17c553407126c98b45e3bae9ba4ac4fd137cfe866068",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 475,
       "airport": "OISS",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "eea8f8033519e0791aa6154326d9c3e2b1f5fe0c8ecb00784ee0e98b382e503c",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 476,
       "airport": "OISS",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "e255ecca468518aab58eddbef8697cb32151be96f8e93723ba54589745cc5e30",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 477,
       "airport": "OISS",
-      "reason": "NOT TO SCALE printed on source page",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "not_to_scale"
     },
     {
       "page": 478,
       "airport": "OISS",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "a4bd79ea0140f09f473d6ecc40ce716b80d4ddb3d0c1f35cdca8d9343cc35541",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
     },
     {
       "page": 479,
       "airport": "OISS",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "1aa0e7f24663797f3cec7e90b89501cafb090ee324c0769b4213c3b5c049ccec",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 480,
       "airport": "OISS",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "deb9f76668b7b1a332df5aaaa6197af4c8901e5ec60e2c806fca81886ac36f14",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
     },
     {
       "page": 481,
       "airport": "OISS",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "e533d37fec68f0f175fea22bddef38d20bb2bfe3e02354fc5861414e231916bd",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 482,
       "airport": "OISS",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "a34d628a07fbf0c5c86c696c46748aedcd495fa4d0a2794f3152e67936e9056d",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
     },
     {
       "page": 483,
       "airport": "OISS",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
@@ -3491,30 +2871,6 @@
       "airport": "OISS",
       "reason": "No printed graticule labels",
       "status": "no_graticule"
-    },
-    {
-      "page": 487,
-      "airport": "OISS",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 488,
-      "airport": "OISS",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 491,
-      "airport": "OISS",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 492,
-      "airport": "OISS",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 494,
@@ -3615,20 +2971,16 @@
     {
       "page": 510,
       "airport": "OITL",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "Printed grid has an inconsistent geographic scale or axis angle",
       "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 511,
       "airport": "OITL",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
-    },
-    {
-      "page": 521,
-      "airport": "OITL",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
+      "sourceFingerprint": "83bb9396441b509c8989edfc040f93039ce49ee7c5a070eb798f1e82e895708c",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 522,
@@ -3703,12 +3055,6 @@
       "status": "no_graticule"
     },
     {
-      "page": 539,
-      "airport": "OITR",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
       "page": 543,
       "airport": "OITT",
       "reason": "No printed graticule labels",
@@ -3771,13 +3117,7 @@
     {
       "page": 557,
       "airport": "OITT",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 560,
-      "airport": "OITT",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "Printed grid has an inconsistent geographic scale or axis angle",
       "status": "needs_additional_control_points_or_review"
     },
     {
@@ -3793,81 +3133,21 @@
       "status": "no_graticule"
     },
     {
-      "page": 563,
-      "airport": "OIYY",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 564,
-      "airport": "OIYY",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 565,
-      "airport": "OIYY",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 566,
-      "airport": "OIYY",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 567,
-      "airport": "OIYY",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 568,
-      "airport": "OIYY",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
       "page": 569,
       "airport": "OIYY",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 570,
-      "airport": "OIYY",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 571,
       "airport": "OIYY",
-      "reason": "NOT TO SCALE printed on source page",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "not_to_scale"
     },
     {
       "page": 572,
       "airport": "OIYY",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 573,
-      "airport": "OIYY",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 574,
-      "airport": "OIYY",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 575,
-      "airport": "OIYY",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
@@ -3875,30 +3155,6 @@
       "airport": "OIYY",
       "reason": "No printed graticule labels",
       "status": "no_graticule"
-    },
-    {
-      "page": 578,
-      "airport": "OIYY",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 582,
-      "airport": "OIYY",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 583,
-      "airport": "OIYY",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 585,
-      "airport": "OIYY",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 587,
@@ -3911,36 +3167,6 @@
       "airport": "OIZC",
       "reason": "No printed graticule labels",
       "status": "no_graticule"
-    },
-    {
-      "page": 589,
-      "airport": "OIZC",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 590,
-      "airport": "OIZC",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 591,
-      "airport": "OIZC",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 592,
-      "airport": "OIZC",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 593,
-      "airport": "OIZC",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 595,
@@ -3967,111 +3193,27 @@
       "status": "no_graticule"
     },
     {
-      "page": 604,
-      "airport": "OIZH",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 605,
-      "airport": "OIZH",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 606,
-      "airport": "OIZH",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 607,
-      "airport": "OIZH",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 608,
-      "airport": "OIZH",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 609,
-      "airport": "OIZH",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 610,
-      "airport": "OIZH",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 611,
-      "airport": "OIZH",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 612,
-      "airport": "OIZH",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 613,
-      "airport": "OIZH",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
       "page": 614,
       "airport": "OIZH",
-      "reason": "NOT TO SCALE printed on source page",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "not_to_scale"
     },
     {
       "page": 615,
       "airport": "OIZH",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 616,
-      "airport": "OIZH",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 617,
-      "airport": "OIZH",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 618,
-      "airport": "OIZH",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 619,
-      "airport": "OIZH",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 620,
       "airport": "OIZH",
-      "reason": "NOT TO SCALE printed on source page",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "not_to_scale"
     },
     {
       "page": 621,
       "airport": "OIZH",
-      "reason": "NOT TO SCALE printed on source page",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "not_to_scale"
     },
     {
@@ -4101,7 +3243,7 @@
     {
       "page": 637,
       "airport": "ORBI",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "Printed grid has an inconsistent geographic scale or axis angle",
       "status": "needs_additional_control_points_or_review"
     },
     {
@@ -4119,26 +3261,34 @@
     {
       "page": 640,
       "airport": "ORBI",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "e4e0fc79f0e79ccffb74227e2becea9ca1706dcbcab03af5fd465c865d440ed6",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 641,
       "airport": "ORBI",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "63bc5b61f78abcda8cdc070461ad345498694ce6f5cc11012a610a1e3fed6b02",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 644,
       "airport": "ORBI",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "9759f28ae6ce4aa5c399785d2d7728b24123d27e8c61e0bfaf09031c6172752f",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 645,
       "airport": "ORBI",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "bcb1dec366ea065dd785bad472ba6c516245061a9ffb78dcc50dc3e1782f6e31",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 646,
@@ -4155,14 +3305,18 @@
     {
       "page": 650,
       "airport": "ORNI",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "cbe8c5161a87593e600fd73f80e24eb4241ae1ec432f560c166f8a243e649e24",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 651,
       "airport": "ORNI",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "df4de6c05842faf313edd1d81e192cae37affdbdbf72ad008892ee786dbc1fe9",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 654,
@@ -4173,38 +3327,34 @@
     {
       "page": 655,
       "airport": "ORNI",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "a8083778b57562ca4c051d734db1946e882c894924b3cbb0d1f65ca5a75e2811",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 656,
       "airport": "ORNI",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "5ce1c4456fc65615b2c222a79c6966f6eceae2040a836db53e71093515f6cff1",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
     },
     {
       "page": 657,
       "airport": "ORNI",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "aefd6fec75045abd7b88a1059c38a038d7ce0adc99dd10e796163a659e4c2047",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 658,
       "airport": "ORNI",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
-    },
-    {
-      "page": 659,
-      "airport": "ORNI",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 660,
-      "airport": "ORNI",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
+      "sourceFingerprint": "568cbdeb0dcafaef6301bbcc3b762bd7a1b1e1c1dcf0c659e322f1c89f4fd49d",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 661,
@@ -4231,51 +3381,9 @@
       "status": "no_graticule"
     },
     {
-      "page": 666,
-      "airport": "OOMS",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 667,
-      "airport": "OOMS",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 668,
-      "airport": "OOMS",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 669,
-      "airport": "OOMS",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 670,
-      "airport": "OOMS",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 671,
-      "airport": "OOMS",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
       "page": 672,
       "airport": "OOMS",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 673,
-      "airport": "OOMS",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
@@ -4293,68 +3401,70 @@
     {
       "page": 678,
       "airport": "OOMS",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "98e8aca5d7e652f458da65090e8ff07014c520e547649c4c44cc0f8005a9ea11",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 679,
       "airport": "OOMS",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "cca65f10236e0c6289b5214e6a720cac560f107e6d61bb3cff1009b3a35f3758",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 680,
       "airport": "OOMS",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
-    },
-    {
-      "page": 681,
-      "airport": "OOMS",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
+      "sourceFingerprint": "ff6acf7f79d9d96e7e2e8fb1e90a53a97f7ce0224c78a7bf179345d0f0e9ae13",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 682,
       "airport": "OOMS",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "d503883b0547a9671e118ca92ddeb72ff56a6027cddfab33b77358e65a1a9f58",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 687,
       "airport": "OOMS",
-      "reason": "NOT TO SCALE printed on source page",
+      "reason": "Printed grid has an inconsistent geographic scale or axis angle",
       "status": "not_to_scale"
     },
     {
       "page": 688,
       "airport": "OOMS",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "69533dd335c22a9ab2e5b5af09a4092f7bc05a7e7f6a1d83ee231b58775f7305",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 689,
       "airport": "OOMS",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "3e2875c3c5c717d6f0d45981bb4833430fd17178ec8d9065a727e096e6cac01c",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 690,
       "airport": "OOMS",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "0989009dfbf060d20529c301285c70edd709820db3bfffe0ecfaf84d697cf64c",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 691,
       "airport": "OOMS",
       "reason": "No printed graticule labels",
       "status": "no_graticule"
-    },
-    {
-      "page": 692,
-      "airport": "OOMS",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 695,
@@ -4441,16 +3551,12 @@
       "status": "no_graticule"
     },
     {
-      "page": 710,
-      "airport": "OMDB",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
       "page": 711,
       "airport": "OMDB",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "3446640297029ac651c3259121d0271882d5d180b8b92eb79044ab60ae5d2c29",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 712,
@@ -4459,51 +3565,9 @@
       "status": "no_graticule"
     },
     {
-      "page": 713,
-      "airport": "OMDB",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 714,
-      "airport": "OMDB",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
       "page": 715,
       "airport": "OMDB",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 716,
-      "airport": "OMDB",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 718,
-      "airport": "OMDB",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 719,
-      "airport": "OMDB",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 720,
-      "airport": "OMDB",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 721,
-      "airport": "OMDB",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
@@ -4551,67 +3615,47 @@
     {
       "page": 737,
       "airport": "OMDB",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "00f463cebdebd84f38e4ff23a6945b775546ced70bfedcfc0e2a2cbe52febb48",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
     },
     {
       "page": 738,
       "airport": "OMDB",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
-    },
-    {
-      "page": 739,
-      "airport": "OMDB",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 740,
-      "airport": "OMDB",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 741,
-      "airport": "OMDB",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
+      "sourceFingerprint": "7edd7d5220284ce9aa8a5638a4a4326d65a92d3aba4cc3e7f07bea514d768cc7",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 743,
       "airport": "OMDB",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "771fd3c7262cc717fa06bd23ba6dd26009c82343a52b979095dac9680b304c42",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
     },
     {
       "page": 744,
       "airport": "OMDB",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "a9e3ee71f18b22e99225165d5220ac6552b3e5117b3697fe8a13a4207e87e937",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
     },
     {
       "page": 745,
       "airport": "OMDB",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "ac69645eb0522d39c552d653325ea4708259e3acc510c4a0d5e3fa3c346b3517",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
     },
     {
-      "page": 746,
+      "page": 750,
       "airport": "OMDB",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 748,
-      "airport": "OMDB",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 749,
-      "airport": "OMDB",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "Invalid affine fit: rank 3, residual 1.530",
       "status": "needs_additional_control_points_or_review"
     },
     {
@@ -4621,39 +3665,9 @@
       "status": "no_graticule"
     },
     {
-      "page": 753,
-      "airport": "UDYZ",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 754,
-      "airport": "UDYZ",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
       "page": 755,
       "airport": "UDYZ",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 756,
-      "airport": "UDYZ",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 757,
-      "airport": "UDYZ",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 759,
-      "airport": "UDYZ",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "Invalid affine fit: rank 3, residual 0.984",
       "status": "needs_additional_control_points_or_review"
     },
     {
@@ -4663,33 +3677,33 @@
       "status": "no_graticule"
     },
     {
-      "page": 764,
+      "page": 763,
       "airport": "UDYZ",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "Invalid affine fit: rank 3, residual 9.600",
       "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 766,
       "airport": "UDYZ",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
+      "status": "needs_additional_control_points_or_review"
+    },
+    {
+      "page": 767,
+      "airport": "UDYZ",
+      "reason": "Invalid affine fit: rank 3, residual 9.440",
       "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 768,
       "airport": "UDYZ",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 769,
       "airport": "UDYZ",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 770,
-      "airport": "UDYZ",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
@@ -4717,39 +3731,23 @@
       "status": "no_graticule"
     },
     {
-      "page": 776,
-      "airport": "UGTB",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 777,
-      "airport": "UGTB",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
       "page": 778,
       "airport": "UGTB",
-      "reason": "NOT TO SCALE printed on source page",
+      "reason": "Invalid affine fit: rank 3, residual 0.894",
       "status": "not_to_scale"
     },
     {
       "page": 779,
       "airport": "UGTB",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
-    },
-    {
-      "page": 780,
-      "airport": "UGTB",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
+      "sourceFingerprint": "e7258b43f5320c33ac308a91b6aa56848cdef7b3e30ac0615fdb77af2fb16968",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 781,
       "airport": "UGTB",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
@@ -4761,67 +3759,77 @@
     {
       "page": 785,
       "airport": "UGTB",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "db0babf816adaca5399b54baaa1bf1e076e80d9dcbcc569a45730c897ba30fbb",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 786,
       "airport": "UGTB",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "1531c67d46b3be028fc588167aa8ea95efa01de4122928728c86741efb69ff8f",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 787,
       "airport": "UGTB",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "17c53f96087f24f65d7887e3cf853b8f496220b39c6143a383fd7e9fbee7da06",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 788,
       "airport": "UGTB",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "9ec73e00a1709644cecb6f9164e54cfe242370a707e3a4c44844eb1dce546e74",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 789,
       "airport": "UGTB",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "ab5cff8e42db2f0d532e65a6d28dc1b902425144f2319e3702a9323d9b3a2a5c",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 790,
       "airport": "UGTB",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "65abd76febdec36e135e18bd552abbed01acbd386c3279fba3e8902d7fd44d70",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
     },
     {
       "page": 791,
       "airport": "UGTB",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "c6fc74904e09beefcf6892e03f46bf84eb2b023cd27d97eb24a07b98552ccae8",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 792,
       "airport": "UGTB",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
-    },
-    {
-      "page": 794,
-      "airport": "UGTB",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
+      "sourceFingerprint": "b6497c9774eb43bc9c351a07debb777b58d72afca7e8e0705453ac2092498390",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 795,
       "airport": "UGTB",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 796,
       "airport": "UGTB",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
@@ -4837,21 +3845,17 @@
       "status": "no_graticule"
     },
     {
-      "page": 800,
-      "airport": "UGSB",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
       "page": 801,
       "airport": "UGSB",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "28e52c37a945557db392b6b7a5883985d04f630f998dc36bc5f69a2ac8e90edd",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
     },
     {
       "page": 802,
       "airport": "UGSB",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
@@ -4861,27 +3865,15 @@
       "status": "no_graticule"
     },
     {
-      "page": 805,
-      "airport": "UGSB",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
       "page": 806,
       "airport": "UGSB",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 807,
       "airport": "UGSB",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 808,
-      "airport": "UGSB",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
@@ -4959,151 +3951,67 @@
     {
       "page": 821,
       "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 822,
-      "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 823,
-      "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "Invalid affine fit: rank 3, residual 1.319",
       "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 824,
       "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "Invalid affine fit: rank 3, residual 1.992",
       "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 826,
       "airport": "LTFM",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "a62472ff24efd19042baf117ff1dd7d0316c16aaa6da5ef50d4f18f73bf1b066",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 827,
       "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 829,
-      "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 830,
-      "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 832,
-      "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "Invalid affine fit: rank 3, residual 0.833",
       "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 833,
       "airport": "LTFM",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "fd07c7fd54a349168f36b59ba55d66579956389f1b4b0d42f823a8d69bd42d71",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 834,
       "airport": "LTFM",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
-    },
-    {
-      "page": 835,
-      "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 836,
-      "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 837,
-      "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 838,
-      "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 839,
-      "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 840,
-      "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 848,
-      "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
+      "sourceFingerprint": "81d71b0487a666ed65639981fdaa6f82543fb8679f327e8f281821e53acdbec2",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 883,
       "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 884,
-      "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 885,
-      "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 886,
       "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 887,
       "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 888,
       "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 889,
-      "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
@@ -5127,7 +4035,7 @@
     {
       "page": 895,
       "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "Printed grid has an inconsistent geographic scale or axis angle",
       "status": "needs_additional_control_points_or_review"
     },
     {
@@ -5227,88 +4135,56 @@
       "status": "no_graticule"
     },
     {
-      "page": 936,
-      "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 937,
-      "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
       "page": 938,
       "airport": "LTFM",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "8aa30bc136340c3c483292f1d66deec296e50726853e427f348f325a0d3134a5",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 939,
       "airport": "LTFM",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
-    },
-    {
-      "page": 941,
-      "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
+      "sourceFingerprint": "3ed38c2ce0590e357de9937ede713789301ab4ce5a5d1c420ca5cf8a42fef4ce",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 942,
       "airport": "LTFM",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
-    },
-    {
-      "page": 944,
-      "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 946,
-      "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 948,
-      "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
+      "sourceFingerprint": "1120da1a1b0952d3c25012cb0cfa6181bbe74fb89188be549fcf8255fbb49bde",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 952,
       "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "Invalid affine fit: rank 3, residual 1.952",
       "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 953,
       "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 955,
-      "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "Invalid affine fit: rank 3, residual 1.952",
       "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 957,
       "airport": "LTFM",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "8a08139dd988b15e5f14c11f7394e0662890ad118f0a905b67a46b5115a92789",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 958,
       "airport": "LTFM",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "b6e3c4a23664be046ee6dc73a858f08483201c530916fd08a6f0fdbd9f0e6dd4",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 964,
@@ -5320,24 +4196,6 @@
       "page": 965,
       "airport": "LTFM",
       "reason": "Invalid affine fit: rank 3, residual 4.830",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 966,
-      "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 968,
-      "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
-      "status": "needs_additional_control_points_or_review"
-    },
-    {
-      "page": 970,
-      "airport": "LTFM",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
       "status": "needs_additional_control_points_or_review"
     },
     {
@@ -5355,8 +4213,10 @@
     {
       "page": 981,
       "airport": "LTFM",
-      "reason": "NOT TO SCALE printed on source page",
-      "status": "not_to_scale"
+      "sourceFingerprint": "c591d576289dcaab1584e21a7c6308beff7ca0561f94b6569c5c83ad596d99bd",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 982,
@@ -5373,25 +4233,25 @@
     {
       "page": 984,
       "airport": "OIAA",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 985,
       "airport": "OIAA",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 986,
       "airport": "OIAA",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {
       "page": 987,
       "airport": "OIAA",
-      "reason": "No bounded map with two measured latitude and longitude ticks",
+      "reason": "No measured latitude/longitude grid could be resolved",
       "status": "needs_additional_control_points_or_review"
     },
     {

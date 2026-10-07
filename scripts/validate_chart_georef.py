@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Check delivered georeferences against the source PDF and index."""
+import argparse
 import hashlib
 import itertools
 import json
@@ -9,16 +10,24 @@ from pathlib import Path
 import fitz
 import numpy as np
 
-from extract_chart_georef import decimal_grid, segments
+from extract_chart_georef import chart_key, decimal_grid, page_fingerprint, segments
 
 
 def main():
-    source = Path('Iran2620.pdf')
-    root = json.loads(Path('app/src/main/assets/chart-georef.json').read_text())
-    audit = json.loads(Path('docs/georeferencing/georef-audit.json').read_text())
-    review = json.loads(Path('docs/georeferencing/reviewed-pages.json').read_text())
-    index = {p['page']: p for p in json.loads(Path('app/src/main/assets/charts-current.json').read_text())}
-    manifest = json.loads(Path('app/src/main/assets/charts-manifest.json').read_text())
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--pdf', default='Iran2620.pdf')
+    parser.add_argument('--georef', default='app/src/main/assets/chart-georef.json')
+    parser.add_argument('--audit', default='docs/georeferencing/georef-audit.json')
+    parser.add_argument('--reviewed-pages', default='docs/georeferencing/reviewed-pages.json')
+    parser.add_argument('--index', default='app/src/main/assets/charts-app-v18.json')
+    parser.add_argument('--manifest', default='app/src/main/assets/charts-manifest.json')
+    args = parser.parse_args()
+    source = Path(args.pdf)
+    root = json.loads(Path(args.georef).read_text())
+    audit = json.loads(Path(args.audit).read_text())
+    review = json.loads(Path(args.reviewed_pages).read_text())
+    index = {p['page']: p for p in json.loads(Path(args.index).read_text())}
+    manifest = json.loads(Path(args.manifest).read_text())
     document = fitz.open(source)
     assert root['version'] == 2 and root['origin'] == 'top_left'
     assert root['coordinateSystem'] == 'WGS84' and root['coordinateSpace'] == 'pdf_points'
@@ -43,7 +52,13 @@ def main():
     for chart in root['charts']:
         page = document[chart['page'] - 1]
         assert chart['airport'] == index[chart['page']]['airport']
-        assert 'NOT TO SCALE' not in page.get_text()
+        assert chart['chartKey'] == chart_key(index[chart['page']])
+        assert chart['sourceFingerprint'] == page_fingerprint(page)
+        has_not_to_scale = 'NOT TO SCALE' in page.get_text()
+        assert chart['validation']['notToScaleTextPresentElsewhereOnPage'] == has_not_to_scale
+        if has_not_to_scale:
+            assert chart['validation'].get('reviewDecision') == 'allow_measured_plan' or \
+                chart['validation'].get('reusedUnchangedSource') is True
         assert chart['width'] == page.rect.width and chart['height'] == page.rect.height
         assert chart['coordinateSpace'] == 'pdf_points' and chart['origin'] == 'top_left'
         assert len(chart['points']) >= 4
@@ -66,6 +81,11 @@ def main():
         assert latitude_axis[0]['pixelAxis'] != longitude_axis[0]['pixelAxis']
         for axis in chart['gridAxes'].values():
             for control in axis:
+                if control.get('derived'):
+                    assert control['label'] is None and control['labelBounds'] is None
+                    assert control['tickSegment'] is None
+                    assert control['derivation'] == 'orthogonal_conformal_scale'
+                    continue
                 assert control['degrees'] == decimal_grid(control['label'])
                 coordinate = 0 if control['pixelAxis'] == 'x' else 1
                 assert abs(control['pdfPoint'] - control['tickSegment'][coordinate]) < .001
@@ -74,6 +94,13 @@ def main():
                            max(abs(float(x) - y) for x, y in zip(word[:4], control['labelBounds'])) < .001
                            for word in words), f"Source label missing on {chart['page']}"
                 assert np.min(np.max(np.abs(paths - control['tickSegment']), axis=1)) < .001
+        measured_counts = {axis: sum(not value.get('derived') for value in values)
+                           for axis, values in chart['gridAxes'].items()}
+        assert measured_counts == chart['validation']['measuredAxisValueCounts']
+        if chart['validation']['method'] == 'single_axis_plus_conformal_scale':
+            assert 1 in measured_counts.values() and max(measured_counts.values()) >= 2
+        else:
+            assert min(measured_counts.values()) >= 2
 
         measured = []
         for lat, lon in itertools.product(latitude_axis, longitude_axis):

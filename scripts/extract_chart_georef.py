@@ -6,16 +6,57 @@ Each page must pass vector tick pairing, residual and geographic scale checks. A
 Coordinates use PDF points, top-left origin, on the untrimmed source page.
 """
 import argparse
+import copy
 import hashlib
 import itertools
 import json
+import os
 import re
+import tempfile
 from pathlib import Path
 
 import fitz
 import numpy as np
 
+from flexible_graticule import match_unframed_axes
+
 GRID = re.compile(r"(\d{2,3})-(\d{2}(?:\.\d+)?)$")
+
+
+def chart_key(entry):
+    """Stable identity across cycles; page numbers are intentionally absent."""
+    clean = lambda value: re.sub(r'\s+', ' ', str(value or '').strip().upper())
+    return '|'.join(clean(entry.get(key)) for key in
+                    ('airport', 'category', 'chart_number', 'name'))
+
+
+def page_fingerprint(page):
+    """Hash canonical visible geometry/text, independent of PDF object IDs."""
+    words = [[round(float(value), 2) for value in word[:4]] + [word[4]]
+             for word in page.get_text('words')]
+    vectors = [[round(float(value), 2) for value in line] for line in segments(page)]
+    payload = {'width': round(float(page.rect.width), 2),
+               'height': round(float(page.rect.height), 2),
+               'words': words, 'segments': sorted(vectors)}
+    encoded = json.dumps(payload, ensure_ascii=False, separators=(',', ':'),
+                         sort_keys=True).encode()
+    return hashlib.sha256(encoded).hexdigest()
+
+
+def atomic_json(path, data):
+    """Publish complete JSON or leave the previous cycle untouched."""
+    path.parent.mkdir(parents=True, exist_ok=True)
+    handle, temporary = tempfile.mkstemp(prefix=f'.{path.name}.', suffix='.tmp', dir=path.parent)
+    try:
+        with os.fdopen(handle, 'w', encoding='utf-8') as stream:
+            json.dump(data, stream, indent=2, ensure_ascii=False)
+            stream.write('\n')
+            stream.flush()
+            os.fsync(stream.fileno())
+        os.replace(temporary, path)
+    finally:
+        if os.path.exists(temporary):
+            os.unlink(temporary)
 
 
 def decimal_grid(label):
@@ -112,9 +153,15 @@ def match_axes(page, lines, top, bottom, anchor, masks):
                               and abs(l[1] - tick[1]) < .4]
                     opposite_masked = any(r['left'] - .6 <= opposite <= r['right'] + .6 and
                                           r['top'] <= tick[1] <= r['bottom'] for r in masks)
-                    if paired or opposite_masked:
+                    # Some source charts intentionally omit the mirrored tick
+                    # where procedure graphics or an inset interrupt the frame.
+                    # A close label-to-tick match on the visible edge is still
+                    # a direct measurement; pairing remains preferred below.
+                    close_label_match = abs(cx - border) < 25 and abs(tick[1] - cy) < 4
+                    if paired or opposite_masked or close_label_match:
                         side_axis = ('longitude' if text_rotated else 'latitude') if ambiguous else axis
-                        choices.append((side_axis, abs(tick[1] - cy), tick, 'y'))
+                        pairing_penalty = 0 if paired or opposite_masked else .2
+                        choices.append((side_axis, abs(tick[1] - cy) + pairing_penalty, tick, 'y'))
         if left <= cx <= right and value <= 180:
             for border in (top_y, bottom_y):
                 if abs(cy - border) > 21:
@@ -138,7 +185,7 @@ def match_axes(page, lines, top, bottom, anchor, masks):
     for axis in axes:
         orientation_counts = {key: sum(p['pixelAxis'] == key for p in axes[axis]) for key in ('x', 'y')}
         dominant = max(orientation_counts, key=orientation_counts.get)
-        if orientation_counts[dominant] < 2 or orientation_counts['x'] == orientation_counts['y']:
+        if orientation_counts[dominant] < 1 or orientation_counts['x'] == orientation_counts['y']:
             raise ValueError('Conflicting axis orientation')
         axes[axis] = [p for p in axes[axis] if p['pixelAxis'] == dominant]
         grouped = {}
@@ -150,10 +197,12 @@ def match_axes(page, lines, top, bottom, anchor, masks):
                 raise ValueError('Duplicate graticule labels disagree')
             unique.append(points[0])
         axes[axis] = sorted(unique, key=lambda p: p['degrees'])
-        if len(axes[axis]) < 2:
-            raise ValueError('Need two distinct, unambiguous axes on a bounded map')
+        if len(axes[axis]) < 1:
+            raise ValueError('Need at least one unambiguous value for each geographic axis')
     if axes['latitude'][0]['pixelAxis'] == axes['longitude'][0]['pixelAxis']:
         raise ValueError('Latitude and longitude must span different bitmap axes')
+    if max(len(axes['latitude']), len(axes['longitude'])) < 2:
+        raise ValueError('Need two measured values on at least one geographic axis')
     return axes
 
 
@@ -177,9 +226,23 @@ def grid_axes(page, anchor):
         # view; this prevents including the profile or minima below the map.
         score = len(axes['latitude']) + len(axes['longitude'])
         candidates.append((score, -(bottom[1] - top[1]), axes, top, bottom))
-    if not candidates:
-        raise ValueError('No bounded map with two measured latitude and longitude ticks')
+    loose = None
+    try:
+        loose = match_unframed_axes(page, tick_lines, anchor, decimal_grid, GRID)
+    except ValueError:
+        pass
     candidates.sort(key=lambda x: x[:2], reverse=True)
+    if loose is not None and (not candidates or
+                              sum(map(len, loose.values())) > candidates[0][0]):
+        axes = loose
+        # The flexible matcher does not assume a closed frame.  Use the full
+        # source page as a conservative clipping envelope; control-point and
+        # transform checks remain identical to the framed path.
+        top = (0.0, 0.0, float(page.rect.width))
+        bottom = (0.0, float(page.rect.height), float(page.rect.width))
+        return axes, lines, top, bottom
+    if not candidates:
+        raise ValueError('No measured latitude/longitude grid could be resolved')
     _, _, axes, top, bottom = candidates[0]
     return axes, lines, top, bottom
 
@@ -215,15 +278,62 @@ def inset_bounds(page, lines, bounds):
             other['bottom'] >= r['bottom'] for other in found)]
 
 
-def extract(page, number, index_entry, anchor):
-    if "NOT TO SCALE" in page.get_text():
-        raise ValueError("NOT TO SCALE: a geographic affine transform is not justified")
+def extract(page, number, index_entry, anchor, fingerprint=None):
+    not_to_scale_text = "NOT TO SCALE" in page.get_text()
     axes, lines, top, bottom = grid_axes(page, anchor)
     bounds = {"left": top[0], "top": top[1], "right": top[2], "bottom": bottom[1]}
+    measured_axis_counts = {axis: len(values) for axis, values in axes.items()}
+    method = "paired_printed_graticule_vector_ticks"
+    if 1 in measured_axis_counts.values():
+        # Many approach plates print only one value on one side of the plan
+        # view.  A second value is derived from the measured orthogonal scale
+        # using the local conformal relationship dx/dlon = cos(lat)*dy/dlat.
+        # The derived point is explicit in the output and is never presented
+        # as another measured source tick.
+        measured_name = 'latitude' if len(axes['latitude']) >= 2 else 'longitude'
+        derived_name = 'longitude' if measured_name == 'latitude' else 'latitude'
+        measured = axes[measured_name]
+        singleton = axes[derived_name][0]
+        delta_geo = abs(measured[-1]['degrees'] - measured[0]['degrees'])
+        delta_pdf = abs(measured[-1]['pdfPoint'] - measured[0]['pdfPoint'])
+        if delta_geo <= 0 or delta_pdf < 8:
+            raise ValueError('Measured axis is too short for conformal scale derivation')
+        latitude = singleton['degrees'] if derived_name == 'latitude' else anchor['lat']
+        physical_ratio = np.cos(np.deg2rad(latitude))
+        measured_scale = delta_pdf / delta_geo
+        derived_scale = (measured_scale / physical_ratio if derived_name == 'latitude'
+                         else measured_scale * physical_ratio)
+        lower = bounds['left'] if singleton['pixelAxis'] == 'x' else bounds['top']
+        upper = bounds['right'] if singleton['pixelAxis'] == 'x' else bounds['bottom']
+        candidate = None
+        for wanted_step in (10 / 60, 5 / 60, 2 / 60, 1 / 60):
+            step = min(delta_geo, wanted_step)
+            for direction in ((-1, 1) if derived_name == 'latitude' else (1, -1)):
+                pixel = singleton['pdfPoint'] + direction * derived_scale * step
+                if lower <= pixel <= upper:
+                    candidate = (step, direction, pixel)
+                    break
+            if candidate:
+                break
+        if not candidate:
+            raise ValueError('Conformal scale derivation falls outside the plan view')
+        step, direction, candidate_pixel = candidate
+        derived = dict(singleton)
+        derived['degrees'] = singleton['degrees'] + direction * step
+        derived['pdfPoint'] = candidate_pixel
+        derived['label'] = None
+        derived['labelBounds'] = None
+        derived['tickSegment'] = None
+        derived['derived'] = True
+        derived['derivation'] = 'orthogonal_conformal_scale'
+        axes[derived_name] = sorted([singleton, derived], key=lambda item: item['degrees'])
+        method = 'single_axis_plus_conformal_scale'
     points = [{"lat": lat["degrees"], "lon": lon["degrees"],
                "x": lon["pdfPoint"] if lon["pixelAxis"] == "x" else lat["pdfPoint"],
                "y": lon["pdfPoint"] if lon["pixelAxis"] == "y" else lat["pdfPoint"],
-               "source": f"Printed grid {lat['label']} / {lon['label']}"}
+               "source": (f"Printed grid {lat['label']} / {lon['label']}"
+                          if lat.get('label') and lon.get('label')
+                          else 'Derived orthogonal conformal grid intersection')}
               for lat, lon in itertools.product(axes["latitude"], axes["longitude"])]
     for point in points:
         if not (bounds["left"] <= point["x"] <= bounds["right"] and
@@ -243,6 +353,8 @@ def extract(page, number, index_entry, anchor):
     if rank != 3 or residual > .75:
         raise ValueError(f"Invalid affine fit: rank {rank}, residual {residual:.3f}")
     return {"page": number, "airport": index_entry["airport"], "name": index_entry.get("name", ""),
+            "chartKey": chart_key(index_entry),
+            "sourceFingerprint": fingerprint or page_fingerprint(page),
             "coordinateSpace": "pdf_points", "origin": "top_left",
             "width": page.rect.width, "height": page.rect.height,
             "bounds": bounds, "excludedBounds": inset_bounds(page, lines, bounds),
@@ -250,7 +362,9 @@ def extract(page, number, index_entry, anchor):
             "maxResidualPdfPoints": .75,
             "validation": {"gridMaxResidualPdfPoints": round(residual, 6),
                            "controlPointCount": len(points),
-                           "method": "paired_printed_graticule_vector_ticks"}}
+                           "method": method,
+                           "measuredAxisValueCounts": measured_axis_counts,
+                           "notToScaleTextPresentElsewhereOnPage": not_to_scale_text}}
 
 
 def main():
@@ -262,14 +376,35 @@ def main():
     parser.add_argument("--pages", default="all", help="all, or comma-separated source page numbers")
     parser.add_argument("--output", default="app/src/main/assets/chart-georef.json")
     parser.add_argument("--audit", default="docs/georeferencing/georef-audit.json")
-    parser.add_argument("--data-version", default="v18")
-    parser.add_argument("--cycle", default="2026-20")
+    parser.add_argument("--manifest", default="app/src/main/assets/charts-manifest.json")
+    parser.add_argument("--data-version", default="", help="Override manifest version")
+    parser.add_argument("--cycle", default="", help="Override manifest cycle")
+    parser.add_argument("--previous-georef", default="",
+                        help="Previous chart-georef.json; unchanged page fingerprints are safely reused")
+    parser.add_argument("--review-decisions", default="",
+                        help="JSON decisions keyed by sourceFingerprint for exceptional pages")
     parser.add_argument("--disable-independent-check", action="store_true")
     args = parser.parse_args()
     pdf_path = Path(args.pdf)
     digest = hashlib.sha256(pdf_path.read_bytes()).hexdigest()
     doc = fitz.open(pdf_path)
+    manifest = json.loads(Path(args.manifest).read_text())
+    data_version = args.data_version or manifest['version']
+    cycle = args.cycle or manifest['cycle']
+    if manifest.get('pages') != len(doc):
+        raise ValueError('Manifest page count does not match the source PDF')
     index = {c["page"]: c for c in json.loads(Path(args.index).read_text())}
+    previous = {}
+    if args.previous_georef:
+        previous_root = json.loads(Path(args.previous_georef).read_text())
+        for old in previous_root.get('charts', []):
+            if old.get('chartKey') and old.get('sourceFingerprint'):
+                previous[(old['chartKey'], old['sourceFingerprint'])] = old
+    decisions = {}
+    if args.review_decisions:
+        decision_root = json.loads(Path(args.review_decisions).read_text())
+        decisions = {item['sourceFingerprint']: item
+                     for item in decision_root.get('decisions', [])}
     coordinate_pattern = re.compile(r"Lat/Long:\s*N(\d+)°\s*([\d.]+).*?E(\d+)°\s*([\d.]+)")
     anchors = {}
     for entry in index.values():
@@ -285,23 +420,45 @@ def main():
     reviewed = {int(n) for n in args.reviewed_pages.split(',') if n}
     selected = sorted(index) if args.pages == 'all' else sorted({int(n) for n in args.pages.split(',')})
     charts, excluded = [], []
+    reused_count = 0
     for number in selected:
         page = doc[number - 1]
-        if 'NOT TO SCALE' in page.get_text():
-            excluded.append({'page': number, 'airport': index[number]['airport'],
-                             'reason': 'NOT TO SCALE printed on source page', 'status': 'not_to_scale'})
+        fingerprint = page_fingerprint(page)
+        reuse = previous.get((chart_key(index[number]), fingerprint))
+        if reuse and reuse.get('width') == page.rect.width and reuse.get('height') == page.rect.height:
+            chart = copy.deepcopy(reuse)
+            chart.update({'page': number, 'airport': index[number]['airport'],
+                          'name': index[number].get('name', ''),
+                          'chartKey': chart_key(index[number]),
+                          'sourceFingerprint': fingerprint})
+            chart.setdefault('validation', {})['reusedUnchangedSource'] = True
+            charts.append(chart)
+            reused_count += 1
             continue
+        decision = decisions.get(fingerprint, {})
+        not_to_scale = 'NOT TO SCALE' in page.get_text()
         if not any(GRID.fullmatch(w[4]) for w in page.get_text('words')):
             excluded.append({'page': number, 'airport': index[number]['airport'],
-                             'reason': 'No printed graticule labels', 'status': 'no_graticule'})
+                             'reason': ('NOT TO SCALE printed on source page' if not_to_scale
+                                        else 'No printed graticule labels'),
+                             'status': 'not_to_scale' if not_to_scale else 'no_graticule'})
             continue
         try:
-            chart = extract(page, number, index[number], anchors[index[number]['airport']])
+            chart = extract(page, number, index[number], anchors[index[number]['airport']], fingerprint)
+            if not_to_scale and decision.get('action') != 'allow_measured_plan':
+                excluded.append({'page': number, 'airport': index[number]['airport'],
+                                 'sourceFingerprint': fingerprint,
+                                 'reason': 'NOT TO SCALE page requires a fingerprint-bound review decision',
+                                 'status': 'review_required_not_to_scale',
+                                 'candidateMethod': chart['validation']['method']})
+                continue
             chart['validation']['visualReview'] = number in reviewed
+            if decision:
+                chart['validation']['reviewDecision'] = decision.get('action')
             charts.append(chart)
         except ValueError as error:
             excluded.append({'page': number, 'airport': index[number]['airport'],
-                             'reason': str(error), 'status': 'not_to_scale' if 'NOT TO SCALE' in str(error)
+                             'reason': str(error), 'status': 'not_to_scale' if not_to_scale
                              else 'needs_additional_control_points_or_review'})
         if number % 100 == 0:
             print(f'Scanned {number}/{len(doc)} pages; {len(charts)} calibrated', flush=True)
@@ -317,7 +474,7 @@ def main():
         check_projection(chart42, check)
         chart42["validation"]["independentChecks"] = [check]
     source = {"file": pdf_path.name, "sha256": digest, "pageCount": len(doc),
-              "chartDataVersion": args.data_version, "cycle": args.cycle}
+              "chartDataVersion": data_version, "cycle": cycle}
     root = {"version": 2, "coordinateSystem": "WGS84", "coordinateSpace": "pdf_points",
             "origin": "top_left", "source": source, "charts": charts}
     airports = []
@@ -330,6 +487,8 @@ def main():
                          'notToScalePages': [entry['page'] for entry in failures if entry['status'] == 'not_to_scale'],
                          'otherExcludedPages': [entry['page'] for entry in failures if entry['status'] != 'not_to_scale']})
     audit = {'source': source, 'processedPages': len(selected), 'airportCount': len(airports),
+             'reusedUnchangedPageCount': reused_count,
+             'newlyExtractedPageCount': len(charts) - reused_count,
              'calibratedPageCount': len(charts), 'airports': airports, 'excludedCharts': excluded,
              'anchors': [{'page': 32, 'name': 'AWZ VOR', 'lat': check['lat'],
                           'lon': check['lon'], 'printed': 'N31 20.3 E048 45.9',
@@ -341,8 +500,7 @@ def main():
                        'A small fitting residual is not a navigation accuracy certification.',
                        'Re-extract and review after replacing the PDF or chart index.']}
     for path, data in [(Path(args.output), root), (Path(args.audit), audit)]:
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(json.dumps(data, indent=2, ensure_ascii=False) + "\n")
+        atomic_json(path, data)
     print(json.dumps({'charts': len(charts), 'airports': len(airports),
                       'airportsWithoutCalibration': [a['icao'] for a in airports if not a['calibratedPages']],
                       'independentCheckPdfPoints': check.get('residualPdfPoints')}, indent=2))
