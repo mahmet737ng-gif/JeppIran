@@ -77,14 +77,22 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Verify packaged chart data
+      - name: Prepare briefing and chart data
         shell: bash
         run: |
           set -euo pipefail
-          # Normal APK builds consume the reviewed assets already committed.
-          # Full extraction + strict validation remains in the dedicated audit workflow.
+          # Normal APK builds consume the reviewed georef asset already committed.
+          # Full georef extraction remains in the dedicated audit workflow.
           test -s app/src/main/assets/chart-georef.json
-          # ApproachBriefStore tolerates a missing generated cache and falls back safely.
+
+          # Build the compact chart briefing cache without running the expensive
+          # full georeferencing extraction.
+          python -m pip install --quiet PyMuPDF
+          python scripts/build_approach_briefings.py \
+            --pdf Iran2620.pdf \
+            --index app/src/main/assets/charts-current.json \
+            --output app/src/main/assets/approach-briefings.json
+          test -s app/src/main/assets/approach-briefings.json
 
       - name: Test and build signed APK
         run: gradle testDebugUnitTest assembleDebug --stacktrace
