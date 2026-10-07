@@ -7,6 +7,8 @@ on:
       - main
       - work-no-build
       - pilot-ops-suite
+      - airport-photo-fullscreen-fix
+      - airport-ui-viewer-polish
 
 permissions:
   contents: write
@@ -93,6 +95,13 @@ jobs:
             --index app/src/main/assets/charts-current.json \
             --output app/src/main/assets/approach-briefings.json
           test -s app/src/main/assets/approach-briefings.json
+
+      - name: Apply viewer and charts UI source package
+        shell: bash
+        run: |
+          set -euo pipefail
+          base64 -d .github/ci-sources/ChartsActivity.kt.gz.b64 | gzip -d > app/src/main/java/com/tareghmsr/jeppiran/ChartsActivity.kt
+          base64 -d .github/ci-sources/PdfViewerActivity.kt.gz.b64 | gzip -d > app/src/main/java/com/tareghmsr/jeppiran/PdfViewerActivity.kt
 
       - name: Test and build signed APK
         run: gradle testDebugUnitTest assembleDebug --stacktrace
