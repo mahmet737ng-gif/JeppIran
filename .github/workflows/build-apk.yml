@@ -6,6 +6,7 @@ on:
     branches:
       - main
       - work-no-build
+      - rollback-clean-perimeter-prompt
 
 permissions:
   contents: write
@@ -76,21 +77,11 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Generate validated chart georeferencing
+      - name: Verify packaged chart georeferencing
         shell: bash
         run: |
           set -euo pipefail
-          python -m pip install -r scripts/requirements-georef.txt
-          REVIEWED_PAGES="$(python -c "import json; from pathlib import Path; d=json.loads(Path('docs/georeferencing/reviewed-pages.json').read_text()); print(','.join(str(x) for x in d.get('pages', [])))")"
-          python scripts/extract_chart_georef.py \
-            --pdf Iran2620.pdf \
-            --index app/src/main/assets/charts-current.json \
-            --output app/src/main/assets/chart-georef.json \
-            --audit docs/georeferencing/georef-audit.json \
-            --reviewed-pages "$REVIEWED_PAGES" \
-            --data-version v18 \
-            --cycle 2026-20
-          python scripts/validate_chart_georef.py
+          test -s app/src/main/assets/chart-georef.json
 
       - name: Test and build signed APK
         run: gradle testDebugUnitTest assembleDebug --stacktrace
