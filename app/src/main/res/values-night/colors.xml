@@ -9,4 +9,8 @@
     <color name="jeppiran_accent">#2FD9FF</color>
     <color name="jeppiran_blue">#1677FF</color>
     <color name="jeppiran_magenta">#FF36B9</color>
+    <color name="jeppiran_icon_primary">#2FD9FF</color>
+    <color name="jeppiran_icon_light">#F7FAFF</color>
+    <color name="jeppiran_icon_fill">#F7FAFF</color>
+    <color name="jeppiran_icon_dark">#071A31</color>
 </resources>
