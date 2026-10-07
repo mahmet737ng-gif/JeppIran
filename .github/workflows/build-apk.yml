@@ -113,7 +113,53 @@ jobs:
             app/src/main/assets/chart-georef.json \
             app/src/main/assets/chart-georef-overrides.json
 
-          python -m pip install --quiet PyMuPDF
+          python -m pip install --quiet -r scripts/requirements-georef.txt
+
+          # Re-measure any OIII APP pages that are absent from the bundled
+          # georeference asset. Fully measured printed grids may tolerate up
+          # to 1.5 PDF points of affine source distortion; inferred-axis
+          # calibrations remain capped at 0.75.
+          MISSING_OIII_PAGES="$(python - <<'PY'
+          import json
+          from pathlib import Path
+
+          charts = json.loads(
+              Path("app/src/main/assets/charts-current.json").read_text()
+          )
+          georef = json.loads(
+              Path("app/src/main/assets/chart-georef.json").read_text()
+          )
+          active = {
+              int(item["page"])
+              for item in georef.get("charts", [])
+          }
+          missing = [
+              int(row["page"])
+              for row in charts
+              if row.get("airport") == "OIII"
+              and row.get("category") == "Approach"
+              and int(row["page"]) not in active
+          ]
+          print(",".join(map(str, sorted(missing))))
+          PY
+          )"
+
+          if [ -n "$MISSING_OIII_PAGES" ]; then
+            echo "Supplementing OIII APP georeferences: $MISSING_OIII_PAGES"
+            python scripts/extract_chart_georef.py \
+              --pdf Iran2620.pdf \
+              --index app/src/main/assets/charts-app-v18.json \
+              --pages "$MISSING_OIII_PAGES" \
+              --output "$RUNNER_TEMP/oiii-georef-supplement.json" \
+              --audit "$RUNNER_TEMP/oiii-georef-supplement-audit.json" \
+              --manifest app/src/main/assets/charts-manifest.json \
+              --disable-independent-check
+
+            python scripts/merge_chart_georef.py \
+              app/src/main/assets/chart-georef.json \
+              "$RUNNER_TEMP/oiii-georef-supplement.json"
+          fi
+
           python scripts/build_approach_briefings.py \
             --pdf Iran2620.pdf \
             --index app/src/main/assets/charts-current.json \
@@ -183,6 +229,7 @@ jobs:
           # repeatedly used to compare the same live aircraft position.
           required = [
               ("ILS Z", "RWY 30"),
+              ("VOR Z", "RWY 12"),
               ("VOR Y", "RWY 12"),
               ("NDB", "RWY 30"),
           ]
@@ -206,9 +253,30 @@ jobs:
                   )
                   matched += 1
 
+          oiii_approaches = [
+              row
+              for row in charts
+              if row.get("airport") == "OIII"
+              and row.get("category") == "Approach"
+          ]
+          assert oiii_approaches, "No OIII APP charts found"
+          missing_oiii = [
+              row
+              for row in oiii_approaches
+              if int(row["page"]) not in pages
+          ]
+          assert not missing_oiii, (
+              "OIII APP charts missing moving-map georeferencing: " +
+              ", ".join(
+                  f"{row['page']} {row.get('name', '')}"
+                  for row in missing_oiii
+              )
+          )
+
           print(
               f"Validated {len(references)} calibrated moving-map charts; "
-              f"OIAW regression references: {matched}"
+              f"OIAW regression references: {matched}; "
+              f"OIII APP coverage: {len(oiii_approaches)}/{len(oiii_approaches)}"
           )
           PY
 

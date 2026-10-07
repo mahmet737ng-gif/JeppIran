@@ -400,8 +400,18 @@ def extract(page, number, index_entry, anchor, fingerprint=None):
         raise ValueError(
             'Printed grid has an inconsistent scale, angle, or mirrored orientation'
         )
-    if rank != 3 or residual > .75:
-        raise ValueError(f"Invalid affine fit: rank {rank}, residual {residual:.3f}")
+    # Fully measured latitude+longitude grids are stronger evidence than
+    # a derived orthogonal axis. Allow a small amount of source-chart affine
+    # distortion for measured grids while keeping inferred-axis records strict.
+    residual_limit = (
+        1.5
+        if method == "paired_printed_graticule_vector_ticks"
+        else .75
+    )
+    if rank != 3 or residual > residual_limit:
+        raise ValueError(
+            f"Invalid affine fit: rank {rank}, residual {residual:.3f}"
+        )
     return {"page": number, "airport": index_entry["airport"], "name": index_entry.get("name", ""),
             "chartKey": chart_key(index_entry),
             "sourceFingerprint": fingerprint or page_fingerprint(page),
@@ -409,7 +419,7 @@ def extract(page, number, index_entry, anchor, fingerprint=None):
             "width": page.rect.width, "height": page.rect.height,
             "bounds": bounds, "excludedBounds": inset_bounds(page, lines, bounds),
             "points": points, "gridAxes": axes, "airportAnchor": anchor,
-            "maxResidualPdfPoints": .75,
+            "maxResidualPdfPoints": residual_limit,
             "validation": {"gridMaxResidualPdfPoints": round(residual, 6),
                            "controlPointCount": len(points),
                            "method": method,

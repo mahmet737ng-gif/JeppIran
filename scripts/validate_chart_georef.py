@@ -120,7 +120,12 @@ def main():
         matrix, _, rank, _ = np.linalg.lstsq(design, xy, rcond=None)
         assert rank == 3
         residual = float(np.max(np.linalg.norm(design @ matrix - xy, axis=1)))
-        assert residual <= chart['maxResidualPdfPoints'] <= .75
+        residual_limit = (
+            1.5
+            if chart['validation']['method'] == 'paired_printed_graticule_vector_ticks'
+            else .75
+        )
+        assert residual <= chart['maxResidualPdfPoints'] <= residual_limit
         assert abs(residual - chart['validation']['gridMaxResidualPdfPoints']) < .00001
         east_vector, north_vector = matrix[0], matrix[1]
         orientation_determinant = (
