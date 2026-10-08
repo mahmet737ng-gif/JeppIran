@@ -182,3 +182,6 @@ body.viewer-fullscreen .pdf-stage{height:100vh}
  .airport-item{min-height:82px}.airport-item .airport-copy{min-height:82px}
  .pdf-stage{min-height:0}
 }
+
+.wx-attribution{margin:2px 4px 8px;color:var(--muted);font-size:11px}
+.wx-attribution a{color:var(--accent);text-decoration:none}
