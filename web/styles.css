@@ -384,7 +384,7 @@ body.viewer-fullscreen .pdf-stage{height:100dvh!important}
   border-color:transparent!important
 }
 .airport-item.selected .airport-shade{
-  background:linear-gradient(90deg,rgba(3,12,20,.68) 0%,rgba(3,12,20,.46) 52%,rgba(3,12,20,.12) 100%)!important
+  background:linear-gradient(90deg,rgba(3,12,20,.38) 0%,rgba(3,12,20,.18) 52%,rgba(3,12,20,.04) 100%)!important
 }
 .airport-chevron{
   position:absolute;
