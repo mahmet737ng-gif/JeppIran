@@ -173,10 +173,11 @@
           <label class="field-label" for="fsxPcIp">FSX PC IPv4 Address</label>
           <input id="fsxPcIp" class="wide-input" placeholder="e.g. 10.31.2.70" autocapitalize="off" autocomplete="off" spellcheck="false">
           <div class="sim-buttons">
-            <button id="connectFsxBtn">CONNECT FSX</button>
+            <button id="connectFsxBtn" type="button" onclick="this.textContent='CONNECTING…';this.disabled=true;var s=document.getElementById('fsxInlineStatus');if(s)s.textContent='Starting FSX connection…';try{if(window.jeppiranConnectFsx){window.jeppiranConnectFsx();}else{if(s)s.textContent='FSX connector is still loading. Refresh this page once.';}}catch(e){if(s)s.textContent='FSX connect error: '+e.message;}setTimeout(()=>{this.disabled=false;if(this.textContent==='CONNECTING…')this.textContent='CONNECT FSX';},2500);">CONNECT FSX</button>
             <button id="disconnectPositionBtn" class="secondary-btn">DISCONNECT</button>
           </div>
-          <small class="sim-note">Use the actual LAN/hotspot IPv4 address, usually the address on the same network as your iPad. No certificate, profile, or port entry is required. <b>Web build 2620-30</b>.</small>
+          <div id="fsxInlineStatus" class="status" style="margin-top:10px">FSX ready to connect.</div>
+          <small class="sim-note">Use the actual LAN/hotspot IPv4 address, usually the address on the same network as your iPad. No certificate, profile, or port entry is required. <b>Web build 2620-31</b>.</small>
         </article>
 
         <article class="sim-card">
@@ -259,6 +260,6 @@
     });
   })();
   </script>
-  <script src="./app.js?v=2620-30" defer></script>
+  <script src="./app.js?v=2620-31" defer></script>
 </body>
 </html>
