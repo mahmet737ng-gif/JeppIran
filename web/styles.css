@@ -528,3 +528,35 @@ body.viewer-fullscreen .pdf-canvas-wrap{
   width:100vw!important;
   min-width:100vw!important
 }
+
+.position-status-btn{
+  display:inline-flex!important;align-items:center;gap:7px;
+  min-width:86px;justify-content:center
+}
+.position-status-dot{
+  width:9px;height:9px;border-radius:50%;
+  background:#77838e;box-shadow:0 0 0 3px rgba(119,131,142,.13)
+}
+.position-status-btn[data-state="waiting"] .position-status-dot{
+  background:#f2c84b;box-shadow:0 0 0 3px rgba(242,200,75,.15)
+}
+.position-status-btn[data-state="live"] .position-status-dot{
+  background:#2ee68a;box-shadow:0 0 0 3px rgba(46,230,138,.15);
+  animation:gpsStatusPulse 1.4s ease-out infinite
+}
+.position-status-btn[data-state="outside"] .position-status-dot,
+.position-status-btn[data-state="warning"] .position-status-dot{
+  background:#ffb347;box-shadow:0 0 0 3px rgba(255,179,71,.16)
+}
+.position-status-btn[data-state="error"] .position-status-dot{
+  background:#ff5b6e;box-shadow:0 0 0 3px rgba(255,91,110,.16)
+}
+.position-status-label{font-size:11px;font-weight:900;white-space:nowrap}
+@keyframes gpsStatusPulse{
+  0%{box-shadow:0 0 0 0 rgba(46,230,138,.34)}
+  75%,100%{box-shadow:0 0 0 8px rgba(46,230,138,0)}
+}
+@media(max-width:620px){
+  .position-status-btn{min-width:40px;padding-left:9px!important;padding-right:9px!important}
+  .position-status-label{display:none}
+}
