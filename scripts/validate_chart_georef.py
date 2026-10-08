@@ -57,8 +57,17 @@ def main():
         has_not_to_scale = 'NOT TO SCALE' in page.get_text()
         assert chart['validation']['notToScaleTextPresentElsewhereOnPage'] == has_not_to_scale
         if has_not_to_scale:
-            assert chart['validation'].get('reviewDecision') == 'allow_measured_plan' or \
-                chart['validation'].get('reusedUnchangedSource') is True
+            # Distinguish checked source geometry from independently confirmed
+            # geographic accuracy. Provisional Approach/Airport records are
+            # never counted as independently verified.
+            provisional = chart['validation'].get('notToScaleOverrideApplied') is True
+            if provisional:
+                assert index[chart['page']]['category'] in {'Approach', 'Airport'}
+                assert chart['validation'].get('verificationStatus') == 'provisional_geometry_only'
+                assert chart['validation'].get('requiresIndependentFeatureCheck') is True
+            else:
+                assert chart['validation'].get('reviewDecision') == 'allow_measured_plan' or \
+                    chart['validation'].get('reusedUnchangedSource') is True
         assert chart['width'] == page.rect.width and chart['height'] == page.rect.height
         assert chart['coordinateSpace'] == 'pdf_points' and chart['origin'] == 'top_left'
         assert len(chart['points']) >= 4
