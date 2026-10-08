@@ -1,31 +1,26 @@
-# JEPPIRAN FSX Bridge — Web + Android architecture
+# JEPPIRAN FSX Bridge v1.3 — persistent web + Android connection
 
-The FSX bridge reads the aircraft position from FSX through SimConnect and provides it to JEPPIRAN in two ways.
+## Main Web App / iPad
+Use the permanent JEPPIRAN URL:
 
-## iPad / Web
-Safari cannot receive raw FSX UDP/SimConnect data directly.
+`https://mahmet737ng-gif.github.io/JeppIran/`
 
-Run JEPPIRAN FSX Bridge on the simulator PC and open the bridge's **Local Web** address on the iPad:
+Run **JEPPIRAN FSX Bridge v1.3** on the FSX PC. In JEPPIRAN open **Simulator / GPS → FSX**, enter any IPv4 address printed by the bridge, and tap **CONNECT FSX**.
+
+The main HTTPS JEPPIRAN page stays open. The browser no longer needs to move to `http://PC-IP:8080`. FSX position is carried through the secure relay and remains active while navigating between Home, Charts and WX.
+
+No iPad certificate or configuration profile is required.
+
+## Android
+The Android app can continue to use the PC IPv4 address and the bridge's local WebSocket path. Bridge v1.3 keeps the existing local connection compatible while also adding the secure relay used by the public Web App.
+
+## Fallback local mode
+The existing Local Web mode remains available for troubleshooting:
 
 - Local JEPPIRAN: `http://PC-IP:8080`
-- Local position WebSocket: `ws://PC-IP:8775`
+- Local FSX WebSocket: `ws://PC-IP:8775`
 
-The Local Web address serves the **same JEPPIRAN web application** through the simulator PC. It is not a separate reduced web app. Charts, WX, navigation and the simulator page remain part of the same JEPPIRAN interface; local mode only adds the FSX live-position transport.
-
-No certificate, iPad profile, Python, or FSUIPC is required.
-
-## Android / APK
-The Android app does not need the Local Web page.
-
-- JEPPIRAN listens directly on UDP **49012**.
-- Open **Simulator / GPS → Microsoft Flight Simulator X (FSX)**.
-- The page shows the Android device IPv4 address.
-- Run JEPPIRAN FSX Bridge on Windows and enter that Android IP as the target.
-- Aircraft position is then received directly by the APK.
-
-## Ports
-- TCP 8080 — same JEPPIRAN web app served locally for iPad/Safari
-- TCP 8775 — FSX live-position WebSocket used by Local Web mode
-- UDP 49012 — direct Android/APK FSX position
-
-The simulator PC and iPad/Android device must be reachable from each other on the same LAN/hotspot. Windows Firewall should allow the bridge on Private networks.
+## Notes
+- FSX and Bridge v1.3 must remain running on the simulator PC.
+- Secure Web Relay mode requires Internet access on the simulator PC and the Web App device.
+- The relay transports simulator position data only.
