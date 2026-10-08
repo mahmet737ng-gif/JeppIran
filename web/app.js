@@ -287,12 +287,12 @@ function refreshPositionStatus(){
     return;
   }
   if(!model){
-    setPositionStatus("warning",activePositionSource==="gps"?"GPS LIVE":"SIM LIVE","Position is live, but this chart has no valid georeference.");
+    setPositionStatus("warning",activePositionSource==="gps"?"NO GEOREF":"SIM NO GEOREF","Position is live, but this chart has no valid georeference.");
     return;
   }
   const p=projectGeo(model,Number(lastPosition.lat),Number(lastPosition.lon));
   if(!p){
-    setPositionStatus("outside",(activePositionSource==="gps"?"GPS":"SIM")+" LIVE • OUTSIDE CHART","Position is live, but it is outside the mapped area of this chart.");
+    setPositionStatus("outside",activePositionSource==="gps"?"GPS OUTSIDE":"SIM OUTSIDE","Position is live, but it is outside the mapped area of this chart.");
     return;
   }
   const acc=Number.isFinite(lastPosition.accuracy)?(" • ±"+Math.round(lastPosition.accuracy)+" m"):"";
@@ -563,6 +563,11 @@ async function showChartMetar(autoHide=true){
 }
 $("#positionStatusBtn").addEventListener("click",()=>{
   const btn=$("#positionStatusBtn");
+  const state=btn&&btn.dataset.state;
+  if(state==="off"||state==="error"){
+    startDeviceGps();
+    return;
+  }
   dialog("Position status",(btn&&btn.dataset.detail)||"No position information available.");
 });
 
