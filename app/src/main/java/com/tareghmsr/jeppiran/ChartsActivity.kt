@@ -268,28 +268,19 @@ class ChartsActivity : AppCompatActivity() {
 
         brand.addView(
             TextView(this).apply {
-                text = "➤"
-                textSize = 29f
-                typeface = Typeface.DEFAULT_BOLD
-                setTextColor(accent())
-                rotation = -12f
-                gravity = Gravity.CENTER
-            },
-            LinearLayout.LayoutParams(
-                42.dp,
-                52.dp
-            )
-        )
-
-        brand.addView(
-            TextView(this).apply {
                 text = "JEPPIRAN"
-                textSize = 23f
-                letterSpacing = 0.07f
+                textSize = 15f
+                letterSpacing = 0.035f
                 typeface = Typeface.create("sans-serif", Typeface.BOLD)
                 setTextColor(primaryText())
-                gravity = Gravity.CENTER_VERTICAL
-            }
+                gravity = Gravity.CENTER
+                isSingleLine = true
+                maxLines = 1
+            },
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                52.dp
+            )
         )
 
         bar.addView(

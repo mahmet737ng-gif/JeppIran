@@ -74,9 +74,9 @@ object BackNavigation {
             FrameLayout.LayoutParams(
                 dp(46),
                 dp(46),
-                Gravity.TOP or Gravity.END
+                Gravity.TOP or Gravity.START
             ).apply {
-                marginEnd = dp(10)
+                marginStart = dp(10)
                 topMargin = dp(8)
             }
 
@@ -90,7 +90,7 @@ object BackNavigation {
                 view.layoutParams as FrameLayout.LayoutParams
 
             layout.topMargin = bars.top + dp(8)
-            layout.marginEnd = bars.right + dp(10)
+            layout.marginStart = bars.left + dp(10)
             view.layoutParams = layout
             insets
         }

@@ -566,6 +566,21 @@ class MainActivity :
                 }
             }
     }
+    override fun onPause() {
+        getSharedPreferences(
+            "jeppiran_process_lifecycle",
+            MODE_PRIVATE
+        )
+            .edit()
+            .putLong(
+                "last_background_at",
+                System.currentTimeMillis()
+            )
+            .apply()
+
+        super.onPause()
+    }
+
     private val Int.dp: Int
         get() =
             (

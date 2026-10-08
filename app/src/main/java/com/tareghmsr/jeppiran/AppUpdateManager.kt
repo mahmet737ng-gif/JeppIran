@@ -175,12 +175,16 @@ object AppUpdateManager {
                 info.patches
             )
 
-        require(
-            chain !=
-                null &&
-                chain.isNotEmpty()
+        if (
+            chain == null ||
+            chain.isEmpty()
         ) {
-            "Delta update package is unavailable for this installed version. Full APK download was not started."
+            return downloadFullApk(
+                context = context,
+                info = info,
+                directory = dir,
+                onProgress = onProgress
+            )
         }
 
         val installedApk =
@@ -194,15 +198,18 @@ object AppUpdateManager {
                 installedApk
             )
 
-        require(
-            installedSha.equals(
-                chain.first()
-                    .fromSha256,
-                ignoreCase =
-                    true
+        if (
+            !installedSha.equals(
+                chain.first().fromSha256,
+                ignoreCase = true
             )
         ) {
-            "Installed APK does not match the delta base. Full APK download was not started."
+            return downloadFullApk(
+                context = context,
+                info = info,
+                directory = dir,
+                onProgress = onProgress
+            )
         }
 
         return applyPatchChain(
