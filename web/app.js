@@ -19,7 +19,7 @@ const AIRPORTS={
 };
 
 let charts=[], manifest=null, selectedAirport="", selectedChart=null, expanded=new Set(["Airport"]);
-let chartTreeOpen=false;
+let airportTreeExpanded=false;
 let chartZoom=1, chartPanX=0, chartPanY=0;
 let chartMetarTimer=null, chartMetarAirport="", chartMetarValue="";
 let chartPointers=new Map(), pinchStartDistance=0, pinchStartZoom=1, panStart=null, swipeStart=null, lastTapAt=0;
@@ -102,11 +102,14 @@ function renderAirports(filter=""){
     b.className="airport-item"+(icao===selectedAirport?" selected":"");
     const idx=(keys.indexOf(icao)%20)+1;
     b.style.setProperty("--airport-bg","url('./airport-images/airport_card_"+idx+".webp')");
-    b.innerHTML="<span class='airport-shade'></span><span class='airport-copy'><b>"+escapeHtml(icao)+"</b><small>"+escapeHtml(meta[0]+(meta[1]?" • "+meta[1]:""))+"</small></span><span class='airport-chevron'>"+(icao===selectedAirport?"▾":"›")+"</span>";
+    const isSelected=icao===selectedAirport;
+    const isOpen=isSelected&&airportTreeExpanded;
+    b.setAttribute("aria-expanded",isOpen?"true":"false");
+    b.innerHTML="<span class='airport-shade'></span><span class='airport-copy'><b>"+escapeHtml(icao)+"</b><small>"+escapeHtml(meta[0]+(meta[1]?" • "+meta[1]:""))+"</small></span><span class='airport-chevron'>"+(isOpen?"▾":"›")+"</span>";
     b.onclick=()=>selectAirport(icao);
     branch.appendChild(b);
 
-    if(icao===selectedAirport){
+    if(isOpen){
       const tree=document.createElement("div");
       tree.className="airport-inline-tree";
       renderTreeInto(tree);
@@ -119,8 +122,15 @@ function renderAirports(filter=""){
 $("#airportSearch").addEventListener("input",e=>renderAirports(e.target.value));
 
 function selectAirport(icao){
+  if(icao===selectedAirport){
+    airportTreeExpanded=!airportTreeExpanded;
+    renderAirports($("#airportSearch").value);
+    return;
+  }
+
   selectedAirport=icao;
   selectedChart=null;
+  airportTreeExpanded=true;
   expanded=new Set(["Airport"]);
   renderAirports($("#airportSearch").value);
   $("#viewerAirport").textContent=icao+" • "+((AIRPORTS[icao]||[])[0]||"AIRPORT");
@@ -143,7 +153,9 @@ function renderTreeInto(root){
     const h=document.createElement("button");
     h.className="tree-group-head";
     const catLabel=cat==="Airport"?"AIRPORT":cat==="Approach"?"APP":cat.toUpperCase();
-    h.textContent=(expanded.has(cat)?"▼ ":"▶ ")+catLabel+" ("+items.length+")";
+    const groupOpen=expanded.has(cat);
+    h.setAttribute("aria-expanded",groupOpen?"true":"false");
+    h.textContent=(groupOpen?"▼ ":"▶ ")+catLabel+" ("+items.length+")";
     h.onclick=e=>{
       e.stopPropagation();
       expanded.has(cat)?expanded.delete(cat):expanded.add(cat);
