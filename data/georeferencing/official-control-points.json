@@ -187,6 +187,21 @@
       "coordinatePrecision": "0.01_arcsecond",
       "status": "published",
       "notToBeUsedForParkingStandPosition": true
+    },
+    {
+      "airport": "OOMS",
+      "featureType": "VOR",
+      "featureId": "MCT",
+      "latitude": "233528.04N",
+      "longitude": "0581536.48E",
+      "sourceAuthority": "Oman Civil Aviation Authority AIM",
+      "sourceDocument": "AIP Oman OOMS AD 2.19",
+      "sourceEdition": "AIRAC AIP AMDT 1-26",
+      "effectiveDate": "2026-02-19",
+      "sourceUrl": "https://aim.caa.gov.om/eAIP_Oman/9.AIRAC%20eAIPOman-1-26/final/2026-02-19-Non-AIRAC/html/eAIP/AD-2.OOMS-en-GB.html",
+      "sourceLocation": "OOMS AD 2.19 DVOR/DME MCT 114.500 MHz CH 92X transmitting antenna coordinates",
+      "coordinatePrecision": "0.01_arcsecond",
+      "status": "published"
     }
   ],
   "notes": [
