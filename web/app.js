@@ -28,9 +28,15 @@ const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
 
 function renderRoute(name){
-  $$(".view").forEach(v=>v.classList.remove("active"));
+  $(".view").forEach(v=>v.classList.remove("active"));
   document.body.classList.remove("viewer-fullscreen");
   const el=$("#"+name+"View")||$("#homeView"); el.classList.add("active");
+  // When the app is being served by the FSX Local Web bridge, entering the
+  // simulator page must always restore FSX as the active source instead of
+  // falling back to a previously saved X-Plane selection.
+  if(name==="simulator" && typeof ensureLocalFsxSession==="function"){
+    setTimeout(()=>ensureLocalFsxSession(false),0);
+  }
 }
 function route(name,replace=false){
   renderRoute(name);
@@ -901,6 +907,24 @@ function setBridgeTarget(source){
   if(bridgeTargetSource==="xplane")$("#useXpBtn").classList.add("active");
   if(bridgeTargetSource==="fsx")$("#useFsxBtn").classList.add("active");
 }
+function ensureLocalFsxSession(autoConnect=true){
+  if(!LOCAL_SIM_WEB)return;
+  if(bridgeTargetSource!=="fsx" || activePositionSource!=="fsx"){
+    setBridgeTarget("fsx");
+    activePositionSource="fsx";
+    localStorage.setItem("positionSource","fsx");
+  }else{
+    // Repaint the FSX controls in case stale UI state survived navigation.
+    setBridgeTarget("fsx");
+  }
+  const expected="ws://"+location.hostname+":"+bridgeMeta.fsx.port;
+  if($("#bridgeUrl").value!==location.hostname) $("#bridgeUrl").value=location.hostname;
+  if(autoConnect && (!bridgeSocket || bridgeSocket.readyState>1)){
+    $("#simStatus").textContent="JEPPIRAN • local FSX bridge • connecting automatically…";
+    setTimeout(connectSimulatorBridge,250);
+  }
+}
+
 function connectSimulatorBridge(){
   stopGps(); stopBridge();
   const source=bridgeTargetSource,meta=bridgeMeta[source]||bridgeMeta.xplane;
@@ -949,8 +973,7 @@ $("#connectBridgeBtn").addEventListener("click",connectSimulatorBridge);
 $("#disconnectPositionBtn").addEventListener("click",()=>disconnectPosition());
 setBridgeTarget(bridgeTargetSource);
 if(LOCAL_SIM_WEB){
-  $("#simStatus").textContent="JEPPIRAN • local FSX bridge • connecting automatically…";
-  setTimeout(connectSimulatorBridge,450);
+  ensureLocalFsxSession(true);
 }else if(activePositionSource==="gps"){
   setTimeout(startDeviceGps,500);
 }
