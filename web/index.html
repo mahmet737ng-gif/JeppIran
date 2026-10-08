@@ -85,7 +85,6 @@
             <small id="viewerChart">Choose a chart from the tree</small>
           </div>
           <div class="viewer-actions">
-            <button id="chartTreeToggleBtn" class="icon-btn tree-toggle-btn" aria-expanded="false">☰ Charts</button>
             <div class="viewer-nav-group" aria-label="Chart navigation">
               <button id="prevChartBtn" class="icon-btn compact-btn" title="Previous chart">‹</button>
               <button id="nextChartBtn" class="icon-btn compact-btn" title="Next chart">›</button>
@@ -95,10 +94,15 @@
               <button id="zoomResetBtn" class="icon-btn zoom-value" title="Reset zoom"><span id="zoomValue">100%</span></button>
               <button id="zoomInBtn" class="icon-btn compact-btn" title="Zoom in">+</button>
             </div>
+            <button id="chartMetarBtn" class="icon-btn metar-toolbar-btn">METAR</button>
             <span id="viewerPositionBadge" class="viewer-position-badge">GPS/SIM OFF</span>
             <button id="offlinePdfBtn" class="icon-btn" disabled>Save Offline</button>
             <button id="fullscreenBtn" class="icon-btn">Fullscreen</button>
           </div>
+        </div>
+        <div id="chartMetarBanner" class="chart-metar-banner" role="status" aria-live="polite">
+          <span id="chartMetarText"></span>
+          <button id="chartMetarClose" type="button" aria-label="Hide METAR">✕</button>
         </div>
         <div id="pdfStage" class="pdf-stage"><div id="pdfLoading" class="pdf-loading hidden">Loading chart…</div>
           <div class="empty-state">
@@ -108,17 +112,6 @@
           </div>
         </div>
       </section>
-
-      <aside id="chartTreePane" class="chart-tree panel" aria-label="Chart tree">
-        <div class="pane-head tree-pane-head">
-          <div>
-            <h2>Charts</h2>
-            <small id="treeAirport"></small>
-          </div>
-          <button id="chartTreeCloseBtn" class="icon-btn compact-btn" aria-label="Close chart tree">✕</button>
-        </div>
-        <div id="chartTree" class="tree-content"></div>
-      </aside>
     </main>
 
     <main id="simulatorView" class="view">
@@ -247,6 +240,6 @@
     });
   })();
   </script>
-  <script src="./app.js?v=2620-13" defer></script>
+  <script src="./app.js?v=2620-14" defer></script>
 </body>
 </html>
