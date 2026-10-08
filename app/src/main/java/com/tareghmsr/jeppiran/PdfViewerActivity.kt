@@ -147,8 +147,12 @@ private val locationPermissionLauncher =
 
 
     private data class RenderedPageGeometry(
-        val pdfWidth: Int, val pdfHeight: Int,
-        val fullWidth: Int, val fullHeight: Int, val cropTop: Int = 0
+        val pdfWidth: Int,
+        val pdfHeight: Int,
+        val fullWidth: Int,
+        val fullHeight: Int,
+        val cropLeft: Int = 0,
+        val cropTop: Int = 0
     )
     private val renderGeometries = java.util.Collections.synchronizedMap(
         java.util.WeakHashMap<Bitmap, RenderedPageGeometry>()
@@ -1473,6 +1477,9 @@ private val locationPermissionLauncher =
                 this
             ).apply {
 
+                visibility =
+                    View.GONE
+
                 textSize =
                     11f
 
@@ -1759,159 +1766,57 @@ private val locationPermissionLauncher =
 
     private fun buildToolToolbar() {
 
+        // Annotation controls are intentionally removed from the chart viewer.
+        // Keep tiny hidden placeholders because fullscreen/inset code references
+        // these views as part of the existing viewer lifecycle.
         toolScroll =
             HorizontalScrollView(
                 this
             ).apply {
-
-                isHorizontalScrollBarEnabled =
-                    false
-
-                isFillViewport =
-                    false
-
-                background =
-                    viewerPanelBackground(
-                        20,
-                        true
-                    )
-
-                elevation =
-                    12.dp.toFloat()
+                visibility = View.GONE
             }
-
-
-        val tools =
-            LinearLayout(
-                this
-            ).apply {
-
-                orientation =
-                    LinearLayout.HORIZONTAL
-
-                gravity =
-                    Gravity.CENTER
-
-                setPadding(
-                    7.dp,
-                    4.dp,
-                    7.dp,
-                    4.dp
-                )
-            }
-
-
-        tools.addView(
-            toolButton(
-                "",
-                Tool.PEN,
-                R.drawable.ic_pen
-            ).apply {
-
-                contentDescription =
-                    "Pencil"
-            },
-            toolButtonParams(
-                62.dp
-            )
-        )
-
-
-        tools.addView(
-            toolButton(
-                "",
-                Tool.ERASER,
-                R.drawable.ic_eraser
-            ).apply {
-
-                contentDescription =
-                    "Pixel eraser"
-            },
-            toolButtonParams(
-                62.dp
-            )
-        )
-
-
-        toolScroll.addView(
-            tools,
-            ViewGroup.LayoutParams(
-                ViewGroup.LayoutParams.WRAP_CONTENT,
-                ViewGroup.LayoutParams.MATCH_PARENT
-            )
-        )
-
 
         root.addView(
             toolScroll,
             FrameLayout.LayoutParams(
-                154.dp,
-                52.dp
-            ).apply {
-
-                gravity =
-                    Gravity.TOP or
-                        Gravity.CENTER_HORIZONTAL
-
-                topMargin =
-                    104.dp
-            }
+                1,
+                1
+            )
         )
-
 
         eraserModeBar =
             LinearLayout(
                 this
             ).apply {
-                orientation = LinearLayout.HORIZONTAL
-                gravity = Gravity.CENTER
-                setPadding(6.dp, 3.dp, 6.dp, 3.dp)
-                background = viewerPanelBackground(16, true)
-                elevation = 10.dp.toFloat()
                 visibility = View.GONE
             }
-
 
         root.addView(
             eraserModeBar,
             FrameLayout.LayoutParams(
-                230.dp,
-                44.dp
-            ).apply {
-                gravity =
-                    Gravity.TOP or Gravity.CENTER_HORIZONTAL
-                topMargin =
-                    156.dp
-            }
+                1,
+                1
+            )
         )
-
 
         annotationContextBar =
             LinearLayout(
                 this
             ).apply {
-                visibility =
-                    View.GONE
+                visibility = View.GONE
             }
-
 
         root.addView(
             annotationContextBar,
             FrameLayout.LayoutParams(
-                1.dp,
-                1.dp
-            ).apply {
-                gravity =
-                    Gravity.TOP
-                topMargin =
-                    156.dp
-            }
+                1,
+                1
+            )
         )
 
-
-        updateToolButtonStates()
+        annotationMode = false
+        annotationTool = null
     }
-
 
     private fun buildChartTreePanel() {
 
@@ -2795,8 +2700,7 @@ private val locationPermissionLauncher =
 
         val topInset =
             insetTop +
-                106.dp +
-                optionsHeight
+                104.dp
 
 
         if (
@@ -3080,7 +2984,7 @@ private val locationPermissionLauncher =
 
 
         pageText.text =
-            buildPageText()
+            ""
 
 
         loadAnnotationsForCurrentChart()
@@ -3166,6 +3070,226 @@ private val locationPermissionLauncher =
                 root
             )
         }
+    }
+
+
+    private fun detectChartContentCrop(
+        bitmap: Bitmap
+    ): IntArray {
+
+        val width =
+            bitmap.width
+
+        val height =
+            bitmap.height
+
+        if (
+            width <= 0 ||
+            height <= 0
+        ) {
+            return intArrayOf(
+                0,
+                0,
+                width,
+                height
+            )
+        }
+
+        val step =
+            4
+
+        var minX =
+            width
+
+        var minY =
+            height
+
+        var maxX =
+            -1
+
+        var maxY =
+            -1
+
+        fun isInk(
+            color: Int
+        ): Boolean {
+
+            if (
+                Color.alpha(
+                    color
+                ) <
+                16
+            ) {
+                return false
+            }
+
+            return Color.red(
+                color
+            ) <
+                246 ||
+                Color.green(
+                    color
+                ) <
+                246 ||
+                Color.blue(
+                    color
+                ) <
+                246
+        }
+
+        var y =
+            0
+
+        while (
+            y <
+            height
+        ) {
+
+            var x =
+                0
+
+            while (
+                x <
+                width
+            ) {
+
+                if (
+                    isInk(
+                        bitmap.getPixel(
+                            x,
+                            y
+                        )
+                    )
+                ) {
+
+                    minX =
+                        min(
+                            minX,
+                            x
+                        )
+
+                    minY =
+                        min(
+                            minY,
+                            y
+                        )
+
+                    maxX =
+                        max(
+                            maxX,
+                            x
+                        )
+
+                    maxY =
+                        max(
+                            maxY,
+                            y
+                        )
+                }
+
+                x +=
+                    step
+            }
+
+            y +=
+                step
+        }
+
+        if (
+            maxX <
+            minX ||
+            maxY <
+            minY
+        ) {
+            return intArrayOf(
+                0,
+                0,
+                width,
+                height
+            )
+        }
+
+        val padding =
+            max(
+                4,
+                (
+                    min(
+                        width,
+                        height
+                    ) *
+                        0.006f
+                    )
+                    .toInt()
+            )
+
+        val left =
+            (
+                minX -
+                    padding
+                )
+                .coerceAtLeast(
+                    0
+                )
+
+        val top =
+            (
+                minY -
+                    padding
+                )
+                .coerceAtLeast(
+                    0
+                )
+
+        val right =
+            (
+                maxX +
+                    padding +
+                    step
+                )
+                .coerceAtMost(
+                    width
+                )
+
+        val bottom =
+            (
+                maxY +
+                    padding +
+                    step
+                )
+                .coerceAtMost(
+                    height
+                )
+
+        val croppedWidth =
+            right -
+                left
+
+        val croppedHeight =
+            bottom -
+                top
+
+        if (
+            croppedWidth <
+            width *
+                0.62f ||
+            croppedHeight <
+            height *
+                0.62f
+        ) {
+            return intArrayOf(
+                0,
+                0,
+                width,
+                height
+            )
+        }
+
+        return intArrayOf(
+            left,
+            top,
+            right,
+            bottom
+        )
     }
 
 
@@ -3292,24 +3416,46 @@ private val locationPermissionLauncher =
 
 
                 val crop =
-                    (
-                        bitmap.height *
-                            TOP_CROP_PERCENT
-                        )
-                        .toInt()
-                        .coerceIn(
-                            0,
-                            max(
-                                0,
-                                bitmap.height - 1
-                            )
-                        )
+                    detectChartContentCrop(
+                        bitmap
+                    )
 
+                val cropLeft =
+                    crop[0]
+
+                val cropTop =
+                    crop[1]
+
+                val cropRight =
+                    crop[2]
+
+                val cropBottom =
+                    crop[3]
+
+                val cropWidth =
+                    cropRight -
+                        cropLeft
+
+                val cropHeight =
+                    cropBottom -
+                        cropTop
 
                 if (
-                    crop <= 0
+                    cropLeft ==
+                        0 &&
+                    cropTop ==
+                        0 &&
+                    cropWidth ==
+                        bitmap.width &&
+                    cropHeight ==
+                        bitmap.height
                 ) {
-                    renderGeometries[bitmap] = renderGeometry
+
+                    renderGeometries[
+                        bitmap
+                    ] =
+                        renderGeometry
+
                     bitmap
 
                 } else {
@@ -3317,15 +3463,24 @@ private val locationPermissionLauncher =
                     val cropped =
                         Bitmap.createBitmap(
                             bitmap,
-                            0,
-                            crop,
-                            bitmap.width,
-                            bitmap.height - crop
+                            cropLeft,
+                            cropTop,
+                            cropWidth,
+                            cropHeight
                         )
 
-
                     bitmap.recycle()
-                    renderGeometries[cropped] = renderGeometry.copy(cropTop = crop)
+
+                    renderGeometries[
+                        cropped
+                    ] =
+                        renderGeometry.copy(
+                            cropLeft =
+                                cropLeft,
+                            cropTop =
+                                cropTop
+                        )
+
                     cropped
                 }
             }
@@ -5222,10 +5377,8 @@ private val locationPermissionLauncher =
             true
         )
 
-        setViewerChromeVisible(
-            toolScroll,
-            true
-        )
+        toolScroll.visibility =
+            View.GONE
 
 
         if (
@@ -8104,6 +8257,7 @@ private val locationPermissionLauncher =
                         geometry.pdfHeight,
                         geometry.fullWidth,
                         geometry.fullHeight,
+                        geometry.cropLeft,
                         geometry.cropTop,
                         image.width,
                         image.height
@@ -10293,50 +10447,63 @@ private val locationPermissionLauncher =
                                 // Ignore tiny finger jitter during a tap.
                                 // A tap must not move the chart even by one pixel.
 
-                            } else if (
-                                scale >
-                                1.02f
-                            ) {
-
-                                offsetX +=
-                                    dx
-
-                                offsetY +=
-                                    dy
-
-
-                                constrainPan()
-
                             } else {
 
                                 val canGoPrevious =
                                     currentChartIndex >
                                         0
 
-
                                 val canGoNext =
                                     currentChartIndex <
                                         airportCharts.size - 1
 
+                                val totalSwipeX =
+                                    event.x -
+                                        swipeStartX
+
+                                val totalSwipeY =
+                                    event.y -
+                                        downY
+
+                                val wantsChartSwipe =
+                                    (
+                                        canGoPrevious ||
+                                            canGoNext
+                                        ) &&
+                                        abs(totalSwipeX) >
+                                            width *
+                                                0.12f &&
+                                        abs(totalSwipeX) >
+                                            abs(totalSwipeY) *
+                                                1.35f
 
                                 if (
-                                    canGoPrevious ||
-                                    canGoNext
+                                    swiping ||
+                                    wantsChartSwipe
                                 ) {
 
                                     swiping =
                                         true
 
-
                                     swipeOffset =
-                                        (
-                                            event.x -
-                                                swipeStartX
-                                            )
+                                        totalSwipeX
                                             .coerceIn(
                                                 -width.toFloat(),
                                                 width.toFloat()
                                             )
+
+                                } else if (
+                                    scale >
+                                        1.02f
+                                ) {
+
+                                    offsetX +=
+                                        dx
+
+                                    offsetY +=
+                                        dy
+
+                                    constrainPan()
                                 }
                             }
 
@@ -10525,8 +10692,6 @@ private val locationPermissionLauncher =
                                 )
 
                             } else if (
-                                scale <=
-                                1.02f &&
                                 swiping
                             ) {
 

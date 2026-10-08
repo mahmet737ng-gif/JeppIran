@@ -371,6 +371,10 @@ class SettingsActivity :
         setContentView(
             root
         )
+
+        BackNavigation.install(
+            this
+        )
     }
 
     private fun addThemeOption(

@@ -111,6 +111,8 @@ class TaxiModeActivity : AppCompatActivity() {
         })
 
         setContentView(ScrollView(this).apply { addView(body) })
+
+        BackNavigation.install(this)
     }
 
     private fun normalizedRoute(raw: String): String {

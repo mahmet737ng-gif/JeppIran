@@ -489,6 +489,10 @@ class WxActivity : AppCompatActivity() {
             root
         )
 
+        BackNavigation.install(
+            this
+        )
+
 
         ViewCompat.setOnApplyWindowInsetsListener(
             root

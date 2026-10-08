@@ -30,6 +30,16 @@ class SplashActivity : AppCompatActivity() {
         ThemeManager.apply(this)
         super.onCreate(savedInstanceState)
 
+        /*
+         * When the app task is already alive and the user returns from another
+         * app (or taps the launcher icon again), do not replay the splash.
+         * A real cold start still has SplashActivity as the task root.
+         */
+        if (!isTaskRoot) {
+            finish()
+            return
+        }
+
         WindowCompat.setDecorFitsSystemWindows(window, false)
         window.statusBarColor = Color.TRANSPARENT
         window.navigationBarColor = Color.TRANSPARENT

@@ -225,6 +225,8 @@ class UpdateActivity : AppCompatActivity() {
 
         setContentView(root)
 
+        BackNavigation.install(this)
+
         ViewCompat.setOnApplyWindowInsetsListener(root) { view, insets ->
             val bars =
                 insets.getInsets(WindowInsetsCompat.Type.systemBars())

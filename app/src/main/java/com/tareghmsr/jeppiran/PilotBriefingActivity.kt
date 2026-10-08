@@ -107,6 +107,8 @@ class PilotBriefingActivity : AppCompatActivity() {
         })
 
         setContentView(ScrollView(this).apply { addView(body) })
+
+        BackNavigation.install(this)
     }
 
     private fun renderCached() {

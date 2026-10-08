@@ -102,6 +102,8 @@ class PilotToolsSettingsActivity : AppCompatActivity() {
 
         val scroll = ScrollView(this).apply { addView(container) }
         setContentView(scroll)
+
+        BackNavigation.install(this)
     }
 
     private fun label(value: String) = TextView(this).apply {

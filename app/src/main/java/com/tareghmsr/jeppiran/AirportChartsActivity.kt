@@ -649,6 +649,10 @@ class AirportChartsActivity :
             root
         )
 
+        BackNavigation.install(
+            this
+        )
+
         ViewCompat.setOnApplyWindowInsetsListener(
             root
         ) { view, insets ->

@@ -163,7 +163,7 @@ class ChartsActivity : AppCompatActivity() {
         contentRoot.addView(
             searchBarContainer
         )
-        contentRoot.addView(buildSummaryBar())
+        // Summary/count/sort/region strip intentionally removed.
 
         airportScrollView =
             ScrollView(this).apply {
@@ -226,6 +226,22 @@ class ChartsActivity : AppCompatActivity() {
                 setPadding(16.dp, 10.dp, 16.dp, 4.dp)
             }
 
+        val back =
+            glassButton("‹", 28f).apply {
+                contentDescription = "Back"
+                setOnClickListener {
+                    finish()
+                }
+            }
+
+        bar.addView(
+            back,
+            LinearLayout.LayoutParams(
+                52.dp,
+                52.dp
+            )
+        )
+
         val menu =
             glassButton("☰", 22f).apply {
                 contentDescription = "Menu"
@@ -239,7 +255,9 @@ class ChartsActivity : AppCompatActivity() {
             LinearLayout.LayoutParams(
                 52.dp,
                 52.dp
-            )
+            ).apply {
+                marginStart = 6.dp
+            }
         )
 
         val brand =
@@ -439,18 +457,6 @@ class ChartsActivity : AppCompatActivity() {
             )
         )
 
-        row.addView(
-            glassButton("≡", 20f).apply {
-                contentDescription = "Sort"
-                setOnClickListener {
-                    showSortDialog()
-                }
-            },
-            LinearLayout.LayoutParams(
-                48.dp,
-                48.dp
-            )
-        )
 
         return FrameLayout(this).apply {
             setPadding(

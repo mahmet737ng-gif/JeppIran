@@ -107,15 +107,18 @@ data class GeoReference(
 
     fun renderedPosition(latitude: Double, longitude: Double, headingDegrees: Double,
                          pdfWidth: Int, pdfHeight: Int, fullBitmapWidth: Int,
-                         fullBitmapHeight: Int, cropTop: Int, bitmapWidth: Int,
-                         bitmapHeight: Int): RenderedAircraftPosition? {
+                         fullBitmapHeight: Int, cropLeft: Int, cropTop: Int,
+                         bitmapWidth: Int, bitmapHeight: Int): RenderedAircraftPosition? {
         if (fullBitmapWidth <= 0 || fullBitmapHeight <= 0 ||
-            cropTop < 0 || cropTop >= fullBitmapHeight || bitmapWidth != fullBitmapWidth ||
-            bitmapHeight != fullBitmapHeight - cropTop ||
+            cropLeft < 0 || cropTop < 0 ||
+            cropLeft >= fullBitmapWidth || cropTop >= fullBitmapHeight ||
+            bitmapWidth <= 0 || bitmapHeight <= 0 ||
+            cropLeft + bitmapWidth > fullBitmapWidth ||
+            cropTop + bitmapHeight > fullBitmapHeight ||
             abs(width - pdfWidth) > 0.01 || abs(height - pdfHeight) > 0.01
         ) return null
         val point = project(latitude, longitude) ?: return null
-        val x = point.first / width * fullBitmapWidth
+        val x = point.first / width * fullBitmapWidth - cropLeft
         val y = point.second / height * fullBitmapHeight - cropTop
         if (!x.isFinite() || !y.isFinite() || x < 0 || y < 0 ||
             x > bitmapWidth || y > bitmapHeight
@@ -393,13 +396,13 @@ object ChartGeoreferenceStore {
     fun renderedPoint(
         context: Context, page: Int, latitude: Double, longitude: Double, headingDegrees: Double,
         dataVersion: String, pdfWidth: Int, pdfHeight: Int,
-        fullBitmapWidth: Int, fullBitmapHeight: Int, cropTop: Int,
+        fullBitmapWidth: Int, fullBitmapHeight: Int, cropLeft: Int, cropTop: Int,
         bitmapWidth: Int, bitmapHeight: Int
     ): RenderedAircraftPosition? {
         load(context)
         if (dataVersion != chartDataVersion) return null
         val ref = references[page] ?: return null
         return ref.renderedPosition(latitude, longitude, headingDegrees, pdfWidth, pdfHeight,
-            fullBitmapWidth, fullBitmapHeight, cropTop, bitmapWidth, bitmapHeight)
+            fullBitmapWidth, fullBitmapHeight, cropLeft, cropTop, bitmapWidth, bitmapHeight)
     }
 }

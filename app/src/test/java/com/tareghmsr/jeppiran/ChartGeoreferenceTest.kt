@@ -30,11 +30,11 @@ class ChartGeoreferenceTest {
             val height = 792 * factor
             val crop = (height * .014f).toInt()
             val actual = ref.renderedPosition(lat, lon, 0.0, 612, 792,
-                width, height, crop, width, height - crop)!!
+                width, height, 0, crop, width, height - crop)!!
             assertEquals(pdf.first * factor, actual.x.toDouble(), .001)
             assertEquals(pdf.second * factor - crop, actual.y.toDouble(), .001)
         }
-        assertNull(ref.renderedPosition(lat, lon, 0.0, 600, 792, 1224, 1584, 22, 1224, 1562))
+        assertNull(ref.renderedPosition(lat, lon, 0.0, 600, 792, 1224, 1584, 0, 22, 1224, 1562))
     }
 
     @Test fun invalidAndInconsistentDataCannotProduceAnAircraftMarker() {
