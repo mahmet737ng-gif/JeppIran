@@ -35,4 +35,4 @@ jobs:
           git add Iran2621.pdf web/data/charts
           git diff --cached --quiet || { echo "LFS package verification failed"; exit 1; }
           git lfs push origin main
-          git push origin main
+          git push --force-with-lease origin main
