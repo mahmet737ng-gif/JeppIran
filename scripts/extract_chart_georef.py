@@ -2,7 +2,9 @@
 """Extract reviewed graticules from the actual PDF, never from text-label centres.
 
 Requires PyMuPDF and NumPy. --reviewed-pages records supplementary visual QA.
-Each page must pass vector tick pairing, residual and geographic scale checks. A NOT TO SCALE page is never promoted automatically.
+Each page must pass vector tick pairing, residual and geographic scale checks.
+Approach/Airport maps with measured coordinates may be retained despite a
+NOT TO SCALE label, but they are provisional until independent feature review.
 Coordinates use PDF points, top-left origin, on the untrimmed source page.
 """
 import argparse
@@ -513,19 +515,29 @@ def main():
         not_to_scale = 'NOT TO SCALE' in page.get_text()
         if not any(GRID.fullmatch(w[4]) for w in page.get_text('words')):
             excluded.append({'page': number, 'airport': index[number]['airport'],
-                             'reason': ('NOT TO SCALE printed on source page' if not_to_scale
-                                        else 'No printed graticule labels'),
-                             'status': 'not_to_scale' if not_to_scale else 'no_graticule'})
+                             'reason': 'No printed latitude/longitude graticule labels',
+                             'status': 'no_graticule'})
             continue
         try:
             chart = extract(page, number, index[number], anchors[index[number]['airport']], fingerprint)
-            if not_to_scale and decision.get('action') != 'allow_measured_plan':
+            # NOT TO SCALE can refer to a profile or inset, rather than
+            # the plan view. Printed-grid candidates still have to pass
+            # scale, axis, orientation and residual checks in extract().
+            provisional_nts = (not_to_scale and
+                               index[number].get('category') in {'Approach', 'Airport'} and
+                               decision.get('action') != 'allow_measured_plan')
+            if (not_to_scale and not provisional_nts and
+                    decision.get('action') != 'allow_measured_plan'):
                 excluded.append({'page': number, 'airport': index[number]['airport'],
                                  'sourceFingerprint': fingerprint,
                                  'reason': 'NOT TO SCALE page requires a fingerprint-bound review decision',
                                  'status': 'review_required_not_to_scale',
                                  'candidateMethod': chart['validation']['method']})
                 continue
+            if provisional_nts:
+                chart['validation']['notToScaleOverrideApplied'] = True
+                chart['validation']['verificationStatus'] = 'provisional_geometry_only'
+                chart['validation']['requiresIndependentFeatureCheck'] = True
             chart['validation']['visualReview'] = number in reviewed
             if decision:
                 chart['validation']['reviewDecision'] = decision.get('action')
@@ -563,14 +575,19 @@ def main():
     audit = {'source': source, 'processedPages': len(selected), 'airportCount': len(airports),
              'reusedUnchangedPageCount': reused_count,
              'newlyExtractedPageCount': len(charts) - reused_count,
-             'calibratedPageCount': len(charts), 'airports': airports, 'excludedCharts': excluded,
+             'calibratedPageCount': len(charts),
+             'provisionalNotToScalePageCount': sum(
+                 c['validation'].get('verificationStatus') == 'provisional_geometry_only'
+                 for c in charts),
+             'airports': airports, 'excludedCharts': excluded,
              'anchors': [{'page': 32, 'name': 'AWZ VOR', 'lat': check['lat'],
                           'lon': check['lon'], 'printed': 'N31 20.3 E048 45.9',
                           'usableForWholePageGeoreferencing': False}],
              'notes': ['EGVAX 1B is a SID on page 32 (10-3), not a STAR.',
                        'Only bounded graticules with mirrored side ticks and resolved axis orientation are automatically accepted.',
                        'Graticule points are intersections of the measured printed axes.',
-                       'NOT TO SCALE pages are excluded, including mixed charts pending region review.',
+                       'For Approach/Airport, valid measured-plan candidates are provisionally retained despite NOT TO SCALE.',
+                       'Other NOT TO SCALE pages require fingerprint-bound review.',
                        'A small fitting residual is not a navigation accuracy certification.',
                        'Re-extract and review after replacing the PDF or chart index.']}
     for path, data in [(Path(args.output), root), (Path(args.audit), audit)]:
