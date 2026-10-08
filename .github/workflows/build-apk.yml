@@ -177,6 +177,7 @@ jobs:
           python - <<'PY'
           import json
           from pathlib import Path
+          import numpy as np
 
           charts = json.loads(Path("app/src/main/assets/charts-current.json").read_text())
           georef = json.loads(Path("app/src/main/assets/chart-georef.json").read_text())
