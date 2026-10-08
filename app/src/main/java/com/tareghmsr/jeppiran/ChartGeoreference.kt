@@ -43,7 +43,8 @@ data class GeoReference(
     val bounds: GeoReferenceBounds,
     val points: List<GeoReferencePoint>,
     val maxResidualPdfPoints: Double = 0.75,
-    val excludedBounds: List<GeoReferenceBounds> = emptyList()
+    val excludedBounds: List<GeoReferenceBounds> = emptyList(),
+    val verifiedFootprint: List<Pair<Double, Double>> = emptyList()
 ) {
     private companion object {
         const val OUTER_EDGE_TOLERANCE_PDF_POINTS = 6.0
@@ -67,6 +68,29 @@ data class GeoReference(
 
     fun isValid(): Boolean = transform != null
 
+    /** Do not extrapolate an exact-GCP transform beyond its checked hull. */
+    private fun withinVerifiedFootprint(x: Double, y: Double): Boolean {
+        if (verifiedFootprint.isEmpty()) return true
+        var inside = false
+        var j = verifiedFootprint.lastIndex
+        for (i in verifiedFootprint.indices) {
+            val (xi, yi) = verifiedFootprint[i]
+            val (xj, yj) = verifiedFootprint[j]
+            val dx = xj - xi
+            val dy = yj - yi
+            val cross = dx * (y - yi) - dy * (x - xi)
+            if (kotlin.math.abs(cross) <= 1e-6 &&
+                x in minOf(xi, xj)..maxOf(xi, xj) &&
+                y in minOf(yi, yj)..maxOf(yi, yj)
+            ) return true
+            if ((yi > y) != (yj > y) &&
+                x < (xj - xi) * (y - yi) / (yj - yi) + xi
+            ) inside = !inside
+            j = i
+        }
+        return inside
+    }
+
     fun project(latitude: Double, longitude: Double): Pair<Double, Double>? {
         if (!latitude.isFinite() || !longitude.isFinite() ||
             latitude !in -90.0..90.0 || longitude !in -180.0..180.0
@@ -84,6 +108,7 @@ data class GeoReference(
                 it.second,
                 OUTER_EDGE_TOLERANCE_PDF_POINTS
             ) &&
+                withinVerifiedFootprint(it.first, it.second) &&
                 excludedBounds.none { area ->
                     area.contains(it.first, it.second)
                 }
@@ -132,6 +157,13 @@ data class GeoReference(
         if (points.size < 4 || !width.isFinite() || !height.isFinite() ||
             width <= 0 || height <= 0 || !maxResidualPdfPoints.isFinite() ||
             maxResidualPdfPoints !in 0.0..2.0 ||
+            verifiedFootprint.isNotEmpty() && (
+                verifiedFootprint.size < 3 ||
+                verifiedFootprint.any { p ->
+                    !p.first.isFinite() || !p.second.isFinite() ||
+                    !bounds.contains(p.first, p.second)
+                }
+            ) ||
             !bounds.left.isFinite() || !bounds.top.isFinite() ||
             !bounds.right.isFinite() || !bounds.bottom.isFinite() ||
             bounds.left < 0 || bounds.top < 0 || bounds.right > width || bounds.bottom > height ||
@@ -206,7 +238,8 @@ object ChartGeoreferenceStore {
     private val SUPPORTED_METHODS =
         setOf(
             "paired_printed_graticule_vector_ticks",
-            "single_axis_plus_conformal_scale"
+            "single_axis_plus_conformal_scale",
+            "published_wgs84_control_points_affine"
         )
 
     private data class ParsedGeoreferences(
@@ -328,6 +361,15 @@ object ChartGeoreferenceStore {
                 )
 
             val pointsJson = item.optJSONArray("points") ?: continue
+            val footprintJson = item.optJSONArray("verifiedFootprint")
+            val verifiedFootprint =
+                (0 until (footprintJson?.length() ?: 0)).map { j ->
+                    val point = footprintJson?.optJSONObject(j)
+                    Pair(
+                        point?.optDouble("x", Double.NaN) ?: Double.NaN,
+                        point?.optDouble("y", Double.NaN) ?: Double.NaN
+                    )
+                }
             val excludedJson = item.optJSONArray("excludedBounds")
             val excludedBounds =
                 (0 until (excludedJson?.length() ?: 0)).map { j ->
@@ -380,7 +422,8 @@ object ChartGeoreferenceStore {
                     bounds,
                     points,
                     item.optDouble("maxResidualPdfPoints", 0.75),
-                    safeExcludedBounds
+                    safeExcludedBounds,
+                    verifiedFootprint
                 )
 
             // Duplicate page identifiers are ambiguous within one source.
