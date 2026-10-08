@@ -14,7 +14,7 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./logo.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="./logo.svg">
-  <link rel="stylesheet" href="./styles.css">
+  <link rel="stylesheet" href="./styles.css?v=2620-35">
 </head>
 <body>
   <div id="app">
@@ -224,6 +224,76 @@
 
   <button id="fullscreenExitBtn" class="fullscreen-exit" type="button" aria-label="Exit fullscreen">✕ Exit Fullscreen</button>
 
+
+  <dialog id="installDialog" class="install-dialog" aria-labelledby="installGuideTitle" aria-describedby="installGuideDesc">
+    <div class="install-sheet">
+      <div class="install-guide-header">
+        <span class="install-heading-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3v12m-4-4 4 4 4-4"/><path d="M4 17v3h16v-3"/>
+          </svg>
+        </span>
+        <div class="install-heading-text">
+          <h2 id="installGuideTitle">Install JEPPIRAN</h2>
+          <p>ADD TO YOUR HOME SCREEN</p>
+        </div>
+        <button id="installGuideClose" class="install-close" type="button" aria-label="Close installation guide">×</button>
+      </div>
+      <div class="install-app-overview">
+        <img class="install-app-logo" src="./logo.svg" alt="JEPPIRAN logo">
+        <div>
+          <strong>JEPPIRAN</strong>
+          <p id="installGuideDesc">Install JEPPIRAN on your iPhone or iPad for quick access and a full-screen app experience.</p>
+        </div>
+      </div>
+      <h3 class="install-section-label">FOLLOW THESE STEPS</h3>
+      <ol class="install-steps">
+        <li class="install-step">
+          <span class="install-step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"/><path d="m15.9 8.1-2.3 5.5-5.5 2.3 2.3-5.5z"/>
+            </svg>
+          </span>
+          <span><strong>1. Open in Safari</strong><small>Use Safari on your iPhone or iPad.</small></span>
+        </li>
+        <li class="install-step">
+          <span class="install-step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 15V3m-4 4 4-4 4 4"/><path d="M8 10H5v11h14V10h-3"/>
+            </svg>
+          </span>
+          <span><strong>2. Tap the Share icon</strong><small>Open the Safari Share menu.</small></span>
+        </li>
+        <li class="install-step">
+          <span class="install-step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="3"/><path d="M12 7v10M7 12h10"/>
+            </svg>
+          </span>
+          <span><strong>3. Add to Home Screen</strong><small>Choose “Add to Home Screen” from the menu.</small></span>
+        </li>
+        <li class="install-step">
+          <span class="install-step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m5 12 4.5 4.5L19 7"/>
+            </svg>
+          </span>
+          <span><strong>4. Tap Add</strong><small>Enable “Open as Web App” if shown, then tap Add.</small></span>
+        </li>
+      </ol>
+      <div class="install-tip">
+        <div class="install-tip-heading">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-9h.01"/>
+          </svg>
+          <strong>Quick tip</strong>
+        </div>
+        <p>Once installed, launch JEPPIRAN directly from your Home Screen.</p>
+      </div>
+      <button id="installGuideDone" class="install-done" type="button">Got it</button>
+    </div>
+  </dialog>
+
   <dialog id="messageDialog">
     <div class="dialog-body">
       <h3 id="dialogTitle">JEPPIRAN</h3>
@@ -260,6 +330,6 @@
     });
   })();
   </script>
-  <script src="./app.js?v=2620-34" defer></script>
+  <script src="./app.js?v=2620-35" defer></script>
 </body>
 </html>

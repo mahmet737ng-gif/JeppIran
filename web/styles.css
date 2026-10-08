@@ -560,3 +560,87 @@ body.viewer-fullscreen .pdf-canvas-wrap{
   .position-status-btn{min-width:40px;padding-left:9px!important;padding-right:9px!important}
   .position-status-label{display:none}
 }
+
+
+/* ===== JEPPIRAN iOS/iPadOS installation guide — UI-only (V2620-35) ===== */
+#installDialog.install-dialog{
+  width:min(470px,calc(100vw - 24px));
+  max-width:calc(100vw - 24px);
+  max-height:calc(100dvh - 24px);
+  margin:auto;
+  padding:0;
+  overflow:auto;
+  overscroll-behavior:contain;
+  border:1px solid var(--stroke);
+  border-radius:22px;
+  background:var(--surface);
+  color:var(--text);
+  box-shadow:0 26px 70px rgba(0,0,0,.42);
+  -webkit-overflow-scrolling:touch;
+}
+#installDialog::backdrop{
+  background:rgba(2,8,15,.72);
+  backdrop-filter:blur(8px);
+  -webkit-backdrop-filter:blur(8px);
+}
+.install-sheet{padding:clamp(16px,3vw,24px)}
+.install-guide-header{display:flex;align-items:center;gap:12px}
+.install-heading-icon,.install-step-icon{
+  display:grid;place-items:center;flex-shrink:0;
+  color:var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--surface2));
+  border:1px solid color-mix(in srgb,var(--accent) 16%,var(--stroke));
+  border-radius:12px
+}
+.install-heading-icon{width:43px;height:43px}
+.install-heading-icon svg{width:24px;height:24px}
+.install-heading-text{flex:1;min-width:0}
+.install-heading-text h2{margin:0 0 4px;font-size:19px;line-height:1.2;letter-spacing:.01em}
+.install-heading-text p{margin:0;color:var(--muted);font-size:10px;font-weight:800;letter-spacing:.11em}
+.install-close{
+  display:grid;place-items:center;flex-shrink:0;
+  width:36px;height:36px;line-height:1;
+  padding:0;border:1px solid var(--stroke);border-radius:11px;
+  background:var(--surface2);color:var(--muted);font-size:25px
+}
+.install-app-overview{display:flex;align-items:center;gap:14px;margin-top:18px;padding:17px 0;border-top:1px solid var(--stroke);border-bottom:1px solid var(--stroke)}
+.install-app-logo{width:64px;height:64px;flex-shrink:0;object-fit:contain;border-radius:15px;background:#000}
+.install-app-overview strong{font-size:16px;letter-spacing:.04em}
+.install-app-overview p{margin:5px 0 0;color:var(--muted);font-size:13px;line-height:1.55}
+.install-section-label{margin:18px 0 12px;color:var(--accent);font-size:11px;font-weight:900;letter-spacing:.09em}
+.install-steps{list-style:none;display:grid;gap:10px;margin:0;padding:0}
+.install-step{display:flex;align-items:center;min-width:0;gap:13px}
+.install-step-icon{width:45px;height:45px;border-radius:11px}
+.install-step-icon svg{width:25px;height:25px}
+.install-step>span:last-child{min-width:0}
+.install-step strong{display:block;font-size:13px;line-height:1.4}
+.install-step small{display:block;margin-top:3px;color:var(--muted);font-size:12px;line-height:1.5}
+.install-tip{margin-top:20px;padding:12px 14px;background:color-mix(in srgb,var(--accent) 7%,var(--surface2));border:1px solid color-mix(in srgb,var(--accent) 13%,var(--stroke));border-radius:13px}
+.install-tip-heading{display:flex;align-items:center;gap:9px;font-size:13px}
+.install-tip-heading svg{width:19px;height:19px;flex-shrink:0;color:var(--accent)}
+.install-tip p{margin:6px 0 0 28px;color:var(--muted);font-size:12px;line-height:1.45}
+.install-done{
+  display:block;width:100%;min-height:46px;margin-top:16px;padding:10px 20px;
+  border:0;border-radius:12px;
+  background:linear-gradient(110deg,var(--accent2),var(--accent));
+  color:#fff;font-size:15px;font-weight:850;text-align:center
+}
+.install-close:focus-visible,.install-done:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+body.jeppiran-installed #installHelpBtn,body.jeppiran-installed .ipad-tip{display:none!important}
+@media(display-mode:standalone){
+  #installHelpBtn,.ipad-tip{display:none!important}
+}
+@media(orientation:landscape) and (min-width:680px){
+  #installDialog.install-dialog{width:min(740px,calc(100vw - 24px))}
+  .install-steps{grid-template-columns:repeat(2,minmax(0,1fr));column-gap:22px;row-gap:16px}
+  .install-step{align-items:flex-start}
+}
+@media(max-width:420px){
+  .install-app-logo{width:56px;height:56px}
+  .install-app-overview{gap:10px}
+  .install-step{gap:11px}
+  .install-step-icon{width:42px;height:42px}
+}
+@media(prefers-reduced-motion:no-preference){
+  @starting-style{#installDialog[open]{opacity:0;transform:translateY(10px)}}
+  #installDialog[open]{opacity:1;transform:translateY(0);transition:opacity .18s ease,transform .18s ease}
+}

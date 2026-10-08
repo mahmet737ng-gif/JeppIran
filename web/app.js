@@ -79,7 +79,29 @@ function dialog(title,text){
   const d=$("#messageDialog"); if(typeof d.showModal==="function") d.showModal(); else alert(title+"\n\n"+text);
 }
 $("#dialogClose").addEventListener("click",()=>$("#messageDialog").close());
-$("#installHelpBtn").addEventListener("click",()=>dialog("Install JEPPIRAN on iPad","Open this page in Safari, tap Share, then choose Add to Home Screen. It will launch like an app."));
+// Presentation-only iOS/iPadOS install instructions; native installation is user-confirmed.
+$("#installHelpBtn").addEventListener("click",()=>{
+  const guide=$("#installDialog");
+  if(guide&&typeof guide.showModal==="function"){
+    if(!guide.open)guide.showModal();
+  }else{
+    dialog("Install JEPPIRAN","On iPhone or iPad: open this page in Safari, tap Share, select Add to Home Screen, then tap Add.");
+  }
+});
+$("#installGuideClose").addEventListener("click",()=>$("#installDialog").close());
+$("#installGuideDone").addEventListener("click",()=>$("#installDialog").close());
+$("#installDialog").addEventListener("click",event=>{
+  if(event.target===event.currentTarget)event.currentTarget.close();
+});
+// An installed web app should not continue to advertise installing itself.
+const jeppiranStandalone=window.matchMedia&&window.matchMedia("(display-mode: standalone)");
+function syncInstallGuideVisibility(){
+  document.body.classList.toggle("jeppiran-installed",Boolean((jeppiranStandalone&&jeppiranStandalone.matches)||navigator.standalone===true));
+}
+if(jeppiranStandalone&&typeof jeppiranStandalone.addEventListener==="function"){
+  jeppiranStandalone.addEventListener("change",syncInstallGuideVisibility);
+}
+syncInstallGuideVisibility();
 $("#infoCard").addEventListener("click",()=>dialog("JEPPIRAN "+VERSION,"iPad web/PWA build. Chart PDFs and weather require internet on first load. The app shell remains available offline."));
 $("#themeBtn").addEventListener("click",()=>{
   document.documentElement.classList.toggle("light");
