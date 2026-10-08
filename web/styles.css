@@ -145,7 +145,7 @@ body.viewer-fullscreen .pdf-stage{height:100vh}
   .airport-list{grid-template-columns:1fr}
 }
 .sim-shell{max-width:860px;margin:28px auto;border-radius:22px;padding:4px 20px 30px;box-shadow:var(--shadow)}
-.sim-source-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0 16px}
+.sim-source-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:12px 0 16px}
 .source-card,.sim-card button{border:1px solid var(--stroke);background:var(--surface2);color:var(--text);border-radius:16px;padding:16px;text-align:left}
 .source-card.active{outline:2px solid var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--surface2))}
 .source-card b,.source-card small{display:block}.source-card small{color:var(--muted);margin-top:5px}
