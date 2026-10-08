@@ -1,0 +1,62 @@
+{
+  "cycle": "2621",
+  "sourceFile": "2621.pdf",
+  "pageCount": 1654,
+  "sourceSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+  "analysisType": "local raw PDF vector tick extraction",
+  "airportsInAutoIndex": 75,
+  "scope": {
+    "approachPages": 706,
+    "airportLayoutCandidatePages": 78,
+    "total": 784
+  },
+  "results": {
+    "pagesWithTwoMeasuredSourceAxes": 447,
+    "pagesMissingTwoMeasuredAxes": 337,
+    "provisionalGridRegions": 489,
+    "multipleRegionPages": 24,
+    "approachCandidatePages": 393,
+    "airportLayoutCandidatePages": 54
+  },
+  "accuracyCertification": {
+    "independentlyVerifiedPages": 0,
+    "claimedCoveragePercent": 0,
+    "reason": "These are source-grid geometry candidates; official AIP ground-feature comparisons and actual PDF symbol-centre checks are not yet complete.",
+    "navigationUse": false
+  },
+  "inspectedExamples": [
+    {
+      "page": 38,
+      "airport": "OIAW",
+      "chart": "10-9",
+      "regions": [
+        "main",
+        "inset_1"
+      ],
+      "evidence": "Measured separate main-map and parking inset vector tick axes"
+    },
+    {
+      "page": 435,
+      "airport": "OIII",
+      "chart": "11-1",
+      "regions": [
+        "main"
+      ],
+      "evidence": "Measured 3 printed latitude values and 5 longitude values"
+    },
+    {
+      "page": 605,
+      "airport": "OIMM",
+      "chart": "11-1",
+      "regions": [],
+      "evidence": "Insufficient independent printed latitude axes; use official published feature GCPs"
+    }
+  ],
+  "requiredNextActions": [
+    "Review Airport layout selection and all insets, noting existing 78 title-selected Airport map candidates are not a fully audited count.",
+    "Collect matching current-cycle AIP published WGS84 coordinates for all eligible pages.",
+    "Measure actual procedure-fix/runway/navaid/stand graphic symbol centres; do not compute fix lat/lon from radial or DME.",
+    "Independently validate, reject distorted regions, and publish only verified records."
+  ],
+  "note": "Full local provisional candidate and unresolved-page artifacts are downloadable from the associated ChatGPT work session; this summary is not a 100% success claim."
+}
