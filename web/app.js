@@ -722,8 +722,7 @@ function updatePositionUi(p,source){
   $("#posAcc").textContent=Number.isFinite(p.accuracy)?Math.round(p.accuracy)+" m":source==="xplane"?"SIM":"—";
   $("#simStatus").textContent=sourceLabel+" • live";
   const badge=$("#viewerPositionBadge");
-  badge.textContent=sourceLabel+" LIVE";
-  badge.classList.add("live");
+  if(badge){badge.textContent=sourceLabel+" LIVE";badge.classList.add("live")}
   document.querySelectorAll(".source-card").forEach(x=>x.classList.remove("active"));
   if(source==="gps") $("#useGpsBtn").classList.add("active");
   if(source==="xplane") $("#useXpBtn").classList.add("active");
@@ -736,7 +735,7 @@ function clearPositionUi(message="Disconnected"){
   $("#positionDot").classList.remove("live");
   ["#posLat","#posLon","#posAlt","#posHdg","#posGs","#posAcc"].forEach(s=>$(s).textContent="—");
   $("#simStatus").textContent=message;
-  const badge=$("#viewerPositionBadge"); badge.textContent="GPS/SIM OFF"; badge.classList.remove("live");
+  const badge=$("#viewerPositionBadge"); if(badge){badge.textContent="";badge.classList.remove("live")}
   document.querySelectorAll(".source-card").forEach(x=>x.classList.remove("active"));
   hideAircraftMarker();
 }
