@@ -840,12 +840,13 @@ function startDeviceGps(){
     clearPositionUi(msg);
   },{enableHighAccuracy:true,maximumAge:1000,timeout:12000});
 }
-let bridgeTargetSource=localStorage.getItem("bridgeTargetSource")||(activePositionSource==="fsx"?"fsx":"xplane");
+const LOCAL_SIM_WEB=location.protocol==="http:"&&location.port==="8080";
+let bridgeTargetSource=LOCAL_SIM_WEB?"fsx":(localStorage.getItem("bridgeTargetSource")||(activePositionSource==="fsx"?"fsx":"xplane"));
 const bridgeMeta={
   xplane:{label:"X-PLANE 11.5",title:"X-PLANE 11.5 BRIDGE",port:8765,securePort:8766,
     help:"Run the standalone JEPPIRAN X-Plane Bridge on the simulator PC, then connect using the WebSocket address printed by the bridge."},
-  fsx:{label:"FSX",title:"FSX SIMCONNECT BRIDGE",port:8775,securePort:8776,
-    help:"Run the standalone JEPPIRAN FSX Bridge on the FSX PC. It reads the user aircraft directly through SimConnect and streams the live position to JEPPIRAN."}
+  fsx:{label:"FSX",title:"FSX LOCAL SIMCONNECT",port:8775,localWebPort:8080,
+    help:"No certificate or iPad file is required. Run JEPPIRAN FSX Bridge on the FSX PC. On iPad open the Local Web address printed by the bridge; JEPPIRAN connects to FSX automatically."}
 };
 function setBridgeTarget(source){
   bridgeTargetSource=bridgeMeta[source]?source:"xplane";
@@ -855,7 +856,9 @@ function setBridgeTarget(source){
   $("#bridgeHelp").textContent=meta.help;
   $("#connectBridgeBtn").textContent="CONNECT "+meta.label;
   const saved=localStorage.getItem("bridgeUrl:"+bridgeTargetSource)||(bridgeTargetSource==="xplane"?localStorage.getItem("bridgeUrl"):"");
-  $("#bridgeUrl").value=saved||("ws://192.168.1.50:"+meta.port);
+  $("#bridgeUrl").value=(LOCAL_SIM_WEB&&bridgeTargetSource==="fsx")
+    ?("ws://"+location.hostname+":"+meta.port)
+    :(saved||("ws://192.168.1.50:"+meta.port));
   document.querySelectorAll(".source-card").forEach(x=>x.classList.remove("active"));
   if(bridgeTargetSource==="xplane")$("#useXpBtn").classList.add("active");
   if(bridgeTargetSource==="fsx")$("#useFsxBtn").classList.add("active");
@@ -883,7 +886,7 @@ function connectSimulatorBridge(){
         accuracy:null,timestamp:Date.now()},resolvedSource);
     }catch(_){}
   };
-  bridgeSocket.onerror=()=>{$("#simStatus").textContent="Bridge connection error. Check URL/firewall/TLS/certificate."};
+  bridgeSocket.onerror=()=>{$("#simStatus").textContent="Bridge connection error. Check the local bridge, PC firewall and network address."};
   bridgeSocket.onclose=()=>{bridgeSocket=null;if(activePositionSource===source)clearPositionUi(meta.label+" bridge disconnected.")};
 }
 $("#useGpsBtn").addEventListener("click",startDeviceGps);
@@ -893,11 +896,16 @@ $("#useFsxBtn").addEventListener("click",()=>{setBridgeTarget("fsx");$("#bridgeU
 $("#connectBridgeBtn").addEventListener("click",connectSimulatorBridge);
 $("#disconnectPositionBtn").addEventListener("click",()=>disconnectPosition());
 setBridgeTarget(bridgeTargetSource);
-if(activePositionSource==="gps") setTimeout(startDeviceGps,500);
+if(LOCAL_SIM_WEB){
+  $("#simStatus").textContent="Local FSX mode • connecting automatically…";
+  setTimeout(connectSimulatorBridge,450);
+}else if(activePositionSource==="gps"){
+  setTimeout(startDeviceGps,500);
+}
 /* ===== End position sources ===== */
 
 window.addEventListener("resize",()=>requestAnimationFrame(()=>{applyChartTransform();updateAircraftMarker()}));
 window.addEventListener("orientationchange",()=>setTimeout(()=>{window.dispatchEvent(new Event("resize"));refitSelectedChartForLayout()},180));
-if("serviceWorker" in navigator) navigator.serviceWorker.register("./service-worker.js").catch(()=>{});
+if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")) navigator.serviceWorker.register("./service-worker.js").catch(()=>{});
 loadData();
 const start=(location.hash||"#home").slice(1); const initial=["home","charts","wx","simulator"].includes(start)?start:"home"; renderRoute(initial); if(!location.hash)history.replaceState({route:initial},"","#"+initial);
