@@ -216,3 +216,136 @@ body.viewer-fullscreen .fullscreen-exit{display:block}
   0%{transform:scale(.55);opacity:.95}
   70%,100%{transform:scale(1.35);opacity:0}
 }
+
+/* ===== 2.0 chart workflow: persistent airport rail + on-demand chart tree ===== */
+.charts-layout.active{
+  position:relative;
+  display:grid;
+  grid-template-columns:230px minmax(0,1fr);
+  grid-template-rows:1fr;
+  height:calc(100dvh - 76px);
+  min-height:0;
+  overflow:hidden
+}
+.airport-pane{
+  grid-column:1;
+  grid-row:1;
+  z-index:35;
+  min-width:0;
+  max-height:none!important;
+  border-width:0 1px 0 0!important
+}
+.viewer-pane{
+  grid-column:2;
+  grid-row:1;
+  min-width:0;
+  min-height:0!important;
+  overflow:hidden
+}
+.chart-tree{
+  position:absolute;
+  z-index:45;
+  top:0;
+  bottom:0;
+  left:230px;
+  width:min(340px,calc(100vw - 250px));
+  max-height:none!important;
+  border-width:0 1px 0 0!important;
+  box-shadow:18px 0 36px rgba(0,0,0,.32);
+  transform:translateX(calc(-100% - 8px));
+  transition:transform .2s ease;
+  pointer-events:none
+}
+.chart-tree.open{
+  transform:translateX(0);
+  pointer-events:auto
+}
+.tree-pane-head{justify-content:space-between}
+.tree-pane-head>div{min-width:0}
+.tree-pane-head small{display:block;margin:3px 0 0;color:var(--muted)}
+.tree-toggle-btn.active{outline:2px solid var(--accent);background:color-mix(in srgb,var(--accent) 14%,var(--surface2))}
+.viewer-actions{align-items:center;overflow-x:auto;scrollbar-width:none}
+.viewer-actions::-webkit-scrollbar{display:none}
+.viewer-nav-group,.viewer-zoom-group{display:flex;gap:5px;flex-shrink:0}
+.compact-btn{min-width:38px;padding:9px 10px}
+.zoom-value{min-width:62px;padding-left:9px;padding-right:9px}
+.pdf-stage{
+  position:relative;
+  overflow:hidden!important;
+  touch-action:none;
+  user-select:none;
+  -webkit-user-select:none;
+  cursor:grab
+}
+.pdf-stage:active{cursor:grabbing}
+.pdf-canvas-wrap{
+  position:relative;
+  min-height:100%;
+  display:flex;
+  justify-content:center;
+  align-items:flex-start;
+  overflow:visible;
+  padding:0
+}
+.chart-transform-layer{
+  position:relative;
+  flex:0 0 auto;
+  transform-origin:50% 0;
+  will-change:transform;
+  touch-action:none
+}
+#pdfCanvas{display:block;max-width:none;touch-action:none}
+.aircraft-marker{
+  transform:translate(-50%,-50%) rotate(var(--aircraft-heading)) scale(var(--marker-inverse-scale,1))
+}
+body.viewer-fullscreen .charts-layout.active{
+  display:grid!important;
+  grid-template-columns:1fr;
+  height:100dvh
+}
+body.viewer-fullscreen .viewer-pane{
+  grid-column:1;
+  height:100dvh
+}
+body.viewer-fullscreen .chart-tree{display:none!important}
+body.viewer-fullscreen .pdf-stage{height:100dvh!important}
+@media (max-width:850px){
+  .charts-layout.active{
+    grid-template-columns:180px minmax(0,1fr);
+    grid-template-rows:1fr;
+    height:calc(100dvh - 76px);
+    min-height:0;
+    overflow:hidden
+  }
+  .airport-pane{
+    grid-column:1;
+    grid-row:1;
+    max-height:none!important;
+    border-width:0 1px 0 0!important
+  }
+  .viewer-pane{grid-column:2;grid-row:1;min-height:0!important}
+  .chart-tree{
+    left:180px;
+    width:min(330px,calc(100vw - 195px));
+    max-height:none!important;
+    border-width:0 1px 0 0!important
+  }
+  .airport-list{
+    display:flex!important;
+    flex-direction:column;
+    grid-template-columns:none!important;
+    overflow:auto
+  }
+  .viewer-toolbar{height:auto;min-height:58px;align-items:flex-start}
+  .viewer-actions{max-width:70%;padding-bottom:2px}
+}
+@media (max-width:620px){
+  .charts-layout.active{grid-template-columns:142px minmax(0,1fr)}
+  .chart-tree{left:142px;width:calc(100vw - 154px)}
+  .airport-item{min-height:72px}
+  .airport-item .airport-copy{min-height:72px;padding:10px}
+  .airport-item b{font-size:16px}
+  .airport-item small{font-size:10px}
+  .viewer-position-badge,.viewer-nav-group{display:none}
+  .viewer-actions{max-width:76%}
+}
