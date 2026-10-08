@@ -810,7 +810,7 @@ function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":
 
 /* ===== Position sources: iOS GPS + simulator WebSocket bridges ===== */
 let activePositionSource=localStorage.getItem("positionSource")||"";
-let gpsWatchId=null, bridgeSocket=null, relaySocket=null, relayPingTimer=null, relayReconnectTimer=null, relayHost="", relayTopic="", lastPosition=null, lastGpsFix=null;
+let gpsWatchId=null, bridgeSocket=null, relaySocket=null, relayPingTimer=null, relayReconnectTimer=null, relayAwaitPositionTimer=null, relayHost="", relayTopic="", lastPosition=null, lastGpsFix=null;
 
 function positionNumber(v,d=5){return Number.isFinite(v)?Number(v).toFixed(d):"—"}
 function updatePositionUi(p,source){
@@ -857,6 +857,7 @@ function stopBridge(){
   if(bridgeSocket){try{bridgeSocket.onclose=null;bridgeSocket.close()}catch(e){}}
   bridgeSocket=null;
   if(relayReconnectTimer){clearTimeout(relayReconnectTimer);relayReconnectTimer=null}
+  if(relayAwaitPositionTimer){clearTimeout(relayAwaitPositionTimer);relayAwaitPositionTimer=null}
   if(relayPingTimer){clearInterval(relayPingTimer);relayPingTimer=null}
   if(relaySocket){try{relaySocket.onclose=null;relaySocket.close()}catch(e){}}
   relaySocket=null;relayHost="";relayTopic="";
@@ -1002,6 +1003,7 @@ async function connectFsxRelay(host,{reconnect=false}={}){
   relayHost=host;
   relayTopic=await fsxRelayTopicFor(host);
   if(relayReconnectTimer){clearTimeout(relayReconnectTimer);relayReconnectTimer=null}
+  if(relayAwaitPositionTimer){clearTimeout(relayAwaitPositionTimer);relayAwaitPositionTimer=null}
   if(relayPingTimer){clearInterval(relayPingTimer);relayPingTimer=null}
   if(relaySocket){try{relaySocket.onclose=null;relaySocket.close()}catch(_){}relaySocket=null}
   if(!reconnect)markFsxWaiting("Connecting securely to FSX Bridge v1.3 for "+host+" …");
@@ -1009,14 +1011,14 @@ async function connectFsxRelay(host,{reconnect=false}={}){
   let ws;
   try{ws=new WebSocket("wss://demo.tbmq.io/mqtt",["mqtt"])}catch(e){markFsxWaiting("FSX secure relay could not start: "+e.message);return}
   relaySocket=ws;ws.binaryType="arraybuffer";
+  let relaySubscribed=false;
   const connectTimeout=setTimeout(()=>{
-    if(relaySocket===ws && ws.readyState!==1){
+    if(relaySocket===ws&&!relaySubscribed){
+      markFsxWaiting("FSX broker handshake timed out. Check Internet and WSS port 443, then retry.");
       try{ws.close()}catch(_){}
-      markFsxWaiting("FSX relay timeout. Confirm Bridge v1.4 says Secure relay: CONNECTED via TBMQ, then try again.");
     }
-  },8000);
+  },12000);
   ws.onopen=()=>{
-    clearTimeout(connectTimeout);
     if(ws!==relaySocket)return;
     ws.send(mqttConnectPacket(clientId,"demo"));
     markFsxWaiting("Secure relay connected • subscribing to FSX "+host+" …");
@@ -1032,7 +1034,15 @@ async function connectFsxRelay(host,{reconnect=false}={}){
         if(pkt.body.length<2||pkt.body[1]!==0){markFsxWaiting("FSX relay broker rejected the connection.");continue}
         try{ws.send(mqttSubscribePacket(relayTopic,1));}catch(_){}
       }else if(type===9){
-        markFsxWaiting("FSX relay ready • waiting for SimConnect position from Bridge v1.3 …");
+        relaySubscribed=true;
+        clearTimeout(connectTimeout);
+        markFsxWaiting("Relay ONLINE • subscribed • waiting for FSX Bridge v1.4 at "+host+" …");
+        if(relayAwaitPositionTimer)clearTimeout(relayAwaitPositionTimer);
+        relayAwaitPositionTimer=setTimeout(()=>{
+          if(ws===relaySocket&&activePositionSource==="fsx"&&!lastPosition){
+            markFsxWaiting("Relay ONLINE but NO FSX POSITION after 15s. Verify FSX is running, Bridge v1.4 shows Secure relay: CONNECTED, and the IPv4 matches "+host+".");
+          }
+        },15000);
       }else if(type===3){
         const b=pkt.body;if(b.length<2)continue;
         const tl=(b[0]<<8)|b[1];if(2+tl>b.length)continue;
@@ -1042,6 +1052,7 @@ async function connectFsxRelay(host,{reconnect=false}={}){
         try{
           const d=JSON.parse(new TextDecoder().decode(b.slice(pos))),lat=Number(d.lat),lon=Number(d.lon);
           if(!Number.isFinite(lat)||!Number.isFinite(lon)||lat<-90||lat>90||lon<-180||lon>180)continue;
+          if(relayAwaitPositionTimer){clearTimeout(relayAwaitPositionTimer);relayAwaitPositionTimer=null}
           updatePositionUi({lat,lon,alt:d.alt==null?null:Number(d.alt),heading:d.heading==null?null:Number(d.heading),
             groundspeed:(d.groundspeed??d.groundSpeedMps)==null?null:Number(d.groundspeed??d.groundSpeedMps),
             pitch:d.pitch==null?null:Number(d.pitch),roll:d.roll==null?null:Number(d.roll),accuracy:null,timestamp:Date.now()},"fsx");
@@ -1059,6 +1070,8 @@ async function connectFsxRelay(host,{reconnect=false}={}){
   ws.onclose=()=>{
     if(ws!==relaySocket)return;
     relaySocket=null;
+    clearTimeout(connectTimeout);
+    if(relayAwaitPositionTimer){clearTimeout(relayAwaitPositionTimer);relayAwaitPositionTimer=null}
     if(relayPingTimer){clearInterval(relayPingTimer);relayPingTimer=null}
     if(activePositionSource==="fsx"&&relayHost){
       markFsxWaiting("FSX relay disconnected • reconnecting…");
