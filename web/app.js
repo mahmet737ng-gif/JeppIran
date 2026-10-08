@@ -25,7 +25,7 @@ let chartMetarTimer=null, chartMetarAirport="", chartMetarValue="";
 let chartPointers=new Map(), pinchStartDistance=0, pinchStartZoom=1, panStart=null, swipeStart=null, lastTapAt=0;
 let georefByPage=new Map(), githubWxCache=null, githubWxCacheAt=0;
 const $=s=>document.querySelector(s);
-const $=s=>[...document.querySelectorAll(s)];
+const $$=s=>[...document.querySelectorAll(s)];
 function readJsonStorage(key,fallback={}){
   try{
     const raw=localStorage.getItem(key);
@@ -45,7 +45,7 @@ window.addEventListener("error",e=>{
 });
 
 function renderRoute(name){
-  $(".view").forEach(v=>v.classList.remove("active"));
+  $$(".view").forEach(v=>v.classList.remove("active"));
   document.body.classList.remove("viewer-fullscreen");
   const el=$("#"+name+"View")||$("#homeView"); el.classList.add("active");
   // When the app is being served by the FSX Local Web bridge, entering the
