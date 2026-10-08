@@ -25,6 +25,7 @@
         android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
+        android:name=".JeppIranApplication"
         android:allowBackup="true"
         android:icon="@drawable/jeppiran_logo"
         android:roundIcon="@drawable/jeppiran_logo"

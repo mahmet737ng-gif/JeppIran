@@ -17,6 +17,7 @@ import kotlin.math.min
 class SplashActivity : AppCompatActivity() {
 
     private val splashDuration = 3000L
+    private val splashIdleThresholdMs = 10 * 60 * 1000L
     private val handler = Handler(Looper.getMainLooper())
     private lateinit var splashView: SplashView
 
@@ -35,7 +36,34 @@ class SplashActivity : AppCompatActivity() {
          * app (or taps the launcher icon again), do not replay the splash.
          * A real cold start still has SplashActivity as the task root.
          */
-        if (!isTaskRoot) {
+        val lifecyclePrefs =
+            getSharedPreferences(
+                "jeppiran_process_lifecycle",
+                MODE_PRIVATE
+            )
+
+        val lastBackgroundAt =
+            lifecyclePrefs.getLong(
+                "last_background_at",
+                0L
+            )
+
+        val returnedRecently =
+            lastBackgroundAt > 0L &&
+                System.currentTimeMillis() -
+                    lastBackgroundAt <
+                splashIdleThresholdMs
+
+        if (
+            !isTaskRoot ||
+            returnedRecently
+        ) {
+            startActivity(
+                Intent(
+                    this,
+                    MainActivity::class.java
+                )
+            )
             finish()
             return
         }

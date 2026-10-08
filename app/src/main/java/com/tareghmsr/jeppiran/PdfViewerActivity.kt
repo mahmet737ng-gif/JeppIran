@@ -3695,24 +3695,10 @@ private val locationPermissionLauncher =
     private fun buildPageText():
         String {
 
-        val chartPosition =
-            "${currentChartIndex + 1}/${airportCharts.size}"
-
-
-        val globalPage =
-            currentChartGlobalPage()
-
-
-        val localPage =
-            airportCharts
-                .getOrNull(
-                    currentChartIndex
-                )
-                ?.pdfPage
-                ?: -1
-
-
-        return "$chartPosition  •  $category"
+        // The chart index/page counter is intentionally hidden. The TextView
+        // remains in the toolbar as a flexible spacer so action buttons keep
+        // their established alignment.
+        return ""
     }
 
 
@@ -7358,6 +7344,9 @@ private val locationPermissionLauncher =
         private var swiping =
             false
 
+        private var alignTopOnNextDraw =
+            true
+
 
         private var contentLeft =
             0
@@ -7580,6 +7569,9 @@ private val locationPermissionLauncher =
 
             swiping =
                 false
+
+            alignTopOnNextDraw =
+                true
 
 
             selectedTextIndex =
@@ -8040,17 +8032,42 @@ private val locationPermissionLauncher =
 
 
             val baseScale =
-                min(
-                    viewport.width() /
-                        image.width.toFloat(),
-                    viewport.height() /
-                        image.height.toFloat()
+                baseScaleFor(
+                    image,
+                    viewport
                 )
 
 
             val finalScale =
                 baseScale *
                     scale
+
+            if (
+                alignTopOnNextDraw
+            ) {
+                val initialHeight =
+                    image.height *
+                        finalScale
+
+                val initialMaxY =
+                    max(
+                        0f,
+                        (
+                            initialHeight -
+                                viewport.height()
+                            ) /
+                            2f
+                    )
+
+                offsetY =
+                    initialMaxY
+
+                offsetX =
+                    0f
+
+                alignTopOnNextDraw =
+                    false
+            }
 
 
             val width =
@@ -8841,11 +8858,9 @@ private val locationPermissionLauncher =
 
 
             val baseScale =
-                min(
-                    viewport.width() /
-                        image.width.toFloat(),
-                    viewport.height() /
-                        image.height.toFloat()
+                baseScaleFor(
+                    image,
+                    viewport
                 )
 
 
@@ -9755,6 +9770,47 @@ private val locationPermissionLauncher =
         }
 
 
+        private fun baseScaleFor(
+            image: Bitmap,
+            viewport: RectF
+        ): Float {
+
+            if (
+                image.width <= 0 ||
+                image.height <= 0 ||
+                viewport.width() <= 0f ||
+                viewport.height() <= 0f
+            ) {
+                return 1f
+            }
+
+            val widthScale =
+                viewport.width() /
+                    image.width.toFloat()
+
+            val heightScale =
+                viewport.height() /
+                    image.height.toFloat()
+
+            /*
+             * Approach plates are portrait pages. Width-fill removes the large
+             * side margins and makes the chart sit directly under the viewer
+             * chrome. Landscape pages still use contain-fit.
+             */
+            return if (
+                image.height >=
+                    image.width
+            ) {
+                widthScale
+            } else {
+                min(
+                    widthScale,
+                    heightScale
+                )
+            }
+        }
+
+
         private fun constrainPan() {
 
             val image =
@@ -9766,17 +9822,8 @@ private val locationPermissionLauncher =
                 scale <=
                 1.02f
             ) {
-
                 scale =
                     1f
-
-                offsetX =
-                    0f
-
-                offsetY =
-                    0f
-
-                return
             }
 
 
@@ -9785,11 +9832,9 @@ private val locationPermissionLauncher =
 
 
             val baseScale =
-                min(
-                    viewport.width() /
-                        image.width.toFloat(),
-                    viewport.height() /
-                        image.height.toFloat()
+                baseScaleFor(
+                    image,
+                    viewport
                 )
 
 
