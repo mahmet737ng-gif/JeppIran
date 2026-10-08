@@ -19,6 +19,9 @@ const AIRPORTS={
 };
 
 let charts=[], manifest=null, selectedAirport="", selectedChart=null, expanded=new Set(["Airport"]);
+let chartTreeOpen=false;
+let chartZoom=1, chartPanX=0, chartPanY=0;
+let chartPointers=new Map(), pinchStartDistance=0, pinchStartZoom=1, panStart=null, swipeStart=null, lastTapAt=0;
 let georefByPage=new Map(), githubWxCache=null, githubWxCacheAt=0;
 const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
@@ -100,6 +103,21 @@ function renderAirports(filter=""){
 }
 $("#airportSearch").addEventListener("input",e=>renderAirports(e.target.value));
 
+function setChartTreeOpen(open){
+  chartTreeOpen=!!open;
+  const pane=$("#chartTreePane");
+  if(pane)pane.classList.toggle("open",chartTreeOpen);
+  const btn=$("#chartTreeToggleBtn");
+  if(btn){
+    btn.classList.toggle("active",chartTreeOpen);
+    btn.setAttribute("aria-expanded",chartTreeOpen?"true":"false");
+  }
+}
+function openChartTree(){setChartTreeOpen(true)}
+function closeChartTree(){setChartTreeOpen(false)}
+$("#chartTreeToggleBtn").addEventListener("click",()=>setChartTreeOpen(!chartTreeOpen));
+$("#chartTreeCloseBtn").addEventListener("click",closeChartTree);
+
 function selectAirport(icao){
   selectedAirport=icao; selectedChart=null; expanded=new Set(["Airport"]);
   renderAirports($("#airportSearch").value);
@@ -109,7 +127,7 @@ function selectAirport(icao){
   $("#pdfStage").innerHTML='<div class="empty-state"><img src="./logo.svg" alt=""><b>Select a chart</b><span>Choose Airport, STAR, SID, Approach or Other below.</span></div>';
   $("#offlinePdfBtn").disabled=true; currentPdfUrl="";
   renderTree();
-  if(matchMedia("(orientation:portrait)").matches) $("#chartTreePane").scrollIntoView({behavior:"smooth",block:"end"});
+  openChartTree();
 }
 function renderTree(){
   const root=$("#chartTree"); root.innerHTML="";
@@ -120,7 +138,8 @@ function renderTree(){
     if(!items.length)return;
     const wrap=document.createElement("div"); wrap.className="tree-group";
     const h=document.createElement("button"); h.className="tree-group-head";
-    h.textContent=(expanded.has(cat)?"▼ ":"▶ ")+cat+" ("+items.length+")";
+    const catLabel=cat==="Airport"?"AIRPORT":cat==="Approach"?"APP":cat.toUpperCase();
+    h.textContent=(expanded.has(cat)?"▼ ":"▶ ")+catLabel+" ("+items.length+")";
     h.onclick=()=>{expanded.has(cat)?expanded.delete(cat):expanded.add(cat);renderTree()};
     wrap.appendChild(h);
     if(expanded.has(cat)){
@@ -223,7 +242,7 @@ function updateAircraftMarker(){
   if(!model){hideAircraftMarker();return}
   const p=projectGeo(model,Number(pos.lat),Number(pos.lon));
   if(!p){hideAircraftMarker();return}
-  const wrap=canvas.parentElement;
+  const wrap=$("#chartTransformLayer")||canvas.parentElement;
   let marker=$("#aircraftMarker");
   if(!marker){
     marker=document.createElement("div");
@@ -234,8 +253,8 @@ function updateAircraftMarker(){
   }else if(marker.parentElement!==wrap){
     wrap.appendChild(marker);
   }
-  const x=canvas.offsetLeft+p.x/model.width*canvas.clientWidth;
-  const y=canvas.offsetTop+p.y/model.height*canvas.clientHeight;
+  const x=p.x/model.width*canvas.clientWidth;
+  const y=p.y/model.height*canvas.clientHeight;
   marker.style.left=x+"px";marker.style.top=y+"px";
   marker.style.setProperty("--aircraft-heading",renderedGeoHeading(model,Number(pos.lat),Number(pos.heading),canvas)+"deg");
   marker.classList.add("visible");
@@ -267,7 +286,7 @@ async function renderSelectedPdf(c){
   currentPdfUrl="./charts/"+encodeURIComponent(info.file||selectedAirport+".pdf");
   $("#offlinePdfBtn").disabled=false;
   const stage=$("#pdfStage");
-  stage.innerHTML='<div class="pdf-loading">Loading chart…</div><div class="pdf-canvas-wrap"><canvas id="pdfCanvas"></canvas></div>';
+  stage.innerHTML='<div class="pdf-loading">Loading chart…</div><div class="pdf-canvas-wrap"><div id="chartTransformLayer" class="chart-transform-layer"><canvas id="pdfCanvas"></canvas></div></div>';
   const lib=await pdfJs(), bytes=await getPdfBytes(currentPdfUrl,true);
   if(token!==pdfRenderToken)return;
   const doc=await lib.getDocument({data:bytes}).promise;
@@ -282,12 +301,140 @@ async function renderSelectedPdf(c){
   const viewport=page.getViewport({scale:cssScale*dpr});
   canvas.width=Math.floor(viewport.width); canvas.height=Math.floor(viewport.height);
   canvas.style.width=Math.floor(viewport.width/dpr)+"px"; canvas.style.height=Math.floor(viewport.height/dpr)+"px";
+  const layer=$("#chartTransformLayer");
+  layer.style.width=canvas.style.width; layer.style.height=canvas.style.height;
+  chartZoom=1;chartPanX=0;chartPanY=0;
   await page.render({canvasContext:canvas.getContext("2d",{alpha:false}),viewport}).promise;
   stage.querySelector(".pdf-loading")?.remove();
+  applyChartTransform();
   updateAircraftMarker();
 }
-function selectChart(c){
+function airportChartSequence(){
+  return charts.filter(c=>c.airport===selectedAirport)
+    .sort((a,b)=>(a.pdf_page||0)-(b.pdf_page||0));
+}
+function navigateChart(delta){
+  if(!selectedChart||!selectedAirport)return;
+  const seq=airportChartSequence();
+  const idx=seq.findIndex(c=>Number(c.page)===Number(selectedChart.page));
+  const next=idx+delta;
+  if(idx<0||next<0||next>=seq.length)return;
+  selectChart(seq[next],{keepTreeClosed:true});
+}
+function clampChartPan(){
+  const stage=$("#pdfStage"),layer=$("#chartTransformLayer");
+  if(!stage||!layer||chartZoom<=1.001){chartPanX=0;chartPanY=0;return}
+  const w=layer.offsetWidth*chartZoom,h=layer.offsetHeight*chartZoom;
+  const maxX=Math.max(0,(w-stage.clientWidth)/2+80);
+  const maxY=Math.max(0,h-stage.clientHeight+80);
+  chartPanX=Math.max(-maxX,Math.min(maxX,chartPanX));
+  chartPanY=Math.max(-maxY,Math.min(80,chartPanY));
+}
+function applyChartTransform(){
+  const layer=$("#chartTransformLayer");
+  if(!layer)return;
+  clampChartPan();
+  layer.style.transform="translate3d("+chartPanX+"px,"+chartPanY+"px,0) scale("+chartZoom+")";
+  layer.style.setProperty("--marker-inverse-scale",(1/chartZoom).toFixed(5));
+  const label=$("#zoomValue"); if(label)label.textContent=Math.round(chartZoom*100)+"%";
+  updateAircraftMarker();
+}
+function setChartZoom(next,{resetPan=false}={}){
+  chartZoom=Math.max(1,Math.min(4,Number(next)||1));
+  if(resetPan||chartZoom<=1.001){chartPanX=0;chartPanY=0}
+  applyChartTransform();
+}
+function resetChartView(){setChartZoom(1,{resetPan:true})}
+function zoomAround(next,cx,cy){
+  const stage=$("#pdfStage");
+  if(!stage){setChartZoom(next);return}
+  const old=chartZoom;
+  const z=Math.max(1,Math.min(4,next));
+  if(Math.abs(z-old)<0.001)return;
+  const r=stage.getBoundingClientRect();
+  const px=cx-r.left-r.width/2,py=cy-r.top;
+  const ratio=z/old;
+  chartPanX=px-(px-chartPanX)*ratio;
+  chartPanY=py-(py-chartPanY)*ratio;
+  chartZoom=z;
+  applyChartTransform();
+}
+$("#zoomOutBtn").addEventListener("click",()=>setChartZoom(chartZoom/1.25));
+$("#zoomInBtn").addEventListener("click",()=>setChartZoom(chartZoom*1.25));
+$("#zoomResetBtn").addEventListener("click",resetChartView);
+$("#prevChartBtn").addEventListener("click",()=>navigateChart(-1));
+$("#nextChartBtn").addEventListener("click",()=>navigateChart(1));
+
+function setupChartGestures(){
+  const stage=$("#pdfStage");
+  if(!stage||stage.dataset.gestures==="1")return;
+  stage.dataset.gestures="1";
+  stage.addEventListener("wheel",e=>{
+    if(!$("#pdfCanvas"))return;
+    e.preventDefault();
+    const factor=e.deltaY<0?1.12:1/1.12;
+    zoomAround(chartZoom*factor,e.clientX,e.clientY);
+  },{passive:false});
+  stage.addEventListener("pointerdown",e=>{
+    if(!$("#pdfCanvas"))return;
+    try{stage.setPointerCapture(e.pointerId)}catch(_){}
+    chartPointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(chartPointers.size===1){
+      panStart={x:e.clientX,y:e.clientY,panX:chartPanX,panY:chartPanY};
+      swipeStart={x:e.clientX,y:e.clientY,time:Date.now()};
+    }else if(chartPointers.size===2){
+      const pts=[...chartPointers.values()];
+      pinchStartDistance=Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y);
+      pinchStartZoom=chartZoom;
+      panStart=null;swipeStart=null;
+    }
+  });
+  stage.addEventListener("pointermove",e=>{
+    if(!chartPointers.has(e.pointerId))return;
+    chartPointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
+    if(chartPointers.size===2){
+      const pts=[...chartPointers.values()];
+      const dist=Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y);
+      const cx=(pts[0].x+pts[1].x)/2,cy=(pts[0].y+pts[1].y)/2;
+      if(pinchStartDistance>0)zoomAround(pinchStartZoom*(dist/pinchStartDistance),cx,cy);
+      return;
+    }
+    if(chartPointers.size===1&&chartZoom>1.001&&panStart){
+      chartPanX=panStart.panX+(e.clientX-panStart.x);
+      chartPanY=panStart.panY+(e.clientY-panStart.y);
+      applyChartTransform();
+    }
+  });
+  const finishPointer=e=>{
+    const start=swipeStart;
+    chartPointers.delete(e.pointerId);
+    if(chartPointers.size===0){
+      if(chartZoom<=1.001&&start){
+        const dx=e.clientX-start.x,dy=e.clientY-start.y,dt=Date.now()-start.time;
+        if(dt<700&&Math.abs(dx)>80&&Math.abs(dx)>Math.abs(dy)*1.35){
+          dx<0?navigateChart(1):navigateChart(-1);
+        }else if(dt<320&&Math.hypot(dx,dy)<18){
+          const now=Date.now();
+          if(now-lastTapAt<330){
+            zoomAround(chartZoom>1.2?1:2,e.clientX,e.clientY);
+            lastTapAt=0;
+          }else lastTapAt=now;
+        }
+      }
+      panStart=null;swipeStart=null;pinchStartDistance=0;
+    }else if(chartPointers.size===1&&chartZoom>1.001){
+      const p=[...chartPointers.values()][0];
+      panStart={x:p.x,y:p.y,panX:chartPanX,panY:chartPanY};
+    }
+  };
+  stage.addEventListener("pointerup",finishPointer);
+  stage.addEventListener("pointercancel",finishPointer);
+}
+setupChartGestures();
+
+function selectChart(c,options={}){
   selectedChart=c; expanded.add(c.category||"Other"); renderTree();
+  if(!options.keepTreeClosed) closeChartTree();
   $("#viewerChart").textContent=(c.chart_number?c.chart_number+" • ":"")+(c.name||("Chart "+c.page));
   renderSelectedPdf(c).catch(e=>{
     $("#pdfStage").innerHTML='<div class="empty-state"><img src="./logo.svg" alt=""><b>Chart unavailable</b><span>'+escapeHtml(e.message)+'</span></div>';
@@ -565,7 +712,7 @@ const savedBridge=localStorage.getItem("bridgeUrl"); if(savedBridge) $("#bridgeU
 if(activePositionSource==="gps") setTimeout(startDeviceGps,500);
 /* ===== End position sources ===== */
 
-window.addEventListener("resize",()=>requestAnimationFrame(updateAircraftMarker));
+window.addEventListener("resize",()=>requestAnimationFrame(()=>{applyChartTransform();updateAircraftMarker()}));
 window.addEventListener("orientationchange",()=>setTimeout(()=>{window.dispatchEvent(new Event("resize"));updateAircraftMarker()},150));
 if("serviceWorker" in navigator) navigator.serviceWorker.register("./service-worker.js").catch(()=>{});
 loadData();
