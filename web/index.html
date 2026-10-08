@@ -158,15 +158,25 @@
         </article>
 
         <article class="sim-card">
-          <h3 id="bridgeTitle">X-PLANE 11.5 BRIDGE</h3>
-          <p id="bridgeHelp" class="sim-help">X-Plane 11.5 sends UDP, which Safari cannot receive directly. Run the JEPPIRAN X-Plane Bridge on the simulator PC, then connect here using its WebSocket address.</p>
-          <label id="bridgeInputLabel" class="field-label" for="bridgeUrl">Bridge WebSocket URL</label>
+          <h3>X-PLANE 11.5 BRIDGE</h3>
+          <p class="sim-help">X-Plane 11.5 sends UDP, which Safari cannot receive directly. Run the JEPPIRAN X-Plane Bridge on the simulator PC, then connect here using its WebSocket address.</p>
+          <label class="field-label" for="bridgeUrl">X-Plane Bridge WebSocket URL</label>
           <input id="bridgeUrl" class="wide-input" value="ws://192.168.1.50:8765" autocapitalize="off" autocomplete="off" spellcheck="false">
           <div class="sim-buttons">
             <button id="connectBridgeBtn">CONNECT X-PLANE</button>
+          </div>
+        </article>
+
+        <article class="sim-card">
+          <h3>FSX SIMCONNECT BRIDGE</h3>
+          <p class="sim-help">Run JEPPIRAN FSX Bridge v1.3 on the FSX PC. Enter the Windows IPv4 address printed by the bridge. JEPPIRAN stays on its permanent HTTPS address and keeps FSX connected while you use Home, Charts and WX.</p>
+          <label class="field-label" for="fsxPcIp">FSX PC IPv4 Address</label>
+          <input id="fsxPcIp" class="wide-input" placeholder="e.g. 10.31.2.70" autocapitalize="off" autocomplete="off" spellcheck="false">
+          <div class="sim-buttons">
+            <button id="connectFsxBtn">CONNECT FSX</button>
             <button id="disconnectPositionBtn" class="secondary-btn">DISCONNECT</button>
           </div>
-          <small class="sim-note">For FSX, run <b>JEPPIRAN FSX Bridge v1.3</b>, select <b>FSX</b>, enter any PC IPv4 address printed by the bridge, then tap <b>CONNECT FSX</b>. The main JEPPIRAN HTTPS address stays open and the FSX connection remains active while you use Home, Charts and WX. No certificate or profile is required.</small>
+          <small class="sim-note">Use the actual LAN/hotspot IPv4 address, usually the address on the same network as your iPad. No certificate, profile, or port entry is required.</small>
         </article>
 
         <article class="sim-card">
@@ -249,6 +259,6 @@
     });
   })();
   </script>
-  <script src="./app.js?v=2620-28" defer></script>
+  <script src="./app.js?v=2620-29" defer></script>
 </body>
 </html>
