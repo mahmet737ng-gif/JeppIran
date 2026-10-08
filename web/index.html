@@ -173,11 +173,11 @@
           <label class="field-label" for="fsxPcIp">FSX PC IPv4 Address</label>
           <input id="fsxPcIp" class="wide-input" placeholder="e.g. 10.31.2.70" autocapitalize="off" autocomplete="off" spellcheck="false">
           <div class="sim-buttons">
-            <button id="connectFsxBtn" type="button" onclick="this.textContent='CONNECTING…';this.disabled=true;var s=document.getElementById('fsxInlineStatus');if(s)s.textContent='Starting FSX connection…';try{if(window.jeppiranConnectFsx){window.jeppiranConnectFsx();}else{if(s)s.textContent='FSX connector is still loading. Refresh this page once.';}}catch(e){if(s)s.textContent='FSX connect error: '+e.message;}setTimeout(()=>{this.disabled=false;if(this.textContent==='CONNECTING…')this.textContent='CONNECT FSX';},2500);">CONNECT FSX</button>
+            <button id="connectFsxBtn" type="button" onclick="this.textContent='CONNECTING…';this.disabled=true;var b=this,s=document.getElementById('fsxInlineStatus');if(s)s.textContent='Starting FSX connection…';try{if(window.jeppiranConnectFsx){sessionStorage.removeItem('jeppiranFsxCoreRetry');window.jeppiranConnectFsx();}else if(!sessionStorage.getItem('jeppiranFsxCoreRetry')){sessionStorage.setItem('jeppiranFsxCoreRetry','1');if(s)s.textContent='Refreshing JEPPIRAN core…';var reload=function(){location.reload();};if('caches' in window){caches.keys().then(function(keys){return Promise.all(keys.filter(function(k){return k.indexOf('jeppiran-pwa-')===0;}).map(function(k){return caches.delete(k);}));}).finally(reload);}else{reload();}}else{if(s)s.textContent='JEPPIRAN core did not initialize. Close this tab, reopen the main JEPPIRAN URL, then try again.';}}catch(e){if(s)s.textContent='FSX connect error: '+e.message;}setTimeout(function(){b.disabled=false;if(b.textContent==='CONNECTING…')b.textContent='CONNECT FSX';},2500);">CONNECT FSX</button>
             <button id="disconnectPositionBtn" class="secondary-btn">DISCONNECT</button>
           </div>
           <div id="fsxInlineStatus" class="status" style="margin-top:10px">FSX ready to connect.</div>
-          <small class="sim-note">Use the actual LAN/hotspot IPv4 address, usually the address on the same network as your iPad. No certificate, profile, or port entry is required. <b>Web build 2620-32</b>.</small>
+          <small class="sim-note">Use the actual LAN/hotspot IPv4 address, usually the address on the same network as your iPad. No certificate, profile, or port entry is required. <b>Web build 2620-33</b>.</small>
         </article>
 
         <article class="sim-card">
@@ -260,6 +260,6 @@
     });
   })();
   </script>
-  <script src="./app.js?v=2620-32" defer></script>
+  <script src="./app.js?v=2620-33" defer></script>
 </body>
 </html>
