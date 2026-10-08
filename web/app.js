@@ -25,7 +25,24 @@ let chartMetarTimer=null, chartMetarAirport="", chartMetarValue="";
 let chartPointers=new Map(), pinchStartDistance=0, pinchStartZoom=1, panStart=null, swipeStart=null, lastTapAt=0;
 let georefByPage=new Map(), githubWxCache=null, githubWxCacheAt=0;
 const $=s=>document.querySelector(s);
-const $$=s=>[...document.querySelectorAll(s)];
+const $=s=>[...document.querySelectorAll(s)];
+function readJsonStorage(key,fallback={}){
+  try{
+    const raw=localStorage.getItem(key);
+    if(!raw)return fallback;
+    const parsed=JSON.parse(raw);
+    return parsed&&typeof parsed==="object"?parsed:fallback;
+  }catch(_){
+    try{localStorage.removeItem(key)}catch(__){}
+    return fallback;
+  }
+}
+window.addEventListener("error",e=>{
+  const s=document.getElementById("fsxInlineStatus");
+  if(s&&!window.jeppiranConnectFsx){
+    s.textContent="JEPPIRAN core error: "+((e&&e.message)||"script initialization failed")+". Reload the page once.";
+  }
+});
 
 function renderRoute(name){
   $(".view").forEach(v=>v.classList.remove("active"));
@@ -652,7 +669,7 @@ $("#fullscreenExitBtn").addEventListener("click",()=>exitViewerFullscreen(true))
 }));
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&document.body.classList.contains("viewer-fullscreen"))exitViewerFullscreen(true)});
 
-const wxCache=JSON.parse(localStorage.getItem("wxCache")||"{}");
+const wxCache=readJsonStorage("wxCache",{});
 $("#getWxBtn").addEventListener("click",getWx);
 async function getWx(){
   const icao=$("#icaoInput").value.trim().toUpperCase();
@@ -1094,7 +1111,7 @@ $("#startGpsBtn").addEventListener("click",startDeviceGps);
 $("#useXpBtn").addEventListener("click",()=>{setBridgeTarget("xplane");$("#bridgeUrl").focus()});
 $("#useFsxBtn").addEventListener("click",()=>{setBridgeTarget("fsx");$("#fsxPcIp")?.focus()});
 $("#connectBridgeBtn").addEventListener("click",()=>{setBridgeTarget("xplane");connectSimulatorBridge()});
-window.jeppiranConnectFsx=()=>{
+window.JEPPIRAN_FsxConnectorReady=true;\nwindow.jeppiranConnectFsx=()=>{
   const btn=$("#connectFsxBtn"),inline=$("#fsxInlineStatus");
   const host=normalizeBridgeHost(($("#fsxPcIp")&&$("#fsxPcIp").value)||"");
   if(!host){
