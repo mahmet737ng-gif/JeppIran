@@ -1,4 +1,4 @@
-const CACHE="jeppiran-pwa-v2620-19";
+const CACHE="jeppiran-pwa-v2620-20";
 const PDF_CACHE="jeppiran-chart-pdfs-v1";
 const SHELL=["./","./index.html","./styles.css","./app.js?v=2620-19","./manifest.webmanifest","./logo.svg","./vendor/pdf.min.mjs","./vendor/pdf.worker.min.mjs"];
 self.addEventListener("install",event=>{
