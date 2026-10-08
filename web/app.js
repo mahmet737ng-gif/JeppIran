@@ -278,25 +278,30 @@ function refreshPositionStatus(){
     return;
   }
   if(!lastPosition){
-    setPositionStatus("waiting",activePositionSource==="gps"?"GPS WAIT":"SIM WAIT","Waiting for a live position fix.");
+    const code=activePositionSource==="gps"?"GPS":activePositionSource==="fsx"?"FSX":"XPLANE";
+    setPositionStatus("waiting",code+" WAIT","Waiting for a live position fix.");
     return;
   }
   const model=selectedChart&&georefByPage.get(Number(selectedChart.page));
   if(!selectedChart){
-    setPositionStatus("live",activePositionSource==="gps"?"GPS LIVE":"SIM LIVE","Position is live. Open a chart to display the aircraft.");
+    const code=activePositionSource==="gps"?"GPS":activePositionSource==="fsx"?"FSX":"XPLANE";
+    setPositionStatus("live",code+" LIVE","Position is live. Open a chart to display the aircraft.");
     return;
   }
   if(!model){
-    setPositionStatus("warning",activePositionSource==="gps"?"NO GEOREF":"SIM NO GEOREF","Position is live, but this chart has no valid georeference.");
+    const code=activePositionSource==="gps"?"GPS":activePositionSource==="fsx"?"FSX":"XPLANE";
+    setPositionStatus("warning",code+" NO GEOREF","Position is live, but this chart has no valid georeference.");
     return;
   }
   const p=projectGeo(model,Number(lastPosition.lat),Number(lastPosition.lon));
   if(!p){
-    setPositionStatus("outside",activePositionSource==="gps"?"GPS OUTSIDE":"SIM OUTSIDE","Position is live, but it is outside the mapped area of this chart.");
+    const code=activePositionSource==="gps"?"GPS":activePositionSource==="fsx"?"FSX":"XPLANE";
+    setPositionStatus("outside",code+" OUTSIDE","Position is live, but it is outside the mapped area of this chart.");
     return;
   }
   const acc=Number.isFinite(lastPosition.accuracy)?(" • ±"+Math.round(lastPosition.accuracy)+" m"):"";
-  setPositionStatus("live",(activePositionSource==="gps"?"GPS":"SIM")+" LIVE"+acc,"Position is live and inside this chart.");
+  const code=activePositionSource==="gps"?"GPS":activePositionSource==="fsx"?"FSX":"XPLANE";
+  setPositionStatus("live",code+" LIVE"+acc,"Position is live and inside this chart.");
 }
 
 function updateAircraftMarker(){
@@ -758,14 +763,14 @@ function toggle(sel,on){$(sel).classList.toggle("hidden",!on)}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 
 
-/* ===== Position sources: iOS GPS + X-Plane 11.5 WebSocket bridge ===== */
+/* ===== Position sources: iOS GPS + simulator WebSocket bridges ===== */
 let activePositionSource=localStorage.getItem("positionSource")||"";
 let gpsWatchId=null, bridgeSocket=null, lastPosition=null, lastGpsFix=null;
 
 function positionNumber(v,d=5){return Number.isFinite(v)?Number(v).toFixed(d):"—"}
 function updatePositionUi(p,source){
   lastPosition=p;
-  const sourceLabel=source==="gps"?"DEVICE GPS":source==="xplane"?"X-PLANE 11.5":"POSITION";
+  const sourceLabel=source==="gps"?"DEVICE GPS":source==="xplane"?"X-PLANE 11.5":source==="fsx"?"FSX":"POSITION";
   $("#positionSource").textContent=sourceLabel;
   $("#positionDot").classList.add("live");
   $("#posLat").textContent=positionNumber(p.lat,6);
@@ -773,13 +778,14 @@ function updatePositionUi(p,source){
   $("#posAlt").textContent=Number.isFinite(p.alt)?Math.round(p.alt)+" m":"—";
   $("#posHdg").textContent=Number.isFinite(p.heading)?Math.round((p.heading+360)%360)+"°":"—";
   $("#posGs").textContent=Number.isFinite(p.groundspeed)?Math.round(p.groundspeed*1.943844)+" kt":"—";
-  $("#posAcc").textContent=Number.isFinite(p.accuracy)?Math.round(p.accuracy)+" m":source==="xplane"?"SIM":"—";
+  $("#posAcc").textContent=Number.isFinite(p.accuracy)?Math.round(p.accuracy)+" m":source==="gps"?"—":"SIM";
   $("#simStatus").textContent=sourceLabel+" • live";
   const badge=$("#viewerPositionBadge");
   if(badge){badge.textContent=sourceLabel+" LIVE";badge.classList.add("live")}
   document.querySelectorAll(".source-card").forEach(x=>x.classList.remove("active"));
   if(source==="gps") $("#useGpsBtn").classList.add("active");
   if(source==="xplane") $("#useXpBtn").classList.add("active");
+  if(source==="fsx") $("#useFsxBtn").classList.add("active");
   updateAircraftMarker();
   window.dispatchEvent(new CustomEvent("jeppiran-position",{detail:p}));
 }
@@ -834,32 +840,59 @@ function startDeviceGps(){
     clearPositionUi(msg);
   },{enableHighAccuracy:true,maximumAge:1000,timeout:12000});
 }
-function connectXPlaneBridge(){
+let bridgeTargetSource=localStorage.getItem("bridgeTargetSource")||(activePositionSource==="fsx"?"fsx":"xplane");
+const bridgeMeta={
+  xplane:{label:"X-PLANE 11.5",title:"X-PLANE 11.5 BRIDGE",port:8765,securePort:8766,
+    help:"Run the standalone JEPPIRAN X-Plane Bridge on the simulator PC, then connect using the WebSocket address printed by the bridge."},
+  fsx:{label:"FSX",title:"FSX SIMCONNECT BRIDGE",port:8775,securePort:8776,
+    help:"Run the standalone JEPPIRAN FSX Bridge on the FSX PC. It reads the user aircraft directly through SimConnect and streams the live position to JEPPIRAN."}
+};
+function setBridgeTarget(source){
+  bridgeTargetSource=bridgeMeta[source]?source:"xplane";
+  localStorage.setItem("bridgeTargetSource",bridgeTargetSource);
+  const meta=bridgeMeta[bridgeTargetSource];
+  $("#bridgeTitle").textContent=meta.title;
+  $("#bridgeHelp").textContent=meta.help;
+  $("#connectBridgeBtn").textContent="CONNECT "+meta.label;
+  const saved=localStorage.getItem("bridgeUrl:"+bridgeTargetSource)||(bridgeTargetSource==="xplane"?localStorage.getItem("bridgeUrl"):"");
+  $("#bridgeUrl").value=saved||("ws://192.168.1.50:"+meta.port);
+  document.querySelectorAll(".source-card").forEach(x=>x.classList.remove("active"));
+  if(bridgeTargetSource==="xplane")$("#useXpBtn").classList.add("active");
+  if(bridgeTargetSource==="fsx")$("#useFsxBtn").classList.add("active");
+}
+function connectSimulatorBridge(){
   stopGps(); stopBridge();
+  const source=bridgeTargetSource,meta=bridgeMeta[source]||bridgeMeta.xplane;
   const url=$("#bridgeUrl").value.trim();
   if(!/^wss?:\/\//i.test(url)){clearPositionUi("Bridge URL must start with ws:// or wss://");return}
-  localStorage.setItem("bridgeUrl",url); activePositionSource="xplane"; localStorage.setItem("positionSource","xplane");
+  localStorage.setItem("bridgeUrl:"+source,url);
+  if(source==="xplane")localStorage.setItem("bridgeUrl",url);
+  activePositionSource=source;localStorage.setItem("positionSource",source);
   $("#simStatus").textContent="Connecting to "+url+" …";
   try{bridgeSocket=new WebSocket(url)}catch(e){clearPositionUi("Could not open WebSocket: "+e.message);return}
-  bridgeSocket.onopen=()=>{$("#simStatus").textContent="Bridge connected • waiting for X-Plane position…"};
+  bridgeSocket.onopen=()=>{$("#simStatus").textContent="Bridge connected • waiting for "+meta.label+" position…"};
   bridgeSocket.onmessage=e=>{
     try{
-      const d=JSON.parse(e.data), lat=Number(d.lat), lon=Number(d.lon);
+      const d=JSON.parse(e.data),lat=Number(d.lat),lon=Number(d.lon);
       if(!Number.isFinite(lat)||!Number.isFinite(lon)||lat<-90||lat>90||lon<-180||lon>180)return;
+      const packetSource=String(d.source||"").toUpperCase();
+      const resolvedSource=packetSource==="FSX"||packetSource.includes("FLIGHT SIMULATOR X")?"fsx":source;
+      if(resolvedSource!==activePositionSource){activePositionSource=resolvedSource;localStorage.setItem("positionSource",resolvedSource)}
       updatePositionUi({lat,lon,alt:d.alt==null?null:Number(d.alt),heading:d.heading==null?null:Number(d.heading),
         groundspeed:(d.groundspeed??d.groundSpeedMps)==null?null:Number(d.groundspeed??d.groundSpeedMps),pitch:d.pitch==null?null:Number(d.pitch),roll:d.roll==null?null:Number(d.roll),
-        accuracy:null,timestamp:Date.now()},"xplane");
+        accuracy:null,timestamp:Date.now()},resolvedSource);
     }catch(_){}
   };
-  bridgeSocket.onerror=()=>{$("#simStatus").textContent="Bridge connection error. Check URL/firewall/TLS."};
-  bridgeSocket.onclose=()=>{bridgeSocket=null;if(activePositionSource==="xplane")clearPositionUi("X-Plane bridge disconnected.")};
+  bridgeSocket.onerror=()=>{$("#simStatus").textContent="Bridge connection error. Check URL/firewall/TLS/certificate."};
+  bridgeSocket.onclose=()=>{bridgeSocket=null;if(activePositionSource===source)clearPositionUi(meta.label+" bridge disconnected.")};
 }
 $("#useGpsBtn").addEventListener("click",startDeviceGps);
 $("#startGpsBtn").addEventListener("click",startDeviceGps);
-$("#useXpBtn").addEventListener("click",()=>{$("#bridgeUrl").focus()});
-$("#connectBridgeBtn").addEventListener("click",connectXPlaneBridge);
+$("#useXpBtn").addEventListener("click",()=>{setBridgeTarget("xplane");$("#bridgeUrl").focus()});
+$("#useFsxBtn").addEventListener("click",()=>{setBridgeTarget("fsx");$("#bridgeUrl").focus()});
+$("#connectBridgeBtn").addEventListener("click",connectSimulatorBridge);
 $("#disconnectPositionBtn").addEventListener("click",()=>disconnectPosition());
-const savedBridge=localStorage.getItem("bridgeUrl"); if(savedBridge) $("#bridgeUrl").value=savedBridge;
+setBridgeTarget(bridgeTargetSource);
 if(activePositionSource==="gps") setTimeout(startDeviceGps,500);
 /* ===== End position sources ===== */
 
