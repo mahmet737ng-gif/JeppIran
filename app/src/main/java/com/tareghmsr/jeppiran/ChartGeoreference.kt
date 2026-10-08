@@ -245,12 +245,12 @@ object ChartGeoreferenceStore {
     private data class ParsedGeoreferences(
         val chartDataVersion: String,
         val sourceSha256: String,
-        val references: Map<Int, GeoReference>
+        val references: Map<Int, List<GeoReference>>
     )
 
     @Volatile private var loaded = false
     private var chartDataVersion = ""
-    private val references = mutableMapOf<Int, GeoReference>()
+    private val references = mutableMapOf<Int, List<GeoReference>>()
 
     @Synchronized
     fun reset() {
@@ -329,7 +329,8 @@ object ChartGeoreferenceStore {
             !sourceSha256.matches(Regex("[0-9a-f]{64}"))
         ) return null
 
-        val parsed = mutableMapOf<Int, GeoReference>()
+        val parsed = mutableMapOf<Int, MutableList<GeoReference>>()
+        val regionIds = mutableMapOf<Int, MutableSet<String>>()
         val duplicatePages = mutableSetOf<Int>()
         val charts = root.optJSONArray("charts") ?: return null
 
@@ -434,30 +435,54 @@ object ChartGeoreferenceStore {
                     verifiedFootprint
                 )
 
-            // Duplicate page identifiers are ambiguous within one source.
+            // Multiple uniquely named regions can share the same source PDF
+            // page, e.g. main ADC + separately georeferenced parking inset.
+            // Repeated region IDs are ambiguous and invalidate that page.
             if (page in duplicatePages) continue
-            if (parsed.containsKey(page)) {
+            val regionId = item.optString("regionId").ifBlank { "main" }
+            if (!regionId.matches(Regex("[A-Za-z][A-Za-z0-9_-]{0,63}"))) continue
+            val seen = regionIds.getOrPut(page) { mutableSetOf() }
+            if (!seen.add(regionId)) {
                 parsed.remove(page)
                 duplicatePages.add(page)
                 continue
             }
-            if (reference.isValid()) parsed[page] = reference
+            if (reference.isValid()) parsed.getOrPut(page) { mutableListOf() }.add(reference)
         }
 
-        return ParsedGeoreferences(dataVersion, sourceSha256, parsed)
+        return ParsedGeoreferences(dataVersion, sourceSha256, parsed.mapValues { it.value.toList() })
     }
 
-    /** Convert PDF points to the actually rendered, cropped bitmap. */
+    /**
+     * Return one marker per independently calibrated region whose verified
+     * geographic footprint contains the aircraft. A chart may show the same
+     * aircraft on its main map AND a separately calibrated parking inset.
+     */
+    fun renderedPoints(
+        context: Context, page: Int, latitude: Double, longitude: Double, headingDegrees: Double,
+        dataVersion: String, pdfWidth: Int, pdfHeight: Int,
+        fullBitmapWidth: Int, fullBitmapHeight: Int, cropLeft: Int, cropTop: Int,
+        bitmapWidth: Int, bitmapHeight: Int
+    ): List<RenderedAircraftPosition> {
+        load(context)
+        if (dataVersion != chartDataVersion) return emptyList()
+        return references[page].orEmpty().mapNotNull { reference ->
+            reference.renderedPosition(
+                latitude, longitude, headingDegrees, pdfWidth, pdfHeight,
+                fullBitmapWidth, fullBitmapHeight, cropLeft, cropTop, bitmapWidth, bitmapHeight
+            )
+        }
+    }
+
+    /** Compatibility for existing single-marker consumers. */
     fun renderedPoint(
         context: Context, page: Int, latitude: Double, longitude: Double, headingDegrees: Double,
         dataVersion: String, pdfWidth: Int, pdfHeight: Int,
         fullBitmapWidth: Int, fullBitmapHeight: Int, cropLeft: Int, cropTop: Int,
         bitmapWidth: Int, bitmapHeight: Int
-    ): RenderedAircraftPosition? {
-        load(context)
-        if (dataVersion != chartDataVersion) return null
-        val ref = references[page] ?: return null
-        return ref.renderedPosition(latitude, longitude, headingDegrees, pdfWidth, pdfHeight,
-            fullBitmapWidth, fullBitmapHeight, cropLeft, cropTop, bitmapWidth, bitmapHeight)
-    }
+    ): RenderedAircraftPosition? = renderedPoints(
+        context, page, latitude, longitude, headingDegrees, dataVersion,
+        pdfWidth, pdfHeight, fullBitmapWidth, fullBitmapHeight, cropLeft,
+        cropTop, bitmapWidth, bitmapHeight
+    ).firstOrNull()
 }
