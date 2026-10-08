@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-"""Report coverage without conflating provisional geometry with verified georeferencing.
+"""Fail-closed Approach + Airport-plan georeference and region coverage report.
 
-Approach pages are all in scope. Airport layout pages are either explicitly
-identified in a review file or suggested by their titles. All other Airport
-pages remain an explicit review backlog; they must not silently disappear
-from a claimed 100% coverage statistic.
+An automatic graticule fit is NOT called an independently verified map.
+An ADC parking inset needs its own independently verified region before the
+page can be counted as fully covered. No chart is silently removed from scope.
 """
 import argparse
 import json
@@ -24,54 +23,96 @@ def read(path):
     return json.loads(Path(path).read_text(encoding="utf-8"))
 
 
-def selection(index, explicit):
+def reviewed_entry(item):
+    if isinstance(item, bool):
+        return {"layout": item, "regions": ["main"] if item else []}
+    if not isinstance(item, dict) or type(item.get("layout")) is not bool:
+        raise ValueError("Airport review entry must be bool or {layout: bool, regions: [...]} object")
+    regions = item.get("regions", ["main"] if item["layout"] else [])
+    if (not isinstance(regions, list) or
+            any(not isinstance(x, str) or not re.fullmatch(r"[A-Za-z][A-Za-z0-9_-]{0,63}", x)
+                for x in regions) or len(regions) != len(set(regions)) or
+            (item["layout"] and not regions) or (not item["layout"] and regions)):
+        raise ValueError("Invalid region IDs in Airport review entry")
+    return {"layout": item["layout"], "regions": regions}
+
+
+def classify(index, explicit):
     approach = []
-    airport_layout = []
-    airport_needs_review = []
-    for item in index:
-        category = str(item.get("category") or "").strip().lower()
-        page = int(item["page"])
+    airport = []
+    unreviewed = []
+    for entry in index:
+        page = int(entry["page"])
+        category = str(entry.get("category") or "").strip().lower()
         if category == "approach":
-            approach.append(item)
+            approach.append((entry, ["main"]))
         elif category == "airport":
             if str(page) in explicit:
-                if explicit[str(page)]:
-                    airport_layout.append(item)
-            elif LAYOUT_TITLE.search(str(item.get("name") or "")):
-                airport_layout.append(item)
+                item = reviewed_entry(explicit[str(page)])
+                if item["layout"]:
+                    airport.append((entry, item["regions"]))
             else:
-                airport_needs_review.append(item)
-    return approach, airport_layout, airport_needs_review
+                unreviewed.append({
+                    "page": page, "airport": entry.get("airport"),
+                    "name": entry.get("name"),
+                    "layoutCandidate": bool(LAYOUT_TITLE.search(str(entry.get("name") or ""))),
+                })
+    return approach, airport, unreviewed
 
 
-def summarize(entries, georef, excluded):
-    counts = {"total": len(entries), "geometryValidated": 0,
-              "provisionalNeedsReview": 0, "missing": 0}
-    details = []
-    for entry in entries:
+def status_for_page(required, actual):
+    if not actual:
+        return "missing"
+    by_region = {str(a.get("regionId") or "main"): a for a in actual}
+    if any(name not in by_region for name in required):
+        return "missingRegions"
+    for name in required:
+        item = by_region[name]
+        validation = item.get("validation") or {}
+        if validation.get("verificationStatus") == "provisional_geometry_only":
+            return "provisionalNeedsReview"
+        if validation.get("method") == "single_axis_plus_conformal_scale":
+            return "derivedAxisNotAccepted"
+        if (validation.get("method") != "published_wgs84_control_points_affine" or
+                validation.get("verificationStatus") != "passed_independent_control_checks" or
+                not validation.get("pixelMeasurementsReviewed") or
+                validation.get("groundControlCount", 0) < 4 or
+                not item.get("verifiedFootprint")):
+            return "geometryWithoutIndependentCheck"
+    return "independentlyVerified"
+
+
+def summarize(selected, georef, excluded):
+    counts = {
+        "totalPages": len(selected),
+        "independentlyVerified": 0,
+        "geometryWithoutIndependentCheck": 0,
+        "provisionalNeedsReview": 0,
+        "derivedAxisNotAccepted": 0,
+        "missingRegions": 0,
+        "missing": 0,
+        "requiredRegions": sum(len(ids) for _, ids in selected),
+        "issues": [],
+    }
+    for entry, region_ids in selected:
         page = int(entry["page"])
-        record = georef.get(page)
-        status = ("missing" if record is None else
-                  "provisionalNeedsReview" if
-                  record.get("validation", {}).get("verificationStatus")
-                  == "provisional_geometry_only" else "geometryValidated")
-        counts[status] += 1
-        if status != "geometryValidated":
-            failure = excluded.get(page) or {}
-            details.append({
+        records = georef.get(page, [])
+        state = status_for_page(region_ids, records)
+        counts[state] += 1
+        if state != "independentlyVerified":
+            found = {str(r.get("regionId") or "main") for r in records}
+            counts["issues"].append({
                 "page": page, "airport": entry.get("airport"),
-                "name": entry.get("name"), "status": status,
-                "reason": failure.get("reason") or
-                          ("Independent feature review required" if record
-                           else "No georeference record"),
+                "name": entry.get("name"), "state": state,
+                "expectedRegions": region_ids, "foundRegions": sorted(found),
+                "missingRegions": sorted(set(region_ids) - found),
+                "extractorReason": (excluded.get(page) or {}).get("reason"),
             })
-    counts["geometryCoveragePercent"] = round(
-        100 * (counts["geometryValidated"] + counts["provisionalNeedsReview"])
-        / counts["total"], 2) if counts["total"] else None
-    counts["verifiedGeometryPercent"] = round(
-        100 * counts["geometryValidated"] / counts["total"], 2
-    ) if counts["total"] else None
-    counts["issues"] = details
+    count = counts["totalPages"]
+    counts["independentlyVerifiedPercent"] = (
+        round(100 * counts["independentlyVerified"] / count, 2) if count else None
+    )
+    counts["complete"] = count > 0 and counts["independentlyVerified"] == count
     return counts
 
 
@@ -81,47 +122,53 @@ def main():
     parser.add_argument("--georef", required=True)
     parser.add_argument("--audit", default="")
     parser.add_argument("--airport-layout-review", default="",
-                        help="Optional JSON map from page number to true/false")
+                        help="JSON {page: bool | {layout: bool, regions: [IDs]}}")
     parser.add_argument("--output", default="")
     parser.add_argument("--strict", action="store_true",
-                        help="Fail if there is missing, provisional or unreviewed coverage")
+                        help="Fail if any required region is unverified or any Airport page is unreviewed")
     args = parser.parse_args()
     index = read(args.index)
     if isinstance(index, dict):
         index = index["charts"]
     root = read(args.georef)
-    georef = {int(x["page"]): x for x in root["charts"]}
+    georef = defaultdict(list)
+    for item in root["charts"]:
+        georef[int(item["page"])].append(item)
     excluded = ({int(x["page"]): x for x in read(args.audit)["excludedCharts"]}
                 if args.audit else {})
     explicit = read(args.airport_layout_review) if args.airport_layout_review else {}
-    if not isinstance(explicit, dict) or any(
-        type(value) is not bool for value in explicit.values()
-    ):
-        raise ValueError("Airport layout review must be a {page: boolean} JSON map")
-    approach, airport_layout, unknown = selection(index, explicit)
+    if not isinstance(explicit, dict) or any(not str(k).isdigit() for k in explicit):
+        raise ValueError("Review must be a JSON object indexed by global PDF page")
+    # Prevent a review for a different cycle from accidentally certifying 2621.
+    valid_airport_pages = {
+        str(int(x["page"])) for x in index if str(x.get("category")).lower() == "airport"
+    }
+    if not set(explicit).issubset(valid_airport_pages):
+        raise ValueError("Airport review references missing or non-Airport pages")
+    approach, airport, unreviewed = classify(index, explicit)
     report = {
         "source": root.get("source", {}),
         "approach": summarize(approach, georef, excluded),
-        "airportLayoutCandidates": summarize(airport_layout, georef, excluded),
-        "unreviewedAirportPages": [
-            {"page": int(x["page"]), "airport": x.get("airport"),
-             "name": x.get("name")} for x in unknown
-        ],
+        "airportLayouts": summarize(airport, georef, excluded),
+        "unreviewedAirportPages": unreviewed,
+        "layoutReviewComplete": not unreviewed,
+        "canClaim100Percent": False,
         "notes": [
-            "Printed-grid calibration is not independent positional verification.",
-            "Provisional NOT TO SCALE records are not ready for aircraft display.",
-            "Airport layout candidates need visual confirmation before a 100% claim.",
+            "Only separately validated published-WGS84 map regions count as independently verified.",
+            "An inset may share a global source PDF page but requires a distinct region ID and independent transform.",
+            "NOT TO SCALE labeling is region-specific and must never invalidate an unrelated verified plan.",
+            "No missing chart or region is filled with guessed, computed-radial, or assumed coordinates.",
         ],
     }
+    report["canClaim100Percent"] = (
+        report["layoutReviewComplete"] and report["approach"]["complete"]
+        and report["airportLayouts"]["complete"]
+    )
     rendered = json.dumps(report, indent=2, ensure_ascii=False)
     if args.output:
         Path(args.output).write_text(rendered + "\n", encoding="utf-8")
     print(rendered)
-    if args.strict and (
-        any(report[key][status] for key in ("approach", "airportLayoutCandidates")
-            for status in ("missing", "provisionalNeedsReview"))
-        or unknown
-    ):
+    if args.strict and not report["canClaim100Percent"]:
         raise SystemExit(2)
 
 
