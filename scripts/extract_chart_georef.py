@@ -287,6 +287,11 @@ def extract(page, number, index_entry, anchor, fingerprint=None):
     measured_axis_counts = {axis: len(values) for axis, values in axes.items()}
     method = "paired_printed_graticule_vector_ticks"
     if 1 in measured_axis_counts.values():
+        if index_entry.get('category') in {'Approach', 'Airport'}:
+            raise ValueError(
+                'Only one published geographic axis measured; no invented '
+                'orthogonal coordinates allowed for Approach/Airport'
+            )
         # Many approach plates print only one value on one side of the plan
         # view.  A second value is derived from the measured orthogonal scale
         # using the local conformal relationship dx/dlon = cos(lat)*dy/dlat.
