@@ -202,6 +202,62 @@
       "sourceLocation": "OOMS AD 2.19 DVOR/DME MCT 114.500 MHz CH 92X transmitting antenna coordinates",
       "coordinatePrecision": "0.01_arcsecond",
       "status": "published"
+    },
+    {
+      "airport": "LTFM",
+      "featureType": "TAXIWAY_CONTROL",
+      "featureId": "A_START",
+      "latitude": "411554.04N",
+      "longitude": "0284243.86E",
+      "sourceAuthority": "DHMI / Turkish Aeronautical Information Service",
+      "sourceDocument": "Türkiye AIP LTFM AD 2",
+      "sourceEdition": "AD 2 LTFM - 46, 19 FEB 26",
+      "sourceUrl": "https://www.dhmi.gov.tr/AIPDocuments/LT_AD_2_LTFM_en.pdf",
+      "sourceLocation": "The start-end coordinates of the centerline of the TWYs of Istanbul Airport, TWY A",
+      "coordinatePrecision": "0.01_arcsecond",
+      "status": "published"
+    },
+    {
+      "airport": "LTFM",
+      "featureType": "TAXIWAY_CONTROL",
+      "featureId": "A_END",
+      "latitude": "411751.59N",
+      "longitude": "0284241.56E",
+      "sourceAuthority": "DHMI / Turkish Aeronautical Information Service",
+      "sourceDocument": "Türkiye AIP LTFM AD 2",
+      "sourceEdition": "AD 2 LTFM - 46, 19 FEB 26",
+      "sourceUrl": "https://www.dhmi.gov.tr/AIPDocuments/LT_AD_2_LTFM_en.pdf",
+      "sourceLocation": "The start-end coordinates of the centerline of the TWYs of Istanbul Airport, TWY A",
+      "coordinatePrecision": "0.01_arcsecond",
+      "status": "published"
+    },
+    {
+      "airport": "LTFM",
+      "featureType": "TAXIWAY_CONTROL",
+      "featureId": "E_START",
+      "latitude": "411508.82N",
+      "longitude": "0284357.13E",
+      "sourceAuthority": "DHMI / Turkish Aeronautical Information Service",
+      "sourceDocument": "Türkiye AIP LTFM AD 2",
+      "sourceEdition": "AD 2 LTFM - 46, 19 FEB 26",
+      "sourceUrl": "https://www.dhmi.gov.tr/AIPDocuments/LT_AD_2_LTFM_en.pdf",
+      "sourceLocation": "The start-end coordinates of the centerline of the TWYs of Istanbul Airport, TWY E",
+      "coordinatePrecision": "0.01_arcsecond",
+      "status": "published"
+    },
+    {
+      "airport": "LTFM",
+      "featureType": "TAXIWAY_CONTROL",
+      "featureId": "E_END",
+      "latitude": "411606.86N",
+      "longitude": "0284356.01E",
+      "sourceAuthority": "DHMI / Turkish Aeronautical Information Service",
+      "sourceDocument": "Türkiye AIP LTFM AD 2",
+      "sourceEdition": "AD 2 LTFM - 46, 19 FEB 26",
+      "sourceUrl": "https://www.dhmi.gov.tr/AIPDocuments/LT_AD_2_LTFM_en.pdf",
+      "sourceLocation": "The start-end coordinates of the centerline of the TWYs of Istanbul Airport, TWY E",
+      "coordinatePrecision": "0.01_arcsecond",
+      "status": "published"
     }
   ],
   "notes": [
