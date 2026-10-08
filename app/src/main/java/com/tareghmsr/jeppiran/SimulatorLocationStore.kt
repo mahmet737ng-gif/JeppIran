@@ -13,6 +13,11 @@ import java.net.SocketException
 import java.nio.ByteBuffer
 import java.nio.ByteOrder
 import org.json.JSONObject
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import okhttp3.WebSocket
+import okhttp3.WebSocketListener
 import kotlin.concurrent.thread
 
 data class SimulatorPosition(
@@ -34,9 +39,11 @@ object SimulatorLocationStore {
     const val MODE_XPLANE_BROADCAST = "X-Plane Auto / Mapping Broadcast"
     const val MODE_XPLANE_RREF = "X-Plane Direct IP / RREF"
     const val MODE_BRIDGE = "Desktop Bridge"
+    const val MODE_FSX_LOCAL = "FSX Local SimConnect"
     const val DEFAULT_XPLANE_MAPPING_PORT = 49002
     const val DEFAULT_XPLANE_RREF_PORT = 49000
     const val DEFAULT_FSX_BRIDGE_PORT = 49012
+    const val DEFAULT_FSX_WS_PORT = 8775
 
     private const val PREFS = "simulator_connection"
     private const val PREF_TYPE = "type"
@@ -61,6 +68,8 @@ object SimulatorLocationStore {
     @Volatile private var session = 0L
 
     private var socket: DatagramSocket? = null
+    private var webSocket: WebSocket? = null
+    private val wsClient = OkHttpClient()
     private var worker: Thread? = null
     private var multicastLock: WifiManager.MulticastLock? = null
     private var appContext: Context? = null
@@ -97,12 +106,70 @@ object SimulatorLocationStore {
     }
 
     @Synchronized
+    fun connectFsxLocal(c: Context, host: String, port: Int = DEFAULT_FSX_WS_PORT) {
+        val cleanHost = host.trim()
+        if (cleanHost.isBlank()) {
+            connected = false
+            connecting = false
+            status = "Connection failed: enter the FSX PC IPv4 address."
+            return
+        }
+
+        stop(false)
+        val id = ++session
+        appContext = c.applicationContext
+        saveSettings(c, TYPE_FSX, cleanHost, port)
+        mode = MODE_FSX_LOCAL
+        source = cleanHost
+        position = null
+        connected = false
+        connecting = true
+        lastPositionMs = 0
+        lastPacketMs = 0
+        running = true
+        status = "Connecting to FSX Local SimConnect at $cleanHost:$port..."
+
+        val request = try {
+            Request.Builder().url("ws://$cleanHost:$port").build()
+        } catch (t: Throwable) {
+            fail("Invalid FSX PC address: ${t.message ?: cleanHost}", id)
+            return
+        }
+
+        webSocket = wsClient.newWebSocket(request, object : WebSocketListener() {
+            override fun onOpen(ws: WebSocket, response: Response) {
+                if (!active(id)) {
+                    ws.close(1000, "Inactive")
+                    return
+                }
+                source = cleanHost
+                status = "FSX bridge connected • waiting for SimConnect position..."
+            }
+
+            override fun onMessage(ws: WebSocket, text: String) {
+                if (!active(id)) return
+                val p = parseBridgePosition(text) ?: return
+                accept(p, "FSX Local SimConnect", cleanHost, id)
+            }
+
+            override fun onFailure(ws: WebSocket, t: Throwable, response: Response?) {
+                if (active(id)) fail("Cannot connect to FSX bridge at $cleanHost:$port — ${t.message ?: "network error"}", id)
+            }
+
+            override fun onClosed(ws: WebSocket, code: Int, reason: String) {
+                if (!active(id)) return
+                if (connected) lost("FSX Local SimConnect closed.", id)
+                else fail("FSX Local SimConnect closed before position data was received.", id)
+            }
+        })
+    }
+    @Synchronized
     fun connect(c: Context, type: String, host: String, port: Int) {
         when (type) {
             TYPE_XPLANE -> connectXPlaneDirect(c, host, port)
             TYPE_MSFS -> { saveSettings(c, type, "", port); begin(c, MODE_BRIDGE) { runBridge(port, "MSFS", it) } }
             TYPE_P3D -> { saveSettings(c, type, "", port); begin(c, MODE_BRIDGE) { runBridge(port, "Prepar3D", it) } }
-            TYPE_FSX -> { saveSettings(c, type, "", port); begin(c, MODE_BRIDGE) { runBridge(port, "FSX", it) } }
+            TYPE_FSX -> connectFsxLocal(c, host, if (port in 1..65535) port else DEFAULT_FSX_WS_PORT)
             else -> { connected = false; connecting = false; status = "Connection failed: unsupported simulator" }
         }
     }
@@ -143,6 +210,8 @@ object SimulatorLocationStore {
         running = false
         try { socket?.close() } catch (_: Throwable) {}
         socket = null
+        try { webSocket?.close(1000, "Disconnected") } catch (_: Throwable) {}
+        webSocket = null
         worker?.interrupt()
         worker = null
         releaseMulticastLock()
@@ -250,6 +319,29 @@ object SimulatorLocationStore {
         }
     }
 
+    private fun parseBridgePosition(text: String): SimulatorPosition? {
+        val j = try { JSONObject(text) } catch (_: Throwable) { return null }
+        val lat = if (j.has("lat")) j.optDouble("lat", Double.NaN) else j.optDouble("latitude", Double.NaN)
+        val lon = if (j.has("lon")) j.optDouble("lon", Double.NaN) else j.optDouble("longitude", Double.NaN)
+        if (lat.isNaN() || lon.isNaN() || lat !in -90.0..90.0 || lon !in -180.0..180.0) return null
+        val alt = if (j.has("alt")) j.optDouble("alt", Double.NaN) else j.optDouble("altitude", Double.NaN)
+        val hdg = j.optDouble("heading", Double.NaN)
+        val gs = when {
+            j.has("groundspeed") -> j.optDouble("groundspeed", Double.NaN)
+            j.has("groundSpeedMps") -> j.optDouble("groundSpeedMps", Double.NaN)
+            else -> Double.NaN
+        }
+        val pitch = j.optDouble("pitch", Double.NaN)
+        val roll = j.optDouble("roll", Double.NaN)
+        return SimulatorPosition(
+            lat, lon,
+            alt.takeUnless { it.isNaN() },
+            hdg.takeUnless { it.isNaN() },
+            gs.takeUnless { it.isNaN() },
+            pitch.takeUnless { it.isNaN() },
+            roll.takeUnless { it.isNaN() }
+        )
+    }
     private fun runBridge(port: Int, label: String, id: Long) {
         val s = try { DatagramSocket(port).apply { soTimeout = 1000 } }
         catch (t: Throwable) { fail("Cannot listen on UDP $port: ${t.message ?: "port unavailable"}", id); return }
@@ -259,34 +351,9 @@ object SimulatorLocationStore {
         while (active(id)) {
             try {
                 val p = DatagramPacket(buf, buf.size); s.receive(p); if (!active(id)) return
-                val j = try { JSONObject(String(p.data, p.offset, p.length, Charsets.UTF_8)) } catch (_: Throwable) { continue }
-                val lat = if (j.has("lat")) j.optDouble("lat", Double.NaN) else j.optDouble("latitude", Double.NaN)
-                val lon = if (j.has("lon")) j.optDouble("lon", Double.NaN) else j.optDouble("longitude", Double.NaN)
-                if (lat.isNaN() || lon.isNaN() || lat !in -90.0..90.0 || lon !in -180.0..180.0) continue
-                val alt = if (j.has("alt")) j.optDouble("alt", Double.NaN) else j.optDouble("altitude", Double.NaN)
-                val hdg = j.optDouble("heading", Double.NaN)
-                val gs = when {
-                    j.has("groundspeed") -> j.optDouble("groundspeed", Double.NaN)
-                    j.has("groundSpeedMps") -> j.optDouble("groundSpeedMps", Double.NaN)
-                    else -> Double.NaN
-                }
-                val pitch = j.optDouble("pitch", Double.NaN)
-                val roll = j.optDouble("roll", Double.NaN)
+                val parsed = parseBridgePosition(String(p.data, p.offset, p.length, Charsets.UTF_8)) ?: continue
                 source = p.address?.hostAddress ?: ""
-                accept(
-                    SimulatorPosition(
-                        lat,
-                        lon,
-                        alt.takeUnless { it.isNaN() },
-                        hdg.takeUnless { it.isNaN() },
-                        gs.takeUnless { it.isNaN() },
-                        pitch.takeUnless { it.isNaN() },
-                        roll.takeUnless { it.isNaN() }
-                    ),
-                    "$label bridge",
-                    source,
-                    id
-                )
+                accept(parsed, "$label bridge", source, id)
             } catch (_: java.net.SocketTimeoutException) { checkTimeout(started, "No valid $label bridge data received.", id) }
             catch (_: SocketException) { if (active(id)) fail("$label UDP socket closed.", id) }
         }
@@ -310,6 +377,8 @@ object SimulatorLocationStore {
         if (session != id) return
         connected = false; connecting = false; position = null; running = false; status = "Connection failed: $reason"
         try { socket?.close() } catch (_: Throwable) {}
+        try { webSocket?.cancel() } catch (_: Throwable) {}
+        webSocket = null
     }
 
     private fun lost(reason: String, id: Long) {
@@ -317,6 +386,8 @@ object SimulatorLocationStore {
         val notify = connected
         connected = false; connecting = false; position = null; running = false; status = "Disconnected: $reason"
         try { socket?.close() } catch (_: Throwable) {}
+        try { webSocket?.cancel() } catch (_: Throwable) {}
+        webSocket = null
         if (notify) appContext?.let { c -> Handler(Looper.getMainLooper()).post { Toast.makeText(c, "Simulator disconnected\n$reason", Toast.LENGTH_LONG).show() } }
     }
 
