@@ -85,6 +85,16 @@
             <small id="viewerChart">Choose a chart from the tree</small>
           </div>
           <div class="viewer-actions">
+            <button id="chartTreeToggleBtn" class="icon-btn tree-toggle-btn" aria-expanded="false">☰ Charts</button>
+            <div class="viewer-nav-group" aria-label="Chart navigation">
+              <button id="prevChartBtn" class="icon-btn compact-btn" title="Previous chart">‹</button>
+              <button id="nextChartBtn" class="icon-btn compact-btn" title="Next chart">›</button>
+            </div>
+            <div class="viewer-zoom-group" aria-label="Chart zoom">
+              <button id="zoomOutBtn" class="icon-btn compact-btn" title="Zoom out">−</button>
+              <button id="zoomResetBtn" class="icon-btn zoom-value" title="Reset zoom"><span id="zoomValue">100%</span></button>
+              <button id="zoomInBtn" class="icon-btn compact-btn" title="Zoom in">+</button>
+            </div>
             <span id="viewerPositionBadge" class="viewer-position-badge">GPS/SIM OFF</span>
             <button id="offlinePdfBtn" class="icon-btn" disabled>Save Offline</button>
             <button id="fullscreenBtn" class="icon-btn">Fullscreen</button>
@@ -99,10 +109,13 @@
         </div>
       </section>
 
-      <aside id="chartTreePane" class="chart-tree panel">
-        <div class="pane-head">
-          <h2>Charts</h2>
-          <small id="treeAirport"></small>
+      <aside id="chartTreePane" class="chart-tree panel" aria-label="Chart tree">
+        <div class="pane-head tree-pane-head">
+          <div>
+            <h2>Charts</h2>
+            <small id="treeAirport"></small>
+          </div>
+          <button id="chartTreeCloseBtn" class="icon-btn compact-btn" aria-label="Close chart tree">✕</button>
         </div>
         <div id="chartTree" class="tree-content"></div>
       </aside>
@@ -234,6 +247,6 @@
     });
   })();
   </script>
-  <script src="./app.js?v=2620-11" defer></script>
+  <script src="./app.js?v=2620-12" defer></script>
 </body>
 </html>
