@@ -793,7 +793,7 @@ function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":
 
 /* ===== Position sources: iOS GPS + simulator WebSocket bridges ===== */
 let activePositionSource=localStorage.getItem("positionSource")||"";
-let gpsWatchId=null, bridgeSocket=null, lastPosition=null, lastGpsFix=null;
+let gpsWatchId=null, bridgeSocket=null, relaySocket=null, relayPingTimer=null, relayReconnectTimer=null, relayHost="", relayTopic="", lastPosition=null, lastGpsFix=null;
 
 function positionNumber(v,d=5){return Number.isFinite(v)?Number(v).toFixed(d):"—"}
 function updatePositionUi(p,source){
@@ -835,6 +835,10 @@ function stopGps(){
 function stopBridge(){
   if(bridgeSocket){try{bridgeSocket.onclose=null;bridgeSocket.close()}catch(e){}}
   bridgeSocket=null;
+  if(relayReconnectTimer){clearTimeout(relayReconnectTimer);relayReconnectTimer=null}
+  if(relayPingTimer){clearInterval(relayPingTimer);relayPingTimer=null}
+  if(relaySocket){try{relaySocket.onclose=null;relaySocket.close()}catch(e){}}
+  relaySocket=null;relayHost="";relayTopic="";
 }
 function disconnectPosition(message="Disconnected"){
   stopGps(); stopBridge(); activePositionSource=""; localStorage.removeItem("positionSource"); clearPositionUi(message);
@@ -873,8 +877,8 @@ let bridgeTargetSource=LOCAL_SIM_WEB?"fsx":(localStorage.getItem("bridgeTargetSo
 const bridgeMeta={
   xplane:{label:"X-PLANE 11.5",title:"X-PLANE 11.5 BRIDGE",port:8765,securePort:8766,
     help:"Run the standalone JEPPIRAN X-Plane Bridge on the simulator PC, then connect using the WebSocket address printed by the bridge."},
-  fsx:{label:"FSX",title:"FSX LOCAL SIMCONNECT",port:8775,localWebPort:8080,
-    help:"Run JEPPIRAN FSX Bridge on the FSX PC. Enter that PC’s IPv4 address below and tap CONNECT FSX. JEPPIRAN opens the Local SimConnect path and connects automatically."}
+  fsx:{label:"FSX",title:"FSX SIMCONNECT BRIDGE",port:8775,localWebPort:8080,
+    help:"Run JEPPIRAN FSX Bridge v1.3 on the FSX PC. Enter any IPv4 address printed by the bridge and tap CONNECT FSX. JEPPIRAN stays on its main HTTPS address and keeps the FSX link alive while you move between Home, Charts and WX."}
 };
 function normalizeBridgeHost(value){
   let v=String(value||"").trim();
@@ -925,6 +929,112 @@ function ensureLocalFsxSession(autoConnect=true){
   }
 }
 
+
+function mqttConcat(parts){
+  let total=0;parts.forEach(p=>total+=p.length);
+  const out=new Uint8Array(total);let o=0;
+  parts.forEach(p=>{out.set(p,o);o+=p.length});return out;
+}
+function mqttRemainingLength(n){
+  const out=[];do{let d=n%128;n=Math.floor(n/128);if(n>0)d|=128;out.push(d)}while(n>0);return new Uint8Array(out);
+}
+function mqttUtf8(s){
+  const b=new TextEncoder().encode(s),out=new Uint8Array(2+b.length);
+  out[0]=(b.length>>8)&255;out[1]=b.length&255;out.set(b,2);return out;
+}
+function mqttConnectPacket(clientId){
+  const vh=mqttConcat([mqttUtf8("MQTT"),new Uint8Array([4,2,0,30])]);
+  const pl=mqttUtf8(clientId),body=mqttConcat([vh,pl]);
+  return mqttConcat([new Uint8Array([0x10]),mqttRemainingLength(body.length),body]);
+}
+function mqttSubscribePacket(topic,packetId=1){
+  const body=mqttConcat([new Uint8Array([(packetId>>8)&255,packetId&255]),mqttUtf8(topic),new Uint8Array([0])]);
+  return mqttConcat([new Uint8Array([0x82]),mqttRemainingLength(body.length),body]);
+}
+function mqttPackets(data){
+  const a=new Uint8Array(data),out=[];let i=0;
+  while(i<a.length){
+    const start=i,header=a[i++];let mul=1,len=0,b=0;
+    do{if(i>=a.length)return out;b=a[i++];len+=(b&127)*mul;mul*=128}while(b&128);
+    if(i+len>a.length)return out;
+    out.push({header,body:a.slice(i,i+len)});i+=len;
+    if(i===start)break;
+  }
+  return out;
+}
+async function fsxRelayTopicFor(host){
+  if(!(window.crypto&&crypto.subtle))throw new Error("Secure crypto is unavailable in this browser.");
+  const bytes=new TextEncoder().encode("JEPPIRAN-FSX-RELAY-V1|"+host);
+  const digest=new Uint8Array(await crypto.subtle.digest("SHA-256",bytes));
+  return "jeppiran/fsx/v1/"+[...digest.slice(0,16)].map(x=>x.toString(16).padStart(2,"0")).join("");
+}
+function markFsxWaiting(message){
+  lastPosition=null;
+  $("#positionSource").textContent="FSX";
+  $("#positionDot").classList.remove("live");
+  ["#posLat","#posLon","#posAlt","#posHdg","#posGs","#posAcc"].forEach(s=>$(s).textContent="—");
+  $("#simStatus").textContent=message;
+  document.querySelectorAll(".source-card").forEach(x=>x.classList.remove("active"));
+  $("#useFsxBtn").classList.add("active");
+  hideAircraftMarker();
+  setPositionStatus("waiting","FSX WAIT",message);
+}
+async function connectFsxRelay(host,{reconnect=false}={}){
+  relayHost=host;
+  relayTopic=await fsxRelayTopicFor(host);
+  if(relayReconnectTimer){clearTimeout(relayReconnectTimer);relayReconnectTimer=null}
+  if(relayPingTimer){clearInterval(relayPingTimer);relayPingTimer=null}
+  if(relaySocket){try{relaySocket.onclose=null;relaySocket.close()}catch(_){}relaySocket=null}
+  if(!reconnect)markFsxWaiting("Connecting securely to FSX Bridge v1.3 for "+host+" …");
+  const clientId="jeppiran_web_"+Math.random().toString(16).slice(2)+Date.now().toString(16);
+  let ws;
+  try{ws=new WebSocket("wss://broker.emqx.io:8084/mqtt",["mqtt"])}catch(e){markFsxWaiting("FSX secure relay could not start: "+e.message);return}
+  relaySocket=ws;ws.binaryType="arraybuffer";
+  ws.onopen=()=>{
+    if(ws!==relaySocket)return;
+    ws.send(mqttConnectPacket(clientId));
+    markFsxWaiting("Secure relay connected • subscribing to FSX "+host+" …");
+    relayPingTimer=setInterval(()=>{if(relaySocket===ws&&ws.readyState===1){try{ws.send(new Uint8Array([0xC0,0x00]))}catch(_){}}},15000);
+  };
+  ws.onmessage=async e=>{
+    if(ws!==relaySocket)return;
+    let buf=e.data;
+    if(buf instanceof Blob)buf=await buf.arrayBuffer();
+    for(const pkt of mqttPackets(buf)){
+      const type=pkt.header>>4;
+      if(type===2){
+        if(pkt.body.length<2||pkt.body[1]!==0){markFsxWaiting("FSX relay broker rejected the connection.");continue}
+        try{ws.send(mqttSubscribePacket(relayTopic,1));}catch(_){}
+      }else if(type===9){
+        markFsxWaiting("FSX relay ready • waiting for SimConnect position from Bridge v1.3 …");
+      }else if(type===3){
+        const b=pkt.body;if(b.length<2)continue;
+        const tl=(b[0]<<8)|b[1];if(2+tl>b.length)continue;
+        const topic=new TextDecoder().decode(b.slice(2,2+tl));if(topic!==relayTopic)continue;
+        let pos=2+tl;
+        const qos=(pkt.header>>1)&3;if(qos>0)pos+=2;
+        try{
+          const d=JSON.parse(new TextDecoder().decode(b.slice(pos))),lat=Number(d.lat),lon=Number(d.lon);
+          if(!Number.isFinite(lat)||!Number.isFinite(lon)||lat<-90||lat>90||lon<-180||lon>180)continue;
+          updatePositionUi({lat,lon,alt:d.alt==null?null:Number(d.alt),heading:d.heading==null?null:Number(d.heading),
+            groundspeed:(d.groundspeed??d.groundSpeedMps)==null?null:Number(d.groundspeed??d.groundSpeedMps),
+            pitch:d.pitch==null?null:Number(d.pitch),roll:d.roll==null?null:Number(d.roll),accuracy:null,timestamp:Date.now()},"fsx");
+        }catch(_){}
+      }
+    }
+  };
+  ws.onerror=()=>{if(ws===relaySocket)$("#simStatus").textContent="FSX secure relay error • retrying…"};
+  ws.onclose=()=>{
+    if(ws!==relaySocket)return;
+    relaySocket=null;
+    if(relayPingTimer){clearInterval(relayPingTimer);relayPingTimer=null}
+    if(activePositionSource==="fsx"&&relayHost){
+      markFsxWaiting("FSX relay disconnected • reconnecting…");
+      relayReconnectTimer=setTimeout(()=>connectFsxRelay(relayHost,{reconnect:true}).catch(()=>{}),2500);
+    }
+  };
+}
+
 function connectSimulatorBridge(){
   stopGps(); stopBridge();
   const source=bridgeTargetSource,meta=bridgeMeta[source]||bridgeMeta.xplane;
@@ -934,12 +1044,11 @@ function connectSimulatorBridge(){
     if(!host){clearPositionUi("Enter the FSX PC IPv4 address.");return}
     localStorage.setItem("fsxPcHost",host);
     activePositionSource=source;localStorage.setItem("positionSource",source);
-    if(!LOCAL_SIM_WEB || location.hostname!==host){
-      $("#simStatus").textContent="Opening FSX Local SimConnect at "+host+" …";
-      location.href="http://"+host+":"+meta.localWebPort+"/#simulator";
+    if(!LOCAL_SIM_WEB){
+      connectFsxRelay(host).catch(e=>markFsxWaiting("FSX relay error: "+e.message));
       return;
     }
-    url="ws://"+host+":"+meta.port;
+    url="ws://"+location.hostname+":"+meta.port;
   }else{
     url=$("#bridgeUrl").value.trim();
     if(!/^wss?:\/\//i.test(url)){clearPositionUi("Bridge URL must start with ws:// or wss://");return}
@@ -976,6 +1085,9 @@ if(LOCAL_SIM_WEB){
   ensureLocalFsxSession(true);
 }else if(activePositionSource==="gps"){
   setTimeout(startDeviceGps,500);
+}else if(activePositionSource==="fsx"&&localStorage.getItem("fsxPcHost")){
+  setBridgeTarget("fsx");
+  setTimeout(()=>connectFsxRelay(localStorage.getItem("fsxPcHost")).catch(()=>{}),500);
 }
 /* ===== End position sources ===== */
 
