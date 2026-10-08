@@ -380,9 +380,9 @@ class SimulatorActivity : AppCompatActivity() {
     private fun chooseSimulator() {
         val items = arrayOf(
             SimulatorLocationStore.TYPE_XPLANE,
+            SimulatorLocationStore.TYPE_FSX,
             SimulatorLocationStore.TYPE_MSFS,
-            SimulatorLocationStore.TYPE_P3D,
-            SimulatorLocationStore.TYPE_FSX
+            SimulatorLocationStore.TYPE_P3D
         )
 
         android.app.AlertDialog.Builder(this)
@@ -523,7 +523,7 @@ class SimulatorActivity : AppCompatActivity() {
             else -> "Simulator"
         }
         return if (selectedType == SimulatorLocationStore.TYPE_FSX) {
-            "No certificate or device file is required. Run JEPPIRAN FSX Bridge on the simulator PC and enter this device IP as the target: ${localIpAddress()} on UDP $defaultPort. JEPPIRAN listens automatically."
+            "Run JEPPIRAN FSX Bridge on the simulator PC and enter this Android device IP as the target: ${localIpAddress()} on UDP $defaultPort. JEPPIRAN receives FSX position directly in the APK; no certificate, browser page, or device file is required."
         } else {
             "$bridgeName uses the JEPPIRAN Windows bridge. Run the matching bridge on the simulator PC and send to this device IP: ${localIpAddress()} on UDP $defaultPort."
         }
