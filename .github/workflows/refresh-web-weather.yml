@@ -49,8 +49,8 @@ jobs:
               except Exception as exc:
                   print("No previous cache:", exc)
 
-          def fetch(kind):
-              ids = urllib.parse.quote(",".join(icaos), safe=",")
+          def fetch_batch(kind, batch):
+              ids = urllib.parse.quote(",".join(batch), safe=",")
               url = f"https://aviationweather.gov/api/data/{kind}?ids={ids}&format=json"
               req = urllib.request.Request(
                   url,
@@ -59,29 +59,45 @@ jobs:
                       "Accept": "application/json"
                   }
               )
-              with urllib.request.urlopen(req, timeout=45) as r:
+              with urllib.request.urlopen(req, timeout=35) as r:
                   return json.load(r)
+
+          def apply_rows(kind, rows):
+              count = 0
+              if not isinstance(rows, list):
+                  return count
+              for row in rows:
+                  icao = str(row.get("icaoId") or row.get("station") or row.get("id") or "").upper()
+                  if icao not in stations:
+                      continue
+                  if kind == "metar":
+                      raw = row.get("rawOb") or row.get("rawText") or row.get("raw_text") or ""
+                  else:
+                      raw = row.get("rawTAF") or row.get("rawTaf") or row.get("rawText") or row.get("raw_text") or ""
+                  if raw:
+                      stations[icao][kind] = str(raw).strip()
+                      count += 1
+              return count
 
           load_previous()
 
+          batch_size = 6
           for kind in ("metar", "taf"):
-              try:
-                  rows = fetch(kind)
-                  print(kind, "records:", len(rows) if isinstance(rows, list) else 0)
-                  if not isinstance(rows, list):
-                      continue
-                  for row in rows:
-                      icao = str(row.get("icaoId") or row.get("station") or row.get("id") or "").upper()
-                      if icao not in stations:
-                          continue
-                      if kind == "metar":
-                          raw = row.get("rawOb") or row.get("rawText") or row.get("raw_text") or ""
-                      else:
-                          raw = row.get("rawTAF") or row.get("rawTaf") or row.get("rawText") or row.get("raw_text") or ""
-                      if raw:
-                          stations[icao][kind] = str(raw).strip()
-              except Exception as exc:
-                  print("NOAA", kind, "fetch failed; retaining previous cache:", exc)
+              total = 0
+              for start in range(0, len(icaos), batch_size):
+                  batch = icaos[start:start + batch_size]
+                  try:
+                      rows = fetch_batch(kind, batch)
+                      total += apply_rows(kind, rows)
+                  except Exception as exc:
+                      print("NOAA", kind, "batch failed", batch, exc)
+                      for icao in batch:
+                          try:
+                              rows = fetch_batch(kind, [icao])
+                              total += apply_rows(kind, rows)
+                          except Exception as one_exc:
+                              print("NOAA", kind, icao, "failed; keeping previous value:", one_exc)
+              print(kind, "updated:", total)
 
           output = {
               "generated_at": datetime.now(timezone.utc).isoformat(),
