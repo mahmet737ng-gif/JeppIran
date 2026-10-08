@@ -940,9 +940,12 @@ function mqttUtf8(s){
   const b=new TextEncoder().encode(s),out=new Uint8Array(2+b.length);
   out[0]=(b.length>>8)&255;out[1]=b.length&255;out.set(b,2);return out;
 }
-function mqttConnectPacket(clientId){
-  const vh=mqttConcat([mqttUtf8("MQTT"),new Uint8Array([4,2,0,30])]);
-  const pl=mqttUtf8(clientId),body=mqttConcat([vh,pl]);
+function mqttConnectPacket(clientId,username="demo"){
+  const flags=username?0x82:0x02; // clean session + optional username
+  const vh=mqttConcat([mqttUtf8("MQTT"),new Uint8Array([4,flags,0,30])]);
+  const parts=[mqttUtf8(clientId)];
+  if(username)parts.push(mqttUtf8(username));
+  const pl=mqttConcat(parts),body=mqttConcat([vh,pl]);
   return mqttConcat([new Uint8Array([0x10]),mqttRemainingLength(body.length),body]);
 }
 function mqttSubscribePacket(topic,packetId=1){
@@ -987,11 +990,18 @@ async function connectFsxRelay(host,{reconnect=false}={}){
   if(!reconnect)markFsxWaiting("Connecting securely to FSX Bridge v1.3 for "+host+" …");
   const clientId="jeppiran_web_"+Math.random().toString(16).slice(2)+Date.now().toString(16);
   let ws;
-  try{ws=new WebSocket("wss://broker.emqx.io:8084/mqtt",["mqtt"])}catch(e){markFsxWaiting("FSX secure relay could not start: "+e.message);return}
+  try{ws=new WebSocket("wss://demo.tbmq.io/mqtt",["mqtt"])}catch(e){markFsxWaiting("FSX secure relay could not start: "+e.message);return}
   relaySocket=ws;ws.binaryType="arraybuffer";
+  const connectTimeout=setTimeout(()=>{
+    if(relaySocket===ws && ws.readyState!==1){
+      try{ws.close()}catch(_){}
+      markFsxWaiting("FSX relay timeout. Confirm Bridge v1.4 says Secure relay: CONNECTED via TBMQ, then try again.");
+    }
+  },8000);
   ws.onopen=()=>{
+    clearTimeout(connectTimeout);
     if(ws!==relaySocket)return;
-    ws.send(mqttConnectPacket(clientId));
+    ws.send(mqttConnectPacket(clientId,"demo"));
     markFsxWaiting("Secure relay connected • subscribing to FSX "+host+" …");
     relayPingTimer=setInterval(()=>{if(relaySocket===ws&&ws.readyState===1){try{ws.send(new Uint8Array([0xC0,0x00]))}catch(_){}}},15000);
   };
@@ -1022,7 +1032,13 @@ async function connectFsxRelay(host,{reconnect=false}={}){
       }
     }
   };
-  ws.onerror=()=>{if(ws===relaySocket)$("#simStatus").textContent="FSX secure relay error • retrying…"};
+  ws.onerror=()=>{
+    clearTimeout(connectTimeout);
+    if(ws===relaySocket){
+      const msg="FSX secure relay error. Use Bridge v1.4 and check that it shows Secure relay: CONNECTED via TBMQ.";
+      markFsxWaiting(msg);
+    }
+  };
   ws.onclose=()=>{
     if(ws!==relaySocket)return;
     relaySocket=null;
