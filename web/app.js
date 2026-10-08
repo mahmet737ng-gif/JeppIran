@@ -134,8 +134,8 @@ let pdfRenderToken=0,currentPdfUrl="";
 async function pdfJs(){
   if(window.pdfjsLib)return window.pdfjsLib;
   try{
-    const mod=await import("https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.min.mjs");
-    mod.GlobalWorkerOptions.workerSrc="https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.min.mjs";
+    const mod=await import("./vendor/pdf.min.mjs");
+    mod.GlobalWorkerOptions.workerSrc="./vendor/pdf.worker.min.mjs";
     return mod;
   }catch(e){throw new Error("PDF renderer could not load. Connect once to initialize the web app.");}
 }
@@ -213,7 +213,8 @@ async function getWx(){
     if(needMetar) jobs.push(fetchWx("metar",icao).then(v=>{metar=v;metarOk=true}).catch(()=>{}));
     if(needTaf) jobs.push(fetchWx("taf",icao).then(v=>{taf=v;tafOk=true}).catch(()=>{}));
     await Promise.all(jobs);
-    if(!metarOk&&!tafOk){
+    const anyRequestedOk=(needMetar&&metarOk)||(needTaf&&tafOk);
+    if(!anyRequestedOk){
       showCachedWx(icao,rawMetar,rawTaf,decoded);
       setWxStatus(icao+" • unable to update • cached data shown");
       return;
