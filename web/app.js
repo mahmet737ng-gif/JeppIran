@@ -339,13 +339,25 @@ async function pdfJs(){
     return mod;
   }catch(e){throw new Error("PDF renderer could not load. Connect once to initialize the web app.");}
 }
+function chartCacheSupported(){
+  return typeof window!=="undefined" && !!window.caches && typeof window.caches.open==="function";
+}
 async function getPdfBytes(url,save=true){
-  const cache=await caches.open("jeppiran-chart-pdfs-v1");
-  let res=await cache.match(url);
+  let cache=null,res=null;
+  if(chartCacheSupported()){
+    try{
+      cache=await window.caches.open("jeppiran-chart-pdfs-v1");
+      res=await cache.match(url);
+    }catch(_){
+      cache=null;
+    }
+  }
   if(!res){
-    res=await fetch(url,{mode:"cors"});
+    res=await fetch(url,{mode:"cors",cache:"no-store"});
     if(!res.ok)throw new Error("PDF HTTP "+res.status);
-    if(save) await cache.put(url,res.clone());
+    if(save&&cache){
+      try{await cache.put(url,res.clone())}catch(_){}
+    }
   }
   return new Uint8Array(await res.arrayBuffer());
 }
@@ -354,7 +366,15 @@ async function renderSelectedPdf(c){
   const info=manifest&&manifest.airports&&manifest.airports[selectedAirport];
   if(!info)throw new Error("No PDF URL is available for "+selectedAirport);
   currentPdfUrl="./charts/"+encodeURIComponent(info.file||selectedAirport+".pdf");
-  $("#offlinePdfBtn").disabled=false;
+  if(chartCacheSupported()){
+    $("#offlinePdfBtn").disabled=false;
+    $("#offlinePdfBtn").textContent="Save Offline";
+    $("#offlinePdfBtn").title="Save this airport PDF for offline use";
+  }else{
+    $("#offlinePdfBtn").disabled=true;
+    $("#offlinePdfBtn").textContent="Online";
+    $("#offlinePdfBtn").title="Offline browser cache is unavailable in Local Simulator Mode";
+  }
   const stage=$("#pdfStage");
   stage.innerHTML='<div class="pdf-loading">Loading chart…</div><div class="pdf-canvas-wrap"><div id="chartTransformLayer" class="chart-transform-layer"><canvas id="pdfCanvas"></canvas></div></div>';
   const lib=await pdfJs(), bytes=await getPdfBytes(currentPdfUrl,true);
@@ -585,7 +605,7 @@ $("#chartMetarClose").addEventListener("click",e=>{e.stopPropagation();hideChart
 $("#chartMetarBanner").addEventListener("click",e=>{if(e.target.id!=="chartMetarClose")hideChartMetar()});
 
 $("#offlinePdfBtn").addEventListener("click",async()=>{
-  if(!currentPdfUrl)return;
+  if(!currentPdfUrl||!chartCacheSupported())return;
   $("#offlinePdfBtn").disabled=true; $("#offlinePdfBtn").textContent="Saving…";
   try{await getPdfBytes(currentPdfUrl,true);$("#offlinePdfBtn").textContent="Saved Offline"}
   catch(e){$("#offlinePdfBtn").textContent="Save Offline";dialog("Offline chart","Could not save this airport PDF: "+e.message)}
