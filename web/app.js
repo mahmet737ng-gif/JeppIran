@@ -1,5 +1,7 @@
 const RAW_ROOT="./data/";
 const VERSION="V2620";
+const WX_CACHE_RAW="https://raw.githubusercontent.com/mahmet737ng-gif/JeppIran/wx-cache/wx-live.json";
+const WX_CACHE_API="https://api.github.com/repos/mahmet737ng-gif/JeppIran/contents/wx-live.json?ref=wx-cache";
 const CATEGORY_ORDER=["Airport","STAR","SID","Approach","Other"];
 const AIRPORTS={
 "LTFM":["ISTANBUL AIRPORT","ISTANBUL"],"OIAA":["ABADAN AIRPORT","ABADAN"],"OIAM":["MAHSHAHR AIRPORT","MAHSHAHR"],
@@ -17,6 +19,7 @@ const AIRPORTS={
 };
 
 let charts=[], manifest=null, selectedAirport="", selectedChart=null, expanded=new Set(["Airport"]);
+let georefByPage=new Map(), githubWxCache=null, githubWxCacheAt=0;
 const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
 
@@ -57,11 +60,13 @@ if(localStorage.getItem("theme")==="light") document.documentElement.classList.a
 
 async function loadData(){
   try{
-    const [m,c]=await Promise.all([
+    const [m,c,g]=await Promise.all([
       fetch(RAW_ROOT+"charts-manifest.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error("manifest");return r.json()}),
-      fetch(RAW_ROOT+"charts-current.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error("charts");return r.json()})
+      fetch(RAW_ROOT+"charts-current.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error("charts");return r.json()}),
+      fetch(RAW_ROOT+"chart-georef.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null)
     ]);
     manifest=m; charts=Array.isArray(c)?c:(c.charts||[]);
+    georefByPage=buildGeorefIndex(g);
     renderAirports();
     $("#updateSubtitle").textContent=(m.version||VERSION)+" data • "+Object.keys(m.airports||{}).length+" airports";
   }catch(e){
@@ -130,6 +135,112 @@ function renderTree(){
     root.appendChild(wrap);
   });
 }
+function geoNum(v){const n=Number(v);return Number.isFinite(n)?n:NaN}
+function geoBoundsContains(b,x,y,t=0){
+  return !!b&&Number.isFinite(x)&&Number.isFinite(y)&&
+    x>=b.left-t&&x<=b.right+t&&y>=b.top-t&&y<=b.bottom+t;
+}
+function makeGeoModel(item){
+  if(!item||!Number.isInteger(Number(item.page)))return null;
+  const allowed=new Set(["paired_printed_graticule_vector_ticks","single_axis_plus_conformal_scale"]);
+  if(!allowed.has(item.validation&&item.validation.method))return null;
+  const width=geoNum(item.width),height=geoNum(item.height),b=item.bounds||{};
+  const bounds={left:geoNum(b.left),top:geoNum(b.top),right:geoNum(b.right),bottom:geoNum(b.bottom)};
+  const points=Array.isArray(item.points)?item.points.map(p=>({x:geoNum(p.x),y:geoNum(p.y),lat:geoNum(p.lat),lon:geoNum(p.lon)})):[];
+  if(points.length<4||!Number.isFinite(width)||!Number.isFinite(height)||width<=0||height<=0||
+     !geoBoundsContains({left:0,top:0,right:width,bottom:height},bounds.left,bounds.top)||
+     !geoBoundsContains({left:0,top:0,right:width,bottom:height},bounds.right,bounds.bottom)||
+     bounds.left>=bounds.right||bounds.top>=bounds.bottom||
+     points.some(p=>!Number.isFinite(p.x)||!Number.isFinite(p.y)||!Number.isFinite(p.lat)||!Number.isFinite(p.lon)||
+       p.lat<-90||p.lat>90||p.lon<-180||p.lon>180||!geoBoundsContains(bounds,p.x,p.y)))return null;
+  let excluded=(Array.isArray(item.excludedBounds)?item.excludedBounds:[]).map(x=>({
+    left:geoNum(x.left),top:geoNum(x.top),right:geoNum(x.right),bottom:geoNum(x.bottom)
+  })).filter(x=>Number.isFinite(x.left)&&Number.isFinite(x.top)&&Number.isFinite(x.right)&&Number.isFinite(x.bottom)&&
+    x.left<x.right&&x.top<x.bottom&&geoBoundsContains(bounds,x.left,x.top)&&geoBoundsContains(bounds,x.right,x.bottom));
+  excluded=excluded.filter(area=>!points.every(p=>geoBoundsContains(area,p.x,p.y)));
+  const meanLon=points.reduce((a,p)=>a+p.lon,0)/points.length;
+  const meanLat=points.reduce((a,p)=>a+p.lat,0)/points.length;
+  const meanX=points.reduce((a,p)=>a+p.x,0)/points.length;
+  const meanY=points.reduce((a,p)=>a+p.y,0)/points.length;
+  let ll=0,bb=0,lb=0,lx=0,bx=0,ly=0,latY=0;
+  points.forEach(p=>{
+    const lon=p.lon-meanLon,lat=p.lat-meanLat;
+    ll+=lon*lon;bb+=lat*lat;lb+=lon*lat;
+    lx+=lon*(p.x-meanX);bx+=lat*(p.x-meanX);
+    ly+=lon*(p.y-meanY);latY+=lat*(p.y-meanY);
+  });
+  const det=ll*bb-lb*lb;
+  if(ll<=1e-16||bb<=1e-16||det<=1e-8*ll*bb)return null;
+  const model={page:Number(item.page),width,height,bounds,excluded,meanLon,meanLat,meanX,meanY,
+    xLon:(bb*lx-lb*bx)/det,xLat:(ll*bx-lb*lx)/det,
+    yLon:(bb*ly-lb*latY)/det,yLat:(ll*latY-lb*ly)/det};
+  const orientation=model.xLon*model.yLat-model.xLat*model.yLon;
+  if(!Number.isFinite(orientation)||orientation>=0)return null;
+  const maxResidual=Math.min(2,Math.max(0,geoNum(item.maxResidualPdfPoints)||0.75));
+  for(const p of points){
+    const q=projectGeoRaw(model,p.lat,p.lon);
+    if(!q||Math.hypot(q.x-p.x,q.y-p.y)>maxResidual)return null;
+  }
+  return model;
+}
+function projectGeoRaw(model,lat,lon){
+  if(!model||!Number.isFinite(lat)||!Number.isFinite(lon)||lat<-90||lat>90||lon<-180||lon>180)return null;
+  const x=model.meanX+model.xLon*(lon-model.meanLon)+model.xLat*(lat-model.meanLat);
+  const y=model.meanY+model.yLon*(lon-model.meanLon)+model.yLat*(lat-model.meanLat);
+  return Number.isFinite(x)&&Number.isFinite(y)?{x,y}:null;
+}
+function projectGeo(model,lat,lon){
+  const p=projectGeoRaw(model,lat,lon);
+  if(!p||!geoBoundsContains(model.bounds,p.x,p.y,6)||model.excluded.some(b=>geoBoundsContains(b,p.x,p.y)))return null;
+  return p;
+}
+function buildGeorefIndex(root){
+  const map=new Map();
+  if(!root||root.version!==2||root.coordinateSystem!=="WGS84"||root.coordinateSpace!=="pdf_points"||root.origin!=="top_left")return map;
+  (Array.isArray(root.charts)?root.charts:[]).forEach(item=>{
+    const model=makeGeoModel(item);
+    if(model&&!map.has(model.page))map.set(model.page,model);
+  });
+  return map;
+}
+function hideAircraftMarker(){
+  const m=$("#aircraftMarker"); if(m)m.classList.remove("visible");
+}
+function renderedGeoHeading(model,lat,heading,canvas){
+  if(!Number.isFinite(heading))return 0;
+  const r=Math.PI/180,cosLat=Math.cos(lat*r);
+  if(Math.abs(cosLat)<1e-8)return 0;
+  const east=Math.sin(heading*r)/cosLat,north=Math.cos(heading*r);
+  const dx=(model.xLon*east+model.xLat*north)*canvas.clientWidth/model.width;
+  const dy=(model.yLon*east+model.yLat*north)*canvas.clientHeight/model.height;
+  if(!Number.isFinite(dx)||!Number.isFinite(dy)||Math.hypot(dx,dy)<1e-8)return 0;
+  return Math.atan2(dx,-dy)/r;
+}
+function updateAircraftMarker(){
+  const canvas=$("#pdfCanvas"),chart=selectedChart,pos=lastPosition;
+  if(!canvas||!chart||!pos){hideAircraftMarker();return}
+  const model=georefByPage.get(Number(chart.page));
+  if(!model){hideAircraftMarker();return}
+  const p=projectGeo(model,Number(pos.lat),Number(pos.lon));
+  if(!p){hideAircraftMarker();return}
+  const wrap=canvas.parentElement;
+  let marker=$("#aircraftMarker");
+  if(!marker){
+    marker=document.createElement("div");
+    marker.id="aircraftMarker";
+    marker.className="aircraft-marker";
+    marker.innerHTML='<span class="aircraft-pulse"></span><span class="aircraft-arrow"></span>';
+    wrap.appendChild(marker);
+  }else if(marker.parentElement!==wrap){
+    wrap.appendChild(marker);
+  }
+  const x=canvas.offsetLeft+p.x/model.width*canvas.clientWidth;
+  const y=canvas.offsetTop+p.y/model.height*canvas.clientHeight;
+  marker.style.left=x+"px";marker.style.top=y+"px";
+  marker.style.setProperty("--aircraft-heading",renderedGeoHeading(model,Number(pos.lat),Number(pos.heading),canvas)+"deg");
+  marker.classList.add("visible");
+}
+
 let pdfRenderToken=0,currentPdfUrl="";
 async function pdfJs(){
   if(window.pdfjsLib)return window.pdfjsLib;
@@ -173,6 +284,7 @@ async function renderSelectedPdf(c){
   canvas.style.width=Math.floor(viewport.width/dpr)+"px"; canvas.style.height=Math.floor(viewport.height/dpr)+"px";
   await page.render({canvasContext:canvas.getContext("2d",{alpha:false}),viewport}).promise;
   stage.querySelector(".pdf-loading")?.remove();
+  updateAircraftMarker();
 }
 function selectChart(c){
   selectedChart=c; expanded.add(c.category||"Other"); renderTree();
@@ -188,14 +300,29 @@ $("#offlinePdfBtn").addEventListener("click",async()=>{
   catch(e){$("#offlinePdfBtn").textContent="Save Offline";dialog("Offline chart","Could not save this airport PDF: "+e.message)}
   finally{setTimeout(()=>{$("#offlinePdfBtn").disabled=false;if($("#offlinePdfBtn").textContent==="Saved Offline")$("#offlinePdfBtn").textContent="Save Offline"},1800)}
 });
-$("#fullscreenBtn").addEventListener("click",async()=>{
-  document.body.classList.toggle("viewer-fullscreen");
-  if(document.body.classList.contains("viewer-fullscreen") && document.documentElement.requestFullscreen){
-    try{await document.documentElement.requestFullscreen()}catch(e){}
-  }else if(document.fullscreenElement && document.exitFullscreen){
-    try{await document.exitFullscreen()}catch(e){}
+async function enterViewerFullscreen(){
+  document.body.classList.add("viewer-fullscreen");
+  const root=document.documentElement;
+  const request=root.requestFullscreen||root.webkitRequestFullscreen;
+  if(request){try{await request.call(root)}catch(e){}}
+  setTimeout(updateAircraftMarker,80);
+}
+async function exitViewerFullscreen(exitNative=true){
+  document.body.classList.remove("viewer-fullscreen");
+  if(exitNative){
+    const active=document.fullscreenElement||document.webkitFullscreenElement;
+    const exit=document.exitFullscreen||document.webkitExitFullscreen;
+    if(active&&exit){try{await exit.call(document)}catch(e){}}
   }
-});
+  setTimeout(updateAircraftMarker,80);
+}
+$("#fullscreenBtn").addEventListener("click",enterViewerFullscreen);
+$("#fullscreenExitBtn").addEventListener("click",()=>exitViewerFullscreen(true));
+["fullscreenchange","webkitfullscreenchange"].forEach(name=>document.addEventListener(name,()=>{
+  const active=document.fullscreenElement||document.webkitFullscreenElement;
+  if(!active&&document.body.classList.contains("viewer-fullscreen"))exitViewerFullscreen(false);
+}));
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&document.body.classList.contains("viewer-fullscreen"))exitViewerFullscreen(true)});
 
 const wxCache=JSON.parse(localStorage.getItem("wxCache")||"{}");
 $("#getWxBtn").addEventListener("click",getWx);
@@ -252,7 +379,28 @@ function extractWxRaw(data,type){
   }
   return "";
 }
+async function loadGithubWxCache(){
+  if(githubWxCache&&Date.now()-githubWxCacheAt<60000)return githubWxCache;
+  const bust=Math.floor(Date.now()/300000);
+  try{
+    const r=await fetch(WX_CACHE_RAW+"?v="+bust,{cache:"no-store",mode:"cors"});
+    if(!r.ok)throw new Error("GitHub raw "+r.status);
+    githubWxCache=await r.json();githubWxCacheAt=Date.now();return githubWxCache;
+  }catch(rawError){
+    const r=await fetch(WX_CACHE_API+"&v="+bust,{cache:"no-store",mode:"cors",headers:{Accept:"application/vnd.github+json"}});
+    if(!r.ok)throw rawError;
+    const data=await r.json(),encoded=String(data.content||"").replace(/\s+/g,"");
+    githubWxCache=JSON.parse(atob(encoded));githubWxCacheAt=Date.now();return githubWxCache;
+  }
+}
+async function fetchWxGithubCache(type,icao){
+  const data=await loadGithubWxCache(),row=data&&data.stations&&data.stations[icao];
+  const raw=row&&row[type];
+  if(typeof raw==="string"&&raw.trim())return raw.trim();
+  throw new Error("No cached "+type.toUpperCase()+" for "+icao);
+}
 async function fetchWx(type,icao){
+  try{return await fetchWxGithubCache(type,icao)}catch(_){}
   const code=encodeURIComponent(icao);
   const providers=[
     {
@@ -338,6 +486,7 @@ function updatePositionUi(p,source){
   document.querySelectorAll(".source-card").forEach(x=>x.classList.remove("active"));
   if(source==="gps") $("#useGpsBtn").classList.add("active");
   if(source==="xplane") $("#useXpBtn").classList.add("active");
+  updateAircraftMarker();
   window.dispatchEvent(new CustomEvent("jeppiran-position",{detail:p}));
 }
 function clearPositionUi(message="Disconnected"){
@@ -348,6 +497,7 @@ function clearPositionUi(message="Disconnected"){
   $("#simStatus").textContent=message;
   const badge=$("#viewerPositionBadge"); badge.textContent="GPS/SIM OFF"; badge.classList.remove("live");
   document.querySelectorAll(".source-card").forEach(x=>x.classList.remove("active"));
+  hideAircraftMarker();
 }
 function stopGps(){
   if(gpsWatchId!==null && navigator.geolocation){navigator.geolocation.clearWatch(gpsWatchId)}
@@ -415,7 +565,8 @@ const savedBridge=localStorage.getItem("bridgeUrl"); if(savedBridge) $("#bridgeU
 if(activePositionSource==="gps") setTimeout(startDeviceGps,500);
 /* ===== End position sources ===== */
 
-window.addEventListener("orientationchange",()=>setTimeout(()=>window.dispatchEvent(new Event("resize")),150));
+window.addEventListener("resize",()=>requestAnimationFrame(updateAircraftMarker));
+window.addEventListener("orientationchange",()=>setTimeout(()=>{window.dispatchEvent(new Event("resize"));updateAircraftMarker()},150));
 if("serviceWorker" in navigator) navigator.serviceWorker.register("./service-worker.js").catch(()=>{});
 loadData();
 const start=(location.hash||"#home").slice(1); const initial=["home","charts","wx","simulator"].includes(start)?start:"home"; renderRoute(initial); if(!location.hash)history.replaceState({route:initial},"","#"+initial);
