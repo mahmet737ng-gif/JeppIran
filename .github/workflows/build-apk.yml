@@ -110,6 +110,15 @@ jobs:
                   f"Unsupported published version format: {current_name}"
               )
 
+          # One-time correction: a prior automatic build accidentally published
+          # 1.9 while the requested release was still 1.8. Keep Android's
+          # versionCode strictly increasing, but restore the visible release
+          # name to 1.8. After this succeeds, normal sequencing resumes from
+          # the newly published 1.8 metadata.
+          if current_name == "1.9" and current_code == 262288:
+              print(f"1.8 {current_code + 1}")
+              raise SystemExit(0)
+
           major = int(match.group(1))
           minor = int(match.group(2)) + 1
 
