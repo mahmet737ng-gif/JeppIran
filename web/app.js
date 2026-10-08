@@ -39,6 +39,7 @@ $$("[data-route]").forEach(b=>b.addEventListener("click",e=>{
   if(target==="home" && history.length>1 && location.hash!=="#home"){history.back()} else route(target);
 }));
 window.addEventListener("popstate",()=>renderRoute((location.hash||"#home").slice(1)));
+window.JEPPIRAN_NAV_READY=true;
 
 function dialog(title,text){
   $("#dialogTitle").textContent=title;
