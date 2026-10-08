@@ -40,10 +40,12 @@ function route(name,replace=false){
     history[fn]({route:name},"",hash);
   }
 }
-$$("[data-route]").forEach(b=>b.addEventListener("click",e=>{
+$("[data-route]").forEach(b=>b.addEventListener("click",e=>{
   e.preventDefault();
   const target=b.dataset.route;
-  if(target==="home" && history.length>1 && location.hash!=="#home"){history.back()} else route(target);
+  // Keep navigation inside the current JEPPIRAN origin. In Local FSX mode,
+  // history.back() can return to the public GitHub app and drop the live bridge.
+  route(target);
 }));
 window.addEventListener("popstate",()=>renderRoute((location.hash||"#home").slice(1)));
 window.JEPPIRAN_NAV_READY=true;
