@@ -1111,7 +1111,8 @@ $("#startGpsBtn").addEventListener("click",startDeviceGps);
 $("#useXpBtn").addEventListener("click",()=>{setBridgeTarget("xplane");$("#bridgeUrl").focus()});
 $("#useFsxBtn").addEventListener("click",()=>{setBridgeTarget("fsx");$("#fsxPcIp")?.focus()});
 $("#connectBridgeBtn").addEventListener("click",()=>{setBridgeTarget("xplane");connectSimulatorBridge()});
-window.JEPPIRAN_FsxConnectorReady=true;\nwindow.jeppiranConnectFsx=()=>{
+window.JEPPIRAN_FsxConnectorReady=true;
+window.jeppiranConnectFsx=()=>{
   const btn=$("#connectFsxBtn"),inline=$("#fsxInlineStatus");
   const host=normalizeBridgeHost(($("#fsxPcIp")&&$("#fsxPcIp").value)||"");
   if(!host){
