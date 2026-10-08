@@ -146,6 +146,8 @@ def register(page, index_entry, match, published, *, max_ground_error_m=10.0):
             'maxIndependentCheckMetres': round(max(holdouts_m), 3),
             'maxPdfResidual': round(page_residual, 5),
             'pixelMeasurementsReviewed': True,
+            'notToScaleTextPresentElsewhereOnPage': 'NOT TO SCALE' in page.get_text(),
+            'visualReview': True,
         }
     }
 
