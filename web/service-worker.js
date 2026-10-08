@@ -1,6 +1,6 @@
-const CACHE="jeppiran-pwa-v2620-8";
+const CACHE="jeppiran-pwa-v2620-9";
 const PDF_CACHE="jeppiran-chart-pdfs-v1";
-const SHELL=["./","./index.html","./styles.css","./app.js?v=2620-8","./manifest.webmanifest","./logo.svg"];
+const SHELL=["./","./index.html","./styles.css","./app.js?v=2620-9","./manifest.webmanifest","./logo.svg"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()));
 });
