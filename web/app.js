@@ -224,7 +224,8 @@ async function getWx(){
     const m=metarOk?metar:(wxCache[icao+":metar"]||"No cached METAR.");
     const t=tafOk?taf:(wxCache[icao+":taf"]||"No cached TAF.");
     showWx(rawMetar,rawTaf,decoded,m,t);
-    const requestedOk=(!needMetar||metarOk)&&(!needTaf||tafOk);\n    setWxStatus(icao+(requestedOk?" • updated":" • partial update"));
+    const requestedOk=(!needMetar||metarOk)&&(!needTaf||tafOk);
+    setWxStatus(icao+(requestedOk?" • updated":" • partial update"));
   }finally{$("#getWxBtn").disabled=false}
 }
 function extractWxRaw(data,type){
