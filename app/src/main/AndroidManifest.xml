@@ -27,6 +27,7 @@
     <application
         android:name=".JeppIranApplication"
         android:allowBackup="true"
+        android:usesCleartextTraffic="true"
         android:icon="@drawable/jeppiran_logo"
         android:roundIcon="@drawable/jeppiran_logo"
         android:label="JEPPIRAN"
