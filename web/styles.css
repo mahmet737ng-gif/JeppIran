@@ -349,3 +349,149 @@ body.viewer-fullscreen .pdf-stage{height:100dvh!important}
   .viewer-position-badge,.viewer-nav-group{display:none}
   .viewer-actions{max-width:76%}
 }
+
+/* ===== 2.1 integrated airport/chart tree + chart METAR ===== */
+.charts-layout.active{
+  grid-template-columns:320px minmax(0,1fr)!important
+}
+.airport-pane{
+  width:auto!important;
+  overflow:hidden!important
+}
+.airport-list{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:10px!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  padding:8px 10px 28px!important
+}
+.airport-branch{
+  display:block;
+  width:100%;
+  min-width:0
+}
+.airport-item{
+  width:100%;
+  position:relative;
+  background-image:var(--airport-bg)!important;
+  background-color:transparent!important
+}
+.airport-item.selected{
+  background-image:var(--airport-bg)!important;
+  background-color:transparent!important;
+  outline:2px solid var(--accent)!important;
+  border-color:transparent!important
+}
+.airport-item.selected .airport-shade{
+  background:linear-gradient(90deg,rgba(3,12,20,.68) 0%,rgba(3,12,20,.46) 52%,rgba(3,12,20,.12) 100%)!important
+}
+.airport-chevron{
+  position:absolute;
+  right:12px;
+  top:50%;
+  transform:translateY(-50%);
+  z-index:2;
+  display:grid;
+  place-items:center;
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  background:rgba(3,12,20,.46);
+  color:#fff;
+  font-size:20px;
+  font-weight:900;
+  pointer-events:none
+}
+.airport-inline-tree{
+  margin:7px 4px 2px 18px;
+  padding:2px 0 6px 10px;
+  border-left:2px solid color-mix(in srgb,var(--accent) 48%,var(--stroke));
+  background:transparent
+}
+.airport-inline-tree .tree-group{margin:2px 0}
+.airport-inline-tree .tree-group-head{
+  padding:9px 8px;
+  border-radius:9px;
+  font-size:12px
+}
+.airport-inline-tree .tree-item{
+  display:block;
+  width:100%;
+  margin:2px 0;
+  padding:9px 9px 9px 14px;
+  border-radius:9px;
+  text-align:left;
+  white-space:normal;
+  overflow-wrap:anywhere;
+  background:transparent
+}
+.airport-inline-tree .tree-item:hover{
+  background:color-mix(in srgb,var(--surface2) 76%,transparent)
+}
+.airport-inline-tree .tree-item.selected{
+  background:rgba(245,51,156,.20)!important;
+  outline:1px solid rgba(245,51,156,.65)
+}
+.viewer-pane{position:relative}
+.chart-metar-banner{
+  position:absolute;
+  z-index:60;
+  top:66px;
+  left:50%;
+  transform:translate(-50%,-12px);
+  width:min(760px,calc(100% - 28px));
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px 12px 12px 16px;
+  border:1px solid rgba(37,199,229,.45);
+  border-radius:14px;
+  background:rgba(5,17,26,.94);
+  color:#fff;
+  box-shadow:0 12px 34px rgba(0,0,0,.34);
+  backdrop-filter:blur(14px);
+  opacity:0;
+  pointer-events:none;
+  transition:opacity .18s ease,transform .18s ease
+}
+.chart-metar-banner.visible{
+  opacity:1;
+  transform:translate(-50%,0);
+  pointer-events:auto
+}
+.chart-metar-banner span{
+  flex:1;
+  min-width:0;
+  font-family:"SFMono-Regular",Menlo,Consolas,monospace;
+  font-size:13px;
+  line-height:1.4
+}
+.chart-metar-banner button{
+  flex:0 0 auto;
+  width:34px;
+  height:34px;
+  border:0;
+  border-radius:10px;
+  background:rgba(255,255,255,.10);
+  color:#fff;
+  font-weight:900
+}
+.metar-toolbar-btn{
+  border-color:rgba(37,199,229,.55)!important
+}
+body.viewer-fullscreen .chart-metar-banner{
+  top:max(14px,env(safe-area-inset-top));
+  width:min(820px,calc(100% - 100px))
+}
+@media(max-width:850px){
+  .charts-layout.active{grid-template-columns:270px minmax(0,1fr)!important}
+  .airport-inline-tree{margin-left:12px;padding-left:8px}
+}
+@media(max-width:620px){
+  .charts-layout.active{grid-template-columns:215px minmax(0,1fr)!important}
+  .airport-list{padding-left:6px!important;padding-right:6px!important}
+  .airport-inline-tree{margin-left:7px}
+  .airport-inline-tree .tree-item{font-size:11px;padding-left:10px}
+  .chart-metar-banner{top:72px;width:calc(100% - 16px)}
+}
