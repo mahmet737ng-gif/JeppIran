@@ -21,6 +21,7 @@ const AIRPORTS={
 let charts=[], manifest=null, selectedAirport="", selectedChart=null, expanded=new Set(["Airport"]);
 let chartTreeOpen=false;
 let chartZoom=1, chartPanX=0, chartPanY=0;
+let chartMetarTimer=null, chartMetarAirport="", chartMetarValue="";
 let chartPointers=new Map(), pinchStartDistance=0, pinchStartZoom=1, panStart=null, swipeStart=null, lastTapAt=0;
 let georefByPage=new Map(), githubWxCache=null, githubWxCacheAt=0;
 const $=s=>document.querySelector(s);
@@ -84,7 +85,9 @@ $("#updateCard").addEventListener("click",async()=>{
 });
 
 function renderAirports(filter=""){
-  const list=$("#airportList"); list.innerHTML="";
+  const list=$("#airportList");
+  const oldScroll=list.scrollTop;
+  list.innerHTML="";
   const keys=[...new Set(charts.map(c=>c.airport))].sort();
   const q=filter.trim().toUpperCase();
   keys.filter(icao=>{
@@ -92,68 +95,75 @@ function renderAirports(filter=""){
     return !q || (icao+" "+meta.join(" ")).toUpperCase().includes(q);
   }).forEach(icao=>{
     const meta=AIRPORTS[icao]||["AIRPORT",""];
+    const branch=document.createElement("div");
+    branch.className="airport-branch"+(icao===selectedAirport?" selected":"");
+
     const b=document.createElement("button");
     b.className="airport-item"+(icao===selectedAirport?" selected":"");
     const idx=(keys.indexOf(icao)%20)+1;
     b.style.setProperty("--airport-bg","url('./airport-images/airport_card_"+idx+".webp')");
-    b.innerHTML="<span class='airport-shade'></span><span class='airport-copy'><b>"+escapeHtml(icao)+"</b><small>"+escapeHtml(meta[0]+(meta[1]?" • "+meta[1]:""))+"</small></span>";
+    b.innerHTML="<span class='airport-shade'></span><span class='airport-copy'><b>"+escapeHtml(icao)+"</b><small>"+escapeHtml(meta[0]+(meta[1]?" • "+meta[1]:""))+"</small></span><span class='airport-chevron'>"+(icao===selectedAirport?"▾":"›")+"</span>";
     b.onclick=()=>selectAirport(icao);
-    list.appendChild(b);
+    branch.appendChild(b);
+
+    if(icao===selectedAirport){
+      const tree=document.createElement("div");
+      tree.className="airport-inline-tree";
+      renderTreeInto(tree);
+      branch.appendChild(tree);
+    }
+    list.appendChild(branch);
   });
+  requestAnimationFrame(()=>{list.scrollTop=oldScroll});
 }
 $("#airportSearch").addEventListener("input",e=>renderAirports(e.target.value));
 
-function setChartTreeOpen(open){
-  chartTreeOpen=!!open;
-  const pane=$("#chartTreePane");
-  if(pane)pane.classList.toggle("open",chartTreeOpen);
-  const btn=$("#chartTreeToggleBtn");
-  if(btn){
-    btn.classList.toggle("active",chartTreeOpen);
-    btn.setAttribute("aria-expanded",chartTreeOpen?"true":"false");
-  }
-}
-function openChartTree(){setChartTreeOpen(true)}
-function closeChartTree(){setChartTreeOpen(false)}
-$("#chartTreeToggleBtn").addEventListener("click",()=>setChartTreeOpen(!chartTreeOpen));
-$("#chartTreeCloseBtn").addEventListener("click",closeChartTree);
-
 function selectAirport(icao){
-  selectedAirport=icao; selectedChart=null; expanded=new Set(["Airport"]);
+  selectedAirport=icao;
+  selectedChart=null;
+  expanded=new Set(["Airport"]);
   renderAirports($("#airportSearch").value);
   $("#viewerAirport").textContent=icao+" • "+((AIRPORTS[icao]||[])[0]||"AIRPORT");
   $("#viewerChart").textContent="Select a chart";
-  $("#treeAirport").textContent=icao;
-  $("#pdfStage").innerHTML='<div class="empty-state"><img src="./logo.svg" alt=""><b>Select a chart</b><span>Choose Airport, STAR, SID, Approach or Other below.</span></div>';
-  $("#offlinePdfBtn").disabled=true; currentPdfUrl="";
-  renderTree();
-  openChartTree();
+  $("#pdfStage").innerHTML='<div class="empty-state"><img src="./logo.svg" alt=""><b>Select a chart</b><span>Choose AIRPORT, STAR, SID or APP under '+escapeHtml(icao)+'.</span></div>';
+  $("#offlinePdfBtn").disabled=true;
+  currentPdfUrl="";
+  hideChartMetar();
 }
-function renderTree(){
-  const root=$("#chartTree"); root.innerHTML="";
-  if(!selectedAirport){root.innerHTML='<div class="status">Select an airport first.</div>';return}
+
+function renderTreeInto(root){
+  root.innerHTML="";
+  if(!selectedAirport)return;
   const airportCharts=charts.filter(c=>c.airport===selectedAirport).sort((a,b)=>(a.pdf_page||0)-(b.pdf_page||0));
   CATEGORY_ORDER.forEach(cat=>{
     const items=airportCharts.filter(c=>(c.category||"Other")===cat);
     if(!items.length)return;
-    const wrap=document.createElement("div"); wrap.className="tree-group";
-    const h=document.createElement("button"); h.className="tree-group-head";
+    const wrap=document.createElement("div");
+    wrap.className="tree-group inline-tree-group";
+    const h=document.createElement("button");
+    h.className="tree-group-head";
     const catLabel=cat==="Airport"?"AIRPORT":cat==="Approach"?"APP":cat.toUpperCase();
     h.textContent=(expanded.has(cat)?"▼ ":"▶ ")+catLabel+" ("+items.length+")";
-    h.onclick=()=>{expanded.has(cat)?expanded.delete(cat):expanded.add(cat);renderTree()};
+    h.onclick=e=>{
+      e.stopPropagation();
+      expanded.has(cat)?expanded.delete(cat):expanded.add(cat);
+      renderAirports($("#airportSearch").value);
+    };
     wrap.appendChild(h);
     if(expanded.has(cat)){
       items.forEach(c=>{
-        const b=document.createElement("button");
-        b.className="tree-item"+(selectedChart&&selectedChart.page===c.page?" selected":"");
+        const item=document.createElement("button");
+        item.className="tree-item"+(selectedChart&&Number(selectedChart.page)===Number(c.page)?" selected":"");
         const number=c.chart_number?c.chart_number+" • ":"";
-        b.innerHTML=escapeHtml(number+(c.name||("Chart "+c.page)));
-        b.onclick=()=>selectChart(c); wrap.appendChild(b);
+        item.innerHTML=escapeHtml(number+(c.name||("Chart "+c.page)));
+        item.onclick=e=>{e.stopPropagation();selectChart(c)};
+        wrap.appendChild(item);
       });
     }
     root.appendChild(wrap);
   });
 }
+
 function geoNum(v){const n=Number(v);return Number.isFinite(n)?n:NaN}
 function geoBoundsContains(b,x,y,t=0){
   return !!b&&Number.isFinite(x)&&Number.isFinite(y)&&
@@ -454,13 +464,55 @@ function setupChartGestures(){
 setupChartGestures();
 
 function selectChart(c,options={}){
-  selectedChart=c; expanded.add(c.category||"Other"); renderTree();
-  if(!options.keepTreeClosed) closeChartTree();
+  selectedChart=c;
+  expanded.add(c.category||"Other");
+  renderAirports($("#airportSearch").value);
   $("#viewerChart").textContent=(c.chart_number?c.chart_number+" • ":"")+(c.name||("Chart "+c.page));
+  showChartMetar(true);
   renderSelectedPdf(c).catch(e=>{
     $("#pdfStage").innerHTML='<div class="empty-state"><img src="./logo.svg" alt=""><b>Chart unavailable</b><span>'+escapeHtml(e.message)+'</span></div>';
   });
 }
+function hideChartMetar(){
+  if(chartMetarTimer){clearTimeout(chartMetarTimer);chartMetarTimer=null}
+  const banner=$("#chartMetarBanner");
+  if(banner)banner.classList.remove("visible");
+}
+function scheduleChartMetarHide(){
+  if(chartMetarTimer)clearTimeout(chartMetarTimer);
+  chartMetarTimer=setTimeout(hideChartMetar,30000);
+}
+async function showChartMetar(autoHide=true){
+  if(!selectedAirport||!selectedChart)return;
+  const icao=selectedAirport;
+  const banner=$("#chartMetarBanner"),text=$("#chartMetarText");
+  if(!banner||!text)return;
+  chartMetarAirport=icao;
+  const cached=wxCache[icao+":metar"]||"";
+  chartMetarValue=cached;
+  text.textContent=cached||("METAR "+icao+" • loading…");
+  banner.classList.add("visible");
+  if(autoHide)scheduleChartMetarHide();
+  try{
+    const raw=await fetchWx("metar",icao);
+    if(icao!==selectedAirport||!selectedChart)return;
+    chartMetarValue=raw;
+    wxCache[icao+":metar"]=raw;
+    wxCache[icao+":time"]=Date.now();
+    localStorage.setItem("wxCache",JSON.stringify(wxCache));
+    text.textContent=raw;
+  }catch(_){
+    if(!cached&&icao===selectedAirport)text.textContent="METAR "+icao+" unavailable";
+  }
+}
+$("#chartMetarBtn").addEventListener("click",()=>{
+  const banner=$("#chartMetarBanner");
+  if(banner&&banner.classList.contains("visible"))hideChartMetar();
+  else showChartMetar(true);
+});
+$("#chartMetarClose").addEventListener("click",e=>{e.stopPropagation();hideChartMetar()});
+$("#chartMetarBanner").addEventListener("click",e=>{if(e.target.id!=="chartMetarClose")hideChartMetar()});
+
 $("#offlinePdfBtn").addEventListener("click",async()=>{
   if(!currentPdfUrl)return;
   $("#offlinePdfBtn").disabled=true; $("#offlinePdfBtn").textContent="Saving…";
