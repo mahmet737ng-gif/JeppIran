@@ -31,6 +31,7 @@ class SimulatorActivity : AppCompatActivity() {
     private var directHostInput: EditText? = null
     private var directPortInput: EditText? = null
     private var bridgePortInput: EditText? = null
+    private var bridgeHostInput: EditText? = null
 
     private var selectedType = SimulatorLocationStore.TYPE_XPLANE
     private var autoStartedThisOpen = false
@@ -101,6 +102,7 @@ class SimulatorActivity : AppCompatActivity() {
         directHostInput = null
         directPortInput = null
         bridgePortInput = null
+        bridgeHostInput = null
 
         content.addView(TextView(this).apply {
             text = "CONNECT TO SIMULATOR"
@@ -290,17 +292,33 @@ class SimulatorActivity : AppCompatActivity() {
             background = roundedSurface()
         }
 
+        val isFsx = selectedType == SimulatorLocationStore.TYPE_FSX
         val defaultPort = when (selectedType) {
             SimulatorLocationStore.TYPE_MSFS -> 49010
             SimulatorLocationStore.TYPE_P3D -> 49011
-            SimulatorLocationStore.TYPE_FSX -> SimulatorLocationStore.DEFAULT_FSX_BRIDGE_PORT
+            SimulatorLocationStore.TYPE_FSX -> SimulatorLocationStore.DEFAULT_FSX_WS_PORT
             else -> 49011
         }
         val saved = SimulatorLocationStore.savedPort(this)
 
+        if (isFsx) {
+            bridgeHostInput = EditText(this).apply {
+                hint = "FSX PC IPv4, e.g. 10.31.2.70"
+                setText(SimulatorLocationStore.savedHost(this@SimulatorActivity))
+                textSize = 15f
+                inputType = InputType.TYPE_CLASS_TEXT
+                setSingleLine(true)
+                setTextColor(textColor())
+                setHintTextColor(secondaryTextColor())
+                background = roundedSurface()
+                setPadding(14.dp, 0, 14.dp, 0)
+            }
+            card.addView(bridgeHostInput, lp(54))
+        }
+
         bridgePortInput = EditText(this).apply {
-            hint = "UDP port"
-            setText((if (saved in 1..65535) saved else defaultPort).toString())
+            hint = if (isFsx) "Local SimConnect WebSocket port" else "UDP port"
+            setText((if (isFsx) defaultPort else if (saved in 1..65535) saved else defaultPort).toString())
             textSize = 15f
             inputType = InputType.TYPE_CLASS_NUMBER
             setSingleLine(true)
@@ -309,16 +327,20 @@ class SimulatorActivity : AppCompatActivity() {
             background = roundedSurface()
             setPadding(14.dp, 0, 14.dp, 0)
         }
-        card.addView(bridgePortInput, lp(54))
+        card.addView(bridgePortInput, lp(54, 0, if (isFsx) 8 else 4, 0, 0))
 
         bridgeButton = Button(this).apply {
-            text = "CONNECT"
+            text = if (isFsx) "CONNECT FSX" else "CONNECT"
             setOnClickListener { connectBridge() }
         }
         card.addView(bridgeButton, lp(52, 0, 10, 0, 0))
 
         card.addView(TextView(this).apply {
-            text = "THIS DEVICE IP: ${localIpAddress()}   •   UDP: $defaultPort"
+            text = if (isFsx) {
+                "FSX LOCAL SIMCONNECT   •   WS: $defaultPort"
+            } else {
+                "THIS DEVICE IP: ${localIpAddress()}   •   UDP: $defaultPort"
+            }
             textSize = 14f
             typeface = Typeface.DEFAULT_BOLD
             setTextColor(accentColor())
@@ -367,10 +389,16 @@ class SimulatorActivity : AppCompatActivity() {
     private fun autoStartBridgeIfNeeded() {
         if (selectedType == SimulatorLocationStore.TYPE_XPLANE) return
         if (SimulatorLocationStore.isConnected() || SimulatorLocationStore.isConnecting()) return
+        if (selectedType == SimulatorLocationStore.TYPE_FSX) {
+            val host = SimulatorLocationStore.savedHost(this).trim()
+            if (host.isBlank()) return
+            SimulatorLocationStore.connectFsxLocal(this, host, SimulatorLocationStore.DEFAULT_FSX_WS_PORT)
+            refreshStatus()
+            return
+        }
         val port = when (selectedType) {
             SimulatorLocationStore.TYPE_MSFS -> 49010
             SimulatorLocationStore.TYPE_P3D -> 49011
-            SimulatorLocationStore.TYPE_FSX -> SimulatorLocationStore.DEFAULT_FSX_BRIDGE_PORT
             else -> return
         }
         SimulatorLocationStore.connect(this, selectedType, "", port)
@@ -398,7 +426,7 @@ class SimulatorActivity : AppCompatActivity() {
                     when (selectedType) {
                         SimulatorLocationStore.TYPE_MSFS -> 49010
                         SimulatorLocationStore.TYPE_P3D -> 49011
-                        SimulatorLocationStore.TYPE_FSX -> SimulatorLocationStore.DEFAULT_FSX_BRIDGE_PORT
+                        SimulatorLocationStore.TYPE_FSX -> SimulatorLocationStore.DEFAULT_FSX_WS_PORT
                         else -> SimulatorLocationStore.savedXPlaneRrefPort(this)
                     }
                 )
@@ -447,11 +475,24 @@ class SimulatorActivity : AppCompatActivity() {
 
         val port = bridgePortInput?.text?.toString()?.toIntOrNull()
         if (port == null || port !in 1..65535) {
-            statusText?.text = "Enter a valid UDP port."
+            statusText?.text = if (selectedType == SimulatorLocationStore.TYPE_FSX) {
+                "Enter a valid FSX Local SimConnect port."
+            } else {
+                "Enter a valid UDP port."
+            }
             return
         }
 
-        SimulatorLocationStore.connect(this, selectedType, "", port)
+        if (selectedType == SimulatorLocationStore.TYPE_FSX) {
+            val host = bridgeHostInput?.text?.toString()?.trim().orEmpty()
+            if (host.isBlank()) {
+                statusText?.text = "Enter the FSX PC IPv4 address."
+                return
+            }
+            SimulatorLocationStore.connectFsxLocal(this, host, port)
+        } else {
+            SimulatorLocationStore.connect(this, selectedType, "", port)
+        }
         refreshStatus()
     }
 
@@ -523,7 +564,7 @@ class SimulatorActivity : AppCompatActivity() {
             else -> "Simulator"
         }
         return if (selectedType == SimulatorLocationStore.TYPE_FSX) {
-            "Run JEPPIRAN FSX Bridge on the simulator PC and enter this Android device IP as the target: ${localIpAddress()} on UDP $defaultPort. JEPPIRAN receives FSX position directly in the APK; no certificate, browser page, or device file is required."
+            "Run JEPPIRAN FSX Bridge on the simulator PC. Enter the PC IPv4 address above and tap CONNECT FSX. The Android app connects directly to the bridge on WebSocket port $defaultPort and receives SimConnect position automatically; no browser, certificate, or device file is required."
         } else {
             "$bridgeName uses the JEPPIRAN Windows bridge. Run the matching bridge on the simulator PC and send to this device IP: ${localIpAddress()} on UDP $defaultPort."
         }
