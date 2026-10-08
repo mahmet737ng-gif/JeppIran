@@ -30,11 +30,13 @@ object SimulatorLocationStore {
     const val TYPE_XPLANE = "X-Plane 11 / 12"
     const val TYPE_MSFS = "Microsoft Flight Simulator 2020 / 2024"
     const val TYPE_P3D = "Prepar3D v4 / v5 / v6"
+    const val TYPE_FSX = "Microsoft Flight Simulator X (FSX)"
     const val MODE_XPLANE_BROADCAST = "X-Plane Auto / Mapping Broadcast"
     const val MODE_XPLANE_RREF = "X-Plane Direct IP / RREF"
     const val MODE_BRIDGE = "Desktop Bridge"
     const val DEFAULT_XPLANE_MAPPING_PORT = 49002
     const val DEFAULT_XPLANE_RREF_PORT = 49000
+    const val DEFAULT_FSX_BRIDGE_PORT = 49012
 
     private const val PREFS = "simulator_connection"
     private const val PREF_TYPE = "type"
@@ -100,6 +102,7 @@ object SimulatorLocationStore {
             TYPE_XPLANE -> connectXPlaneDirect(c, host, port)
             TYPE_MSFS -> { saveSettings(c, type, "", port); begin(c, MODE_BRIDGE) { runBridge(port, "MSFS", it) } }
             TYPE_P3D -> { saveSettings(c, type, "", port); begin(c, MODE_BRIDGE) { runBridge(port, "Prepar3D", it) } }
+            TYPE_FSX -> { saveSettings(c, type, "", port); begin(c, MODE_BRIDGE) { runBridge(port, "FSX", it) } }
             else -> { connected = false; connecting = false; status = "Connection failed: unsupported simulator" }
         }
     }
@@ -261,8 +264,29 @@ object SimulatorLocationStore {
                 val lon = if (j.has("lon")) j.optDouble("lon", Double.NaN) else j.optDouble("longitude", Double.NaN)
                 if (lat.isNaN() || lon.isNaN() || lat !in -90.0..90.0 || lon !in -180.0..180.0) continue
                 val alt = if (j.has("alt")) j.optDouble("alt", Double.NaN) else j.optDouble("altitude", Double.NaN)
-                val hdg = j.optDouble("heading", Double.NaN); source = p.address?.hostAddress ?: ""
-                accept(SimulatorPosition(lat, lon, alt.takeUnless { it.isNaN() }, hdg.takeUnless { it.isNaN() }), "$label bridge", source, id)
+                val hdg = j.optDouble("heading", Double.NaN)
+                val gs = when {
+                    j.has("groundspeed") -> j.optDouble("groundspeed", Double.NaN)
+                    j.has("groundSpeedMps") -> j.optDouble("groundSpeedMps", Double.NaN)
+                    else -> Double.NaN
+                }
+                val pitch = j.optDouble("pitch", Double.NaN)
+                val roll = j.optDouble("roll", Double.NaN)
+                source = p.address?.hostAddress ?: ""
+                accept(
+                    SimulatorPosition(
+                        lat,
+                        lon,
+                        alt.takeUnless { it.isNaN() },
+                        hdg.takeUnless { it.isNaN() },
+                        gs.takeUnless { it.isNaN() },
+                        pitch.takeUnless { it.isNaN() },
+                        roll.takeUnless { it.isNaN() }
+                    ),
+                    "$label bridge",
+                    source,
+                    id
+                )
             } catch (_: java.net.SocketTimeoutException) { checkTimeout(started, "No valid $label bridge data received.", id) }
             catch (_: SocketException) { if (active(id)) fail("$label UDP socket closed.", id) }
         }
