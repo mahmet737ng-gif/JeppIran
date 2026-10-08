@@ -63,7 +63,7 @@ function route(name,replace=false){
     history[fn]({route:name},"",hash);
   }
 }
-$("[data-route]").forEach(b=>b.addEventListener("click",e=>{
+$$("[data-route]").forEach(b=>b.addEventListener("click",e=>{
   e.preventDefault();
   const target=b.dataset.route;
   // Keep navigation inside the current JEPPIRAN origin. In Local FSX mode,
