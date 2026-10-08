@@ -157,13 +157,13 @@
         <article class="sim-card">
           <h3 id="bridgeTitle">X-PLANE 11.5 BRIDGE</h3>
           <p id="bridgeHelp" class="sim-help">X-Plane 11.5 sends UDP, which Safari cannot receive directly. Run the JEPPIRAN X-Plane Bridge on the simulator PC, then connect here using its WebSocket address.</p>
-          <label class="field-label" for="bridgeUrl">Bridge WebSocket URL</label>
+          <label id="bridgeInputLabel" class="field-label" for="bridgeUrl">Bridge WebSocket URL</label>
           <input id="bridgeUrl" class="wide-input" value="ws://192.168.1.50:8765" autocapitalize="off" autocomplete="off" spellcheck="false">
           <div class="sim-buttons">
             <button id="connectBridgeBtn">CONNECT X-PLANE</button>
             <button id="disconnectPositionBtn" class="secondary-btn">DISCONNECT</button>
           </div>
-          <small class="sim-note">For FSX on iPad, run JEPPIRAN FSX Bridge and open its <b>Local Web</b> address (for example <b>http://PC-IP:8080</b>). That address serves the <b>same JEPPIRAN web app</b> through the simulator PC and adds the live FSX connection automatically — it is not a separate app. No certificate or profile is required.</small>
+          <small class="sim-note">For FSX, select <b>FSX</b>, enter the simulator PC IPv4 address, then tap <b>CONNECT FSX</b>. JEPPIRAN will open its Local SimConnect path automatically and connect to the bridge. No certificate or profile is required.</small>
         </article>
 
         <article class="sim-card">
@@ -246,6 +246,6 @@
     });
   })();
   </script>
-  <script src="./app.js?v=2620-24" defer></script>
+  <script src="./app.js?v=2620-25" defer></script>
 </body>
 </html>
