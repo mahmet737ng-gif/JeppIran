@@ -900,7 +900,7 @@ const bridgeMeta={
   xplane:{label:"X-PLANE 11.5",title:"X-PLANE 11.5 BRIDGE",port:8765,securePort:8766,
     help:"Run the standalone JEPPIRAN X-Plane Bridge on the simulator PC, then connect using the WebSocket address printed by the bridge."},
   fsx:{label:"FSX",title:"FSX SIMCONNECT BRIDGE",port:8775,localWebPort:8080,
-    help:"Run JEPPIRAN FSX Bridge v1.3 on the FSX PC. Enter any IPv4 address printed by the bridge and tap CONNECT FSX. JEPPIRAN stays on its main HTTPS address and keeps the FSX link alive while you move between Home, Charts and WX."}
+    help:"Run JEPPIRAN FSX Bridge v1.4 on the FSX PC. Enter any IPv4 address printed by the bridge and tap CONNECT FSX. JEPPIRAN stays on its main HTTPS address and keeps the FSX link alive while you move between Home, Charts and WX."}
 };
 function normalizeBridgeHost(value){
   let v=String(value||"").trim();
@@ -1006,7 +1006,7 @@ async function connectFsxRelay(host,{reconnect=false}={}){
   if(relayAwaitPositionTimer){clearTimeout(relayAwaitPositionTimer);relayAwaitPositionTimer=null}
   if(relayPingTimer){clearInterval(relayPingTimer);relayPingTimer=null}
   if(relaySocket){try{relaySocket.onclose=null;relaySocket.close()}catch(_){}relaySocket=null}
-  if(!reconnect)markFsxWaiting("Connecting securely to FSX Bridge v1.3 for "+host+" …");
+  if(!reconnect)markFsxWaiting("Connecting securely to FSX Bridge v1.4 for "+host+" …");
   const clientId="jeppiran_web_"+Math.random().toString(16).slice(2)+Date.now().toString(16);
   let ws;
   try{ws=new WebSocket("wss://demo.tbmq.io/mqtt",["mqtt"])}catch(e){markFsxWaiting("FSX secure relay could not start: "+e.message);return}
