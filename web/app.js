@@ -532,12 +532,21 @@ $("#offlinePdfBtn").addEventListener("click",async()=>{
   catch(e){$("#offlinePdfBtn").textContent="Save Offline";dialog("Offline chart","Could not save this airport PDF: "+e.message)}
   finally{setTimeout(()=>{$("#offlinePdfBtn").disabled=false;if($("#offlinePdfBtn").textContent==="Saved Offline")$("#offlinePdfBtn").textContent="Save Offline"},1800)}
 });
+async function refitSelectedChartForLayout(){
+  if(!selectedChart)return;
+  chartPointers.clear();
+  panStart=null;swipeStart=null;pinchStartDistance=0;
+  try{await renderSelectedPdf(selectedChart)}catch(e){
+    $("#pdfStage").innerHTML='<div class="empty-state"><img src="./logo.svg" alt=""><b>Chart unavailable</b><span>'+escapeHtml(e.message)+'</span></div>';
+  }
+}
+
 async function enterViewerFullscreen(){
   document.body.classList.add("viewer-fullscreen");
   const root=document.documentElement;
   const request=root.requestFullscreen||root.webkitRequestFullscreen;
   if(request){try{await request.call(root)}catch(e){}}
-  setTimeout(updateAircraftMarker,80);
+  setTimeout(()=>refitSelectedChartForLayout(),180);
 }
 async function exitViewerFullscreen(exitNative=true){
   document.body.classList.remove("viewer-fullscreen");
@@ -546,7 +555,7 @@ async function exitViewerFullscreen(exitNative=true){
     const exit=document.exitFullscreen||document.webkitExitFullscreen;
     if(active&&exit){try{await exit.call(document)}catch(e){}}
   }
-  setTimeout(updateAircraftMarker,80);
+  setTimeout(()=>refitSelectedChartForLayout(),180);
 }
 $("#fullscreenBtn").addEventListener("click",enterViewerFullscreen);
 $("#fullscreenExitBtn").addEventListener("click",()=>exitViewerFullscreen(true));
@@ -798,7 +807,7 @@ if(activePositionSource==="gps") setTimeout(startDeviceGps,500);
 /* ===== End position sources ===== */
 
 window.addEventListener("resize",()=>requestAnimationFrame(()=>{applyChartTransform();updateAircraftMarker()}));
-window.addEventListener("orientationchange",()=>setTimeout(()=>{window.dispatchEvent(new Event("resize"));updateAircraftMarker()},150));
+window.addEventListener("orientationchange",()=>setTimeout(()=>{window.dispatchEvent(new Event("resize"));refitSelectedChartForLayout()},180));
 if("serviceWorker" in navigator) navigator.serviceWorker.register("./service-worker.js").catch(()=>{});
 loadData();
 const start=(location.hash||"#home").slice(1); const initial=["home","charts","wx","simulator"].includes(start)?start:"home"; renderRoute(initial); if(!location.hash)history.replaceState({route:initial},"","#"+initial);
