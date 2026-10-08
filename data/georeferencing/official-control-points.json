@@ -409,6 +409,24 @@
       "coordinatePrecision": "0.01_arcsecond",
       "status": "published",
       "applicableJeppChart": "OIII 11-1 ILS Z or LOC Z RWY 29L"
+    },
+    {
+      "airport": "OIMM",
+      "featureType": "VOR",
+      "featureId": "MSD",
+      "latitude": "361352.2N",
+      "longitude": "0593902.0E",
+      "sourceAuthority": "Civil Aviation Organization of the Islamic Republic of Iran",
+      "sourceDocument": "AIP Iran OIMM AD 2.19 Radio Navigation and Landing Aids",
+      "sourceEdition": "AIRAC AMDT 1/23 (23 MAR 2023); 2026 edition revalidation required",
+      "sourceUrl": "https://samanplatinum.com/wp-content/uploads/2023/08/OIMM-Mashhad-_-Shahid-Hashemi-Nejad-INTL.pdf",
+      "sourceLocation": "OIMM AD 2.19 / DVOR/DME MSD 114.000 MHz CH 87X / transmitting antenna coordinates",
+      "independentCorroboration": "ICAO MID Air Navigation Plan lists MASHHAD MSD at 361352.2N 0593902.0E",
+      "independentUrl": "https://www.icao.int/MID/Documents/eANP/MID%20eANP%20VOL%20II.pdf",
+      "coordinatePrecision": "0.1_arcsecond",
+      "status": "published_historical_requires_active_AIP_confirmation",
+      "applicableJeppChart": "OIMM 11-1 ILS Z or LOC Z RWY 31R; cycle2621 PDF page 605",
+      "notToBeUsedForParkingStandPosition": true
     }
   ],
   "notes": [
