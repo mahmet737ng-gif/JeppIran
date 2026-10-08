@@ -132,6 +132,10 @@
             <b>X-PLANE 11.5</b>
             <small>Receive position through JEPPIRAN Bridge</small>
           </button>
+          <button id="useFsxBtn" class="source-card">
+            <b>FSX</b>
+            <small>Direct SimConnect bridge for Flight Simulator X</small>
+          </button>
         </div>
 
         <article class="sim-card">
@@ -151,15 +155,15 @@
         </article>
 
         <article class="sim-card">
-          <h3>X-PLANE 11.5 BRIDGE</h3>
-          <p class="sim-help">X-Plane 11.5 sends UDP, which Safari cannot receive directly. Run the JEPPIRAN X-Plane Web Bridge on the simulator PC, then connect here using its WebSocket address.</p>
+          <h3 id="bridgeTitle">X-PLANE 11.5 BRIDGE</h3>
+          <p id="bridgeHelp" class="sim-help">X-Plane 11.5 sends UDP, which Safari cannot receive directly. Run the JEPPIRAN X-Plane Bridge on the simulator PC, then connect here using its WebSocket address.</p>
           <label class="field-label" for="bridgeUrl">Bridge WebSocket URL</label>
           <input id="bridgeUrl" class="wide-input" value="ws://192.168.1.50:8765" autocapitalize="off" autocomplete="off" spellcheck="false">
           <div class="sim-buttons">
             <button id="connectBridgeBtn">CONNECT X-PLANE</button>
             <button id="disconnectPositionBtn" class="secondary-btn">DISCONNECT</button>
           </div>
-          <small class="sim-note">When JEPPIRAN is hosted over HTTPS, iOS may require a trusted <b>wss://</b> bridge. The included bridge supports TLS certificate/key files.</small>
+          <small class="sim-note">For iPad/iPhone use the secure <b>wss://</b> address printed by the selected standalone bridge and install its generated JEPPIRAN CA certificate once.</small>
         </article>
 
         <article class="sim-card">
@@ -242,6 +246,6 @@
     });
   })();
   </script>
-  <script src="./app.js?v=2620-19" defer></script>
+  <script src="./app.js?v=2620-21" defer></script>
 </body>
 </html>
