@@ -303,10 +303,14 @@ object ChartGeoreferenceStore {
         for (i in 0 until charts.length()) {
             val item = charts.optJSONObject(i) ?: continue
             val page = item.optInt("page", -1)
-            val method =
-                item.optJSONObject("validation")
-                    ?.optString("method")
-                    .orEmpty()
+            val validation = item.optJSONObject("validation")
+            val method = validation?.optString("method").orEmpty()
+            // An NTS candidate with a mathematically fitted grid is not
+            // necessarily accurate at runways, fixes or taxiways. Do not
+            // show a misleading aircraft marker until independently checked.
+            if (validation?.optString("verificationStatus") == "provisional_geometry_only") {
+                continue
+            }
 
             if (page <= 0 ||
                 item.optString("coordinateSpace") != "pdf_points" ||
