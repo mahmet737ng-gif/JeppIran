@@ -412,12 +412,26 @@ def extract(page, number, index_entry, anchor, fingerprint=None):
         raise ValueError(
             f"Invalid affine fit: rank {rank}, residual {residual:.3f}"
         )
+    excluded_bounds = []
+    for area in inset_bounds(page, lines, bounds):
+        # A legitimate inset cannot contain every control point of the main
+        # georeferenced plan view. If it does, the detector has mistaken the
+        # plan-view frame itself for an inset; keeping it would suppress every
+        # aircraft position on that chart.
+        if all(
+            area["left"] <= point["x"] <= area["right"] and
+            area["top"] <= point["y"] <= area["bottom"]
+            for point in points
+        ):
+            continue
+        excluded_bounds.append(area)
+
     return {"page": number, "airport": index_entry["airport"], "name": index_entry.get("name", ""),
             "chartKey": chart_key(index_entry),
             "sourceFingerprint": fingerprint or page_fingerprint(page),
             "coordinateSpace": "pdf_points", "origin": "top_left",
             "width": page.rect.width, "height": page.rect.height,
-            "bounds": bounds, "excludedBounds": inset_bounds(page, lines, bounds),
+            "bounds": bounds, "excludedBounds": excluded_bounds,
             "points": points, "gridAxes": axes, "airportAnchor": anchor,
             "maxResidualPdfPoints": residual_limit,
             "validation": {"gridMaxResidualPdfPoints": round(residual, 6),

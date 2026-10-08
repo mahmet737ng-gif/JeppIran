@@ -122,6 +122,7 @@ jobs:
           MISSING_OIII_PAGES="$(python - <<'PY'
           import json
           from pathlib import Path
+          import numpy as np
 
           charts = json.loads(
               Path("app/src/main/assets/charts-current.json").read_text()
@@ -159,6 +160,9 @@ jobs:
               app/src/main/assets/chart-georef.json \
               "$RUNNER_TEMP/oiii-georef-supplement.json"
           fi
+
+          python scripts/repair_georef_excluded_bounds.py \
+            app/src/main/assets/chart-georef.json
 
           python scripts/build_approach_briefings.py \
             --pdf Iran2620.pdf \
@@ -213,6 +217,15 @@ jobs:
 
               points = item.get("points") or []
               assert len(points) >= 4, f"Insufficient control points on page {page}"
+
+              for area in item.get("excludedBounds") or []:
+                  assert not all(
+                      area["left"] <= point["x"] <= area["right"]
+                      and area["top"] <= point["y"] <= area["bottom"]
+                      for point in points
+                  ), (
+                      f"Page {page} excludes its entire georeferenced plan view"
+                  )
 
               axes = item.get("gridAxes") or {}
               east = axis_vector(axes["longitude"])
@@ -272,6 +285,71 @@ jobs:
                   for row in missing_oiii
               )
           )
+
+          reference_by_page = {
+              int(item["page"]): item
+              for item in references
+          }
+
+          def project_anchor(item):
+              points = item["points"]
+              lon = np.array([point["lon"] for point in points], dtype=float)
+              lat = np.array([point["lat"] for point in points], dtype=float)
+              x = np.array([point["x"] for point in points], dtype=float)
+              y = np.array([point["y"] for point in points], dtype=float)
+
+              mean_lon = float(lon.mean())
+              mean_lat = float(lat.mean())
+              mean_x = float(x.mean())
+              mean_y = float(y.mean())
+
+              design = np.column_stack((
+                  lon - mean_lon,
+                  lat - mean_lat,
+              ))
+              x_coeff, *_ = np.linalg.lstsq(
+                  design,
+                  x - mean_x,
+                  rcond=None,
+              )
+              y_coeff, *_ = np.linalg.lstsq(
+                  design,
+                  y - mean_y,
+                  rcond=None,
+              )
+
+              anchor = item.get("airportAnchor") or {}
+              anchor_lat = float(anchor["lat"])
+              anchor_lon = float(anchor["lon"])
+
+              projected_x = (
+                  mean_x
+                  + x_coeff[0] * (anchor_lon - mean_lon)
+                  + x_coeff[1] * (anchor_lat - mean_lat)
+              )
+              projected_y = (
+                  mean_y
+                  + y_coeff[0] * (anchor_lon - mean_lon)
+                  + y_coeff[1] * (anchor_lat - mean_lat)
+              )
+              return float(projected_x), float(projected_y)
+
+          for row in oiii_approaches:
+              page = int(row["page"])
+              item = reference_by_page[page]
+              x, y = project_anchor(item)
+              bounds = item["bounds"]
+
+              assert bounds["left"] - 6.0 <= x <= bounds["right"] + 6.0
+              assert bounds["top"] - 6.0 <= y <= bounds["bottom"] + 6.0
+
+              assert not any(
+                  area["left"] <= x <= area["right"]
+                  and area["top"] <= y <= area["bottom"]
+                  for area in item.get("excludedBounds") or []
+              ), (
+                  f"OIII page {page} suppresses the Mehrabad airport anchor"
+              )
 
           print(
               f"Validated {len(references)} calibrated moving-map charts; "

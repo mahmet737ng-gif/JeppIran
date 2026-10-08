@@ -344,6 +344,27 @@ object ChartGeoreferenceStore {
                     )
                 }
 
+            /*
+             * Defensive repair for legacy georef data: an excluded region
+             * that contains every control point is the main plan-view frame,
+             * not a real inset. Keeping it would make every valid aircraft
+             * position disappear on that chart.
+             */
+            val safeExcludedBounds =
+                excludedBounds.filterNot {
+                    area ->
+
+                    points.isNotEmpty() &&
+                        points.all {
+                            point ->
+
+                            area.contains(
+                                point.x,
+                                point.y
+                            )
+                        }
+                }
+
             val reference =
                 GeoReference(
                     page,
@@ -352,7 +373,7 @@ object ChartGeoreferenceStore {
                     bounds,
                     points,
                     item.optDouble("maxResidualPdfPoints", 0.75),
-                    excludedBounds
+                    safeExcludedBounds
                 )
 
             // Duplicate page identifiers are ambiguous within one source.
