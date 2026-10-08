@@ -72,6 +72,7 @@ async function loadData(){
     manifest=m; charts=Array.isArray(c)?c:(c.charts||[]);
     georefByPage=buildGeorefIndex(g);
     renderAirports();
+    refreshPositionStatus();
     $("#updateSubtitle").textContent=(m.version||VERSION)+" data • "+Object.keys(m.airports||{}).length+" airports";
   }catch(e){
     $("#updateSubtitle").textContent="Unable to load online chart index";
@@ -257,13 +258,54 @@ function renderedGeoHeading(model,lat,heading,canvas){
   if(!Number.isFinite(dx)||!Number.isFinite(dy)||Math.hypot(dx,dy)<1e-8)return 0;
   return Math.atan2(dx,-dy)/r;
 }
+function setPositionStatus(state,text,detail=""){
+  const btn=$("#positionStatusBtn");
+  if(!btn)return;
+  btn.dataset.state=state||"off";
+  btn.title=text||"Position status";
+  btn.setAttribute("aria-label",text||"Position status");
+  const dot=btn.querySelector(".position-status-dot");
+  const label=btn.querySelector(".position-status-label");
+  if(label)label.textContent=text||"GPS";
+  btn.dataset.detail=detail||"";
+}
+function chartHasGeoref(){
+  return !!(selectedChart&&georefByPage.get(Number(selectedChart.page)));
+}
+function refreshPositionStatus(){
+  if(!activePositionSource){
+    setPositionStatus("off","GPS OFF","No position source selected.");
+    return;
+  }
+  if(!lastPosition){
+    setPositionStatus("waiting",activePositionSource==="gps"?"GPS WAIT":"SIM WAIT","Waiting for a live position fix.");
+    return;
+  }
+  const model=selectedChart&&georefByPage.get(Number(selectedChart.page));
+  if(!selectedChart){
+    setPositionStatus("live",activePositionSource==="gps"?"GPS LIVE":"SIM LIVE","Position is live. Open a chart to display the aircraft.");
+    return;
+  }
+  if(!model){
+    setPositionStatus("warning",activePositionSource==="gps"?"GPS LIVE":"SIM LIVE","Position is live, but this chart has no valid georeference.");
+    return;
+  }
+  const p=projectGeo(model,Number(lastPosition.lat),Number(lastPosition.lon));
+  if(!p){
+    setPositionStatus("outside",(activePositionSource==="gps"?"GPS":"SIM")+" LIVE • OUTSIDE CHART","Position is live, but it is outside the mapped area of this chart.");
+    return;
+  }
+  const acc=Number.isFinite(lastPosition.accuracy)?(" • ±"+Math.round(lastPosition.accuracy)+" m"):"";
+  setPositionStatus("live",(activePositionSource==="gps"?"GPS":"SIM")+" LIVE"+acc,"Position is live and inside this chart.");
+}
+
 function updateAircraftMarker(){
   const canvas=$("#pdfCanvas"),chart=selectedChart,pos=lastPosition;
-  if(!canvas||!chart||!pos){hideAircraftMarker();return}
+  if(!canvas||!chart||!pos){hideAircraftMarker();refreshPositionStatus();return}
   const model=georefByPage.get(Number(chart.page));
-  if(!model){hideAircraftMarker();return}
+  if(!model){hideAircraftMarker();refreshPositionStatus();return}
   const p=projectGeo(model,Number(pos.lat),Number(pos.lon));
-  if(!p){hideAircraftMarker();return}
+  if(!p){hideAircraftMarker();refreshPositionStatus();return}
   const wrap=$("#chartTransformLayer")||canvas.parentElement;
   let marker=$("#aircraftMarker");
   if(!marker){
@@ -280,6 +322,7 @@ function updateAircraftMarker(){
   marker.style.left=x+"px";marker.style.top=y+"px";
   marker.style.setProperty("--aircraft-heading",renderedGeoHeading(model,Number(pos.lat),Number(pos.heading),canvas)+"deg");
   marker.classList.add("visible");
+  refreshPositionStatus();
 }
 
 let pdfRenderToken=0,currentPdfUrl="";
@@ -479,6 +522,7 @@ function selectChart(c,options={}){
   selectedChart=c;
   expanded.add(c.category||"Other");
   renderAirports($("#airportSearch").value);
+  refreshPositionStatus();
   $("#viewerChart").textContent=(c.chart_number?c.chart_number+" • ":"")+(c.name||("Chart "+c.page));
   showChartMetar(true);
   renderSelectedPdf(c).catch(e=>{
@@ -517,6 +561,11 @@ async function showChartMetar(autoHide=true){
     if(!cached&&icao===selectedAirport)text.textContent="METAR "+icao+" unavailable";
   }
 }
+$("#positionStatusBtn").addEventListener("click",()=>{
+  const btn=$("#positionStatusBtn");
+  dialog("Position status",(btn&&btn.dataset.detail)||"No position information available.");
+});
+
 $("#chartMetarBtn").addEventListener("click",()=>{
   const banner=$("#chartMetarBanner");
   if(banner&&banner.classList.contains("visible"))hideChartMetar();
@@ -738,6 +787,7 @@ function clearPositionUi(message="Disconnected"){
   const badge=$("#viewerPositionBadge"); if(badge){badge.textContent="";badge.classList.remove("live")}
   document.querySelectorAll(".source-card").forEach(x=>x.classList.remove("active"));
   hideAircraftMarker();
+  if(!/permission|unavailable|timed out|error/i.test(message))setPositionStatus("off","GPS OFF",message);
 }
 function stopGps(){
   if(gpsWatchId!==null && navigator.geolocation){navigator.geolocation.clearWatch(gpsWatchId)}
@@ -760,6 +810,7 @@ function startDeviceGps(){
   if(!navigator.geolocation){clearPositionUi("Geolocation is not supported by this browser.");return}
   $("#simStatus").textContent="Requesting iOS location permission…";
   activePositionSource="gps"; localStorage.setItem("positionSource","gps");
+  setPositionStatus("waiting","GPS WAIT","Requesting browser location permission and waiting for a fix.");
   if(gpsWatchId!==null) stopGps();
   gpsWatchId=navigator.geolocation.watchPosition(pos=>{
     const c=pos.coords;
@@ -773,7 +824,9 @@ function startDeviceGps(){
     lastGpsFix=fix; updatePositionUi(fix,"gps");
   },err=>{
     const reasons={1:"Location permission denied.",2:"Location unavailable.",3:"Location request timed out."};
-    clearPositionUi(reasons[err.code]||("GPS error: "+err.message));
+    const msg=reasons[err.code]||("GPS error: "+err.message);
+    setPositionStatus("error","GPS ERROR",msg);
+    clearPositionUi(msg);
   },{enableHighAccuracy:true,maximumAge:1000,timeout:12000});
 }
 function connectXPlaneBridge(){
