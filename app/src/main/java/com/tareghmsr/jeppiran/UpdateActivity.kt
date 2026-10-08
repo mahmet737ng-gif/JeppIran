@@ -28,7 +28,8 @@ class UpdateActivity : AppCompatActivity() {
 
         private const val REMOTE_MANIFEST = REMOTE_ROOT + "charts-manifest.json"
         private const val REMOTE_CHARTS = REMOTE_ROOT + "charts-current.json"
-        private const val REMOTE_GEOREF = REMOTE_ROOT + "chart-georef.json"
+        private const val RELEASE_ROOT =
+            "https://github.com/mahmet737ng-gif/JeppIran/releases/download/"
         private const val REMOTE_CHANGES = REMOTE_ROOT + "chart-changes.json"
         private const val REMOTE_ENROUTE_MANIFEST = REMOTE_ROOT + "enroute-manifest.json"
         private const val TIMEOUT = 20000
@@ -50,6 +51,7 @@ class UpdateActivity : AppCompatActivity() {
 
     private var remoteManifestRaw = ""
     private var remoteDataVersion = ""
+    private var remoteReleaseTag = ""
     private var remoteCycle = ""
     private var remoteEffectiveFrom = ""
     private var remoteEffectiveTo = ""
@@ -324,6 +326,9 @@ class UpdateActivity : AppCompatActivity() {
 
                 remoteManifestRaw = manifestRaw
                 remoteDataVersion = version
+                remoteReleaseTag =
+                    root.optString("release_tag")
+                        .trim()
                 remoteCycle = cycle
                 remoteEffectiveFrom = effectiveFrom
                 remoteEffectiveTo = effectiveTo
@@ -582,7 +587,26 @@ class UpdateActivity : AppCompatActivity() {
         thread(name = "JeppIran-DataUpdateInstall") {
             try {
                 val chartsRaw = fetchText(REMOTE_CHARTS)
-                val georefRaw = fetchText(REMOTE_GEOREF)
+
+                val releaseTag =
+                    remoteReleaseTag
+                        .ifBlank {
+                            JSONObject(remoteManifestRaw)
+                                .optString("release_tag")
+                                .trim()
+                        }
+
+                require(releaseTag.isNotBlank()) {
+                    "Chart release tag is missing"
+                }
+
+                val georefRaw =
+                    fetchText(
+                        RELEASE_ROOT +
+                            releaseTag +
+                            "/chart-georef.json"
+                    )
+
                 val changesRaw =
                     runCatching {
                         fetchText(REMOTE_CHANGES)

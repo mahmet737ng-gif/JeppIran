@@ -249,12 +249,16 @@ object ChartGeoreferenceStore {
                 when {
                     active == null -> bundled
                     bundled == null -> active
-                    active.chartDataVersion == bundled.chartDataVersion &&
-                        active.sourceSha256 == bundled.sourceSha256 -> {
-                        // A data-cycle download may have persisted an older
-                        // georeference set for the exact same PDF. Keep any
-                        // active-only pages, but let the newer app asset repair
-                        // or extend matching page records.
+                    active.chartDataVersion == bundled.chartDataVersion -> {
+                        /*
+                         * A data-cycle download can persist an older georef
+                         * file for the same JEPPIRAN data version. App updates
+                         * may contain reviewed repairs for that same cycle, so
+                         * the bundled records must remain authoritative even
+                         * when the old persisted file reports a different
+                         * source SHA. Active-only pages are preserved, while a
+                         * bundled record replaces the same page.
+                         */
                         ParsedGeoreferences(
                             chartDataVersion = bundled.chartDataVersion,
                             sourceSha256 = bundled.sourceSha256,
