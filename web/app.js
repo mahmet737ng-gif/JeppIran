@@ -891,21 +891,15 @@ function normalizeBridgeHost(value){
 function setBridgeTarget(source){
   bridgeTargetSource=bridgeMeta[source]?source:"xplane";
   localStorage.setItem("bridgeTargetSource",bridgeTargetSource);
-  const meta=bridgeMeta[bridgeTargetSource];
-  $("#bridgeTitle").textContent=meta.title;
-  $("#bridgeHelp").textContent=meta.help;
-  $("#connectBridgeBtn").textContent="CONNECT "+meta.label;
-  const label=$("#bridgeInputLabel");
-  const input=$("#bridgeUrl");
-  if(bridgeTargetSource==="fsx"){
-    if(label)label.textContent="FSX PC IPv4 Address";
-    input.placeholder="e.g. 10.31.2.70";
-    input.value=LOCAL_SIM_WEB?location.hostname:(localStorage.getItem("fsxPcHost")||"");
-  }else{
-    if(label)label.textContent="Bridge WebSocket URL";
-    input.placeholder="ws://192.168.1.50:8765";
+  const xInput=$("#bridgeUrl"),fInput=$("#fsxPcIp");
+  if(xInput){
     const saved=localStorage.getItem("bridgeUrl:xplane")||localStorage.getItem("bridgeUrl")||"";
-    input.value=saved||("ws://192.168.1.50:"+meta.port);
+    if(!xInput.value||bridgeTargetSource==="xplane")xInput.value=saved||("ws://192.168.1.50:"+bridgeMeta.xplane.port);
+  }
+  if(fInput){
+    const savedFsx=localStorage.getItem("fsxPcHost")||"";
+    if(LOCAL_SIM_WEB)fInput.value=location.hostname;
+    else if(!fInput.value)fInput.value=savedFsx;
   }
   document.querySelectorAll(".source-card").forEach(x=>x.classList.remove("active"));
   if(bridgeTargetSource==="xplane")$("#useXpBtn").classList.add("active");
@@ -922,7 +916,7 @@ function ensureLocalFsxSession(autoConnect=true){
     setBridgeTarget("fsx");
   }
   const expected="ws://"+location.hostname+":"+bridgeMeta.fsx.port;
-  if($("#bridgeUrl").value!==location.hostname) $("#bridgeUrl").value=location.hostname;
+  if($("#fsxPcIp")&&$("#fsxPcIp").value!==location.hostname) $("#fsxPcIp").value=location.hostname;
   if(autoConnect && (!bridgeSocket || bridgeSocket.readyState>1)){
     $("#simStatus").textContent="JEPPIRAN • local FSX bridge • connecting automatically…";
     setTimeout(connectSimulatorBridge,250);
@@ -1040,7 +1034,7 @@ function connectSimulatorBridge(){
   const source=bridgeTargetSource,meta=bridgeMeta[source]||bridgeMeta.xplane;
   let url="";
   if(source==="fsx"){
-    const host=normalizeBridgeHost($("#bridgeUrl").value);
+    const host=normalizeBridgeHost(($("#fsxPcIp")&&$("#fsxPcIp").value)||"");
     if(!host){clearPositionUi("Enter the FSX PC IPv4 address.");return}
     localStorage.setItem("fsxPcHost",host);
     activePositionSource=source;localStorage.setItem("positionSource",source);
@@ -1077,8 +1071,9 @@ function connectSimulatorBridge(){
 $("#useGpsBtn").addEventListener("click",startDeviceGps);
 $("#startGpsBtn").addEventListener("click",startDeviceGps);
 $("#useXpBtn").addEventListener("click",()=>{setBridgeTarget("xplane");$("#bridgeUrl").focus()});
-$("#useFsxBtn").addEventListener("click",()=>{setBridgeTarget("fsx");$("#bridgeUrl").focus()});
-$("#connectBridgeBtn").addEventListener("click",connectSimulatorBridge);
+$("#useFsxBtn").addEventListener("click",()=>{setBridgeTarget("fsx");$("#fsxPcIp")?.focus()});
+$("#connectBridgeBtn").addEventListener("click",()=>{setBridgeTarget("xplane");connectSimulatorBridge()});
+$("#connectFsxBtn").addEventListener("click",()=>{setBridgeTarget("fsx");connectSimulatorBridge()});
 $("#disconnectPositionBtn").addEventListener("click",()=>disconnectPosition());
 setBridgeTarget(bridgeTargetSource);
 if(LOCAL_SIM_WEB){
