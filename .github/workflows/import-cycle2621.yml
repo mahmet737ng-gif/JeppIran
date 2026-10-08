@@ -27,7 +27,7 @@ jobs:
           bundle_dir=/tmp/cycle2621-stage/jeppiran-cycle2621-stage
           git bundle verify "$bundle_dir/cycle2621.bundle"
           git fetch "$bundle_dir/cycle2621.bundle" refs/heads/main:refs/remotes/import/main
-          git switch -C main refs/remotes/import/main
+          GIT_LFS_SKIP_SMUDGE=1 git switch -C main refs/remotes/import/main
           cp "$bundle_dir/files/Iran2621.pdf" Iran2621.pdf
           rm -rf web/data/charts
           mkdir -p web/data
