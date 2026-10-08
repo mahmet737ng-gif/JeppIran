@@ -1,6 +1,6 @@
-const CACHE="jeppiran-pwa-v2620-9";
+const CACHE="jeppiran-pwa-v2620-10";
 const PDF_CACHE="jeppiran-chart-pdfs-v1";
-const SHELL=["./","./index.html","./styles.css","./app.js?v=2620-9","./manifest.webmanifest","./logo.svg"];
+const SHELL=["./","./index.html","./styles.css","./app.js?v=2620-10","./manifest.webmanifest","./logo.svg","./vendor/pdf.min.mjs","./vendor/pdf.worker.min.mjs"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()));
 });
@@ -11,6 +11,7 @@ self.addEventListener("fetch",event=>{
   if(event.request.method!=="GET")return;
   const url=new URL(event.request.url);
   if(url.origin!==self.location.origin)return;
+  if(url.pathname.includes("/charts/"))return;
   if(/\/(app\.js|index\.html|styles\.css|service-worker\.js)$/.test(url.pathname)||url.pathname.endsWith("/JeppIran/")){
     event.respondWith(fetch(event.request).then(response=>{
       if(response.ok){const copy=response.clone();event.waitUntil(caches.open(CACHE).then(cache=>cache.put(event.request,copy)))}
