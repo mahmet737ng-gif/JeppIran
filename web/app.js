@@ -866,7 +866,7 @@ const bridgeMeta={
   xplane:{label:"X-PLANE 11.5",title:"X-PLANE 11.5 BRIDGE",port:8765,securePort:8766,
     help:"Run the standalone JEPPIRAN X-Plane Bridge on the simulator PC, then connect using the WebSocket address printed by the bridge."},
   fsx:{label:"FSX",title:"FSX LOCAL SIMCONNECT",port:8775,localWebPort:8080,
-    help:"No certificate or iPad file is required. Run JEPPIRAN FSX Bridge on the FSX PC. On iPad open the Local Web address printed by the bridge; JEPPIRAN connects to FSX automatically."}
+    help:"Run JEPPIRAN FSX Bridge on the FSX PC, then open the Local Web address printed by the bridge. It serves the same JEPPIRAN web app through the simulator PC and adds the live FSX feed automatically; no second app, certificate, or iPad profile is required."}
 };
 function setBridgeTarget(source){
   bridgeTargetSource=bridgeMeta[source]?source:"xplane";
@@ -917,7 +917,7 @@ $("#connectBridgeBtn").addEventListener("click",connectSimulatorBridge);
 $("#disconnectPositionBtn").addEventListener("click",()=>disconnectPosition());
 setBridgeTarget(bridgeTargetSource);
 if(LOCAL_SIM_WEB){
-  $("#simStatus").textContent="Local FSX mode • connecting automatically…";
+  $("#simStatus").textContent="JEPPIRAN • local FSX bridge • connecting automatically…";
   setTimeout(connectSimulatorBridge,450);
 }else if(activePositionSource==="gps"){
   setTimeout(startDeviceGps,500);
