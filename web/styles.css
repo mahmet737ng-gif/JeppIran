@@ -495,3 +495,36 @@ body.viewer-fullscreen .chart-metar-banner{
   .airport-inline-tree .tree-item{font-size:11px;padding-left:10px}
   .chart-metar-banner{top:72px;width:calc(100% - 16px)}
 }
+
+/* ===== 2.2 fullscreen chart fit + no GPS/SIM text badge ===== */
+.viewer-position-badge{display:none!important}
+body.viewer-fullscreen .charts-layout.active{
+  position:fixed!important;
+  inset:0!important;
+  width:100vw!important;
+  height:100dvh!important;
+  min-height:0!important;
+  display:block!important;
+  overflow:hidden!important
+}
+body.viewer-fullscreen .viewer-pane{
+  position:fixed!important;
+  inset:0!important;
+  width:100vw!important;
+  height:100dvh!important;
+  min-width:100vw!important;
+  min-height:100dvh!important;
+  overflow:hidden!important
+}
+body.viewer-fullscreen .pdf-stage{
+  position:absolute!important;
+  inset:0!important;
+  width:100vw!important;
+  height:100dvh!important;
+  min-width:100vw!important;
+  min-height:100dvh!important
+}
+body.viewer-fullscreen .pdf-canvas-wrap{
+  width:100vw!important;
+  min-width:100vw!important
+}
