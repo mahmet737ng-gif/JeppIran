@@ -344,6 +344,14 @@ object ChartGeoreferenceStore {
             if (validation?.optString("verificationStatus") == "provisional_geometry_only") {
                 continue
             }
+            // Never display an Approach/Airport marker from a geographic
+            // axis invented with a conformal scale assumption. Do not
+            // change legacy STAR/SID handling in this focused update.
+            val chartKey = item.optString("chartKey").uppercase()
+            if (method == "single_axis_plus_conformal_scale" &&
+                (chartKey.contains("|APPROACH|") || chartKey.contains("|AIRPORT|"))) {
+                continue
+            }
 
             if (page <= 0 ||
                 item.optString("coordinateSpace") != "pdf_points" ||
