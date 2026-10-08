@@ -323,8 +323,14 @@ function navigateChart(delta){
 }
 function clampChartPan(){
   const stage=$("#pdfStage"),layer=$("#chartTransformLayer");
-  if(!stage||!layer||chartZoom<=1.001){chartPanX=0;chartPanY=0;return}
+  if(!stage||!layer)return;
   const w=layer.offsetWidth*chartZoom,h=layer.offsetHeight*chartZoom;
+  if(chartZoom<=1.001){
+    chartPanX=0;
+    const minY=Math.min(0,stage.clientHeight-h);
+    chartPanY=Math.max(minY,Math.min(0,chartPanY));
+    return;
+  }
   const maxX=Math.max(0,(w-stage.clientWidth)/2+80);
   const maxY=Math.max(0,h-stage.clientHeight+80);
   chartPanX=Math.max(-maxX,Math.min(maxX,chartPanX));
@@ -372,8 +378,14 @@ function setupChartGestures(){
   stage.addEventListener("wheel",e=>{
     if(!$("#pdfCanvas"))return;
     e.preventDefault();
-    const factor=e.deltaY<0?1.12:1/1.12;
-    zoomAround(chartZoom*factor,e.clientX,e.clientY);
+    if(e.ctrlKey||e.metaKey){
+      const factor=e.deltaY<0?1.12:1/1.12;
+      zoomAround(chartZoom*factor,e.clientX,e.clientY);
+    }else{
+      chartPanY-=e.deltaY;
+      if(chartZoom>1.001)chartPanX-=e.deltaX;
+      applyChartTransform();
+    }
   },{passive:false});
   stage.addEventListener("pointerdown",e=>{
     if(!$("#pdfCanvas"))return;
@@ -399,10 +411,19 @@ function setupChartGestures(){
       if(pinchStartDistance>0)zoomAround(pinchStartZoom*(dist/pinchStartDistance),cx,cy);
       return;
     }
-    if(chartPointers.size===1&&chartZoom>1.001&&panStart){
-      chartPanX=panStart.panX+(e.clientX-panStart.x);
-      chartPanY=panStart.panY+(e.clientY-panStart.y);
-      applyChartTransform();
+    if(chartPointers.size===1&&panStart){
+      const dx=e.clientX-panStart.x,dy=e.clientY-panStart.y;
+      const stageEl=$("#pdfStage"),layerEl=$("#chartTransformLayer");
+      const canVerticalPan=!!(stageEl&&layerEl&&layerEl.offsetHeight*chartZoom>stageEl.clientHeight+1);
+      if(chartZoom>1.001){
+        chartPanX=panStart.panX+dx;
+        chartPanY=panStart.panY+dy;
+        applyChartTransform();
+      }else if(canVerticalPan&&Math.abs(dy)>Math.abs(dx)*0.65){
+        chartPanX=0;
+        chartPanY=panStart.panY+dy;
+        applyChartTransform();
+      }
     }
   });
   const finishPointer=e=>{
