@@ -76,19 +76,50 @@ jobs:
           echo "JEPPIRAN_KEY_ALIAS=androiddebugkey" >> "$GITHUB_ENV"
           echo "JEPPIRAN_KEY_PASSWORD=android" >> "$GITHUB_ENV"
 
-          # Build JeppIran APK run 279 is public version 1.0. Every later
-          # workflow run advances the visible decimal sequence:
-          # 1.0 ... 1.9, 2.0 ... 2.9, and so on.
-          VERSION_ORDINAL=$((GITHUB_RUN_NUMBER - 279))
-          if [ "$VERSION_ORDINAL" -lt 0 ]; then
-            echo "Unexpected workflow run number: $GITHUB_RUN_NUMBER" >&2
-            exit 1
-          fi
-          VERSION_MAJOR=$((1 + VERSION_ORDINAL / 10))
-          VERSION_MINOR=$((VERSION_ORDINAL % 10))
-          VERSION_NAME="${VERSION_MAJOR}.${VERSION_MINOR}"
+          # Advance only from the latest successfully published app version.
+          # Failed/retried workflow runs must not skip visible version numbers.
+          CURRENT_JSON="$RUNNER_TEMP/jeppiran-current-update.json"
 
-          VERSION_CODE=$((262000 + GITHUB_RUN_NUMBER))
+          curl -fsSL \
+            "https://github.com/mahmet737ng-gif/JeppIran/releases/download/jeppiran-test/app-update.json?t=$(date +%s)" \
+            -o "$CURRENT_JSON" || true
+
+          read -r VERSION_NAME VERSION_CODE < <(
+            python - "$CURRENT_JSON" <<'PY'
+          import json
+          import os
+          import re
+          import sys
+
+          path = sys.argv[1]
+          current_name = "0.9"
+          current_code = 262278
+
+          if os.path.isfile(path) and os.path.getsize(path) > 0:
+              try:
+                  with open(path, "r", encoding="utf-8") as fh:
+                      data = json.load(fh)
+                  current_name = str(data.get("versionName", current_name))
+                  current_code = int(data.get("versionCode", current_code))
+              except Exception:
+                  pass
+
+          match = re.fullmatch(r"(\d+)\.(\d+)", current_name)
+          if not match:
+              raise SystemExit(
+                  f"Unsupported published version format: {current_name}"
+              )
+
+          major = int(match.group(1))
+          minor = int(match.group(2)) + 1
+
+          if minor >= 10:
+              major += 1
+              minor = 0
+
+          print(f"{major}.{minor} {current_code + 1}")
+          PY
+          )
           echo "JEPPIRAN_VERSION_CODE=$VERSION_CODE" >> "$GITHUB_ENV"
           echo "JEPPIRAN_VERSION_NAME=$VERSION_NAME" >> "$GITHUB_ENV"
           echo "JEPPIRAN_APK_PATH=app/build/outputs/apk/debug/${VERSION_NAME}.apk" >> "$GITHUB_ENV"

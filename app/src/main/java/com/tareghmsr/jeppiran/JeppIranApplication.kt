@@ -188,8 +188,23 @@ class JeppIranApplication :
                     ).toFloat()
 
                 setOnClickListener {
-                    activity.onBackPressedDispatcher
-                        .onBackPressed()
+                    val componentActivity =
+                        activity as?
+                            androidx.activity.ComponentActivity
+
+                    if (
+                        componentActivity !=
+                        null
+                    ) {
+                        componentActivity
+                            .onBackPressedDispatcher
+                            .onBackPressed()
+                    } else {
+                        @Suppress(
+                            "DEPRECATION"
+                        )
+                        activity.onBackPressed()
+                    }
                 }
             }
 
