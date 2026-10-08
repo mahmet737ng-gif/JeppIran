@@ -1073,7 +1073,24 @@ $("#startGpsBtn").addEventListener("click",startDeviceGps);
 $("#useXpBtn").addEventListener("click",()=>{setBridgeTarget("xplane");$("#bridgeUrl").focus()});
 $("#useFsxBtn").addEventListener("click",()=>{setBridgeTarget("fsx");$("#fsxPcIp")?.focus()});
 $("#connectBridgeBtn").addEventListener("click",()=>{setBridgeTarget("xplane");connectSimulatorBridge()});
-$("#connectFsxBtn").addEventListener("click",()=>{setBridgeTarget("fsx");connectSimulatorBridge()});
+$("#connectFsxBtn").addEventListener("click",()=>{
+  const btn=$("#connectFsxBtn");
+  const host=normalizeBridgeHost(($("#fsxPcIp")&&$("#fsxPcIp").value)||"");
+  if(!host){
+    markFsxWaiting("Enter the FSX PC IPv4 address first.");
+    $("#fsxPcIp")?.focus();
+    return;
+  }
+  $("#simStatus").textContent="FSX CONNECT • starting secure relay…";
+  if(btn){btn.disabled=true;setTimeout(()=>{btn.disabled=false},1200)}
+  try{
+    setBridgeTarget("fsx");
+    connectSimulatorBridge();
+  }catch(e){
+    markFsxWaiting("FSX connect error: "+(e&&e.message?e.message:String(e)));
+    if(btn)btn.disabled=false;
+  }
+});
 $("#disconnectPositionBtn").addEventListener("click",()=>disconnectPosition());
 setBridgeTarget(bridgeTargetSource);
 if(LOCAL_SIM_WEB){
