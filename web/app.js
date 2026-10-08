@@ -808,6 +808,10 @@ function updatePositionUi(p,source){
   $("#posGs").textContent=Number.isFinite(p.groundspeed)?Math.round(p.groundspeed*1.943844)+" kt":"—";
   $("#posAcc").textContent=Number.isFinite(p.accuracy)?Math.round(p.accuracy)+" m":source==="gps"?"—":"SIM";
   $("#simStatus").textContent=sourceLabel+" • live";
+  if(source==="fsx"){
+    const inline=$("#fsxInlineStatus");if(inline)inline.textContent="FSX LIVE • simulator position received.";
+    const btn=$("#connectFsxBtn");if(btn){btn.disabled=false;btn.textContent="FSX CONNECTED"}
+  }
   const badge=$("#viewerPositionBadge");
   if(badge){badge.textContent=sourceLabel+" LIVE";badge.classList.add("live")}
   document.querySelectorAll(".source-card").forEach(x=>x.classList.remove("active"));
@@ -964,6 +968,7 @@ async function fsxRelayTopicFor(host){
 }
 function markFsxWaiting(message){
   lastPosition=null;
+  const inline=$("#fsxInlineStatus");if(inline)inline.textContent=message;
   $("#positionSource").textContent="FSX";
   $("#positionDot").classList.remove("live");
   ["#posLat","#posLon","#posAlt","#posHdg","#posGs","#posAcc"].forEach(s=>$(s).textContent="—");
@@ -1073,24 +1078,30 @@ $("#startGpsBtn").addEventListener("click",startDeviceGps);
 $("#useXpBtn").addEventListener("click",()=>{setBridgeTarget("xplane");$("#bridgeUrl").focus()});
 $("#useFsxBtn").addEventListener("click",()=>{setBridgeTarget("fsx");$("#fsxPcIp")?.focus()});
 $("#connectBridgeBtn").addEventListener("click",()=>{setBridgeTarget("xplane");connectSimulatorBridge()});
-$("#connectFsxBtn").addEventListener("click",()=>{
-  const btn=$("#connectFsxBtn");
+window.jeppiranConnectFsx=()=>{
+  const btn=$("#connectFsxBtn"),inline=$("#fsxInlineStatus");
   const host=normalizeBridgeHost(($("#fsxPcIp")&&$("#fsxPcIp").value)||"");
   if(!host){
-    markFsxWaiting("Enter the FSX PC IPv4 address first.");
+    const msg="Enter the FSX PC IPv4 address first.";
+    markFsxWaiting(msg);
+    if(inline)inline.textContent=msg;
     $("#fsxPcIp")?.focus();
+    if(btn){btn.disabled=false;btn.textContent="CONNECT FSX"}
     return;
   }
-  $("#simStatus").textContent="FSX CONNECT • starting secure relay…";
-  if(btn){btn.disabled=true;setTimeout(()=>{btn.disabled=false},1200)}
+  const msg="FSX CONNECT • starting secure relay for "+host+" …";
+  $("#simStatus").textContent=msg;
+  if(inline)inline.textContent=msg;
   try{
     setBridgeTarget("fsx");
     connectSimulatorBridge();
   }catch(e){
-    markFsxWaiting("FSX connect error: "+(e&&e.message?e.message:String(e)));
-    if(btn)btn.disabled=false;
+    const err="FSX connect error: "+(e&&e.message?e.message:String(e));
+    markFsxWaiting(err);
+    if(inline)inline.textContent=err;
+    if(btn){btn.disabled=false;btn.textContent="CONNECT FSX"}
   }
-});
+};
 $("#disconnectPositionBtn").addEventListener("click",()=>disconnectPosition());
 setBridgeTarget(bridgeTargetSource);
 if(LOCAL_SIM_WEB){
