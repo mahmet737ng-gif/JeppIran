@@ -25,7 +25,7 @@ def parse_xgps(data):
         try: vals.append(float(part))
         except ValueError: pass
     if len(vals) < 2: return None
-    lat,lon=vals[0],vals[1]
+    lon,lat=vals[0],vals[1]
     if not(-90<=lat<=90 and -180<=lon<=180): return None
     alt=vals[2] if len(vals)>2 else None
     track=vals[3] if len(vals)>3 else None
