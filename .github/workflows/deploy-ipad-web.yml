@@ -38,11 +38,13 @@ jobs:
 
       - name: Prepare synchronized web assets
         run: |
-          mkdir -p web/data web/airport-images web/charts
+          mkdir -p web/data web/airport-images web/charts web/vendor
           cp app/src/main/assets/charts-current.json web/data/charts-current.json
           cp app/src/main/assets/charts-manifest.json web/data/charts-manifest.json
           cp app/src/main/assets/chart-georef.json web/data/chart-georef.json
           cp app/src/main/res/drawable-nodpi/airport_card_*.webp web/airport-images/
+          curl -fL --retry 4 --retry-all-errors https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.min.mjs -o web/vendor/pdf.min.mjs
+          curl -fL --retry 4 --retry-all-errors https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.min.mjs -o web/vendor/pdf.worker.min.mjs
 
           python3 - <<'PY'
           import json
