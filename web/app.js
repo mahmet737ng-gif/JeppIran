@@ -153,11 +153,11 @@ async function renderSelectedPdf(c){
   const token=++pdfRenderToken;
   const info=manifest&&manifest.airports&&manifest.airports[selectedAirport];
   if(!info)throw new Error("No PDF URL is available for "+selectedAirport);
-  currentPdfUrl=info.url;
+  currentPdfUrl="./charts/"+encodeURIComponent(info.file||selectedAirport+".pdf");
   $("#offlinePdfBtn").disabled=false;
   const stage=$("#pdfStage");
   stage.innerHTML='<div class="pdf-loading">Loading chart…</div><div class="pdf-canvas-wrap"><canvas id="pdfCanvas"></canvas></div>';
-  const lib=await pdfJs(), bytes=await getPdfBytes(info.url,true);
+  const lib=await pdfJs(), bytes=await getPdfBytes(currentPdfUrl,true);
   if(token!==pdfRenderToken)return;
   const doc=await lib.getDocument({data:bytes}).promise;
   const pageNo=Math.max(1,Math.min(doc.numPages,Number(c.pdf_page)||1));
@@ -224,25 +224,53 @@ async function getWx(){
     const m=metarOk?metar:(wxCache[icao+":metar"]||"No cached METAR.");
     const t=tafOk?taf:(wxCache[icao+":taf"]||"No cached TAF.");
     showWx(rawMetar,rawTaf,decoded,m,t);
-    setWxStatus(icao+(metarOk&&tafOk?" • updated":" • partial update"));
+    const requestedOk=(!needMetar||metarOk)&&(!needTaf||tafOk);\n    setWxStatus(icao+(requestedOk?" • updated":" • partial update"));
   }finally{$("#getWxBtn").disabled=false}
 }
+function extractWxRaw(data,type){
+  if(!data)return "";
+  if(typeof data==="string")return data.trim();
+  if(Array.isArray(data)){
+    for(const row of data){const v=extractWxRaw(row,type);if(v)return v}
+    return "";
+  }
+  if(type==="metar"){
+    const v=data.raw||data.rawText||data.rawOb||data.raw_text;
+    if(typeof v==="string"&&v.trim())return v.trim();
+  }else{
+    const direct=data.rawTAF||data.rawTaf||data.raw_text||data.rawText;
+    if(typeof direct==="string"&&direct.trim())return direct.trim();
+    if(data.taf){
+      if(typeof data.taf==="string"&&data.taf.trim())return data.taf.trim();
+      const nested=extractWxRaw(data.taf,"taf"); if(nested)return nested;
+    }
+  }
+  for(const k of ["data","results","reports","items"]){
+    if(data[k]){const v=extractWxRaw(data[k],type);if(v)return v}
+  }
+  return "";
+}
 async function fetchWx(type,icao){
-  const primary="https://aviationweather.gov/api/data/"+type+"?ids="+encodeURIComponent(icao)+"&format=raw";
-  const urls=[primary,
-    "https://aviationweather.gov/api/data/"+type+"?ids="+encodeURIComponent(icao)+"&format=json"];
+  const code=encodeURIComponent(icao);
+  const providers=[
+    {
+      url:"https://rotatepilot.com/api/v1/metar?icao="+code+"&taf=1",
+      pick:data=>type==="metar"?(data&&data.raw):(data&&data.taf&&(data.taf.raw||data.taf.rawText))
+    },
+    {
+      url:type==="metar"?"https://metars.eu/api/metars/"+code:"https://metars.eu/api/tafs/"+code,
+      pick:data=>extractWxRaw(data,type)
+    }
+  ];
   let last=null;
-  for(const url of urls){
+  for(const p of providers){
     try{
-      const r=await fetch(url,{mode:"cors",cache:"no-store",headers:{Accept:url.endsWith("json")?"application/json":"text/plain"}});
+      const r=await fetch(p.url,{mode:"cors",cache:"no-store",headers:{Accept:"application/json"}});
       if(!r.ok)throw new Error("HTTP "+r.status);
-      if(url.endsWith("json")){
-        const data=await r.json(), row=Array.isArray(data)?data[0]:null;
-        const raw=row&&(row.rawOb||row.rawTAF||row.raw_text||row.rawText);
-        if(raw)return String(raw).trim();
-        throw new Error("No "+type.toUpperCase()+" returned");
-      }
-      const txt=(await r.text()).trim(); if(txt)return txt;
+      const data=await r.json();
+      const raw=(p.pick(data)||"").toString().trim();
+      if(raw)return raw;
+      throw new Error("No "+type.toUpperCase()+" returned");
     }catch(e){last=e}
   }
   throw last||new Error("Weather service unavailable");
