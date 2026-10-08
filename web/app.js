@@ -866,8 +866,16 @@ const bridgeMeta={
   xplane:{label:"X-PLANE 11.5",title:"X-PLANE 11.5 BRIDGE",port:8765,securePort:8766,
     help:"Run the standalone JEPPIRAN X-Plane Bridge on the simulator PC, then connect using the WebSocket address printed by the bridge."},
   fsx:{label:"FSX",title:"FSX LOCAL SIMCONNECT",port:8775,localWebPort:8080,
-    help:"Run JEPPIRAN FSX Bridge on the FSX PC, then open the Local Web address printed by the bridge. It serves the same JEPPIRAN web app through the simulator PC and adds the live FSX feed automatically; no second app, certificate, or iPad profile is required."}
+    help:"Run JEPPIRAN FSX Bridge on the FSX PC. Enter that PC’s IPv4 address below and tap CONNECT FSX. JEPPIRAN opens the Local SimConnect path and connects automatically."}
 };
+function normalizeBridgeHost(value){
+  let v=String(value||"").trim();
+  v=v.replace(/^https?:\/\//i,"").replace(/^wss?:\/\//i,"");
+  v=v.split(/[\/?#]/)[0];
+  if(/^\[[^\]]+\]:\d+$/.test(v))v=v.replace(/:\d+$/,"");
+  else if(/^\d{1,3}(?:\.\d{1,3}){3}:\d+$/.test(v))v=v.replace(/:\d+$/,"");
+  return v;
+}
 function setBridgeTarget(source){
   bridgeTargetSource=bridgeMeta[source]?source:"xplane";
   localStorage.setItem("bridgeTargetSource",bridgeTargetSource);
@@ -875,10 +883,18 @@ function setBridgeTarget(source){
   $("#bridgeTitle").textContent=meta.title;
   $("#bridgeHelp").textContent=meta.help;
   $("#connectBridgeBtn").textContent="CONNECT "+meta.label;
-  const saved=localStorage.getItem("bridgeUrl:"+bridgeTargetSource)||(bridgeTargetSource==="xplane"?localStorage.getItem("bridgeUrl"):"");
-  $("#bridgeUrl").value=(LOCAL_SIM_WEB&&bridgeTargetSource==="fsx")
-    ?("ws://"+location.hostname+":"+meta.port)
-    :(saved||("ws://192.168.1.50:"+meta.port));
+  const label=$("#bridgeInputLabel");
+  const input=$("#bridgeUrl");
+  if(bridgeTargetSource==="fsx"){
+    if(label)label.textContent="FSX PC IPv4 Address";
+    input.placeholder="e.g. 10.31.2.70";
+    input.value=LOCAL_SIM_WEB?location.hostname:(localStorage.getItem("fsxPcHost")||"");
+  }else{
+    if(label)label.textContent="Bridge WebSocket URL";
+    input.placeholder="ws://192.168.1.50:8765";
+    const saved=localStorage.getItem("bridgeUrl:xplane")||localStorage.getItem("bridgeUrl")||"";
+    input.value=saved||("ws://192.168.1.50:"+meta.port);
+  }
   document.querySelectorAll(".source-card").forEach(x=>x.classList.remove("active"));
   if(bridgeTargetSource==="xplane")$("#useXpBtn").classList.add("active");
   if(bridgeTargetSource==="fsx")$("#useFsxBtn").classList.add("active");
@@ -886,11 +902,25 @@ function setBridgeTarget(source){
 function connectSimulatorBridge(){
   stopGps(); stopBridge();
   const source=bridgeTargetSource,meta=bridgeMeta[source]||bridgeMeta.xplane;
-  const url=$("#bridgeUrl").value.trim();
-  if(!/^wss?:\/\//i.test(url)){clearPositionUi("Bridge URL must start with ws:// or wss://");return}
-  localStorage.setItem("bridgeUrl:"+source,url);
-  if(source==="xplane")localStorage.setItem("bridgeUrl",url);
-  activePositionSource=source;localStorage.setItem("positionSource",source);
+  let url="";
+  if(source==="fsx"){
+    const host=normalizeBridgeHost($("#bridgeUrl").value);
+    if(!host){clearPositionUi("Enter the FSX PC IPv4 address.");return}
+    localStorage.setItem("fsxPcHost",host);
+    activePositionSource=source;localStorage.setItem("positionSource",source);
+    if(!LOCAL_SIM_WEB || location.hostname!==host){
+      $("#simStatus").textContent="Opening FSX Local SimConnect at "+host+" …";
+      location.href="http://"+host+":"+meta.localWebPort+"/#simulator";
+      return;
+    }
+    url="ws://"+host+":"+meta.port;
+  }else{
+    url=$("#bridgeUrl").value.trim();
+    if(!/^wss?:\/\//i.test(url)){clearPositionUi("Bridge URL must start with ws:// or wss://");return}
+    localStorage.setItem("bridgeUrl:"+source,url);
+    localStorage.setItem("bridgeUrl",url);
+    activePositionSource=source;localStorage.setItem("positionSource",source);
+  }
   $("#simStatus").textContent="Connecting to "+url+" …";
   try{bridgeSocket=new WebSocket(url)}catch(e){clearPositionUi("Could not open WebSocket: "+e.message);return}
   bridgeSocket.onopen=()=>{$("#simStatus").textContent="Bridge connected • waiting for "+meta.label+" position…"};
