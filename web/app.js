@@ -210,7 +210,108 @@ function setWxStatus(t){$("#wxStatus").textContent=t}
 function toggle(sel,on){$(sel).classList.toggle("hidden",!on)}
 function escapeHtml(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
 
+
+/* ===== Position sources: iOS GPS + X-Plane 11.5 WebSocket bridge ===== */
+let activePositionSource=localStorage.getItem("positionSource")||"";
+let gpsWatchId=null, bridgeSocket=null, lastPosition=null, lastGpsFix=null;
+
+function positionNumber(v,d=5){return Number.isFinite(v)?Number(v).toFixed(d):"—"}
+function updatePositionUi(p,source){
+  lastPosition=p;
+  const sourceLabel=source==="gps"?"DEVICE GPS":source==="xplane"?"X-PLANE 11.5":"POSITION";
+  $("#positionSource").textContent=sourceLabel;
+  $("#positionDot").classList.add("live");
+  $("#posLat").textContent=positionNumber(p.lat,6);
+  $("#posLon").textContent=positionNumber(p.lon,6);
+  $("#posAlt").textContent=Number.isFinite(p.alt)?Math.round(p.alt)+" m":"—";
+  $("#posHdg").textContent=Number.isFinite(p.heading)?Math.round((p.heading+360)%360)+"°":"—";
+  $("#posGs").textContent=Number.isFinite(p.groundspeed)?Math.round(p.groundspeed*1.943844)+" kt":"—";
+  $("#posAcc").textContent=Number.isFinite(p.accuracy)?Math.round(p.accuracy)+" m":source==="xplane"?"SIM":"—";
+  $("#simStatus").textContent=sourceLabel+" • live";
+  const badge=$("#viewerPositionBadge");
+  badge.textContent=sourceLabel+" LIVE";
+  badge.classList.add("live");
+  document.querySelectorAll(".source-card").forEach(x=>x.classList.remove("active"));
+  if(source==="gps") $("#useGpsBtn").classList.add("active");
+  if(source==="xplane") $("#useXpBtn").classList.add("active");
+  window.dispatchEvent(new CustomEvent("jeppiran-position",{detail:p}));
+}
+function clearPositionUi(message="Disconnected"){
+  lastPosition=null;
+  $("#positionSource").textContent="No source selected";
+  $("#positionDot").classList.remove("live");
+  ["#posLat","#posLon","#posAlt","#posHdg","#posGs","#posAcc"].forEach(s=>$(s).textContent="—");
+  $("#simStatus").textContent=message;
+  const badge=$("#viewerPositionBadge"); badge.textContent="GPS/SIM OFF"; badge.classList.remove("live");
+  document.querySelectorAll(".source-card").forEach(x=>x.classList.remove("active"));
+}
+function stopGps(){
+  if(gpsWatchId!==null && navigator.geolocation){navigator.geolocation.clearWatch(gpsWatchId)}
+  gpsWatchId=null; lastGpsFix=null;
+}
+function stopBridge(){
+  if(bridgeSocket){try{bridgeSocket.onclose=null;bridgeSocket.close()}catch(e){}}
+  bridgeSocket=null;
+}
+function disconnectPosition(message="Disconnected"){
+  stopGps(); stopBridge(); activePositionSource=""; localStorage.removeItem("positionSource"); clearPositionUi(message);
+}
+function bearingBetween(a,b){
+  const r=Math.PI/180, p1=a.lat*r, p2=b.lat*r, dl=(b.lon-a.lon)*r;
+  const y=Math.sin(dl)*Math.cos(p2), x=Math.cos(p1)*Math.sin(p2)-Math.sin(p1)*Math.cos(p2)*Math.cos(dl);
+  return (Math.atan2(y,x)/r+360)%360;
+}
+function startDeviceGps(){
+  stopBridge();
+  if(!navigator.geolocation){clearPositionUi("Geolocation is not supported by this browser.");return}
+  $("#simStatus").textContent="Requesting iOS location permission…";
+  activePositionSource="gps"; localStorage.setItem("positionSource","gps");
+  if(gpsWatchId!==null) stopGps();
+  gpsWatchId=navigator.geolocation.watchPosition(pos=>{
+    const c=pos.coords;
+    let heading=Number.isFinite(c.heading)?c.heading:null;
+    const fix={lat:c.latitude,lon:c.longitude,alt:Number.isFinite(c.altitude)?c.altitude:null,
+      heading,groundspeed:Number.isFinite(c.speed)?c.speed:null,accuracy:c.accuracy,timestamp:pos.timestamp};
+    if(!Number.isFinite(fix.heading) && lastGpsFix){
+      const moved=Math.hypot((fix.lat-lastGpsFix.lat)*111000,(fix.lon-lastGpsFix.lon)*111000*Math.cos(fix.lat*Math.PI/180));
+      if(moved>4) fix.heading=bearingBetween(lastGpsFix,fix);
+    }
+    lastGpsFix=fix; updatePositionUi(fix,"gps");
+  },err=>{
+    const reasons={1:"Location permission denied.",2:"Location unavailable.",3:"Location request timed out."};
+    clearPositionUi(reasons[err.code]||("GPS error: "+err.message));
+  },{enableHighAccuracy:true,maximumAge:1000,timeout:12000});
+}
+function connectXPlaneBridge(){
+  stopGps(); stopBridge();
+  const url=$("#bridgeUrl").value.trim();
+  if(!/^wss?:\/\//i.test(url)){clearPositionUi("Bridge URL must start with ws:// or wss://");return}
+  localStorage.setItem("bridgeUrl",url); activePositionSource="xplane"; localStorage.setItem("positionSource","xplane");
+  $("#simStatus").textContent="Connecting to "+url+" …";
+  try{bridgeSocket=new WebSocket(url)}catch(e){clearPositionUi("Could not open WebSocket: "+e.message);return}
+  bridgeSocket.onopen=()=>{$("#simStatus").textContent="Bridge connected • waiting for X-Plane position…"};
+  bridgeSocket.onmessage=e=>{
+    try{
+      const d=JSON.parse(e.data), lat=Number(d.lat), lon=Number(d.lon);
+      if(!Number.isFinite(lat)||!Number.isFinite(lon)||lat<-90||lat>90||lon<-180||lon>180)return;
+      updatePositionUi({lat,lon,alt:d.alt==null?null:Number(d.alt),heading:d.heading==null?null:Number(d.heading),
+        groundspeed:(d.groundspeed??d.groundSpeedMps)==null?null:Number(d.groundspeed??d.groundSpeedMps),pitch:d.pitch==null?null:Number(d.pitch),roll:d.roll==null?null:Number(d.roll),
+        accuracy:null,timestamp:Date.now()},"xplane");
+    }catch(_){}
+  };
+  bridgeSocket.onerror=()=>{$("#simStatus").textContent="Bridge connection error. Check URL/firewall/TLS."};
+  bridgeSocket.onclose=()=>{bridgeSocket=null;if(activePositionSource==="xplane")clearPositionUi("X-Plane bridge disconnected.")};
+}
+$("#useGpsBtn").addEventListener("click",startDeviceGps);
+$("#startGpsBtn").addEventListener("click",startDeviceGps);
+$("#useXpBtn").addEventListener("click",()=>{$("#bridgeUrl").focus()});
+$("#connectBridgeBtn").addEventListener("click",connectXPlaneBridge);
+$("#disconnectPositionBtn").addEventListener("click",()=>disconnectPosition());
+const savedBridge=localStorage.getItem("bridgeUrl"); if(savedBridge) $("#bridgeUrl").value=savedBridge;
+if(activePositionSource==="gps") setTimeout(startDeviceGps,500);
+/* ===== End position sources ===== */
+
 window.addEventListener("orientationchange",()=>setTimeout(()=>window.dispatchEvent(new Event("resize")),150));
 if("serviceWorker" in navigator) navigator.serviceWorker.register("./service-worker.js").catch(()=>{});
 loadData();
-const start=(location.hash||"#home").slice(1); route(["home","charts","wx"].includes(start)?start:"home");
+const start=(location.hash||"#home").slice(1); route(["home","charts","wx","simulator"].includes(start)?start:"home");

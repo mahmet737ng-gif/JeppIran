@@ -144,3 +144,20 @@ body.viewer-fullscreen .pdf-stage{height:100vh}
   .wx-entry button{height:50px}
   .airport-list{grid-template-columns:1fr}
 }
+.sim-shell{max-width:860px;margin:28px auto;border-radius:22px;padding:4px 20px 30px;box-shadow:var(--shadow)}
+.sim-source-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0 16px}
+.source-card,.sim-card button{border:1px solid var(--stroke);background:var(--surface2);color:var(--text);border-radius:16px;padding:16px;text-align:left}
+.source-card.active{outline:2px solid var(--accent);background:color-mix(in srgb,var(--accent) 12%,var(--surface2))}
+.source-card b,.source-card small{display:block}.source-card small{color:var(--muted);margin-top:5px}
+.sim-card{margin:12px 0;padding:18px;border:1px solid var(--stroke);border-radius:18px;background:var(--surface2)}
+.sim-card h3{margin:0 0 8px;font-size:14px;letter-spacing:.05em}.sim-help,.sim-note{color:var(--muted);line-height:1.5}
+.sim-card-head{display:flex;align-items:center;justify-content:space-between}.sim-card-head small{display:block;color:var(--muted);margin-top:4px}
+.status-dot{width:13px;height:13px;border-radius:50%;background:#687887;box-shadow:0 0 0 5px rgba(104,120,135,.12)}
+.status-dot.live{background:#2ee68a;box-shadow:0 0 0 5px rgba(46,230,138,.15)}
+.position-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:16px 0}
+.position-grid div{padding:12px;border-radius:12px;background:var(--surface);min-width:0}.position-grid small{display:block;color:var(--muted);font-size:10px}.position-grid b{display:block;margin-top:4px;font-family:"SFMono-Regular",Menlo,monospace;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wide-input{width:100%;height:48px;border:1px solid var(--stroke);border-radius:14px;padding:0 14px;background:var(--surface);color:var(--text);outline:none}
+.sim-buttons{display:flex;gap:10px;margin-top:12px}.sim-buttons button,#startGpsBtn{font-weight:900;text-align:center;background:linear-gradient(135deg,var(--accent2),var(--accent));color:white;border:0}.sim-buttons .secondary-btn{background:var(--surface);color:var(--text);border:1px solid var(--stroke)}
+.viewer-position-badge{display:inline-flex;align-items:center;min-height:36px;padding:0 10px;border-radius:999px;border:1px solid var(--stroke);color:var(--muted);font-size:11px;font-weight:800;white-space:nowrap}
+.viewer-position-badge.live{color:#2ee68a;border-color:rgba(46,230,138,.55)}
+@media(max-width:650px){.sim-source-grid{grid-template-columns:1fr}.position-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.viewer-position-badge{display:none}}

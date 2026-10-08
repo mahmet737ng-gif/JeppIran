@@ -52,6 +52,10 @@
           <span class="card-icon">↻</span>
           <span><b>Update</b><small id="updateSubtitle">Check chart cycle</small></span>
         </button>
+        <button class="home-card" data-route="simulator">
+          <span class="card-icon">✈︎</span>
+          <span><b>Simulator / GPS</b><small>Device GPS or X-Plane 11.5</small></span>
+        </button>
         <button class="home-card" id="infoCard">
           <span class="card-icon">i</span>
           <span><b>Info</b><small>JEPPIRAN web build</small></span>
@@ -81,6 +85,7 @@
             <small id="viewerChart">Choose a chart from the tree</small>
           </div>
           <div class="viewer-actions">
+            <span id="viewerPositionBadge" class="viewer-position-badge">GPS/SIM OFF</span>
             <button id="openPdfBtn" class="icon-btn" disabled>Open PDF</button>
             <button id="fullscreenBtn" class="icon-btn">Fullscreen</button>
           </div>
@@ -101,6 +106,60 @@
         </div>
         <div id="chartTree" class="tree-content"></div>
       </aside>
+    </main>
+
+    <main id="simulatorView" class="view">
+      <section class="sim-shell panel">
+        <div class="pane-head">
+          <button class="back-btn" data-route="home">‹ Home</button>
+          <h2>SIMULATOR / GPS</h2>
+        </div>
+
+        <div class="sim-source-grid">
+          <button id="useGpsBtn" class="source-card">
+            <b>DEVICE GPS</b>
+            <small>Use this iPhone/iPad location</small>
+          </button>
+          <button id="useXpBtn" class="source-card">
+            <b>X-PLANE 11.5</b>
+            <small>Receive position through JEPPIRAN Bridge</small>
+          </button>
+        </div>
+
+        <article class="sim-card">
+          <div class="sim-card-head">
+            <div><b>LIVE POSITION</b><small id="positionSource">No source selected</small></div>
+            <span id="positionDot" class="status-dot"></span>
+          </div>
+          <div id="positionGrid" class="position-grid">
+            <div><small>LAT</small><b id="posLat">—</b></div>
+            <div><small>LON</small><b id="posLon">—</b></div>
+            <div><small>ALT</small><b id="posAlt">—</b></div>
+            <div><small>HDG</small><b id="posHdg">—</b></div>
+            <div><small>GS</small><b id="posGs">—</b></div>
+            <div><small>ACCURACY</small><b id="posAcc">—</b></div>
+          </div>
+          <div id="simStatus" class="status">Disconnected</div>
+        </article>
+
+        <article class="sim-card">
+          <h3>X-PLANE 11.5 BRIDGE</h3>
+          <p class="sim-help">X-Plane 11.5 sends UDP, which Safari cannot receive directly. Run the JEPPIRAN X-Plane Web Bridge on the simulator PC, then connect here using its WebSocket address.</p>
+          <label class="field-label" for="bridgeUrl">Bridge WebSocket URL</label>
+          <input id="bridgeUrl" class="wide-input" value="ws://192.168.1.50:8765" autocapitalize="off" autocomplete="off" spellcheck="false">
+          <div class="sim-buttons">
+            <button id="connectBridgeBtn">CONNECT X-PLANE</button>
+            <button id="disconnectPositionBtn" class="secondary-btn">DISCONNECT</button>
+          </div>
+          <small class="sim-note">When JEPPIRAN is hosted over HTTPS, iOS may require a trusted <b>wss://</b> bridge. The included bridge supports TLS certificate/key files.</small>
+        </article>
+
+        <article class="sim-card">
+          <h3>DEVICE GPS</h3>
+          <p class="sim-help">Uses iOS/iPadOS Location Services. Safari will ask for permission the first time. High-accuracy mode is requested automatically.</p>
+          <button id="startGpsBtn">START DEVICE GPS</button>
+        </article>
+      </section>
     </main>
 
     <main id="wxView" class="view">
