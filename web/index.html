@@ -204,7 +204,35 @@
     </div>
   </dialog>
 
+  <script id="JEPPIRAN_NAV_FALLBACK">
+  (function(){
+    function showRoute(name){
+      var views=document.querySelectorAll(".view");
+      for(var i=0;i<views.length;i++) views[i].classList.remove("active");
+      document.body.classList.remove("viewer-fullscreen");
+      var el=document.getElementById(name+"View")||document.getElementById("homeView");
+      if(el) el.classList.add("active");
+    }
+    document.addEventListener("click",function(e){
+      if(window.JEPPIRAN_NAV_READY) return;
+      var node=e.target;
+      while(node && node!==document && !(node.getAttribute && node.getAttribute("data-route"))) node=node.parentNode;
+      if(!node || node===document) return;
+      e.preventDefault();
+      var name=node.getAttribute("data-route")||"home";
+      showRoute(name);
+      var hash="#"+name;
+      if(location.hash!==hash) history.pushState({route:name},"",hash);
+    },false);
+    window.addEventListener("popstate",function(){
+      if(!window.JEPPIRAN_NAV_READY) showRoute((location.hash||"#home").slice(1));
+    });
+    document.addEventListener("DOMContentLoaded",function(){
+      if(!window.JEPPIRAN_NAV_READY) showRoute((location.hash||"#home").slice(1));
+    });
+  })();
+  </script>
   <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.min.mjs" type="module" id="pdfjsModule"></script>
-  <script src="./app.js?v=2620-7" defer></script>
+  <script src="./app.js?v=2620-8" defer></script>
 </body>
 </html>
