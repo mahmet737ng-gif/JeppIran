@@ -86,11 +86,11 @@
           </div>
           <div class="viewer-actions">
             <span id="viewerPositionBadge" class="viewer-position-badge">GPS/SIM OFF</span>
-            <button id="openPdfBtn" class="icon-btn" disabled>Open PDF</button>
+            <button id="offlinePdfBtn" class="icon-btn" disabled>Save Offline</button>
             <button id="fullscreenBtn" class="icon-btn">Fullscreen</button>
           </div>
         </div>
-        <div id="pdfStage" class="pdf-stage">
+        <div id="pdfStage" class="pdf-stage"><div id="pdfLoading" class="pdf-loading hidden">Loading chart…</div>
           <div class="empty-state">
             <img src="./logo.svg" alt="">
             <b>Select an airport and chart</b>
@@ -204,6 +204,7 @@
     </div>
   </dialog>
 
+  <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.min.mjs" type="module" id="pdfjsModule"></script>
   <script src="./app.js" defer></script>
 </body>
 </html>

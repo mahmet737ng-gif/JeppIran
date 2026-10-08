@@ -30,6 +30,13 @@ jobs:
         uses: actions/configure-pages@v5
         with:
           enablement: true
+      - name: Prepare synchronized web assets
+        run: |
+          mkdir -p web/data web/airport-images
+          cp app/src/main/assets/charts-current.json web/data/charts-current.json
+          cp app/src/main/assets/charts-manifest.json web/data/charts-manifest.json
+          cp app/src/main/assets/chart-georef.json web/data/chart-georef.json
+          cp app/src/main/res/drawable-nodpi/airport_card_*.webp web/airport-images/
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:

@@ -161,3 +161,24 @@ body.viewer-fullscreen .pdf-stage{height:100vh}
 .viewer-position-badge{display:inline-flex;align-items:center;min-height:36px;padding:0 10px;border-radius:999px;border:1px solid var(--stroke);color:var(--muted);font-size:11px;font-weight:800;white-space:nowrap}
 .viewer-position-badge.live{color:#2ee68a;border-color:rgba(46,230,138,.55)}
 @media(max-width:650px){.sim-source-grid{grid-template-columns:1fr}.position-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.viewer-position-badge{display:none}}
+
+/* 1.9 parity pass */
+.airport-list{display:flex!important;flex-direction:column;gap:10px;padding:8px 12px 24px}
+.airport-item{position:relative;isolation:isolate;overflow:hidden;min-height:92px;padding:0;border:1px solid var(--stroke);border-radius:17px;background-image:var(--airport-bg);background-size:cover;background-position:center;color:#fff;box-shadow:0 7px 18px rgba(0,0,0,.18)}
+.airport-item .airport-shade{position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(3,12,20,.94) 0%,rgba(3,12,20,.74) 46%,rgba(3,12,20,.28) 100%)}
+.airport-item .airport-copy{display:flex;min-height:92px;flex-direction:column;justify-content:flex-end;padding:15px;text-shadow:0 1px 4px #000}
+.airport-item b{font-size:21px;letter-spacing:.045em}.airport-item small{font-size:12px;color:#dbe6ed;margin-top:5px}
+.airport-item.selected{outline:2px solid var(--accent);border-color:transparent}
+.pdf-stage{overflow:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;background:#31363b}
+.pdf-canvas-wrap{min-height:100%;display:flex;justify-content:center;align-items:flex-start;background:#31363b}
+#pdfCanvas{display:block;background:#fff;max-width:none;touch-action:pan-x pan-y;box-shadow:0 2px 14px rgba(0,0,0,.32)}
+.pdf-loading{position:absolute;z-index:5;top:16px;left:50%;transform:translateX(-50%);padding:9px 13px;border-radius:999px;background:rgba(5,15,23,.88);color:#fff;font-weight:800}
+.tree-item{font-size:13px;line-height:1.3}
+@media (orientation:portrait),(max-width:850px){
+ .charts-layout.active{height:calc(100dvh - 76px);min-height:0;overflow:hidden;grid-template-rows:minmax(180px,28%) minmax(0,1fr) minmax(170px,26%)}
+ .airport-pane,.chart-tree{max-height:none}
+ .viewer-pane{min-height:0}
+ .airport-list{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));overflow:auto}
+ .airport-item{min-height:82px}.airport-item .airport-copy{min-height:82px}
+ .pdf-stage{min-height:0}
+}

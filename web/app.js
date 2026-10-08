@@ -1,4 +1,4 @@
-const RAW_ROOT="https://raw.githubusercontent.com/mahmet737ng-gif/JeppIran/main/app/src/main/assets/";
+const RAW_ROOT="./data/";
 const VERSION="V2620";
 const CATEGORY_ORDER=["Airport","STAR","SID","Approach","Other"];
 const AIRPORTS={
@@ -20,13 +20,25 @@ let charts=[], manifest=null, selectedAirport="", selectedChart=null, expanded=n
 const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
 
-function route(name){
-  $$(".view").forEach(v=>v.classList.remove("active"));
+function renderRoute(name){
+  $(".view").forEach(v=>v.classList.remove("active"));
   document.body.classList.remove("viewer-fullscreen");
-  const el=$("#"+name+"View"); if(el) el.classList.add("active");
-  history.replaceState(null,"","#"+name);
+  const el=$("#"+name+"View")||$("#homeView"); el.classList.add("active");
 }
-$$("[data-route]").forEach(b=>b.addEventListener("click",()=>route(b.dataset.route)));
+function route(name,replace=false){
+  renderRoute(name);
+  const hash="#"+name;
+  if(location.hash!==hash){
+    const fn=replace?"replaceState":"pushState";
+    history[fn]({route:name},"",hash);
+  }
+}
+$("[data-route]").forEach(b=>b.addEventListener("click",e=>{
+  e.preventDefault();
+  const target=b.dataset.route;
+  if(target==="home" && history.length>1 && location.hash!=="#home"){history.back()} else route(target);
+}));
+window.addEventListener("popstate",()=>renderRoute((location.hash||"#home").slice(1)));
 
 function dialog(title,text){
   $("#dialogTitle").textContent=title;
@@ -73,7 +85,9 @@ function renderAirports(filter=""){
     const meta=AIRPORTS[icao]||["AIRPORT",""];
     const b=document.createElement("button");
     b.className="airport-item"+(icao===selectedAirport?" selected":"");
-    b.innerHTML="<b>"+escapeHtml(icao)+"</b><small>"+escapeHtml(meta[0]+(meta[1]?" • "+meta[1]:""))+"</small>";
+    const idx=(keys.indexOf(icao)%20)+1;
+    b.style.setProperty("--airport-bg","url('./airport-images/airport_card_"+idx+".webp')");
+    b.innerHTML="<span class='airport-shade'></span><span class='airport-copy'><b>"+escapeHtml(icao)+"</b><small>"+escapeHtml(meta[0]+(meta[1]?" • "+meta[1]:""))+"</small></span>";
     b.onclick=()=>selectAirport(icao);
     list.appendChild(b);
   });
@@ -87,7 +101,7 @@ function selectAirport(icao){
   $("#viewerChart").textContent="Select a chart";
   $("#treeAirport").textContent=icao;
   $("#pdfStage").innerHTML='<div class="empty-state"><img src="./logo.svg" alt=""><b>Select a chart</b><span>Choose Airport, STAR, SID, Approach or Other below.</span></div>';
-  $("#openPdfBtn").disabled=true;
+  $("#offlinePdfBtn").disabled=true; currentPdfUrl="";
   renderTree();
   if(matchMedia("(orientation:portrait)").matches) $("#chartTreePane").scrollIntoView({behavior:"smooth",block:"end"});
 }
@@ -108,26 +122,71 @@ function renderTree(){
         const b=document.createElement("button");
         b.className="tree-item"+(selectedChart&&selectedChart.page===c.page?" selected":"");
         const number=c.chart_number?c.chart_number+" • ":"";
-        b.innerHTML=escapeHtml(number+(c.name||("Chart "+c.page)))+"<small>PDF page "+escapeHtml(String(c.pdf_page||""))+"</small>";
+        b.innerHTML=escapeHtml(number+(c.name||("Chart "+c.page)));
         b.onclick=()=>selectChart(c); wrap.appendChild(b);
       });
     }
     root.appendChild(wrap);
   });
 }
+let pdfRenderToken=0,currentPdfUrl="";
+async function pdfJs(){
+  if(window.pdfjsLib)return window.pdfjsLib;
+  try{
+    const mod=await import("https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.min.mjs");
+    mod.GlobalWorkerOptions.workerSrc="https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.min.mjs";
+    return mod;
+  }catch(e){throw new Error("PDF renderer could not load. Connect once to initialize the web app.");}
+}
+async function getPdfBytes(url,save=true){
+  const cache=await caches.open("jeppiran-chart-pdfs-v1");
+  let res=await cache.match(url);
+  if(!res){
+    res=await fetch(url,{mode:"cors"});
+    if(!res.ok)throw new Error("PDF HTTP "+res.status);
+    if(save) await cache.put(url,res.clone());
+  }
+  return new Uint8Array(await res.arrayBuffer());
+}
+async function renderSelectedPdf(c){
+  const token=++pdfRenderToken;
+  const info=manifest&&manifest.airports&&manifest.airports[selectedAirport];
+  if(!info)throw new Error("No PDF URL is available for "+selectedAirport);
+  currentPdfUrl=info.url;
+  $("#offlinePdfBtn").disabled=false;
+  const stage=$("#pdfStage");
+  stage.innerHTML='<div class="pdf-loading">Loading chart…</div><div class="pdf-canvas-wrap"><canvas id="pdfCanvas"></canvas></div>';
+  const lib=await pdfJs(), bytes=await getPdfBytes(info.url,true);
+  if(token!==pdfRenderToken)return;
+  const doc=await lib.getDocument({data:bytes}).promise;
+  const pageNo=Math.max(1,Math.min(doc.numPages,Number(c.pdf_page)||1));
+  const page=await doc.getPage(pageNo);
+  if(token!==pdfRenderToken)return;
+  const wrap=stage.querySelector(".pdf-canvas-wrap"), canvas=$("#pdfCanvas");
+  const base=page.getViewport({scale:1});
+  const available=Math.max(320,stage.clientWidth-4);
+  const dpr=Math.min(window.devicePixelRatio||1,2.5);
+  const cssScale=available/base.width;
+  const viewport=page.getViewport({scale:cssScale*dpr});
+  canvas.width=Math.floor(viewport.width); canvas.height=Math.floor(viewport.height);
+  canvas.style.width=Math.floor(viewport.width/dpr)+"px"; canvas.style.height=Math.floor(viewport.height/dpr)+"px";
+  await page.render({canvasContext:canvas.getContext("2d",{alpha:false}),viewport}).promise;
+  stage.querySelector(".pdf-loading")?.remove();
+}
 function selectChart(c){
   selectedChart=c; expanded.add(c.category||"Other"); renderTree();
   $("#viewerChart").textContent=(c.chart_number?c.chart_number+" • ":"")+(c.name||("Chart "+c.page));
-  const info=manifest&&manifest.airports&&manifest.airports[selectedAirport];
-  if(!info){dialog("PDF","No PDF URL is available for "+selectedAirport);return}
-  const url=info.url+"#page="+encodeURIComponent(c.pdf_page||1)+"&zoom=page-width";
-  const frame=document.createElement("iframe");
-  frame.title=selectedAirport+" chart";
-  frame.src=url;
-  $("#pdfStage").replaceChildren(frame);
-  $("#openPdfBtn").disabled=false;
-  $("#openPdfBtn").onclick=()=>window.open(url,"_blank","noopener");
+  renderSelectedPdf(c).catch(e=>{
+    $("#pdfStage").innerHTML='<div class="empty-state"><img src="./logo.svg" alt=""><b>Chart unavailable</b><span>'+escapeHtml(e.message)+'</span></div>';
+  });
 }
+$("#offlinePdfBtn").addEventListener("click",async()=>{
+  if(!currentPdfUrl)return;
+  $("#offlinePdfBtn").disabled=true; $("#offlinePdfBtn").textContent="Saving…";
+  try{await getPdfBytes(currentPdfUrl,true);$("#offlinePdfBtn").textContent="Saved Offline"}
+  catch(e){$("#offlinePdfBtn").textContent="Save Offline";dialog("Offline chart","Could not save this airport PDF: "+e.message)}
+  finally{setTimeout(()=>{$("#offlinePdfBtn").disabled=false;if($("#offlinePdfBtn").textContent==="Saved Offline")$("#offlinePdfBtn").textContent="Save Offline"},1800)}
+});
 $("#fullscreenBtn").addEventListener("click",async()=>{
   document.body.classList.toggle("viewer-fullscreen");
   if(document.body.classList.contains("viewer-fullscreen") && document.documentElement.requestFullscreen){
@@ -168,10 +227,24 @@ async function getWx(){
   }finally{$("#getWxBtn").disabled=false}
 }
 async function fetchWx(type,icao){
-  const url="https://aviationweather.gov/api/data/"+type+"?ids="+encodeURIComponent(icao)+"&format=raw";
-  const r=await fetch(url,{headers:{Accept:"text/plain"}});
-  if(!r.ok) throw new Error("HTTP "+r.status);
-  return (await r.text()).trim();
+  const primary="https://aviationweather.gov/api/data/"+type+"?ids="+encodeURIComponent(icao)+"&format=raw";
+  const urls=[primary,
+    "https://aviationweather.gov/api/data/"+type+"?ids="+encodeURIComponent(icao)+"&format=json"];
+  let last=null;
+  for(const url of urls){
+    try{
+      const r=await fetch(url,{mode:"cors",cache:"no-store",headers:{Accept:url.endsWith("json")?"application/json":"text/plain"}});
+      if(!r.ok)throw new Error("HTTP "+r.status);
+      if(url.endsWith("json")){
+        const data=await r.json(), row=Array.isArray(data)?data[0]:null;
+        const raw=row&&(row.rawOb||row.rawTAF||row.raw_text||row.rawText);
+        if(raw)return String(raw).trim();
+        throw new Error("No "+type.toUpperCase()+" returned");
+      }
+      const txt=(await r.text()).trim(); if(txt)return txt;
+    }catch(e){last=e}
+  }
+  throw last||new Error("Weather service unavailable");
 }
 function showCachedWx(icao,m,t,d){
   showWx(m,t,d,wxCache[icao+":metar"]||"No cached METAR.",wxCache[icao+":taf"]||"No cached TAF.");
@@ -314,4 +387,4 @@ if(activePositionSource==="gps") setTimeout(startDeviceGps,500);
 window.addEventListener("orientationchange",()=>setTimeout(()=>window.dispatchEvent(new Event("resize")),150));
 if("serviceWorker" in navigator) navigator.serviceWorker.register("./service-worker.js").catch(()=>{});
 loadData();
-const start=(location.hash||"#home").slice(1); route(["home","charts","wx","simulator"].includes(start)?start:"home");
+const start=(location.hash||"#home").slice(1); const initial=["home","charts","wx","simulator"].includes(start)?start:"home"; renderRoute(initial); if(!location.hash)history.replaceState({route:initial},"","#"+initial);
