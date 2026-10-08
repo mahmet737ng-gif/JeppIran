@@ -6,6 +6,10 @@ on:
     branches: [main]
     paths:
       - 'web/**'
+      - 'app/src/main/assets/charts-current.json'
+      - 'app/src/main/assets/charts-manifest.json'
+      - 'app/src/main/assets/chart-georef.json'
+      - 'app/src/main/res/drawable-nodpi/airport_card_*.webp'
       - '.github/workflows/deploy-ipad-web.yml'
 
 permissions:
@@ -32,11 +36,24 @@ jobs:
           enablement: true
       - name: Prepare synchronized web assets
         run: |
-          mkdir -p web/data web/airport-images
+          mkdir -p web/data web/airport-images web/charts
           cp app/src/main/assets/charts-current.json web/data/charts-current.json
           cp app/src/main/assets/charts-manifest.json web/data/charts-manifest.json
           cp app/src/main/assets/chart-georef.json web/data/chart-georef.json
           cp app/src/main/res/drawable-nodpi/airport_card_*.webp web/airport-images/
+          while IFS=
+      - name: Upload site
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: web
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4
+\\t' read -r url file; do
+            echo "Downloading chart asset: $file"
+            curl -fL --retry 4 --retry-all-errors --connect-timeout 20 "$url" -o "web/charts/$file"
+          done < <(jq -r '.airports[] | [.url,.file] | @tsv' app/src/main/assets/charts-manifest.json)
+          echo "Bundled $(find web/charts -type f -name '*.pdf' | wc -l) airport PDFs into Pages artifact."
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:
