@@ -52,6 +52,7 @@ class SimulatorActivity : AppCompatActivity() {
         buildUi()
         handler.post(refreshRunnable)
         autoStartXPlaneIfNeeded()
+        autoStartBridgeIfNeeded()
     }
 
     override fun onDestroy() {
@@ -289,7 +290,12 @@ class SimulatorActivity : AppCompatActivity() {
             background = roundedSurface()
         }
 
-        val defaultPort = if (selectedType == SimulatorLocationStore.TYPE_MSFS) 49010 else 49011
+        val defaultPort = when (selectedType) {
+            SimulatorLocationStore.TYPE_MSFS -> 49010
+            SimulatorLocationStore.TYPE_P3D -> 49011
+            SimulatorLocationStore.TYPE_FSX -> SimulatorLocationStore.DEFAULT_FSX_BRIDGE_PORT
+            else -> 49011
+        }
         val saved = SimulatorLocationStore.savedPort(this)
 
         bridgePortInput = EditText(this).apply {
@@ -310,6 +316,14 @@ class SimulatorActivity : AppCompatActivity() {
             setOnClickListener { connectBridge() }
         }
         card.addView(bridgeButton, lp(52, 0, 10, 0, 0))
+
+        card.addView(TextView(this).apply {
+            text = "THIS DEVICE IP: ${localIpAddress()}   •   UDP: $defaultPort"
+            textSize = 14f
+            typeface = Typeface.DEFAULT_BOLD
+            setTextColor(accentColor())
+            setPadding(0, 0, 0, 10.dp)
+        })
 
         card.addView(TextView(this).apply {
             text = buildBridgeGuide(defaultPort)
@@ -350,11 +364,25 @@ class SimulatorActivity : AppCompatActivity() {
         }, 350L)
     }
 
+    private fun autoStartBridgeIfNeeded() {
+        if (selectedType == SimulatorLocationStore.TYPE_XPLANE) return
+        if (SimulatorLocationStore.isConnected() || SimulatorLocationStore.isConnecting()) return
+        val port = when (selectedType) {
+            SimulatorLocationStore.TYPE_MSFS -> 49010
+            SimulatorLocationStore.TYPE_P3D -> 49011
+            SimulatorLocationStore.TYPE_FSX -> SimulatorLocationStore.DEFAULT_FSX_BRIDGE_PORT
+            else -> return
+        }
+        SimulatorLocationStore.connect(this, selectedType, "", port)
+        refreshStatus()
+    }
+
     private fun chooseSimulator() {
         val items = arrayOf(
             SimulatorLocationStore.TYPE_XPLANE,
             SimulatorLocationStore.TYPE_MSFS,
-            SimulatorLocationStore.TYPE_P3D
+            SimulatorLocationStore.TYPE_P3D,
+            SimulatorLocationStore.TYPE_FSX
         )
 
         android.app.AlertDialog.Builder(this)
@@ -370,6 +398,7 @@ class SimulatorActivity : AppCompatActivity() {
                     when (selectedType) {
                         SimulatorLocationStore.TYPE_MSFS -> 49010
                         SimulatorLocationStore.TYPE_P3D -> 49011
+                        SimulatorLocationStore.TYPE_FSX -> SimulatorLocationStore.DEFAULT_FSX_BRIDGE_PORT
                         else -> SimulatorLocationStore.savedXPlaneRrefPort(this)
                     }
                 )
@@ -377,6 +406,8 @@ class SimulatorActivity : AppCompatActivity() {
                 if (selectedType == SimulatorLocationStore.TYPE_XPLANE) {
                     autoStartedThisOpen = false
                     autoStartXPlaneIfNeeded()
+                } else {
+                    autoStartBridgeIfNeeded()
                 }
             }
             .show()
@@ -485,9 +516,17 @@ class SimulatorActivity : AppCompatActivity() {
     }
 
     private fun buildBridgeGuide(defaultPort: Int): String {
-        val bridgeName = if (selectedType == SimulatorLocationStore.TYPE_MSFS) "MSFS" else "Prepar3D"
-        return "$bridgeName uses the JEPPIRAN Windows bridge already included in the project. " +
-            "Run the matching bridge on the simulator PC and send to this device IP: ${localIpAddress()} on UDP $defaultPort."
+        val bridgeName = when (selectedType) {
+            SimulatorLocationStore.TYPE_MSFS -> "MSFS"
+            SimulatorLocationStore.TYPE_P3D -> "Prepar3D"
+            SimulatorLocationStore.TYPE_FSX -> "FSX"
+            else -> "Simulator"
+        }
+        return if (selectedType == SimulatorLocationStore.TYPE_FSX) {
+            "No certificate or device file is required. Run JEPPIRAN FSX Bridge on the simulator PC and enter this device IP as the target: ${localIpAddress()} on UDP $defaultPort. JEPPIRAN listens automatically."
+        } else {
+            "$bridgeName uses the JEPPIRAN Windows bridge. Run the matching bridge on the simulator PC and send to this device IP: ${localIpAddress()} on UDP $defaultPort."
+        }
     }
 
     private fun step(number: String, text: String): TextView = TextView(this).apply {
