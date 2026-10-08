@@ -57,6 +57,12 @@ def register(page, index_entry, match, published, *, max_ground_error_m=10.0):
     width, height = float(page.rect.width), float(page.rect.height)
     if match.get('coordinateSpace') != 'pdf_points' or match.get('origin') != 'top_left':
         raise ValueError("Pixel measurements must use actual source PDF points")
+    region_id = match.get('regionId')
+    if not isinstance(region_id, str) or not region_id or not region_id.replace('_','').replace('-','').isalnum():
+        raise ValueError("Every verified region needs its own stable ID")
+    region_type = match.get('regionType')
+    if region_type not in ('main', 'inset', 'parking_inset', 'plan_view'):
+        raise ValueError("Unknown georeferenced map region type")
     bounds = match.get('bounds', {})
     if not (0 <= bounds['left'] < bounds['right'] <= width and
             0 <= bounds['top'] < bounds['bottom'] <= height):
@@ -132,6 +138,7 @@ def register(page, index_entry, match, published, *, max_ground_error_m=10.0):
             raise ValueError("Independent geodetic feature check failed")
     return {
         'page': int(index_entry['page']), 'airport': index_entry['airport'],
+        'regionId': region_id, 'regionType': region_type,
         'name': index_entry.get('name', ''), 'chartKey': chart_key(index_entry),
         'sourceFingerprint': match['sourceFingerprint'],
         'coordinateSpace': 'pdf_points', 'origin': 'top_left',
@@ -174,11 +181,16 @@ def main():
     if measured_root.get('sourcePdfSha256') != digest:
         raise ValueError("Measurement source PDF SHA does not match")
     accepted, rejected = [], []
+    seen_regions = set()
     for item in measured_root.get('charts', []):
         number = int(item['page'])
         try:
             if number not in indexed or number > len(document):
                 raise ValueError("No matching indexed PDF page")
+            region_key = (number, item.get('regionId'))
+            if region_key in seen_regions:
+                raise ValueError("Duplicate page/region ID in reviewed measurements")
+            seen_regions.add(region_key)
             accepted.append(register(document[number-1], indexed[number], item, published))
         except (ValueError, TypeError, KeyError, np.linalg.LinAlgError) as error:
             rejected.append({'page': number, 'airport': item.get('airport'),
@@ -192,7 +204,9 @@ def main():
         'charts': accepted
     }
     Path(args.output).write_text(json.dumps(root, indent=2)+"\n", encoding='utf-8')
-    report = {'accepted': len(accepted), 'rejected': rejected,
+    report = {'acceptedRegions': len(accepted),
+              'acceptedPages': len({c['page'] for c in accepted}),
+              'rejected': rejected,
               'unmeasuredPagesAreUngeoreferenced': True,
               'noGuessedCoordinates': True}
     Path(args.report).write_text(json.dumps(report, indent=2)+"\n", encoding='utf-8')
