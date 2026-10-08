@@ -82,4 +82,5 @@ dependencies {
     implementation("androidx.activity:activity-ktx:1.10.1")
     implementation("androidx.work:work-runtime-ktx:2.10.1")
     implementation("org.apache.commons:commons-compress:1.27.1")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
 }
