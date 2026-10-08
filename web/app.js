@@ -21,7 +21,7 @@ const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
 
 function renderRoute(name){
-  $(".view").forEach(v=>v.classList.remove("active"));
+  $$(".view").forEach(v=>v.classList.remove("active"));
   document.body.classList.remove("viewer-fullscreen");
   const el=$("#"+name+"View")||$("#homeView"); el.classList.add("active");
 }
@@ -33,7 +33,7 @@ function route(name,replace=false){
     history[fn]({route:name},"",hash);
   }
 }
-$("[data-route]").forEach(b=>b.addEventListener("click",e=>{
+$$("[data-route]").forEach(b=>b.addEventListener("click",e=>{
   e.preventDefault();
   const target=b.dataset.route;
   if(target==="home" && history.length>1 && location.hash!=="#home"){history.back()} else route(target);
