@@ -1,0 +1,27 @@
+{
+  "cycle": "2621",
+  "data_version": "V2621",
+  "source": "Iran2621.pdf",
+  "source_sha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+  "pdf_pages": 1654,
+  "indexed_charts": 1494,
+  "airports": 78,
+  "indexed_categories": {
+    "AIRPORT": 426,
+    "APP": 492,
+    "SID": 313,
+    "STAR": 263
+  },
+  "decisions": {
+    "CONFLICT": 27,
+    "MATCH": 1263,
+    "NON_CHART": 9,
+    "REVIEW": 355
+  },
+  "unindexed_pages": 160,
+  "category_conflicts": 27,
+  "review_required": 382,
+  "duplicate_title_groups": 10,
+  "changes_applied_to_app": false,
+  "interpretation": "Text/vector evidence audit; ambiguous charts await visual validation."
+}

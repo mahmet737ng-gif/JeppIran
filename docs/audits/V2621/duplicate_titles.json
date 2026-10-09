@@ -1,0 +1,111 @@
+[
+  {
+    "icao": "OICC",
+    "category": "AIRPORT",
+    "chart_number": "10-9",
+    "title": "Airport Diagram Chart (ADC)",
+    "pages": [
+      195,
+      198,
+      199,
+      200,
+      201,
+      202,
+      203,
+      204,
+      205
+    ]
+  },
+  {
+    "icao": "OICI",
+    "category": "APP",
+    "chart_number": "11-1",
+    "title": "ILS Z RWY 32",
+    "pages": [
+      212,
+      213
+    ]
+  },
+  {
+    "icao": "OIII",
+    "category": "AIRPORT",
+    "chart_number": "10-1R",
+    "title": "RADAR MINIMUM ALTITUDES",
+    "pages": [
+      407,
+      408
+    ]
+  },
+  {
+    "icao": "OIKK",
+    "category": "AIRPORT",
+    "chart_number": "10-9",
+    "title": "Airport Diagram Chart (ADC)",
+    "pages": [
+      503,
+      514,
+      548
+    ]
+  },
+  {
+    "icao": "OIMB",
+    "category": "AIRPORT",
+    "chart_number": "10-9",
+    "title": "Airport Diagram Chart (ADC)",
+    "pages": [
+      561,
+      642
+    ]
+  },
+  {
+    "icao": "OING",
+    "category": "AIRPORT",
+    "chart_number": "10-9",
+    "title": "Airport Diagram Chart (ADC)",
+    "pages": [
+      651,
+      659
+    ]
+  },
+  {
+    "icao": "OITT",
+    "category": "AIRPORT",
+    "chart_number": "10-9",
+    "title": "Airport Diagram Chart (ADC)",
+    "pages": [
+      808,
+      841
+    ]
+  },
+  {
+    "icao": "OIZH",
+    "category": "AIRPORT",
+    "chart_number": "10-9",
+    "title": "Airport Diagram Chart (ADC)",
+    "pages": [
+      896,
+      937
+    ]
+  },
+  {
+    "icao": "OMDB",
+    "category": "SID",
+    "chart_number": "10-3J",
+    "title": "SID 10-3J",
+    "pages": [
+      1398,
+      1421
+    ]
+  },
+  {
+    "icao": "OITR",
+    "category": "AIRPORT",
+    "chart_number": "20-1P6",
+    "title": "AIRPORT BRIEFING",
+    "pages": [
+      1643,
+      1644,
+      1645
+    ]
+  }
+]
