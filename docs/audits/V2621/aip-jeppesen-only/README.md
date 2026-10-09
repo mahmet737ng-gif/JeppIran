@@ -5,12 +5,12 @@ THIRD-PARTY COORDINATES: **0 permitted**. Application/runtime GPS, FSX/X-Plane b
 
 Indexed terminal charts: 1642; published georeference records: 776.
 Eligible APP / ADC / airport layout & layout-review charts: **737**.
-Records without strictly matched current-cycle chart georeference: **245**.
+Records without strictly matched current-cycle chart georeference: **248**.
 
 | Category | Eligible | Missing / identity mismatch |
 |---|---:|---:|
 | APP | 534 | 156 |
-| ADC | 86 | 25 |
+| ADC | 86 | 28 |
 | AIRPORT_LAYOUT | 102 | 52 |
 | AIRPORT_LAYOUT_REVIEW | 15 | 12 |
 
@@ -28,7 +28,7 @@ Printed NOT TO SCALE may apply only to a separate inset; it requires scale-regio
 - \`NO_PRINTED_GRATICULE_AIP_GCP_OR_RADIAL_DME_CONSTRAINTS_NEEDED\`: 53
 - \`JEPP_VECTOR_GRATICULE_FIT_PROVISIONAL\`: 52
 - \`VECTOR_GEOMETRY_REJECTED_PENDING_AIP_CONTROL\`: 46
-- \`HEADER_OWNER_MISMATCH_REQUIRES_REINDEX\`: 2
+- \`HEADER_OWNER_MISMATCH_REQUIRES_REINDEX\`: 5
 
 ### Source ICAO discrepancies flagged (check the printed header visually before changing index)
 

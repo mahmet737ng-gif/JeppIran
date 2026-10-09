@@ -5,7 +5,7 @@
     "originalAirportCount": 78,
     "georefCurrentCount": 776,
     "eligibleCount": 737,
-    "needsGeoreference": 245,
+    "needsGeoreference": 248,
     "eligibleByType": {
       "ADC": 86,
       "APP": 534,
@@ -13,7 +13,7 @@
       "AIRPORT_LAYOUT_REVIEW": 15
     },
     "needsByType": {
-      "ADC": 25,
+      "ADC": 28,
       "APP": 156,
       "AIRPORT_LAYOUT_REVIEW": 12,
       "AIRPORT_LAYOUT": 52
@@ -24,7 +24,7 @@
       "NOT_TO_SCALE_REQUIRES_SPECIFIC_PLAN_VIEW_REGION_QA": 92,
       "JEPP_VECTOR_GRATICULE_FIT_PROVISIONAL": 52,
       "NO_PRINTED_GRATICULE_AIP_GCP_OR_RADIAL_DME_CONSTRAINTS_NEEDED": 53,
-      "HEADER_OWNER_MISMATCH_REQUIRES_REINDEX": 2
+      "HEADER_OWNER_MISMATCH_REQUIRES_REINDEX": 5
     },
     "headerOwnerMismatches": [
       {
@@ -35,7 +35,7 @@
         "category": "ADC",
         "plate": "10-9",
         "name": "Airport Diagram Chart (ADC)",
-        "baseline": "EXISTING_MATCHED",
+        "baseline": "OWNER_MISMATCH_WITH_EXISTING_GEO_HOLD",
         "georefKeyVerified": true,
         "previousGeoRecordsOnPage": 1,
         "jeppPrintedGrid": true,
@@ -43,9 +43,7 @@
         "jeppARPTextMention": true,
         "jeppVORTextMention": true,
         "jeppNDBTextMention": true,
-        "jeppRadialLabels": [
-          "400"
-        ],
+        "jeppRadialLabels": [],
         "jeppDmeLabelsNm": [],
         "officialAipUrl": "",
         "officialAipControlsIndependentVerified": false,
@@ -54,7 +52,7 @@
         "approvedForApp": false,
         "userTestStatus": "",
         "jeppApproximateAnchorFound": true,
-        "candidateResult": "NOT_ATTEMPTED"
+        "candidateResult": "HEADER_OWNER_MISMATCH_REQUIRES_REINDEX"
       },
       {
         "page": 548,
@@ -64,7 +62,7 @@
         "category": "ADC",
         "plate": "10-9",
         "name": "Airport Diagram Chart (ADC)",
-        "baseline": "EXISTING_MATCHED",
+        "baseline": "OWNER_MISMATCH_WITH_EXISTING_GEO_HOLD",
         "georefKeyVerified": true,
         "previousGeoRecordsOnPage": 1,
         "jeppPrintedGrid": true,
@@ -72,9 +70,7 @@
         "jeppARPTextMention": true,
         "jeppVORTextMention": true,
         "jeppNDBTextMention": false,
-        "jeppRadialLabels": [
-          "400"
-        ],
+        "jeppRadialLabels": [],
         "jeppDmeLabelsNm": [],
         "officialAipUrl": "",
         "officialAipControlsIndependentVerified": false,
@@ -83,7 +79,7 @@
         "approvedForApp": false,
         "userTestStatus": "",
         "jeppApproximateAnchorFound": true,
-        "candidateResult": "NOT_ATTEMPTED"
+        "candidateResult": "HEADER_OWNER_MISMATCH_REQUIRES_REINDEX"
       },
       {
         "page": 651,
@@ -147,7 +143,7 @@
         "category": "ADC",
         "plate": "10-9",
         "name": "Airport Diagram Chart (ADC)",
-        "baseline": "EXISTING_MATCHED",
+        "baseline": "OWNER_MISMATCH_WITH_EXISTING_GEO_HOLD",
         "georefKeyVerified": true,
         "previousGeoRecordsOnPage": 1,
         "jeppPrintedGrid": true,
@@ -155,9 +151,7 @@
         "jeppARPTextMention": true,
         "jeppVORTextMention": true,
         "jeppNDBTextMention": true,
-        "jeppRadialLabels": [
-          "400"
-        ],
+        "jeppRadialLabels": [],
         "jeppDmeLabelsNm": [],
         "officialAipUrl": "",
         "officialAipControlsIndependentVerified": false,
@@ -166,9 +160,10 @@
         "approvedForApp": false,
         "userTestStatus": "",
         "jeppApproximateAnchorFound": true,
-        "candidateResult": "NOT_ATTEMPTED"
+        "candidateResult": "HEADER_OWNER_MISMATCH_REQUIRES_REINDEX"
       }
     ],
+    "existingGeorefUnderWrongPrintedIcao": 3,
     "noAutomaticPublish": true
   },
   "charts": [
@@ -189,8 +184,7 @@
       "jeppVORTextMention": true,
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [
-        "141",
-        "400"
+        "141"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -222,16 +216,13 @@
         "120",
         "150",
         "240",
-        "318",
-        "750"
+        "318"
       ],
       "jeppDmeLabelsNm": [
         "0.6",
         "3.0",
         "5.0",
-        "10.0",
-        "116",
-        "321"
+        "10.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -263,18 +254,14 @@
         "138",
         "150",
         "240",
-        "318",
-        "750"
+        "318"
       ],
       "jeppDmeLabelsNm": [
         "0.6",
         "3.0",
         "5.0",
         "10.0",
-        "15.0",
-        "116",
-        "138",
-        "321"
+        "15.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -346,8 +333,7 @@
       "jeppDmeLabelsNm": [
         "0.8",
         "3.0",
-        "8.0",
-        "358"
+        "8.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -380,11 +366,7 @@
         "260",
         "300"
       ],
-      "jeppDmeLabelsNm": [
-        "150",
-        "342",
-        "358"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -418,8 +400,7 @@
       "jeppDmeLabelsNm": [
         "1.5",
         "5.0",
-        "10.0",
-        "116"
+        "10.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -456,8 +437,7 @@
         "5.0",
         "10.0",
         "15.0",
-        "24",
-        "138"
+        "24"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -489,9 +469,7 @@
         "240",
         "318"
       ],
-      "jeppDmeLabelsNm": [
-        "116"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -526,8 +504,7 @@
         "0.8",
         "5.0",
         "10.0",
-        "15.0",
-        "210"
+        "15.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -586,8 +563,7 @@
         "1.0",
         "3.0",
         "8.0",
-        "13.0",
-        "316"
+        "13.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -619,8 +595,7 @@
         "1.0",
         "3.0",
         "8.0",
-        "13.0",
-        "132"
+        "13.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -650,9 +625,7 @@
       "jeppRadialLabels": [
         "300"
       ],
-      "jeppDmeLabelsNm": [
-        "157"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -707,9 +680,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": true,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -740,15 +711,12 @@
         "130",
         "150",
         "200",
-        "304",
-        "600",
-        "750"
+        "304"
       ],
       "jeppDmeLabelsNm": [
         "0.8",
         "4.0",
-        "10.0",
-        "301"
+        "10.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -779,17 +747,13 @@
         "124",
         "130",
         "150",
-        "200",
-        "600",
-        "750"
+        "200"
       ],
       "jeppDmeLabelsNm": [
         "0.8",
         "4.0",
         "10.0",
-        "13.0",
-        "124",
-        "301"
+        "13.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -820,14 +784,11 @@
         "130",
         "150",
         "200",
-        "304",
-        "600",
-        "750"
+        "304"
       ],
       "jeppDmeLabelsNm": [
         "0.8",
-        "4.0",
-        "121"
+        "4.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -862,9 +823,7 @@
       "jeppDmeLabelsNm": [
         "2.0",
         "4.0",
-        "9.0",
-        "114.0",
-        "119"
+        "9.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -899,9 +858,7 @@
         "2.0",
         "4.0",
         "9.0",
-        "13.0",
-        "114.0",
-        "299"
+        "13.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -968,9 +925,7 @@
         "2.0",
         "3.0",
         "5.0",
-        "8.0",
-        "114.0",
-        "304"
+        "8.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -1006,9 +961,7 @@
         "3.0",
         "5.0",
         "8.0",
-        "13.0",
-        "114.0",
-        "124"
+        "13.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -1071,9 +1024,7 @@
         "180",
         "230"
       ],
-      "jeppDmeLabelsNm": [
-        "114.0"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -1104,9 +1055,7 @@
         "160",
         "240"
       ],
-      "jeppDmeLabelsNm": [
-        "114.0"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -1132,9 +1081,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": false,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -1226,8 +1173,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [
-        "150",
-        "360"
+        "150"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -1321,9 +1267,7 @@
       "jeppARPTextMention": false,
       "jeppVORTextMention": false,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "360"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -1379,8 +1323,7 @@
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [
         "129",
-        "309",
-        "400"
+        "309"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -1413,9 +1356,7 @@
         "120",
         "150",
         "190",
-        "240",
-        "550",
-        "750"
+        "240"
       ],
       "jeppDmeLabelsNm": [
         "0.6",
@@ -1552,8 +1493,7 @@
       "jeppRadialLabels": [
         "180",
         "210",
-        "250",
-        "630"
+        "250"
       ],
       "jeppDmeLabelsNm": [
         "1",
@@ -1780,8 +1720,7 @@
       "jeppVORTextMention": true,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "300",
-        "400"
+        "300"
       ],
       "jeppDmeLabelsNm": [
         "1"
@@ -1849,19 +1788,14 @@
         "121",
         "140",
         "150",
-        "210",
-        "550",
-        "750"
+        "210"
       ],
       "jeppDmeLabelsNm": [
-        "0",
         "0.7",
         "3.0",
         "5.6",
         "10.0",
-        "10.6",
-        "283",
-        "295"
+        "10.6"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -1892,9 +1826,7 @@
         "120",
         "140",
         "150",
-        "210",
-        "550",
-        "750"
+        "210"
       ],
       "jeppDmeLabelsNm": [
         "0.7",
@@ -1936,8 +1868,7 @@
       ],
       "jeppDmeLabelsNm": [
         "5.0",
-        "10.0",
-        "295"
+        "10.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -1972,9 +1903,7 @@
       ],
       "jeppDmeLabelsNm": [
         "5.0",
-        "10.0",
-        "092",
-        "282"
+        "10.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -2009,8 +1938,7 @@
       ],
       "jeppDmeLabelsNm": [
         "5.0",
-        "10.0",
-        "295"
+        "10.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -2045,9 +1973,7 @@
       ],
       "jeppDmeLabelsNm": [
         "5.0",
-        "10.0",
-        "092",
-        "282"
+        "10.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -2347,9 +2273,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [],
-      "jeppDmeLabelsNm": [
-        "180"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "https://ais.airport.ir/documents/452631/186839484/OIBL.pdf",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -2376,9 +2300,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [],
-      "jeppDmeLabelsNm": [
-        "550"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "https://ais.airport.ir/documents/452631/186839484/OIBL.pdf",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -2432,12 +2354,9 @@
       "jeppVORTextMention": true,
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [
-        "300",
-        "400"
+        "300"
       ],
-      "jeppDmeLabelsNm": [
-        "121.725"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -2466,18 +2385,14 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
         "120",
-        "300",
-        "550",
-        "750"
+        "300"
       ],
       "jeppDmeLabelsNm": [
         "0.7",
         "5.0",
         "10.5",
         "14.0",
-        "21.0",
-        "127",
-        "307"
+        "21.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -2505,17 +2420,13 @@
       "jeppVORTextMention": true,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "120",
-        "550",
-        "750"
+        "120"
       ],
       "jeppDmeLabelsNm": [
         "0.7",
         "5.0",
         "8.0",
-        "10.0",
-        "127",
-        "307"
+        "10.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -2549,8 +2460,7 @@
         "7.0",
         "9.0",
         "14.0",
-        "21.0",
-        "127"
+        "21.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -2615,8 +2525,7 @@
       "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [
         "6.0",
-        "8.0",
-        "720"
+        "8.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -2647,12 +2556,11 @@
         "125"
       ],
       "jeppDmeLabelsNm": [
-        "3.0",
         "3",
+        "3.0",
         "9.0",
         "15.0",
-        "21.0",
-        "720"
+        "21.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -2685,9 +2593,7 @@
       "jeppDmeLabelsNm": [
         "3.0",
         "8.0",
-        "13.0",
-        "295",
-        "720"
+        "13.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -2719,10 +2625,7 @@
         "150",
         "200"
       ],
-      "jeppDmeLabelsNm": [
-        "297",
-        "457"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -2753,8 +2656,7 @@
         "240"
       ],
       "jeppDmeLabelsNm": [
-        "27",
-        "131"
+        "27"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -2781,9 +2683,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": true,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -2886,8 +2786,7 @@
         "3.00",
         "5.0",
         "12.0",
-        "15.0",
-        "230"
+        "15.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -2920,8 +2819,8 @@
         "312"
       ],
       "jeppDmeLabelsNm": [
-        "2",
         "2.0",
+        "2",
         "3.00",
         "5.0",
         "12.0"
@@ -2957,7 +2856,6 @@
         "312"
       ],
       "jeppDmeLabelsNm": [
-        "0",
         "2",
         "2.0",
         "5.0",
@@ -3061,9 +2959,7 @@
         "1.0",
         "5.0",
         "10.0",
-        "15.0",
-        "133",
-        "313"
+        "15.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -3099,8 +2995,7 @@
         "1.0",
         "2",
         "5.0",
-        "10.0",
-        "133"
+        "10.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -3130,9 +3025,7 @@
       "jeppRadialLabels": [
         "240"
       ],
-      "jeppDmeLabelsNm": [
-        "135"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -3161,10 +3054,7 @@
       "jeppRadialLabels": [
         "150"
       ],
-      "jeppDmeLabelsNm": [
-        "135",
-        "850"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -3193,9 +3083,7 @@
       "jeppRadialLabels": [
         "240"
       ],
-      "jeppDmeLabelsNm": [
-        "312"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -3224,9 +3112,7 @@
       "jeppRadialLabels": [
         "150"
       ],
-      "jeppDmeLabelsNm": [
-        "312"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -3252,9 +3138,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": true,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -3292,8 +3176,7 @@
         "5.0",
         "10.0",
         "12.0",
-        "25",
-        "318"
+        "25"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -3327,9 +3210,7 @@
       ],
       "jeppDmeLabelsNm": [
         "1.8",
-        "6.0",
-        "103",
-        "111"
+        "6.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -3387,9 +3268,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": true,
       "jeppNDBTextMention": false,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -3458,9 +3337,7 @@
         "240",
         "280"
       ],
-      "jeppDmeLabelsNm": [
-        "125"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -3490,8 +3367,7 @@
         "112",
         "148",
         "292",
-        "294",
-        "400"
+        "294"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -3554,18 +3430,14 @@
         "150",
         "240",
         "259",
-        "280",
-        "600",
-        "750"
+        "280"
       ],
       "jeppDmeLabelsNm": [
         "0.8",
         "4.0",
         "7.0",
         "12.0",
-        "17.0",
-        "112",
-        "291"
+        "17.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -3595,17 +3467,14 @@
       "jeppRadialLabels": [
         "130",
         "150",
-        "240",
-        "600",
-        "750"
+        "240"
       ],
       "jeppDmeLabelsNm": [
         "0.8",
         "4.0",
         "7.0",
         "12.0",
-        "18.0",
-        "296"
+        "18.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -3680,8 +3549,7 @@
         "5.0",
         "7.0",
         "12.0",
-        "18.0",
-        "294"
+        "18.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -3717,8 +3585,7 @@
         "3.0",
         "7.0",
         "12.0",
-        "18.0",
-        "296"
+        "18.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -3836,12 +3703,8 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": true,
       "jeppNDBTextMention": false,
-      "jeppRadialLabels": [
-        "400"
-      ],
-      "jeppDmeLabelsNm": [
-        "103"
-      ],
+      "jeppRadialLabels": [],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -4026,10 +3889,7 @@
       ],
       "jeppDmeLabelsNm": [
         "7.0",
-        "12.0",
-        "137",
-        "295",
-        "317"
+        "12.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -4056,9 +3916,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": true,
       "jeppNDBTextMention": false,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -4089,8 +3947,7 @@
       "jeppRadialLabels": [
         "109",
         "130",
-        "274",
-        "800"
+        "274"
       ],
       "jeppDmeLabelsNm": [
         "0.6",
@@ -4099,10 +3956,7 @@
         "8.5",
         "11.0",
         "15.0",
-        "20.0",
-        "274",
-        "276",
-        "289"
+        "20.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -4141,8 +3995,7 @@
         "8.0",
         "12.0",
         "20.0",
-        "33",
-        "285"
+        "33"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -4176,8 +4029,7 @@
         "2.0",
         "7.0",
         "8.0",
-        "15.0",
-        "266"
+        "15.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -4213,8 +4065,7 @@
         "7.0",
         "8.0",
         "15.0",
-        "20.0",
-        "277"
+        "20.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -4241,9 +4092,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": true,
       "jeppNDBTextMention": false,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -4282,8 +4131,7 @@
         "10.0",
         "11.0",
         "14.0",
-        "17.0",
-        "194"
+        "17.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -4312,8 +4160,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
         "013",
-        "150",
-        "490"
+        "150"
       ],
       "jeppDmeLabelsNm": [
         "3.0",
@@ -4402,9 +4249,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": false,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -4439,8 +4284,7 @@
       "jeppDmeLabelsNm": [
         "1.7",
         "7.0",
-        "9.0",
-        "335"
+        "9.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -4500,8 +4344,7 @@
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [
         "074",
-        "254",
-        "400"
+        "254"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -4535,9 +4378,7 @@
         "150",
         "230",
         "240",
-        "348",
-        "550",
-        "750"
+        "348"
       ],
       "jeppDmeLabelsNm": [
         "0.8",
@@ -4546,10 +4387,7 @@
         "7.0",
         "12.0",
         "15.0",
-        "20.0",
-        "113",
-        "166",
-        "348"
+        "20.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -4580,9 +4418,7 @@
         "120",
         "150",
         "230",
-        "240",
-        "550",
-        "750"
+        "240"
       ],
       "jeppDmeLabelsNm": [
         "0.8",
@@ -4591,10 +4427,7 @@
         "7.0",
         "12.0",
         "15.0",
-        "20.0",
-        "113",
-        "166",
-        "348"
+        "20.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -4631,8 +4464,7 @@
         "3.0",
         "4",
         "8.0",
-        "15.0",
-        "348"
+        "15.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -4671,9 +4503,7 @@
         "5",
         "9.0",
         "15.0",
-        "23",
-        "166",
-        "348"
+        "23"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -4735,9 +4565,7 @@
         "075",
         "150"
       ],
-      "jeppDmeLabelsNm": [
-        "255"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -4773,8 +4601,7 @@
         "3.0",
         "6",
         "8.0",
-        "15.0",
-        "348"
+        "15.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -4811,9 +4638,7 @@
         "4.0",
         "7",
         "9.0",
-        "15.0",
-        "166",
-        "348"
+        "15.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -4853,9 +4678,7 @@
         "7.0",
         "10.0",
         "15.0",
-        "20.0",
-        "166",
-        "348"
+        "20.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -4896,9 +4719,7 @@
         "7.0",
         "10.0",
         "15.0",
-        "20.0",
-        "166",
-        "348"
+        "20.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -4929,8 +4750,7 @@
         "180",
         "190",
         "240",
-        "300",
-        "504"
+        "300"
       ],
       "jeppDmeLabelsNm": [
         "1"
@@ -4963,9 +4783,7 @@
       "jeppRadialLabels": [
         "300"
       ],
-      "jeppDmeLabelsNm": [
-        "090"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -5001,9 +4819,7 @@
         "3.0",
         "4",
         "8.0",
-        "15.0",
-        "166",
-        "348"
+        "15.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -5037,12 +4853,10 @@
       "jeppDmeLabelsNm": [
         "0.5",
         "1",
-        "3.0",
         "3",
+        "3.0",
         "8.0",
-        "15.0",
-        "166",
-        "348"
+        "15.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -5070,9 +4884,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [
-        "310",
-        "380",
-        "504"
+        "310"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -5101,8 +4913,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [
-        "150",
-        "504"
+        "150"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -5130,9 +4941,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": false,
       "jeppNDBTextMention": false,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -5159,9 +4968,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": true,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -5198,9 +5005,7 @@
         "3.0",
         "7.0",
         "12.0",
-        "17.0",
-        "117.3",
-        "324"
+        "17.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -5231,7 +5036,6 @@
         "324"
       ],
       "jeppDmeLabelsNm": [
-        "0",
         "9.5",
         "15.0",
         "32"
@@ -5265,11 +5069,9 @@
         "324"
       ],
       "jeppDmeLabelsNm": [
-        "0",
         "4.5",
         "9.5",
-        "15.0",
-        "136"
+        "15.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -5297,9 +5099,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [],
-      "jeppDmeLabelsNm": [
-        "205"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -5352,9 +5152,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": true,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -5385,9 +5183,7 @@
         "140",
         "150",
         "230",
-        "270",
-        "650",
-        "750"
+        "270"
       ],
       "jeppDmeLabelsNm": [
         "0.9",
@@ -5424,9 +5220,7 @@
       "jeppRadialLabels": [
         "140",
         "150",
-        "220",
-        "650",
-        "750"
+        "220"
       ],
       "jeppDmeLabelsNm": [
         "0.9",
@@ -5467,8 +5261,7 @@
       "jeppDmeLabelsNm": [
         "1.5",
         "5.0",
-        "10.0",
-        "290"
+        "10.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -5595,9 +5388,7 @@
       "jeppRadialLabels": [
         "150"
       ],
-      "jeppDmeLabelsNm": [
-        "090"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -5745,8 +5536,7 @@
       "jeppDmeLabelsNm": [
         "1.0",
         "6.0",
-        "11.0",
-        "326"
+        "11.0"
       ],
       "officialAipUrl": "https://ais.airport.ir/documents/452631/186839535/OIHH.pdf",
       "officialAipControlsIndependentVerified": false,
@@ -5813,9 +5603,7 @@
       "jeppDmeLabelsNm": [
         "1.0",
         "6.0",
-        "11.0",
-        "090",
-        "332"
+        "11.0"
       ],
       "officialAipUrl": "https://ais.airport.ir/documents/452631/186839535/OIHH.pdf",
       "officialAipControlsIndependentVerified": false,
@@ -5847,8 +5635,7 @@
         "2.0",
         "6.0",
         "12.0",
-        "18.0",
-        "317"
+        "18.0"
       ],
       "officialAipUrl": "https://ais.airport.ir/documents/452631/186839535/OIHH.pdf",
       "officialAipControlsIndependentVerified": false,
@@ -5886,8 +5673,7 @@
         "6.0",
         "9.0",
         "12.0",
-        "18.0",
-        "317"
+        "18.0"
       ],
       "officialAipUrl": "https://ais.airport.ir/documents/452631/186839535/OIHH.pdf",
       "officialAipControlsIndependentVerified": false,
@@ -5918,9 +5704,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": true,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -6104,9 +5888,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "300",
-        "400",
-        "800"
+        "300"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -6142,11 +5924,7 @@
         "120",
         "134",
         "136",
-        "162",
-        "400",
-        "404",
-        "406",
-        "408"
+        "162"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -6216,12 +5994,7 @@
         "204",
         "205",
         "207",
-        "301",
-        "400",
-        "401",
-        "403",
-        "405",
-        "407"
+        "301"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -6256,10 +6029,7 @@
         "140",
         "150",
         "190",
-        "284",
-        "468",
-        "550",
-        "750"
+        "284"
       ],
       "jeppDmeLabelsNm": [
         "0.7",
@@ -6268,10 +6038,7 @@
         "14",
         "15.0",
         "22.7",
-        "22.8",
-        "115",
-        "116",
-        "135"
+        "22.8"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -6301,16 +6068,12 @@
       "jeppRadialLabels": [
         "090",
         "120",
-        "270",
-        "550",
-        "750"
+        "270"
       ],
       "jeppDmeLabelsNm": [
         "0.7",
         "6.2",
-        "11.8",
-        "135",
-        "270"
+        "11.8"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -6341,9 +6104,7 @@
         "095",
         "115",
         "140",
-        "284",
-        "400",
-        "450"
+        "284"
       ],
       "jeppDmeLabelsNm": [
         "6.2",
@@ -6351,9 +6112,7 @@
         "14",
         "15.0",
         "22.7",
-        "22.8",
-        "115",
-        "116"
+        "22.8"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -6382,15 +6141,12 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
         "090",
-        "270",
-        "400",
-        "450"
+        "270"
       ],
       "jeppDmeLabelsNm": [
         "0.7",
         "6.2",
-        "11.8",
-        "270"
+        "11.8"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -6421,8 +6177,7 @@
         "130",
         "150",
         "160",
-        "200",
-        "900"
+        "200"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -6528,8 +6283,7 @@
         "130",
         "140",
         "150",
-        "200",
-        "468"
+        "200"
       ],
       "jeppDmeLabelsNm": [
         "0.5",
@@ -6594,9 +6348,7 @@
       "jeppARPTextMention": false,
       "jeppVORTextMention": false,
       "jeppNDBTextMention": false,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -6681,13 +6433,10 @@
       "jeppRadialLabels": [
         "130",
         "150",
-        "240",
-        "800"
+        "240"
       ],
       "jeppDmeLabelsNm": [
-        "7.5",
-        "115.3",
-        "285"
+        "7.5"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -6717,19 +6466,14 @@
       "jeppRadialLabels": [
         "130",
         "150",
-        "240",
-        "800"
+        "240"
       ],
       "jeppDmeLabelsNm": [
         "0.7",
         "4.2",
         "7.7",
         "15.0",
-        "25.0",
-        "115.3",
-        "116",
-        "137",
-        "285"
+        "25.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -6763,8 +6507,7 @@
         "200",
         "230",
         "240",
-        "295",
-        "800"
+        "295"
       ],
       "jeppDmeLabelsNm": [
         "0.9",
@@ -6775,10 +6518,7 @@
         "11.0",
         "13",
         "15.0",
-        "25.0",
-        "115.3",
-        "116",
-        "285"
+        "25.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -6855,8 +6595,7 @@
         "10.0",
         "15.0",
         "20.0",
-        "25.0",
-        "180"
+        "25.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -6890,9 +6629,7 @@
       "jeppDmeLabelsNm": [
         "2.7",
         "10.0",
-        "15.0",
-        "115.3",
-        "137"
+        "15.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -6921,8 +6658,7 @@
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [
         "026",
-        "206",
-        "400"
+        "206"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -6989,8 +6725,7 @@
         "1.8",
         "5.0",
         "6.8",
-        "9.0",
-        "206"
+        "9.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -7024,8 +6759,7 @@
       "jeppDmeLabelsNm": [
         "0.8",
         "5.0",
-        "035",
-        "206"
+        "035"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -7131,8 +6865,7 @@
         "3.0",
         "6.0",
         "11.0",
-        "13.0",
-        "117.2"
+        "13.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -7165,10 +6898,7 @@
         "230",
         "240"
       ],
-      "jeppDmeLabelsNm": [
-        "117.2",
-        "206"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -7199,9 +6929,7 @@
         "320"
       ],
       "jeppDmeLabelsNm": [
-        "27",
-        "117.2",
-        "250"
+        "27"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -7233,11 +6961,7 @@
         "310"
       ],
       "jeppDmeLabelsNm": [
-        "0",
-        "053",
-        "090",
-        "117.2",
-        "250"
+        "053"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -7330,8 +7054,8 @@
         "200"
       ],
       "jeppDmeLabelsNm": [
-        "3.0",
         "3",
+        "3.0",
         "6.0",
         "11.0",
         "15.0"
@@ -7435,9 +7159,7 @@
       "jeppRadialLabels": [
         "220"
       ],
-      "jeppDmeLabelsNm": [
-        "150"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -7467,9 +7189,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": false,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -7532,9 +7252,7 @@
         "260",
         "317"
       ],
-      "jeppDmeLabelsNm": [
-        "137"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -7591,9 +7309,7 @@
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [
         "148",
-        "335",
-        "385",
-        "400"
+        "335"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -7627,16 +7343,14 @@
         "220",
         "228",
         "325",
-        "339",
-        "816"
+        "339"
       ],
       "jeppDmeLabelsNm": [
         "1.0",
-        "7.0",
         "7",
+        "7.0",
         "13.0",
-        "20.0",
-        "339"
+        "20.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -7669,18 +7383,14 @@
         "220",
         "228",
         "325",
-        "339",
-        "816"
+        "339"
       ],
       "jeppDmeLabelsNm": [
         "1.0",
-        "7.0",
         "7",
+        "7.0",
         "13.0",
-        "20.0",
-        "339",
-        "353",
-        "357"
+        "20.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -7721,8 +7431,7 @@
       "jeppDmeLabelsNm": [
         "2.4",
         "7.0",
-        "12.0",
-        "195"
+        "12.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -7763,9 +7472,7 @@
       "jeppDmeLabelsNm": [
         "2.4",
         "10.0",
-        "12.0",
-        "167",
-        "195"
+        "12.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -7784,7 +7491,7 @@
       "category": "ADC",
       "plate": "10-9",
       "name": "Airport Diagram Chart (ADC)",
-      "baseline": "EXISTING_MATCHED",
+      "baseline": "OWNER_MISMATCH_WITH_EXISTING_GEO_HOLD",
       "georefKeyVerified": true,
       "previousGeoRecordsOnPage": 1,
       "jeppPrintedGrid": true,
@@ -7792,9 +7499,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": true,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -7803,7 +7508,7 @@
       "approvedForApp": false,
       "userTestStatus": "",
       "jeppApproximateAnchorFound": true,
-      "candidateResult": "NOT_ATTEMPTED"
+      "candidateResult": "HEADER_OWNER_MISMATCH_REQUIRES_REINDEX"
     },
     {
       "page": 516,
@@ -7828,8 +7533,7 @@
       ],
       "jeppDmeLabelsNm": [
         "4.0",
-        "9.0",
-        "114.9"
+        "9.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -7861,9 +7565,7 @@
         "170",
         "310"
       ],
-      "jeppDmeLabelsNm": [
-        "114.9"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -7948,9 +7650,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": false,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -7985,8 +7685,7 @@
         "2.5",
         "7.0",
         "12.0",
-        "15.0",
-        "222"
+        "15.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -8138,10 +7837,7 @@
       "jeppARPTextMention": false,
       "jeppVORTextMention": false,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "490",
-        "500"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -8168,9 +7864,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": false,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -8203,8 +7897,8 @@
         "210"
       ],
       "jeppDmeLabelsNm": [
-        "2",
         "2.0",
+        "2",
         "5.0",
         "8.0",
         "10.0",
@@ -8241,11 +7935,10 @@
         "280"
       ],
       "jeppDmeLabelsNm": [
-        "1",
         "1.0",
+        "1",
         "5.0",
-        "10.0",
-        "114"
+        "10.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -8273,9 +7966,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [],
-      "jeppDmeLabelsNm": [
-        "103"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -8293,7 +7984,7 @@
       "category": "ADC",
       "plate": "10-9",
       "name": "Airport Diagram Chart (ADC)",
-      "baseline": "EXISTING_MATCHED",
+      "baseline": "OWNER_MISMATCH_WITH_EXISTING_GEO_HOLD",
       "georefKeyVerified": true,
       "previousGeoRecordsOnPage": 1,
       "jeppPrintedGrid": true,
@@ -8301,9 +7992,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": true,
       "jeppNDBTextMention": false,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -8312,7 +8001,7 @@
       "approvedForApp": false,
       "userTestStatus": "",
       "jeppApproximateAnchorFound": true,
-      "candidateResult": "NOT_ATTEMPTED"
+      "candidateResult": "HEADER_OWNER_MISMATCH_REQUIRES_REINDEX"
     },
     {
       "page": 550,
@@ -8333,15 +8022,13 @@
       "jeppRadialLabels": [
         "150",
         "316",
-        "320",
-        "360"
+        "320"
       ],
       "jeppDmeLabelsNm": [
         "1.0",
         "5.0",
         "10.0",
-        "15.0",
-        "316"
+        "15.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -8374,11 +8061,7 @@
         "180",
         "230"
       ],
-      "jeppDmeLabelsNm": [
-        "135",
-        "290",
-        "303"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -8412,8 +8095,7 @@
         "7.0",
         "10.0",
         "12.0",
-        "15.0",
-        "127"
+        "15.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -8440,9 +8122,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": true,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "https://ais.airport.ir/documents/452631/186839606/OIMB.pdf",
       "officialAipControlsIndependentVerified": false,
@@ -8518,8 +8198,7 @@
         "2.0",
         "6.5",
         "11.5",
-        "32",
-        "123"
+        "32"
       ],
       "officialAipUrl": "https://ais.airport.ir/documents/452631/186839606/OIMB.pdf",
       "officialAipControlsIndependentVerified": false,
@@ -8578,9 +8257,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [],
-      "jeppDmeLabelsNm": [
-        "270"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "https://ais.airport.ir/documents/452631/186839606/OIMB.pdf",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -8610,9 +8287,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": true,
       "jeppNDBTextMention": false,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -8650,8 +8325,7 @@
         "3.39",
         "8.0",
         "15.0",
-        "21.0",
-        "235"
+        "21.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -8708,9 +8382,7 @@
       "jeppARPTextMention": false,
       "jeppVORTextMention": false,
       "jeppNDBTextMention": false,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -8771,9 +8443,7 @@
         "180",
         "240",
         "300",
-        "305",
-        "550",
-        "750"
+        "305"
       ],
       "jeppDmeLabelsNm": [
         "0.6",
@@ -8814,18 +8484,13 @@
         "180",
         "240",
         "300",
-        "305",
-        "550",
-        "750"
+        "305"
       ],
       "jeppDmeLabelsNm": [
         "0.6",
         "3.0",
         "5.2",
-        "11.0",
-        "110",
-        "290",
-        "309"
+        "11.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -8855,9 +8520,7 @@
       "jeppRadialLabels": [
         "120",
         "180",
-        "240",
-        "550",
-        "750"
+        "240"
       ],
       "jeppDmeLabelsNm": [
         "0.6",
@@ -8937,8 +8600,7 @@
       "jeppDmeLabelsNm": [
         "2.0",
         "6.0",
-        "11.0",
-        "319"
+        "11.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -8978,8 +8640,7 @@
         "5.0",
         "11.0",
         "13",
-        "16.0",
-        "310"
+        "16.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -9016,8 +8677,7 @@
       "jeppDmeLabelsNm": [
         "1.0",
         "5.0",
-        "11.0",
-        "121"
+        "11.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -9049,10 +8709,7 @@
         "300",
         "350"
       ],
-      "jeppDmeLabelsNm": [
-        "115",
-        "385"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -9081,13 +8738,9 @@
       "jeppRadialLabels": [
         "150",
         "270",
-        "350",
-        "514"
+        "350"
       ],
-      "jeppDmeLabelsNm": [
-        "115",
-        "385"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -9114,10 +8767,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [],
-      "jeppDmeLabelsNm": [
-        "336",
-        "385"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -9181,8 +8831,7 @@
         "3.7",
         "5.0",
         "8.0",
-        "12.0",
-        "246"
+        "12.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -9332,9 +8981,7 @@
       "jeppARPTextMention": false,
       "jeppVORTextMention": true,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -9370,8 +9017,7 @@
       "jeppDmeLabelsNm": [
         "4.0",
         "9.0",
-        "14.0",
-        "271"
+        "14.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -9434,10 +9080,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [],
-      "jeppDmeLabelsNm": [
-        "084",
-        "279"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -9493,9 +9136,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": true,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -9669,10 +9310,7 @@
       "jeppARPTextMention": false,
       "jeppVORTextMention": false,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "440",
-        "490"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -9754,10 +9392,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [],
-      "jeppDmeLabelsNm": [
-        "250",
-        "256"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -9783,9 +9418,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": true,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -9817,18 +9450,14 @@
         "130",
         "150",
         "160",
-        "249",
-        "600",
-        "750",
-        "900"
+        "249"
       ],
       "jeppDmeLabelsNm": [
         "0.6",
         "3",
         "3.2",
         "7.4",
-        "15.0",
-        "249"
+        "15.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -9859,18 +9488,14 @@
         "070",
         "130",
         "160",
-        "249",
-        "600",
-        "750",
-        "900"
+        "249"
       ],
       "jeppDmeLabelsNm": [
         "0.6",
         "3.2",
         "7.4",
         "15.0",
-        "36",
-        "249"
+        "36"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -9900,10 +9525,7 @@
       "jeppRadialLabels": [
         "070",
         "130",
-        "150",
-        "600",
-        "750",
-        "900"
+        "150"
       ],
       "jeppDmeLabelsNm": [
         "0.6",
@@ -9939,13 +9561,11 @@
       "jeppRadialLabels": [
         "150",
         "160",
-        "309",
-        "900"
+        "309"
       ],
       "jeppDmeLabelsNm": [
         "7.0",
-        "15.0",
-        "129"
+        "15.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -9974,8 +9594,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
         "160",
-        "309",
-        "900"
+        "309"
       ],
       "jeppDmeLabelsNm": [
         "7.0",
@@ -10008,8 +9627,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
         "070",
-        "150",
-        "900"
+        "150"
       ],
       "jeppDmeLabelsNm": [
         "5.0",
@@ -10105,8 +9723,7 @@
         "1.0",
         "6.0",
         "11.0",
-        "17.0",
-        "291"
+        "17.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -10133,9 +9750,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": false,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -10163,17 +9778,14 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [
-        "150",
-        "500"
+        "150"
       ],
       "jeppDmeLabelsNm": [
         "1.5",
         "2",
         "5.0",
         "10.0",
-        "17.0",
-        "225",
-        "283"
+        "17.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -10201,14 +9813,12 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [
-        "150",
-        "500"
+        "150"
       ],
       "jeppDmeLabelsNm": [
         "1.5",
         "5.0",
-        "10.0",
-        "225"
+        "10.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -10236,15 +9846,13 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [
-        "150",
-        "500"
+        "150"
       ],
       "jeppDmeLabelsNm": [
         "1.5",
         "5.0",
         "10.0",
-        "17.0",
-        "294"
+        "17.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -10275,8 +9883,7 @@
       "jeppDmeLabelsNm": [
         "2.0",
         "6.0",
-        "12.0",
-        "155"
+        "12.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -10303,9 +9910,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": true,
       "jeppNDBTextMention": false,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -10344,11 +9949,7 @@
         "6.0",
         "10.5",
         "11.0",
-        "14.0",
-        "234",
-        "270",
-        "325",
-        "335"
+        "14.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -10384,9 +9985,7 @@
         "1.0",
         "6.0",
         "11.0",
-        "14.0",
-        "234",
-        "335"
+        "14.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -10441,9 +10040,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [],
-      "jeppDmeLabelsNm": [
-        "149"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -10469,9 +10066,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": false,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -10513,8 +10108,7 @@
         "12.0",
         "14.0",
         "15.0",
-        "17.0",
-        "268"
+        "17.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -10622,17 +10216,14 @@
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [
         "099",
-        "150",
-        "460",
-        "490"
+        "150"
       ],
       "jeppDmeLabelsNm": [
         "3.0",
         "7.8",
         "8.0",
         "13.0",
-        "18.0",
-        "279"
+        "18.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -10692,9 +10283,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": true,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -10732,8 +10321,7 @@
         "5.0",
         "7.0",
         "10.0",
-        "16.0",
-        "117.0"
+        "16.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -10823,8 +10411,7 @@
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [
         "111",
-        "291",
-        "400"
+        "291"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -10888,10 +10475,7 @@
         "150",
         "170",
         "240",
-        "280",
-        "650",
-        "700",
-        "750"
+        "280"
       ],
       "jeppDmeLabelsNm": [
         "0.9",
@@ -10903,9 +10487,7 @@
         "12",
         "13.0",
         "17.0",
-        "28",
-        "112",
-        "292"
+        "28"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -10937,9 +10519,7 @@
         "140",
         "170",
         "240",
-        "280",
-        "700",
-        "750"
+        "280"
       ],
       "jeppDmeLabelsNm": [
         "1.0",
@@ -10947,8 +10527,7 @@
         "4.0",
         "8.0",
         "11.0",
-        "28",
-        "292"
+        "28"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -10980,10 +10559,7 @@
         "150",
         "170",
         "240",
-        "290",
-        "650",
-        "700",
-        "750"
+        "290"
       ],
       "jeppDmeLabelsNm": [
         "0.9",
@@ -10993,9 +10569,7 @@
         "8.0",
         "11.0",
         "13.0",
-        "29",
-        "112",
-        "292"
+        "29"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -11108,9 +10682,7 @@
         "2.0",
         "4.0",
         "8.0",
-        "13.0",
-        "095",
-        "105"
+        "13.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -11146,9 +10718,7 @@
         "7.0",
         "11.0",
         "16.0",
-        "20.0",
-        "107",
-        "287"
+        "20.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -11204,9 +10774,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": true,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -11242,8 +10810,7 @@
       "jeppDmeLabelsNm": [
         "1.5",
         "9.0",
-        "15.0",
-        "275"
+        "15.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -11389,8 +10956,7 @@
       "jeppRadialLabels": [
         "150",
         "160",
-        "340",
-        "490"
+        "340"
       ],
       "jeppDmeLabelsNm": [
         "1.0",
@@ -11522,8 +11088,7 @@
       "jeppVORTextMention": true,
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [
-        "300",
-        "400"
+        "300"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -11557,17 +11122,13 @@
         "150",
         "180",
         "195",
-        "240",
-        "550",
-        "750"
+        "240"
       ],
       "jeppDmeLabelsNm": [
         "0.6",
         "4.0",
         "7.0",
-        "14.0",
-        "144",
-        "309"
+        "14.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -11598,9 +11159,7 @@
         "120",
         "150",
         "230",
-        "325",
-        "550",
-        "750"
+        "325"
       ],
       "jeppDmeLabelsNm": [
         "0.7",
@@ -11608,8 +11167,7 @@
         "3.7",
         "6.7",
         "8.0",
-        "11.0",
-        "145"
+        "11.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -11639,9 +11197,7 @@
       "jeppRadialLabels": [
         "130",
         "150",
-        "230",
-        "600",
-        "750"
+        "230"
       ],
       "jeppDmeLabelsNm": [
         "0.7",
@@ -11650,8 +11206,7 @@
         "3.7",
         "6.7",
         "8.0",
-        "11.0",
-        "145"
+        "11.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -11755,8 +11310,7 @@
         "2.5",
         "5.0",
         "10.0",
-        "12.0",
-        "215"
+        "12.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -11863,9 +11417,7 @@
         "2.5",
         "5.0",
         "10.0",
-        "12.0",
-        "215",
-        "312"
+        "12.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -11929,9 +11481,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [],
-      "jeppDmeLabelsNm": [
-        "185"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -11986,13 +11536,11 @@
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [
-        "0",
         "2.0",
         "5.0",
         "8.0",
         "10.0",
-        "13.0",
-        "252"
+        "13.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -12048,9 +11596,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": true,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -12082,16 +11628,13 @@
         "150",
         "190",
         "300",
-        "330",
-        "550",
-        "750"
+        "330"
       ],
       "jeppDmeLabelsNm": [
         "3.5",
         "7.0",
         "10.0",
-        "13.0",
-        "209"
+        "13.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -12124,15 +11667,12 @@
         "230",
         "240",
         "300",
-        "330",
-        "550",
-        "750"
+        "330"
       ],
       "jeppDmeLabelsNm": [
         "3.5",
         "7.0",
-        "8.0",
-        "209"
+        "8.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -12162,15 +11702,12 @@
       "jeppRadialLabels": [
         "120",
         "150",
-        "240",
-        "550",
-        "750"
+        "240"
       ],
       "jeppDmeLabelsNm": [
         "0.7",
         "3.5",
-        "7.0",
-        "209"
+        "7.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -12216,9 +11753,7 @@
         "14.0",
         "16",
         "16.0",
-        "21",
-        "113.5",
-        "195"
+        "21"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -12318,9 +11853,7 @@
       "jeppRadialLabels": [
         "150"
       ],
-      "jeppDmeLabelsNm": [
-        "213"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -12379,12 +11912,9 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
         "300",
-        "304",
-        "400"
+        "304"
       ],
-      "jeppDmeLabelsNm": [
-        "124.1"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -12450,9 +11980,7 @@
         "5.0",
         "9.0",
         "16.0",
-        "18.0",
-        "115",
-        "117.7"
+        "18.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -12484,18 +12012,14 @@
         "102",
         "130",
         "285",
-        "355",
-        "600",
-        "750"
+        "355"
       ],
       "jeppDmeLabelsNm": [
         "0.8",
         "3.5",
         "13.0",
         "16.0",
-        "18.0",
-        "115",
-        "117.7"
+        "18.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -12570,9 +12094,7 @@
         "9.0",
         "13.0",
         "16.0",
-        "18.0",
-        "117.7",
-        "124"
+        "18.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -12606,14 +12128,13 @@
         "355"
       ],
       "jeppDmeLabelsNm": [
-        "3.0",
         "3",
+        "3.0",
         "7.0",
         "10.0",
         "13.0",
         "16.0",
-        "18.0",
-        "117.7"
+        "18.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -12710,8 +12231,7 @@
         "5.0",
         "10.0",
         "13",
-        "15.0",
-        "295"
+        "15.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -12738,9 +12258,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": true,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -12771,15 +12289,13 @@
       "jeppRadialLabels": [
         "120",
         "125",
-        "230",
-        "360"
+        "230"
       ],
       "jeppDmeLabelsNm": [
         "1.0",
         "6.0",
         "11.0",
-        "17.0",
-        "125"
+        "17.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -12809,15 +12325,13 @@
       "jeppRadialLabels": [
         "120",
         "125",
-        "150",
-        "360"
+        "150"
       ],
       "jeppDmeLabelsNm": [
         "1.0",
         "6.0",
         "11.0",
-        "17.0",
-        "125"
+        "17.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -12850,16 +12364,14 @@
         "150",
         "240",
         "280",
-        "320",
-        "360"
+        "320"
       ],
       "jeppDmeLabelsNm": [
         "1.5",
         "5.0",
         "7.0",
         "12.0",
-        "17.0",
-        "125"
+        "17.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -12890,9 +12402,7 @@
         "150",
         "160"
       ],
-      "jeppDmeLabelsNm": [
-        "131"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -12921,9 +12431,7 @@
       "jeppRadialLabels": [
         "240"
       ],
-      "jeppDmeLabelsNm": [
-        "307"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -12950,9 +12458,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [],
-      "jeppDmeLabelsNm": [
-        "135"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -12978,9 +12484,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": true,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -13042,18 +12546,14 @@
         "190",
         "230",
         "240",
-        "311",
-        "600",
-        "750"
+        "311"
       ],
       "jeppDmeLabelsNm": [
         "0.8",
         "3.0",
         "5.8",
         "11.0",
-        "15.0",
-        "125",
-        "311"
+        "15.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -13092,9 +12592,7 @@
         "2.5",
         "5.0",
         "10.0",
-        "15.0",
-        "117.7",
-        "312"
+        "15.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -13131,8 +12629,7 @@
       "jeppDmeLabelsNm": [
         "2.5",
         "5.0",
-        "10.0",
-        "330"
+        "10.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -13166,10 +12663,7 @@
         "230",
         "240"
       ],
-      "jeppDmeLabelsNm": [
-        "117.7",
-        "312"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -13207,9 +12701,7 @@
         "1.3",
         "5.0",
         "10.0",
-        "15.0",
-        "117.7",
-        "125"
+        "15.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -13247,9 +12739,7 @@
         "1.3",
         "5.0",
         "10.0",
-        "15.0",
-        "117.7",
-        "125"
+        "15.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -13279,9 +12769,7 @@
       "jeppRadialLabels": [
         "128"
       ],
-      "jeppDmeLabelsNm": [
-        "117.7"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -13312,9 +12800,7 @@
         "230",
         "312"
       ],
-      "jeppDmeLabelsNm": [
-        "117.7"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -13342,9 +12828,7 @@
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [
-        "21",
-        "117.7",
-        "306"
+        "21"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -13363,7 +12847,7 @@
       "category": "ADC",
       "plate": "10-9",
       "name": "Airport Diagram Chart (ADC)",
-      "baseline": "EXISTING_MATCHED",
+      "baseline": "OWNER_MISMATCH_WITH_EXISTING_GEO_HOLD",
       "georefKeyVerified": true,
       "previousGeoRecordsOnPage": 1,
       "jeppPrintedGrid": true,
@@ -13371,9 +12855,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": true,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -13382,7 +12864,7 @@
       "approvedForApp": false,
       "userTestStatus": "",
       "jeppApproximateAnchorFound": true,
-      "candidateResult": "NOT_ATTEMPTED"
+      "candidateResult": "HEADER_OWNER_MISMATCH_REQUIRES_REINDEX"
     },
     {
       "page": 897,
@@ -13447,9 +12929,7 @@
         "220",
         "240"
       ],
-      "jeppDmeLabelsNm": [
-        "335"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -13518,9 +12998,7 @@
       "jeppRadialLabels": [
         "050",
         "090",
-        "340",
-        "360",
-        "380"
+        "340"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -13551,13 +13029,9 @@
       "jeppRadialLabels": [
         "050",
         "090",
-        "150",
-        "360",
-        "380"
+        "150"
       ],
-      "jeppDmeLabelsNm": [
-        "130"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -13585,8 +13059,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
         "090",
-        "270",
-        "400"
+        "270"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -13625,9 +13098,7 @@
         "4.0",
         "8.0",
         "15.0",
-        "17.0",
-        "115.6",
-        "295"
+        "17.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -13663,8 +13134,7 @@
         "3",
         "4.0",
         "8.0",
-        "15.0",
-        "115.6"
+        "15.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -13697,9 +13167,7 @@
         "150",
         "160"
       ],
-      "jeppDmeLabelsNm": [
-        "115.6"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -13738,8 +13206,7 @@
         "5.1",
         "8.0",
         "15.0",
-        "17.0",
-        "115.6"
+        "17.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -13771,9 +13238,7 @@
         "240",
         "270"
       ],
-      "jeppDmeLabelsNm": [
-        "115.6"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -13799,9 +13264,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": true,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -13835,9 +13298,7 @@
         "150",
         "170",
         "240",
-        "350",
-        "550",
-        "750"
+        "350"
       ],
       "jeppDmeLabelsNm": [
         "0.7",
@@ -13845,8 +13306,7 @@
         "8.6",
         "15.0",
         "17",
-        "20.0",
-        "350"
+        "20.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -13880,9 +13340,7 @@
         "150",
         "170",
         "240",
-        "350",
-        "550",
-        "750"
+        "350"
       ],
       "jeppDmeLabelsNm": [
         "0.7",
@@ -13890,9 +13348,7 @@
         "8.6",
         "15.0",
         "17",
-        "20.0",
-        "163",
-        "350"
+        "20.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -14037,8 +13493,7 @@
         "12.0",
         "15.0",
         "17",
-        "20.0",
-        "163"
+        "20.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -14070,9 +13525,7 @@
         "130",
         "350"
       ],
-      "jeppDmeLabelsNm": [
-        "146"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -14103,9 +13556,7 @@
         "130",
         "350"
       ],
-      "jeppDmeLabelsNm": [
-        "146"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -14158,9 +13609,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": true,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -14197,8 +13646,7 @@
         "5.0",
         "10.0",
         "15.0",
-        "27",
-        "347"
+        "27"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -14231,12 +13679,10 @@
         "290"
       ],
       "jeppDmeLabelsNm": [
-        "0",
         "2.0",
         "5.0",
         "10.0",
-        "16.0",
-        "172"
+        "16.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -14271,8 +13717,7 @@
         "2.0",
         "6.0",
         "11.0",
-        "16.0",
-        "354"
+        "16.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -14306,9 +13751,7 @@
       "jeppDmeLabelsNm": [
         "2.0",
         "6.0",
-        "10",
-        "181",
-        "343"
+        "10"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -14336,10 +13779,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [],
-      "jeppDmeLabelsNm": [
-        "124",
-        "205"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -14398,8 +13838,7 @@
         "1.0",
         "6.0",
         "11.0",
-        "16.0",
-        "139"
+        "16.0"
       ],
       "officialAipUrl": "https://ais.airport.ir/documents/452631/186846259/OIZS.pdf",
       "officialAipControlsIndependentVerified": false,
@@ -14553,9 +13992,7 @@
         "120",
         "150",
         "160",
-        "240",
-        "550",
-        "750"
+        "240"
       ],
       "jeppDmeLabelsNm": [
         "1.0",
@@ -14565,9 +14002,7 @@
         "5.9",
         "10.9",
         "11.9",
-        "19.6",
-        "100",
-        "288"
+        "19.6"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -14598,9 +14033,7 @@
         "120",
         "150",
         "190",
-        "307",
-        "550",
-        "750"
+        "307"
       ],
       "jeppDmeLabelsNm": [
         "1.0",
@@ -14610,8 +14043,7 @@
         "6.0",
         "11.0",
         "12.1",
-        "20.1",
-        "100"
+        "20.1"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -14642,12 +14074,10 @@
         "130",
         "140",
         "150",
-        "230",
-        "750"
+        "230"
       ],
       "jeppDmeLabelsNm": [
-        "3.8",
-        "100"
+        "3.8"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -14678,12 +14108,10 @@
         "120",
         "130",
         "150",
-        "190",
-        "750"
+        "190"
       ],
       "jeppDmeLabelsNm": [
-        "3.8",
-        "280"
+        "3.8"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -14793,8 +14221,7 @@
       "jeppRadialLabels": [
         "111",
         "146",
-        "326",
-        "550"
+        "326"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -14895,8 +14322,7 @@
         "12.0",
         "12.8",
         "22.0",
-        "29.0",
-        "146"
+        "29.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -14934,8 +14360,7 @@
         "15.0",
         "21.0",
         "22.0",
-        "29.0",
-        "326"
+        "29.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -14963,12 +14388,10 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "122",
-        "820"
+        "122"
       ],
       "jeppDmeLabelsNm": [
-        "7.8",
-        "146"
+        "7.8"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -14996,10 +14419,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [],
-      "jeppDmeLabelsNm": [
-        "326",
-        "695"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -15033,8 +14453,7 @@
         "12",
         "12.0",
         "22.0",
-        "29.0",
-        "145"
+        "29.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -15070,8 +14489,7 @@
         "15.0",
         "21.0",
         "22.0",
-        "29.0",
-        "500"
+        "29.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -15213,10 +14631,7 @@
       "jeppRadialLabels": [
         "120",
         "150",
-        "160",
-        "550",
-        "750",
-        "900"
+        "160"
       ],
       "jeppDmeLabelsNm": [
         "0.7",
@@ -15285,10 +14700,7 @@
         "120",
         "150",
         "160",
-        "248",
-        "550",
-        "750",
-        "900"
+        "248"
       ],
       "jeppDmeLabelsNm": [
         "0.7",
@@ -15300,9 +14712,7 @@
         "13.0",
         "20.0",
         "21",
-        "25",
-        "344",
-        "351"
+        "25"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -15343,9 +14753,7 @@
         "13.0",
         "20.0",
         "21",
-        "25",
-        "344",
-        "351"
+        "25"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -15376,17 +14784,14 @@
         "100",
         "120",
         "150",
-        "170",
-        "550",
-        "750"
+        "170"
       ],
       "jeppDmeLabelsNm": [
         "0.7",
         "1.9",
         "4.0",
         "5.3",
-        "10.3",
-        "355"
+        "10.3"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -15418,9 +14823,7 @@
         "120",
         "150",
         "170",
-        "248",
-        "550",
-        "750"
+        "248"
       ],
       "jeppDmeLabelsNm": [
         "0.7",
@@ -15431,8 +14834,7 @@
         "11.8",
         "16.0",
         "21.0",
-        "21.4",
-        "355"
+        "21.4"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -15460,8 +14862,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "150",
-        "800"
+        "150"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -15520,9 +14921,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": false,
       "jeppNDBTextMention": false,
-      "jeppRadialLabels": [
-        "550"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -15557,8 +14956,7 @@
         "0.7",
         "5.8",
         "15.0",
-        "16.0",
-        "143"
+        "16.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -15650,9 +15048,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": true,
       "jeppNDBTextMention": false,
-      "jeppRadialLabels": [
-        "550"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -15708,9 +15104,7 @@
       "jeppVORTextMention": true,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "120",
-        "550",
-        "750"
+        "120"
       ],
       "jeppDmeLabelsNm": [
         "4.9",
@@ -15745,9 +15139,7 @@
       "jeppVORTextMention": true,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "120",
-        "550",
-        "750"
+        "120"
       ],
       "jeppDmeLabelsNm": [
         "2.0",
@@ -15783,8 +15175,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
         "150",
-        "160",
-        "900"
+        "160"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -15813,8 +15204,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "150",
-        "800"
+        "150"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -15843,11 +15233,9 @@
       "jeppVORTextMention": true,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "140",
-        "750"
+        "140"
       ],
       "jeppDmeLabelsNm": [
-        "0",
         "0.2",
         "31"
       ],
@@ -15877,11 +15265,9 @@
       "jeppVORTextMention": true,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "140",
-        "750"
+        "140"
       ],
       "jeppDmeLabelsNm": [
-        "0",
         "3.5",
         "13"
       ],
@@ -15945,9 +15331,7 @@
       "jeppARPTextMention": false,
       "jeppVORTextMention": false,
       "jeppNDBTextMention": false,
-      "jeppRadialLabels": [
-        "550"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [
         "2",
         "3",
@@ -15984,13 +15368,7 @@
         "301",
         "311",
         "312",
-        "313",
-        "401",
-        "412",
-        "413",
-        "414",
-        "902",
-        "903"
+        "313"
       ],
       "jeppDmeLabelsNm": [
         "2",
@@ -16027,13 +15405,7 @@
       "jeppRadialLabels": [
         "302",
         "312",
-        "313",
-        "401",
-        "402",
-        "413",
-        "414",
-        "415",
-        "902"
+        "313"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -16065,9 +15437,7 @@
         "071",
         "120",
         "160",
-        "240",
-        "550",
-        "750"
+        "240"
       ],
       "jeppDmeLabelsNm": [
         "1.2",
@@ -16077,10 +15447,7 @@
         "12.0",
         "12.2",
         "23",
-        "25.7",
-        "083",
-        "276",
-        "287"
+        "25.7"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -16119,9 +15486,7 @@
         "12.0",
         "12.2",
         "23",
-        "25.7",
-        "276",
-        "287"
+        "25.7"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -16152,9 +15517,7 @@
         "110",
         "120",
         "150",
-        "180",
-        "550",
-        "750"
+        "180"
       ],
       "jeppDmeLabelsNm": [
         "1.0",
@@ -16195,9 +15558,7 @@
         "120",
         "150",
         "180",
-        "249",
-        "550",
-        "750"
+        "249"
       ],
       "jeppDmeLabelsNm": [
         "0.2",
@@ -16211,9 +15572,7 @@
         "6.6",
         "12.0",
         "12.8",
-        "13.0",
-        "271",
-        "282"
+        "13.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -16244,9 +15603,7 @@
         "110",
         "120",
         "150",
-        "180",
-        "550",
-        "750"
+        "180"
       ],
       "jeppDmeLabelsNm": [
         "0.7",
@@ -16286,10 +15643,7 @@
         "160",
         "289",
         "317",
-        "325",
-        "550",
-        "750",
-        "900"
+        "325"
       ],
       "jeppDmeLabelsNm": [
         "0.7",
@@ -16301,9 +15655,7 @@
         "12.9",
         "15.1",
         "15.3",
-        "19.0",
-        "289",
-        "317"
+        "19.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -16335,10 +15687,7 @@
         "150",
         "289",
         "319",
-        "325",
-        "550",
-        "750",
-        "900"
+        "325"
       ],
       "jeppDmeLabelsNm": [
         "0.7",
@@ -16350,10 +15699,7 @@
         "11.0",
         "13.4",
         "17.3",
-        "19.0",
-        "224",
-        "289",
-        "319"
+        "19.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -16387,9 +15733,7 @@
         "180",
         "289",
         "317",
-        "325",
-        "550",
-        "750"
+        "325"
       ],
       "jeppDmeLabelsNm": [
         "1.2",
@@ -16399,10 +15743,7 @@
         "14.6",
         "15.1",
         "19.0",
-        "063",
-        "263",
-        "289",
-        "317"
+        "063"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -16443,10 +15784,7 @@
         "14.6",
         "15.1",
         "19.0",
-        "063",
-        "263",
-        "289",
-        "317"
+        "063"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -16478,11 +15816,7 @@
         "130",
         "140",
         "150",
-        "190",
-        "600",
-        "650",
-        "750",
-        "800"
+        "190"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -16515,9 +15849,7 @@
         "150",
         "160",
         "170",
-        "230",
-        "800",
-        "900"
+        "230"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -16550,13 +15882,9 @@
         "140",
         "150",
         "170",
-        "210",
-        "800",
-        "900"
+        "210"
       ],
-      "jeppDmeLabelsNm": [
-        "470"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -16590,9 +15918,7 @@
         "170",
         "180",
         "230",
-        "240",
-        "800",
-        "900"
+        "240"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -16626,13 +15952,7 @@
         "140",
         "150",
         "160",
-        "170",
-        "600",
-        "650",
-        "700",
-        "750",
-        "800",
-        "900"
+        "170"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -16673,8 +15993,7 @@
         "4.0",
         "6.0",
         "12.0",
-        "13.0",
-        "271"
+        "13.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -16715,10 +16034,7 @@
         "9.2",
         "15.1",
         "15.3",
-        "19.0",
-        "289",
-        "317",
-        "500"
+        "19.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -16758,10 +16074,7 @@
         "9.2",
         "13.4",
         "17.3",
-        "19.0",
-        "289",
-        "319",
-        "500"
+        "19.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -17003,9 +16316,7 @@
       "jeppRadialLabels": [
         "120",
         "150",
-        "240",
-        "550",
-        "750"
+        "240"
       ],
       "jeppDmeLabelsNm": [
         "0.7",
@@ -17037,9 +16348,7 @@
       "jeppARPTextMention": false,
       "jeppVORTextMention": true,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [
         "0.7",
         "4.1",
@@ -17073,9 +16382,7 @@
       "jeppRadialLabels": [
         "120",
         "150",
-        "240",
-        "550",
-        "750"
+        "240"
       ],
       "jeppDmeLabelsNm": [
         "0.7",
@@ -17108,9 +16415,7 @@
       "jeppARPTextMention": false,
       "jeppVORTextMention": true,
       "jeppNDBTextMention": true,
-      "jeppRadialLabels": [
-        "400"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [
         "0.7",
         "4.1",
@@ -17144,12 +16449,9 @@
       "jeppRadialLabels": [
         "120",
         "150",
-        "240",
-        "550",
-        "750"
+        "240"
       ],
       "jeppDmeLabelsNm": [
-        "0",
         "0.8",
         "3.0",
         "4.1",
@@ -17183,8 +16485,7 @@
       "jeppVORTextMention": true,
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [
-        "200",
-        "450"
+        "200"
       ],
       "jeppDmeLabelsNm": [
         "0.8",
@@ -17222,9 +16523,7 @@
       "jeppRadialLabels": [
         "120",
         "150",
-        "240",
-        "550",
-        "750"
+        "240"
       ],
       "jeppDmeLabelsNm": [
         "0.8",
@@ -17259,8 +16558,7 @@
       "jeppVORTextMention": true,
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [
-        "200",
-        "450"
+        "200"
       ],
       "jeppDmeLabelsNm": [
         "0.8",
@@ -17309,8 +16607,7 @@
         "7.5",
         "9.0",
         "10.5",
-        "030",
-        "225"
+        "030"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -17338,8 +16635,7 @@
       "jeppVORTextMention": true,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "210",
-        "450"
+        "210"
       ],
       "jeppDmeLabelsNm": [
         "3.6",
@@ -17349,8 +16645,7 @@
         "7.5",
         "9.0",
         "10.5",
-        "030",
-        "218"
+        "030"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -17425,8 +16720,7 @@
       "jeppVORTextMention": true,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "062",
-        "400"
+        "062"
       ],
       "jeppDmeLabelsNm": [
         "0.5",
@@ -17482,8 +16776,7 @@
         "7.5",
         "9.0",
         "10.5",
-        "030",
-        "225"
+        "030"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -17514,9 +16807,7 @@
         "140",
         "150",
         "179",
-        "240",
-        "650",
-        "750"
+        "240"
       ],
       "jeppDmeLabelsNm": [
         "2.0",
@@ -17529,8 +16820,7 @@
         "9.2",
         "11",
         "12.0",
-        "12.7",
-        "210"
+        "12.7"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -17574,8 +16864,7 @@
         "8.5",
         "9.2",
         "12.0",
-        "12.7",
-        "210"
+        "12.7"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -17606,9 +16895,7 @@
         "030",
         "140",
         "150",
-        "240",
-        "650",
-        "750"
+        "240"
       ],
       "jeppDmeLabelsNm": [
         "2.0",
@@ -17653,9 +16940,7 @@
         "150",
         "210",
         "220",
-        "240",
-        "550",
-        "750"
+        "240"
       ],
       "jeppDmeLabelsNm": [
         "0.2",
@@ -17696,9 +16981,7 @@
         "150",
         "209",
         "220",
-        "240",
-        "550",
-        "750"
+        "240"
       ],
       "jeppDmeLabelsNm": [
         "0.7",
@@ -17806,8 +17089,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
         "031",
-        "290",
-        "360"
+        "290"
       ],
       "jeppDmeLabelsNm": [
         "4.5",
@@ -17929,8 +17211,7 @@
         "1.2",
         "4.0",
         "7.0",
-        "10.0",
-        "210"
+        "10.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -18005,8 +17286,7 @@
         "1.2",
         "4.0",
         "7.0",
-        "10.0",
-        "210"
+        "10.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -18069,8 +17349,7 @@
       "jeppDmeLabelsNm": [
         "6.0",
         "6.3",
-        "8.1",
-        "356"
+        "8.1"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -18105,8 +17384,7 @@
         "3.0",
         "6.0",
         "6.3",
-        "8.1",
-        "356"
+        "8.1"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -18298,9 +17576,7 @@
       "jeppARPTextMention": false,
       "jeppVORTextMention": false,
       "jeppNDBTextMention": false,
-      "jeppRadialLabels": [
-        "501"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -18346,9 +17622,7 @@
         "225",
         "315",
         "318",
-        "319",
-        "406",
-        "601"
+        "319"
       ],
       "jeppDmeLabelsNm": [
         "1",
@@ -19777,8 +19051,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
         "100",
-        "300",
-        "601"
+        "300"
       ],
       "jeppDmeLabelsNm": [
         "1",
@@ -19852,13 +19125,9 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
         "120",
-        "130",
-        "550",
-        "600",
-        "750"
+        "130"
       ],
       "jeppDmeLabelsNm": [
-        "0.0",
         "0.1",
         "0.8",
         "1.0",
@@ -19867,8 +19136,7 @@
         "7.7",
         "8.7",
         "15.0",
-        "16.0",
-        "110.0"
+        "16.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -19897,11 +19165,9 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
         "300",
-        "350",
-        "450"
+        "350"
       ],
       "jeppDmeLabelsNm": [
-        "0.0",
         "0.1",
         "0.8",
         "1.0",
@@ -19910,8 +19176,7 @@
         "7.7",
         "8.7",
         "15.0",
-        "16.0",
-        "110.0"
+        "16.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -19942,13 +19207,9 @@
         "073",
         "120",
         "130",
-        "244",
-        "550",
-        "600",
-        "750"
+        "244"
       ],
       "jeppDmeLabelsNm": [
-        "0.0",
         "0.1",
         "0.8",
         "1.0",
@@ -19961,8 +19222,7 @@
         "15.0",
         "16.0",
         "16.4",
-        "16.8",
-        "110.0"
+        "16.8"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -19993,11 +19253,9 @@
         "073",
         "244",
         "300",
-        "350",
-        "450"
+        "350"
       ],
       "jeppDmeLabelsNm": [
-        "0.0",
         "0.1",
         "0.8",
         "1.0",
@@ -20010,8 +19268,7 @@
         "15.0",
         "16.0",
         "16.4",
-        "16.8",
-        "110.0"
+        "16.8"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -20040,21 +19297,16 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
         "120",
-        "130",
-        "550",
-        "600",
-        "750"
+        "130"
       ],
       "jeppDmeLabelsNm": [
-        "0.0",
         "1.0",
         "4.1",
         "5.1",
         "7.7",
         "8.7",
         "15.0",
-        "16.0",
-        "110.0"
+        "16.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -20083,19 +19335,16 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
         "300",
-        "350",
-        "450"
+        "350"
       ],
       "jeppDmeLabelsNm": [
-        "0.0",
         "1.0",
         "4.1",
         "5.1",
         "7.7",
         "8.7",
         "15.0",
-        "16.0",
-        "110.0"
+        "16.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -20137,8 +19386,7 @@
         "11.8",
         "15.0",
         "16.8",
-        "19.5",
-        "110.0"
+        "19.5"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -20166,9 +19414,7 @@
       "jeppVORTextMention": true,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "120",
-        "550",
-        "750"
+        "120"
       ],
       "jeppDmeLabelsNm": [
         "0.1",
@@ -20255,9 +19501,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
         "120",
-        "200",
-        "550",
-        "750"
+        "200"
       ],
       "jeppDmeLabelsNm": [
         "0.1",
@@ -20349,9 +19593,7 @@
       "jeppVORTextMention": true,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "120",
-        "550",
-        "750"
+        "120"
       ],
       "jeppDmeLabelsNm": [
         "0.1",
@@ -20480,9 +19722,7 @@
       "jeppVORTextMention": true,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "120",
-        "550",
-        "750"
+        "120"
       ],
       "jeppDmeLabelsNm": [
         "0.6",
@@ -20496,9 +19736,7 @@
         "10.4",
         "11.8",
         "17.3",
-        "18.7",
-        "173",
-        "177"
+        "18.7"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -20541,8 +19779,7 @@
         "10.4",
         "11.8",
         "17.3",
-        "18.7",
-        "173"
+        "18.7"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -20572,9 +19809,7 @@
       "jeppRadialLabels": [
         "120",
         "162",
-        "357",
-        "550",
-        "750"
+        "357"
       ],
       "jeppDmeLabelsNm": [
         "0.6",
@@ -20590,8 +19825,7 @@
         "11.8",
         "14.5",
         "17.3",
-        "18.7",
-        "177"
+        "18.7"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -20639,8 +19873,7 @@
         "11.8",
         "14.5",
         "17.3",
-        "18.7",
-        "177"
+        "18.7"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -20669,9 +19902,7 @@
       "jeppVORTextMention": true,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "120",
-        "550",
-        "750"
+        "120"
       ],
       "jeppDmeLabelsNm": [
         "0.6",
@@ -20683,8 +19914,7 @@
         "10.4",
         "11.8",
         "17.3",
-        "18.7",
-        "173"
+        "18.7"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -20725,8 +19955,7 @@
         "10.4",
         "11.8",
         "17.3",
-        "18.7",
-        "173"
+        "18.7"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -20766,8 +19995,7 @@
         "10.0",
         "10.4",
         "14.5",
-        "17.3",
-        "340"
+        "17.3"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -20795,9 +20023,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "120",
-        "550",
-        "750"
+        "120"
       ],
       "jeppDmeLabelsNm": [
         "0.2",
@@ -20809,8 +20035,7 @@
         "8.5",
         "11.1",
         "16.0",
-        "18.6",
-        "110.0"
+        "18.6"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -20851,8 +20076,7 @@
         "8.5",
         "11.1",
         "16.0",
-        "18.6",
-        "110.0"
+        "18.6"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -20883,12 +20107,9 @@
         "061",
         "120",
         "257",
-        "266",
-        "550",
-        "750"
+        "266"
       ],
       "jeppDmeLabelsNm": [
-        "0",
         "0.2",
         "0.8",
         "2.8",
@@ -20979,9 +20200,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "120",
-        "550",
-        "750"
+        "120"
       ],
       "jeppDmeLabelsNm": [
         "0.8",
@@ -21071,9 +20290,7 @@
         "11.2",
         "16.0",
         "18.0",
-        "18.6",
-        "110.0",
-        "266"
+        "18.6"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -21101,9 +20318,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "120",
-        "550",
-        "750"
+        "120"
       ],
       "jeppDmeLabelsNm": [
         "0.8",
@@ -21117,8 +20332,7 @@
         "14.8",
         "17.3",
         "17.5",
-        "20.0",
-        "752"
+        "20.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -21162,8 +20376,7 @@
         "14.8",
         "17.3",
         "17.5",
-        "20.0",
-        "752"
+        "20.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -21193,9 +20406,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
         "120",
-        "340",
-        "550",
-        "750"
+        "340"
       ],
       "jeppDmeLabelsNm": [
         "0.8",
@@ -21213,8 +20424,7 @@
         "17.5",
         "20.0",
         "22.3",
-        "24.8",
-        "752"
+        "24.8"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -21262,8 +20472,7 @@
         "17.5",
         "20.0",
         "22.3",
-        "24.8",
-        "752"
+        "24.8"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -21291,9 +20500,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "120",
-        "550",
-        "750"
+        "120"
       ],
       "jeppDmeLabelsNm": [
         "0.8",
@@ -21382,8 +20589,7 @@
       "jeppRadialLabels": [
         "150",
         "240",
-        "340",
-        "400"
+        "340"
       ],
       "jeppDmeLabelsNm": [
         "4.8",
@@ -21424,9 +20630,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "120",
-        "550",
-        "750"
+        "120"
       ],
       "jeppDmeLabelsNm": [
         "0.8",
@@ -21508,9 +20712,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
         "017",
-        "120",
-        "550",
-        "750"
+        "120"
       ],
       "jeppDmeLabelsNm": [
         "0.8",
@@ -21596,9 +20798,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "120",
-        "550",
-        "750"
+        "120"
       ],
       "jeppDmeLabelsNm": [
         "0.8",
@@ -21968,9 +21168,7 @@
         "083",
         "120",
         "150",
-        "190",
-        "550",
-        "750"
+        "190"
       ],
       "jeppDmeLabelsNm": [
         "1.6",
@@ -21980,9 +21178,7 @@
         "7.9",
         "9.4",
         "9.5",
-        "13.9",
-        "251",
-        "263"
+        "13.9"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -22027,9 +21223,7 @@
         "7.9",
         "9.4",
         "9.5",
-        "13.9",
-        "233",
-        "263"
+        "13.9"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -22065,8 +21259,7 @@
         "150",
         "160",
         "200",
-        "220",
-        "900"
+        "220"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -22170,11 +21363,7 @@
         "120",
         "130",
         "140",
-        "220",
-        "550",
-        "600",
-        "650",
-        "750"
+        "220"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -22214,9 +21403,7 @@
         "5.4",
         "7.9",
         "9.4",
-        "9.5",
-        "233",
-        "263"
+        "9.5"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -22249,9 +21436,7 @@
         "130",
         "150"
       ],
-      "jeppDmeLabelsNm": [
-        "128.0"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -22279,9 +21464,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [],
-      "jeppDmeLabelsNm": [
-        "100"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -22308,14 +21491,11 @@
       "jeppVORTextMention": true,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "120",
-        "550",
-        "750"
+        "120"
       ],
       "jeppDmeLabelsNm": [
         "9.9",
-        "10.4",
-        "130"
+        "10.4"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -22347,14 +21527,12 @@
         "240"
       ],
       "jeppDmeLabelsNm": [
-        "0.0",
         "0.5",
         "3.0",
         "3.5",
         "9.0",
         "9.9",
-        "10.4",
-        "130"
+        "10.4"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -22382,17 +21560,13 @@
       "jeppVORTextMention": true,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "120",
-        "550",
-        "750"
+        "120"
       ],
       "jeppDmeLabelsNm": [
         "9.9",
         "10.4",
         "16.8",
-        "17.3",
-        "130",
-        "296"
+        "17.3"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -22424,7 +21598,6 @@
         "240"
       ],
       "jeppDmeLabelsNm": [
-        "0.0",
         "0.5",
         "1.5",
         "3.0",
@@ -22432,9 +21605,7 @@
         "9.9",
         "10.4",
         "16.8",
-        "17.3",
-        "130",
-        "296"
+        "17.3"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -22464,14 +21635,11 @@
       "jeppRadialLabels": [
         "120",
         "150",
-        "240",
-        "550",
-        "750"
+        "240"
       ],
       "jeppDmeLabelsNm": [
         "7.5",
-        "8.6",
-        "170"
+        "8.6"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -22514,9 +21682,7 @@
         "7.0",
         "7.5",
         "8.1",
-        "8.6",
-        "170",
-        "310"
+        "8.6"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -22546,18 +21712,14 @@
       "jeppRadialLabels": [
         "120",
         "150",
-        "240",
-        "550",
-        "750"
+        "240"
       ],
       "jeppDmeLabelsNm": [
         "7.5",
         "8.6",
         "11.5",
         "12.6",
-        "15",
-        "170",
-        "310"
+        "15"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -22602,8 +21764,7 @@
         "8.6",
         "11.5",
         "12.6",
-        "15",
-        "170"
+        "15"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -22636,7 +21797,6 @@
         "240"
       ],
       "jeppDmeLabelsNm": [
-        "0.0",
         "0.5",
         "3.6",
         "4.1",
@@ -22645,8 +21805,7 @@
         "10.0",
         "10.4",
         "16.8",
-        "17.3",
-        "296"
+        "17.3"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -22721,8 +21880,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": true,
       "jeppRadialLabels": [
-        "300",
-        "400"
+        "300"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -22850,8 +22008,7 @@
         "6.9",
         "11.0",
         "11.9",
-        "13.5",
-        "330"
+        "13.5"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -22898,8 +22055,7 @@
         "6.9",
         "11.0",
         "11.9",
-        "13.5",
-        "330"
+        "13.5"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -23427,9 +22583,7 @@
       "jeppRadialLabels": [
         "120",
         "150",
-        "220",
-        "550",
-        "750"
+        "220"
       ],
       "jeppDmeLabelsNm": [
         "2.0",
@@ -23465,8 +22619,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
         "200",
-        "300",
-        "400"
+        "300"
       ],
       "jeppDmeLabelsNm": [
         "2.0",
@@ -23505,9 +22658,7 @@
         "120",
         "150",
         "210",
-        "240",
-        "550",
-        "750"
+        "240"
       ],
       "jeppDmeLabelsNm": [
         "2.0",
@@ -23591,17 +22742,14 @@
       "jeppRadialLabels": [
         "120",
         "150",
-        "230",
-        "550",
-        "750"
+        "230"
       ],
       "jeppDmeLabelsNm": [
         "2.0",
         "4.0",
         "6.1",
         "11.0",
-        "15.5",
-        "299"
+        "15.5"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -23676,9 +22824,7 @@
       "jeppRadialLabels": [
         "120",
         "150",
-        "220",
-        "550",
-        "750"
+        "220"
       ],
       "jeppDmeLabelsNm": [
         "2.0",
@@ -23686,8 +22832,7 @@
         "6.0",
         "9.3",
         "12.1",
-        "16.6",
-        "299"
+        "16.6"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -23716,8 +22861,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
         "200",
-        "300",
-        "400"
+        "300"
       ],
       "jeppDmeLabelsNm": [
         "2.0",
@@ -23725,8 +22869,7 @@
         "6.0",
         "9.3",
         "12.1",
-        "16.6",
-        "299"
+        "16.6"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -23758,11 +22901,7 @@
         "150",
         "160",
         "170",
-        "240",
-        "700",
-        "750",
-        "800",
-        "900"
+        "240"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -23827,10 +22966,7 @@
       "jeppRadialLabels": [
         "140",
         "150",
-        "230",
-        "700",
-        "750",
-        "800"
+        "230"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -23867,11 +23003,7 @@
         "150",
         "160",
         "220",
-        "299",
-        "700",
-        "750",
-        "800",
-        "900"
+        "299"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -24353,9 +23485,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [],
-      "jeppDmeLabelsNm": [
-        "584"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -24382,8 +23512,7 @@
       "jeppVORTextMention": true,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "156",
-        "600"
+        "156"
       ],
       "jeppDmeLabelsNm": [
         "1"
@@ -24449,10 +23578,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "301",
-        "425",
-        "511",
-        "600"
+        "301"
       ],
       "jeppDmeLabelsNm": [
         "1"
@@ -24486,9 +23612,7 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": false,
       "jeppNDBTextMention": false,
-      "jeppRadialLabels": [
-        "600"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [
         "1"
       ],
@@ -24521,37 +23645,7 @@
       "jeppARPTextMention": false,
       "jeppVORTextMention": false,
       "jeppNDBTextMention": false,
-      "jeppRadialLabels": [
-        "600",
-        "602",
-        "603",
-        "604",
-        "605",
-        "606",
-        "608",
-        "609",
-        "610",
-        "611",
-        "612",
-        "613",
-        "614",
-        "615",
-        "616",
-        "617",
-        "621",
-        "623",
-        "625",
-        "626",
-        "627",
-        "628",
-        "629",
-        "630",
-        "631",
-        "632",
-        "634",
-        "635",
-        "636"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -24590,38 +23684,7 @@
         "224",
         "226",
         "304",
-        "306",
-        "425",
-        "502",
-        "503",
-        "504",
-        "505",
-        "507",
-        "508",
-        "509",
-        "511",
-        "512",
-        "513",
-        "515",
-        "603",
-        "605",
-        "607",
-        "609",
-        "611",
-        "613",
-        "621",
-        "622",
-        "623",
-        "624",
-        "625",
-        "626",
-        "627",
-        "628",
-        "632",
-        "633",
-        "634",
-        "636",
-        "637"
+        "306"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -24840,8 +23903,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "336",
-        "600"
+        "336"
       ],
       "jeppDmeLabelsNm": [
         "1"
@@ -24878,9 +23940,7 @@
       "jeppRadialLabels": [
         "120",
         "150",
-        "220",
-        "550",
-        "750"
+        "220"
       ],
       "jeppDmeLabelsNm": [
         "1.2",
@@ -24914,8 +23974,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "300",
-        "400"
+        "300"
       ],
       "jeppDmeLabelsNm": [
         "7.8",
@@ -24951,9 +24010,7 @@
         "120",
         "130",
         "150",
-        "220",
-        "550",
-        "750"
+        "220"
       ],
       "jeppDmeLabelsNm": [
         "1.2",
@@ -24992,15 +24049,13 @@
       "jeppVORTextMention": true,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "300",
-        "400"
+        "300"
       ],
       "jeppDmeLabelsNm": [
         "7.8",
         "11.0",
         "14.5",
-        "21",
-        "156"
+        "21"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -25033,10 +24088,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
         "120",
-        "150",
-        "550",
-        "750",
-        "800"
+        "150"
       ],
       "jeppDmeLabelsNm": [
         "1.2",
@@ -25070,8 +24122,7 @@
       "jeppVORTextMention": false,
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
-        "300",
-        "400"
+        "300"
       ],
       "jeppDmeLabelsNm": [
         "7.8",
@@ -25105,17 +24156,13 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [
         "120",
-        "150",
-        "550",
-        "750",
-        "800"
+        "150"
       ],
       "jeppDmeLabelsNm": [
         "1.2",
         "7.8",
         "11.0",
-        "14.4",
-        "336"
+        "14.4"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -25146,15 +24193,11 @@
       "jeppARPTextMention": true,
       "jeppVORTextMention": false,
       "jeppNDBTextMention": false,
-      "jeppRadialLabels": [
-        "400",
-        "450"
-      ],
+      "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [
         "7.8",
         "11.0",
-        "14.4",
-        "336"
+        "14.4"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -25191,8 +24234,7 @@
         "150",
         "170",
         "180",
-        "220",
-        "900"
+        "220"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -25227,8 +24269,7 @@
         "170",
         "180",
         "220",
-        "230",
-        "900"
+        "230"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -25266,11 +24307,7 @@
         "150",
         "160",
         "170",
-        "230",
-        "700",
-        "750",
-        "800",
-        "900"
+        "230"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -25307,12 +24344,7 @@
         "140",
         "150",
         "200",
-        "230",
-        "600",
-        "650",
-        "700",
-        "750",
-        "800"
+        "230"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -25432,17 +24464,14 @@
       "jeppRadialLabels": [
         "120",
         "150",
-        "190",
-        "550",
-        "750"
+        "190"
       ],
       "jeppDmeLabelsNm": [
         "0.6",
         "3.0",
         "4.0",
         "5.8",
-        "13",
-        "112.1"
+        "13"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -25476,9 +24505,7 @@
       "jeppRadialLabels": [
         "120",
         "150",
-        "190",
-        "550",
-        "750"
+        "190"
       ],
       "jeppDmeLabelsNm": [
         "0.6",
@@ -25489,9 +24516,7 @@
         "15.0",
         "15.4",
         "20.0",
-        "20.4",
-        "112.1",
-        "254"
+        "20.4"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -25526,15 +24551,12 @@
         "110",
         "120",
         "150",
-        "180",
-        "550",
-        "750"
+        "180"
       ],
       "jeppDmeLabelsNm": [
         "0.6",
         "4.0",
-        "5.8",
-        "254"
+        "5.8"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -25569,9 +24591,7 @@
         "110",
         "120",
         "150",
-        "180",
-        "550",
-        "750"
+        "180"
       ],
       "jeppDmeLabelsNm": [
         "0.6",
@@ -25581,8 +24601,7 @@
         "15.0",
         "15.2",
         "20.0",
-        "20.2",
-        "112.1"
+        "20.2"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -25686,8 +24705,7 @@
       "jeppRadialLabels": [
         "120",
         "150",
-        "190",
-        "800"
+        "190"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -25724,8 +24742,7 @@
         "140",
         "150",
         "180",
-        "253",
-        "750"
+        "253"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -25953,9 +24970,7 @@
       "jeppRadialLabels": [
         "102"
       ],
-      "jeppDmeLabelsNm": [
-        "112.1"
-      ],
+      "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
@@ -25990,8 +25005,7 @@
         "125",
         "150",
         "200",
-        "300",
-        "400"
+        "300"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -26054,9 +25068,7 @@
         "120",
         "130",
         "150",
-        "200",
-        "550",
-        "750"
+        "200"
       ],
       "jeppDmeLabelsNm": [
         "1.0",
@@ -26095,9 +25107,7 @@
         "150",
         "170",
         "174",
-        "200",
-        "550",
-        "750"
+        "200"
       ],
       "jeppDmeLabelsNm": [
         "1.0",
@@ -26105,8 +25115,7 @@
         "4.5",
         "6.0",
         "12.0",
-        "17.0",
-        "190"
+        "17.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -26137,9 +25146,7 @@
         "120",
         "130",
         "150",
-        "200",
-        "550",
-        "750"
+        "200"
       ],
       "jeppDmeLabelsNm": [
         "1.0",
@@ -26178,8 +25185,7 @@
       ],
       "jeppDmeLabelsNm": [
         "4.0",
-        "6.0",
-        "114.6"
+        "6.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -26210,9 +25216,7 @@
         "120",
         "130",
         "150",
-        "200",
-        "550",
-        "750"
+        "200"
       ],
       "jeppDmeLabelsNm": [
         "1.0",
@@ -26296,15 +25300,12 @@
         "120",
         "130",
         "150",
-        "200",
-        "550",
-        "750"
+        "200"
       ],
       "jeppDmeLabelsNm": [
         "1.0",
         "4.0",
-        "6.0",
-        "114.6"
+        "6.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -26335,9 +25336,7 @@
         "120",
         "130",
         "150",
-        "200",
-        "550",
-        "750"
+        "200"
       ],
       "jeppDmeLabelsNm": [
         "1.0",
@@ -26414,8 +25413,7 @@
         "130",
         "150",
         "175",
-        "200",
-        "800"
+        "200"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -26447,8 +25445,7 @@
         "130",
         "140",
         "150",
-        "200",
-        "750"
+        "200"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -26480,8 +25477,7 @@
         "130",
         "140",
         "150",
-        "200",
-        "750"
+        "200"
       ],
       "jeppDmeLabelsNm": [],
       "officialAipUrl": "",
@@ -26523,8 +25519,7 @@
         "8.0",
         "8.5",
         "12.0",
-        "17.0",
-        "190"
+        "17.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,
@@ -26565,8 +25560,7 @@
         "8.0",
         "8.5",
         "12.0",
-        "17.0",
-        "190"
+        "17.0"
       ],
       "officialAipUrl": "",
       "officialAipControlsIndependentVerified": false,

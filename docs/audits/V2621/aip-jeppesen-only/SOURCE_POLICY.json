@@ -40,6 +40,8 @@
     "OIMB": "https://ais.airport.ir/documents/452631/186839606/OIMB.pdf",
     "OIZS": "https://ais.airport.ir/documents/452631/186846259/OIZS.pdf"
   },
+  "aipDocumentVersionDateMustBeChecked": true,
+  "sourceAipLinksOnlyAreNotCompletedGroundControlChecks": true,
   "userValidatedAdcs": {
     "OIMB": 561,
     "OIHH": 342,
@@ -52,6 +54,7 @@
   "dmeIfVerticalSeparationUnknown": "valid spherical/circular constraint with uncertainty; NEVER equate to exact horizontal range",
   "radialNeeds": "documented station, magnetic variation and date, angular uncertainty; fixes need intersecting independent source constraints",
   "aipGcpPrecision": "do not use Jepp general-info rounded Lat/Long as 10m control; require official precision and held-out fit",
+  "radialDmeLabelParsing": "preliminary textual token screening ONLY; station pairing, plotted fix position and AIP validity not verified",
   "testDoesNotImplyNavigationCertification": true,
   "noAutomaticPublication": true
 }
