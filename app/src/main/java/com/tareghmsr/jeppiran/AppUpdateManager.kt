@@ -212,20 +212,28 @@ object AppUpdateManager {
             )
         }
 
-        return applyPatchChain(
-            context =
-                context,
-            info =
-                info,
-            installedApk =
-                installedApk,
-            chain =
-                chain,
-            directory =
-                dir,
-            onProgress =
-                onProgress
-        )
+        // A corrupt/unavailable delta must not block updates. A single tap
+        // still installs the newest version by falling back to the full APK.
+        return try {
+            applyPatchChain(
+                context = context,
+                info = info,
+                installedApk = installedApk,
+                chain = chain,
+                directory = dir,
+                onProgress = onProgress
+            )
+        } catch (error: Exception) {
+            dir.listFiles().orEmpty()
+                .filter { it.name.startsWith("delta-") || it.name.startsWith("rebuild-") }
+                .forEach { it.delete() }
+            downloadFullApk(
+                context = context,
+                info = info,
+                directory = dir,
+                onProgress = onProgress
+            )
+        }
     }
 
     fun launchInstaller(
@@ -441,80 +449,25 @@ object AppUpdateManager {
         return info
     }
 
+    // Only a single verified delta from the installed APK straight to the latest.
+    // Never select intermediate versions; if no direct delta exists, download
+    // the final APK once. Older clients' chained updates are not resumed here.
     private fun buildPatchChain(
         fromVersionCode: Long,
         targetVersionCode: Long,
         patches: List<PatchInfo>
-    ):
-        List<PatchInfo>? {
+    ): List<PatchInfo>? {
+        if (fromVersionCode >= targetVersionCode) return emptyList()
 
-        if (
-            fromVersionCode >=
-            targetVersionCode
-        ) {
-            return emptyList()
-        }
-
-        val byFrom =
-            patches
-                .groupBy {
-                    it.fromVersionCode
-                }
-
-        val result =
-            mutableListOf<
-                PatchInfo
-            >()
-
-        var current =
-            fromVersionCode
-
-        val visited =
-            mutableSetOf<Long>()
-
-        while (
-            current <
-            targetVersionCode
-        ) {
-
-            if (
-                !visited.add(
-                    current
-                )
-            ) {
-                return null
+        val direct = patches.asSequence()
+            .filter {
+                it.fromVersionCode == fromVersionCode &&
+                    it.toVersionCode == targetVersionCode &&
+                    it.patchSizeBytes > 0L
             }
+            .minByOrNull { it.patchSizeBytes }
 
-            val next =
-                byFrom[
-                    current
-                ]
-                    .orEmpty()
-                    .filter {
-                        it.toVersionCode <=
-                            targetVersionCode
-                    }
-                    .maxByOrNull {
-                        it.toVersionCode
-                    }
-                    ?: return null
-
-            result.add(
-                next
-            )
-
-            current =
-                next.toVersionCode
-        }
-
-        return if (
-            current ==
-            targetVersionCode
-        ) {
-            result
-        } else {
-            null
-        }
+        return direct?.let { listOf(it) }
     }
 
     private fun applyPatchChain(
