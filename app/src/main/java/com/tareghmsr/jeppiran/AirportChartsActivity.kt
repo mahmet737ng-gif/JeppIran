@@ -444,7 +444,6 @@ class AirportChartsActivity :
         details.addView(entry("Elevation",if(elevation=="—") "—" else elevation+" ft"))
         details.addView(entry("Latitude",value("lat")))
         details.addView(entry("Longitude",value("lon")))
-        details.addView(entry("ATIS / Tower / Ground","Consult ADC"))
         put(right,details)
 
         val notam=card("NOTAM")
@@ -478,6 +477,14 @@ class AirportChartsActivity :
                 else (if (dark) Color.rgb(25, 79, 125) else Color.rgb(153, 199, 229)))
         }
     }
+
+    private fun railSubtreeBackground(): GradientDrawable =
+        GradientDrawable().apply {
+            cornerRadius = 7.dp.toFloat()
+            val dark = isDarkTheme()
+            setColor(if (dark) Color.rgb(11, 41, 67) else Color.rgb(247, 252, 255))
+            setStroke(1.dp, if (dark) Color.rgb(43, 103, 142) else Color.rgb(159, 194, 222))
+        }
 
     private fun railText(value: String, sp: Float, muted: Boolean = false): TextView =
         TextView(this).apply {
@@ -623,13 +630,14 @@ class AirportChartsActivity :
                     if (expanded) for (chart in items) {
                         airportRailRows.addView(railText(
                             (if (chart.chartNumber.isBlank()) "" else chart.chartNumber + " · ") + chart.name,
-                            10f, true
+                            10f, false
                         ).apply {
-                            setPadding(10.dp, 9.dp, 4.dp, 9.dp)
+                            setPadding(10.dp, 9.dp, 6.dp, 9.dp)
+                            background = railSubtreeBackground()
                             setOnClickListener { openChart(chart) }
                         }, LinearLayout.LayoutParams(
                             LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
-                        ).apply { leftMargin=7.dp })
+                        ).apply { leftMargin=9.dp; bottomMargin=4.dp })
                     }
                 }
             }
