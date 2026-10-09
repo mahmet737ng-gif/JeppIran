@@ -15,6 +15,11 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 URL = "https://raw.githubusercontent.com/davidmegginson/ourairports-data/main/runways.csv"
+# Approved annotated V2621 OIAA Airport Diagram: TRUE bearings, not magnetic.
+# Only these two runway ends are overridden; never apply 321 to other airports.
+# User-supplied bearings require independent current ADC/AIP verification.
+CONFIRMED_TRUE = {("OIAA", "32L"): 321.0, ("OIAA", "14R"): 141.0}
+
 
 def numeric(raw, low, high):
     if raw is None or str(raw).strip() == "":
@@ -66,6 +71,9 @@ def build(manifest_path, source=None):
             if not re.fullmatch(r"\d{2}[LRC]?", ident) and not re.fullmatch(r"\d{2}", ident):
                 continue
             true = numeric(heading, 0, 360)
+            approved = CONFIRMED_TRUE.get((icao, ident))
+            if approved is not None:
+                true = approved
             if true == 360:
                 true = 0.0
             runway = {
@@ -78,7 +86,8 @@ def build(manifest_path, source=None):
                 "lengthFt": round(length_ft) if length_ft is not None else None,
                 "widthFt": round(width_ft) if width_ft is not None else None,
                 "surface": (row.get("surface") or "").strip() or None,
-                "source": "OurAirports community data — verify current ADC/AIP",
+                "source": ("User-approved V2621 OIAA ADC annotation — TRUE bearing; verify current AIP"
+                           if approved is not None else "OurAirports community data — verify current ADC/AIP"),
             }
             grouped[icao].append(runway)
             with_heading += true is not None

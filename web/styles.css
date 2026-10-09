@@ -802,3 +802,12 @@ body:has(#homeView.active),body:has(#chartsView.active){background:#030c19}
   #chartsView.chart-open .viewer-actions{max-width:100%}
 }
 @media(prefers-reduced-motion:reduce){.charts-layout.active{transition:none}.aircraft-pulse{animation:none}}
+
+/* Task: TRUE/geographic runway orientation (same bearings as Android). */
+.runway-bearing-compass{width:100%;max-width:360px;display:flex;flex-direction:column;align-items:center;gap:2px}
+.runway-bearing-compass svg{display:block;width:min(100%,320px);height:190px;overflow:visible}
+.runway-bearing-compass strong{font-size:13px;color:#e4f6ff}
+.runway-bearing-compass small{font-size:11px;color:#8dbad9;text-align:center}
+.runway-bearing-unavailable{padding:32px 10px;color:#b3cee3;font-size:13px;text-align:center}
+.wind-compass{min-height:225px;padding:2px 0 9px}
+@media(max-width:620px){.runway-bearing-compass svg{height:155px}.wind-compass{min-height:195px}}

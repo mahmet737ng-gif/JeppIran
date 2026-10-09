@@ -196,7 +196,7 @@ function renderAirports(filter=""){
 $("#airportSearch").addEventListener("input",e=>renderAirports(e.target.value));
 function selectAirport(icao){
   selectedAirport=icao;selectedChart=null;airportTreeExpanded=true;profileProcedureTab="Airport";profileTab="Overview";
-  window.jeppiranSelectedRunway="";
+  window.jeppiranSelectedRunway=icao==="OIAA"?"32L":"";
   expanded=new Set(["Airport"]);
   $("#chartsView").classList.remove("chart-open");
   renderAirports($("#airportSearch").value);
@@ -260,14 +260,39 @@ function windComponents(raw,rwy){
 }
 function profileCurrentRunway(icao){
   const defaultRunways=(AIRPORT_PROFILE[icao]||{}).runways||[];
-  const runways=icao==="OIII"?defaultRunways:(airportRunwayMetadata[icao]||defaultRunways);
-  return runways.find(x=>x.name===window.jeppiranSelectedRunway)||runways[0]||null
+  const runways=(airportRunwayMetadata[icao]&&airportRunwayMetadata[icao].length)
+    ?airportRunwayMetadata[icao]:defaultRunways;
+  const desired=window.jeppiranSelectedRunway||(icao==="OIAA"?"32L":"");
+  return runways.find(x=>x.name===desired)||runways[0]||null;
+}
+// True-heading compass: north remains fixed; runway rotates clockwise from TRUE north.
+// A missing true heading yields no runway diagram rather than a false bearing.
+function runwayCompassMarkup(rw){
+  const heading=rw&&Number.isFinite(rw.headingTrue)?((rw.headingTrue%360)+360)%360:null;
+  if(heading===null)return '<div class="runway-bearing-unavailable">TRUE runway bearing unavailable</div>';
+  const runwayName=profileEsc(rw.name||"RWY");
+  const north='N';
+  return '<div class="runway-bearing-compass" role="img" aria-label="Runway '+runwayName+', geographic heading '+heading.toFixed(1)+' degrees clockwise from true north">'+
+    '<svg viewBox="0 0 320 214" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'+
+      '<circle cx="160" cy="108" r="82" fill="none" stroke="#286490" stroke-width="1.5"/>'+
+      '<path d="M160 20V37M160 180V196M72 108H89M231 108H248" stroke="#3d9acf" stroke-width="2"/>'+
+      '<text x="160" y="16" text-anchor="middle" fill="#8edbff" font-size="16" font-weight="700">N</text>'+
+      '<g transform="rotate('+heading+' 160 108)">'+
+        '<rect x="145" y="53" width="30" height="110" rx="2" fill="#102943" stroke="#c9eafa" stroke-width="2.5"/>'+
+        '<path d="M160 62V154" stroke="#c9eafa" stroke-width="2" stroke-dasharray="10 8"/>'+
+        '<path d="M160 33 L147 51 L173 51 Z" fill="#35c8ff"/>'+
+      '</g>'+
+      '<circle cx="160" cy="108" r="2.5" fill="#eefaff"/>'+
+    '</svg>'+
+    '<strong>RWY '+runwayName+' · '+heading.toFixed(1)+'° TRUE</strong>'+
+    '<small>Geographic bearing • clockwise from TRUE north</small>'+
+    '</div>';
 }
 function renderAirportProfile(icao){
   const root=$("#airportProfile");if(!root||icao!==selectedAirport)return;
   const community=airportMetadata[icao]||{};
-  const d={...(AIRPORT_PROFILE[icao]||{}),...(icao==="OIII"?{}:community)};
-  if(icao!=="OIII"&&airportRunwayMetadata[icao])d.runways=airportRunwayMetadata[icao];
+  const d={...(AIRPORT_PROFILE[icao]||{}),...community};
+  if(airportRunwayMetadata[icao]&&airportRunwayMetadata[icao].length)d.runways=airportRunwayMetadata[icao];
   const legacy=AIRPORTS[icao]||["",""];
   const meta=[community.name||legacy[0]||"Airport data unavailable",community.city||legacy[1]||""];
   const raw=wxCache[icao+":metar"]||"";
@@ -306,8 +331,8 @@ function renderAirportProfile(icao){
       '<div class="profile-quick"><button type="button" data-quick-proc="Airport"><span>▤</span>Charts</button><button type="button" data-quick-proc="Approach"><span>✈</span>Approaches</button><button type="button" data-quick-proc="Airport"><span>▦</span>Airport Diagram</button></div>'+
     '</div><div class="profile-col">'+
       '<section class="profile-card" id="profileWind"><header><span>WIND COMPONENTS '+(rw?"("+profileEsc(rw.name)+")":"")+'</span></header>'+
-      '<div class="wind-compass"><span>'+((comp)?'Wind '+comp.direction+'° / '+comp.speed+' kt':'Wind component data unavailable')+'</span><div class="rwy-visual"><span>'+profileEsc(rw?rw.name:"RUNWAY")+'</span></div></div>'+
-      '<div class="wind-data"><div><span>Runway heading (MAG)</span><b>'+(rw?(Number.isFinite(rw.headingMag)?rw.headingMag.toFixed(1)+"°":"—"):"—")+'</b></div><div><span>Runway heading (TRUE)</span><b>'+(rw?(Number.isFinite(rw.headingTrue)?rw.headingTrue.toFixed(1)+"°":"—"):"—")+'</b></div><div><span>METAR wind (TRUE)</span><b>'+(comp?comp.direction+"° / "+comp.speed+" kt":"—")+'</b></div><div><span class="wind-head">↑ '+(comp?comp.headName:"Headwind")+'</span><b class="wind-head">'+(comp?comp.head+" kt":"—")+'</b></div><div><span class="wind-cross">→ Crosswind</span><b class="wind-cross">'+(comp?comp.cross+" kt "+comp.crossName:"—")+'</b></div></div></section>'+
+      '<div class="wind-compass">'+runwayCompassMarkup(rw)+'</div>'+
+      '<div class="wind-data"><div><span>Runway bearing (TRUE / geographic)</span><b>'+(rw?(Number.isFinite(rw.headingTrue)?rw.headingTrue.toFixed(1)+"°":"—"):"—")+'</b></div><div><span>Magnetic bearing (unverified)</span><b>—</b></div><div><span>METAR wind (TRUE)</span><b>'+(comp?comp.direction+"° / "+comp.speed+" kt":"—")+'</b></div><div><span class="wind-head">↑ '+(comp?comp.headName:"Headwind")+'</span><b class="wind-head">'+(comp?comp.head+" kt":"—")+'</b></div><div><span class="wind-cross">→ Crosswind</span><b class="wind-cross">'+(comp?comp.cross+" kt "+comp.crossName:"—")+'</b></div></div></section>'+
       '<section class="profile-card" id="profileInfo"><header>ADDITIONAL INFORMATION</header>'+
       [['ICAO',icao],['IATA',d.iata||"—"],['Field elevation',Number.isFinite(d.elevation)?d.elevation.toLocaleString()+" ft":"—"],['Coordinates',Number.isFinite(d.lat)?d.lat.toFixed(4)+"N, "+d.lon.toFixed(4)+"E":"—"],['UTC time','<span class="profile-utc"></span>'],['Frequencies','Consult current ADC / AIP'],['Fuel / Services','Consult current AIP'],['Metadata source',community.source?'OurAirports / verify AIP':'Not available — verify AIP']].map(([k,v])=>'<div class="profile-info-row"><span>'+k+'</span><b>'+v+'</b></div>').join("")+'</section>'+
       '<div class="profile-alert" id="profileNotam">Runway dimensions and TRUE headings are community reference data, not verified AIP/ADC. Current NOTAM: please consult a validated current source. No status is inferred from missing data.</div>'+

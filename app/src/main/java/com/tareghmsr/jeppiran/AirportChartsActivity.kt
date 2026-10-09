@@ -328,20 +328,16 @@ class AirportChartsActivity :
                     String.format(java.util.Locale.US, "%.1f° TRUE", item.optDouble("headingTrue"))
                     else "TRUE heading unavailable"
                 val nameText=if (opposite.isBlank()) name else name+" / "+opposite
+                val highlighted = name == (selectedTrueRunway.ifBlank { if (icao == "OIAA") "32L" else runways.optJSONObject(0)?.optString("name", "").orEmpty() })
                 val row=bar().apply {
                     setPadding(11.dp,12.dp,11.dp,12.dp)
-                    background=round(surface2)
+                    background=round(if (highlighted) (if (dark) Color.rgb(7,54,97) else Color.rgb(205,235,255)) else surface2, highlighted)
                     addView(title("▱  "+nameText, 13f, textColor, true), LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.WRAP_CONTENT,1f))
                     addView(stack().apply {
                         addView(title(dims,12f,textColor,true))
                         addView(title(heading+" · MAG —",10f,muted))
                     })
-                    setOnClickListener {
-                        androidx.appcompat.app.AlertDialog.Builder(this@AirportChartsActivity)
-                            .setTitle("RWY "+nameText)
-                            .setMessage("Length × width: "+dims+"\n"+heading+"\nMagnetic heading: not verified\nSource: OurAirports; consult current ADC/AIP.")
-                            .setPositiveButton("OK",null).show()
-                    }
+                    setOnClickListener { selectTrueWindRunway(name) }
                 }
                 runwayCard.addView(row, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { bottomMargin=6.dp })
             }
@@ -360,17 +356,26 @@ class AirportChartsActivity :
         }
         put(left,shortcuts)
 
-        val wind=card("WIND COMPONENTS")
-        wind.addView(title("▱  SELECT RUNWAY / METAR",17f,textColor,true).apply {
-            gravity=Gravity.CENTER
-            setPadding(0,14.dp,0,14.dp)
-            background=round(surface2)
-        })
-        wind.addView(entry("Runway heading (MAG)","— · ADC required"))
-        wind.addView(entry("METAR wind (TRUE)","—"))
-        wind.addView(entry("↑ Headwind","—"))
-        wind.addView(entry("→ Crosswind","—"))
-        wind.addView(title("Calculations require current METAR and verified heading. Unavailable values are never guessed.",10f,muted))
+        val chosenName = selectedTrueRunway.ifBlank { if (icao == "OIAA") "32L" else runways?.optJSONObject(0)?.optString("name", "").orEmpty() }
+        val runwayForWind = (0 until (runways?.length() ?: 0)).mapNotNull {
+            runways?.optJSONObject(it)
+        }.firstOrNull { it.optString("name") == chosenName }
+            ?: runways?.optJSONObject(0)
+        val windRunwayName = runwayForWind?.optString("name", "—") ?: "—"
+        val trueBearing = if (runwayForWind != null && runwayForWind.has("headingTrue") && !runwayForWind.isNull("headingTrue"))
+            runwayForWind.optDouble("headingTrue", Double.NaN) else Double.NaN
+        val wind=card("WIND COMPONENTS  •  RWY " + windRunwayName)
+        wind.addView(TrueRunwayCompassView(this).apply {
+            runwayId = windRunwayName
+            headingTrue = if (trueBearing.isFinite()) trueBearing.toFloat() else null
+        }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 185.dp))
+        wind.addView(entry("Runway bearing (TRUE / geographic)",
+            if (trueBearing.isFinite()) String.format(java.util.Locale.US, "%.1f°", trueBearing) else "—"))
+        wind.addView(entry("Magnetic bearing", "— · not verified"))
+        wind.addView(entry("METAR wind (TRUE)", "—"))
+        wind.addView(entry("↑ Headwind", "—"))
+        wind.addView(entry("→ Crosswind", "—"))
+        wind.addView(title("Bearing measured clockwise from TRUE north; magnetic variation is not added.",10f,muted))
         put(right,wind)
 
         val details=card("ADDITIONAL INFORMATION")
@@ -497,6 +502,7 @@ class AirportChartsActivity :
             return
         }
         icao = code
+        selectedTrueRunway = if (code == "OIAA") "32L" else ""
         airportName = ChartRepository.airportName(code)
         city = ChartRepository.city(code)
         selectedCategory = ""
@@ -594,6 +600,26 @@ class AirportChartsActivity :
                 0, LinearLayout.LayoutParams.MATCH_PARENT, 1f
             ))
         }
+    }
+
+    // Only the selected runway changes. Keep the airport rail, charts and FSX untouched.
+    private var selectedTrueRunway: String = ""
+
+    private fun selectTrueWindRunway(name: String) {
+        if (!::profilePanel.isInitialized || !::root.isInitialized) return
+        selectedTrueRunway = name
+        val index = root.indexOfChild(profilePanel)
+        if (index < 0) return
+        val prior = profilePanel
+        val scrollY = (prior as? ScrollView)?.scrollY ?: 0
+        val replacement = buildAirportFactsPanel()
+        replacement.visibility = prior.visibility
+        root.removeViewAt(index)
+        profilePanel = replacement
+        root.addView(replacement, index, LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f
+        ))
+        (replacement as? ScrollView)?.post { it.scrollTo(0, scrollY) }
     }
 
     private lateinit var profilePanel: View
