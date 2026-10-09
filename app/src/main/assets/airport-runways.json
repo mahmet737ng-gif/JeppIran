@@ -155,30 +155,36 @@
       {
         "name": "30",
         "opposite": "",
-        "headingTrue": 300,
-        "headingMag": null,
+        "headingTrue": 304.13,
+        "headingMag": 300,
         "length": null,
         "width": null,
         "lengthFt": null,
         "widthFt": null,
         "surface": null,
-        "source": "Jeppesen cycle 2621 ADC, PDF p.38",
+        "source": "Iran AIP OIAW AD 2.12, published TRUE BRG; checked against Jeppesen V2621 ADC PDF p.38 (magnetic markings)",
         "adcPage": 38,
-        "adcReviewed": false
+        "adcReviewed": true,
+        "headingTrueVerified": true,
+        "headingDatum": "GEO (True)",
+        "trueHeadingSourceUrl": "https://ais.airport.ir/documents/452631/186839466/OIAW.pdf"
       },
       {
         "name": "12",
         "opposite": "",
-        "headingTrue": 120,
-        "headingMag": null,
+        "headingTrue": 124.11,
+        "headingMag": 120,
         "length": null,
         "width": null,
         "lengthFt": null,
         "widthFt": null,
         "surface": null,
-        "source": "Jeppesen cycle 2621 ADC, PDF p.38",
+        "source": "Iran AIP OIAW AD 2.12, published TRUE BRG; checked against Jeppesen V2621 ADC PDF p.38 (magnetic markings)",
         "adcPage": 38,
-        "adcReviewed": false
+        "adcReviewed": true,
+        "headingTrueVerified": true,
+        "headingDatum": "GEO (True)",
+        "trueHeadingSourceUrl": "https://ais.airport.ir/documents/452631/186839466/OIAW.pdf"
       }
     ],
     "OIBA": [
