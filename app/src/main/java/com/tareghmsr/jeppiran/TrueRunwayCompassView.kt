@@ -93,11 +93,11 @@ class TrueRunwayCompassView(context: Context) : View(context) {
         canvas.drawPath(arrow, ink)
         canvas.restore()
 
-        // METAR wind is reported FROM its TRUE direction. Draw a separate
+        // METAR wind arrow uses the direction printed in the METAR, without conversion. Draw a separate
         // inward yellow arrow; do not rotate it along with the runway.
         val wind = windFromTrue
         val speed = windSpeedKts
-        if (wind != null && wind.isFinite() && speed != null && speed > 0) {
+        if (wind != null && wind.isFinite() && speed != null && speed >= 3) {
             canvas.save()
             canvas.rotate(((wind % 360f) + 360f) % 360f)
             ink.color = Color.rgb(255, 210, 106)
@@ -123,8 +123,8 @@ class TrueRunwayCompassView(context: Context) : View(context) {
         canvas.drawText("RWY " + runwayId + " HDG · " + h.toInt() + "°",
             0f, 87f, ink)
         ink.textSize = 10f
-        ink.color = if (wind != null && speed != null && speed > 0) Color.rgb(255, 210, 106) else muted
-        canvas.drawText(if (wind != null && speed != null && speed > 0)
+        ink.color = if (wind != null && speed != null && speed >= 3) Color.rgb(255, 210, 106) else muted
+        canvas.drawText(if (wind != null && speed != null && speed >= 3)
             "WIND FROM " + wind.toInt() + "° / " + speed + " KT"
             else if (speed == 0) "CALM WIND" else "WIND DIRECTION UNAVAILABLE", 0f, 105f, ink)
         canvas.restore()
