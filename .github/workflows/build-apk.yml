@@ -159,9 +159,27 @@ jobs:
           python scripts/repair_georef_orientation.py \
             app/src/main/assets/chart-georef.json
 
-          python scripts/apply_georef_overrides.py \
-            app/src/main/assets/chart-georef.json \
-            app/src/main/assets/chart-georef-overrides.json
+          # The old OIAW override is bound to v18 / 2620 PDF bytes.
+          # Only apply it if BOTH the version and source PDF checksum match.
+          # Never copy a 2620 coordinate fix onto a 2621 chart by page number.
+          OVERRIDE_COMPATIBLE="$(python - <<'PY'
+          import json
+          from pathlib import Path
+          base=json.loads(Path('app/src/main/assets/chart-georef.json').read_text())
+          override=json.loads(Path('app/src/main/assets/chart-georef-overrides.json').read_text())
+          source=base.get('source') or {}
+          same=(source.get('chartDataVersion')==override.get('chartDataVersion') and
+                source.get('sha256')==override.get('sourceSha256'))
+          print('yes' if same else 'no')
+          PY
+          )"
+          if [ "$OVERRIDE_COMPATIBLE" = "yes" ]; then
+            python scripts/apply_georef_overrides.py \
+              app/src/main/assets/chart-georef.json \
+              app/src/main/assets/chart-georef-overrides.json
+          else
+            echo 'Ignoring source-mismatched V2620 georef override; 2621 charts remain unchanged.'
+          fi
 
           python -m pip install --quiet -r scripts/requirements-georef.txt
 
