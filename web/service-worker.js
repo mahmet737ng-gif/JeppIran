@@ -1,6 +1,6 @@
-const CACHE="jeppiran-pwa-v2621-aipgeo-subtree-2";
+const CACHE="jeppiran-pwa-v2621-adc-only-hdg-3";
 const PDF_CACHE="jeppiran-chart-pdfs-v2621-printclean-3";
-const SHELL=["./","./index.html","./styles.css?v=2621-aipgeo-subtree-2","./app.js?v=2621-aipgeo-subtree-2","./manifest.webmanifest","./app-icon.png","./vendor/pdf.min.mjs","./vendor/pdf.worker.min.mjs"];
+const SHELL=["./","./index.html","./styles.css?v=2621-adc-only-hdg-3","./app.js?v=2621-adc-only-hdg-3","./manifest.webmanifest","./app-icon.png","./vendor/pdf.min.mjs","./vendor/pdf.worker.min.mjs"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()));
 });
