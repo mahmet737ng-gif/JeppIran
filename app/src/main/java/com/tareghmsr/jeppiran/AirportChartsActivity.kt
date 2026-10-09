@@ -597,6 +597,26 @@ class AirportChartsActivity :
     }
 
     private lateinit var profilePanel: View
+    private var inlineChartView: InlineAirportChartView? = null
+
+    private fun showChartInline(chart: ChartRepository.ChartInfo) {
+        inlineChartView?.let { root.removeView(it) }
+        val panel = InlineAirportChartView(this, repository,
+            exit = { showProfileView() },
+            advanced = { item -> openChartAdvanced(item) }
+        )
+        inlineChartView = panel
+        root.addView(panel, root.indexOfChild(profilePanel) + 1,
+            LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f))
+        for (i in 0 until root.childCount) {
+            val child = root.getChildAt(i)
+            child.visibility = if (child === panel) View.VISIBLE else View.GONE
+        }
+        adjustRail(true)
+        panel.open(chart)
+    }
+
+
 
     private fun showProfileView() {
         if (!::profilePanel.isInitialized || !::root.isInitialized) return
@@ -612,7 +632,8 @@ class AirportChartsActivity :
         adjustRail(true)
         for (i in 0 until root.childCount) {
             val child = root.getChildAt(i)
-            child.visibility = if (child === profilePanel) View.GONE else View.VISIBLE
+            child.visibility = if (child === profilePanel || child === inlineChartView)
+                View.GONE else View.VISIBLE
         }
         if (!category.isNullOrEmpty() && ::searchBox.isInitialized) selectCategory(category)
     }
@@ -2438,7 +2459,11 @@ class AirportChartsActivity :
         )
     }
 
-    private fun openChart(
+    private fun openChart(chart: ChartRepository.ChartInfo) {
+        showChartInline(chart)
+    }
+
+    private fun openChartAdvanced(
         chart: ChartRepository.ChartInfo
     ) {
 
