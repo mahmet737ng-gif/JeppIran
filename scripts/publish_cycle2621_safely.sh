@@ -45,6 +45,33 @@ python scripts/build_chart_changes.py \
   --official chart-changes-final.json \
   --output cycle-build/chart-changes.json
 
+# Some new 2621 airports do not print an N/E coarse coordinate on the
+# first indexed page. Never invent an anchor. Skip ONLY their new GCP
+# candidates while retaining all their chart PDFs and index entries.
+python - <<'PY'
+from pathlib import Path
+p=Path("scripts/extract_chart_georef.py")
+s=p.read_text()
+old="""    if {entry['airport'] for entry in index.values()} != set(anchors):
+        raise ValueError('Cannot resolve the printed N/E airport coordinates for every indexed airport')"""
+new="""    missing = sorted({entry['airport'] for entry in index.values()} - set(anchors))
+    if missing:
+        print('No printed N/E coordinate (georef deferred, all charts retained):',
+              ', '.join(missing), flush=True)"""
+assert s.count(old)==1, "Unknown extractor source, fail closed"
+s=s.replace(old,new)
+marker="        decision = decisions.get(fingerprint, {})"
+replacement="""        if index[number]['airport'] not in anchors:
+            excluded.append({'page': number, 'airport': index[number]['airport'],
+                             'reason': 'No exact published/printed airport position available',
+                             'status': 'needs_verified_ground_control_points'})
+            continue
+        decision = decisions.get(fingerprint, {})"""
+assert s.count(marker)==1, "Cannot insert safe missing-control guard"
+s=s.replace(marker,replacement)
+p.write_text(s)
+PY
+
 python scripts/extract_chart_georef.py \
   --pdf Iran2621.pdf --index cycle-build/charts-current.json \
   --output cycle-build/chart-georef.json \
