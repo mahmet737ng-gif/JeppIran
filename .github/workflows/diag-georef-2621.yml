@@ -106,5 +106,12 @@ jobs:
              for x in primary if pagegeo.get(x["page"]) and pagegeo[x["page"]][0].get("airport")==x["airport"]][:5]
           res["approach_icao_unmatched_sample"]=[x["page"] for x in eligible["APP"] if not any(g.get("airport")==x["airport"] for g in pagegeo.get(x["page"],[]))][:20]
           res["georef_source_version_uses_previous_cycle"]=not match_source
+
+          adc_missing=[]
+          for x in eligible["ADC_PRIMARY"]:
+              gs=pagegeo.get(x["page"],[])
+              if not any(z.get("airport")==x["airport"] for z in gs):
+                  adc_missing.append({"page":x["page"],"icao":x["airport"],"plate":x.get("chart_number",""),"name":x.get("name","")})
+          print("ADC_MISSING_LIST="+json.dumps(adc_missing,ensure_ascii=False,sort_keys=True))
           print("GEOREF_CENSUS="+json.dumps(res,ensure_ascii=False,sort_keys=True))
           PY
