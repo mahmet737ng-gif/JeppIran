@@ -619,7 +619,9 @@ class AirportChartsActivity :
         root.addView(replacement, index, LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f
         ))
-        (replacement as? ScrollView)?.post { it.scrollTo(0, scrollY) }
+        (replacement as? ScrollView)?.let { view ->
+            view.post { view.scrollTo(0, scrollY) }
+        }
     }
 
     private lateinit var profilePanel: View
