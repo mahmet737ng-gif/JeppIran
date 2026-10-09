@@ -1,0 +1,83 @@
+name: Verify inspected V2621 pages 1-26 before release
+
+on:
+  push:
+    branches: [release/v2621-reviewed-pages-1-26]
+    paths:
+      - 'scripts/apply_reviewed_2621_pages.py'
+      - 'app/src/main/java/com/tareghmsr/jeppiran/ChartRepository.kt'
+      - '.github/workflows/verify-reviewed-v2621-pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  verify-reviewed-v2621:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Checkout with full PDF, preserved files
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install vector-PDF verification dependencies
+        run: python -m pip install PyMuPDF==1.26.6 numpy==2.3.5
+      - name: Apply source-checked corrections
+        run: python scripts/apply_reviewed_2621_pages.py
+      - name: Assert category integrity and clipped georeferencing
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          ix=json.loads(Path('app/src/main/assets/charts-current.json').read_text())
+          geo=json.loads(Path('app/src/main/assets/chart-georef.json').read_text())
+          by={r['page']:r for r in ix}
+          geoby={r['page']:r for r in geo['charts']}
+          assert len(ix)==1494 and len(by)==1494
+          assert len(geo['charts'])==776 and len(geoby)==776
+          for page in range(1,27):
+              assert page in by, f"missing source page {page}"
+          assert [by[i]['name'] for i in (10,11,25,26)]==[
+              'ILS Z RWY 32L','ILS Y RWY 32L',
+              'VOR RWY 31 (CAT C & D)','VOR RWY 31 (CAT A & B)']
+          assert all(geoby[p]['excludedBounds'] for p in (12,18))
+          assert all(geoby[p]['bounds']['top']>100 for p in (13,16))
+          assert len([r for r in ix if r['category']=='Approach'])==492
+          assert len(set(r['page'] for r in ix))==len(ix)
+          print('Validated all 26 published classification slots, 4 corrections and 776 georeferences')
+          PY
+          git diff --check
+      - name: Set up JDK
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+        with:
+          packages: platform-tools
+      - name: Install Android build platform
+        shell: bash
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager "platforms;android-36" "build-tools;36.0.0"
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Verify Kotlin and build smoke APK
+        run: |
+          gradle testDebugUnitTest assembleDebug --no-daemon
+      - name: Commit validated changes only on staging branch
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/src/main/assets/charts-current.json app/src/main/assets/chart-georef.json
+          if ! git diff --cached --quiet; then
+            git commit -m "Publish tested V2621 pages 1-26 titles and two measured map references"
+            git push origin HEAD:release/v2621-reviewed-pages-1-26
+          fi

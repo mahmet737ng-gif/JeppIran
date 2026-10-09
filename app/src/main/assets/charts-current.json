@@ -86,7 +86,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "11-1",
-    "name": "ILS Z OR LOC Z RWY 32L",
+    "name": "ILS Z RWY 32L",
     "pdf_page": 10
   },
   {
@@ -95,7 +95,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "11-2",
-    "name": "ILS Y OR LOC Y RWY 32L",
+    "name": "ILS Y RWY 32L",
     "pdf_page": 11
   },
   {
@@ -221,7 +221,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "13-3",
-    "name": "VOR RWY 31",
+    "name": "VOR RWY 31 (CAT C & D)",
     "pdf_page": 7
   },
   {
@@ -230,7 +230,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "13-4",
-    "name": "VOR RWY 31",
+    "name": "VOR RWY 31 (CAT A & B)",
     "pdf_page": 8
   },
   {

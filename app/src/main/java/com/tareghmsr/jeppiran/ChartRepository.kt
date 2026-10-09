@@ -475,6 +475,39 @@ class ChartRepository(
         FALLBACK_RELEASE_TAG
 
 
+    // Same-cycle downloaded chart metadata can outlive an APK upgrade.
+    // Only the four explicitly source-reviewed V2621 titles are overlaid.
+    // Future AIRAC cycles and all simulator configuration remain untouched.
+    private val hasReviewed2621Bundle: Boolean by lazy {
+        runCatching {
+            context.assets.open(MANIFEST_FILE).bufferedReader().use { reader ->
+                JSONObject(reader.readText()).optString("version") == "V2621"
+            }
+        }.getOrDefault(false)
+    }
+
+    private fun visuallyReviewed2621Title(
+        page: Int, icao: String, number: String, category: String, old: String
+    ): String {
+        val active = ChartUpdateStore.activeVersion(context)
+        if (!hasReviewed2621Bundle || (active.isNotBlank() && active != "V2621") ||
+            category != "Approach"
+        ) return old
+
+        return when {
+            page == 10 && icao == "OIAA" && number == "11-1" &&
+                old in setOf("ILS Z OR LOC Z RWY 32L", "ILS Z RWY 32L") -> "ILS Z RWY 32L"
+            page == 11 && icao == "OIAA" && number == "11-2" &&
+                old in setOf("ILS Y OR LOC Y RWY 32L", "ILS Y RWY 32L") -> "ILS Y RWY 32L"
+            page == 25 && icao == "OIAM" && number == "13-3" &&
+                old in setOf("VOR RWY 31", "VOR RWY 31 (CAT C & D)") -> "VOR RWY 31 (CAT C & D)"
+            page == 26 && icao == "OIAM" && number == "13-4" &&
+                old in setOf("VOR RWY 31", "VOR RWY 31 (CAT A & B)") -> "VOR RWY 31 (CAT A & B)"
+            else -> old
+        }
+    }
+
+
     private val chartList =
         mutableListOf<ChartInfo>()
 
@@ -1442,7 +1475,7 @@ class ChartRepository(
         val displayName =
             cleanRuntimeName(
 
-                rawName,
+                visuallyReviewed2621Title(page, itemIcao, chartNumber, category, rawName),
 
                 category,
 
