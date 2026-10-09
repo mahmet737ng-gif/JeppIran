@@ -1,0 +1,18 @@
+{
+  "source": "Iran2621.pdf",
+  "source_sha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+  "total_pages": 1654,
+  "images_at_200_dpi": 1654,
+  "manually_reviewed_pages": 32,
+  "unverified_pages": 1622,
+  "statuses": {
+    "MANUALLY_CHECKED_FULL_SIZE": 32,
+    "AWAITING_INDIVIDUAL_VISUAL_VERIFICATION": 1613,
+    "SOURCE_SUPPLEMENT": 9
+  },
+  "auto_audit_conflicts": 19,
+  "auto_audit_review_requests": 317,
+  "live_chart_data_modified": false,
+  "new_geo_approvals": 0,
+  "disclaimer": "Rendering and parsing all pages is not individual human visual confirmation. Unverified classifications and georeferences must not be deployed as validated."
+}
