@@ -1,5 +1,5 @@
 name: Safely publish JEPPIRAN chart cycle 2621
-# Retry 2: defer unknown N/E anchors without guessing, retain all charts.
+# Retry 3: reconcile proven unchanged procedure metadata before carrying georeferencing.
 
 on:
   push:
