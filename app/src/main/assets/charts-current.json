@@ -5770,12 +5770,12 @@
   },
   {
     "page": 642,
-    "airport": "OIMB",
+    "airport": "OIMT",
     "country": "Iran",
     "category": "Airport",
     "chart_number": "10-9",
     "name": "Airport Diagram Chart (ADC)",
-    "pdf_page": 15
+    "pdf_page": 5
   },
   {
     "page": 643,
@@ -5784,7 +5784,7 @@
     "category": "Airport",
     "chart_number": "10-9S",
     "name": "MINIMUMS",
-    "pdf_page": 5
+    "pdf_page": 6
   },
   {
     "page": 644,
@@ -5793,7 +5793,7 @@
     "category": "Approach",
     "chart_number": "13-1",
     "name": "VOR DME RWY 33 CAT C & D",
-    "pdf_page": 6
+    "pdf_page": 7
   },
   {
     "page": 645,
@@ -5802,7 +5802,7 @@
     "category": "Approach",
     "chart_number": "13-2",
     "name": "VOR DME RWY 33 CAT A & B",
-    "pdf_page": 7
+    "pdf_page": 8
   },
   {
     "page": 646,
@@ -5811,7 +5811,7 @@
     "category": "Approach",
     "chart_number": "13-3",
     "name": "APPROACH 13-3",
-    "pdf_page": 8
+    "pdf_page": 9
   },
   {
     "page": 647,
@@ -5820,7 +5820,7 @@
     "category": "Approach",
     "chart_number": "13-4",
     "name": "APPROACH 13-4",
-    "pdf_page": 9
+    "pdf_page": 10
   },
   {
     "page": 648,
@@ -5829,7 +5829,7 @@
     "category": "Approach",
     "chart_number": "16-1",
     "name": "NDB RWY 33 CAT C & D",
-    "pdf_page": 10
+    "pdf_page": 11
   },
   {
     "page": 649,
@@ -5838,7 +5838,7 @@
     "category": "Approach",
     "chart_number": "16-2",
     "name": "APPROACH 16-2",
-    "pdf_page": 11
+    "pdf_page": 12
   },
   {
     "page": 650,
@@ -7651,30 +7651,30 @@
   },
   {
     "page": 851,
-    "airport": "OITT",
+    "airport": "OITU",
     "country": "Iran",
     "category": "STAR",
     "chart_number": "10-2",
     "name": "TBZ 1N",
-    "pdf_page": 21
+    "pdf_page": 2
   },
   {
     "page": 852,
-    "airport": "OITT",
+    "airport": "OITU",
     "country": "Iran",
     "category": "STAR",
     "chart_number": "10-2A",
     "name": "TBZ 1P",
-    "pdf_page": 22
+    "pdf_page": 3
   },
   {
     "page": 853,
-    "airport": "OITT",
+    "airport": "OITU",
     "country": "Iran",
     "category": "SID",
     "chart_number": "10-3",
     "name": "TBZ 1A",
-    "pdf_page": 23
+    "pdf_page": 4
   },
   {
     "page": 854,
@@ -7683,7 +7683,7 @@
     "category": "Airport",
     "chart_number": "10-9",
     "name": "Airport Diagram Chart (ADC)",
-    "pdf_page": 2
+    "pdf_page": 5
   },
   {
     "page": 855,
@@ -7692,7 +7692,7 @@
     "category": "Approach",
     "chart_number": "13-1",
     "name": "VOR DME RWY 29",
-    "pdf_page": 3
+    "pdf_page": 6
   },
   {
     "page": 856,

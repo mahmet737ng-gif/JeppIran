@@ -1,4 +1,4 @@
-const CACHE="jeppiran-pwa-v2621-adc-qa1";
+const CACHE="jeppiran-pwa-v2621-tabas-maku-1";
 const PDF_CACHE="jeppiran-chart-pdfs-v2621-printclean-3";
 const SHELL=["./","./index.html","./styles.css?v=2621-icao-noglow-6","./app.js?v=2621-adc-qa1","./manifest.webmanifest","./app-icon.png","./vendor/pdf.min.mjs","./vendor/pdf.worker.min.mjs"];
 self.addEventListener("install",event=>{

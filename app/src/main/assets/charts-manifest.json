@@ -7,7 +7,7 @@
   "cycle": "2621",
   "effective_from": "",
   "effective_to": "",
-  "generated_at": "2026-10-09T00:00:00Z",
+  "generated_at": "2026-10-09T22:14:32.716048+00:00",
   "pages": 1654,
   "airports": {
     "LTAC": {
@@ -1146,10 +1146,10 @@
     },
     "OIMB": {
       "file": "OIMB.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-3/OIMB.pdf",
-      "sha256": "15995e340fee0f2840f36dd495a7d6c7d0c1acdb2ff00f52ea0b7e5ee8952078",
-      "size": 395416,
-      "pages": 15,
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-tabas-maku-fix-1/OIMB.pdf",
+      "sha256": "a77274a1435e904ff9402b9fe5fa13038bb55817f49ee9180b19d1a0ea13d2ab",
+      "size": 384861,
+      "pages": 14,
       "global_pages": [
         553,
         554,
@@ -1164,8 +1164,7 @@
         563,
         564,
         565,
-        566,
-        642
+        566
       ]
     },
     "OIMJ": {
@@ -1276,15 +1275,16 @@
     },
     "OIMT": {
       "file": "OIMT.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-3/OIMT.pdf",
-      "sha256": "19998b47b926187a164647c449dc18105a29457a3190c2bf7ae8a24d08a68f61",
-      "size": 421282,
-      "pages": 11,
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-tabas-maku-fix-1/OIMT.pdf",
+      "sha256": "59c83c21e7b1f74c524fe0d54dff4bad8c9ba505aad383560e896d037cc35f46",
+      "size": 431837,
+      "pages": 12,
       "global_pages": [
         638,
         639,
         640,
         641,
+        642,
         643,
         644,
         645,
@@ -1603,10 +1603,10 @@
     },
     "OITT": {
       "file": "OITT.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-3/OITT.pdf",
-      "sha256": "3d5fce8425ceb20317a6733ecba628ef8c77adf709908d464fff0f8321d2afca",
-      "size": 1501947,
-      "pages": 23,
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-tabas-maku-fix-1/OITT.pdf",
+      "sha256": "5f2dae1f26d74ca9a963009ef1b08be29a1e2b5042b4ba7ca08d65bc64209a75",
+      "size": 826764,
+      "pages": 20,
       "global_pages": [
         772,
         808,
@@ -1627,20 +1627,20 @@
         846,
         847,
         848,
-        849,
-        851,
-        852,
-        853
+        849
       ]
     },
     "OITU": {
       "file": "OITU.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-3/OITU.pdf",
-      "sha256": "8f5f5abd314c0dd6d522bdcbcefbb615ac2f17ca3b45ad06495fe8ba2c96ec48",
-      "size": 191950,
-      "pages": 3,
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-tabas-maku-fix-1/OITU.pdf",
+      "sha256": "19d14fd00723791e065f16f30a5f06ffb7f04b9c9851859b9f696395ff1387b2",
+      "size": 877588,
+      "pages": 6,
       "global_pages": [
         850,
+        851,
+        852,
+        853,
         854,
         855
       ]
@@ -2356,7 +2356,7 @@
     }
   },
   "display_transform": "Print overlay removed without cropping; original PDF page boxes retained",
-  "chart_index_revision": "V2621-final-94-reviewed",
+  "chart_index_revision": "V2621-tabas-maku-ownership-fix-1",
   "indexed_terminal_pages": 1642,
   "source_pages_including_notices": 1654,
   "additional_documents": [
@@ -2381,5 +2381,6 @@
       ],
       "type": "REVISION_LETTER_AND_CHANGE_NOTICES"
     }
-  ]
+  ],
+  "airport_pdf_patch_release": "charts-V2621-tabas-maku-fix-1"
 }
