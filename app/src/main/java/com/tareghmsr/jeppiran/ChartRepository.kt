@@ -178,6 +178,12 @@ class ChartRepository(
                 ),
 
                 AirportInfo(
+                    "OIMT",
+                    "TABAS AIRPORT",
+                    "TABAS"
+                ),
+
+                AirportInfo(
                     "OIMM",
                     "MASHHAD INTERNATIONAL",
                     "MASHHAD"
@@ -229,6 +235,12 @@ class ChartRepository(
                     "OITT",
                     "TABRIZ INTERNATIONAL",
                     "TABRIZ"
+                ),
+
+                AirportInfo(
+                    "OITU",
+                    "MAKU AIRPORT",
+                    "MAKU"
                 ),
 
                 AirportInfo(
