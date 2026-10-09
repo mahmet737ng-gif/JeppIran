@@ -508,6 +508,41 @@ class ChartRepository(
     }
 
 
+    // Only source-verified V2621 metadata overrides: a previously downloaded
+    // same-cycle JSON bundle can outlive an Android APK upgrade. No PDF pages,
+    // aircraft georeferences, simulator settings or later AIRAC cycles change.
+    private fun audited2621Metadata(
+        page: Int,
+        icao: String,
+        category: String,
+        plate: String,
+        title: String
+    ): Triple<String, String, String> {
+        val active = ChartUpdateStore.activeVersion(context)
+        if (!hasReviewed2621Bundle ||
+            (active.isNotBlank() && active != "V2621")
+        ) return Triple(category, plate, title)
+
+        if (icao == "LTFM" && category == "STAR" &&
+            page in setOf(
+                1200, 1201, 1203, 1205, 1207, 1209, 1211, 1213,
+                1214, 1215, 1216, 1217, 1218, 1219, 1220, 1226,
+                1228, 1229
+            ) && plate.startsWith("30-3")
+        ) return Triple("SID", plate, title)
+
+        if (icao != "UDYZ" || category != "Approach") {
+            return Triple(category, plate, title)
+        }
+        return when (page) {
+            1347 -> Triple(category, "11-1", "ILS DME RWY 08")
+            1348 -> Triple(category, "11-1A", "CAT II ILS DME RWY 08")
+            1350 -> Triple(category, "12-2", "RNP Z RWY 26")
+            1351 -> Triple(category, "12-3", "RNP Y RWY 26")
+            else -> Triple(category, plate, title)
+        }
+    }
+
     private val chartList =
         mutableListOf<ChartInfo>()
 
@@ -1466,6 +1501,10 @@ class ChartRepository(
             )
 
 
+        val audited = audited2621Metadata(
+            page, itemIcao, category, chartNumber, rawName
+        )
+
         val airportInfo =
             airport(
                 itemIcao
@@ -1475,11 +1514,13 @@ class ChartRepository(
         val displayName =
             cleanRuntimeName(
 
-                visuallyReviewed2621Title(page, itemIcao, chartNumber, category, rawName),
+                visuallyReviewed2621Title(
+                    page, itemIcao, audited.second, audited.first, audited.third
+                ),
 
-                category,
+                audited.first,
 
-                chartNumber,
+                audited.second,
 
                 page
             )
@@ -1509,10 +1550,10 @@ class ChartRepository(
                         ?: itemIcao,
 
                 category =
-                    category,
+                    audited.first,
 
                 chartNumber =
-                    chartNumber,
+                    audited.second,
 
                 name =
                     displayName
