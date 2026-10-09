@@ -409,7 +409,7 @@ class AirportChartsActivity :
         val adcBearing = if (runwayForWind != null && runwayForWind.has("headingAdc") && !runwayForWind.isNull("headingAdc"))
             runwayForWind.optDouble("headingAdc", Double.NaN) else Double.NaN
         val (windFrom, windSpeed) = cachedMetarWind()
-        val windDelta = if (windFrom != null && windSpeed != null && adcBearing.isFinite())
+        val windDelta = if (windFrom != null && windSpeed != null && windSpeed >= 3 && adcBearing.isFinite())
             Math.toRadians(windFrom.toDouble() - adcBearing) else null
         val headValue = windDelta?.let { windSpeed!!.toDouble() * kotlin.math.cos(it) }
         val crossValue = windDelta?.let { windSpeed!!.toDouble() * kotlin.math.sin(it) }
@@ -427,13 +427,26 @@ class AirportChartsActivity :
             else if (windSpeed == 0) "CALM"
             else if (windFrom == null) "VRB / " + windSpeed + " kt"
             else String.format(java.util.Locale.US, "%03d° / %d kt", windFrom.toInt(), windSpeed)))
-        wind.addView(entry("↑ Headwind",
-            headValue?.let { String.format(java.util.Locale.US, "%.1f kt %s", kotlin.math.abs(it),
-                if (it >= 0) "headwind" else "tailwind") } ?: "—"))
+        wind.addView(entry(
+            if (headValue == null) "↑ Headwind / Tailwind" else if (headValue >= 0) "↑ Headwind" else "↓ Tailwind",
+            headValue?.let { String.format(java.util.Locale.US, "%.1f kt", kotlin.math.abs(it)) } ?: "—"
+        ).apply {
+            val tail = headValue?.let { -it }
+            val statusColor = when {
+                headValue == null -> muted
+                headValue >= 0 -> Color.rgb(66, 230, 158)
+                tail != null && tail > 5 -> Color.rgb(255, 98, 115)
+                tail != null && tail >= 3 -> Color.rgb(255, 207, 74)
+                else -> muted
+            }
+            for (i in 0 until childCount) {
+                (getChildAt(i) as? android.widget.TextView)?.setTextColor(statusColor)
+            }
+        })
         wind.addView(entry("→ Crosswind",
             crossValue?.let { String.format(java.util.Locale.US, "%.1f kt from %s", kotlin.math.abs(it),
                 if (it >= 0) "right" else "left") } ?: "—"))
-        wind.addView(title("Runway vector uses the ADC heading as printed; no magnetic correction. Wind components are approximate if wind/ADC reference systems differ.",10f,muted))
+        wind.addView(title("Wind arrow and components use raw METAR direction versus the printed ADC heading; no conversion.",10f,muted))
         put(right,wind)
 
         val details=card("ADDITIONAL INFORMATION")
