@@ -1,0 +1,493 @@
+{
+  "cycle": "V2621",
+  "source_sha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+  "verification": "Vector graticule extraction only, no independent geodetic holdout; NOT FOR ACTUAL NAVIGATION",
+  "summary": {
+    "REJECTED_AUTOMATED_FIT_NEEDS_REVIEW": 22,
+    "MEASURED_GRID_CANDIDATE": 2
+  },
+  "rows": [
+    {
+      "page": 71,
+      "index_icao": "OIBB",
+      "printed_icao": "OIBB",
+      "index_plate": "10-9",
+      "printed_plate": "10-9",
+      "index_category": "Airport",
+      "index_owner_mismatch": false,
+      "existing_georef_page_owner": null,
+      "has_record_under_correct_owner": false,
+      "source_anchor": {
+        "lat": 28.95,
+        "lon": 50.83
+      },
+      "contains_not_to_scale": false,
+      "extraction_status": "REJECTED_AUTOMATED_FIT_NEEDS_REVIEW",
+      "candidate": false,
+      "failure_reason": "Invalid affine fit: rank 3, residual 38.648"
+    },
+    {
+      "page": 118,
+      "index_icao": "OIBL",
+      "printed_icao": "OIBL",
+      "index_plate": "10-9",
+      "printed_plate": "10-9",
+      "index_category": "Airport",
+      "index_owner_mismatch": false,
+      "existing_georef_page_owner": null,
+      "has_record_under_correct_owner": false,
+      "source_anchor": {
+        "lat": 26.531666666666666,
+        "lon": 54.82833333333333
+      },
+      "contains_not_to_scale": false,
+      "extraction_status": "REJECTED_AUTOMATED_FIT_NEEDS_REVIEW",
+      "candidate": false,
+      "failure_reason": "Conformal scale derivation falls outside the plan view"
+    },
+    {
+      "page": 131,
+      "index_icao": "OIBP",
+      "printed_icao": "OIBP",
+      "index_plate": "10-9",
+      "printed_plate": "10-9",
+      "index_category": "Airport",
+      "index_owner_mismatch": false,
+      "existing_georef_page_owner": null,
+      "has_record_under_correct_owner": false,
+      "source_anchor": {
+        "lat": 27.38,
+        "lon": 52.73833333333333
+      },
+      "contains_not_to_scale": false,
+      "extraction_status": "REJECTED_AUTOMATED_FIT_NEEDS_REVIEW",
+      "candidate": false,
+      "failure_reason": "Invalid affine fit: rank 3, residual 4.681"
+    },
+    {
+      "page": 211,
+      "index_icao": "OICI",
+      "printed_icao": "OICI",
+      "index_plate": "10-9",
+      "printed_plate": "10-9",
+      "index_category": "Airport",
+      "index_owner_mismatch": false,
+      "existing_georef_page_owner": null,
+      "has_record_under_correct_owner": false,
+      "source_anchor": {
+        "lat": 33.585,
+        "lon": 46.405
+      },
+      "contains_not_to_scale": false,
+      "extraction_status": "REJECTED_AUTOMATED_FIT_NEEDS_REVIEW",
+      "candidate": false,
+      "failure_reason": "No measured latitude/longitude grid could be resolved"
+    },
+    {
+      "page": 221,
+      "index_icao": "OICK",
+      "printed_icao": "OICK",
+      "index_plate": "10-9",
+      "printed_plate": "10-9",
+      "index_category": "Airport",
+      "index_owner_mismatch": false,
+      "existing_georef_page_owner": null,
+      "has_record_under_correct_owner": false,
+      "source_anchor": {
+        "lat": 33.43833333333333,
+        "lon": 48.28
+      },
+      "contains_not_to_scale": false,
+      "extraction_status": "REJECTED_AUTOMATED_FIT_NEEDS_REVIEW",
+      "candidate": false,
+      "failure_reason": "Invalid affine fit: rank 3, residual 158.406"
+    },
+    {
+      "page": 264,
+      "index_icao": "OIFM",
+      "printed_icao": "OIFM",
+      "index_plate": "10-9",
+      "printed_plate": "10-9",
+      "index_category": "Airport",
+      "index_owner_mismatch": false,
+      "existing_georef_page_owner": null,
+      "has_record_under_correct_owner": false,
+      "source_anchor": {
+        "lat": 32.751666666666665,
+        "lon": 51.86333333333333
+      },
+      "contains_not_to_scale": false,
+      "extraction_status": "REJECTED_AUTOMATED_FIT_NEEDS_REVIEW",
+      "candidate": false,
+      "failure_reason": "No measured latitude/longitude grid could be resolved"
+    },
+    {
+      "page": 299,
+      "index_icao": "OIFS",
+      "printed_icao": "OIFS",
+      "index_plate": "10-9",
+      "printed_plate": "10-9",
+      "index_category": "Airport",
+      "index_owner_mismatch": false,
+      "existing_georef_page_owner": null,
+      "has_record_under_correct_owner": false,
+      "source_anchor": {
+        "lat": 32.29666666666667,
+        "lon": 50.84166666666667
+      },
+      "contains_not_to_scale": false,
+      "extraction_status": "REJECTED_AUTOMATED_FIT_NEEDS_REVIEW",
+      "candidate": false,
+      "failure_reason": "Invalid affine fit: rank 3, residual 5.484"
+    },
+    {
+      "page": 342,
+      "index_icao": "OIHH",
+      "printed_icao": "OIHH",
+      "index_plate": "10-9",
+      "printed_plate": "10-9",
+      "index_category": "Airport",
+      "index_owner_mismatch": false,
+      "existing_georef_page_owner": null,
+      "has_record_under_correct_owner": false,
+      "source_anchor": {
+        "lat": 34.87,
+        "lon": 48.55
+      },
+      "contains_not_to_scale": false,
+      "extraction_status": "REJECTED_AUTOMATED_FIT_NEEDS_REVIEW",
+      "candidate": false,
+      "failure_reason": "Conformal scale derivation falls outside the plan view"
+    },
+    {
+      "page": 561,
+      "index_icao": "OIMB",
+      "printed_icao": "OIMB",
+      "index_plate": "10-9",
+      "printed_plate": "10-9",
+      "index_category": "Airport",
+      "index_owner_mismatch": false,
+      "existing_georef_page_owner": null,
+      "has_record_under_correct_owner": false,
+      "source_anchor": {
+        "lat": 32.89833333333333,
+        "lon": 59.266666666666666
+      },
+      "contains_not_to_scale": false,
+      "extraction_status": "REJECTED_AUTOMATED_FIT_NEEDS_REVIEW",
+      "candidate": false,
+      "failure_reason": "Invalid affine fit: rank 3, residual 8.736"
+    },
+    {
+      "page": 622,
+      "index_icao": "OIMN",
+      "printed_icao": "OIMN",
+      "index_plate": "10-9",
+      "printed_plate": "10-9",
+      "index_category": "Airport",
+      "index_owner_mismatch": false,
+      "existing_georef_page_owner": null,
+      "has_record_under_correct_owner": false,
+      "source_anchor": {
+        "lat": 37.49,
+        "lon": 57.306666666666665
+      },
+      "contains_not_to_scale": false,
+      "extraction_status": "REJECTED_AUTOMATED_FIT_NEEDS_REVIEW",
+      "candidate": false,
+      "failure_reason": "No measured latitude/longitude grid could be resolved"
+    },
+    {
+      "page": 651,
+      "index_icao": "OING",
+      "printed_icao": "OINE",
+      "index_plate": "10-9",
+      "printed_plate": "10-9",
+      "index_category": "Airport",
+      "index_owner_mismatch": true,
+      "existing_georef_page_owner": null,
+      "has_record_under_correct_owner": false,
+      "source_anchor": {
+        "lat": 37.375,
+        "lon": 55.45166666666667
+      },
+      "contains_not_to_scale": false,
+      "extraction_status": "REJECTED_AUTOMATED_FIT_NEEDS_REVIEW",
+      "candidate": false,
+      "failure_reason": "Conformal scale derivation falls outside the plan view"
+    },
+    {
+      "page": 714,
+      "index_icao": "OISR",
+      "printed_icao": "OISR",
+      "index_plate": "10-9",
+      "printed_plate": "10-9",
+      "index_category": "Airport",
+      "index_owner_mismatch": false,
+      "existing_georef_page_owner": null,
+      "has_record_under_correct_owner": false,
+      "source_anchor": {
+        "lat": 27.373333333333335,
+        "lon": 53.18833333333333
+      },
+      "contains_not_to_scale": false,
+      "extraction_status": "REJECTED_AUTOMATED_FIT_NEEDS_REVIEW",
+      "candidate": false,
+      "failure_reason": "Invalid affine fit: rank 3, residual 5.520"
+    },
+    {
+      "page": 751,
+      "index_icao": "OISS",
+      "printed_icao": "OISS",
+      "index_plate": "10-9",
+      "printed_plate": "10-9",
+      "index_category": "Airport",
+      "index_owner_mismatch": false,
+      "existing_georef_page_owner": null,
+      "has_record_under_correct_owner": false,
+      "source_anchor": {
+        "lat": 29.54,
+        "lon": 52.58833333333333
+      },
+      "contains_not_to_scale": false,
+      "extraction_status": "REJECTED_AUTOMATED_FIT_NEEDS_REVIEW",
+      "candidate": false,
+      "failure_reason": "No measured latitude/longitude grid could be resolved"
+    },
+    {
+      "page": 794,
+      "index_icao": "OITL",
+      "printed_icao": "OITL",
+      "index_plate": "10-9",
+      "printed_plate": "10-9",
+      "index_category": "Airport",
+      "index_owner_mismatch": false,
+      "existing_georef_page_owner": null,
+      "has_record_under_correct_owner": false,
+      "source_anchor": {
+        "lat": 38.32666666666667,
+        "lon": 48.425
+      },
+      "contains_not_to_scale": false,
+      "extraction_status": "REJECTED_AUTOMATED_FIT_NEEDS_REVIEW",
+      "candidate": false,
+      "failure_reason": "Invalid affine fit: rank 3, residual 8.892"
+    },
+    {
+      "page": 808,
+      "index_icao": "OITT",
+      "printed_icao": "OITM",
+      "index_plate": "10-9",
+      "printed_plate": "10-9",
+      "index_category": "Airport",
+      "index_owner_mismatch": true,
+      "existing_georef_page_owner": null,
+      "has_record_under_correct_owner": false,
+      "source_anchor": {
+        "lat": 37.348333333333336,
+        "lon": 46.13333333333333
+      },
+      "contains_not_to_scale": false,
+      "extraction_status": "REJECTED_AUTOMATED_FIT_NEEDS_REVIEW",
+      "candidate": false,
+      "failure_reason": "No measured latitude/longitude grid could be resolved"
+    },
+    {
+      "page": 859,
+      "index_icao": "OITZ",
+      "printed_icao": "OITZ",
+      "index_plate": "10-9",
+      "printed_plate": "10-9",
+      "index_category": "Airport",
+      "index_owner_mismatch": false,
+      "existing_georef_page_owner": null,
+      "has_record_under_correct_owner": false,
+      "source_anchor": {
+        "lat": 36.775,
+        "lon": 48.36
+      },
+      "contains_not_to_scale": false,
+      "extraction_status": "REJECTED_AUTOMATED_FIT_NEEDS_REVIEW",
+      "candidate": false,
+      "failure_reason": "Invalid affine fit: rank 3, residual 4.920"
+    },
+    {
+      "page": 961,
+      "index_icao": "OIZS",
+      "printed_icao": "OIZS",
+      "index_plate": "10-9",
+      "printed_plate": "10-9",
+      "index_category": "Airport",
+      "index_owner_mismatch": false,
+      "existing_georef_page_owner": null,
+      "has_record_under_correct_owner": false,
+      "source_anchor": {
+        "lat": 27.418333333333333,
+        "lon": 62.31666666666667
+      },
+      "contains_not_to_scale": false,
+      "extraction_status": "REJECTED_AUTOMATED_FIT_NEEDS_REVIEW",
+      "candidate": false,
+      "failure_reason": "Conformal scale derivation falls outside the plan view"
+    },
+    {
+      "page": 1001,
+      "index_icao": "ORER",
+      "printed_icao": "ORER",
+      "index_plate": "10-9",
+      "printed_plate": "10-9",
+      "index_category": "Airport",
+      "index_owner_mismatch": false,
+      "existing_georef_page_owner": null,
+      "has_record_under_correct_owner": false,
+      "source_anchor": {
+        "lat": 36.23833333333334,
+        "lon": 43.946666666666665
+      },
+      "contains_not_to_scale": false,
+      "extraction_status": "REJECTED_AUTOMATED_FIT_NEEDS_REVIEW",
+      "candidate": false,
+      "failure_reason": "Invalid affine fit: rank 3, residual 8.269"
+    },
+    {
+      "page": 1368,
+      "index_icao": "UGTB",
+      "printed_icao": "UGTB",
+      "index_plate": "10-9",
+      "printed_plate": "10-9",
+      "index_category": "Airport",
+      "index_owner_mismatch": false,
+      "existing_georef_page_owner": null,
+      "has_record_under_correct_owner": false,
+      "source_anchor": {
+        "lat": 41.67,
+        "lon": 44.955
+      },
+      "contains_not_to_scale": false,
+      "extraction_status": "REJECTED_AUTOMATED_FIT_NEEDS_REVIEW",
+      "candidate": false,
+      "failure_reason": "Invalid affine fit: rank 3, residual 4.720"
+    },
+    {
+      "page": 1388,
+      "index_icao": "UGSB",
+      "printed_icao": "UGSB",
+      "index_plate": "10-9",
+      "printed_plate": "10-9",
+      "index_category": "Airport",
+      "index_owner_mismatch": false,
+      "existing_georef_page_owner": null,
+      "has_record_under_correct_owner": false,
+      "source_anchor": {
+        "lat": 41.61,
+        "lon": 41.6
+      },
+      "contains_not_to_scale": false,
+      "extraction_status": "REJECTED_AUTOMATED_FIT_NEEDS_REVIEW",
+      "candidate": false,
+      "failure_reason": "No measured latitude/longitude grid could be resolved"
+    },
+    {
+      "page": 1472,
+      "index_icao": "OMDW",
+      "printed_icao": "OMDW",
+      "index_plate": "20-9",
+      "printed_plate": "20-9",
+      "index_category": "Airport",
+      "index_owner_mismatch": false,
+      "existing_georef_page_owner": null,
+      "has_record_under_correct_owner": false,
+      "source_anchor": {
+        "lat": 24.918333333333333,
+        "lon": 55.175
+      },
+      "contains_not_to_scale": false,
+      "extraction_status": "REJECTED_AUTOMATED_FIT_NEEDS_REVIEW",
+      "candidate": false,
+      "failure_reason": "Invalid affine fit: rank 3, residual 6.444"
+    },
+    {
+      "page": 1536,
+      "index_icao": "OTHH",
+      "printed_icao": "OTHH",
+      "index_plate": "20-9",
+      "printed_plate": "20-9",
+      "index_category": "Airport",
+      "index_owner_mismatch": false,
+      "existing_georef_page_owner": null,
+      "has_record_under_correct_owner": false,
+      "source_anchor": {
+        "lat": 25.275,
+        "lon": 51.608333333333334
+      },
+      "contains_not_to_scale": false,
+      "extraction_status": "MEASURED_GRID_CANDIDATE",
+      "candidate": true,
+      "axis_count_measured": {
+        "latitude": 4,
+        "longitude": 2
+      },
+      "method": "paired_printed_graticule_vector_ticks",
+      "grid_max_residual_pdf_points": 0.072028,
+      "count_control_points": 8,
+      "insets_detected": 0,
+      "bbox": {
+        "left": 8.4,
+        "top": 18.84,
+        "right": 583.2,
+        "bottom": 762.48
+      }
+    },
+    {
+      "page": 1580,
+      "index_icao": "OPKC",
+      "printed_icao": "OPKC",
+      "index_plate": "10-9",
+      "printed_plate": "10-9",
+      "index_category": "Airport",
+      "index_owner_mismatch": false,
+      "existing_georef_page_owner": null,
+      "has_record_under_correct_owner": false,
+      "source_anchor": {
+        "lat": 24.908333333333335,
+        "lon": 67.16333333333333
+      },
+      "contains_not_to_scale": false,
+      "extraction_status": "REJECTED_AUTOMATED_FIT_NEEDS_REVIEW",
+      "candidate": false,
+      "failure_reason": "Invalid affine fit: rank 3, residual 10.236"
+    },
+    {
+      "page": 1623,
+      "index_icao": "OPIS",
+      "printed_icao": "OPIS",
+      "index_plate": "20-9",
+      "printed_plate": "20-9",
+      "index_category": "Airport",
+      "index_owner_mismatch": false,
+      "existing_georef_page_owner": null,
+      "has_record_under_correct_owner": false,
+      "source_anchor": {
+        "lat": 33.54833333333333,
+        "lon": 72.825
+      },
+      "contains_not_to_scale": false,
+      "extraction_status": "MEASURED_GRID_CANDIDATE",
+      "candidate": true,
+      "axis_count_measured": {
+        "latitude": 2,
+        "longitude": 4
+      },
+      "method": "paired_printed_graticule_vector_ticks",
+      "grid_max_residual_pdf_points": 0.072012,
+      "count_control_points": 8,
+      "insets_detected": 0,
+      "bbox": {
+        "left": 85.44,
+        "top": 83.52,
+        "right": 526.32,
+        "bottom": 409.8
+      }
+    }
+  ]
+}
