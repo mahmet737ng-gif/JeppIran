@@ -1,7 +1,7 @@
 {
   "cycle": "V2621",
   "source": "Terminal chart cycle V2621: headings copied from ADC runway-end annotations, not AIP/OurAirports",
-  "notice": "ADC numbers are displayed exactly as charted, with no magnetic variation calculation or conversion. Most entries await independent visual review; NOT FOR ACTUAL NAVIGATION.",
+  "notice": "For JEPPIRAN runway schematics display only headingAdc: number printed alongside each runway end in V2621 ADC, unchanged. This is not necessarily a geographic (TRUE) bearing. Most records await manual chart review; not for actual navigation.",
   "airport_count": 75,
   "runway_direction_count": 196,
   "airports": {
@@ -9,8 +9,6 @@
       {
         "name": "21R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -25,8 +23,6 @@
       {
         "name": "21C",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -41,8 +37,6 @@
       {
         "name": "03L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -57,8 +51,6 @@
       {
         "name": "03C",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -73,8 +65,6 @@
       {
         "name": "03R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -89,8 +79,6 @@
       {
         "name": "21L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -107,8 +95,6 @@
       {
         "name": "14R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -123,8 +109,6 @@
       {
         "name": "32L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -141,8 +125,6 @@
       {
         "name": "13",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -157,8 +139,6 @@
       {
         "name": "31",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -175,8 +155,6 @@
       {
         "name": "30",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": 300,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -191,8 +169,6 @@
       {
         "name": "12",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": 120,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -209,8 +185,6 @@
       {
         "name": "08",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -225,8 +199,6 @@
       {
         "name": "26",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -243,8 +215,6 @@
       {
         "name": "31L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -259,8 +229,6 @@
       {
         "name": "31R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -275,8 +243,6 @@
       {
         "name": "13R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -291,8 +257,6 @@
       {
         "name": "13L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -309,8 +273,6 @@
       {
         "name": "09L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -325,8 +287,6 @@
       {
         "name": "27R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -341,8 +301,6 @@
       {
         "name": "27L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -357,8 +315,6 @@
       {
         "name": "09R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -375,8 +331,6 @@
       {
         "name": "08",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -391,8 +345,6 @@
       {
         "name": "26",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -409,8 +361,6 @@
       {
         "name": "13",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -425,8 +375,6 @@
       {
         "name": "31",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -443,8 +391,6 @@
       {
         "name": "13",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -459,8 +405,6 @@
       {
         "name": "31",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -477,8 +421,6 @@
       {
         "name": "30",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -493,8 +435,6 @@
       {
         "name": "12",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -511,8 +451,6 @@
       {
         "name": "11",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -527,8 +465,6 @@
       {
         "name": "29",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -545,8 +481,6 @@
       {
         "name": "11L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -561,8 +495,6 @@
       {
         "name": "29R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -577,8 +509,6 @@
       {
         "name": "29L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -593,8 +523,6 @@
       {
         "name": "11R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -611,8 +539,6 @@
       {
         "name": "14",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -627,8 +553,6 @@
       {
         "name": "32",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -645,8 +569,6 @@
       {
         "name": "11",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -661,8 +583,6 @@
       {
         "name": "29",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -679,8 +599,6 @@
       {
         "name": "19",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -695,8 +613,6 @@
       {
         "name": "01",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -713,8 +629,6 @@
       {
         "name": "10",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -729,8 +643,6 @@
       {
         "name": "28",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -747,8 +659,6 @@
       {
         "name": "07R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -763,8 +673,6 @@
       {
         "name": "07L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -779,8 +687,6 @@
       {
         "name": "25R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -795,8 +701,6 @@
       {
         "name": "25L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -813,8 +717,6 @@
       {
         "name": "14",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -829,8 +731,6 @@
       {
         "name": "32",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -847,8 +747,6 @@
       {
         "name": "27",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -863,8 +761,6 @@
       {
         "name": "09",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -881,8 +777,6 @@
       {
         "name": "28",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -897,8 +791,6 @@
       {
         "name": "10",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -915,8 +807,6 @@
       {
         "name": "08",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -931,8 +821,6 @@
       {
         "name": "26",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -949,8 +837,6 @@
       {
         "name": "29L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -965,8 +851,6 @@
       {
         "name": "11R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -981,8 +865,6 @@
       {
         "name": "11L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -997,8 +879,6 @@
       {
         "name": "29R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1015,8 +895,6 @@
       {
         "name": "29L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1031,8 +909,6 @@
       {
         "name": "11L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1047,8 +923,6 @@
       {
         "name": "29R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1063,8 +937,6 @@
       {
         "name": "11R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1081,8 +953,6 @@
       {
         "name": "30",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1097,8 +967,6 @@
       {
         "name": "12",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1115,8 +983,6 @@
       {
         "name": "03R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1131,8 +997,6 @@
       {
         "name": "03L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1147,8 +1011,6 @@
       {
         "name": "21L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1163,8 +1025,6 @@
       {
         "name": "21R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1181,8 +1041,6 @@
       {
         "name": "13",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1197,8 +1055,6 @@
       {
         "name": "31",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1215,8 +1071,6 @@
       {
         "name": "34R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1231,8 +1085,6 @@
       {
         "name": "16L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1247,8 +1099,6 @@
       {
         "name": "16R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1263,8 +1113,6 @@
       {
         "name": "34L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1281,8 +1129,6 @@
       {
         "name": "12",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1297,8 +1143,6 @@
       {
         "name": "30",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1315,8 +1159,6 @@
       {
         "name": "05",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1331,8 +1173,6 @@
       {
         "name": "23",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1349,8 +1189,6 @@
       {
         "name": "11",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1365,8 +1203,6 @@
       {
         "name": "29",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1383,8 +1219,6 @@
       {
         "name": "13",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1399,8 +1233,6 @@
       {
         "name": "31",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1417,8 +1249,6 @@
       {
         "name": "08",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1433,8 +1263,6 @@
       {
         "name": "26",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1449,8 +1277,6 @@
       {
         "name": "28",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1465,8 +1291,6 @@
       {
         "name": "10",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1483,8 +1307,6 @@
       {
         "name": "07",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1499,8 +1321,6 @@
       {
         "name": "25",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1517,8 +1337,6 @@
       {
         "name": "13R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1533,8 +1351,6 @@
       {
         "name": "13L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1549,8 +1365,6 @@
       {
         "name": "31L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1565,8 +1379,6 @@
       {
         "name": "31R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1583,8 +1395,6 @@
       {
         "name": "07",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1599,8 +1409,6 @@
       {
         "name": "25",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1617,8 +1425,6 @@
       {
         "name": "27",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1633,8 +1439,6 @@
       {
         "name": "09",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1651,8 +1455,6 @@
       {
         "name": "33",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1667,8 +1469,6 @@
       {
         "name": "15",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1685,8 +1485,6 @@
       {
         "name": "10",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1701,8 +1499,6 @@
       {
         "name": "28",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1719,8 +1515,6 @@
       {
         "name": "13",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1735,8 +1529,6 @@
       {
         "name": "31",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1753,8 +1545,6 @@
       {
         "name": "10",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1769,8 +1559,6 @@
       {
         "name": "28",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1787,8 +1575,6 @@
       {
         "name": "12",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1803,8 +1589,6 @@
       {
         "name": "30",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1819,8 +1603,6 @@
       {
         "name": "31",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1835,8 +1617,6 @@
       {
         "name": "13",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1853,8 +1633,6 @@
       {
         "name": "16",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1869,8 +1647,6 @@
       {
         "name": "34",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1887,8 +1663,6 @@
       {
         "name": "14",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1903,8 +1677,6 @@
       {
         "name": "32",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1921,8 +1693,6 @@
       {
         "name": "27",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1937,8 +1707,6 @@
       {
         "name": "09",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1955,8 +1723,6 @@
       {
         "name": "11",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1971,8 +1737,6 @@
       {
         "name": "29",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -1989,8 +1753,6 @@
       {
         "name": "11R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2005,8 +1767,6 @@
       {
         "name": "29L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2021,8 +1781,6 @@
       {
         "name": "11L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2037,8 +1795,6 @@
       {
         "name": "29R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2055,8 +1811,6 @@
       {
         "name": "13",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2071,8 +1825,6 @@
       {
         "name": "31",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2089,8 +1841,6 @@
       {
         "name": "15",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2105,8 +1855,6 @@
       {
         "name": "33",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2123,8 +1871,6 @@
       {
         "name": "15",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2139,8 +1885,6 @@
       {
         "name": "07",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2155,8 +1899,6 @@
       {
         "name": "33",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2171,8 +1913,6 @@
       {
         "name": "25",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2189,8 +1929,6 @@
       {
         "name": "08",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2205,8 +1943,6 @@
       {
         "name": "26",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2223,8 +1959,6 @@
       {
         "name": "21",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2239,8 +1973,6 @@
       {
         "name": "03",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2257,8 +1989,6 @@
       {
         "name": "30R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2273,8 +2003,6 @@
       {
         "name": "12L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2289,8 +2017,6 @@
       {
         "name": "12R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2305,8 +2031,6 @@
       {
         "name": "30L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2323,8 +2047,6 @@
       {
         "name": "11",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2339,8 +2061,6 @@
       {
         "name": "29",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2357,8 +2077,6 @@
       {
         "name": "12",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2373,8 +2091,6 @@
       {
         "name": "30",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2391,8 +2107,6 @@
       {
         "name": "13",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2407,8 +2121,6 @@
       {
         "name": "31",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2425,8 +2137,6 @@
       {
         "name": "16",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2441,8 +2151,6 @@
       {
         "name": "34",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2459,8 +2167,6 @@
       {
         "name": "09R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2475,8 +2181,6 @@
       {
         "name": "27L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2491,8 +2195,6 @@
       {
         "name": "09L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2507,8 +2209,6 @@
       {
         "name": "27R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2525,8 +2225,6 @@
       {
         "name": "17L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2541,8 +2239,6 @@
       {
         "name": "35L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2559,8 +2255,6 @@
       {
         "name": "17",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2575,8 +2269,6 @@
       {
         "name": "35",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2593,8 +2285,6 @@
       {
         "name": "13",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2609,8 +2299,6 @@
       {
         "name": "31",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2627,8 +2315,6 @@
       {
         "name": "12L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2643,8 +2329,6 @@
       {
         "name": "12R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2659,8 +2343,6 @@
       {
         "name": "30L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2675,8 +2357,6 @@
       {
         "name": "30R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2693,8 +2373,6 @@
       {
         "name": "12",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2709,8 +2387,6 @@
       {
         "name": "30",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2727,8 +2403,6 @@
       {
         "name": "08L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2743,8 +2417,6 @@
       {
         "name": "26R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2759,8 +2431,6 @@
       {
         "name": "26L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2775,8 +2445,6 @@
       {
         "name": "08R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2793,8 +2461,6 @@
       {
         "name": "28L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2809,8 +2475,6 @@
       {
         "name": "10L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2825,8 +2489,6 @@
       {
         "name": "10R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2841,8 +2503,6 @@
       {
         "name": "28R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2859,8 +2519,6 @@
       {
         "name": "07R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2875,8 +2533,6 @@
       {
         "name": "25L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2891,8 +2547,6 @@
       {
         "name": "07L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2907,8 +2561,6 @@
       {
         "name": "25R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2925,8 +2577,6 @@
       {
         "name": "33R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2941,8 +2591,6 @@
       {
         "name": "33L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2957,8 +2605,6 @@
       {
         "name": "15L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2973,8 +2619,6 @@
       {
         "name": "15R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -2991,8 +2635,6 @@
       {
         "name": "18",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -3007,8 +2649,6 @@
       {
         "name": "36",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -3025,8 +2665,6 @@
       {
         "name": "14",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -3041,8 +2679,6 @@
       {
         "name": "32",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -3059,8 +2695,6 @@
       {
         "name": "10",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -3075,8 +2709,6 @@
       {
         "name": "28",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -3093,8 +2725,6 @@
       {
         "name": "31",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -3109,8 +2739,6 @@
       {
         "name": "13",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -3127,8 +2755,6 @@
       {
         "name": "16R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -3143,8 +2769,6 @@
       {
         "name": "16L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -3159,8 +2783,6 @@
       {
         "name": "34L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -3175,8 +2797,6 @@
       {
         "name": "34R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -3193,8 +2813,6 @@
       {
         "name": "08",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -3209,8 +2827,6 @@
       {
         "name": "26",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -3227,8 +2843,6 @@
       {
         "name": "12",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -3243,8 +2857,6 @@
       {
         "name": "30",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -3261,8 +2873,6 @@
       {
         "name": "13R",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
@@ -3277,8 +2887,6 @@
       {
         "name": "31L",
         "opposite": "",
-        "headingTrue": null,
-        "headingMag": null,
         "length": null,
         "width": null,
         "lengthFt": null,
