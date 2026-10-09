@@ -568,6 +568,7 @@ class AirportChartsActivity :
         searchBarAnimation?.cancel()
         searchBarHidden = false
         buildUi()
+        refreshAirportMetarForWind()
         loadCharts()
         renderRailAirports()
     }
