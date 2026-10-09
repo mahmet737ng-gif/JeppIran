@@ -119,6 +119,8 @@ async function loadData(){
     manifest=m; charts=Array.isArray(c)?c:(c.charts||[]);
     georefByPage=buildGeorefIndex(g);
     renderAirports();
+    if(!selectedAirport && charts.some(c=>c.airport==="OIII"))selectAirport("OIII");
+    if($("#homeCycle"))$("#homeCycle").textContent=(m.version||VERSION);
     refreshPositionStatus();
     $("#updateSubtitle").textContent=(m.version||VERSION)+" data • "+Object.keys(m.airports||{}).length+" airports";
   }catch(e){
@@ -132,98 +134,185 @@ $("#updateCard").addEventListener("click",async()=>{
   dialog("Chart data",manifest?("Current web data: "+(manifest.version||VERSION)+". Airport PDFs are loaded on demand."):"Unable to check updates.");
 });
 
+
+/* Approved JeppIran airport profile — display-only; live data is never faked. */
+const AIRPORT_PROFILE={
+  OIII:{iata:"THR",elevation:3962,lat:35.68917,lon:51.31439,runways:[
+    {name:"11L / 29R",length:3989,width:45,headingTrue:289,headingMag:285},
+    {name:"11R / 29L",length:4041,width:60,headingTrue:289,headingMag:285}
+  ],freqs:[]},
+  OIIE:{iata:"IKA"},OIMM:{iata:"MHD"},OISS:{iata:"SYZ"},OIFM:{iata:"IFN"},
+  OIKB:{iata:"BND"},OITT:{iata:"TBZ"},OIAW:{iata:"AWZ"},OIBK:{iata:"KIH"}
+};
+let airportFilterMode="all", profileProcedureTab="Airport", profileTab="Overview", profileMetarRequest=0;
+const AIRPORT_FAV_KEY="jeppiran-airport-favorites";
+function getAirportFavorites(){return readJsonStorage(AIRPORT_FAV_KEY,[])||[]}
+function setAirportFavorite(icao){const s=new Set(getAirportFavorites());s.has(icao)?s.delete(icao):s.add(icao);localStorage.setItem(AIRPORT_FAV_KEY,JSON.stringify([...s]));renderAirports($("#airportSearch").value);}
+function profileEsc(v){return escapeHtml(String(v===undefined||v===null?"—":v))}
+function utcDisplay(){
+  const el=$("#homeUtc");
+  if(el)el.textContent=new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit",timeZone:"UTC",hour12:false})+"Z UTC";
+  $$(".profile-utc").forEach(e=>e.textContent=new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit",timeZone:"UTC",hour12:false})+"Z");
+}
+utcDisplay();setInterval(utcDisplay,30000);
+if($("#enrouteHomeBtn"))$("#enrouteHomeBtn").addEventListener("click",()=>dialog("Enroute","The Enroute tile viewer is not included in this web build yet. Existing Android Enroute data is unchanged."));
+if($("#settingsHomeBtn"))$("#settingsHomeBtn").addEventListener("click",()=>{document.documentElement.classList.toggle("light");localStorage.setItem("theme",document.documentElement.classList.contains("light")?"light":"dark");dialog("Settings","Appearance switched. For GPS / simulator connection use Connect to Simulator at the bottom of Home.");});
+$$("[data-airport-filter]").forEach(b=>b.addEventListener("click",()=>{
+  airportFilterMode=b.dataset.airportFilter;
+  $$("[data-airport-filter]").forEach(x=>x.classList.toggle("active",x===b));
+  renderAirports($("#airportSearch").value);
+}));
 function renderAirports(filter=""){
-  const list=$("#airportList");
-  const oldScroll=list.scrollTop;
-  list.innerHTML="";
-  const keys=[...new Set(charts.map(c=>c.airport))].sort();
+  const list=$("#airportList");if(!list)return;
+  const oldScroll=list.scrollTop;list.innerHTML="";
   const q=filter.trim().toUpperCase();
-  keys.filter(icao=>{
+  const fav=new Set(getAirportFavorites());
+  [...new Set(charts.map(c=>c.airport))].sort().filter(icao=>{
     const meta=AIRPORTS[icao]||["",""];
-    return !q || (icao+" "+meta.join(" ")).toUpperCase().includes(q);
+    return (!q||(icao+" "+meta.join(" ")).toUpperCase().includes(q))&&(airportFilterMode!=="favorites"||fav.has(icao));
   }).forEach(icao=>{
     const meta=AIRPORTS[icao]||["AIRPORT",""];
     const branch=document.createElement("div");
     branch.className="airport-branch"+(icao===selectedAirport?" selected":"");
-
-    const b=document.createElement("button");
+    const b=document.createElement("button");b.type="button";
     b.className="airport-item"+(icao===selectedAirport?" selected":"");
-    const idx=(keys.indexOf(icao)%20)+1;
-    b.style.setProperty("--airport-bg","url('./airport-images/airport_card_"+idx+".webp')");
-    const isSelected=icao===selectedAirport;
-    const isOpen=isSelected&&airportTreeExpanded;
+    const isOpen=icao===selectedAirport&&airportTreeExpanded;
     b.setAttribute("aria-expanded",isOpen?"true":"false");
-    b.innerHTML="<span class='airport-shade'></span><span class='airport-copy'><b>"+escapeHtml(icao)+"</b><small>"+escapeHtml(meta[0]+(meta[1]?" • "+meta[1]:""))+"</small></span><span class='airport-chevron'>"+(isOpen?"▾":"›")+"</span>";
+    b.innerHTML="<span class='airport-copy'><b>"+profileEsc(icao)+"</b><small>"+profileEsc(meta[0])+"</small><small>"+profileEsc(meta[1])+"</small></span><span class='airport-chevron'>"+(isOpen?"▾":"›")+"</span>";
     b.onclick=()=>selectAirport(icao);
     branch.appendChild(b);
-
-    if(isOpen){
-      const tree=document.createElement("div");
-      tree.className="airport-inline-tree";
-      renderTreeInto(tree);
-      branch.appendChild(tree);
-    }
+    if(isOpen){const tree=document.createElement("div");tree.className="airport-inline-tree";renderTreeInto(tree);branch.appendChild(tree)}
     list.appendChild(branch);
   });
   requestAnimationFrame(()=>{list.scrollTop=oldScroll});
 }
 $("#airportSearch").addEventListener("input",e=>renderAirports(e.target.value));
-
 function selectAirport(icao){
-  if(icao===selectedAirport){
-    airportTreeExpanded=!airportTreeExpanded;
-    renderAirports($("#airportSearch").value);
-    return;
-  }
-
-  selectedAirport=icao;
-  selectedChart=null;
-  airportTreeExpanded=true;
+  selectedAirport=icao;selectedChart=null;airportTreeExpanded=true;profileProcedureTab="Airport";profileTab="Overview";
   expanded=new Set(["Airport"]);
+  $("#chartsView").classList.remove("chart-open");
   renderAirports($("#airportSearch").value);
   $("#viewerAirport").textContent=icao+" • "+((AIRPORTS[icao]||[])[0]||"AIRPORT");
   $("#viewerChart").textContent="Select a chart";
-  $("#pdfStage").innerHTML='<div class="empty-state"><img src="./app-icon.png" alt=""><b>Select a chart</b><span>Choose AIRPORT, STAR, SID or APP under '+escapeHtml(icao)+'.</span></div>';
-  $("#offlinePdfBtn").disabled=true;
-  currentPdfUrl="";
-  hideChartMetar();
+  $("#pdfStage").innerHTML='<div class="empty-state"><b>Select a procedure</b></div>';
+  $("#offlinePdfBtn").disabled=true;currentPdfUrl="";hideChartMetar();
+  renderAirportProfile(icao);
+  refreshProfileMetar(icao);
 }
-
 function renderTreeInto(root){
-  root.innerHTML="";
-  if(!selectedAirport)return;
+  root.innerHTML="";if(!selectedAirport)return;
   const airportCharts=charts.filter(c=>c.airport===selectedAirport).sort((a,b)=>(a.pdf_page||0)-(b.pdf_page||0));
-  CATEGORY_ORDER.forEach(cat=>{
+  ["STAR","SID","Airport","Approach","Other"].forEach(cat=>{
     const items=airportCharts.filter(c=>(c.category||"Other")===cat);
     if(!items.length)return;
-    const wrap=document.createElement("div");
-    wrap.className="tree-group inline-tree-group";
-    const h=document.createElement("button");
-    h.className="tree-group-head";
+    const wrap=document.createElement("div");wrap.className="tree-group inline-tree-group";
+    const h=document.createElement("button");h.type="button";h.className="tree-group-head";
     const catLabel=cat==="Airport"?"AIRPORT":cat==="Approach"?"APP":cat.toUpperCase();
     const groupOpen=expanded.has(cat);
-    h.setAttribute("aria-expanded",groupOpen?"true":"false");
-    h.textContent=(groupOpen?"▼ ":"▶ ")+catLabel+" ("+items.length+")";
-    h.onclick=e=>{
-      e.stopPropagation();
-      expanded.has(cat)?expanded.delete(cat):expanded.add(cat);
-      renderAirports($("#airportSearch").value);
-    };
+    h.setAttribute("aria-expanded",groupOpen?"true":"false");h.textContent=(groupOpen?"▾ ":"▸ ")+catLabel+" ("+items.length+")";
+    h.onclick=e=>{e.stopPropagation();expanded.has(cat)?expanded.delete(cat):expanded.add(cat);renderAirports($("#airportSearch").value)};
     wrap.appendChild(h);
-    if(expanded.has(cat)){
-      items.forEach(c=>{
-        const item=document.createElement("button");
-        item.className="tree-item"+(selectedChart&&Number(selectedChart.page)===Number(c.page)?" selected":"");
-        const number=c.chart_number?c.chart_number+" • ":"";
-        item.innerHTML=escapeHtml(number+(c.name||("Chart "+c.page)));
-        item.onclick=e=>{e.stopPropagation();selectChart(c)};
-        wrap.appendChild(item);
-      });
-    }
-    root.appendChild(wrap);
+    if(groupOpen)items.forEach(c=>{
+      const item=document.createElement("button");item.type="button";
+      item.className="tree-item"+(selectedChart&&Number(selectedChart.page)===Number(c.page)?" selected":"");
+      item.innerHTML=profileEsc(c.chart_number?c.chart_number+" • "+c.name:c.name||("Chart "+c.page));
+      item.onclick=e=>{e.stopPropagation();selectChart(c)};
+      wrap.appendChild(item)
+    });
+    root.appendChild(wrap)
   });
 }
-
+function metarInfo(raw){
+  const tokens=(raw||"").trim().toUpperCase().split(/\s+/);
+  const txt=tokens.join(" ");
+  const wind=txt.match(/\b(\d{3}|VRB)(\d{2,3})(?:G\d{2,3})?KT\b/);
+  const temp=txt.match(/\b(M?\d{2})\/(M?\d{2})\b/);
+  const clouds=tokens.filter(x=>/^(FEW|SCT|BKN|OVC)\d{3}(CB|TCU)?$/.test(x));
+  const wx=tokens.filter(x=>/^(?:[-+]|VC)?(?:TS|SH|FZ|DZ|RA|SN|SG|PL|GR|GS|BR|FG|HZ|DU|SA|FU|SQ)+$/.test(x));
+  let desc="Clear",icon="☀";
+  if(wx.some(x=>x.includes("TS"))){desc="Thunderstorm";icon="⛈"}
+  else if(wx.some(x=>x.includes("SN"))){desc="Snow";icon="❄"}
+  else if(wx.some(x=>x.includes("RA")||x.includes("DZ"))){desc="Rain";icon="🌧"}
+  else if(wx.some(x=>/FG|BR|HZ|DU|SA|FU/.test(x))){desc="Reduced visibility";icon="🌫"}
+  else if(clouds.some(x=>x.startsWith("BKN")||x.startsWith("OVC"))){desc="Cloudy";icon="☁"}
+  else if(clouds.length){desc="Partly cloudy";icon="🌤"}
+  const tempVal=temp?(temp[1][0]==="M"?"-":"")+temp[1].replace("M","")+"°C":"—";
+  const vis=txt.includes(" 9999")?"> 10 km":(txt.match(/\b\d{4}\b/)?"See METAR":"—");
+  return {windDirection:wind&&wind[1]!=="VRB"?Number(wind[1]):null,windSpeed:wind?Number(wind[2]):null,
+    temp:tempVal,icon,desc,clouds:clouds.join(", ")||"No reported cloud layers",visibility:vis};
+}
+function windComponents(raw,rwy){
+  if(!rwy||!Number.isFinite(rwy.headingTrue))return null;
+  const info=metarInfo(raw);
+  if(info.windDirection===null||info.windSpeed===null)return null;
+  const angle=(info.windDirection-rwy.headingTrue)*Math.PI/180;
+  const head=info.windSpeed*Math.cos(angle),cross=info.windSpeed*Math.sin(angle);
+  return {head:Math.abs(head).toFixed(1),headName:head>=0?"Headwind":"Tailwind",cross:Math.abs(cross).toFixed(1),crossName:cross>=0?"From right":"From left",
+    direction:info.windDirection,speed:info.windSpeed}
+}
+function profileCurrentRunway(icao){
+  const d=AIRPORT_PROFILE[icao];return d&&d.runways?d.runways.find(x=>x.name===window.jeppiranSelectedRunway)||d.runways[1]||d.runways[0]:null
+}
+function renderAirportProfile(icao){
+  const root=$("#airportProfile");if(!root||icao!==selectedAirport)return;
+  const meta=AIRPORTS[icao]||["Unknown airport",""];
+  const d=AIRPORT_PROFILE[icao]||{};
+  const raw=wxCache[icao+":metar"]||"";
+  const wx=metarInfo(raw);const rw=profileCurrentRunway(icao),comp=windComponents(raw,rw);
+  const formattedCoord=Number.isFinite(d.lat)?d.lat.toFixed(4)+"° N &nbsp; "+d.lon.toFixed(4)+"° E":"Data not available";
+  const fav=new Set(getAirportFavorites());
+  const categories=[["STAR","STAR"],["SID","SID"],["Airport","AIRPORT"],["Approach","APP"]];
+  const name=meta[0].toLowerCase().includes("airport")||meta[0].toLowerCase().includes("international")?meta[0]:meta[0]+" Airport";
+  const runwayRows=d.runways?d.runways.map(x=>'<button type="button" class="rwy-row'+(rw===x?' active':'')+'" data-runway="'+profileEsc(x.name)+'"><span><b>▱ '+profileEsc(x.name)+'</b><small>True '+x.headingTrue+'° / Mag '+x.headingMag+'°</small></span><span><b>'+x.length.toLocaleString()+' × '+x.width+' m</b><small>Length × width</small></span><span><b>Asphalt</b><small>Published</small></span></button>').join(""):'<div class="profile-empty">Runway dimensions not yet verified for this airport.</div>';
+  const procCategory=profileProcedureTab;
+  const procs=charts.filter(c=>c.airport===icao&&c.category===procCategory).sort((a,b)=>(a.pdf_page||0)-(b.pdf_page||0)).slice(0,100);
+  root.innerHTML='<div class="profile-shell">'+
+    '<div class="profile-heading"><div><div class="profile-code-row"><strong class="profile-icao">'+profileEsc(icao)+'</strong><span class="profile-chip">'+profileEsc(d.iata||"ICAO")+'</span><button type="button" class="profile-chip" id="profileFavBtn" aria-label="Favorite airport">'+(fav.has(icao)?"★":"☆")+'</button></div><h2>'+profileEsc(name)+'</h2><p>'+profileEsc(meta[1])+(meta[1]?', ':'')+'Iran</p></div><div class="profile-elev">Elevation: '+(Number.isFinite(d.elevation)?d.elevation.toLocaleString()+' ft':'—')+'<br>⌖ '+formattedCoord+'<br><span class="profile-utc"></span> UTC</div></div>'+
+    '<nav class="profile-tabs" aria-label="Airport profile">'+["Overview","Charts","Weather","NOTAM","Info"].map(t=>'<button type="button" class="profile-tab'+(profileTab===t?" active":"")+'" data-profile-tab="'+t+'">'+t+'</button>').join("")+'</nav>'+
+    '<div class="profile-cols"><div class="profile-col">'+
+      '<section class="profile-card" id="profileWeather"><header><span>METAR • '+profileEsc(icao)+'</span><small id="profileMetarAge">'+(raw?"Last received / cached":"Loading live METAR…")+'</small></header>'+
+        '<span class="metar-raw" id="profileMetarRaw">'+profileEsc(raw||"Waiting for actual METAR…")+'</span>'+
+        '<div class="weather-summary"><div class="weather-brief"><span class="weather-icon">'+wx.icon+'</span><div><strong>'+profileEsc(raw?wx.temp:"—")+'</strong><small>'+profileEsc(raw?wx.desc:"Weather unavailable")+'</small><small>'+profileEsc(raw?wx.clouds:"")+'</small></div></div>'+
+        '<div class="weather-facts"><span>◉ '+profileEsc(wx.visibility)+'</span><span>➤ '+(wx.windDirection===null?"—":wx.windDirection.toString().padStart(3,"0")+"°")+' / '+(wx.windSpeed===null?"—":wx.windSpeed+" kt")+'</span><span>UTC <span class="profile-utc"></span></span></div></div></section>'+
+      '<section class="profile-card" id="profileRunways"><header><span>RUNWAYS</span><small>Dimensions and published bearings</small></header>'+runwayRows+'</section>'+
+      '<section class="profile-card" id="profileCharts"><header>CHARTS &amp; PROCEDURES <small>'+charts.filter(c=>c.airport===icao).length+' charts</small></header>'+
+        '<div class="profile-procedures"><nav class="profile-proc-tabs">'+categories.map(([k,n])=>'<button class="'+(procCategory===k?"active":"")+'" type="button" data-proc-tab="'+k+'">'+n+'</button>').join("")+'</nav><div class="profile-proc-list">'+(procs.length?procs.map(c=>'<button type="button" data-chart-page="'+profileEsc(c.page)+'"><span>'+profileEsc(c.name||"Chart "+c.page)+'</span><small>›</small></button>').join(""):'<div class="profile-empty">No '+profileEsc(procCategory)+' charts in this airport.</div>')+'</div></div></section>'+
+      '<div class="profile-quick"><button type="button" data-quick-proc="Airport"><span>▤</span>Charts</button><button type="button" data-quick-proc="Approach"><span>✈</span>Approaches</button><button type="button" data-quick-proc="Airport"><span>▦</span>Airport Diagram</button></div>'+
+    '</div><div class="profile-col">'+
+      '<section class="profile-card" id="profileWind"><header><span>WIND COMPONENTS '+(rw?"("+profileEsc(rw.name)+")":"")+'</span></header>'+
+      '<div class="wind-compass"><span>'+((comp)?'Wind '+comp.direction+'° / '+comp.speed+' kt':'Wind component data unavailable')+'</span><div class="rwy-visual"><span>'+profileEsc(rw?rw.name:"RUNWAY")+'</span></div></div>'+
+      '<div class="wind-data"><div><span>Runway heading (MAG)</span><b>'+(rw?rw.headingMag+"°":"—")+'</b></div><div><span>Runway heading (TRUE)</span><b>'+(rw?rw.headingTrue+"°":"—")+'</b></div><div><span>METAR wind (TRUE)</span><b>'+(comp?comp.direction+"° / "+comp.speed+" kt":"—")+'</b></div><div><span class="wind-head">↑ '+(comp?comp.headName:"Headwind")+'</span><b class="wind-head">'+(comp?comp.head+" kt":"—")+'</b></div><div><span class="wind-cross">→ Crosswind</span><b class="wind-cross">'+(comp?comp.cross+" kt "+comp.crossName:"—")+'</b></div></div></section>'+
+      '<section class="profile-card" id="profileInfo"><header>ADDITIONAL INFORMATION</header>'+
+      [['ICAO',icao],['IATA',d.iata||"—"],['Field elevation',Number.isFinite(d.elevation)?d.elevation.toLocaleString()+" ft":"—"],['Coordinates',Number.isFinite(d.lat)?d.lat.toFixed(4)+"N, "+d.lon.toFixed(4)+"E":"—"],['UTC time','<span class="profile-utc"></span>'],['Frequencies','Consult current ADC / AIP'],['Fuel / Services','Consult current AIP']].map(([k,v])=>'<div class="profile-info-row"><span>'+k+'</span><b>'+v+'</b></div>').join("")+'</section>'+
+      '<div class="profile-alert" id="profileNotam">Current NOTAM: please consult a validated current source. No status is inferred from missing data.</div>'+
+    '</div></div></div>';
+  root.querySelector("#profileFavBtn").onclick=()=>{setAirportFavorite(icao);renderAirportProfile(icao)};
+  root.querySelectorAll("[data-runway]").forEach(b=>b.onclick=()=>{window.jeppiranSelectedRunway=b.dataset.runway;renderAirportProfile(icao)});
+  root.querySelectorAll("[data-proc-tab]").forEach(b=>b.onclick=()=>{profileProcedureTab=b.dataset.procTab;renderAirportProfile(icao)});
+  root.querySelectorAll("[data-quick-proc]").forEach(b=>b.onclick=()=>{profileProcedureTab=b.dataset.quickProc;profileTab="Charts";renderAirportProfile(icao);root.querySelector("#profileCharts").scrollIntoView({behavior:"smooth",block:"center"})});
+  root.querySelectorAll("[data-chart-page]").forEach(b=>b.onclick=()=>{const c=charts.find(c=>c.airport===icao&&String(c.page)===b.dataset.chartPage);if(c)selectChart(c)});
+  root.querySelectorAll("[data-profile-tab]").forEach(b=>b.onclick=()=>{
+    profileTab=b.dataset.profileTab;root.querySelectorAll("[data-profile-tab]").forEach(x=>x.classList.toggle("active",x===b));
+    const target={Overview:".profile-heading",Charts:"#profileCharts",Weather:"#profileWeather",NOTAM:"#profileNotam",Info:"#profileInfo"}[profileTab];
+    const elem=root.querySelector(target);if(elem)elem.scrollIntoView({behavior:"smooth",block:"start"})
+  });
+  utcDisplay();
+}
+async function refreshProfileMetar(icao){
+  const token=++profileMetarRequest;
+  try{
+    const raw=await fetchWx("metar",icao);
+    if(token!==profileMetarRequest||icao!==selectedAirport||selectedChart)return;
+    wxCache[icao+":metar"]=raw;
+    wxCache[icao+":time"]=Date.now();
+    localStorage.setItem("wxCache",JSON.stringify(wxCache));
+    renderAirportProfile(icao);
+    const age=$("#profileMetarAge");if(age)age.textContent="Live METAR • verify observation time";
+  }catch(_){
+    if(token!==profileMetarRequest||icao!==selectedAirport)return;
+    const age=$("#profileMetarAge");if(age)age.textContent=wxCache[icao+":metar"]?"Cached METAR • not current":"METAR unavailable";
+  }
+}
 function geoNum(v){const n=Number(v);return Number.isFinite(n)?n:NaN}
 function geoBoundsContains(b,x,y,t=0){
   return !!b&&Number.isFinite(x)&&Number.isFinite(y)&&
@@ -592,6 +681,7 @@ setupChartGestures();
 
 function selectChart(c,options={}){
   selectedChart=c;
+  $("#chartsView").classList.add("chart-open");
   expanded.add(c.category||"Other");
   renderAirports($("#airportSearch").value);
   refreshPositionStatus();
