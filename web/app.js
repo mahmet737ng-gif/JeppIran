@@ -310,7 +310,7 @@ async function refreshProfileMetar(icao){
     wxCache[icao+":time"]=Date.now();
     localStorage.setItem("wxCache",JSON.stringify(wxCache));
     renderAirportProfile(icao);
-    const age=$("#profileMetarAge");if(age)age.textContent="Live METAR • verify observation time";
+    const age=$("#profileMetarAge");if(age)age.textContent="METAR received • verify observation time";
   }catch(_){
     if(token!==profileMetarRequest||icao!==selectedAirport)return;
     const age=$("#profileMetarAge");if(age)age.textContent=wxCache[icao+":metar"]?"Cached METAR • not current":"METAR unavailable";
