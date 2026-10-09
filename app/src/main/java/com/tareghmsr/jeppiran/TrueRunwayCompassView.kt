@@ -10,14 +10,14 @@ import android.view.View
 import kotlin.math.min
 
 /**
- * A runway points to TRUE bearing clockwise from north.
- * Screen-up is north; no magnetic variation is added.
- * Unavailable bearings never result in an invented runway vector.
+ * A runway vector displays the heading annotated at the ADC runway end.
+ * Screen-up is diagram north; no heading correction is added.
+ * Unavailable chart headings never result in an invented runway vector.
  */
 class TrueRunwayCompassView(context: Context) : View(context) {
     var runwayId = "—"
         set(value) { field = value; invalidate() }
-    var headingTrue: Float? = null
+    var headingAdc: Float? = null
         set(value) { field = value; invalidate() }
     var windFromTrue: Float? = null
         set(value) { field = value; invalidate() }
@@ -58,16 +58,16 @@ class TrueRunwayCompassView(context: Context) : View(context) {
         ink.typeface = android.graphics.Typeface.DEFAULT_BOLD
         canvas.drawText("N", 0f, -104f, ink)
 
-        val h = headingTrue
+        val h = headingAdc
         if (h == null || !h.isFinite()) {
             ink.color = muted
             ink.textSize = 12f
-            canvas.drawText("TRUE heading unavailable", 0f, 4f, ink)
+            canvas.drawText("ADC heading unavailable", 0f, 4f, ink)
             canvas.restore()
             return
         }
 
-        // Upward runway axis rotated clockwise through h degrees from TRUE north.
+        // Runway axis rotated by the number printed on the ADC, not AIP GEO bearing.
         canvas.save()
         canvas.rotate(((h % 360f) + 360f) % 360f)
         ink.color = Color.rgb(18, 51, 82)
