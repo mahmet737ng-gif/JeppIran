@@ -55,6 +55,15 @@ def source_rows(source=None):
 def build(manifest_path, source=None):
     manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
     selected = set(manifest["airports"])
+    # The user's approved source of runway headings is the actual ADC PDF.
+    # CI must not silently overwrite it with approximate community bearings.
+    adc_path = Path("app/src/main/assets/airport-runways.json")
+    if source is None and adc_path.is_file():
+        adc = json.loads(adc_path.read_text(encoding="utf-8"))
+        if adc.get("cycle") != manifest.get("version"):
+            raise RuntimeError("Current-cycle ADC headings are missing: refusing to substitute community runway headings")
+        if adc.get("source", "").startswith("Terminal chart cycle") and adc.get("airports"):
+            return adc
     grouped = {code: [] for code in selected}
     with_heading = 0
     for row in source_rows(source):
