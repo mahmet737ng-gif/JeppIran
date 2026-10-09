@@ -247,16 +247,14 @@ function metarInfo(raw){
   return {windDirection:wind&&wind[1]!=="VRB"?Number(wind[1]):null,windSpeed:wind?Number(wind[2]):null,
     temp:tempVal,icon,desc,clouds:clouds.join(", ")||"No reported cloud layers",visibility:vis};
 }
-function airportVariation(icao){const a=airportMetadata[icao]||{};const v=a.magneticVariationDeg;return a.magneticVariationVerified===true&&typeof v==="number"&&Number.isFinite(v)&&Math.abs(v)<=45?v:null}
-function magneticWind(raw,icao){const info=metarInfo(raw),variation=airportVariation(icao);return {...info,variation,windMag:variation!==null&&info.windDirection!==null?((info.windDirection-variation)%360+360)%360:null}}
-function windComponents(raw,rwy,icao){
+function windComponents(raw,rwy){
   if(!rwy||!Number.isFinite(rwy.headingAdc))return null;
-  const info=magneticWind(raw,icao);
-  if(info.windMag===null||info.windSpeed===null||info.windSpeed<3)return null;
-  const angle=(info.windMag-rwy.headingAdc)*Math.PI/180;
+  const info=metarInfo(raw);
+  if(info.windDirection===null||info.windSpeed===null||info.windSpeed<3)return null;
+  const angle=(info.windDirection-rwy.headingAdc)*Math.PI/180;
   const head=info.windSpeed*Math.cos(angle),cross=info.windSpeed*Math.sin(angle);
   return {head:Math.abs(head).toFixed(1),headRaw:head,headName:head>=0?"Headwind":"Tailwind",cross:Math.abs(cross).toFixed(1),crossName:cross>=0?"From right":"From left",
-    direction:Math.round(info.windMag),speed:info.windSpeed}
+    direction:info.windDirection,speed:info.windSpeed}
 }
 function profileCurrentRunway(icao){
   const defaultRunways=(AIRPORT_PROFILE[icao]||{}).runways||[];
@@ -265,22 +263,20 @@ function profileCurrentRunway(icao){
   const desired=window.jeppiranSelectedRunway||(icao==="OIAA"?"32L":"");
   return runways.find(x=>x.name===desired)||runways[0]||null;
 }
-// True-heading compass: north remains fixed; runway rotates clockwise from TRUE north.
-// A missing true heading yields no runway diagram rather than a false bearing.
+// Rotate the runway by its printed ADC heading and the wind arrow by its raw METAR direction.
 function runwayCompassMarkup(rw, weather){
   const heading=rw&&Number.isFinite(rw.headingAdc)?((rw.headingAdc%360)+360)%360:null;
   if(heading===null)return '<div class="runway-bearing-unavailable">ADC runway-end heading unavailable — no heading guessed</div>';
   const runwayName=profileEsc(rw.name||"RWY");
-  // METAR uses the direction wind comes FROM, measured clockwise from TRUE north.
-  // Show an inward-pointing arrow, independent of the runway's rotated orientation.
-  const from=weather&&Number.isFinite(weather.windMag)&&Number.isFinite(weather.windSpeed)&&weather.windSpeed>=3
-    ?((weather.windMag%360)+360)%360:null;
+  // Draw the inward-facing wind arrow using the direction printed in the METAR, without conversion.
+  const from=weather&&Number.isFinite(weather.windDirection)&&Number.isFinite(weather.windSpeed)&&weather.windSpeed>=3
+    ?((weather.windDirection%360)+360)%360:null;
   const arrow=from===null?'':'<g class="wind-direction-arrow" transform="rotate('+from+' 160 108)">'+
     '<path d="M160 12V55" stroke="#ffd26a" stroke-width="5" stroke-linecap="round"/>'+
     '<path d="M150 44L160 59L170 44" fill="none" stroke="#ffd26a" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>'+
     '</g>';
-  const windLabel=from!==null?'Wind FROM '+Math.round(from)+'° MAG · '+weather.windSpeed+' kt':
-    weather&&weather.windSpeed<3?'Light/calm wind — no arrow':weather&&weather.variation===null?'Variation unavailable — no magnetic wind arrow':'Wind direction unavailable / VRB';
+  const windLabel=from!==null?'Wind FROM '+Math.round(from)+'° METAR · '+weather.windSpeed+' kt':
+    weather&&weather.windSpeed<3?'Light/calm wind — no arrow':'Wind direction unavailable / VRB';
   return '<div class="runway-bearing-compass" role="img" aria-label="Runway '+runwayName+' ADC chart heading '+Math.round(heading)+' degrees clockwise from north; '+profileEsc(windLabel)+'">'+
     '<svg viewBox="0 0 320 214" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'+
       '<circle cx="160" cy="108" r="82" fill="none" stroke="#286490" stroke-width="1.5"/>'+
@@ -308,8 +304,7 @@ function renderAirportProfile(icao){
   const meta=[community.name||legacy[0]||"Airport data unavailable",community.city||legacy[1]||""];
   const raw=wxCache[icao+":metar"]||"";
   const taf=wxCache[icao+":taf"]||"";
-  const variation=airportVariation(icao);
-  const wx=metarInfo(raw);const rw=profileCurrentRunway(icao),comp=windComponents(raw,rw,icao);
+  const wx=metarInfo(raw);const rw=profileCurrentRunway(icao),comp=windComponents(raw,rw);
   const formattedCoord=Number.isFinite(d.lat)?d.lat.toFixed(4)+"° N &nbsp; "+d.lon.toFixed(4)+"° E":"Data not available";
   const fav=new Set(getAirportFavorites());
   const categories=[["STAR","STAR"],["SID","SID"],["Airport","AIRPORT"],["Approach","APP"]];
@@ -341,8 +336,8 @@ function renderAirportProfile(icao){
       '<section class="profile-card" id="profileNotam"><header><span>NOTAM • '+profileEsc(icao)+'</span></header><details class="profile-notam-details"><summary>NOTAM status & details</summary><p>No validated NOTAM feed is connected. Current NOTAM status unknown. Check an authorized AIS/NOF source before flight.</p></details></section>'+
     '</div><div class="profile-col">'+
       '<section class="profile-card" id="profileWind"><header><span>WIND COMPONENTS '+(rw?"("+profileEsc(rw.name)+")":"")+'</span></header>'+
-      '<div class="wind-compass">'+runwayCompassMarkup(rw,magneticWind(raw,icao))+'</div>'+
-      '<div class="wind-data"><div><span>Variation (E+ / W−)</span><b>'+(variation===null?"Unavailable":variation.toFixed(1)+"°")+'</b></div><div><span>Runway HDG (ADC)</span><b>'+(rw?(Number.isFinite(rw.headingAdc)?Math.round(rw.headingAdc)+"°":"—"):"—")+'</b></div><div><span>Wind converted to MAG</span><b>'+(comp?comp.direction+"° / "+comp.speed+" kt":"—")+'</b></div><div><span class="'+(comp?(comp.headRaw>=0?"wind-status-head":Number(comp.head)>=3&&Number(comp.head)<=5?"wind-status-tail-warning":Number(comp.head)>5?"wind-status-tail-danger":"wind-status-neutral"):"wind-status-neutral")+'">↑ '+(comp?comp.headName:"Headwind")+'</span><b class="'+(comp?(comp.headRaw>=0?"wind-status-head":Number(comp.head)>=3&&Number(comp.head)<=5?"wind-status-tail-warning":Number(comp.head)>5?"wind-status-tail-danger":"wind-status-neutral"):"wind-status-neutral")+'">'+(comp?comp.head+" kt":"—")+'</b></div><div><span class="wind-cross">→ Crosswind</span><b class="wind-cross">'+(comp?comp.cross+" kt "+comp.crossName:"—")+'</b></div></div></section>'+
+      '<div class="wind-compass">'+runwayCompassMarkup(rw,wx)+'</div>'+
+      '<div class="wind-data"><div><span>Runway HDG (ADC)</span><b>'+(rw?(Number.isFinite(rw.headingAdc)?Math.round(rw.headingAdc)+"°":"—"):"—")+'</b></div><div><span>METAR wind direction</span><b>'+(comp?comp.direction+"° / "+comp.speed+" kt":"—")+'</b></div><div><span class="'+(comp?(comp.headRaw>=0?"wind-status-head":Number(comp.head)>=3&&Number(comp.head)<=5?"wind-status-tail-warning":Number(comp.head)>5?"wind-status-tail-danger":"wind-status-neutral"):"wind-status-neutral")+'">↑ '+(comp?comp.headName:"Headwind")+'</span><b class="'+(comp?(comp.headRaw>=0?"wind-status-head":Number(comp.head)>=3&&Number(comp.head)<=5?"wind-status-tail-warning":Number(comp.head)>5?"wind-status-tail-danger":"wind-status-neutral"):"wind-status-neutral")+'">'+(comp?comp.head+" kt":"—")+'</b></div><div><span class="wind-cross">→ Crosswind</span><b class="wind-cross">'+(comp?comp.cross+" kt "+comp.crossName:"—")+'</b></div></div></section>'+
       '<section class="profile-card" id="profileInfo"><header>ADDITIONAL INFORMATION</header>'+
       [['ICAO',icao],['IATA',d.iata||"—"],['Field elevation',Number.isFinite(d.elevation)?d.elevation.toLocaleString()+" ft":"—"],['Coordinates',Number.isFinite(d.lat)?d.lat.toFixed(4)+"N, "+d.lon.toFixed(4)+"E":"—"],['UTC time','<span class="profile-utc"></span>']].map(([k,v])=>'<div class="profile-info-row"><span>'+k+'</span><b>'+v+'</b></div>').join("")+'</section>'+
 
