@@ -1,0 +1,11 @@
+pdf_page,icao,category_verified,printed_plate,printed_title,visual_review_200dpi,finding
+"201","OICC","APP","13-2","VOR A","YES","Wrong Airport/ADC 10-9 index; georef identity must be independently checked"
+"202","OICC","APP","16-1","NDB RWY 29L","YES","Wrong Airport/ADC 10-9 index; georef identity must be independently checked"
+"203","OICC","APP","16-2","NDB A","YES","Wrong Airport/ADC 10-9 index; georef identity must be independently checked"
+"204","OICC","APP","16-3","NDB B (CAT C & D)","YES","Wrong Airport/ADC 10-9 index; georef identity must be independently checked"
+"205","OICC","APP","16-4","NDB C (CAT C & D)","YES","Wrong Airport/ADC 10-9 index; georef identity must be independently checked"
+"206","OICI","AIRPORT","","AIRPORT INFORMATION","YES","Information-only; no georef needed"
+"207","OICI","STAR","10-2","ALTET 1N; ALTET 1P","YES","NOT TO SCALE; no georef"
+"208","OICI","STAR","10-2-0","ALTET 1Q RNP ARRIVAL RWY 32","YES","Printed plate number is 10-2-0, not index 10-2"
+"209","OICI","SID","10-3","ALTET 1A; ALTET 1B","YES","NOT TO SCALE; no georef"
+"210","OICI","SID","10-3-0","ALTET 1C; ALTET 1D RNP DEPARTURES","YES","Printed plate number is 10-3-0, not index 10-3"
