@@ -13,14 +13,14 @@
     "STAR": 263
   },
   "decisions": {
-    "CONFLICT": 27,
-    "MATCH": 1263,
+    "CONFLICT": 19,
+    "MATCH": 1309,
     "NON_CHART": 9,
-    "REVIEW": 355
+    "REVIEW": 317
   },
   "unindexed_pages": 160,
-  "category_conflicts": 27,
-  "review_required": 382,
+  "category_conflicts": 19,
+  "review_required": 336,
   "duplicate_title_groups": 10,
   "changes_applied_to_app": false,
   "interpretation": "Text/vector evidence audit; ambiguous charts await visual validation."

@@ -4,8 +4,8 @@ Source pages: 1654
 Indexed chart pages: 1494
 Airport folders: 78
 Unindexed source pages: 160
-Conflicting categories: 27
-Pages requiring review: 382
+Conflicting categories: 19
+Pages requiring review: 336
 Repeated title/number groups: 10
 
 ## Existing indexed categories
@@ -17,10 +17,10 @@ Repeated title/number groups: 10
 
 ## Audit outcomes
 
-- CONFLICT: 27
-- MATCH: 1263
+- CONFLICT: 19
+- MATCH: 1309
 - NON_CHART: 9
-- REVIEW: 355
+- REVIEW: 317
 
 The full one-row-per-page classification is in pages.csv.
 Only high-confidence matches are considered checked by automatic evidence.
