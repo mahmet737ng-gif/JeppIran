@@ -85,6 +85,26 @@ jobs:
           res["airport_9_other_strict_map_like_names"]=sum(bool(re.search(
                   r"DIAGRAM|PARKING|APRON|STAND|INS COORD|AIRPORT CHART|GROUND CHART|TAXI ROUTE|HOT SPOT|PUSHBACK|DOCKING|TAXIWAY",
                   x.get("name",""),re.I)) for x in minor)
+          pat=r"DIAGRAM|PARKING|APRON|STAND|INS COORD|AIRPORT CHART|GROUND CHART|TAXI ROUTE|HOT SPOT|PUSHBACK|DOCKING|TAXIWAY"
+          onlymaps=[x for x in minor if re.search(pat,x.get("name",""),re.I)]
+          def coverage(records):
+              n_any=0;n_matching=0;n_exact=0
+              unmatched=[]
+              for x in records:
+                  gs=pagegeo.get(x["page"],[])
+                  n_any+=bool(gs)
+                  owned=[g for g in gs if g.get("airport")==x.get("airport")]
+                  n_matching+=bool(owned)
+                  expected="|".join((x["airport"],x["category"].upper(),x.get("chart_number",""),x.get("name","")))
+                  n_exact+=any(z.get("chartKey")==expected for z in owned)
+                  if not owned:unmatched.append(x["page"])
+              return {"total":len(records),"with_matching_icao_georef":n_matching,"without_matching_icao_georef":len(records)-n_matching,
+                      "exact_chartkey":n_exact,"without_exact_chartkey":len(records)-n_exact,"unmatched_pages":unmatched}
+          res["secondary_layout_oriented"]=coverage(onlymaps)
+          primary=eligible["ADC_PRIMARY"]
+          res["primary_adc_sample_mismatches"]=[dict(page=x["page"],icao=x["airport"],title=x["name"],key=pagegeo[x["page"]][0].get("chartKey"))
+             for x in primary if pagegeo.get(x["page"]) and pagegeo[x["page"]][0].get("airport")==x["airport"]][:5]
+          res["approach_icao_unmatched_sample"]=[x["page"] for x in eligible["APP"] if not any(g.get("airport")==x["airport"] for g in pagegeo.get(x["page"],[]))][:20]
           res["georef_source_version_uses_previous_cycle"]=not match_source
           print("GEOREF_CENSUS="+json.dumps(res,ensure_ascii=False,sort_keys=True))
           PY
