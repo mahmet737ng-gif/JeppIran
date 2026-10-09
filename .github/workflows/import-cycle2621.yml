@@ -1,5 +1,5 @@
 name: Safely publish JEPPIRAN chart cycle 2621
-# Retry 3: reconcile proven unchanged procedure metadata before carrying georeferencing.
+# Retry 4: keep committed V2621 chart output, discard only uncommitted CI intermediates before safe rebase.
 
 on:
   push:
