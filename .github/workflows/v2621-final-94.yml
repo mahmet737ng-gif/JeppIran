@@ -1,0 +1,87 @@
+name: Finish V2621 1561-1654 chart-data publication
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/v2621-final-94.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: v2621-last-94-release
+  cancel-in-progress: false
+
+jobs:
+  package-and-publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 70
+    steps:
+      - name: Checkout source and preserve simulator integrations
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install fixed PDF processor
+        run: python -m pip install PyMuPDF==1.26.6
+      - name: Validate and regenerate all full-frame airport PDFs and separate notices
+        run: |
+          python -m py_compile scripts/v2621_finalize_last_pages.py
+          python scripts/v2621_finalize_last_pages.py
+      - name: Publish isolated chart release, keeping previous releases
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag=charts-V2621-printclean-3
+          if ! gh release view "$tag" >/dev/null 2>&1; then
+            gh release create "$tag" \
+              --title 'JEPPIRAN V2621: final 1642 terminal pages, printclean full frame' \
+              --notes '81 source-verified Karachi / Islamabad charts restored; 3 incorrectly indexed revision-letter pages removed; all 12 source revision/change-notice pages available as a separate document. MediaBox/CropBox and chart frame preserved. No new georeference. NOT FOR ACTUAL NAVIGATION.'
+          fi
+          gh release upload "$tag" cycle-v2621-final/airports/*.pdf --clobber
+          gh release upload "$tag" \
+            cycle-v2621-final/V2621_REVISION_AND_CHANGE_NOTICES.pdf \
+            cycle-v2621-final/notice-index.json \
+            cycle-v2621-final/last-94-source-audit.json \
+            app/src/main/assets/chart-georef.json \
+            --clobber
+          count="$(gh release view "$tag" --json assets \
+            --jq '.assets | map(select(.name | endswith(".pdf"))) | length')"
+          test "$count" = 79
+          gh release view "$tag" --json assets \
+            --jq '.assets | map(select(.name=="OPKC.pdf" or .name=="OPIS.pdf" or .name=="V2621_REVISION_AND_CHANGE_NOTICES.pdf")) | length' | grep -qx 3
+      - name: Publish validated index after successful release upload
+        run: |
+          set -euo pipefail
+          cp cycle-v2621-final/charts-current.json app/src/main/assets/charts-current.json
+          cp cycle-v2621-final/charts-manifest.json app/src/main/assets/charts-manifest.json
+          python - <<'PY'
+          from pathlib import Path
+          old='jeppiran-chart-pdfs-v2621-printclean-2'
+          new='jeppiran-chart-pdfs-v2621-printclean-3'
+          app=Path('web/app.js')
+          s=app.read_text()
+          assert old in s, 'Unexpected pre-release PDF cache key'
+          app.write_text(s.replace(old,new))
+          sw=Path('web/service-worker.js')
+          s=sw.read_text()
+          assert old in s
+          s=s.replace(old,new)
+          import re
+          s=re.sub(r'jeppiran-pwa-v[^"]+', 'jeppiran-pwa-v2621-complete-1642',s,count=1)
+          sw.write_text(s)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add app/src/main/assets/charts-current.json \
+                  app/src/main/assets/charts-manifest.json \
+                  web/app.js web/service-worker.js
+          git diff --cached --quiet && { echo 'Expected V2621 index changes not found'; exit 1; }
+          git commit -m 'Publish all 1642 V2621 terminal pages, 81 Pakistan charts and separate non-chart notices'
+          git push origin HEAD:main
