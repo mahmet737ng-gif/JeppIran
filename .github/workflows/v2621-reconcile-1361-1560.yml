@@ -1,10 +1,6 @@
 name: Publish V2621 reviewed 1361-1560 corrections
 
 on:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/v2621-reconcile-1361-1560.yml'
   workflow_dispatch:
 
 permissions:
@@ -151,7 +147,6 @@ jobs:
           from collections import Counter
           check=Counter(x['category'] for x in screened)
           assert check==Counter({'Airport':92,'STAR':25,'SID':39,'Approach':44}),check
-          (OUT/'charts-current.json').write_text(json.dumps(corrected,ensure_ascii=False,indent=2)+'\n')
           (OUT/'corrections.json').write_text(json.dumps(fixlog,ensure_ascii=False,indent=2)+'\n')
           (OUT/'review.json').write_text(json.dumps({'range':'1361-1560','original_source_sha256':sha,'screened_categories':dict(check),'screened_pages':200,'native_size_all_independently_approved':False,'new_georeferences_approved':0,'added_local_continuation_page':1561},indent=2)+'\n')
           # Keep active georeferencing unchanged; no guessed control points.
@@ -203,6 +198,8 @@ jobs:
           assert manifest['airports']['OMDB']['pages']==56
           assert 1422 in manifest['airports']['OMDB']['global_pages'] and 1423 in manifest['airports']['OMDB']['global_pages']
           assert 1561 in manifest['airports']['OTHH']['global_pages']
+          (OUT/'charts-current.json').write_text(json.dumps(corrected,ensure_ascii=False,indent=2)+'\n')
+          assert all(row['pdf_page']==manifest['airports'][row['airport']]['global_pages'].index(row['page'])+1 for row in corrected),'Local PDF pages not synchronized to rebuilt PDFs'
           manifest['generated_at']='2026-10-09T00:00:00Z'
           (OUT/'charts-manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
           (OUT/'VALIDATION.txt').write_text('Original full-frame V2621 source retained; Printed metadata truly removed without page crop; 1564 indexed source charts; 76 actual airport bundles; OTHH 73 source charts; all 200 target-page identities covered; no new georeferencing approved; NOT FOR ACTUAL NAVIGATION.\n')
