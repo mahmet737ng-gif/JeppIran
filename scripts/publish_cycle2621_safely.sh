@@ -29,6 +29,43 @@ python scripts/build_base_index.py --pdf-text pdf-text --output charts-index-v9.
 python scripts/name_charts_v12.py
 python scripts/classify_charts_v16.py
 python scripts/build_charts_final.py
+
+# Reconcile current chart classification with 166 old chart bodies independently
+# verified IDENTICAL by PDF text, vector paths and rendered raster.
+REF="feature/georef-2621-airport-approach-coverage"
+git fetch --no-tags origin "refs/heads/$REF:refs/remotes/origin/$REF"
+git show "origin/$REF:docs/georeferencing/cycle2621-unchanged-approach-carryforward-manifest.json" > /tmp/cycle2621-unchanged-manifest.json
+python - <<'PY'
+import json
+from pathlib import Path
+file=Path('charts-current-final.json')
+rows=json.loads(file.read_text())
+assert isinstance(rows,list)
+pages={int(x['page']):x for x in rows}
+assert len(pages)==len(rows)
+old=json.load(open('app/src/main/assets/chart-georef.json'))
+prev={int(x['page']):x for x in old['charts']}
+manifest=json.load(open('/tmp/cycle2621-unchanged-manifest.json'))
+assert manifest['current']['pdfSha256']=='d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6'
+corrections=[]
+for pair in manifest['pageMappings']:
+    old_page=int(pair['previousPage'])
+    page=int(pair['currentPage'])
+    fields=prev[old_page]['chartKey'].split('|')
+    assert len(fields)==4 and fields[1]=='APPROACH'
+    if page not in pages:
+        raise RuntimeError(f'Independently matched Approach page {page} missing from index')
+    target={'airport':fields[0],'category':'Approach',
+            'chart_number':fields[2],'name':fields[3]}
+    row=pages[page]
+    if any(row.get(k)!=v for k,v in target.items()):
+        corrections.append({'page':page,'prior':{k:row.get(k) for k in target},'correction':target})
+        row.update(target)
+file.write_text(json.dumps(rows,ensure_ascii=False,indent=2)+'\n')
+Path('cycle2621-identity-corrections.json').write_text(json.dumps(corrections,indent=2))
+print('Chart identity repairs based ONLY on unchanged published source:',len(corrections))
+PY
+
 python scripts/build_chart_cycle.py \
   --pdf Iran2621.pdf --charts charts-current-final.json \
   --version V2621 --cycle 2621 --release-tag charts-V2621 \
