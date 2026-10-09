@@ -167,6 +167,116 @@ class AirportChartsActivity :
         super.onDestroy()
     }
 
+    /**
+     * Task 3: compact, offline airport facts from source-attributed build assets.
+     * This intentionally leaves the existing chart/PDF/FSX activities unchanged.
+     * Values without a source are not replaced by guessed airport data.
+     */
+    private fun buildAirportFactsPanel(): View {
+        val info = try {
+            org.json.JSONObject(
+                assets.open("airport-profiles.json").bufferedReader().use { it.readText() }
+            ).optJSONObject("airports")?.optJSONObject(icao)
+        } catch (_: Exception) {
+            null
+        }
+
+        val runwayData = try {
+            org.json.JSONObject(
+                assets.open("airport-runways.json").bufferedReader().use { it.readText() }
+            ).optJSONObject("airports")?.optJSONArray(icao)
+        } catch (_: Exception) {
+            null
+        }
+
+        val realName = info?.optString("name", "").orEmpty()
+        val iata = info?.optString("iata", "").orEmpty()
+        val country = info?.optString("country", "").orEmpty()
+        val cityName = info?.optString("city", "").orEmpty()
+        val elevation = if (info?.has("elevation") == true && !info.isNull("elevation")) {
+            info.optInt("elevation").toString() + " ft"
+        } else {
+            "Not available"
+        }
+        val lat = if (info?.has("lat") == true && !info.isNull("lat")) {
+            String.format(java.util.Locale.US, "%.4f", info.optDouble("lat"))
+        } else "—"
+        val lon = if (info?.has("lon") == true && !info.isNull("lon")) {
+            String.format(java.util.Locale.US, "%.4f", info.optDouble("lon"))
+        } else "—"
+        val endsCount = runwayData?.length() ?: 0
+
+        val panel = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(14.dp, 12.dp, 14.dp, 12.dp)
+            background = createSearchBackground()
+        }
+        panel.addView(TextView(this).apply {
+            text = "AIRPORT PROFILE  •  " + icao
+            textSize = 14f
+            typeface = Typeface.DEFAULT_BOLD
+            setTextColor(getColor(R.color.jeppiran_blue))
+        })
+        panel.addView(TextView(this).apply {
+            text = if (realName.isNotBlank()) realName else (airportName.ifBlank { "Airport name unavailable" })
+            textSize = 16f
+            typeface = Typeface.DEFAULT_BOLD
+            setTextColor(primaryTextColor())
+            setPadding(0, 5.dp, 0, 3.dp)
+        })
+        panel.addView(TextView(this).apply {
+            text = (if (iata.isBlank()) "IATA —" else "IATA $iata") +
+                "   •   " + (cityName.ifBlank { city }) +
+                (if (country.isBlank()) "" else ", $country") + "\n" +
+                "Elevation: $elevation    •    Lat/Lon: $lat, $lon"
+            textSize = 12f
+            setTextColor(secondaryTextColor())
+            maxLines = 3
+        })
+        panel.addView(TextView(this).apply {
+            text = "RUNWAY DETAILS  ($endsCount runway ends)  ›"
+            textSize = 12f
+            typeface = Typeface.DEFAULT_BOLD
+            setTextColor(getColor(R.color.jeppiran_blue))
+            setPadding(0, 9.dp, 0, 3.dp)
+            setOnClickListener {
+                val message = if (runwayData == null || runwayData.length() == 0) {
+                    "Runway information unavailable. Refer to current ADC/AIP."
+                } else {
+                    buildString {
+                        for (i in 0 until runwayData.length()) {
+                            val row = runwayData.optJSONObject(i) ?: continue
+                            val runwayId = row.optString("name", "—")
+                            val opposite = row.optString("opposite", "")
+                            val length = if (!row.isNull("length")) row.optInt("length").toString() else "—"
+                            val width = if (!row.isNull("width")) row.optInt("width").toString() else "—"
+                            val trueHeading = if (!row.isNull("headingTrue")) {
+                                String.format(java.util.Locale.US, "%.1f° TRUE", row.optDouble("headingTrue"))
+                            } else "TRUE heading unavailable"
+                            append("RWY $runwayId")
+                            if (opposite.isNotBlank()) append(" (opposite $opposite)")
+                            append("\n  $length × $width m   •   $trueHeading")
+                            append("\n  MAG: not verified; consult current ADC")
+                            if (i < runwayData.length() - 1) append("\n\n")
+                        }
+                    }
+                }
+                androidx.appcompat.app.AlertDialog.Builder(this@AirportChartsActivity)
+                    .setTitle("$icao • RUNWAYS")
+                    .setMessage(message + "\n\nCommunity reference data (OurAirports). Not approved for actual navigation.")
+                    .setPositiveButton("Close", null)
+                    .show()
+            }
+        })
+        panel.addView(TextView(this).apply {
+            text = "Source: OurAirports community data — verify current AIP/ADC"
+            textSize = 10f
+            setTextColor(secondaryTextColor())
+            setPadding(0, 5.dp, 0, 0)
+        })
+        return panel
+    }
+
     private fun buildUi() {
 
         root =
@@ -353,6 +463,17 @@ class AirportChartsActivity :
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
+        )
+
+        // Read-only facts strip; the chart search and viewer continue to work as before.
+        root.addView(
+            buildAirportFactsPanel(),
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply {
+                setMargins(12.dp, 0, 12.dp, 6.dp)
+            }
         )
 
         searchContainer =

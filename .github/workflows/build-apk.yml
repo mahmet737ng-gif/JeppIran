@@ -8,6 +8,11 @@ on:
       - work-no-build
       - pilot-ops-suite
 
+# Subsequent APK runs must not race the published version counter.
+concurrency:
+  group: jeppiran-native-release-${{ github.ref }}
+  cancel-in-progress: false
+
 permissions:
   contents: write
 
@@ -238,6 +243,15 @@ jobs:
             --index app/src/main/assets/charts-current.json \
             --output app/src/main/assets/approach-briefings.json
           test -s app/src/main/assets/approach-briefings.json
+          # Package the same independently sourced airport facts used by Web.
+          # The assets remain available to Android without an internet connection.
+          python scripts/build_airport_profiles.py \
+            --output app/src/main/assets/airport-profiles.json
+          python scripts/build_airport_runways.py \
+            --output app/src/main/assets/airport-runways.json
+          test -s app/src/main/assets/airport-profiles.json
+          test -s app/src/main/assets/airport-runways.json
+
 
       - name: Validate moving-map georeferences
         shell: bash
