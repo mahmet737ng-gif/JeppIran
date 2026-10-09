@@ -1,0 +1,39 @@
+name: Supply V2621 printclean georeferencing metadata
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/v2621-printclean-georef-asset.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: jeppiran-printclean-georef-asset
+  cancel-in-progress: false
+jobs:
+  attach:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check source metadata and attach unchanged georeferences
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          from pathlib import Path
+          a=Path('app/src/main/assets')
+          m=json.loads((a/'charts-manifest.json').read_text())
+          g=json.loads((a/'chart-georef.json').read_text())
+          assert m['version']=='V2621' and m['release_tag']=='charts-V2621-printclean-1'
+          assert g['source']['sha256']==m['source_sha256']
+          assert g['source']['chartDataVersion']==m['version']
+          assert len((a/'chart-georef.json').read_bytes())>1024
+          print('Original vetted georef metadata retained,',len(g.get('charts',[])),'chart records.')
+          PY
+          gh release view charts-V2621-printclean-1
+          gh release upload charts-V2621-printclean-1 app/src/main/assets/chart-georef.json --clobber
+          gh release view charts-V2621-printclean-1 --json assets --jq '.assets[].name' | grep -Fx 'chart-georef.json'
