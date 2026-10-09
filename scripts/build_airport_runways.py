@@ -132,9 +132,18 @@ def main():
     path = Path(a.output)
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(data, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print("JeppIran runway airports: {}/{}".format(data["runway_airport_count"], data["airport_count"]))
-    print("Runway directions: {} ({} TRUE headings available)".format(data["runway_direction_count"], data["directions_with_true_heading"]))
-    print("Without runway records:", ", ".join(data["missing_icaos"]) or "none")
+    # An approved current-cycle ADC dataset may use a slimmer summary schema.
+    # Report its values without modifying the certified source or bearing data.
+    airports = data.get("airports", {})
+    print("JeppIran runway airports: {}/{}".format(
+        data.get("runway_airport_count", len(airports)),
+        data.get("airport_count", len(airports)),
+    ))
+    print("Runway directions: {} ({} TRUE headings available)".format(
+        data["runway_direction_count"],
+        data.get("directions_with_true_heading", "source-controlled"),
+    ))
+    print("Without runway records:", ", ".join(data.get("missing_icaos", [])) or "none")
 
 if __name__ == "__main__":
     main()
