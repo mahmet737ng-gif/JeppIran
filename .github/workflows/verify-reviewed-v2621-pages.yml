@@ -70,8 +70,7 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
       - name: Verify Kotlin and build smoke APK
         run: |
-          chmod +x ./gradlew
-          ./gradlew :app:testDebugUnitTest :app:assembleDebug --no-daemon
+          gradle testDebugUnitTest assembleDebug --no-daemon
       - name: Commit validated changes only on staging branch
         shell: bash
         run: |
