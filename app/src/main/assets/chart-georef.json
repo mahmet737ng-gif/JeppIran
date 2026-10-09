@@ -189,8 +189,8 @@
     {
       "page": 10,
       "airport": "OIAA",
-      "name": "ILS Z OR LOC Z RWY 32L",
-      "chartKey": "OIAA|APPROACH|11-1|ILS Z OR LOC Z RWY 32L",
+      "name": "ILS Z RWY 32L",
+      "chartKey": "OIAA|APPROACH|11-1|ILS Z RWY 32L",
       "sourceFingerprint": "16d36f312c92e8beb7b8f9a1f58d1d879c0117b5fa2892e4ce2d326a04debaae",
       "coordinateSpace": "pdf_points",
       "origin": "top_left",
@@ -332,8 +332,8 @@
     {
       "page": 11,
       "airport": "OIAA",
-      "name": "ILS Y OR LOC Y RWY 32L",
-      "chartKey": "OIAA|APPROACH|11-2|ILS Y OR LOC Y RWY 32L",
+      "name": "ILS Y RWY 32L",
+      "chartKey": "OIAA|APPROACH|11-2|ILS Y RWY 32L",
       "sourceFingerprint": "dc55c7e743a661b6908be6329057e9bdc9c61963bebf5d117b6b6125acf1f17f",
       "coordinateSpace": "pdf_points",
       "origin": "top_left",
@@ -512,6 +512,154 @@
       "originalSourceFingerprint": "5cc246b17c089f721c9e7009aa112e327d9ceed184c311c15d8a90706e42ce42"
     },
     {
+      "page": 12,
+      "airport": "OIAA",
+      "name": "VOR Z RWY 14R",
+      "chartKey": "OIAA|APPROACH|13-1|VOR Z RWY 14R",
+      "sourceFingerprint": "8f7983b58abcca37bdf5308071417088d07c2a56dab75d2b49ef0fd6f1acca5b",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.84,
+        "top": 168.36,
+        "right": 531.6,
+        "bottom": 518.16
+      },
+      "excludedBounds": [
+        {
+          "left": 356.0,
+          "top": 168.36,
+          "right": 531.6,
+          "bottom": 251.5
+        }
+      ],
+      "points": [
+        {
+          "lat": 30.333333333333332,
+          "lon": 48.166666666666664,
+          "x": 249.24000549316406,
+          "y": 483.0,
+          "source": "Printed grid 30-20 / 48-10"
+        },
+        {
+          "lat": 30.333333333333332,
+          "lon": 48.333333333333336,
+          "x": 410.0400085449219,
+          "y": 483.0,
+          "source": "Printed grid 30-20 / 48-20"
+        },
+        {
+          "lat": 30.5,
+          "lon": 48.166666666666664,
+          "x": 249.24000549316406,
+          "y": 297.9599914550781,
+          "source": "Printed grid 30-30 / 48-10"
+        },
+        {
+          "lat": 30.5,
+          "lon": 48.333333333333336,
+          "x": 410.0400085449219,
+          "y": 297.9599914550781,
+          "source": "Printed grid 30-30 / 48-20"
+        }
+      ],
+      "gridAxes": {
+        "latitude": [
+          {
+            "label": "30-20",
+            "degrees": 30.333333333333332,
+            "pdfPoint": 483.0,
+            "pixelAxis": "y",
+            "labelBounds": [
+              98.4,
+              480.0865,
+              114.3879,
+              488.7263
+            ],
+            "tickSegment": [
+              90.84,
+              483.0,
+              95.64,
+              483.0
+            ]
+          },
+          {
+            "label": "30-30",
+            "degrees": 30.5,
+            "pdfPoint": 297.9599914550781,
+            "pixelAxis": "y",
+            "labelBounds": [
+              98.4,
+              295.1665,
+              114.3879,
+              303.8064
+            ],
+            "tickSegment": [
+              90.84,
+              297.96,
+              95.64,
+              297.96
+            ]
+          }
+        ],
+        "longitude": [
+          {
+            "label": "48-10",
+            "degrees": 48.166666666666664,
+            "pdfPoint": 249.24000549316406,
+            "pixelAxis": "x",
+            "labelBounds": [
+              241.92,
+              505.0464,
+              257.908,
+              513.6863
+            ],
+            "tickSegment": [
+              249.24,
+              517.92,
+              249.24,
+              513.12
+            ]
+          },
+          {
+            "label": "48-20",
+            "degrees": 48.333333333333336,
+            "pdfPoint": 410.0400085449219,
+            "pixelAxis": "x",
+            "labelBounds": [
+              402.36,
+              505.0464,
+              418.3479,
+              513.6863
+            ],
+            "tickSegment": [
+              410.04,
+              517.92,
+              410.04,
+              513.12
+            ]
+          }
+        ]
+      },
+      "maxResidualPdfPoints": 0.75,
+      "validation": {
+        "gridMaxResidualPdfPoints": 3.1776437161565096e-14,
+        "controlPointCount": 4,
+        "method": "paired_printed_graticule_vector_ticks",
+        "measuredAxisValueCounts": {
+          "latitude": 2,
+          "longitude": 2
+        },
+        "notToScaleTextPresentElsewhereOnPage": true,
+        "visualReview": true,
+        "reviewDecision": "allow_measured_plan",
+        "reviewNote": "Main map graticule measured from PDF vector ticks. Upper-right NOT TO SCALE inset masked. Not navigation-certified; device acceptance test outstanding.",
+        "pendingExternalGeodeticAccuracyValidation": true
+      }
+    },
+    {
       "page": 13,
       "airport": "OIAA",
       "name": "VOR Y RWY 14R",
@@ -522,10 +670,10 @@
       "width": 612,
       "height": 792,
       "bounds": {
-        "left": 0,
-        "top": 0,
-        "right": 612,
-        "bottom": 792
+        "left": 90.72,
+        "top": 168.24,
+        "right": 531.84,
+        "bottom": 518.16
       },
       "excludedBounds": [],
       "points": [
@@ -1004,10 +1152,10 @@
       "width": 612,
       "height": 792,
       "bounds": {
-        "left": 0,
-        "top": 0,
-        "right": 612,
-        "bottom": 792
+        "left": 90.72,
+        "top": 168.24,
+        "right": 531.84,
+        "bottom": 518.16
       },
       "excludedBounds": [],
       "points": [
@@ -1324,6 +1472,154 @@
         "notANewIndependentGeodeticAccuracyTest": true
       },
       "originalSourceFingerprint": "37f2defe5667e862bfcb30062e323ddaecfdb74e74fa1ed87f4b240e59cd68ac"
+    },
+    {
+      "page": 18,
+      "airport": "OIAA",
+      "name": "NDB RWY 14R",
+      "chartKey": "OIAA|APPROACH|16-1|NDB RWY 14R",
+      "sourceFingerprint": "916125f6a25661753eb402513612bbdc278cb450e8d410842d06b9504e94be8a",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.84,
+        "top": 168.36,
+        "right": 531.6,
+        "bottom": 518.16
+      },
+      "excludedBounds": [
+        {
+          "left": 356.0,
+          "top": 168.36,
+          "right": 531.6,
+          "bottom": 251.5
+        }
+      ],
+      "points": [
+        {
+          "lat": 30.333333333333332,
+          "lon": 48.166666666666664,
+          "x": 249.24000549316406,
+          "y": 483.0,
+          "source": "Printed grid 30-20 / 48-10"
+        },
+        {
+          "lat": 30.333333333333332,
+          "lon": 48.333333333333336,
+          "x": 410.0400085449219,
+          "y": 483.0,
+          "source": "Printed grid 30-20 / 48-20"
+        },
+        {
+          "lat": 30.5,
+          "lon": 48.166666666666664,
+          "x": 249.24000549316406,
+          "y": 298.9200134277344,
+          "source": "Printed grid 30-30 / 48-10"
+        },
+        {
+          "lat": 30.5,
+          "lon": 48.333333333333336,
+          "x": 410.0400085449219,
+          "y": 298.9200134277344,
+          "source": "Printed grid 30-30 / 48-20"
+        }
+      ],
+      "gridAxes": {
+        "latitude": [
+          {
+            "label": "30-20",
+            "degrees": 30.333333333333332,
+            "pdfPoint": 483.0,
+            "pixelAxis": "y",
+            "labelBounds": [
+              98.4,
+              480.0865,
+              114.3879,
+              488.7263
+            ],
+            "tickSegment": [
+              90.84,
+              483.0,
+              95.64,
+              483.0
+            ]
+          },
+          {
+            "label": "30-30",
+            "degrees": 30.5,
+            "pdfPoint": 298.9200134277344,
+            "pixelAxis": "y",
+            "labelBounds": [
+              98.4,
+              295.1665,
+              114.3879,
+              303.8064
+            ],
+            "tickSegment": [
+              113.4,
+              298.92,
+              111.72,
+              298.92
+            ]
+          }
+        ],
+        "longitude": [
+          {
+            "label": "48-10",
+            "degrees": 48.166666666666664,
+            "pdfPoint": 249.24000549316406,
+            "pixelAxis": "x",
+            "labelBounds": [
+              241.92,
+              505.0464,
+              257.908,
+              513.6863
+            ],
+            "tickSegment": [
+              249.24,
+              517.92,
+              249.24,
+              513.12
+            ]
+          },
+          {
+            "label": "48-20",
+            "degrees": 48.333333333333336,
+            "pdfPoint": 410.0400085449219,
+            "pixelAxis": "x",
+            "labelBounds": [
+              402.36,
+              505.0464,
+              418.3479,
+              513.6863
+            ],
+            "tickSegment": [
+              410.04,
+              517.92,
+              410.04,
+              513.12
+            ]
+          }
+        ]
+      },
+      "maxResidualPdfPoints": 0.75,
+      "validation": {
+        "gridMaxResidualPdfPoints": 4.4938668397781776e-14,
+        "controlPointCount": 4,
+        "method": "paired_printed_graticule_vector_ticks",
+        "measuredAxisValueCounts": {
+          "latitude": 2,
+          "longitude": 2
+        },
+        "notToScaleTextPresentElsewhereOnPage": true,
+        "visualReview": true,
+        "reviewDecision": "allow_measured_plan",
+        "reviewNote": "Main map graticule measured from PDF vector ticks. Upper-right NOT TO SCALE inset masked. Not navigation-certified; device acceptance test outstanding.",
+        "pendingExternalGeodeticAccuracyValidation": true
+      }
     },
     {
       "page": 22,
@@ -1796,8 +2092,8 @@
     {
       "page": 25,
       "airport": "OIAM",
-      "name": "VOR RWY 31",
-      "chartKey": "OIAM|APPROACH|13-3|VOR RWY 31",
+      "name": "VOR RWY 31 (CAT C & D)",
+      "chartKey": "OIAM|APPROACH|13-3|VOR RWY 31 (CAT C & D)",
       "sourceFingerprint": "413e00b9bed42121c1062c75c4fbfdad798acff6a4821baf04f979d5fd128152",
       "coordinateSpace": "pdf_points",
       "origin": "top_left",
@@ -1978,8 +2274,8 @@
     {
       "page": 26,
       "airport": "OIAM",
-      "name": "VOR RWY 31",
-      "chartKey": "OIAM|APPROACH|13-4|VOR RWY 31",
+      "name": "VOR RWY 31 (CAT A & B)",
+      "chartKey": "OIAM|APPROACH|13-4|VOR RWY 31 (CAT A & B)",
       "sourceFingerprint": "97fe78258125710f6d52cd6ba5813e3ee77b7147e9a1deda039e4676705b83b6",
       "coordinateSpace": "pdf_points",
       "origin": "top_left",
