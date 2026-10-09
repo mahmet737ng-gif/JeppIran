@@ -147,9 +147,53 @@ jobs:
             --index cycle-build/charts-current.json \
             --output cycle-build/chart-georef.json \
             --audit cycle-build/georef-audit.json \
+            --manifest cycle-build/manifest.json \
+            --previous-georef app/src/main/assets/chart-georef.json \
             --data-version "${{ steps.cycle.outputs.version }}" \
             --cycle "${{ steps.cycle.outputs.cycle }}" \
             --disable-independent-check
+
+      - name: Preserve previously approved Approach georeferences if charts are unchanged
+        shell: bash
+        run: |
+          set -euo pipefail
+          SRC="${{ steps.cycle.outputs.source }}"
+          CYCLE="${{ steps.cycle.outputs.cycle }}"
+          PREVIOUS_PDF=$(python - <<'PY'
+          import json
+          print(json.load(open('app/src/main/assets/charts-manifest.json')).get('source', ''))
+          PY
+          )
+          REVIEWED="cycle-build/verified-unchanged-approaches.json"
+          if [ -n "$PREVIOUS_PDF" ] && [ -f "$PREVIOUS_PDF" ] && [ "$PREVIOUS_PDF" != "$SRC" ]; then
+            PREVIOUS_CYCLE=$(python - <<'PY'
+          import json
+          print(json.load(open('app/src/main/assets/chart-georef.json'))['source']['cycle'])
+          PY
+          )
+            python scripts/detect_unchanged_prior_approaches.py \
+              --previous-pdf "$PREVIOUS_PDF" \
+              --current-pdf "$SRC" \
+              --previous-georef app/src/main/assets/chart-georef.json \
+              --current-index cycle-build/charts-current.json \
+              --previous-cycle "$PREVIOUS_CYCLE" \
+              --current-cycle "$CYCLE" \
+              --output "$REVIEWED"
+          elif [ "$CYCLE" = "2621" ]; then
+            cp docs/georeferencing/cycle2621-unchanged-approach-carryforward-manifest.json "$REVIEWED"
+          else
+            echo "Previous PDF unavailable; no georefs will be carried without verified matching."
+          fi
+          if [ -f "$REVIEWED" ]; then
+            python scripts/carry_forward_verified_approaches.py \
+              --pdf "$SRC" \
+              --previous-georef app/src/main/assets/chart-georef.json \
+              --current-georef cycle-build/chart-georef.json \
+              --index cycle-build/charts-current.json \
+              --reviewed-manifest "$REVIEWED" \
+              --output cycle-build/chart-georef.json \
+              --report cycle-build/approach-carry-forward-audit.json
+          fi
 
       - name: Validate bundle
         shell: bash

@@ -1,0 +1,89 @@
+{
+  "title": "OIMM 11-1 ILS Z or LOC Z RWY 31R — measured official control-point test",
+  "cycle": "2621",
+  "pdfPage": 605,
+  "pdfSourceSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+  "status": "LOCAL_ONLY_PROTOTYPE_NOT_PUBLISHED",
+  "officialSources": {
+    "thresholds": "https://ais.airport.ir/documents/452631/186839618/AD%2B2%2BOIMM%2BADC.pdf",
+    "vorCurrentCorroboration": "https://ais.airport.ir/documents/452631/186838685/ENR+3.1.pdf#page=81",
+    "vorCoordinate": "36°13′52.2″N, 059°39′02.0″E"
+  },
+  "measuredNativePDFPointControls": [
+    {
+      "id": "MSD_VOR",
+      "lat": "361352.2N",
+      "lon": "0593902.0E",
+      "x": 213.54,
+      "y": 247.98,
+      "measurement": "center of vector concentric VOR symbol path 1011"
+    },
+    {
+      "id": "THR_13L",
+      "lat": "361451.71N",
+      "lon": "0593735.23E",
+      "x": 192.42,
+      "y": 230.16,
+      "measurement": "midpoint of runway vector polygon 1551 northwest cross-end"
+    },
+    {
+      "id": "THR_31R",
+      "lat": "361326.45N",
+      "lon": "0593925.71E",
+      "x": 219.18,
+      "y": 255.66,
+      "measurement": "midpoint of runway vector polygon 1551 southeast cross-end"
+    },
+    {
+      "id": "THR_13R",
+      "lat": "361448.01N",
+      "lon": "0593727.83E",
+      "x": 190.5,
+      "y": 231.36,
+      "measurement": "midpoint of runway vector polygon 1552 northwest cross-end"
+    },
+    {
+      "id": "THR_31L",
+      "lat": "361320.29N",
+      "lon": "0593921.51E",
+      "x": 218.04,
+      "y": 257.64,
+      "measurement": "midpoint of runway vector polygon 1552 southeast cross-end"
+    }
+  ],
+  "metrics": {
+    "localAffineMaxResidualPDFPoints": 0.04778,
+    "leaveOneOutGroundErrorsMeters": {
+      "MSD_VOR": 10.72,
+      "THR_13L": 3.68,
+      "THR_31R": 8.01,
+      "THR_13R": 2.31,
+      "THR_31L": 7.75
+    },
+    "maximumLeaveOneOutErrorMeters": 10.72,
+    "strictThresholdMeters": 10,
+    "strictThresholdPassed": false,
+    "independentPrintedLongitudes": [
+      {
+        "lon": "59-40",
+        "x": 228.12
+      },
+      {
+        "lon": "59-50",
+        "x": 378.36
+      },
+      {
+        "lon": "60-00",
+        "x": 528.48
+      }
+    ],
+    "knownPrintedLatitude": {
+      "lat": "36-10",
+      "y": 319.8
+    },
+    "observedGridLatitudePointsPerMinute": 18.568,
+    "msdLatitudeScalePointsPerMinute": 18.5581,
+    "note": "Independent distant approach fixes have not been geolocated on this PDF; local 5-point fit MUST NOT be extrapolated across entire plate."
+  },
+  "conclusion": "The official VOR + four runway threshold method quantitatively calibrates the airport neighborhood. At configured strict independent 10m limit it narrowly fails (10.72m), and full approach plan remains uncertified. No navigation marker should be released from this trial until accepted review."
+}

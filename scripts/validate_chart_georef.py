@@ -46,7 +46,8 @@ def main():
     assert len(exclusions) == len(set(exclusions))
     assert set(pages) | set(exclusions) == set(index)
     assert {c['airport'] for c in root['charts']} == {c['airport'] for c in index.values()}
-    assert 32 not in pages  # EGVAX 1B is explicitly NOT TO SCALE.
+    if root['source'].get('cycle') in ('2620', 2620):
+        assert 32 not in pages  # Legacy 2620-specific EGVAX 1B check.
 
     maximum_residual = 0.0
     for chart in root['charts']:
@@ -56,9 +57,18 @@ def main():
         assert chart['sourceFingerprint'] == page_fingerprint(page)
         has_not_to_scale = 'NOT TO SCALE' in page.get_text()
         assert chart['validation']['notToScaleTextPresentElsewhereOnPage'] == has_not_to_scale
-        if has_not_to_scale:
-            assert chart['validation'].get('reviewDecision') == 'allow_measured_plan' or \
-                chart['validation'].get('reusedUnchangedSource') is True
+        if has_not_to_scale and chart['validation'].get('method') != 'published_wgs84_control_points_affine':
+            # Distinguish checked source geometry from independently confirmed
+            # geographic accuracy. Provisional Approach/Airport records are
+            # never counted as independently verified.
+            provisional = chart['validation'].get('notToScaleOverrideApplied') is True
+            if provisional:
+                assert index[chart['page']]['category'] in {'Approach', 'Airport'}
+                assert chart['validation'].get('verificationStatus') == 'provisional_geometry_only'
+                assert chart['validation'].get('requiresIndependentFeatureCheck') is True
+            else:
+                assert chart['validation'].get('reviewDecision') == 'allow_measured_plan' or \
+                    chart['validation'].get('reusedUnchangedSource') is True
         assert chart['width'] == page.rect.width and chart['height'] == page.rect.height
         assert chart['coordinateSpace'] == 'pdf_points' and chart['origin'] == 'top_left'
         assert len(chart['points']) >= 4
@@ -70,6 +80,42 @@ def main():
         for area in chart['excludedBounds']:
             assert bounds['left'] <= area['left'] < area['right'] <= bounds['right']
             assert bounds['top'] <= area['top'] < area['bottom'] <= bounds['bottom']
+        if chart['validation']['method'] == 'published_wgs84_control_points_affine':
+            # This method never derives a location from chart scale or a
+            # guessed station coordinate. Every GCP must match a published
+            # feature; measurements must cover a real map region.
+            assert chart['validation']['verificationStatus'] == 'passed_independent_control_checks'
+            assert chart['validation']['pixelMeasurementsReviewed'] is True
+            assert chart['validation']['groundControlCount'] >= 4
+            assert chart['validation']['maxIndependentCheckMetres'] <= 10
+            assert len(chart['points']) >= 4
+            hull = chart.get('verifiedFootprint', [])
+            assert len(hull) >= 3
+            assert all(bounds['left'] <= p['x'] <= bounds['right'] and
+                       bounds['top'] <= p['y'] <= bounds['bottom'] for p in hull)
+            controls_path = Path('data/georeferencing/official-control-points.json')
+            from validate_official_controls import validate
+            controls = {
+                (p['airport'], p['featureType'], p['featureId']): p
+                for p in validate(json.loads(controls_path.read_text()))
+            }
+            for p in chart['points']:
+                control = controls[(chart['airport'], p['featureType'], p['featureId'])]
+                assert control['precisionEligibleForGroundMap']
+                assert p['lat'] == control['latitudeDecimal']
+                assert p['lon'] == control['longitudeDecimal']
+            coordinates = np.array([[p['lon'], p['lat']] for p in chart['points']])
+            positions = np.array([[p['x'], p['y']] for p in chart['points']])
+            centered = coordinates - coordinates.mean(axis=0)
+            matrix = np.column_stack((centered, np.ones(len(coordinates))))
+            coeff, _, rank, _ = np.linalg.lstsq(matrix, positions, rcond=None)
+            assert rank == 3
+            max_err = float(np.max(np.linalg.norm(matrix @ coeff - positions, axis=1)))
+            assert max_err <= chart['maxResidualPdfPoints'] <= .75
+            assert chart['validation']['maxPdfResidual'] <= .75
+            assert coeff[0,0]*coeff[1,1] - coeff[0,1]*coeff[1,0] < 0
+            maximum_residual = max(maximum_residual, max_err)
+            continue
         assert chart['validation']['visualReview'] == (chart['page'] in review['pages'])
         latitude_axis = chart['gridAxes']['latitude']
         longitude_axis = chart['gridAxes']['longitude']

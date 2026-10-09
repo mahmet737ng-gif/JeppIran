@@ -43,7 +43,8 @@ data class GeoReference(
     val bounds: GeoReferenceBounds,
     val points: List<GeoReferencePoint>,
     val maxResidualPdfPoints: Double = 0.75,
-    val excludedBounds: List<GeoReferenceBounds> = emptyList()
+    val excludedBounds: List<GeoReferenceBounds> = emptyList(),
+    val verifiedFootprint: List<Pair<Double, Double>> = emptyList()
 ) {
     private companion object {
         const val OUTER_EDGE_TOLERANCE_PDF_POINTS = 6.0
@@ -67,6 +68,29 @@ data class GeoReference(
 
     fun isValid(): Boolean = transform != null
 
+    /** Do not extrapolate an exact-GCP transform beyond its checked hull. */
+    private fun withinVerifiedFootprint(x: Double, y: Double): Boolean {
+        if (verifiedFootprint.isEmpty()) return true
+        var inside = false
+        var j = verifiedFootprint.lastIndex
+        for (i in verifiedFootprint.indices) {
+            val (xi, yi) = verifiedFootprint[i]
+            val (xj, yj) = verifiedFootprint[j]
+            val dx = xj - xi
+            val dy = yj - yi
+            val cross = dx * (y - yi) - dy * (x - xi)
+            if (kotlin.math.abs(cross) <= 1e-6 &&
+                x in minOf(xi, xj)..maxOf(xi, xj) &&
+                y in minOf(yi, yj)..maxOf(yi, yj)
+            ) return true
+            if ((yi > y) != (yj > y) &&
+                x < (xj - xi) * (y - yi) / (yj - yi) + xi
+            ) inside = !inside
+            j = i
+        }
+        return inside
+    }
+
     fun project(latitude: Double, longitude: Double): Pair<Double, Double>? {
         if (!latitude.isFinite() || !longitude.isFinite() ||
             latitude !in -90.0..90.0 || longitude !in -180.0..180.0
@@ -84,6 +108,7 @@ data class GeoReference(
                 it.second,
                 OUTER_EDGE_TOLERANCE_PDF_POINTS
             ) &&
+                withinVerifiedFootprint(it.first, it.second) &&
                 excludedBounds.none { area ->
                     area.contains(it.first, it.second)
                 }
@@ -132,6 +157,13 @@ data class GeoReference(
         if (points.size < 4 || !width.isFinite() || !height.isFinite() ||
             width <= 0 || height <= 0 || !maxResidualPdfPoints.isFinite() ||
             maxResidualPdfPoints !in 0.0..2.0 ||
+            verifiedFootprint.isNotEmpty() && (
+                verifiedFootprint.size < 3 ||
+                verifiedFootprint.any { p ->
+                    !p.first.isFinite() || !p.second.isFinite() ||
+                    !bounds.contains(p.first, p.second)
+                }
+            ) ||
             !bounds.left.isFinite() || !bounds.top.isFinite() ||
             !bounds.right.isFinite() || !bounds.bottom.isFinite() ||
             bounds.left < 0 || bounds.top < 0 || bounds.right > width || bounds.bottom > height ||
@@ -206,18 +238,19 @@ object ChartGeoreferenceStore {
     private val SUPPORTED_METHODS =
         setOf(
             "paired_printed_graticule_vector_ticks",
-            "single_axis_plus_conformal_scale"
+            "single_axis_plus_conformal_scale",
+            "published_wgs84_control_points_affine"
         )
 
     private data class ParsedGeoreferences(
         val chartDataVersion: String,
         val sourceSha256: String,
-        val references: Map<Int, GeoReference>
+        val references: Map<Int, List<GeoReference>>
     )
 
     @Volatile private var loaded = false
     private var chartDataVersion = ""
-    private val references = mutableMapOf<Int, GeoReference>()
+    private val references = mutableMapOf<Int, List<GeoReference>>()
 
     @Synchronized
     fun reset() {
@@ -296,17 +329,38 @@ object ChartGeoreferenceStore {
             !sourceSha256.matches(Regex("[0-9a-f]{64}"))
         ) return null
 
-        val parsed = mutableMapOf<Int, GeoReference>()
+        val parsed = mutableMapOf<Int, MutableList<GeoReference>>()
+        val regionIds = mutableMapOf<Int, MutableSet<String>>()
         val duplicatePages = mutableSetOf<Int>()
         val charts = root.optJSONArray("charts") ?: return null
 
         for (i in 0 until charts.length()) {
             val item = charts.optJSONObject(i) ?: continue
             val page = item.optInt("page", -1)
-            val method =
-                item.optJSONObject("validation")
-                    ?.optString("method")
-                    .orEmpty()
+            val validation = item.optJSONObject("validation")
+            val method = validation?.optString("method").orEmpty()
+            // An NTS candidate with a mathematically fitted grid is not
+            // necessarily accurate at runways, fixes or taxiways. Do not
+            // show a misleading aircraft marker until independently checked.
+            if (validation?.optString("verificationStatus") == "provisional_geometry_only") {
+                continue
+            }
+            // Never display an Approach/Airport marker from a geographic
+            // axis invented with a conformal scale assumption. Do not
+            // change legacy STAR/SID handling in this focused update.
+            val chartKey = item.optString("chartKey").uppercase()
+            val independentlyReviewedLegacy =
+                validation?.optBoolean("carryForwardApproved", false) == true &&
+                validation?.optBoolean("verifiedUnchangedAgainstPreviousSource", false) == true &&
+                validation?.optBoolean("reusedUnchangedSource", false) == true
+            if (method == "single_axis_plus_conformal_scale" &&
+                (chartKey.contains("|APPROACH|") || chartKey.contains("|AIRPORT|")) &&
+                !independentlyReviewedLegacy) {
+                // No NEW single-axis inferred scale is accepted. Retain a
+                // previously approved calibration only for an explicitly
+                // reviewed, unchanged cycle-to-cycle chart.
+                continue
+            }
 
             if (page <= 0 ||
                 item.optString("coordinateSpace") != "pdf_points" ||
@@ -324,6 +378,15 @@ object ChartGeoreferenceStore {
                 )
 
             val pointsJson = item.optJSONArray("points") ?: continue
+            val footprintJson = item.optJSONArray("verifiedFootprint")
+            val verifiedFootprint =
+                (0 until (footprintJson?.length() ?: 0)).map { j ->
+                    val point = footprintJson?.optJSONObject(j)
+                    Pair(
+                        point?.optDouble("x", Double.NaN) ?: Double.NaN,
+                        point?.optDouble("y", Double.NaN) ?: Double.NaN
+                    )
+                }
             val excludedJson = item.optJSONArray("excludedBounds")
             val excludedBounds =
                 (0 until (excludedJson?.length() ?: 0)).map { j ->
@@ -376,33 +439,58 @@ object ChartGeoreferenceStore {
                     bounds,
                     points,
                     item.optDouble("maxResidualPdfPoints", 0.75),
-                    safeExcludedBounds
+                    safeExcludedBounds,
+                    verifiedFootprint
                 )
 
-            // Duplicate page identifiers are ambiguous within one source.
+            // Multiple uniquely named regions can share the same source PDF
+            // page, e.g. main ADC + separately georeferenced parking inset.
+            // Repeated region IDs are ambiguous and invalidate that page.
             if (page in duplicatePages) continue
-            if (parsed.containsKey(page)) {
+            val regionId = item.optString("regionId").ifBlank { "main" }
+            if (!regionId.matches(Regex("[A-Za-z][A-Za-z0-9_-]{0,63}"))) continue
+            val seen = regionIds.getOrPut(page) { mutableSetOf() }
+            if (!seen.add(regionId)) {
                 parsed.remove(page)
                 duplicatePages.add(page)
                 continue
             }
-            if (reference.isValid()) parsed[page] = reference
+            if (reference.isValid()) parsed.getOrPut(page) { mutableListOf() }.add(reference)
         }
 
-        return ParsedGeoreferences(dataVersion, sourceSha256, parsed)
+        return ParsedGeoreferences(dataVersion, sourceSha256, parsed.mapValues { it.value.toList() })
     }
 
-    /** Convert PDF points to the actually rendered, cropped bitmap. */
+    /**
+     * Return one marker per independently calibrated region whose verified
+     * geographic footprint contains the aircraft. A chart may show the same
+     * aircraft on its main map AND a separately calibrated parking inset.
+     */
+    fun renderedPoints(
+        context: Context, page: Int, latitude: Double, longitude: Double, headingDegrees: Double,
+        dataVersion: String, pdfWidth: Int, pdfHeight: Int,
+        fullBitmapWidth: Int, fullBitmapHeight: Int, cropLeft: Int, cropTop: Int,
+        bitmapWidth: Int, bitmapHeight: Int
+    ): List<RenderedAircraftPosition> {
+        load(context)
+        if (dataVersion != chartDataVersion) return emptyList()
+        return references[page].orEmpty().mapNotNull { reference ->
+            reference.renderedPosition(
+                latitude, longitude, headingDegrees, pdfWidth, pdfHeight,
+                fullBitmapWidth, fullBitmapHeight, cropLeft, cropTop, bitmapWidth, bitmapHeight
+            )
+        }
+    }
+
+    /** Compatibility for existing single-marker consumers. */
     fun renderedPoint(
         context: Context, page: Int, latitude: Double, longitude: Double, headingDegrees: Double,
         dataVersion: String, pdfWidth: Int, pdfHeight: Int,
         fullBitmapWidth: Int, fullBitmapHeight: Int, cropLeft: Int, cropTop: Int,
         bitmapWidth: Int, bitmapHeight: Int
-    ): RenderedAircraftPosition? {
-        load(context)
-        if (dataVersion != chartDataVersion) return null
-        val ref = references[page] ?: return null
-        return ref.renderedPosition(latitude, longitude, headingDegrees, pdfWidth, pdfHeight,
-            fullBitmapWidth, fullBitmapHeight, cropLeft, cropTop, bitmapWidth, bitmapHeight)
-    }
+    ): RenderedAircraftPosition? = renderedPoints(
+        context, page, latitude, longitude, headingDegrees, dataVersion,
+        pdfWidth, pdfHeight, fullBitmapWidth, fullBitmapHeight, cropLeft,
+        cropTop, bitmapWidth, bitmapHeight
+    ).firstOrNull()
 }

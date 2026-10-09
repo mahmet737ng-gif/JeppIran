@@ -8260,9 +8260,9 @@ private val locationPermissionLauncher =
                     ?: return
 
 
-            val point =
+            val points =
                 ChartGeoreferenceStore
-                    .renderedPoint(
+                    .renderedPoints(
                         this@PdfViewerActivity,
                         currentChartGlobalPage(),
                         position.first,
@@ -8279,7 +8279,7 @@ private val locationPermissionLauncher =
                         image.width,
                         image.height
                     )
-                    ?: return
+            if (points.isEmpty()) return
 
 
             val safeScale =
@@ -8398,6 +8398,7 @@ private val locationPermissionLauncher =
                 }
 
 
+            for (point in points) {
             canvas.drawCircle(
                 point.x,
                 point.y,
@@ -8546,6 +8547,7 @@ private val locationPermissionLauncher =
 
 
             canvas.restore()
+            } // main and independently calibrated inset marker(s)
 
 
             /*

@@ -1,0 +1,694 @@
+{
+  "schemaVersion": 1,
+  "policy": "Retain an already approved 2620 georeference ONLY for chart pages that were source-PDF text, vector-geometry and raster matched against exactly these two source SHA256s; never derive new coordinates.",
+  "previous": {
+    "cycle": "2620",
+    "pdfSha256": "ee439abb9c582a42020eec738a370db9742c84f4aa198d7181ef0c5fe34933b4",
+    "georefSourceSha256": "ee439abb9c582a42020eec738a370db9742c84f4aa198d7181ef0c5fe34933b4",
+    "pageCount": 991
+  },
+  "current": {
+    "cycle": "2621",
+    "pdfSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+    "pageCount": 1654
+  },
+  "verification": {
+    "text": "identical chart body excluding JeppView changing print header",
+    "vectorMatchBothDirectionsMinimum": 0.96,
+    "vectorCoordinateTolerancePdfPoints": 0.8,
+    "rasterCorrelationMinimum": 0.84,
+    "rasterDifferentPixelFractionMaximum": 0.11,
+    "verifiedPdfPairs": 166
+  },
+  "previousMethodBreakdown": {
+    "paired_printed_graticule_vector_ticks": 132,
+    "single_axis_plus_conformal_scale": 34
+  },
+  "caution": "These 166 inherit the previously approved 2620 calibration. This is not proof that prior calibration meets current independent, non-estimated position accuracy requirements. The 34 one-axis conformal-scale records remain identified as legacy.",
+  "pageMappings": [
+    {
+      "previousPage": 10,
+      "currentPage": 10
+    },
+    {
+      "previousPage": 11,
+      "currentPage": 11
+    },
+    {
+      "previousPage": 13,
+      "currentPage": 13
+    },
+    {
+      "previousPage": 14,
+      "currentPage": 14
+    },
+    {
+      "previousPage": 15,
+      "currentPage": 15
+    },
+    {
+      "previousPage": 16,
+      "currentPage": 16
+    },
+    {
+      "previousPage": 17,
+      "currentPage": 17
+    },
+    {
+      "previousPage": 24,
+      "currentPage": 24
+    },
+    {
+      "previousPage": 25,
+      "currentPage": 25
+    },
+    {
+      "previousPage": 26,
+      "currentPage": 26
+    },
+    {
+      "previousPage": 41,
+      "currentPage": 41
+    },
+    {
+      "previousPage": 42,
+      "currentPage": 42
+    },
+    {
+      "previousPage": 43,
+      "currentPage": 43
+    },
+    {
+      "previousPage": 44,
+      "currentPage": 44
+    },
+    {
+      "previousPage": 47,
+      "currentPage": 47
+    },
+    {
+      "previousPage": 49,
+      "currentPage": 49
+    },
+    {
+      "previousPage": 50,
+      "currentPage": 50
+    },
+    {
+      "previousPage": 51,
+      "currentPage": 51
+    },
+    {
+      "previousPage": 64,
+      "currentPage": 75
+    },
+    {
+      "previousPage": 65,
+      "currentPage": 76
+    },
+    {
+      "previousPage": 66,
+      "currentPage": 77
+    },
+    {
+      "previousPage": 67,
+      "currentPage": 78
+    },
+    {
+      "previousPage": 70,
+      "currentPage": 81
+    },
+    {
+      "previousPage": 71,
+      "currentPage": 82
+    },
+    {
+      "previousPage": 72,
+      "currentPage": 83
+    },
+    {
+      "previousPage": 73,
+      "currentPage": 84
+    },
+    {
+      "previousPage": 87,
+      "currentPage": 98
+    },
+    {
+      "previousPage": 88,
+      "currentPage": 99
+    },
+    {
+      "previousPage": 89,
+      "currentPage": 100
+    },
+    {
+      "previousPage": 90,
+      "currentPage": 101
+    },
+    {
+      "previousPage": 91,
+      "currentPage": 102
+    },
+    {
+      "previousPage": 92,
+      "currentPage": 103
+    },
+    {
+      "previousPage": 93,
+      "currentPage": 104
+    },
+    {
+      "previousPage": 94,
+      "currentPage": 105
+    },
+    {
+      "previousPage": 95,
+      "currentPage": 106
+    },
+    {
+      "previousPage": 96,
+      "currentPage": 107
+    },
+    {
+      "previousPage": 103,
+      "currentPage": 132
+    },
+    {
+      "previousPage": 104,
+      "currentPage": 133
+    },
+    {
+      "previousPage": 105,
+      "currentPage": 134
+    },
+    {
+      "previousPage": 106,
+      "currentPage": 135
+    },
+    {
+      "previousPage": 107,
+      "currentPage": 136
+    },
+    {
+      "previousPage": 108,
+      "currentPage": 137
+    },
+    {
+      "previousPage": 109,
+      "currentPage": 138
+    },
+    {
+      "previousPage": 111,
+      "currentPage": 140
+    },
+    {
+      "previousPage": 175,
+      "currentPage": 270
+    },
+    {
+      "previousPage": 177,
+      "currentPage": 272
+    },
+    {
+      "previousPage": 178,
+      "currentPage": 273
+    },
+    {
+      "previousPage": 179,
+      "currentPage": 274
+    },
+    {
+      "previousPage": 182,
+      "currentPage": 277
+    },
+    {
+      "previousPage": 184,
+      "currentPage": 279
+    },
+    {
+      "previousPage": 210,
+      "currentPage": 326
+    },
+    {
+      "previousPage": 211,
+      "currentPage": 327
+    },
+    {
+      "previousPage": 212,
+      "currentPage": 328
+    },
+    {
+      "previousPage": 213,
+      "currentPage": 329
+    },
+    {
+      "previousPage": 214,
+      "currentPage": 330
+    },
+    {
+      "previousPage": 215,
+      "currentPage": 331
+    },
+    {
+      "previousPage": 216,
+      "currentPage": 332
+    },
+    {
+      "previousPage": 217,
+      "currentPage": 333
+    },
+    {
+      "previousPage": 218,
+      "currentPage": 334
+    },
+    {
+      "previousPage": 219,
+      "currentPage": 335
+    },
+    {
+      "previousPage": 228,
+      "currentPage": 344
+    },
+    {
+      "previousPage": 229,
+      "currentPage": 345
+    },
+    {
+      "previousPage": 230,
+      "currentPage": 346
+    },
+    {
+      "previousPage": 231,
+      "currentPage": 347
+    },
+    {
+      "previousPage": 264,
+      "currentPage": 390
+    },
+    {
+      "previousPage": 265,
+      "currentPage": 391
+    },
+    {
+      "previousPage": 266,
+      "currentPage": 392
+    },
+    {
+      "previousPage": 267,
+      "currentPage": 393
+    },
+    {
+      "previousPage": 312,
+      "currentPage": 438
+    },
+    {
+      "previousPage": 314,
+      "currentPage": 440
+    },
+    {
+      "previousPage": 325,
+      "currentPage": 480
+    },
+    {
+      "previousPage": 326,
+      "currentPage": 481
+    },
+    {
+      "previousPage": 327,
+      "currentPage": 482
+    },
+    {
+      "previousPage": 328,
+      "currentPage": 483
+    },
+    {
+      "previousPage": 329,
+      "currentPage": 484
+    },
+    {
+      "previousPage": 343,
+      "currentPage": 505
+    },
+    {
+      "previousPage": 344,
+      "currentPage": 506
+    },
+    {
+      "previousPage": 345,
+      "currentPage": 507
+    },
+    {
+      "previousPage": 346,
+      "currentPage": 508
+    },
+    {
+      "previousPage": 357,
+      "currentPage": 563
+    },
+    {
+      "previousPage": 359,
+      "currentPage": 565
+    },
+    {
+      "previousPage": 360,
+      "currentPage": 566
+    },
+    {
+      "previousPage": 394,
+      "currentPage": 605
+    },
+    {
+      "previousPage": 398,
+      "currentPage": 609
+    },
+    {
+      "previousPage": 400,
+      "currentPage": 611
+    },
+    {
+      "previousPage": 401,
+      "currentPage": 612
+    },
+    {
+      "previousPage": 402,
+      "currentPage": 613
+    },
+    {
+      "previousPage": 403,
+      "currentPage": 614
+    },
+    {
+      "previousPage": 413,
+      "currentPage": 624
+    },
+    {
+      "previousPage": 414,
+      "currentPage": 625
+    },
+    {
+      "previousPage": 415,
+      "currentPage": 626
+    },
+    {
+      "previousPage": 416,
+      "currentPage": 627
+    },
+    {
+      "previousPage": 424,
+      "currentPage": 635
+    },
+    {
+      "previousPage": 434,
+      "currentPage": 660
+    },
+    {
+      "previousPage": 435,
+      "currentPage": 661
+    },
+    {
+      "previousPage": 436,
+      "currentPage": 662
+    },
+    {
+      "previousPage": 438,
+      "currentPage": 664
+    },
+    {
+      "previousPage": 439,
+      "currentPage": 665
+    },
+    {
+      "previousPage": 448,
+      "currentPage": 694
+    },
+    {
+      "previousPage": 449,
+      "currentPage": 695
+    },
+    {
+      "previousPage": 491,
+      "currentPage": 759
+    },
+    {
+      "previousPage": 512,
+      "currentPage": 796
+    },
+    {
+      "previousPage": 513,
+      "currentPage": 797
+    },
+    {
+      "previousPage": 514,
+      "currentPage": 798
+    },
+    {
+      "previousPage": 515,
+      "currentPage": 799
+    },
+    {
+      "previousPage": 516,
+      "currentPage": 800
+    },
+    {
+      "previousPage": 517,
+      "currentPage": 801
+    },
+    {
+      "previousPage": 518,
+      "currentPage": 802
+    },
+    {
+      "previousPage": 519,
+      "currentPage": 803
+    },
+    {
+      "previousPage": 520,
+      "currentPage": 804
+    },
+    {
+      "previousPage": 521,
+      "currentPage": 805
+    },
+    {
+      "previousPage": 578,
+      "currentPage": 883
+    },
+    {
+      "previousPage": 579,
+      "currentPage": 884
+    },
+    {
+      "previousPage": 580,
+      "currentPage": 885
+    },
+    {
+      "previousPage": 582,
+      "currentPage": 887
+    },
+    {
+      "previousPage": 584,
+      "currentPage": 889
+    },
+    {
+      "previousPage": 585,
+      "currentPage": 890
+    },
+    {
+      "previousPage": 597,
+      "currentPage": 912
+    },
+    {
+      "previousPage": 598,
+      "currentPage": 913
+    },
+    {
+      "previousPage": 599,
+      "currentPage": 914
+    },
+    {
+      "previousPage": 600,
+      "currentPage": 915
+    },
+    {
+      "previousPage": 601,
+      "currentPage": 916
+    },
+    {
+      "previousPage": 624,
+      "currentPage": 939
+    },
+    {
+      "previousPage": 625,
+      "currentPage": 940
+    },
+    {
+      "previousPage": 626,
+      "currentPage": 941
+    },
+    {
+      "previousPage": 627,
+      "currentPage": 942
+    },
+    {
+      "previousPage": 628,
+      "currentPage": 943
+    },
+    {
+      "previousPage": 629,
+      "currentPage": 944
+    },
+    {
+      "previousPage": 632,
+      "currentPage": 947
+    },
+    {
+      "previousPage": 642,
+      "currentPage": 989
+    },
+    {
+      "previousPage": 660,
+      "currentPage": 979
+    },
+    {
+      "previousPage": 683,
+      "currentPage": 1058
+    },
+    {
+      "previousPage": 684,
+      "currentPage": 1059
+    },
+    {
+      "previousPage": 686,
+      "currentPage": 1061
+    },
+    {
+      "previousPage": 692,
+      "currentPage": 1067
+    },
+    {
+      "previousPage": 693,
+      "currentPage": 1068
+    },
+    {
+      "previousPage": 739,
+      "currentPage": 1439
+    },
+    {
+      "previousPage": 740,
+      "currentPage": 1440
+    },
+    {
+      "previousPage": 741,
+      "currentPage": 1441
+    },
+    {
+      "previousPage": 742,
+      "currentPage": 1442
+    },
+    {
+      "previousPage": 747,
+      "currentPage": 1447
+    },
+    {
+      "previousPage": 764,
+      "currentPage": 1350
+    },
+    {
+      "previousPage": 765,
+      "currentPage": 1351
+    },
+    {
+      "previousPage": 793,
+      "currentPage": 1379
+    },
+    {
+      "previousPage": 804,
+      "currentPage": 1390
+    },
+    {
+      "previousPage": 805,
+      "currentPage": 1391
+    },
+    {
+      "previousPage": 808,
+      "currentPage": 1394
+    },
+    {
+      "previousPage": 936,
+      "currentPage": 1289
+    },
+    {
+      "previousPage": 937,
+      "currentPage": 1290
+    },
+    {
+      "previousPage": 940,
+      "currentPage": 1293
+    },
+    {
+      "previousPage": 941,
+      "currentPage": 1294
+    },
+    {
+      "previousPage": 950,
+      "currentPage": 1303
+    },
+    {
+      "previousPage": 951,
+      "currentPage": 1304
+    },
+    {
+      "previousPage": 954,
+      "currentPage": 1307
+    },
+    {
+      "previousPage": 955,
+      "currentPage": 1308
+    },
+    {
+      "previousPage": 956,
+      "currentPage": 1309
+    },
+    {
+      "previousPage": 966,
+      "currentPage": 1319
+    },
+    {
+      "previousPage": 967,
+      "currentPage": 1320
+    },
+    {
+      "previousPage": 970,
+      "currentPage": 1323
+    },
+    {
+      "previousPage": 971,
+      "currentPage": 1324
+    },
+    {
+      "previousPage": 973,
+      "currentPage": 1326
+    },
+    {
+      "previousPage": 974,
+      "currentPage": 1327
+    },
+    {
+      "previousPage": 975,
+      "currentPage": 1328
+    },
+    {
+      "previousPage": 976,
+      "currentPage": 1329
+    },
+    {
+      "previousPage": 979,
+      "currentPage": 1332
+    },
+    {
+      "previousPage": 980,
+      "currentPage": 1333
+    }
+  ]
+}
