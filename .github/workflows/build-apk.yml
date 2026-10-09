@@ -194,6 +194,7 @@ jobs:
               --output "$RUNNER_TEMP/oiii-georef-supplement.json" \
               --audit "$RUNNER_TEMP/oiii-georef-supplement-audit.json" \
               --manifest app/src/main/assets/charts-manifest.json \
+              --cycle 2620 \
               --disable-independent-check
 
             python scripts/merge_chart_georef.py \
