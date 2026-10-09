@@ -5,6 +5,7 @@ on:
     branches: [audit/v2621-visual-batches-201-400]
     paths:
       - '.github/workflows/v2621-aip-jepp-source-only.yml'
+      - 'scripts/v2621_aip_jeppesen_only_reaudit.py'
   workflow_dispatch:
 
 permissions:
