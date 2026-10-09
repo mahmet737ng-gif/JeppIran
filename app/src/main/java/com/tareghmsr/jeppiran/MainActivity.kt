@@ -372,6 +372,11 @@ class MainActivity :
             R.layout.activity_main
         )
 
+        // Responsive three-column landscape / two-column portrait Home.
+        findViewById<android.widget.GridLayout>(R.id.homeGrid).columnCount =
+            if (resources.configuration.orientation ==
+                android.content.res.Configuration.ORIENTATION_LANDSCAPE) 3 else 2
+
         val usageNoticeShown =
             showUsageNoticeIfNeeded()
 

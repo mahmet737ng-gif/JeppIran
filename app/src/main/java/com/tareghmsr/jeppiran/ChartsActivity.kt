@@ -268,7 +268,7 @@ class ChartsActivity : AppCompatActivity() {
 
         brand.addView(
             TextView(this).apply {
-                text = "JEPPIRAN"
+                text = "JeppIran"
                 textSize = 15f
                 letterSpacing = 0.035f
                 typeface = Typeface.create("sans-serif", Typeface.BOLD)
@@ -363,7 +363,7 @@ class ChartsActivity : AppCompatActivity() {
 
             addView(
                 TextView(this@ChartsActivity).apply {
-                    text = "AIRPORT CHARTS"
+                    text = "Charts"
                     textSize = 30f
                     typeface = Typeface.create("sans-serif", Typeface.BOLD)
                     setTextColor(primaryText())
@@ -1126,14 +1126,7 @@ class ChartsActivity : AppCompatActivity() {
                 gravity = Gravity.CENTER_VERTICAL
             }
 
-        top.addView(
-            buildIcaoThumbnail(airport.icao),
-            LinearLayout.LayoutParams(
-                82.dp,
-                58.dp
-            )
-        )
-
+        // No airport thumbnails: approved design uses typography-only rows.
         val names =
             LinearLayout(this).apply {
                 orientation = LinearLayout.VERTICAL
@@ -1157,9 +1150,7 @@ class ChartsActivity : AppCompatActivity() {
                 addView(
                     TextView(this@ChartsActivity).apply {
                         text =
-                            meta.flag +
-                                "  " +
-                                airport.city.titleCase() +
+                            airport.city.titleCase() +
                                 " • " +
                                 meta.country
                         textSize = 12f
