@@ -64,7 +64,7 @@ def normalize(text):
     return re.sub(r"\s+", " ", text).strip()
 
 
-def classify(header, whole, code, current):
+def classify(header, whole, code, current, title_hint=""):
     """Prioritize actual chart labels and Jeppesen plate numbers.
 
     Do not promote 'SID'/'STAR' mentions from generic explanatory prose.
@@ -85,14 +85,19 @@ def classify(header, whole, code, current):
     ):
         return "SID", 98, "printed_SID_header"
 
-    # JEPPIRAN rule: 10-2 is STAR; 10-3 is SID;
-    # all other 10- / 20- charts belong to AIRPORT, not APP.
-    if re.match(r"^10-2(?:[A-Z0-9]*)$", c):
-        return "STAR", 96, "Jeppesen_10-2_series"
-    if re.match(r"^10-3(?:[A-Z0-9]*)$", c):
-        return "SID", 96, "Jeppesen_10-3_series"
-    if re.match(r"^(10|20)-", c):
-        return "AIRPORT", 96, "Jeppesen_10_20_airport_series"
+    # Jeppesen section families vary by region (10-/20-/30-).
+    # 10-2/20-2/30-2 are procedure arrivals and 10-3/20-3/30-3
+    # departures. 10-20 is NOT 10-2, hence require suffix to start
+    # with a letter. Remaining 10-/20-/30- pages are airport support.
+    if re.match(r"^(10|20|30)-2(?:[A-Z][A-Z0-9]*)?$", c):
+        return "STAR", 96, "Jeppesen_STAR_series"
+    if re.match(r"^(10|20|30)-3(?:[A-Z][A-Z0-9]*)?$", c):
+        return "SID", 96, "Jeppesen_SID_series"
+    if old_airport_support := (current == "AIRPORT" and
+        ("QUALIFICATION" in title_hint or "BRIEFING" in title_hint)):
+        return "AIRPORT", 91, "airport_qualification_or_briefing"
+    if re.match(r"^(10|20|30)-", c):
+        return "AIRPORT", 94, "Jeppesen_airport_support_series"
 
     if INFO.search(h):
         return "AIRPORT", 88, "airport_header"
@@ -180,7 +185,7 @@ def main():
             number_present = code in NUMBER.findall(visible)
         else:
             number_present = False
-        detected, confidence, signal = classify(visible, full, code, old)
+        detected, confidence, signal = classify(visible, full, code, old, title.upper())
         if not old:
             if detected == "REFERENCE":
                 decision, reason, proposal = "NON_CHART", "unindexed_change_notice", ""
