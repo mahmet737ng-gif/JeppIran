@@ -1,0 +1,247 @@
+name: Publish V2621 reviewed 1361-1560 corrections
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/v2621-reconcile-1361-1560.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: jeppiran-v2621-1361-1560-release
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 65
+    steps:
+      - name: Checkout original source and current metadata
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install PDF processor
+        run: python -m pip install PyMuPDF==1.26.6
+      - name: Reconcile source-verified ICAO categories plates and omitted pages
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from collections import defaultdict
+          import copy,hashlib,json,re
+          import fitz
+          SRC=Path('Iran2621.pdf')
+          ROOT=Path('app/src/main/assets')
+          OUT=Path('v2621-reconciled')
+          OUT.mkdir(exist_ok=True)
+          sha='d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6'
+          assert hashlib.sha256(SRC.read_bytes()).hexdigest()==sha,'Original PDF has changed'
+          doc=fitz.open(SRC)
+          assert len(doc)==1654
+          oldmanifest=json.loads((ROOT/'charts-manifest.json').read_text())
+          assert oldmanifest['source_sha256']==sha and oldmanifest['version']=='V2621'
+          assert oldmanifest['release_tag']=='charts-V2621-printclean-1','Do not overwrite a newer chart release'
+          rows=json.loads((ROOT/'charts-current.json').read_text())
+          assert len(rows)==1494
+          bypage={int(x['page']):x for x in rows}
+          assert len(bypage)==1494
+          fixlog=[]
+          def change(page,**edits):
+              row=bypage[page]
+              before={k:row.get(k) for k in edits}
+              row.update(edits)
+              if any(before.get(k)!=v for k,v in edits.items()):
+                  fixlog.append({'page':page,'before':before,'after':edits})
+          def add(page,icao,cat,plate,title,country):
+              assert page not in bypage,f'duplicate index page {page}'
+              bypage[page]={
+                'page':page,'airport':icao,'country':country,'category':cat,
+                'chart_number':plate,'name':title,'pdf_page':0}
+              fixlog.append({'page':page,'added':{'airport':icao,'category':cat,'plate':plate,'name':title}})
+          def header(page,icao):
+              s=doc[page-1].get_text()
+              key=icao+'/DOH' if icao=='OTHH' else icao+'/DWC' if icao=='OMDW' else icao+'/DXB'
+              assert key in s or ('Airport Information For '+icao) in s,f'ICAO header differs page {page}'
+              return s
+          def hasplate(page,plate):
+              if not plate:return
+              s=doc[page-1].get_text()
+              assert re.search(r'(?<![A-Za-z0-9])'+re.escape(plate)+r'(?![A-Za-z0-9])',s),f'Plate {plate} absent from source PDF page {page}'
+          # Printed OMDB text page 1398 is an airport-briefing continuation, NOT SID.
+          header(1398,'OMDB');hasplate(1398,'10-1P1')
+          assert bypage[1398]['category']=='SID'
+          change(1398,category='Airport',chart_number='10-1P1',name='AIRPORT BRIEFING')
+          change(1391,name='LOC Z RWY 12')
+          change(1409,name='RNAV STAR INSTRUCTIONS')
+          change(1412,name='SID INSTRUCTIONS')
+          # Two distinct, omitted temporary taxiway closure notices (not NOTAM validity certification).
+          for n,p,t in [
+            (1422,'10-8','TEMPORARY CLOSURE OF TAXIWAYS (AIP SUP 20/26)'),
+            (1423,'10-8A','TEMPORARY CLOSURE OF TAXIWAYS (CONTINUATION)')]:
+              header(n,'OMDB');hasplate(n,p);add(n,'OMDB','Airport',p,t,'UAE')
+          # Explicit printed procedure types replace unresolved CHART PAGE labels.
+          for n,p,title in [
+            (1439,'11-2','ILS RWY 12R'),(1440,'11-2A','CAT II/III ILS RWY 12R'),
+            (1441,'11-3','ILS RWY 30L'),(1442,'11-3A','CAT II/III ILS RWY 30L'),
+            (1447,'12-3','RNP RWY 30L')]:
+              header(n,'OMDB');hasplate(n,p);change(n,chart_number=p,name=title)
+          # Five Al Maktoum charts were incorrectly bundled under Dubai Intl.
+          for n,p in [(1460,'20-2'),(1461,'20-2A'),(1466,'20-3'),(1467,'20-3A'),(1470,'20-3D')]:
+              header(n,'OMDW');hasplate(n,p)
+              assert bypage[n]['airport']=='OMDB'
+              change(n,airport='OMDW')
+          for n,p,title in [
+            (1483,'21-1','ILS RWY 12'),(1484,'21-1A','CAT II/III ILS RWY 12'),
+            (1485,'21-2','ILS RWY 30'),(1486,'21-2A','CAT II/III ILS RWY 30'),
+            (1487,'22-1','RNP RWY 12'),(1488,'22-2','RNP RWY 30')]:
+              header(n,'OMDW');hasplate(n,p);change(n,chart_number=p,name=title)
+          change(1480,name='VISUAL DOCKING GUIDANCE SYSTEMS')
+          change(1481,name='VISUAL DOCKING GUIDANCE SYSTEMS (CONTINUATION)')
+          # OTHH/Hamad Intl was largely omitted, and 5 of its charts had phantom UAE owners.
+          plates={}
+          for n in [1489,1490]:plates[n]=''
+          for n in range(1491,1501):plates[n]='20-1P'+(str(n-1491) if n>1491 else '')
+          plates[1501]='20-1R'
+          for i,p in enumerate(['20-2','20-2A','20-2A1','20-2A2','20-2B','20-2C','20-2D','20-2E','20-2F','20-2G','20-2H','20-2J','20-2K']):plates[1502+i]=p
+          for i,p in enumerate(['20-3','20-3A','20-3B','20-3C','20-3D','20-3E','20-3F','20-3G','20-3H','20-3J','20-3K','20-3L','20-3M','20-3N','20-3P','20-3Q','20-3S','20-3T']):plates[1515+i]=p
+          for i,p in enumerate(['20-8','20-8A','20-8B']):plates[1533+i]=p
+          for i,p in enumerate(['20-9','20-9A','20-9B','20-9C','20-9D','20-9E','20-9F','20-9G','20-9H','20-9J','20-9K','20-9L','20-9M','20-9N']):plates[1536+i]=p
+          apps=['ILS RWY 16L','CAT II/III ILS RWY 16L','ILS RWY 16R','CAT II/III ILS RWY 16R','ILS RWY 34L','CAT II/III ILS RWY 34L','ILS RWY 34R','CAT II/III ILS RWY 34R','RNP RWY 16L','RNP RWY 16R','RNP RWY 34L','RNP RWY 34R']
+          for i,p in enumerate(['21-1','21-1A','21-2','21-2A','21-3','21-3A','21-4','21-4A','22-1','22-2','22-3','22-4']):plates[1550+i]=p
+          def route_title(s,kind,plate):
+              vals=re.findall(r'(?<![A-Z0-9])([A-Z]{3,6}\s+\d{1,2}[A-Z])\s*\[[A-Z0-9]{4,8}\]',s)
+              vals=list(dict.fromkeys(x.strip() for x in vals))
+              return ', '.join(vals[:18]) if vals else ('RNP '+kind+' '+plate)
+          for n in range(1489,1562):
+              s=header(n,'OTHH');p=plates[n];hasplate(n,p)
+              if n<=1501:cat='Airport'
+              elif n<=1514:cat='STAR'
+              elif n<=1532:cat='SID'
+              elif n<=1549:cat='Airport'
+              else:cat='Approach'
+              if n<=1490:title='AIRPORT INFORMATION PAGE '+str(n-1488)
+              elif n<=1500:title='AIRPORT BRIEFING '+p
+              elif n==1501:title='RADAR MINIMUM ALTITUDES'
+              elif n<=1514:title=route_title(s,'STAR',p)
+              elif n<=1532:title=route_title(s,'SID',p)
+              elif n<=1535:title='AIRPORT OPERATIONS INSTRUCTIONS '+p
+              elif n==1536:title='AIRPORT DIAGRAM'
+              elif n==1537:title='ADDITIONAL RUNWAY INFORMATION'
+              elif n<=1541:title='APRON AND PARKING STAND COORDINATES '+p
+              elif n<=1548:title='VISUAL DOCKING GUIDANCE SYSTEM '+p
+              elif n==1549:title='AIRPORT GROUND CHART '+p
+              else:title=apps[n-1550]
+              if n in bypage:
+                  assert bypage[n]['airport'] in ('OMDL','OMQF'),f'Existing OTHH index origin unexpected {n}'
+                  change(n,airport='OTHH',country='Qatar',category=cat,chart_number=p,name=title)
+              else:add(n,'OTHH',cat,p,title,'Qatar')
+          assert len(bypage)==1564,'New reviewed chart count must be 1564'
+          assert all(bypage[n]['airport']=='OTHH' for n in range(1489,1562))
+          assert all(bypage[n]['airport']=='OMDW' for n in range(1451,1489))
+          assert all(bypage[n]['airport']=='OMDB' for n in range(1395,1451))
+          assert not any(x['airport'] in ('OMDL','OMQF') for x in bypage.values()),'Phantom owners remain'
+          corrected=[bypage[n] for n in sorted(bypage)]
+          screened=[x for x in corrected if 1361<=x['page']<=1560]
+          from collections import Counter
+          check=Counter(x['category'] for x in screened)
+          assert check==Counter({'Airport':92,'STAR':25,'SID':39,'Approach':44}),check
+          (OUT/'charts-current.json').write_text(json.dumps(corrected,ensure_ascii=False,indent=2)+'\n')
+          (OUT/'corrections.json').write_text(json.dumps(fixlog,ensure_ascii=False,indent=2)+'\n')
+          (OUT/'review.json').write_text(json.dumps({'range':'1361-1560','original_source_sha256':sha,'screened_categories':dict(check),'screened_pages':200,'native_size_all_independently_approved':False,'new_georeferences_approved':0,'added_local_continuation_page':1561},indent=2)+'\n')
+          # Keep active georeferencing unchanged; no guessed control points.
+          print('VERIFIED INDEX',len(corrected),'charts;',len(fixlog),'revisions')
+          manifest=copy.deepcopy(oldmanifest)
+          tag='charts-V2621-printclean-2'
+          base='https://github.com/mahmet737ng-gif/JeppIran/releases/download/'+tag+'/'
+          manifest.update(release_tag=tag,base_url=base,chart_index_revision='V2621-reviewed-1361-1560')
+          manifest['airports']={}
+          airportdir=OUT/'airports'
+          airportdir.mkdir(exist_ok=True)
+          grouped=defaultdict(list)
+          for row in corrected:grouped[row['airport']].append(row)
+          for icao,items in sorted(grouped.items()):
+              items.sort(key=lambda x:x['page'])
+              nd=fitz.open()
+              for j,row in enumerate(items,1):
+                  num=int(row['page'])
+                  nd.insert_pdf(doc,from_page=num-1,to_page=num-1)
+                  pg=nd[-1]; before=(pg.mediabox,pg.cropbox,pg.rect,pg.rotation)
+                  printrect=[]
+                  for block in pg.get_text('dict')['blocks']:
+                      if block.get('type')!=0:continue
+                      for line in block['lines']:
+                          string=''.join(s['text'] for s in line['spans'])
+                          if string.startswith('Printed from JeppView'):
+                              printrect.append(fitz.Rect(line['bbox']))
+                  ons=pg.search_for('Printed on 09 Oct 2026')
+                  rr=printrect or ons
+                  assert len(rr)==1,f'Print header redaction pattern mismatch {num}'
+                  r=rr[0]
+                  assert r.y1<51,f'Print overlay outside expected top margin {num}'
+                  pg.add_redact_annot(fitz.Rect(r.x0+.01,r.y0+.01,r.x1-.01,r.y1-.01),fill=(1,1,1),cross_out=False)
+                  pg.apply_redactions(images=0,graphics=0,text=0)
+                  assert (pg.mediabox,pg.cropbox,pg.rect,pg.rotation)==before and pg.rect==doc[num-1].rect,'Page box modified'
+                  assert not re.search(r'Printed from JeppView|Printed on\s+\d{1,2}\s+\w+\s+\d{4}',pg.get_text()),f'Print line remains page {num}'
+                  row['pdf_page']=j
+              output=airportdir/(icao+'.pdf')
+              nd.set_metadata({})
+              nd.save(output,garbage=4,deflate=True)
+              nd.close()
+              pages=[int(x['page']) for x in items]
+              manifest['airports'][icao]=dict(file=output.name,url=base+output.name,sha256=hashlib.sha256(output.read_bytes()).hexdigest(),size=output.stat().st_size,pages=len(pages),global_pages=pages)
+              print('REPACKAGED',icao,len(pages),'pages',flush=True)
+          assert sum(x['pages'] for x in manifest['airports'].values())==1564
+          assert len(manifest['airports'])==76,'Expected 76 real airport bundles'
+          assert manifest['airports']['OTHH']['pages']==73
+          assert manifest['airports']['OMDW']['pages']==38
+          assert manifest['airports']['OMDB']['pages']==56
+          assert 1422 in manifest['airports']['OMDB']['global_pages'] and 1423 in manifest['airports']['OMDB']['global_pages']
+          assert 1561 in manifest['airports']['OTHH']['global_pages']
+          manifest['generated_at']='2026-10-09T00:00:00Z'
+          (OUT/'charts-manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+          (OUT/'VALIDATION.txt').write_text('Original full-frame V2621 source retained; Printed metadata truly removed without page crop; 1564 indexed source charts; 76 actual airport bundles; OTHH 73 source charts; all 200 target-page identities covered; no new georeferencing approved; NOT FOR ACTUAL NAVIGATION.\n')
+          doc.close()
+          print('PACKAGE COMPLETE',len(manifest['airports']),len(corrected))
+          PY
+      - name: Publish isolated airport chart release before metadata update
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag=charts-V2621-printclean-2
+          gh release view "$tag" >/dev/null 2>&1 || gh release create "$tag" --title "JEPPIRAN V2621 reviewed airport data v2, printclean" --notes "Correct OMDB/OMDW/OTHH ownership, 69 missing pages in 1361-1560, plus final OTHH page 1561. Original geometry and boxes retained. No new georeferences. NOT FOR ACTUAL NAVIGATION."
+          gh release upload "$tag" v2621-reconciled/airports/*.pdf --clobber
+          gh release upload "$tag" v2621-reconciled/corrections.json v2621-reconciled/review.json v2621-reconciled/VALIDATION.txt --clobber
+          test "$(gh release view "$tag" --json assets --jq '.assets | map(select(.name | endswith(".pdf"))) | length')" = 76
+          test "$(gh release view "$tag" --json assets --jq '.assets | map(select(.name == "OTHH.pdf")) | length')" = 1
+      - name: Update Android and Web chart index, clear only versioned chart cache
+        run: |
+          cp v2621-reconciled/charts-current.json app/src/main/assets/charts-current.json
+          cp v2621-reconciled/charts-manifest.json app/src/main/assets/charts-manifest.json
+          python - <<'PY'
+          from pathlib import Path
+          old='jeppiran-chart-pdfs-v2621-printclean-1'
+          new='jeppiran-chart-pdfs-v2621-printclean-2'
+          app=Path('web/app.js')
+          s=app.read_text()
+          assert old in s
+          app.write_text(s.replace(old,new))
+          sw=Path('web/service-worker.js')
+          s=sw.read_text()
+          assert old in s
+          s=s.replace(old,new)
+          import re
+          s=re.sub(r'jeppiran-pwa-v[^\"]+','jeppiran-pwa-v2621-audit-1361-1560',s,count=1)
+          sw.write_text(s)
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add app/src/main/assets/charts-current.json app/src/main/assets/charts-manifest.json web/app.js web/service-worker.js
+          git diff --cached --quiet || git commit -m 'Publish V2621 airport data corrections 1361-1560 and restored OTHH charts'
+          git push origin HEAD:main
