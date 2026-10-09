@@ -47,6 +47,16 @@ def build(manifest_path=DEFAULT_MANIFEST, adc_path=DEFAULT_ADC):
                 if isinstance(heading, bool) or not isinstance(heading, (int, float)) or not math.isfinite(heading) or not 0 <= heading < 360:
                     raise ValueError(f"Invalid ADC heading for {icao} {name}")
                 direction_count += 1
+    # Regression guards against accidentally reintroducing AIP GEO headings.
+    if cycle == "V2621":
+        expected = {
+            ("OIAA", "32L"): 321, ("OIAA", "14R"): 141,
+            ("OIAW", "12"): 120, ("OIAW", "30"): 300,
+        }
+        for (icao, name), heading in expected.items():
+            matches = [row for row in airports.get(icao, []) if row.get("name") == name]
+            if len(matches) != 1 or matches[0].get("headingAdc") != heading:
+                raise ValueError(f"ADC runway heading regression: {icao} {name} must be {heading}")
     selected = set(manifest["airports"])
     covered = set(airports).intersection(selected)
     adc["airport_count"] = len(selected)
