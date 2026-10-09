@@ -14,7 +14,7 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./app-icon.png" type="image/png">
   <link rel="apple-touch-icon" sizes="256x256" href="./app-icon.png">
-  <link rel="stylesheet" href="./styles.css?v=2620-35">
+  <link rel="stylesheet" href="./styles.css?v=2620-36">
 </head>
 <body>
   <div id="app">
@@ -32,56 +32,57 @@
       </div>
     </header>
 
-    <main id="homeView" class="view active">
-      <section class="hero">
-        <img src="./app-icon.png" alt="JeppIran">
-        <div>
-          <h1>JeppIran</h1>
-          <p>Aviation charts and weather, optimized for iPad.</p>
-          <span class="version-pill">V2620</span>
+    <main id="homeView" class="view active flight-home">
+      <div class="flight-home-inner">
+        <div class="flight-home-horizon">
+          <div class="flight-hero-title">
+            <div class="home-arrow" aria-hidden="true">✈</div>
+            <h1>Jepp<span>Iran</span></h1>
+            <p>AVIATION CHARTS FOR A HIGHER PERSPECTIVE</p>
+          </div>
+          <div class="airway-graphic" aria-hidden="true">
+            <svg viewBox="0 0 1080 370" preserveAspectRatio="xMidYMid slice">
+              <defs><pattern id="navGrid" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M60 0H0V60" fill="none" stroke="#125788" stroke-width=".65" opacity=".45"/></pattern></defs>
+              <rect width="1080" height="370" fill="url(#navGrid)"/>
+              <g fill="none" stroke="#2264a5" stroke-width="1.3" opacity=".75">
+                <path d="M0 98L146 176L326 44L528 150L733 32L1080 145M5 345L146 176L338 274L528 150L803 315L1080 145M326 44L338 274L733 32M338 274L803 315"/>
+                <path d="M80 0L234 370M375 0L425 370M820 0L910 370" stroke-dasharray="5 9"/>
+              </g>
+              <g stroke="#35b8ef" stroke-width="2" fill="#071725"><circle cx="146" cy="176" r="6"/><circle cx="326" cy="44" r="6"/><circle cx="528" cy="150" r="7"/><circle cx="733" cy="32" r="6"/><circle cx="803" cy="315" r="6"/><circle cx="338" cy="274" r="6"/></g>
+              <path d="M105 240L528 150L934 87" stroke="#40cbfc" stroke-width="2.8" fill="none" stroke-dasharray="18 7"/><circle cx="528" cy="150" r="25" fill="none" stroke="#27cdf1" opacity=".65"/>
+              <g fill="#b5dbf5" font-size="16" font-family="Arial,sans-serif"><text x="155" y="156">PAROT</text><text x="345" y="49">B412</text><text x="544" y="133">TAREQ</text><text x="745" y="30">DALAN</text><text x="818" y="313">NIVAK</text><text x="356" y="270">FL340</text><text x="887" y="70">M739</text></g>
+              <path d="M583 133l24-7 9-18 7 2-2 20 32 8 4 8-37-1-18 19-7-3 9-22-23-1z" fill="#f1f8ff" stroke="#49c9fb" stroke-width="1"/>
+            </svg>
+          </div>
+          <div class="home-capsules"><span class="utc-clock" id="homeUtc">--:--Z&nbsp; UTC</span><span class="cycle-pill">DATA CYCLE <b id="homeCycle">V2620</b></span></div>
         </div>
-      </section>
-
-      <section class="cards">
-        <button class="home-card" data-route="charts">
-          <span class="card-icon">▤</span>
-          <span><b>Charts</b><small>Airport chart library</small></span>
-        </button>
-        <button class="home-card" data-route="wx">
-          <span class="card-icon">☀︎</span>
-          <span><b>WX</b><small>METAR / TAF / Decoded</small></span>
-        </button>
-        <button class="home-card" id="updateCard">
-          <span class="card-icon">↻</span>
-          <span><b>Update</b><small id="updateSubtitle">Check chart cycle</small></span>
-        </button>
-        <button class="home-card" data-route="simulator">
-          <span class="card-icon">✈︎</span>
-          <span><b>Simulator / GPS</b><small>Device GPS, X-Plane 11.5 or FSX</small></span>
-        </button>
-        <button class="home-card" id="infoCard">
-          <span class="card-icon">i</span>
-          <span><b>Info</b><small>JeppIran web build</small></span>
-        </button>
-      </section>
-
-      <section class="ipad-tip">
-        <b>Install on iPad</b>
-        <span>Open this page in Safari → Share → Add to Home Screen.</span>
-      </section>
+        <section class="cards home-tiles" aria-label="Main navigation">
+          <button class="home-card" data-route="charts"><span class="card-icon">▱</span><span><b>Charts</b><small>Airport charts</small></span></button>
+          <button class="home-card" id="enrouteHomeBtn"><span class="card-icon">✈</span><span><b>Enroute</b><small>Low / High charts</small></span></button>
+          <button class="home-card" data-route="wx"><span class="card-icon">☁</span><span><b>Weather</b><small>METAR / TAF</small></span></button>
+          <button class="home-card" id="updateCard"><span class="card-icon">⟳</span><span><b>Update</b><small id="updateSubtitle">Check for updates</small></span></button>
+          <button class="home-card" id="settingsHomeBtn"><span class="card-icon">⚙</span><span><b>Settings</b><small>App preferences</small></span></button>
+          <button class="home-card" id="infoCard"><span class="card-icon">ⓘ</span><span><b>Info</b><small>About JeppIran</small></span></button>
+        </section>
+        <footer class="home-footer"><span>◉ &nbsp; JEPPIRAN</span><span>FOR PERSONAL USE ONLY • NOT FOR ACTUAL NAVIGATION</span><button data-route="simulator" class="home-sim-link">Connect to Simulator →</button></footer>
+      </div>
     </main>
 
     <main id="chartsView" class="view charts-layout">
       <aside class="airport-pane panel">
         <div class="pane-head">
           <button class="back-btn" data-route="home">‹ Home</button>
-          <h2>Airports</h2>
+          <h2>Charts</h2>
         </div>
-        <input id="airportSearch" class="search" type="search" placeholder="Search ICAO / airport / city">
-        <div id="airportList" class="airport-list"></div>
+        <input id="airportSearch" class="search" type="search" placeholder="Search ICAO or city">
+        <div class="airport-filters"><button type="button" class="airport-filter active" data-airport-filter="all">All</button><button type="button" class="airport-filter" data-airport-filter="favorites">Favorites</button></div><div id="airportList" class="airport-list"></div>
       </aside>
 
       <section class="viewer-pane">
+        <div id="airportProfile" class="airport-profile" aria-live="polite">
+          <div class="profile-no-selection"><span>✈</span><h2>Select an airport</h2><p>Choose an airport on the left to view its profile and procedures.</p></div>
+        </div>
+
         <div class="viewer-toolbar">
           <div class="viewer-title">
             <strong id="viewerAirport">Select an airport</strong>
@@ -330,6 +331,6 @@
     });
   })();
   </script>
-  <script src="./app.js?v=2620-35" defer></script>
+  <script src="./app.js?v=2620-36" defer></script>
 </body>
 </html>
