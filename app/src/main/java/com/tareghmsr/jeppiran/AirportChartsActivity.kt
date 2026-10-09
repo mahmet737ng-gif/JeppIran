@@ -477,7 +477,8 @@ class AirportChartsActivity :
     private lateinit var airportRailScroll: ScrollView
     private lateinit var airportRailSearch: EditText
     private var airportRailQuery = ""
-    private val railExpanded = mutableSetOf("Airport")
+    private val railExpanded = mutableSetOf<String>()
+    private var airportRailOpen = true
 
     private fun railBackground(selected: Boolean = false): GradientDrawable {
         val dark = isDarkTheme()
@@ -575,10 +576,15 @@ class AirportChartsActivity :
 
     private fun selectAirportInRail(code: String) {
         if (code == icao) {
+            airportRailOpen = !airportRailOpen
+            railExpanded.clear()
             showProfileView()
             adjustRail(false)
+            renderRailAirports()
             return
         }
+        airportRailOpen = true
+        railExpanded.clear()
         icao = code
         selectedTrueRunway = if (code == "OIAA") "32L" else ""
         airportName = ChartRepository.airportName(code)
@@ -619,7 +625,7 @@ class AirportChartsActivity :
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
             ).apply { bottomMargin = 7.dp })
 
-            if (chosen) {
+            if (chosen && airportRailOpen) {
                 val groups = repository.getDisplayChartsForAirport(icao)
                     .groupBy { ChartRepository.normalizeCategory(it.category) }
                 for (category in listOf("STAR", "SID", "Airport", "Approach")) {
