@@ -132,11 +132,11 @@
             <b>DEVICE GPS</b>
             <small>Use this iPhone/iPad location</small>
           </button>
-          <button id="useXpBtn" class="source-card">
+          <button id="useXpBtn" class="source-card" hidden style="display:none">
             <b>X-PLANE 11.5</b>
             <small>Receive position through JEPPIRAN Bridge</small>
           </button>
-          <button id="useFsxBtn" class="source-card">
+          <button id="useFsxBtn" class="source-card" hidden style="display:none">
             <b>FSX</b>
             <small>SimConnect position through JEPPIRAN Bridge</small>
           </button>
@@ -158,8 +158,8 @@
           <div id="simStatus" class="status">Disconnected</div>
         </article>
 
-        <article class="sim-card">
-          <h3>X-PLANE 11.5 BRIDGE</h3>
+        <article class="sim-card" hidden style="display:none">
+          <h3 style="display:none">X-PLANE 11.5 BRIDGE</h3>
           <p class="sim-help">X-Plane 11.5 sends UDP, which Safari cannot receive directly. Run the JEPPIRAN X-Plane Bridge on the simulator PC, then connect here using its WebSocket address.</p>
           <label class="field-label" for="bridgeUrl">X-Plane Bridge WebSocket URL</label>
           <input id="bridgeUrl" class="wide-input" value="ws://192.168.1.50:8765" autocapitalize="off" autocomplete="off" spellcheck="false">
@@ -174,11 +174,11 @@
           <label class="field-label" for="fsxPcIp">Simulator PC IPv4 Address</label>
           <input id="fsxPcIp" class="wide-input" placeholder="e.g. 10.31.2.70" autocapitalize="off" autocomplete="off" spellcheck="false">
           <div class="sim-buttons">
-            <button id="connectFsxBtn" type="button" onclick="this.textContent='CONNECTING…';this.disabled=true;var b=this,s=document.getElementById('fsxInlineStatus');if(s)s.textContent='Starting FSX connection…';try{if(window.jeppiranConnectFsx){sessionStorage.removeItem('jeppiranFsxCoreRetry');window.jeppiranConnectFsx();}else if(!sessionStorage.getItem('jeppiranFsxCoreRetry')){sessionStorage.setItem('jeppiranFsxCoreRetry','1');if(s)s.textContent='Refreshing JEPPIRAN core…';var reload=function(){location.reload();};if('caches' in window){caches.keys().then(function(keys){return Promise.all(keys.filter(function(k){return k.indexOf('jeppiran-pwa-')===0;}).map(function(k){return caches.delete(k);}));}).finally(reload);}else{reload();}}else{if(s)s.textContent='JEPPIRAN core did not initialize. Close this tab, reopen the main JEPPIRAN URL, then try again.';}}catch(e){if(s)s.textContent='FSX connect error: '+e.message;}setTimeout(function(){b.disabled=false;if(b.textContent==='CONNECTING…')b.textContent='CONNECT SIMULATOR';},2500);">CONNECT FSX</button>
+            <button id="connectFsxBtn" type="button" onclick="this.textContent='CONNECTING…';this.disabled=true;var b=this,s=document.getElementById('fsxInlineStatus');if(s)s.textContent='Starting simulator connection…';try{if(window.jeppiranConnectFsx){sessionStorage.removeItem('jeppiranFsxCoreRetry');window.jeppiranConnectFsx();}else if(!sessionStorage.getItem('jeppiranFsxCoreRetry')){sessionStorage.setItem('jeppiranFsxCoreRetry','1');if(s)s.textContent='Refreshing JEPPIRAN core…';var reload=function(){location.reload();};if('caches' in window){caches.keys().then(function(keys){return Promise.all(keys.filter(function(k){return k.indexOf('jeppiran-pwa-')===0;}).map(function(k){return caches.delete(k);}));}).finally(reload);}else{reload();}}else{if(s)s.textContent='JEPPIRAN core did not initialize. Close this tab, reopen the main JEPPIRAN URL, then try again.';}}catch(e){if(s)s.textContent='Simulator connect error: '+e.message;}setTimeout(function(){b.disabled=false;if(b.textContent==='CONNECTING…')b.textContent='CONNECT SIMULATOR';},2500);">CONNECT SIMULATOR</button>
             <button id="disconnectPositionBtn" class="secondary-btn">DISCONNECT</button>
           </div>
           <div id="fsxInlineStatus" class="status" style="margin-top:10px">Simulator ready to connect.</div>
-          <small class="sim-note">Use the actual LAN/hotspot IPv4 address, usually the address on the same network as your iPad. No certificate, profile, or port entry is required. <b>Web build 2620-34</b>.</small>
+          <small class="sim-note">Use the actual LAN/hotspot IPv4 address, usually the address on the same network as your iPad. No certificate, profile, or port entry is required. <b>Web build 2621-Universal-01</b>.</small>
         </article>
 
         <article class="sim-card">
@@ -331,6 +331,6 @@
     });
   })();
   </script>
-  <script src="./app.js?v=2620-36" defer></script>
+  <script src="./app.js?v=2621-universal-01" defer></script>
 </body>
 </html>
