@@ -187,7 +187,7 @@ class SplashActivity : AppCompatActivity() {
             val brandY = if (landscape) h * .72f else h * .63f
             textPaint.textSize = if (landscape) h * .10f else w * .095f
             textPaint.alpha = alpha
-            canvas.drawText("JEPPIRAN", w * .5f, brandY, textPaint)
+            canvas.drawText("JeppIran", w * .5f, brandY, textPaint)
 
             subTextPaint.textSize = if (landscape) h * .028f else w * .028f
             subTextPaint.alpha = (220f * slide).toInt()

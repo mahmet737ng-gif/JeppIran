@@ -183,7 +183,7 @@ function selectAirport(icao){
   renderAirports($("#airportSearch").value);
   $("#viewerAirport").textContent=icao+" • "+((AIRPORTS[icao]||[])[0]||"AIRPORT");
   $("#viewerChart").textContent="Select a chart";
-  $("#pdfStage").innerHTML='<div class="empty-state"><img src="./logo.svg" alt=""><b>Select a chart</b><span>Choose AIRPORT, STAR, SID or APP under '+escapeHtml(icao)+'.</span></div>';
+  $("#pdfStage").innerHTML='<div class="empty-state"><img src="./app-icon.png" alt=""><b>Select a chart</b><span>Choose AIRPORT, STAR, SID or APP under '+escapeHtml(icao)+'.</span></div>';
   $("#offlinePdfBtn").disabled=true;
   currentPdfUrl="";
   hideChartMetar();
@@ -598,7 +598,7 @@ function selectChart(c,options={}){
   $("#viewerChart").textContent=(c.chart_number?c.chart_number+" • ":"")+(c.name||("Chart "+c.page));
   showChartMetar(true);
   renderSelectedPdf(c).catch(e=>{
-    $("#pdfStage").innerHTML='<div class="empty-state"><img src="./logo.svg" alt=""><b>Chart unavailable</b><span>'+escapeHtml(e.message)+'</span></div>';
+    $("#pdfStage").innerHTML='<div class="empty-state"><img src="./app-icon.png" alt=""><b>Chart unavailable</b><span>'+escapeHtml(e.message)+'</span></div>';
   });
 }
 function hideChartMetar(){
@@ -663,7 +663,7 @@ async function refitSelectedChartForLayout(){
   chartPointers.clear();
   panStart=null;swipeStart=null;pinchStartDistance=0;
   try{await renderSelectedPdf(selectedChart)}catch(e){
-    $("#pdfStage").innerHTML='<div class="empty-state"><img src="./logo.svg" alt=""><b>Chart unavailable</b><span>'+escapeHtml(e.message)+'</span></div>';
+    $("#pdfStage").innerHTML='<div class="empty-state"><img src="./app-icon.png" alt=""><b>Chart unavailable</b><span>'+escapeHtml(e.message)+'</span></div>';
   }
 }
 

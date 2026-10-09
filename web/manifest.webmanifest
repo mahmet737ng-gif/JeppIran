@@ -1,14 +1,19 @@
 {
-  "name":"JEPPIRAN",
-  "short_name":"JEPPIRAN",
-  "description":"Aviation charts and weather for iPad",
-  "start_url":"./",
-  "scope":"./",
-  "display":"standalone",
-  "orientation":"any",
-  "background_color":"#07121b",
-  "theme_color":"#07121b",
-  "icons":[
-    {"src":"./logo.svg","sizes":"any","type":"image/svg+xml","purpose":"any maskable"}
+  "name": "JeppIran",
+  "short_name": "JeppIran",
+  "description": "Aviation charts and weather for iPad",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#07121b",
+  "theme_color": "#07121b",
+  "icons": [
+    {
+      "src": "./app-icon.png",
+      "sizes": "256x256",
+      "type": "image/png",
+      "purpose": "any"
+    }
   ]
 }
