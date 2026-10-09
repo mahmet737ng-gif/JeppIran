@@ -1,0 +1,90 @@
+name: Read-only V2621 georeference coverage census
+on:
+  push:
+    branches:
+      - audit/v2621-visual-batches-201-400
+    paths:
+      - .github/workflows/diag-georef-2621.yml
+
+permissions:
+  contents: read
+
+jobs:
+  counts:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Calculate source-aware counts without publishing or writing files
+        shell: bash
+        run: |
+          python - <<'PY'
+          import json,re,collections
+          from pathlib import Path
+          d=Path("app/src/main/assets")
+          idx=json.loads((d/"charts-current.json").read_text())
+          manifest=json.loads((d/"charts-manifest.json").read_text())
+          g=json.loads((d/"chart-georef.json").read_text())
+          source=g.get("source",{})
+          charts=g.get("charts",[])
+          pagegeo=collections.defaultdict(list)
+          for c in charts:
+              if isinstance(c.get("page"),int):pagegeo[c["page"]].append(c)
+          owned={}
+          def eligible_type(x):
+              if x.get("category")=="Approach":return "APP"
+              if x.get("category")!="Airport":return None
+              plate=x.get("chart_number") or ""
+              name=x.get("name") or ""
+              if re.fullmatch(r"(?:10|20|30)-9",plate):return "ADC_PRIMARY"
+              if re.fullmatch(r"(?:10|20|30)-9[A-Z0-9]+",plate) and not re.search(r"MINIMUMS|^10-9S|^20-9S|^30-9S",name+" "+plate,re.I):return "AIRPORT_9_OTHER"
+              return None
+          eligible=collections.defaultdict(list)
+          for x in idx:
+              k=eligible_type(x)
+              if k:eligible[k].append(x)
+          match_source=(source.get("sha256")==manifest.get("source_sha256") and
+                    source.get("chartDataVersion")==manifest.get("version") and
+                    source.get("pageCount")==manifest.get("pages",source.get("pageCount")))
+          total_by_category={}
+          for c in ("Approach","Airport","STAR","SID"):
+              total_by_category[c]=sum(x.get("category")==c for x in idx)
+          res={"manifest_version":manifest.get("version"),"manifest_sha":manifest.get("source_sha256"),
+               "georef_source":source,"source_matches":match_source,
+               "index_total":len(idx),"index_categories":total_by_category,
+               "georef_records":len(charts),"georef_unique_page_numbers":len(pagegeo)}
+          for kind,group in eligible.items():
+              present=[];matching_airport=[];matching_key=[];duplicates=[]
+              for x in group:
+                  recs=pagegeo.get(x["page"],[])
+                  if recs:
+                      present.append(x["page"])
+                      if len(recs)>1:duplicates.append(x["page"])
+                  for rec in recs:
+                      if rec.get("airport")==x.get("airport"):
+                          matching_airport.append(x["page"])
+                          expect="|".join((x.get("airport",""),x.get("category","").upper(),x.get("chart_number",""),x.get("name","")))
+                          if rec.get("chartKey")==expect:
+                              matching_key.append(x["page"])
+                          break
+              res[kind]={"total":len(group),"has_any_page_geo":len(present),
+                   "page_and_airport_match":len(matching_airport),
+                   "exact_chart_key_match":len(matching_key),
+                   "missing_by_page_and_icao":len(group)-len(matching_airport),
+                   "strictly_source_matched_and_key_verified_count":len(matching_key) if match_source else 0,
+                   "not_source_and_key_verified":len(group)-(len(matching_key) if match_source else 0)}
+          # Optional note: the 9-series family includes hotspots, docking guidance
+          # and runway information, not all actual surveyed-scale plans.
+          minor=eligible["AIRPORT_9_OTHER"]
+          res["airport_9_other_title_histogram"]=dict(collections.Counter(x.get("name") for x in minor).most_common())
+          res["airport_9_other_strict_map_like_names"]=sum(bool(re.search(
+                  r"DIAGRAM|PARKING|APRON|STAND|INS COORD|AIRPORT CHART|GROUND CHART|TAXI ROUTE|HOT SPOT|PUSHBACK|DOCKING|TAXIWAY",
+                  x.get("name",""),re.I)) for x in minor)
+          res["georef_source_version_uses_previous_cycle"]=not match_source
+          print("GEOREF_CENSUS="+json.dumps(res,ensure_ascii=False,sort_keys=True))
+          PY
