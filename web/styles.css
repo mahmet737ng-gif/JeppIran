@@ -913,3 +913,19 @@ body:has(#homeView.active),body:has(#chartsView.active){background:#030c19}
   color:#fff!important;
   border-color:#146bbc!important
 }
+
+/* Overview-only airport profile, NOTAM disclosure, TAF and wind status */
+#chartsView .profile-tabs{display:flex;justify-content:flex-start}
+#chartsView .profile-tab{min-width:125px}
+#chartsView .profile-weather-text{padding:13px 15px;white-space:pre-wrap;overflow-wrap:anywhere;font:12px/1.6 ui-monospace,SFMono-Regular,Consolas,monospace;color:#d9ebfd}
+#chartsView .profile-notam-details{padding:12px 15px;color:#c4def2;font-size:13px}
+#chartsView .profile-notam-details summary{cursor:pointer;font-weight:750;color:#60cfff;padding:7px 0}
+#chartsView .profile-notam-details p{line-height:1.6;color:#b7ccde}
+#chartsView .wind-status-head{color:#42e69e!important}
+#chartsView .wind-status-tail-warning{color:#ffcf4a!important}
+#chartsView .wind-status-tail-danger{color:#ff6273!important}
+#chartsView .wind-status-neutral{color:#a9c0d4!important}
+:root.light #chartsView .profile-weather-text{color:#edf8ff}
+:root.light #chartsView .profile-notam-details{color:#244664}
+:root.light #chartsView .profile-notam-details summary{color:#37baff}
+:root.light #chartsView .profile-notam-details p{color:#c1d5e5}
