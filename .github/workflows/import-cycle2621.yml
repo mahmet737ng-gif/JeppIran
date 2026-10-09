@@ -1,38 +1,55 @@
-name: Import JEPPIRAN cycle 2621
+name: Safely publish JEPPIRAN chart cycle 2621
 
 on:
+  push:
+    branches:
+      - release/cycle2621-safe
+    paths:
+      - .github/workflows/import-cycle2621.yml
   workflow_dispatch:
 
 permissions:
   contents: write
+  actions: write
+
+concurrency:
+  group: jeppiran-cycle2621-safe
+  cancel-in-progress: false
 
 jobs:
-  import-cycle:
-    runs-on: ubuntu-latest
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 70
     steps:
-      - name: Check out repository
+      - name: Checkout latest main, preserving FSX and application changes
         uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
           lfs: false
 
-      - name: Import approved cycle 2621 commit and LFS assets
+      - name: Install source PDF processors and LFS
         shell: bash
         run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq poppler-utils git-lfs
+          python -m pip install "PyMuPDF==1.26.6" "numpy==2.3.5"
+          git lfs install --local
+
+      - name: Prepare and publish only validated V2621 chart data
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
           set -euo pipefail
-          package_url="https://github.com/mahmet737ng-gif/JeppIran/releases/download/cycle2621-staging/jeppiran-cycle2621-stage.tar.gz"
-          curl -fL --retry 3 --retry-delay 2 -o /tmp/cycle2621-stage.tar.gz "$package_url"
-          mkdir -p /tmp/cycle2621-stage
-          tar -xzf /tmp/cycle2621-stage.tar.gz -C /tmp/cycle2621-stage
-          bundle_dir=/tmp/cycle2621-stage/jeppiran-cycle2621-stage
-          git bundle verify "$bundle_dir/cycle2621.bundle"
-          git fetch "$bundle_dir/cycle2621.bundle" refs/heads/main:refs/remotes/import/main
-          GIT_LFS_SKIP_SMUDGE=1 git switch -C main refs/remotes/import/main
-          cp "$bundle_dir/files/Iran2621.pdf" Iran2621.pdf
-          rm -rf web/data/charts
-          mkdir -p web/data
-          cp -a "$bundle_dir/files/web/data/charts" web/data/charts
-          git add Iran2621.pdf web/data/charts
-          git diff --cached --quiet || { echo "LFS package verification failed"; exit 1; }
-          git lfs push origin main
-          git push --force-with-lease origin main
+          git fetch origin refs/heads/release/cycle2621-safe:refs/remotes/origin/release/cycle2621-safe
+          git show origin/release/cycle2621-safe:scripts/publish_cycle2621_safely.sh > /tmp/publish2621.sh
+          bash /tmp/publish2621.sh
+
+      - name: Request fresh iPad web deployment
+        if: success()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run "Deploy iPad Web App" --ref main || echo "Web deployment requires follow-up check"
