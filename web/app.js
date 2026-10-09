@@ -1,4 +1,62 @@
 const RAW_ROOT="./data/";
+
+const ADC_QA_MODE = new URLSearchParams(location.search).get("adc_test")==="1";
+function showAdcQaMessage(message, payload=null){
+  let wrap=document.getElementById("adcQaPanel");
+  if(!wrap){
+    wrap=document.createElement("aside"); wrap.id="adcQaPanel";
+    wrap.style.cssText="position:fixed;right:10px;bottom:10px;z-index:99999;background:#442807;color:#fff9dc;border:2px solid #f6b74d;border-radius:10px;padding:10px;max-width:min(440px,92vw);box-shadow:0 6px 24px #0008;font:12px/1.4 system-ui,sans-serif;";
+    document.body.appendChild(wrap);
+  }
+  wrap.replaceChildren();
+  const heading=document.createElement("strong");heading.textContent="ADC EXPERIMENT · NOT FOR ACTUAL NAVIGATION";
+  heading.style.cssText="display:block;margin-bottom:5px;font-size:12px;"; wrap.appendChild(heading);
+  const msg=document.createElement("div");msg.textContent=message;wrap.appendChild(msg);
+  if(!payload)return;
+  const row=document.createElement("div");row.style.cssText="display:flex;flex-wrap:wrap;gap:5px;margin-top:8px";
+  for(const item of payload.charts){
+    for(const point of item.points.filter(p=>/^(ARP|THR08|THR26|RWY10 physical|THR28|NDB HAM|NDB LEN|VOR\/DME HAM)$/.test(p.source))){
+      const btn=document.createElement("button");btn.type="button";
+      btn.textContent=item.airport+" · "+point.source;
+      btn.style.cssText="color:#171717;background:#ffe1a1;border:0;border-radius:5px;padding:5px;cursor:pointer";
+      btn.addEventListener("click",()=>{
+        const chart=charts.find(c=>Number(c.page)===Number(item.page)&&c.airport===item.airport);
+        if(!chart){showAdcQaMessage("ADC chart is missing from the active index.");return;}
+        stopGps();stopBridge();
+        selectAirport(item.airport);
+        route("charts");
+        selectChart(chart);
+        activePositionSource="qa";
+        updatePositionUi({lat:point.lat,lon:point.lon,alt:0,heading:0,groundspeed:0,accuracy:0},"qa");
+      });
+      row.appendChild(btn);
+    }
+  }
+  wrap.appendChild(row);
+}
+async function enableAdcQaIfRequested(m){
+  if(!ADC_QA_MODE)return;
+  try{
+    const response=await fetch("./data/adc-georef-v2621-qa.json?v=1",{cache:"no-store"});
+    if(!response.ok)throw Error("QA calibration file missing");
+    const payload=await response.json();
+    if(!payload.testOnly || payload.charts?.length!==2 ||
+       payload.source?.sha256!==m.source_sha256 || payload.source?.chartDataVersion!==m.version)
+      throw Error("QA source/cycle does not match the active chart data");
+    for(const [page,icao] of [[118,"OIBL"],[342,"OIHH"]]){
+      const item=payload.charts.find(c=>Number(c.page)===page && c.airport===icao);
+      const sourceChart=charts.find(c=>Number(c.page)===page && c.airport===icao && c.chart_number==="10-9");
+      if(!item || !sourceChart || !item.validation?.qaTestOnly)throw Error("QA chart identity mismatch");
+      const model=makeGeoModel(item);
+      if(!model)throw Error("QA calibration rejected for "+icao);
+      georefByPage.set(page,model);
+    }
+    showAdcQaMessage("OIBL and OIHH experimental positioning active. Select an airport ADC, connect a simulator, or tap a sample point below.",payload);
+  }catch(error){
+    showAdcQaMessage("QA DISABLED: "+error.message+". Public charts were not modified.");
+  }
+}
+
 const VERSION="V2620";
 const WX_CACHE_RAW="https://raw.githubusercontent.com/mahmet737ng-gif/JeppIran/wx-cache/wx-live.json";
 const WX_CACHE_API="https://api.github.com/repos/mahmet737ng-gif/JeppIran/contents/wx-live.json?ref=wx-cache";
@@ -123,6 +181,7 @@ async function loadData(){
     airportMetadata=profiles&&profiles.airports&&profiles.cycle===m.version?profiles.airports:{};
     airportRunwayMetadata=runways&&runways.airports&&runways.cycle===m.version?runways.airports:{};
     georefByPage=buildGeorefIndex(g);
+    await enableAdcQaIfRequested(m);
     renderAirports();
     if(!selectedAirport && charts.some(c=>c.airport==="OIII"))selectAirport("OIII");
     if($("#homeCycle"))$("#homeCycle").textContent=(m.version||VERSION);
@@ -369,7 +428,7 @@ function geoBoundsContains(b,x,y,t=0){
 }
 function makeGeoModel(item){
   if(!item||!Number.isInteger(Number(item.page)))return null;
-  const allowed=new Set(["paired_printed_graticule_vector_ticks","single_axis_plus_conformal_scale"]);
+  const allowed=new Set(["paired_printed_graticule_vector_ticks","single_axis_plus_conformal_scale","aip_and_printed_grid_10m_test_only"]);
   if(!allowed.has(item.validation&&item.validation.method))return null;
   const width=geoNum(item.width),height=geoNum(item.height),b=item.bounds||{};
   const bounds={left:geoNum(b.left),top:geoNum(b.top),right:geoNum(b.right),bottom:geoNum(b.bottom)};

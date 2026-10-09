@@ -1,0 +1,169 @@
+{
+  "version": 2,
+  "coordinateSystem": "WGS84",
+  "coordinateSpace": "pdf_points",
+  "origin": "top_left",
+  "testOnly": true,
+  "notice": "TEST ONLY. Not approved for actual navigation.",
+  "source": {
+    "file": "Iran2621.pdf",
+    "sha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+    "pageCount": 1654,
+    "chartDataVersion": "V2621",
+    "cycle": 2621
+  },
+  "charts": [
+    {
+      "page": 118,
+      "airport": "OIBL",
+      "name": "Airport Diagram Chart (ADC)",
+      "chartKey": "OIBL|AIRPORT|10-9|AIRPORT DIAGRAM CHART (ADC)",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 85.44,
+        "top": 83.52,
+        "right": 526.08,
+        "bottom": 454.68
+      },
+      "excludedBounds": [],
+      "maxResidualPdfPoints": 0.75,
+      "points": [
+        {
+          "x": 155.46,
+          "y": 301.44,
+          "lat": 26.530452778,
+          "lon": 54.812438889,
+          "source": "THR08"
+        },
+        {
+          "x": 456,
+          "y": 251.88,
+          "lat": 26.534127778,
+          "lon": 54.837191667,
+          "source": "THR26"
+        },
+        {
+          "x": 409.26,
+          "y": 297.78,
+          "lat": 26.530694444,
+          "lon": 54.833333333,
+          "source": "NDB LEN"
+        },
+        {
+          "x": 338.46,
+          "y": 288.42,
+          "lat": 26.531388889,
+          "lon": 54.8275,
+          "source": "ARP"
+        },
+        {
+          "x": 206.88,
+          "y": 262.2,
+          "lat": 26.533333333,
+          "lon": 54.816666667,
+          "source": "26-32 x 54-49"
+        },
+        {
+          "x": 409.32,
+          "y": 262.2,
+          "lat": 26.533333333,
+          "lon": 54.833333333,
+          "source": "26-32 x 54-50"
+        }
+      ],
+      "validation": {
+        "method": "aip_and_printed_grid_10m_test_only",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "independentOfficialAipSameCycleVerificationComplete": false,
+        "maxAipLeaveOneOutMeters": 5.745
+      }
+    },
+    {
+      "page": 342,
+      "airport": "OIHH",
+      "name": "Airport Diagram Chart (ADC)",
+      "chartKey": "OIHH|AIRPORT|10-9|AIRPORT DIAGRAM CHART (ADC)",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 85.44,
+        "top": 83.52,
+        "right": 526.2,
+        "bottom": 454.8
+      },
+      "excludedBounds": [
+        {
+          "left": 85.44,
+          "top": 317.64,
+          "right": 211.32,
+          "bottom": 454.68
+        }
+      ],
+      "maxResidualPdfPoints": 0.75,
+      "points": [
+        {
+          "x": 118.26,
+          "y": 220.74,
+          "lat": 34.871072222,
+          "lon": 48.539263889,
+          "source": "RWY10 physical"
+        },
+        {
+          "x": 490.98,
+          "y": 319.74,
+          "lat": 34.862272222,
+          "lon": 48.579419444,
+          "source": "THR28"
+        },
+        {
+          "x": 180.78,
+          "y": 300.9,
+          "lat": 34.863944444,
+          "lon": 48.546,
+          "source": "NDB HAM"
+        },
+        {
+          "x": 220.38,
+          "y": 267.78,
+          "lat": 34.866888889,
+          "lon": 48.550277778,
+          "source": "VOR/DME HAM"
+        },
+        {
+          "x": 223.02,
+          "y": 238.98,
+          "lat": 34.869444444,
+          "lon": 48.550555556,
+          "source": "ARP"
+        },
+        {
+          "x": 217.8,
+          "y": 270.48,
+          "lat": 34.866666667,
+          "lon": 48.55,
+          "source": "34-52 x 48-33"
+        },
+        {
+          "x": 372.72,
+          "y": 270.48,
+          "lat": 34.866666667,
+          "lon": 48.566666667,
+          "source": "34-52 x 48-34"
+        }
+      ],
+      "validation": {
+        "method": "aip_and_printed_grid_10m_test_only",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "independentOfficialAipSameCycleVerificationComplete": false,
+        "maxAipLeaveOneOutMeters": 3.062
+      }
+    }
+  ]
+}
