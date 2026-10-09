@@ -1,4 +1,5 @@
 name: Safely publish JEPPIRAN chart cycle 2621
+# Retry 2: defer unknown N/E anchors without guessing, retain all charts.
 
 on:
   push:
