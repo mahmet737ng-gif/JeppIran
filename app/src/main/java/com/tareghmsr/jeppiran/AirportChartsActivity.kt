@@ -168,113 +168,239 @@ class AirportChartsActivity :
     }
 
     /**
-     * Task 3: compact, offline airport facts from source-attributed build assets.
-     * This intentionally leaves the existing chart/PDF/FSX activities unchanged.
-     * Values without a source are not replaced by guessed airport data.
+     * Task 4. Photo-free airport profile in the approved JeppIran visual language.
+     * Source-attributed fields only; no guessed ADC headings or operational weather.
      */
     private fun buildAirportFactsPanel(): View {
         val info = try {
-            org.json.JSONObject(
-                assets.open("airport-profiles.json").bufferedReader().use { it.readText() }
-            ).optJSONObject("airports")?.optJSONObject(icao)
-        } catch (_: Exception) {
-            null
+            org.json.JSONObject(assets.open("airport-profiles.json").bufferedReader().use { it.readText() })
+                .optJSONObject("airports")?.optJSONObject(icao)
+        } catch (_: Exception) { null }
+        val runways = try {
+            org.json.JSONObject(assets.open("airport-runways.json").bufferedReader().use { it.readText() })
+                .optJSONObject("airports")?.optJSONArray(icao)
+        } catch (_: Exception) { null }
+        val dark = isDarkTheme()
+        val textColor = if (dark) Color.rgb(239,248,255) else Color.rgb(21,47,72)
+        val muted = if (dark) Color.rgb(164,192,217) else Color.rgb(72,112,144)
+        val cyan = if (dark) Color.rgb(59,198,255) else Color.rgb(0,112,205)
+        val surface = if (dark) Color.rgb(7,28,51) else Color.WHITE
+        val surface2 = if (dark) Color.rgb(9,41,71) else Color.rgb(233,246,255)
+        val border = if (dark) Color.rgb(30,88,135) else Color.rgb(139,194,229)
+        fun round(color: Int, highlight: Boolean = false): GradientDrawable =
+            GradientDrawable().apply {
+                cornerRadius = 13.dp.toFloat()
+                setColor(color)
+                setStroke(1.dp, if (highlight) cyan else border)
+            }
+        fun title(value: String, size: Float, color: Int = textColor, bold: Boolean = false): TextView =
+            TextView(this).apply {
+                text = value
+                textSize = size
+                setTextColor(color)
+                if (bold) typeface = Typeface.DEFAULT_BOLD
+            }
+        fun stack(): LinearLayout = LinearLayout(this).apply { orientation = LinearLayout.VERTICAL }
+        fun bar(): LinearLayout = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
         }
-
-        val runwayData = try {
-            org.json.JSONObject(
-                assets.open("airport-runways.json").bufferedReader().use { it.readText() }
-            ).optJSONObject("airports")?.optJSONArray(icao)
-        } catch (_: Exception) {
-            null
+        fun card(heading: String): LinearLayout = stack().apply {
+            setPadding(14.dp, 13.dp, 14.dp, 13.dp)
+            background = round(surface)
+            addView(title(heading, 14f, cyan, true))
         }
+        fun entry(k: String, v: String): LinearLayout = bar().apply {
+            setPadding(0, 10.dp, 0, 6.dp)
+            addView(title(k, 12f, muted), LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+            addView(title(v, 12f, textColor, true))
+        }
+        fun value(name: String): String {
+            if (info == null || !info.has(name) || info.isNull(name)) return "—"
+            return info.optString(name, "—").ifBlank { "—" }
+        }
+        fun rwyValue(item: org.json.JSONObject, key: String): String =
+            if (item.has(key) && !item.isNull(key)) item.optInt(key).toString() else "—"
 
-        val realName = info?.optString("name", "").orEmpty()
-        val iata = info?.optString("iata", "").orEmpty()
-        val country = info?.optString("country", "").orEmpty()
-        val cityName = info?.optString("city", "").orEmpty()
-        val elevation = if (info?.has("elevation") == true && !info.isNull("elevation")) {
-            info.optInt("elevation").toString() + " ft"
+        val outer = ScrollView(this).apply {
+            fillViewport = true
+            isVerticalScrollBarEnabled = false
+            setBackgroundColor(if (dark) Color.rgb(3,13,28) else Color.rgb(236,246,255))
+        }
+        val contents = stack().apply { setPadding(14.dp, 16.dp, 14.dp, 20.dp) }
+        outer.addView(contents)
+        val head = bar()
+        val names = stack()
+        val codes = bar()
+        codes.addView(title(icao, 40f, textColor, true))
+        if (value("iata") != "—") {
+            codes.addView(title(value("iata"), 13f, cyan, true).apply {
+                setPadding(12.dp, 6.dp, 12.dp, 6.dp)
+                background = round(surface2)
+            }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { marginStart=10.dp })
+        }
+        names.addView(codes)
+        names.addView(title(value("name").takeUnless { it == "—" } ?: airportName, 19f, textColor, true))
+        names.addView(title(
+            listOf(value("city").takeUnless { it == "—" } ?: city, value("country"))
+                .filter { it.isNotBlank() && it != "—" }.joinToString(", "),
+            13f, cyan
+        ))
+        head.addView(names, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+        val elevation = value("elevation")
+        head.addView(stack().apply {
+            addView(title(if (elevation=="—") "Elev —" else "Elev " + elevation + " ft", 12f, muted))
+            addView(android.widget.TextClock(this@AirportChartsActivity).apply {
+                timeZone = "UTC"
+                format24Hour = "HH:mm'Z'"
+                format12Hour = "HH:mm'Z'"
+                textSize = 12f
+                setTextColor(cyan)
+            })
+        })
+        contents.addView(head)
+
+        val tabs = HorizontalScrollView(this).apply { isHorizontalScrollBarEnabled = false }
+        val tabBar = bar()
+        fun tab(label: String, active: Boolean, action: () -> Unit) {
+            tabBar.addView(title(label, 12f, if (active) Color.WHITE else muted, active).apply {
+                setPadding(14.dp, 12.dp, 14.dp, 12.dp)
+                gravity = Gravity.CENTER
+                background = round(if (active) Color.rgb(11,119,231) else surface2, active)
+                setOnClickListener { action() }
+            }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { marginEnd=5.dp })
+        }
+        var weatherTarget: View? = null
+        var notamTarget: View? = null
+        var infoTarget: View? = null
+        tab("Overview", true) { outer.smoothScrollTo(0,0) }
+        tab("Charts", false) { showChartsBrowser(null) }
+        tab("Weather", false) { weatherTarget?.let { outer.smoothScrollTo(0,it.top) } }
+        tab("NOTAM", false) { notamTarget?.let { outer.smoothScrollTo(0,it.top) } }
+        tab("Info", false) { infoTarget?.let { outer.smoothScrollTo(0,it.top) } }
+        tabs.addView(tabBar)
+        contents.addView(tabs, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { topMargin = 16.dp; bottomMargin = 12.dp })
+
+        val landscape = resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
+        val left = stack()
+        val right = stack()
+        if (landscape) {
+            contents.addView(bar().apply {
+                gravity = Gravity.TOP
+                addView(left, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.3f).apply { marginEnd = 9.dp })
+                addView(right, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+            })
         } else {
-            "Not available"
+            contents.addView(left)
+            contents.addView(right)
         }
-        val lat = if (info?.has("lat") == true && !info.isNull("lat")) {
-            String.format(java.util.Locale.US, "%.4f", info.optDouble("lat"))
-        } else "—"
-        val lon = if (info?.has("lon") == true && !info.isNull("lon")) {
-            String.format(java.util.Locale.US, "%.4f", info.optDouble("lon"))
-        } else "—"
-        val endsCount = runwayData?.length() ?: 0
-
-        val panel = LinearLayout(this).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(14.dp, 12.dp, 14.dp, 12.dp)
-            background = createSearchBackground()
+        fun put(parent: LinearLayout, child: View) {
+            parent.addView(child, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { bottomMargin = 12.dp })
         }
-        panel.addView(TextView(this).apply {
-            text = "AIRPORT PROFILE  •  " + icao
-            textSize = 14f
-            typeface = Typeface.DEFAULT_BOLD
-            setTextColor(getColor(R.color.jeppiran_blue))
-        })
-        panel.addView(TextView(this).apply {
-            text = if (realName.isNotBlank()) realName else (airportName.ifBlank { "Airport name unavailable" })
-            textSize = 16f
-            typeface = Typeface.DEFAULT_BOLD
-            setTextColor(primaryTextColor())
-            setPadding(0, 5.dp, 0, 3.dp)
-        })
-        panel.addView(TextView(this).apply {
-            text = (if (iata.isBlank()) "IATA —" else "IATA $iata") +
-                "   •   " + (cityName.ifBlank { city }) +
-                (if (country.isBlank()) "" else ", $country") + "\n" +
-                "Elevation: $elevation    •    Lat/Lon: $lat, $lon"
-            textSize = 12f
-            setTextColor(secondaryTextColor())
-            maxLines = 3
-        })
-        panel.addView(TextView(this).apply {
-            text = "RUNWAY DETAILS  ($endsCount runway ends)  ›"
-            textSize = 12f
-            typeface = Typeface.DEFAULT_BOLD
-            setTextColor(getColor(R.color.jeppiran_blue))
-            setPadding(0, 9.dp, 0, 3.dp)
+        val weather = card("METAR • " + icao)
+        weatherTarget = weather
+        weather.addView(title("☀☁   LIVE WEATHER", 21f, cyan, true).apply { setPadding(0,14.dp,0,8.dp) })
+        weather.addView(title("Open Weather to obtain current METAR and TAF. No sample weather is shown as live.", 12f, muted))
+        weather.addView(title("View METAR / TAF   ›", 14f, cyan, true).apply {
+            setPadding(0,13.dp,0,3.dp)
             setOnClickListener {
-                val message = if (runwayData == null || runwayData.length() == 0) {
-                    "Runway information unavailable. Refer to current ADC/AIP."
-                } else {
-                    buildString {
-                        for (i in 0 until runwayData.length()) {
-                            val row = runwayData.optJSONObject(i) ?: continue
-                            val runwayId = row.optString("name", "—")
-                            val opposite = row.optString("opposite", "")
-                            val length = if (!row.isNull("length")) row.optInt("length").toString() else "—"
-                            val width = if (!row.isNull("width")) row.optInt("width").toString() else "—"
-                            val trueHeading = if (!row.isNull("headingTrue")) {
-                                String.format(java.util.Locale.US, "%.1f° TRUE", row.optDouble("headingTrue"))
-                            } else "TRUE heading unavailable"
-                            append("RWY $runwayId")
-                            if (opposite.isNotBlank()) append(" (opposite $opposite)")
-                            append("\n  $length × $width m   •   $trueHeading")
-                            append("\n  MAG: not verified; consult current ADC")
-                            if (i < runwayData.length() - 1) append("\n\n")
-                        }
-                    }
-                }
-                androidx.appcompat.app.AlertDialog.Builder(this@AirportChartsActivity)
-                    .setTitle("$icao • RUNWAYS")
-                    .setMessage(message + "\n\nCommunity reference data (OurAirports). Not approved for actual navigation.")
-                    .setPositiveButton("Close", null)
-                    .show()
+                startActivity(Intent(this@AirportChartsActivity, WxActivity::class.java).putExtra("ICAO", icao))
             }
         })
-        panel.addView(TextView(this).apply {
-            text = "Source: OurAirports community data — verify current AIP/ADC"
-            textSize = 10f
-            setTextColor(secondaryTextColor())
-            setPadding(0, 5.dp, 0, 0)
+        put(left,weather)
+
+        val runwayCard = card("RUNWAYS")
+        if (runways == null || runways.length() == 0) {
+            runwayCard.addView(title("No runway record available • consult current ADC / AIP", 12f, muted))
+        } else {
+            for (index in 0 until runways.length()) {
+                val item=runways.optJSONObject(index) ?: continue
+                val name=item.optString("name", "—")
+                val opposite=item.optString("opposite", "")
+                val dims=rwyValue(item,"length")+" × "+rwyValue(item,"width")+" m"
+                val heading=if (!item.isNull("headingTrue") && item.has("headingTrue"))
+                    String.format(java.util.Locale.US, "%.1f° TRUE", item.optDouble("headingTrue"))
+                    else "TRUE heading unavailable"
+                val nameText=if (opposite.isBlank()) name else name+" / "+opposite
+                val row=bar().apply {
+                    setPadding(11.dp,12.dp,11.dp,12.dp)
+                    background=round(surface2)
+                    addView(title("▱  "+nameText, 13f, textColor, true), LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.WRAP_CONTENT,1f))
+                    addView(stack().apply {
+                        addView(title(dims,12f,textColor,true))
+                        addView(title(heading+" · MAG —",10f,muted))
+                    })
+                    setOnClickListener {
+                        androidx.appcompat.app.AlertDialog.Builder(this@AirportChartsActivity)
+                            .setTitle("RWY "+nameText)
+                            .setMessage("Length × width: "+dims+"\n"+heading+"\nMagnetic heading: not verified\nSource: OurAirports; consult current ADC/AIP.")
+                            .setPositiveButton("OK",null).show()
+                    }
+                }
+                runwayCard.addView(row, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { bottomMargin=6.dp })
+            }
+        }
+        runwayCard.addView(title("Source: OurAirports community data. Verify with current ADC/AIP.",10f,muted))
+        put(left,runwayCard)
+
+        val shortcuts=bar()
+        for ((name, category) in listOf(Pair("▤ CHARTS","Airport"), Pair("✈ APPROACHES","Approach"), Pair("▦ DIAGRAM","Airport"))) {
+            shortcuts.addView(title(name,11f,cyan,true).apply {
+                gravity=Gravity.CENTER
+                setPadding(4.dp,17.dp,4.dp,17.dp)
+                background=round(surface2)
+                setOnClickListener { showChartsBrowser(category) }
+            }, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f).apply { marginEnd=5.dp })
+        }
+        put(left,shortcuts)
+
+        val wind=card("WIND COMPONENTS")
+        wind.addView(title("▱  SELECT RUNWAY / METAR",17f,textColor,true).apply {
+            gravity=Gravity.CENTER
+            setPadding(0,14.dp,0,14.dp)
+            background=round(surface2)
         })
-        return panel
+        wind.addView(entry("Runway heading (MAG)","— · ADC required"))
+        wind.addView(entry("METAR wind (TRUE)","—"))
+        wind.addView(entry("↑ Headwind","—"))
+        wind.addView(entry("→ Crosswind","—"))
+        wind.addView(title("Calculations require current METAR and verified heading. Unavailable values are never guessed.",10f,muted))
+        put(right,wind)
+
+        val details=card("ADDITIONAL INFORMATION")
+        infoTarget=details
+        details.addView(entry("ICAO",icao))
+        details.addView(entry("IATA",value("iata")))
+        details.addView(entry("Elevation",if(elevation=="—") "—" else elevation+" ft"))
+        details.addView(entry("Latitude",value("lat")))
+        details.addView(entry("Longitude",value("lon")))
+        details.addView(entry("ATIS / Tower / Ground","Consult ADC"))
+        put(right,details)
+
+        val notam=card("NOTAM")
+        notamTarget=notam
+        notam.addView(title("No verified current NOTAM feed attached. Consult an authorized source.",12f,muted))
+        put(right,notam)
+        return outer
+    }
+
+    private lateinit var profilePanel: View
+
+    private fun showProfileView() {
+        if (!::profilePanel.isInitialized || !::root.isInitialized) return
+        for (i in 0 until root.childCount) {
+            val child = root.getChildAt(i)
+            child.visibility = if (child === profilePanel) View.VISIBLE else View.GONE
+        }
+    }
+
+    private fun showChartsBrowser(category: String?) {
+        if (!::profilePanel.isInitialized || !::root.isInitialized) return
+        for (i in 0 until root.childCount) {
+            val child = root.getChildAt(i)
+            child.visibility = if (child === profilePanel) View.GONE else View.VISIBLE
+        }
+        if (!category.isNullOrEmpty() && ::searchBox.isInitialized) selectCategory(category)
     }
 
     private fun buildUi() {
@@ -464,17 +590,19 @@ class AirportChartsActivity :
                 LinearLayout.LayoutParams.WRAP_CONTENT
             )
         )
+        header.addView(TextView(this).apply {
+            text = "‹ AIRPORT PROFILE"
+            textSize = 13f
+            setTextColor(if (isDarkTheme()) Color.rgb(65,194,255) else Color.rgb(0,115,204))
+            setPadding(0,12.dp,0,2.dp)
+            setOnClickListener { showProfileView() }
+        })
 
-        // Read-only facts strip; the chart search and viewer continue to work as before.
-        root.addView(
-            buildAirportFactsPanel(),
-            LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT
-            ).apply {
-                setMargins(12.dp, 0, 12.dp, 6.dp)
-            }
-        )
+
+        profilePanel = buildAirportFactsPanel()
+        root.addView(profilePanel, LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f
+        ))
 
         searchContainer =
             LinearLayout(
@@ -769,6 +897,8 @@ class AirportChartsActivity :
         setContentView(
             root
         )
+
+        showProfileView()
 
         BackNavigation.install(
             this
