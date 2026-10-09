@@ -351,8 +351,8 @@ object ChartGeoreferenceStore {
             val chartKey = item.optString("chartKey").uppercase()
             val independentlyReviewedLegacy =
                 validation?.optBoolean("carryForwardApproved", false) == true &&
-                validation.optBoolean("verifiedUnchangedAgainstPreviousSource", false) &&
-                validation.optBoolean("reusedUnchangedSource", false)
+                validation?.optBoolean("verifiedUnchangedAgainstPreviousSource", false) == true &&
+                validation?.optBoolean("reusedUnchangedSource", false) == true
             if (method == "single_axis_plus_conformal_scale" &&
                 (chartKey.contains("|APPROACH|") || chartKey.contains("|AIRPORT|")) &&
                 !independentlyReviewedLegacy) {
