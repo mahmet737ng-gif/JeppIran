@@ -10794,7 +10794,7 @@
     "page": 1200,
     "airport": "LTFM",
     "country": "Turkey",
-    "category": "STAR",
+    "category": "SID",
     "chart_number": "30-3E1",
     "name": "EKAWE 1M, MAKOL 1M",
     "pdf_page": 39
@@ -10803,7 +10803,7 @@
     "page": 1201,
     "airport": "LTFM",
     "country": "Turkey",
-    "category": "STAR",
+    "category": "SID",
     "chart_number": "30-3E2",
     "name": "EKAWE 1L, MAKOL 1L",
     "pdf_page": 40
@@ -10821,7 +10821,7 @@
     "page": 1203,
     "airport": "LTFM",
     "country": "Turkey",
-    "category": "STAR",
+    "category": "SID",
     "chart_number": "30-3G",
     "name": "RATVU 1T, VICEN 1T",
     "pdf_page": 42
@@ -10839,7 +10839,7 @@
     "page": 1205,
     "airport": "LTFM",
     "country": "Turkey",
-    "category": "STAR",
+    "category": "SID",
     "chart_number": "30-3J",
     "name": "RATVU 1U, VICEN 1U",
     "pdf_page": 44
@@ -10857,7 +10857,7 @@
     "page": 1207,
     "airport": "LTFM",
     "country": "Turkey",
-    "category": "STAR",
+    "category": "SID",
     "chart_number": "30-3L",
     "name": "RATVU 1V, VICEN 1V",
     "pdf_page": 46
@@ -10875,7 +10875,7 @@
     "page": 1209,
     "airport": "LTFM",
     "country": "Turkey",
-    "category": "STAR",
+    "category": "SID",
     "chart_number": "30-3N",
     "name": "VICEN 1Q",
     "pdf_page": 48
@@ -10893,7 +10893,7 @@
     "page": 1211,
     "airport": "LTFM",
     "country": "Turkey",
-    "category": "STAR",
+    "category": "SID",
     "chart_number": "30-3Q",
     "name": "VICEN 1R",
     "pdf_page": 50
@@ -10911,7 +10911,7 @@
     "page": 1213,
     "airport": "LTFM",
     "country": "Turkey",
-    "category": "STAR",
+    "category": "SID",
     "chart_number": "30-3T",
     "name": "VICEN 1S",
     "pdf_page": 52
@@ -10920,7 +10920,7 @@
     "page": 1214,
     "airport": "LTFM",
     "country": "Turkey",
-    "category": "STAR",
+    "category": "SID",
     "chart_number": "30-3T1",
     "name": "RATVU 1M, VICEN 1M",
     "pdf_page": 53
@@ -10929,7 +10929,7 @@
     "page": 1215,
     "airport": "LTFM",
     "country": "Turkey",
-    "category": "STAR",
+    "category": "SID",
     "chart_number": "30-3T2",
     "name": "RATVU 1Y, VICEN 1Y",
     "pdf_page": 54
@@ -10938,7 +10938,7 @@
     "page": 1216,
     "airport": "LTFM",
     "country": "Turkey",
-    "category": "STAR",
+    "category": "SID",
     "chart_number": "30-3T3",
     "name": "RATVU 1L, VICEN 1L",
     "pdf_page": 55
@@ -10947,7 +10947,7 @@
     "page": 1217,
     "airport": "LTFM",
     "country": "Turkey",
-    "category": "STAR",
+    "category": "SID",
     "chart_number": "30-3T4",
     "name": "VICEN 1Z",
     "pdf_page": 56
@@ -10956,7 +10956,7 @@
     "page": 1218,
     "airport": "LTFM",
     "country": "Turkey",
-    "category": "STAR",
+    "category": "SID",
     "chart_number": "30-3T5",
     "name": "BARPE 1M, IVGUS 1M",
     "pdf_page": 57
@@ -10965,7 +10965,7 @@
     "page": 1219,
     "airport": "LTFM",
     "country": "Turkey",
-    "category": "STAR",
+    "category": "SID",
     "chart_number": "30-3T6",
     "name": "BARPE 1Y, IVGUS 1Y",
     "pdf_page": 58
@@ -10974,7 +10974,7 @@
     "page": 1220,
     "airport": "LTFM",
     "country": "Turkey",
-    "category": "STAR",
+    "category": "SID",
     "chart_number": "30-3T7",
     "name": "BARPE 1L, IVGUS 1L",
     "pdf_page": 59
@@ -11028,7 +11028,7 @@
     "page": 1226,
     "airport": "LTFM",
     "country": "Turkey",
-    "category": "STAR",
+    "category": "SID",
     "chart_number": "30-3V2",
     "name": "BARPE 1V, IVGUS 1V",
     "pdf_page": 65
@@ -11046,7 +11046,7 @@
     "page": 1228,
     "airport": "LTFM",
     "country": "Turkey",
-    "category": "STAR",
+    "category": "SID",
     "chart_number": "30-3V4",
     "name": "IBLAL 1M, REZOV 1M, TUDBU 1M, VADEN 1M",
     "pdf_page": 67
@@ -11055,7 +11055,7 @@
     "page": 1229,
     "airport": "LTFM",
     "country": "Turkey",
-    "category": "STAR",
+    "category": "SID",
     "chart_number": "30-3V5",
     "name": "IBLAL 1L, REZOV 1L, TUDBU 1L, VADEN 1L",
     "pdf_page": 68
@@ -12119,7 +12119,7 @@
     "country": "Armenia",
     "category": "Approach",
     "chart_number": "11-1",
-    "name": "APPROACH 11-1",
+    "name": "ILS DME RWY 08",
     "pdf_page": 11
   },
   {
@@ -12128,7 +12128,7 @@
     "country": "Armenia",
     "category": "Approach",
     "chart_number": "11-1A",
-    "name": "APPROACH 11-1A",
+    "name": "CAT II ILS DME RWY 08",
     "pdf_page": 12
   },
   {
@@ -12145,8 +12145,8 @@
     "airport": "UDYZ",
     "country": "Armenia",
     "category": "Approach",
-    "chart_number": "",
-    "name": "RNP RWY 26",
+    "chart_number": "12-2",
+    "name": "RNP Z RWY 26",
     "pdf_page": 14
   },
   {
@@ -12154,8 +12154,8 @@
     "airport": "UDYZ",
     "country": "Armenia",
     "category": "Approach",
-    "chart_number": "",
-    "name": "RNP RWY 26",
+    "chart_number": "12-3",
+    "name": "RNP Y RWY 26",
     "pdf_page": 15
   },
   {
