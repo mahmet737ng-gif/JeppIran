@@ -964,8 +964,8 @@ function updatePositionUi(p,source){
   $("#posAcc").textContent=Number.isFinite(p.accuracy)?Math.round(p.accuracy)+" m":source==="gps"?"—":"SIM";
   $("#simStatus").textContent=sourceLabel+" • live";
   if(source==="fsx"){
-    const inline=$("#fsxInlineStatus");if(inline)inline.textContent="FSX LIVE • simulator position received.";
-    const btn=$("#connectFsxBtn");if(btn){btn.disabled=false;btn.textContent="FSX CONNECTED"}
+    const inline=$("#fsxInlineStatus");if(inline)inline.textContent="SIMULATOR LIVE • position received.";
+    const btn=$("#connectFsxBtn");if(btn){btn.disabled=false;btn.textContent="SIMULATOR CONNECTED"}
   }
   const badge=$("#viewerPositionBadge");
   if(badge){badge.textContent=sourceLabel+" LIVE";badge.classList.add("live")}
@@ -1275,24 +1275,24 @@ window.jeppiranConnectFsx=()=>{
   const btn=$("#connectFsxBtn"),inline=$("#fsxInlineStatus");
   const host=normalizeBridgeHost(($("#fsxPcIp")&&$("#fsxPcIp").value)||"");
   if(!host){
-    const msg="Enter the FSX PC IPv4 address first.";
+    const msg="Enter the simulator PC IPv4 address first.";
     markFsxWaiting(msg);
     if(inline)inline.textContent=msg;
     $("#fsxPcIp")?.focus();
-    if(btn){btn.disabled=false;btn.textContent="CONNECT FSX"}
+    if(btn){btn.disabled=false;btn.textContent="CONNECT SIMULATOR"}
     return;
   }
-  const msg="FSX CONNECT • starting secure relay for "+host+" …";
+  const msg="SIMULATOR CONNECT • starting secure relay for "+host+" …";
   $("#simStatus").textContent=msg;
   if(inline)inline.textContent=msg;
   try{
     setBridgeTarget("fsx");
     connectSimulatorBridge();
   }catch(e){
-    const err="FSX connect error: "+(e&&e.message?e.message:String(e));
+    const err="Simulator connection error: "+(e&&e.message?e.message:String(e));
     markFsxWaiting(err);
     if(inline)inline.textContent=err;
-    if(btn){btn.disabled=false;btn.textContent="CONNECT FSX"}
+    if(btn){btn.disabled=false;btn.textContent="CONNECT SIMULATOR"}
   }
 };
 $("#disconnectPositionBtn").addEventListener("click",()=>disconnectPosition());
