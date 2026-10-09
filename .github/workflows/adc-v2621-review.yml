@@ -1,0 +1,59 @@
+name: V2621 ADC 24 source-level candidate review
+on:
+  push:
+    branches:
+      - audit/v2621-visual-batches-201-400
+    paths:
+      - .github/workflows/adc-v2621-review.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+concurrency:
+  group: v2621-adc-24-audit-only
+  cancel-in-progress: false
+jobs:
+  review:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          lfs: true
+          path: source
+          fetch-depth: 1
+      - uses: actions/checkout@v4
+        with:
+          ref: audit/v2621-visual-batches-201-400
+          path: review
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install source extraction prerequisites
+        run: python -m pip install PyMuPDF==1.26.6 numpy
+      - name: Produce candidates without modifying live georeference
+        working-directory: source
+        run: |
+          python ../review/scripts/adc_v2621_candidate_review.py
+      - name: Commit source-level findings only to audit branch
+        run: |
+          mkdir -p review/docs/audits/V2621/adc
+          cp source/docs/audits/V2621/adc/24_adc_review.json review/docs/audits/V2621/adc/
+          cp source/docs/audits/V2621/adc/24_adc_report.md review/docs/audits/V2621/adc/
+          cp source/docs/audits/V2621/adc/24_adc_unreleased_candidates.json review/docs/audits/V2621/adc/
+          cd review
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/audits/V2621/adc/
+          git diff --cached --quiet || git commit -m 'Record 24 ADC source vector tick fits and unapproved georeference candidates'
+          git push origin HEAD:audit/v2621-visual-batches-201-400
+      - uses: actions/upload-artifact@v4
+        with:
+          name: V2621-ADC-24-CANDIDATES-NOT-FOR-RELEASE
+          path: |
+            source/docs/audits/V2621/adc/24_adc_review.json
+            source/docs/audits/V2621/adc/24_adc_report.md
+            source/docs/audits/V2621/adc/24_adc_unreleased_candidates.json
+          retention-days: 30
