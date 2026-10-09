@@ -169,15 +169,15 @@
         </article>
 
         <article class="sim-card">
-          <h3>FSX SIMCONNECT BRIDGE</h3>
-          <p class="sim-help">Run JEPPIRAN FSX Bridge v1.4 on the FSX PC. Enter the Windows IPv4 address printed by the bridge. JEPPIRAN stays on its permanent HTTPS address and keeps FSX connected while you use Home, Charts and WX.</p>
-          <label class="field-label" for="fsxPcIp">FSX PC IPv4 Address</label>
+          <h3>UNIVERSAL SIMULATOR BRIDGE</h3>
+          <p class="sim-help">Run JEPPIRAN Universal Bridge on the simulator PC. Enter the Windows IPv4 address printed by the bridge. X-Plane live telemetry is supported by the new test bridge; keep the existing FSX Bridge v1.4 for FSX live telemetry. Connection stays active between JEPPIRAN pages.</p>
+          <label class="field-label" for="fsxPcIp">Simulator PC IPv4 Address</label>
           <input id="fsxPcIp" class="wide-input" placeholder="e.g. 10.31.2.70" autocapitalize="off" autocomplete="off" spellcheck="false">
           <div class="sim-buttons">
-            <button id="connectFsxBtn" type="button" onclick="this.textContent='CONNECTING…';this.disabled=true;var b=this,s=document.getElementById('fsxInlineStatus');if(s)s.textContent='Starting FSX connection…';try{if(window.jeppiranConnectFsx){sessionStorage.removeItem('jeppiranFsxCoreRetry');window.jeppiranConnectFsx();}else if(!sessionStorage.getItem('jeppiranFsxCoreRetry')){sessionStorage.setItem('jeppiranFsxCoreRetry','1');if(s)s.textContent='Refreshing JEPPIRAN core…';var reload=function(){location.reload();};if('caches' in window){caches.keys().then(function(keys){return Promise.all(keys.filter(function(k){return k.indexOf('jeppiran-pwa-')===0;}).map(function(k){return caches.delete(k);}));}).finally(reload);}else{reload();}}else{if(s)s.textContent='JEPPIRAN core did not initialize. Close this tab, reopen the main JEPPIRAN URL, then try again.';}}catch(e){if(s)s.textContent='FSX connect error: '+e.message;}setTimeout(function(){b.disabled=false;if(b.textContent==='CONNECTING…')b.textContent='CONNECT FSX';},2500);">CONNECT FSX</button>
+            <button id="connectFsxBtn" type="button" onclick="this.textContent='CONNECTING…';this.disabled=true;var b=this,s=document.getElementById('fsxInlineStatus');if(s)s.textContent='Starting FSX connection…';try{if(window.jeppiranConnectFsx){sessionStorage.removeItem('jeppiranFsxCoreRetry');window.jeppiranConnectFsx();}else if(!sessionStorage.getItem('jeppiranFsxCoreRetry')){sessionStorage.setItem('jeppiranFsxCoreRetry','1');if(s)s.textContent='Refreshing JEPPIRAN core…';var reload=function(){location.reload();};if('caches' in window){caches.keys().then(function(keys){return Promise.all(keys.filter(function(k){return k.indexOf('jeppiran-pwa-')===0;}).map(function(k){return caches.delete(k);}));}).finally(reload);}else{reload();}}else{if(s)s.textContent='JEPPIRAN core did not initialize. Close this tab, reopen the main JEPPIRAN URL, then try again.';}}catch(e){if(s)s.textContent='FSX connect error: '+e.message;}setTimeout(function(){b.disabled=false;if(b.textContent==='CONNECTING…')b.textContent='CONNECT SIMULATOR';},2500);">CONNECT FSX</button>
             <button id="disconnectPositionBtn" class="secondary-btn">DISCONNECT</button>
           </div>
-          <div id="fsxInlineStatus" class="status" style="margin-top:10px">FSX ready to connect.</div>
+          <div id="fsxInlineStatus" class="status" style="margin-top:10px">Simulator ready to connect.</div>
           <small class="sim-note">Use the actual LAN/hotspot IPv4 address, usually the address on the same network as your iPad. No certificate, profile, or port entry is required. <b>Web build 2620-34</b>.</small>
         </article>
 
