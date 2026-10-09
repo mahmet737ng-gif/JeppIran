@@ -15,10 +15,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 URL = "https://raw.githubusercontent.com/davidmegginson/ourairports-data/main/runways.csv"
-# Approved annotated V2621 OIAA Airport Diagram: TRUE bearings, not magnetic.
-# Only these two runway ends are overridden; never apply 321 to other airports.
-# User-supplied bearings require independent current ADC/AIP verification.
-CONFIRMED_TRUE = {("OIAA", "32L"): 321.0, ("OIAA", "14R"): 141.0}
+# User-corrected V2621 OIAA geographic heading, no magnetic variation added.
+# RWY 32L is 324 degrees; reciprocal RWY 14R is 144 degrees.
+# This is a user-supplied reference, NOT certified current AIP/ADC.
+CONFIRMED_TRUE = {("OIAA", "32L"): 324.0, ("OIAA", "14R"): 144.0}
 
 
 def numeric(raw, low, high):

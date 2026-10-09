@@ -272,7 +272,7 @@ function runwayCompassMarkup(rw){
   if(heading===null)return '<div class="runway-bearing-unavailable">TRUE runway bearing unavailable</div>';
   const runwayName=profileEsc(rw.name||"RWY");
   const north='N';
-  return '<div class="runway-bearing-compass" role="img" aria-label="Runway '+runwayName+', geographic heading '+heading.toFixed(1)+' degrees clockwise from true north">'+
+  return '<div class="runway-bearing-compass" role="img" aria-label="Runway '+runwayName+', geographic heading '+Math.trunc(heading)+' degrees clockwise from true north">'+
     '<svg viewBox="0 0 320 214" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">'+
       '<circle cx="160" cy="108" r="82" fill="none" stroke="#286490" stroke-width="1.5"/>'+
       '<path d="M160 20V37M160 180V196M72 108H89M231 108H248" stroke="#3d9acf" stroke-width="2"/>'+
@@ -284,8 +284,8 @@ function runwayCompassMarkup(rw){
       '</g>'+
       '<circle cx="160" cy="108" r="2.5" fill="#eefaff"/>'+
     '</svg>'+
-    '<strong>RWY '+runwayName+' · '+heading.toFixed(1)+'° TRUE</strong>'+
-    '<small>Geographic bearing • clockwise from TRUE north</small>'+
+    '<strong>RWY '+runwayName+' HDG · '+Math.trunc(heading)+'°</strong>'+
+    '<small>Geographic heading · clockwise from north (not magnetic)</small>'+
     '</div>';
 }
 function renderAirportProfile(icao){
@@ -332,7 +332,7 @@ function renderAirportProfile(icao){
     '</div><div class="profile-col">'+
       '<section class="profile-card" id="profileWind"><header><span>WIND COMPONENTS '+(rw?"("+profileEsc(rw.name)+")":"")+'</span></header>'+
       '<div class="wind-compass">'+runwayCompassMarkup(rw)+'</div>'+
-      '<div class="wind-data"><div><span>Runway bearing (TRUE / geographic)</span><b>'+(rw?(Number.isFinite(rw.headingTrue)?rw.headingTrue.toFixed(1)+"°":"—"):"—")+'</b></div><div><span>Magnetic bearing (unverified)</span><b>—</b></div><div><span>METAR wind (TRUE)</span><b>'+(comp?comp.direction+"° / "+comp.speed+" kt":"—")+'</b></div><div><span class="wind-head">↑ '+(comp?comp.headName:"Headwind")+'</span><b class="wind-head">'+(comp?comp.head+" kt":"—")+'</b></div><div><span class="wind-cross">→ Crosswind</span><b class="wind-cross">'+(comp?comp.cross+" kt "+comp.crossName:"—")+'</b></div></div></section>'+
+      '<div class="wind-data"><div><span>Runway HDG (geographic)</span><b>'+(rw?(Number.isFinite(rw.headingTrue)?Math.trunc(rw.headingTrue)+"°":"—"):"—")+'</b></div><div><span>Magnetic bearing (unverified)</span><b>—</b></div><div><span>METAR wind (TRUE)</span><b>'+(comp?comp.direction+"° / "+comp.speed+" kt":"—")+'</b></div><div><span class="wind-head">↑ '+(comp?comp.headName:"Headwind")+'</span><b class="wind-head">'+(comp?comp.head+" kt":"—")+'</b></div><div><span class="wind-cross">→ Crosswind</span><b class="wind-cross">'+(comp?comp.cross+" kt "+comp.crossName:"—")+'</b></div></div></section>'+
       '<section class="profile-card" id="profileInfo"><header>ADDITIONAL INFORMATION</header>'+
       [['ICAO',icao],['IATA',d.iata||"—"],['Field elevation',Number.isFinite(d.elevation)?d.elevation.toLocaleString()+" ft":"—"],['Coordinates',Number.isFinite(d.lat)?d.lat.toFixed(4)+"N, "+d.lon.toFixed(4)+"E":"—"],['UTC time','<span class="profile-utc"></span>'],['Frequencies','Consult current ADC / AIP'],['Fuel / Services','Consult current AIP'],['Metadata source',community.source?'OurAirports / verify AIP':'Not available — verify AIP']].map(([k,v])=>'<div class="profile-info-row"><span>'+k+'</span><b>'+v+'</b></div>').join("")+'</section>'+
       '<div class="profile-alert" id="profileNotam">Runway dimensions and TRUE headings are community reference data, not verified AIP/ADC. Current NOTAM: please consult a validated current source. No status is inferred from missing data.</div>'+

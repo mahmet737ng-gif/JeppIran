@@ -93,7 +93,7 @@ class TrueRunwayCompassView(context: Context) : View(context) {
         ink.style = Paint.Style.FILL
         ink.textSize = 12f
         ink.typeface = android.graphics.Typeface.DEFAULT_BOLD
-        canvas.drawText("RWY " + runwayId + " · " + String.format(java.util.Locale.US, "%.1f° TRUE", h),
+        canvas.drawText("RWY " + runwayId + " HDG · " + h.toInt() + "°",
             0f, 97f, ink)
         canvas.restore()
     }

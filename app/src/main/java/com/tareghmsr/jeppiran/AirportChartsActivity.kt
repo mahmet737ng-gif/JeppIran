@@ -369,8 +369,8 @@ class AirportChartsActivity :
             runwayId = windRunwayName
             headingTrue = if (trueBearing.isFinite()) trueBearing.toFloat() else null
         }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 185.dp))
-        wind.addView(entry("Runway bearing (TRUE / geographic)",
-            if (trueBearing.isFinite()) String.format(java.util.Locale.US, "%.1f°", trueBearing) else "—"))
+        wind.addView(entry("Runway HDG (geographic)",
+            if (trueBearing.isFinite()) trueBearing.toInt().toString() + "°" else "—"))
         wind.addView(entry("Magnetic bearing", "— · not verified"))
         wind.addView(entry("METAR wind (TRUE)", "—"))
         wind.addView(entry("↑ Headwind", "—"))
