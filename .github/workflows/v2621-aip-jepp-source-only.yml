@@ -1,0 +1,60 @@
+name: Reaudit V2621 APP and Layout using AIP and Jeppesen ONLY
+
+on:
+  push:
+    branches: [audit/v2621-visual-batches-201-400]
+    paths:
+      - '.github/workflows/v2621-aip-jepp-source-only.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: jeppiran-v2621-source-only-audit
+  cancel-in-progress: false
+
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 75
+    steps:
+      - name: Checkout stable PDF, index and active georef (READ ONLY)
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          lfs: true
+          path: source
+      - name: Checkout audit scripts (NO stable changes)
+        uses: actions/checkout@v4
+        with:
+          ref: audit/v2621-visual-batches-201-400
+          path: audit
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install PDF and vector-math dependencies
+        run: python -m pip install PyMuPDF==1.26.6 numpy
+      - name: Full source-policy source-only scan of unmatched APP and airport layout
+        working-directory: source
+        run: |
+          cp ../audit/scripts/v2621_aip_jeppesen_only_reaudit.py scripts/
+          python -m py_compile scripts/v2621_aip_jeppesen_only_reaudit.py
+          python scripts/v2621_aip_jeppesen_only_reaudit.py
+      - name: Publish evidence ONLY to audit branch
+        run: |
+          set -euo pipefail
+          mkdir -p audit/docs/audits/V2621/aip-jeppesen-only
+          cp source/docs/audits/V2621/aip-jeppesen-only/* audit/docs/audits/V2621/aip-jeppesen-only/
+          cd audit
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/audits/V2621/aip-jeppesen-only/
+          git diff --cached --quiet || git commit -m 'Audit all missing V2621 APP and airport-layout georeferences against Jeppesen-only map constraints'
+          git push origin HEAD:audit/v2621-visual-batches-201-400
+      - uses: actions/upload-artifact@v4
+        with:
+          name: JEPPIRAN-V2621-AIP-JEPP-ONLY-AUDIT-NOT-APPROVED
+          path: source/docs/audits/V2621/aip-jeppesen-only/
+          retention-days: 60
