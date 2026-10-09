@@ -6,17 +6,23 @@
   "analysisType": "local raw PDF vector tick extraction",
   "airportsInAutoIndex": 75,
   "scope": {
-    "approachPages": 706,
-    "airportLayoutCandidatePages": 78,
-    "total": 784
-  },
-  "results": {
-    "pagesWithTwoMeasuredSourceAxes": 447,
-    "pagesMissingTwoMeasuredAxes": 337,
-    "provisionalGridRegions": 489,
-    "multipleRegionPages": 24,
-    "approachCandidatePages": 393,
-    "airportLayoutCandidatePages": 54
+    "legacyAutomaticClassifications": {
+      "approachLabelled": 706,
+      "airportLayoutCandidates": 78,
+      "total": 784,
+      "approachGridCandidates": 393,
+      "approachGridMissing": 313
+    },
+    "correctedFromEntire1654PageSource": {
+      "procedureApproachCharts": 543,
+      "provisionalPrintedGridCandidatePages": 375,
+      "pagesRequiringExactGcpChecksOrMatching": 168,
+      "omittedApproachPagesRecovered": 19,
+      "omittedApproachPagesStillUnresolved": 7,
+      "previous313ActuallyApproach": 161,
+      "previous313NotConfirmedAsApproach": 152,
+      "independentlyVerifiedCompleteApproachGeorefs": 0
+    }
   },
   "accuracyCertification": {
     "independentlyVerifiedPages": 0,
@@ -58,5 +64,22 @@
     "Measure actual procedure-fix/runway/navaid/stand graphic symbol centres; do not compute fix lat/lon from radial or DME.",
     "Independently validate, reject distorted regions, and publish only verified records."
   ],
-  "note": "Full local provisional candidate and unresolved-page artifacts are downloadable from the associated ChatGPT work session; this summary is not a 100% success claim."
+  "note": "Full local provisional candidate and unresolved-page artifacts are downloadable from the associated ChatGPT work session; this summary is not a 100% success claim.",
+  "warning": "The previous automatic Approach count 706 and grid-missing count 313 were misclassified. They MUST NOT be used as final Approach coverage denominators.",
+  "originalLegacyVectorGridExtraction": {
+    "pagesWithTwoMeasuredSourceAxes": 447,
+    "pagesMissingTwoMeasuredAxes": 337,
+    "provisionalGridRegions": 489,
+    "multipleRegionPages": 24,
+    "approachCandidatePages": 393,
+    "airportLayoutCandidatePages": 54
+  },
+  "sourceClassificationNotes": [
+    "Previous 706/313 counts arose from labeling SID/STAR/airport/minimums and map coordinate strings as approach chart numbers.",
+    "Full source scan checked 1654 pages for MISSED APCH/MISSED APPROACH and removed minima 10-9S/20-9S, SID/STAR; additional 19 genuine Approach plates were previously omitted.",
+    "375 are measured grid candidates only. Zero newly survey-GCP-certified full Approach pages from this recheck.",
+    "The remaining 168 unresolved pages: 92 have one measured axis plus published symbol needed; 45 require 4 independent GCPs; 24 have tick pairs without consistent paired axes; 7 are recovered omitted source pages needing additional GCPs.",
+    "Local OIMM page 605 VOR+threshold five-control trial remains below strict certification (10.72 m max holdout > 10 m limit)."
+  ],
+  "downloadableDetail": "JEPPIRAN_2621_RECHECK_313_CORRECTED.zip (full ChatGPT work session)."
 }
