@@ -223,7 +223,7 @@ class AirportChartsActivity :
             if (item.has(key) && !item.isNull(key)) item.optInt(key).toString() else "—"
 
         val outer = ScrollView(this).apply {
-            fillViewport = true
+            isFillViewport = true
             isVerticalScrollBarEnabled = false
             setBackgroundColor(if (dark) Color.rgb(3,13,28) else Color.rgb(236,246,255))
         }
