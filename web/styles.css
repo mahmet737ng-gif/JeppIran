@@ -811,3 +811,105 @@ body:has(#homeView.active),body:has(#chartsView.active){background:#030c19}
 .runway-bearing-unavailable{padding:32px 10px;color:#b3cee3;font-size:13px;text-align:center}
 .wind-compass{min-height:225px;padding:2px 0 9px}
 @media(max-width:620px){.runway-bearing-compass svg{height:155px}.wind-compass{min-height:195px}}
+
+/* Airport/chart subtree contrast: isolated palette for both themes.
+   This never changes the PDF viewer, simulator transport or airport navigation. */
+#chartsView{
+  --jp-tree-panel:#071c31;
+  --jp-tree-row:#0b2a47;
+  --jp-tree-heading:#123758;
+  --jp-tree-border:#286187;
+  --jp-tree-guide:#389ac9;
+  --jp-tree-text:#eaf6ff;
+  --jp-tree-secondary:#aad0eb;
+  --jp-tree-hover:#17466c;
+  --jp-tree-selected:#0b599d;
+  --jp-tree-selected-line:#5bd5ff;
+}
+:root.light #chartsView{
+  --jp-tree-panel:#eaf4ff;
+  --jp-tree-row:#ffffff;
+  --jp-tree-heading:#d9ebfd;
+  --jp-tree-border:#a4c5df;
+  --jp-tree-guide:#3982b3;
+  --jp-tree-text:#183c58;
+  --jp-tree-secondary:#355d79;
+  --jp-tree-hover:#d0e9fc;
+  --jp-tree-selected:#1265ae;
+  --jp-tree-selected-line:#0874cc;
+}
+#chartsView .airport-inline-tree{
+  padding:6px 5px 7px 8px!important;
+  margin-top:5px!important;
+  border-left:2px solid var(--jp-tree-guide)!important;
+  border-radius:0 10px 10px 0;
+  background:var(--jp-tree-panel)!important;
+  box-shadow:inset 0 0 0 1px var(--jp-tree-border);
+  color:var(--jp-tree-text)!important
+}
+#chartsView .airport-inline-tree .tree-group-head{
+  background:var(--jp-tree-heading)!important;
+  color:var(--jp-tree-text)!important;
+  border:1px solid var(--jp-tree-border)!important;
+  border-radius:7px!important;
+  text-shadow:none!important
+}
+#chartsView .airport-inline-tree .tree-item{
+  background:var(--jp-tree-row)!important;
+  color:var(--jp-tree-text)!important;
+  border:1px solid var(--jp-tree-border)!important;
+  border-radius:7px!important;
+  margin:4px 0!important;
+  padding:9px 8px!important;
+  line-height:1.4!important;
+  text-shadow:none!important;
+  overflow-wrap:anywhere
+}
+#chartsView .airport-inline-tree .tree-item:hover{
+  background:var(--jp-tree-hover)!important;
+  border-color:var(--jp-tree-guide)!important
+}
+#chartsView .airport-inline-tree .tree-item.selected{
+  background:var(--jp-tree-selected)!important;
+  color:#fff!important;
+  border-color:var(--jp-tree-selected-line)!important;
+  outline:1px solid var(--jp-tree-selected-line)!important;
+  outline-offset:0
+}
+#chartsView .airport-inline-tree button:focus-visible{
+  outline:2px solid var(--jp-tree-selected-line)!important;
+  outline-offset:2px
+}
+:root.light #chartsView .airport-pane{
+  background:linear-gradient(145deg,#f5faff,#e3eef8)!important;
+  border-right-color:var(--jp-tree-border)!important;
+  color:#183c58!important
+}
+:root.light #chartsView .search{
+  background:#fff!important;
+  border-color:#acc7df!important;
+  color:#193d58!important
+}
+:root.light #chartsView .airport-item,
+:root.light #chartsView .airport-item.selected{
+  background:#f8fcff!important;
+  border-color:#abc8e0!important
+}
+:root.light #chartsView .airport-item.selected{
+  background:#dcefff!important;
+  outline-color:#128acc!important
+}
+:root.light #chartsView .airport-item b{color:#183c58!important}
+:root.light #chartsView .airport-item small{color:#456c88!important}
+:root.light #chartsView .airport-chevron,
+:root.light #chartsView .back-btn{color:#1267a6!important}
+:root.light #chartsView .airport-filter{
+  background:#f3f9ff!important;
+  color:#275271!important;
+  border-color:#aecbdd!important
+}
+:root.light #chartsView .airport-filter.active{
+  background:#146bbc!important;
+  color:#fff!important;
+  border-color:#146bbc!important
+}
