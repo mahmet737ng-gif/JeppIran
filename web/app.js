@@ -183,7 +183,7 @@ function renderAirports(filter=""){
     const isOpen=icao===selectedAirport&&airportTreeExpanded;
     b.setAttribute("aria-expanded",isOpen?"true":"false");
     b.innerHTML="<span class='airport-copy'><b>"+profileEsc(icao)+"</b><small>"+profileEsc(meta[0])+"</small><small>"+profileEsc(meta[1])+"</small></span><span class='airport-chevron'>"+(isOpen?"▾":"›")+"</span>";
-    b.onclick=()=>{if(icao===selectedAirport&&airportTreeExpanded){airportTreeExpanded=false;expanded.clear();renderAirports($("#airportSearch").value)}else selectAirport(icao)};
+    b.onclick=()=>{if(icao===selectedAirport){airportTreeExpanded=!airportTreeExpanded;expanded.clear();renderAirports($("#airportSearch").value);if(!selectedChart){renderAirportProfile(icao)}}else selectAirport(icao)};
     branch.appendChild(b);
     if(isOpen){const tree=document.createElement("div");tree.className="airport-inline-tree";renderTreeInto(tree);branch.appendChild(tree)}
     list.appendChild(branch);
