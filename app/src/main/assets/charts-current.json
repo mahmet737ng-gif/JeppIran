@@ -3119,7 +3119,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "16-2",
-    "name": "CHART PAGE 231",
+    "name": "CIRCLING NDB DME (CAT C & D)",
     "pdf_page": 12
   },
   {
@@ -3128,7 +3128,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "16-3",
-    "name": "APPROACH 16-3",
+    "name": "CIRCLING NDB DME (CAT A & B)",
     "pdf_page": 13
   },
   {
@@ -3478,8 +3478,8 @@
     "airport": "OIIE",
     "country": "Iran",
     "category": "Approach",
-    "chart_number": "",
-    "name": "ILS RWY 29R",
+    "chart_number": "21-1-0",
+    "name": "ILS RWY 29R (TEMPORARY PLATE)",
     "pdf_page": 29
   },
   {
@@ -3496,8 +3496,8 @@
     "airport": "OIIE",
     "country": "Iran",
     "category": "Approach",
-    "chart_number": "",
-    "name": "ILS RWY 29R",
+    "chart_number": "21-1A-0",
+    "name": "CAT II ILS RWY 29R (TEMPORARY PLATE)",
     "pdf_page": 31
   },
   {
@@ -4334,7 +4334,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "16-2",
-    "name": "CHART PAGE 327",
+    "name": "NDB Z RWY 30",
     "pdf_page": 13
   },
   {
@@ -4343,7 +4343,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "16-3",
-    "name": "CHART PAGE 328",
+    "name": "NDB Y RWY 30 (CAT A & B)",
     "pdf_page": 14
   },
   {
@@ -4352,7 +4352,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "16-4",
-    "name": "CHART PAGE 329",
+    "name": "NDB X RWY 30 (CAT C & D)",
     "pdf_page": 15
   },
   {
@@ -5081,7 +5081,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "16-1",
-    "name": "CHART PAGE 359",
+    "name": "NDB A (CAT A & B)",
     "pdf_page": 13
   },
   {
@@ -5090,7 +5090,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "16-2",
-    "name": "CHART PAGE 360",
+    "name": "NDB B (CAT C & D)",
     "pdf_page": 14
   },
   {
@@ -8654,7 +8654,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "16-1",
-    "name": "APPROACH 16-1",
+    "name": "CIRCLING NDB DME (CAT A, B & C)",
     "pdf_page": 5
   },
   {
@@ -8663,7 +8663,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "16-2",
-    "name": "APPROACH 16-2",
+    "name": "CIRCLING NDB 2 (CAT C)",
     "pdf_page": 6
   },
   {
@@ -8672,7 +8672,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "16-3",
-    "name": "APPROACH 16-3",
+    "name": "CIRCLING NDB 1 (CAT A & B)",
     "pdf_page": 7
   },
   {
@@ -9811,12 +9811,12 @@
   },
   {
     "page": 1091,
-    "airport": "LTAE",
+    "airport": "LTAC",
     "country": "Turkey",
     "category": "STAR",
     "chart_number": "10-2L",
     "name": "BAKIR 1N, HALIL 1M, HALIL 1N, HAY 1M, HAY 1N, TELVO 1N",
-    "pdf_page": 1
+    "pdf_page": 22
   },
   {
     "page": 1092,
@@ -9825,7 +9825,7 @@
     "category": "STAR",
     "chart_number": "10-2M",
     "name": "KIZIK 1E, NASIM 1E, PETAR 1E, SALGO 1E",
-    "pdf_page": 22
+    "pdf_page": 23
   },
   {
     "page": 1093,
@@ -9834,7 +9834,7 @@
     "category": "STAR",
     "chart_number": "10-2N",
     "name": "KIZIK 1F, KIZIK 1G, NASIM 1F, NASIM 1G, PETAR 1F, PETAR 1G, SALGO 1F, SALGO 1G",
-    "pdf_page": 23
+    "pdf_page": 24
   },
   {
     "page": 1094,
@@ -9843,7 +9843,7 @@
     "category": "STAR",
     "chart_number": "10-2P",
     "name": "KIZIK 1N, NASIM 1N, PETAR 1N, SALGO 1N",
-    "pdf_page": 24
+    "pdf_page": 25
   },
   {
     "page": 1095,
@@ -9852,7 +9852,7 @@
     "category": "STAR",
     "chart_number": "10-2Q",
     "name": "ASTAL 1C, GURBU 1C, ILHAN 1C, KUBER 1C, YUCEL 1C",
-    "pdf_page": 25
+    "pdf_page": 26
   },
   {
     "page": 1096,
@@ -9861,7 +9861,7 @@
     "category": "STAR",
     "chart_number": "10-2S",
     "name": "BAKIR 1C, HALIL 1C, HAY 1C, TELVO 1C",
-    "pdf_page": 26
+    "pdf_page": 27
   },
   {
     "page": 1097,
@@ -9870,7 +9870,7 @@
     "category": "STAR",
     "chart_number": "10-2T",
     "name": "KIZIK 1C, NASIM 1C, PETAR 1C, SALGO 1C",
-    "pdf_page": 27
+    "pdf_page": 28
   },
   {
     "page": 1098,
@@ -9879,7 +9879,7 @@
     "category": "STAR",
     "chart_number": "10-2U",
     "name": "ASTAL 1K, GURBU 1K, ILHAN 1K, KUBER 1K, YUCEL 1K",
-    "pdf_page": 28
+    "pdf_page": 29
   },
   {
     "page": 1099,
@@ -9888,7 +9888,7 @@
     "category": "STAR",
     "chart_number": "10-2V",
     "name": "BAKIR 1K, HALIL 1K, HAY 1K, TELVO 1K",
-    "pdf_page": 29
+    "pdf_page": 30
   },
   {
     "page": 1100,
@@ -9897,7 +9897,7 @@
     "category": "STAR",
     "chart_number": "10-2W",
     "name": "KIZIK 1K, NASIM 1K, PETAR 1K, SALGO 1K",
-    "pdf_page": 30
+    "pdf_page": 31
   },
   {
     "page": 1101,
@@ -9906,7 +9906,7 @@
     "category": "SID",
     "chart_number": "10-3",
     "name": "ASTAL 1T, DEREL 1T, GURBU 1T, ILHAN 1T",
-    "pdf_page": 31
+    "pdf_page": 32
   },
   {
     "page": 1102,
@@ -9915,7 +9915,7 @@
     "category": "SID",
     "chart_number": "10-3A",
     "name": "BALAX 2D, BENTA 2D, EKMEK 2D, GOBIT 2D",
-    "pdf_page": 32
+    "pdf_page": 33
   },
   {
     "page": 1103,
@@ -9924,7 +9924,7 @@
     "category": "SID",
     "chart_number": "10-3A1",
     "name": "ASTAL 1L, DEREL 1L, GURBU 1L, ILHAN 1L",
-    "pdf_page": 33
+    "pdf_page": 34
   },
   {
     "page": 1104,
@@ -9933,7 +9933,7 @@
     "category": "SID",
     "chart_number": "10-3A2",
     "name": "BALAX 2V, BENTA 2V, EKMEK 2V, GOBIT 2V",
-    "pdf_page": 34
+    "pdf_page": 35
   },
   {
     "page": 1105,
@@ -9942,7 +9942,7 @@
     "category": "SID",
     "chart_number": "10-3B",
     "name": "BAKIR 1T, GOBIT 1T, TELVO 1T, YUCEL 1T",
-    "pdf_page": 35
+    "pdf_page": 36
   },
   {
     "page": 1106,
@@ -9951,7 +9951,7 @@
     "category": "SID",
     "chart_number": "10-3C",
     "name": "AZBUL 2D, HALIL 2D, TELVO 2D",
-    "pdf_page": 36
+    "pdf_page": 37
   },
   {
     "page": 1107,
@@ -9960,7 +9960,7 @@
     "category": "SID",
     "chart_number": "10-3C1",
     "name": "BAKIR 1L, GOBIT 1L, TELVO 1L, YUCEL 1L",
-    "pdf_page": 37
+    "pdf_page": 38
   },
   {
     "page": 1108,
@@ -9969,7 +9969,7 @@
     "category": "SID",
     "chart_number": "10-3C2",
     "name": "AZBUL 2V, HALIL 2V, TELVO 2V",
-    "pdf_page": 38
+    "pdf_page": 39
   },
   {
     "page": 1109,
@@ -9978,7 +9978,7 @@
     "category": "SID",
     "chart_number": "10-3D",
     "name": "HALIL 1T, LATGA 1T, UMRUN 1T, YAVRU 1T",
-    "pdf_page": 39
+    "pdf_page": 40
   },
   {
     "page": 1110,
@@ -9987,7 +9987,7 @@
     "category": "SID",
     "chart_number": "10-3E",
     "name": "DEREL 2D, LATGA 2D, NEMRO 2D, PETAR 2D, YAVRU 2D",
-    "pdf_page": 40
+    "pdf_page": 41
   },
   {
     "page": 1111,
@@ -9996,7 +9996,7 @@
     "category": "SID",
     "chart_number": "10-3E1",
     "name": "HALIL 1L, LATGA 1L, UMRUN 1L, YAVRU 1L",
-    "pdf_page": 41
+    "pdf_page": 42
   },
   {
     "page": 1112,
@@ -10005,7 +10005,7 @@
     "category": "SID",
     "chart_number": "10-3E2",
     "name": "DEREL 2V, LATGA 2V, NEMRO 2V, PETAR 2V, YAVRU 2V",
-    "pdf_page": 42
+    "pdf_page": 43
   },
   {
     "page": 1113,
@@ -10014,7 +10014,7 @@
     "category": "SID",
     "chart_number": "10-3F",
     "name": "ASTAL 1J, DEREL 1J, GURBU 1J, ILHAN 1J",
-    "pdf_page": 43
+    "pdf_page": 44
   },
   {
     "page": 1114,
@@ -10023,7 +10023,7 @@
     "category": "SID",
     "chart_number": "10-3G",
     "name": "BALAX 2H, BENTA 2H, EKMEK 2H, GOBIT 2H",
-    "pdf_page": 44
+    "pdf_page": 45
   },
   {
     "page": 1115,
@@ -10032,7 +10032,7 @@
     "category": "SID",
     "chart_number": "10-3H",
     "name": "BAKIR 1J, GOBIT 1J, TELVO 1J, YUCEL 1J",
-    "pdf_page": 45
+    "pdf_page": 46
   },
   {
     "page": 1116,
@@ -10041,7 +10041,7 @@
     "category": "SID",
     "chart_number": "10-3J",
     "name": "AZBUL 2H, HALIL 2H, TELVO 2H",
-    "pdf_page": 46
+    "pdf_page": 47
   },
   {
     "page": 1117,
@@ -10050,7 +10050,7 @@
     "category": "SID",
     "chart_number": "10-3K",
     "name": "HALIL 1J, LATGA 1J, UMRUN 1J, YAVRU 1J",
-    "pdf_page": 47
+    "pdf_page": 48
   },
   {
     "page": 1118,
@@ -10059,7 +10059,7 @@
     "category": "SID",
     "chart_number": "10-3L",
     "name": "DEREL 2H, LATGA 2H, NEMRO 2H, PETAR 2H, YAVRU 2H",
-    "pdf_page": 48
+    "pdf_page": 49
   },
   {
     "page": 1119,
@@ -10068,7 +10068,7 @@
     "category": "SID",
     "chart_number": "10-3M",
     "name": "ASTAL 1A, ASTAL 1B, BAKIR 1A, BAKIR 1B, DEREL 1A, DEREL 1B",
-    "pdf_page": 49
+    "pdf_page": 50
   },
   {
     "page": 1120,
@@ -10077,7 +10077,7 @@
     "category": "SID",
     "chart_number": "10-3N",
     "name": "GURBU 1A, GURBU 1B, HALIL 1A, HALIL 1B, HALIL 1U",
-    "pdf_page": 50
+    "pdf_page": 51
   },
   {
     "page": 1121,
@@ -10086,7 +10086,7 @@
     "category": "SID",
     "chart_number": "10-3P",
     "name": "ILHAN 1A, ILHAN 1B",
-    "pdf_page": 51
+    "pdf_page": 52
   },
   {
     "page": 1122,
@@ -10095,7 +10095,7 @@
     "category": "SID",
     "chart_number": "10-3Q",
     "name": "KUBER 1A, KUBER 1B, LATGA 1A, LATGA 1B",
-    "pdf_page": 52
+    "pdf_page": 53
   },
   {
     "page": 1123,
@@ -10104,7 +10104,7 @@
     "category": "SID",
     "chart_number": "10-3S",
     "name": "PETAR 1A, PETAR 1B, SALGO 1A, SALGO 1B",
-    "pdf_page": 53
+    "pdf_page": 54
   },
   {
     "page": 1124,
@@ -10113,7 +10113,7 @@
     "category": "SID",
     "chart_number": "10-3T",
     "name": "TELVO 1A, TELVO 1B, YUCEL 1A, YUCEL 1B",
-    "pdf_page": 54
+    "pdf_page": 55
   },
   {
     "page": 1125,
@@ -10122,7 +10122,7 @@
     "category": "Airport",
     "chart_number": "10-4",
     "name": "ESENBOGA INTL 26 SEP 25 10-4 .Eff.2.Oct. .NOISE.",
-    "pdf_page": 55
+    "pdf_page": 56
   },
   {
     "page": 1126,
@@ -10131,7 +10131,7 @@
     "category": "Airport",
     "chart_number": "10-9",
     "name": "Airport Diagram Chart (ADC)",
-    "pdf_page": 56
+    "pdf_page": 57
   },
   {
     "page": 1127,
@@ -10140,7 +10140,7 @@
     "category": "Airport",
     "chart_number": "10-9A",
     "name": "ADDITIONAL RUNWAY INFORMATION",
-    "pdf_page": 57
+    "pdf_page": 58
   },
   {
     "page": 1128,
@@ -10149,7 +10149,7 @@
     "category": "Airport",
     "chart_number": "10-9B",
     "name": "HOT SPOTS",
-    "pdf_page": 58
+    "pdf_page": 59
   },
   {
     "page": 1129,
@@ -10158,7 +10158,7 @@
     "category": "Airport",
     "chart_number": "10-9C",
     "name": "HOT SPOTS",
-    "pdf_page": 59
+    "pdf_page": 60
   },
   {
     "page": 1130,
@@ -10167,7 +10167,7 @@
     "category": "Airport",
     "chart_number": "10-9D",
     "name": "PARKING STANDS & COORDS",
-    "pdf_page": 60
+    "pdf_page": 61
   },
   {
     "page": 1131,
@@ -10176,7 +10176,7 @@
     "category": "Airport",
     "chart_number": "10-9E",
     "name": "AIRPORT CHART",
-    "pdf_page": 61
+    "pdf_page": 62
   },
   {
     "page": 1132,
@@ -10185,7 +10185,7 @@
     "category": "Airport",
     "chart_number": "10-9F",
     "name": "AIRPORT CHART",
-    "pdf_page": 62
+    "pdf_page": 63
   },
   {
     "page": 1133,
@@ -10194,7 +10194,7 @@
     "category": "Approach",
     "chart_number": "11-1",
     "name": "ILS Y OR LOC Y RWY 03L",
-    "pdf_page": 63
+    "pdf_page": 64
   },
   {
     "page": 1134,
@@ -10203,7 +10203,7 @@
     "category": "Approach",
     "chart_number": "11-1A",
     "name": "ILS Z RWY 03L",
-    "pdf_page": 64
+    "pdf_page": 65
   },
   {
     "page": 1135,
@@ -10212,7 +10212,7 @@
     "category": "Approach",
     "chart_number": "11-2",
     "name": "ILS X OR LOC X RWY 03L",
-    "pdf_page": 65
+    "pdf_page": 66
   },
   {
     "page": 1136,
@@ -10221,7 +10221,7 @@
     "category": "Approach",
     "chart_number": "11-2A",
     "name": "APPROACH 11-2A",
-    "pdf_page": 66
+    "pdf_page": 67
   },
   {
     "page": 1137,
@@ -10230,7 +10230,7 @@
     "category": "Approach",
     "chart_number": "11-3",
     "name": "ILS Y OR LOC Y RWY 03C",
-    "pdf_page": 67
+    "pdf_page": 68
   },
   {
     "page": 1138,
@@ -10239,7 +10239,7 @@
     "category": "Approach",
     "chart_number": "11-3A",
     "name": "APPROACH 11-3A",
-    "pdf_page": 68
+    "pdf_page": 69
   },
   {
     "page": 1139,
@@ -10248,7 +10248,7 @@
     "category": "Approach",
     "chart_number": "11-4",
     "name": "APPROACH 11-4",
-    "pdf_page": 69
+    "pdf_page": 70
   },
   {
     "page": 1140,
@@ -10257,7 +10257,7 @@
     "category": "Approach",
     "chart_number": "11-4A",
     "name": "APPROACH 11-4A",
-    "pdf_page": 70
+    "pdf_page": 71
   },
   {
     "page": 1141,
@@ -10266,7 +10266,7 @@
     "category": "Approach",
     "chart_number": "11-5",
     "name": "ILS Z OR LOC Z RWY 03R",
-    "pdf_page": 71
+    "pdf_page": 72
   },
   {
     "page": 1142,
@@ -10275,7 +10275,7 @@
     "category": "Approach",
     "chart_number": "11-5A",
     "name": "ILS X RWY 03R",
-    "pdf_page": 72
+    "pdf_page": 73
   },
   {
     "page": 1143,
@@ -10284,7 +10284,7 @@
     "category": "Approach",
     "chart_number": "11-6",
     "name": "ILS Y OR LOC Y RWY 03R",
-    "pdf_page": 73
+    "pdf_page": 74
   },
   {
     "page": 1144,
@@ -10293,7 +10293,7 @@
     "category": "Approach",
     "chart_number": "11-6A",
     "name": "VOR R",
-    "pdf_page": 74
+    "pdf_page": 75
   },
   {
     "page": 1145,
@@ -10302,7 +10302,7 @@
     "category": "Approach",
     "chart_number": "11-7",
     "name": "APPROACH 11-7",
-    "pdf_page": 75
+    "pdf_page": 76
   },
   {
     "page": 1146,
@@ -10311,7 +10311,7 @@
     "category": "Approach",
     "chart_number": "11-8",
     "name": "ILS X OR LOC X RWY 21L",
-    "pdf_page": 76
+    "pdf_page": 77
   },
   {
     "page": 1147,
@@ -10320,7 +10320,7 @@
     "category": "Approach",
     "chart_number": "11-8A",
     "name": "CAT II/III ILS Y RWY 21L",
-    "pdf_page": 77
+    "pdf_page": 78
   },
   {
     "page": 1148,
@@ -10329,7 +10329,7 @@
     "category": "Approach",
     "chart_number": "11-9",
     "name": "ILS Z OR LOC Z RWY 21L",
-    "pdf_page": 78
+    "pdf_page": 79
   },
   {
     "page": 1149,
@@ -10338,7 +10338,7 @@
     "category": "Approach",
     "chart_number": "11-10",
     "name": "ILS Z OR LOC Z RWY 21C",
-    "pdf_page": 79
+    "pdf_page": 80
   },
   {
     "page": 1150,
@@ -10347,7 +10347,7 @@
     "category": "Approach",
     "chart_number": "11-11",
     "name": "ILS Z OR LOC Z RWY 21R",
-    "pdf_page": 80
+    "pdf_page": 81
   },
   {
     "page": 1151,
@@ -10356,7 +10356,7 @@
     "category": "Approach",
     "chart_number": "13-1",
     "name": "VOR Z RWY 03L",
-    "pdf_page": 81
+    "pdf_page": 82
   },
   {
     "page": 1152,
@@ -10365,7 +10365,7 @@
     "category": "Approach",
     "chart_number": "13-2",
     "name": "VOR Z RWY 03C",
-    "pdf_page": 82
+    "pdf_page": 83
   },
   {
     "page": 1153,
@@ -10374,7 +10374,7 @@
     "category": "Approach",
     "chart_number": "13-3",
     "name": "VOR Z RWY 03R",
-    "pdf_page": 83
+    "pdf_page": 84
   },
   {
     "page": 1154,
@@ -10383,7 +10383,7 @@
     "category": "Approach",
     "chart_number": "13-4",
     "name": "VOR Z RWY 21L",
-    "pdf_page": 84
+    "pdf_page": 85
   },
   {
     "page": 1155,
@@ -10392,7 +10392,7 @@
     "category": "Approach",
     "chart_number": "13-5",
     "name": "NDB Z RWY 21C",
-    "pdf_page": 85
+    "pdf_page": 86
   },
   {
     "page": 1156,
@@ -10401,7 +10401,7 @@
     "category": "Approach",
     "chart_number": "13-6",
     "name": "VOR Y RWY 21C",
-    "pdf_page": 86
+    "pdf_page": 87
   },
   {
     "page": 1157,
@@ -10410,7 +10410,7 @@
     "category": "Approach",
     "chart_number": "13-7",
     "name": "NDB Z RWY 21R",
-    "pdf_page": 87
+    "pdf_page": 88
   },
   {
     "page": 1158,
@@ -10419,7 +10419,7 @@
     "category": "Approach",
     "chart_number": "13-8",
     "name": "VOR Y RWY 21R",
-    "pdf_page": 88
+    "pdf_page": 89
   },
   {
     "page": 1159,
@@ -10428,7 +10428,7 @@
     "category": "Approach",
     "chart_number": "13-9",
     "name": "VOR A",
-    "pdf_page": 89
+    "pdf_page": 90
   },
   {
     "page": 1160,
@@ -10437,7 +10437,7 @@
     "category": "Approach",
     "chart_number": "16-1",
     "name": "NDB Z RWY 03L",
-    "pdf_page": 90
+    "pdf_page": 91
   },
   {
     "page": 1161,
@@ -10446,7 +10446,7 @@
     "category": "Approach",
     "chart_number": "16-2",
     "name": "NDB Z RWY 03C",
-    "pdf_page": 91
+    "pdf_page": 92
   },
   {
     "page": 1162,
