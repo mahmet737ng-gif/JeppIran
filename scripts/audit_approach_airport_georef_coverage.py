@@ -69,6 +69,12 @@ def status_for_page(required, actual):
     for name in required:
         item = by_region[name]
         validation = item.get("validation") or {}
+        if (validation.get("carryForwardApproved") is True and
+                validation.get("verifiedUnchangedAgainstPreviousSource") is True and
+                validation.get("reusedUnchangedSource") is True):
+            # Unchanged prior calibration retains its historical approval.
+            # It is NOT promoted to independent current-cycle accuracy QA.
+            return "legacyApprovedUnchanged"
         if validation.get("verificationStatus") == "provisional_geometry_only":
             return "provisionalNeedsReview"
         if validation.get("method") == "single_axis_plus_conformal_scale":
@@ -86,6 +92,7 @@ def summarize(selected, georef, excluded):
     counts = {
         "totalPages": len(selected),
         "independentlyVerified": 0,
+        "legacyApprovedUnchanged": 0,
         "geometryWithoutIndependentCheck": 0,
         "provisionalNeedsReview": 0,
         "derivedAxisNotAccepted": 0,
@@ -112,7 +119,13 @@ def summarize(selected, georef, excluded):
     counts["independentlyVerifiedPercent"] = (
         round(100 * counts["independentlyVerified"] / count, 2) if count else None
     )
-    counts["complete"] = count > 0 and counts["independentlyVerified"] == count
+    counts["previouslyApprovedOrIndependentlyVerifiedPercent"] = (
+        round(100 * (counts["independentlyVerified"] + counts["legacyApprovedUnchanged"]) / count, 2)
+        if count else None
+    )
+    counts["complete"] = count > 0 and (
+        counts["independentlyVerified"] + counts["legacyApprovedUnchanged"] == count
+    )
     return counts
 
 
@@ -154,6 +167,7 @@ def main():
         "layoutReviewComplete": not unreviewed,
         "canClaim100Percent": False,
         "notes": [
+            "Previously approved unchanged charts may retain legacy approval, separately counted from independent GCP checks.",
             "Only separately validated published-WGS84 map regions count as independently verified.",
             "An inset may share a global source PDF page but requires a distinct region ID and independent transform.",
             "NOT TO SCALE labeling is region-specific and must never invalidate an unrelated verified plan.",
@@ -163,6 +177,14 @@ def main():
     report["canClaim100Percent"] = (
         report["layoutReviewComplete"] and report["approach"]["complete"]
         and report["airportLayouts"]["complete"]
+    )
+    report["canClaim100PercentIndependentlyVerified"] = (
+        report["layoutReviewComplete"] and
+        all(
+            report[k]["totalPages"] > 0 and
+            report[k]["independentlyVerified"] == report[k]["totalPages"]
+            for k in ("approach", "airportLayouts")
+        )
     )
     rendered = json.dumps(report, indent=2, ensure_ascii=False)
     if args.output:
