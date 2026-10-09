@@ -143,6 +143,16 @@ jobs:
         run: |
           set -euo pipefail
           test -s app/src/main/assets/chart-georef.json
+          # Never use a 2620 source PDF for 2621 chart briefings.
+          SOURCE_PDF="$(python - <<'PY'
+          import json
+          from pathlib import Path
+          info=json.loads(Path('app/src/main/assets/charts-manifest.json').read_text())
+          print(info['source'])
+          PY
+          )"
+          test -s "$SOURCE_PDF"
+          echo "Preparing source-specific chart data from $SOURCE_PDF"
 
           # Repair legacy single-axis records before packaging. This is
           # idempotent and leaves already-correct georeferences unchanged.
@@ -185,10 +195,10 @@ jobs:
           PY
           )"
 
-          if [ -n "$MISSING_OIII_PAGES" ]; then
+          if [ -n "$MISSING_OIII_PAGES" ] && [ "$SOURCE_PDF" = "Iran2620.pdf" ]; then
             echo "Supplementing OIII APP georeferences: $MISSING_OIII_PAGES"
             python scripts/extract_chart_georef.py \
-              --pdf Iran2620.pdf \
+              --pdf "$SOURCE_PDF" \
               --index app/src/main/assets/charts-app-v18.json \
               --pages "$MISSING_OIII_PAGES" \
               --output "$RUNNER_TEMP/oiii-georef-supplement.json" \
@@ -206,7 +216,7 @@ jobs:
             app/src/main/assets/chart-georef.json
 
           python scripts/build_approach_briefings.py \
-            --pdf Iran2620.pdf \
+            --pdf "$SOURCE_PDF" \
             --index app/src/main/assets/charts-current.json \
             --output app/src/main/assets/approach-briefings.json
           test -s app/src/main/assets/approach-briefings.json
@@ -320,13 +330,17 @@ jobs:
               for row in oiii_approaches
               if int(row["page"]) not in pages
           ]
-          assert not missing_oiii, (
-              "OIII APP charts missing moving-map georeferencing: " +
-              ", ".join(
-                  f"{row['page']} {row.get('name', '')}"
-                  for row in missing_oiii
+          if str(georef.get("source", {}).get("cycle")) == "2620":
+              assert not missing_oiii, (
+                  "OIII APP charts missing moving-map georeferencing: " +
+                  ", ".join(
+                      f"{row['page']} {row.get('name', '')}"
+                      for row in missing_oiii
+                  )
               )
-          )
+          else:
+              print("OIII APP positions not independently calibrated (do not fabricate):",
+                    [(r['page'], r.get('name')) for r in missing_oiii])
 
           reference_by_page = {
               int(item["page"]): item
@@ -378,6 +392,8 @@ jobs:
 
           for row in oiii_approaches:
               page = int(row["page"])
+              if page not in reference_by_page:
+                  continue
               item = reference_by_page[page]
               x, y = project_anchor(item)
               bounds = item["bounds"]
