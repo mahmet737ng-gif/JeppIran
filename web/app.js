@@ -1194,6 +1194,14 @@ async function connectFsxRelay(host,{reconnect=false}={}){
           updatePositionUi({lat,lon,alt:d.alt==null?null:Number(d.alt),heading:d.heading==null?null:Number(d.heading),
             groundspeed:(d.groundspeed??d.groundSpeedMps)==null?null:Number(d.groundspeed??d.groundSpeedMps),
             pitch:d.pitch==null?null:Number(d.pitch),roll:d.roll==null?null:Number(d.roll),accuracy:null,timestamp:Date.now()},"fsx");
+          // The universal bridge shares the proven FSX relay transport but reports its detected simulator.
+          const detected=String(d.source||"").trim();
+          if(detected && detected!=="FSX"){
+            const label="SIMULATOR • "+detected;
+            const sourceEl=$("#positionSource");if(sourceEl)sourceEl.textContent=label;
+            const statusEl=$("#simStatus");if(statusEl)statusEl.textContent=label+" • live";
+            const inlineEl=$("#fsxInlineStatus");if(inlineEl)inlineEl.textContent=detected+" LIVE • position received.";
+          }
         }catch(_){}
       }
     }
