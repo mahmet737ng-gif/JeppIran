@@ -1,6 +1,19 @@
 #!/usr/bin/env bash
 # Release 2621 data while preserving the complete latest main history.
 set -euo pipefail
+# Idempotence guard for concurrent safe-publication runs. No overrides needed.
+if python - <<'PY'
+import json
+try:
+    manifest=json.load(open('app/src/main/assets/charts-manifest.json'))
+except (OSError,ValueError):
+    raise SystemExit(1)
+raise SystemExit(0 if manifest.get('version')=='V2621' and manifest.get('source')=='Iran2621.pdf' and manifest.get('pages')==1654 else 1)
+PY
+then
+  echo 'V2621 data is already current on main. No duplicate changes required.'
+  exit 0
+fi
 REPO="$GITHUB_REPOSITORY"
 STAGE=/tmp/jeppiran-cycle2621-safe-stage
 mkdir -p "$STAGE"
