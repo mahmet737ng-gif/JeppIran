@@ -368,8 +368,8 @@ class AirportChartsActivity :
                 val opposite=item.optString("opposite", "")
                 val dims=if (item.isNull("length") || item.isNull("width")) "Dimensions not verified"
                     else rwyValue(item,"length")+" × "+rwyValue(item,"width")+" m"
-                val heading=if (!item.isNull("headingTrue") && item.has("headingTrue"))
-                    String.format(java.util.Locale.US, "%.0f° ADC", item.optDouble("headingTrue"))
+                val heading=if (!item.isNull("headingAdc") && item.has("headingAdc"))
+                    String.format(java.util.Locale.US, "%.0f° ADC", item.optDouble("headingAdc"))
                     else "TRUE heading unavailable"
                 val nameText=if (opposite.isBlank()) name else name+" / "+opposite
                 val highlighted = name == (selectedTrueRunway.ifBlank { if (icao == "OIAA") "32L" else runways.optJSONObject(0)?.optString("name", "").orEmpty() })
@@ -406,22 +406,22 @@ class AirportChartsActivity :
         }.firstOrNull { it.optString("name") == chosenName }
             ?: runways?.optJSONObject(0)
         val windRunwayName = runwayForWind?.optString("name", "—") ?: "—"
-        val trueBearing = if (runwayForWind != null && runwayForWind.has("headingTrue") && !runwayForWind.isNull("headingTrue"))
-            runwayForWind.optDouble("headingTrue", Double.NaN) else Double.NaN
+        val adcBearing = if (runwayForWind != null && runwayForWind.has("headingAdc") && !runwayForWind.isNull("headingAdc"))
+            runwayForWind.optDouble("headingAdc", Double.NaN) else Double.NaN
         val (windFrom, windSpeed) = cachedMetarWind()
-        val windDelta = if (windFrom != null && windSpeed != null && trueBearing.isFinite())
-            Math.toRadians(windFrom.toDouble() - trueBearing) else null
+        val windDelta = if (windFrom != null && windSpeed != null && adcBearing.isFinite())
+            Math.toRadians(windFrom.toDouble() - adcBearing) else null
         val headValue = windDelta?.let { windSpeed!!.toDouble() * kotlin.math.cos(it) }
         val crossValue = windDelta?.let { windSpeed!!.toDouble() * kotlin.math.sin(it) }
         val wind=card("WIND COMPONENTS  •  RWY " + windRunwayName)
         wind.addView(TrueRunwayCompassView(this).apply {
             runwayId = windRunwayName
-            headingTrue = if (trueBearing.isFinite()) trueBearing.toFloat() else null
+            headingAdc = if (adcBearing.isFinite()) adcBearing.toFloat() else null
             windFromTrue = windFrom
             windSpeedKts = windSpeed
         }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 185.dp))
-        wind.addView(entry("Runway HDG (geographic)",
-            if (trueBearing.isFinite()) trueBearing.toInt().toString() + "°" else "—"))
+        wind.addView(entry("Runway HDG (ADC)",
+            if (adcBearing.isFinite()) adcBearing.toInt().toString() + "°" else "—"))
         wind.addView(entry("Magnetic bearing", "— · not verified"))
         wind.addView(entry("METAR wind (TRUE)",
             if (windSpeed == null) "—"
@@ -434,7 +434,7 @@ class AirportChartsActivity :
         wind.addView(entry("→ Crosswind",
             crossValue?.let { String.format(java.util.Locale.US, "%.1f kt from %s", kotlin.math.abs(it),
                 if (it >= 0) "right" else "left") } ?: "—"))
-        wind.addView(title("Bearing measured clockwise from TRUE north; magnetic variation is not added.",10f,muted))
+        wind.addView(title("Runway vector uses the ADC heading as printed; no magnetic correction. Wind components are approximate if wind/ADC reference systems differ.",10f,muted))
         put(right,wind)
 
         val details=card("ADDITIONAL INFORMATION")
