@@ -1,6 +1,7 @@
 const RAW_ROOT="./data/";
 
 const ADC_QA_MODE = new URLSearchParams(location.search).get("adc_test")==="1";
+const BIRJAND_ADC_QA_MODE = new URLSearchParams(location.search).get("adc_test")==="birjand";
 function showAdcQaMessage(message, payload=null){
   let wrap=document.getElementById("adcQaPanel");
   if(!wrap){
@@ -15,7 +16,7 @@ function showAdcQaMessage(message, payload=null){
   if(!payload)return;
   const row=document.createElement("div");row.style.cssText="display:flex;flex-wrap:wrap;gap:5px;margin-top:8px";
   for(const item of payload.charts){
-    for(const point of item.points.filter(p=>/^(ARP|THR08|THR26|RWY10 physical|THR28|NDB HAM|NDB LEN|VOR\/DME HAM)$/.test(p.source))){
+    for(const point of [...item.points,...(item.testPoints||[])].filter(p=>p.controlType==="AIP" || /^(ARP|THR08|THR26|RWY10 physical|THR28|NDB HAM|NDB LEN|VOR\/DME HAM)$/.test(p.source))){
       const btn=document.createElement("button");btn.type="button";
       btn.textContent=item.airport+" · "+point.source;
       btn.style.cssText="color:#171717;background:#ffe1a1;border:0;border-radius:5px;padding:5px;cursor:pointer";
@@ -54,6 +55,32 @@ async function enableAdcQaIfRequested(m){
     showAdcQaMessage("OIBL and OIHH experimental positioning active. Select an airport ADC, connect a simulator, or tap a sample point below.",payload);
   }catch(error){
     showAdcQaMessage("QA DISABLED: "+error.message+". Public charts were not modified.");
+  }
+}
+
+
+async function enableBirjandAdcQaIfRequested(m){
+  if(!BIRJAND_ADC_QA_MODE)return;
+  try{
+    const r=await fetch("./data/birjand-adc-v2621-qa.json?v=1",{cache:"no-store"});
+    if(!r.ok)throw Error("Birjand test calibration file missing");
+    const payload=await r.json();
+    if(!payload.testOnly || payload.charts?.length!==1 ||
+       payload.version!==2 || payload.source?.pageCount!==1654 ||
+       payload.source?.sha256!==m.source_sha256 ||
+       payload.source?.chartDataVersion!==m.version)
+      throw Error("Birjand test source or AIRAC cycle mismatch");
+    const item=payload.charts[0],c=charts.find(x=>Number(x.page)===561&&x.airport==="OIMB"&&x.category==="Airport"&&x.chart_number==="10-9");
+    if(!c || item.page!==561 || item.airport!=="OIMB" || !item.validation?.qaTestOnly ||
+       item.chartKey!==[c.airport,c.category.toUpperCase(),c.chart_number,c.name.toUpperCase()].join("|"))
+      throw Error("Birjand chart index identity does not match official page 561");
+    if(georefByPage.has(561))throw Error("Page 561 is already georeferenced; QA override is blocked");
+    const model=makeGeoModel(item);
+    if(!model)throw Error("Birjand QA calibration has not passed chart geometry checks");
+    georefByPage.set(561,model);
+    showAdcQaMessage("BIRJAND OIMB · ADC 10-9 · provisional 10m test active. Open Birjand or tap a surveyed AIP point. Do not use for actual navigation.",payload);
+  }catch(error){
+    showAdcQaMessage("BIRJAND QA DISABLED: "+error.message+". No production georeference was modified.");
   }
 }
 
@@ -182,6 +209,7 @@ async function loadData(){
     airportRunwayMetadata=runways&&runways.airports&&runways.cycle===m.version?runways.airports:{};
     georefByPage=buildGeorefIndex(g);
     await enableAdcQaIfRequested(m);
+    await enableBirjandAdcQaIfRequested(m);
     renderAirports();
     if(!selectedAirport && charts.some(c=>c.airport==="OIII"))selectAirport("OIII");
     if($("#homeCycle"))$("#homeCycle").textContent=(m.version||VERSION);

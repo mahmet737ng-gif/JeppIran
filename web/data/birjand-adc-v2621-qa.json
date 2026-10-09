@@ -1,0 +1,150 @@
+{
+  "version": 2,
+  "coordinateSystem": "WGS84",
+  "coordinateSpace": "pdf_points",
+  "origin": "top_left",
+  "testOnly": true,
+  "notice": "EXPERIMENTAL TEST: JEPPIRAN ADC OIMB page 561; NOT FOR ACTUAL NAVIGATION. No production georeferences changed.",
+  "source": {
+    "file": "Iran2621.pdf",
+    "sha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+    "pageCount": 1654,
+    "chartDataVersion": "V2621",
+    "cycle": 2621
+  },
+  "charts": [
+    {
+      "page": 561,
+      "airport": "OIMB",
+      "name": "Airport Diagram Chart (ADC)",
+      "chartKey": "OIMB|AIRPORT|10-9|AIRPORT DIAGRAM CHART (ADC)",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 85.44,
+        "top": 83.52,
+        "right": 526.2,
+        "bottom": 454.8
+      },
+      "excludedBounds": [],
+      "maxResidualPdfPoints": 0.75,
+      "points": [
+        {
+          "x": 216.18,
+          "y": 228.78,
+          "lat": 32.8980555556,
+          "lon": 59.2661111111,
+          "source": "ARP",
+          "controlType": "AIP"
+        },
+        {
+          "x": 154.8,
+          "y": 248.7,
+          "lat": 32.8951083333,
+          "lon": 59.2553277778,
+          "source": "RWY08 physical",
+          "controlType": "AIP"
+        },
+        {
+          "x": 284.88,
+          "y": 222.54,
+          "lat": 32.8989583333,
+          "lon": 59.2781444444,
+          "source": "RWY26 physical",
+          "controlType": "AIP"
+        },
+        {
+          "x": 236.52,
+          "y": 239.16,
+          "lat": 32.8965194444,
+          "lon": 59.2696805556,
+          "source": "RWY10 physical",
+          "controlType": "AIP"
+        },
+        {
+          "x": 465.06,
+          "y": 274.08,
+          "lat": 32.8913333333,
+          "lon": 59.3097972222,
+          "source": "RWY28 physical",
+          "controlType": "AIP"
+        },
+        {
+          "x": 292.02,
+          "y": 275.7,
+          "lat": 32.8911111111,
+          "lon": 59.2794444444,
+          "source": "NDB BRN",
+          "controlType": "AIP"
+        },
+        {
+          "x": 300.9,
+          "y": 231.9,
+          "lat": 32.8976388889,
+          "lon": 59.2809722222,
+          "source": "VOR/DME BRN",
+          "controlType": "AIP"
+        },
+        {
+          "x": 219.36,
+          "y": 328.08,
+          "lat": 32.8833333333,
+          "lon": 59.2666666667,
+          "source": "32-53 x 59-16",
+          "controlType": "GRID"
+        },
+        {
+          "x": 219.36,
+          "y": 215.52,
+          "lat": 32.9,
+          "lon": 59.2666666667,
+          "source": "32-54 x 59-16",
+          "controlType": "GRID"
+        },
+        {
+          "x": 314.16,
+          "y": 215.52,
+          "lat": 32.9,
+          "lon": 59.2833333333,
+          "source": "32-54 x 59-17",
+          "controlType": "GRID"
+        },
+        {
+          "x": 409.08,
+          "y": 215.52,
+          "lat": 32.9,
+          "lon": 59.3,
+          "source": "32-54 x 59-18",
+          "controlType": "GRID"
+        }
+      ],
+      "testPoints": [
+        {
+          "x": 165.06,
+          "y": 246.6,
+          "lat": 32.8954166667,
+          "lon": 59.2571472222,
+          "source": "RWY08 displaced 174 m",
+          "controlType": "AIP",
+          "fit": false
+        }
+      ],
+      "validation": {
+        "method": "aip_and_printed_grid_10m_test_only",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "independentOfficialAipSameCycleVerificationComplete": false,
+        "sourceAipUrl": "https://ais.airport.ir/documents/452631/186839606/OIMB.pdf",
+        "maxAipLeaveOneOutMeters": 6.386,
+        "maxAipOnlyLeaveOneOutMeters": 6.395,
+        "hybridRmseMeters": 2.41,
+        "independentDisplacedThresholdErrorMeters": 0.807,
+        "insetMaskReviewComplete": false,
+        "realDeviceMarkerReviewComplete": false,
+        "sourceSourcePageVerified": true
+      }
+    }
+  ]
+}
