@@ -1,6 +1,6 @@
 # JEPPIRAN V2621 — Visual-screening audit for original PDF pages 461–560
 
-Source: `2621(2).pdf` (1654 pages); SHA256 `d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6e46ce8a7ab6`. 
+Source: `2621(2).pdf` (1654 pages); SHA256 `d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6`. 
 
 All 100 pages rendered separately at 200 DPI and visually inspected in 25 four-up sheets with source PDF metadata cross-check. Pages **461, 483, 503, 553** additionally inspected individually at native 200-DPI image size. **The other 96 pages remain pending individual native-size proofreading**; no false full-resolution approval is asserted.
 
