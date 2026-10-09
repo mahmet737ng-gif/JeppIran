@@ -1,6 +1,6 @@
-const CACHE="jeppiran-pwa-v2620-36-brand";
+const CACHE="jeppiran-pwa-v2620-37-approved-ui";
 const PDF_CACHE="jeppiran-chart-pdfs-v1";
-const SHELL=["./","./index.html","./styles.css","./app.js?v=2620-34","./manifest.webmanifest","./app-icon.png","./vendor/pdf.min.mjs","./vendor/pdf.worker.min.mjs"];
+const SHELL=["./","./index.html","./styles.css?v=2620-36","./app.js?v=2620-36","./manifest.webmanifest","./app-icon.png","./vendor/pdf.min.mjs","./vendor/pdf.worker.min.mjs"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()));
 });
