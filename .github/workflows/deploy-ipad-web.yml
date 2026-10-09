@@ -43,6 +43,7 @@ jobs:
           cp app/src/main/assets/charts-manifest.json web/data/charts-manifest.json
           cp app/src/main/assets/chart-georef.json web/data/chart-georef.json
           python3 scripts/build_airport_profiles.py --output web/data/airport-profiles.json
+          python3 scripts/build_airport_runways.py --output web/data/airport-runways.json
           cp app/src/main/res/drawable-nodpi/airport_card_*.webp web/airport-images/
           curl -fL --retry 4 --retry-all-errors https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.min.mjs -o web/vendor/pdf.min.mjs
           curl -fL --retry 4 --retry-all-errors https://cdn.jsdelivr.net/npm/pdfjs-dist@4.10.38/build/pdf.worker.min.mjs -o web/vendor/pdf.worker.min.mjs

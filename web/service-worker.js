@@ -1,4 +1,4 @@
-const CACHE="jeppiran-pwa-v2620-38-airport-profiles";
+const CACHE="jeppiran-pwa-v2620-39-airport-runways";
 const PDF_CACHE="jeppiran-chart-pdfs-v1";
 const SHELL=["./","./index.html","./styles.css?v=2620-36","./app.js?v=2620-36","./manifest.webmanifest","./app-icon.png","./vendor/pdf.min.mjs","./vendor/pdf.worker.min.mjs"];
 self.addEventListener("install",event=>{

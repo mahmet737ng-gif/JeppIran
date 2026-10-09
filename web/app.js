@@ -18,7 +18,7 @@ const AIRPORTS={
 "UDYZ":["ZVARTNOTS INTERNATIONAL","YEREVAN"],"UGSB":["BATUMI INTERNATIONAL","BATUMI"],"UGTB":["TBILISI INTERNATIONAL","TBILISI"]
 };
 
-let airportMetadata={};
+let airportMetadata={}, airportRunwayMetadata={};
 let charts=[], manifest=null, selectedAirport="", selectedChart=null, expanded=new Set(["Airport"]);
 let airportTreeExpanded=false;
 let chartZoom=1, chartPanX=0, chartPanY=0;
@@ -112,14 +112,16 @@ if(localStorage.getItem("theme")==="light") document.documentElement.classList.a
 
 async function loadData(){
   try{
-    const [m,c,g,profiles]=await Promise.all([
+    const [m,c,g,profiles,runways]=await Promise.all([
       fetch(RAW_ROOT+"charts-manifest.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error("manifest");return r.json()}),
       fetch(RAW_ROOT+"charts-current.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error("charts");return r.json()}),
       fetch(RAW_ROOT+"chart-georef.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null),
-      fetch(RAW_ROOT+"airport-profiles.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null)
+      fetch(RAW_ROOT+"airport-profiles.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null),
+      fetch(RAW_ROOT+"airport-runways.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null)
     ]);
     manifest=m; charts=Array.isArray(c)?c:(c.charts||[]);
     airportMetadata=profiles&&profiles.airports&&profiles.cycle===m.version?profiles.airports:{};
+    airportRunwayMetadata=runways&&runways.airports&&runways.cycle===m.version?runways.airports:{};
     georefByPage=buildGeorefIndex(g);
     renderAirports();
     if(!selectedAirport && charts.some(c=>c.airport==="OIII"))selectAirport("OIII");
@@ -194,6 +196,7 @@ function renderAirports(filter=""){
 $("#airportSearch").addEventListener("input",e=>renderAirports(e.target.value));
 function selectAirport(icao){
   selectedAirport=icao;selectedChart=null;airportTreeExpanded=true;profileProcedureTab="Airport";profileTab="Overview";
+  window.jeppiranSelectedRunway="";
   expanded=new Set(["Airport"]);
   $("#chartsView").classList.remove("chart-open");
   renderAirports($("#airportSearch").value);
@@ -256,12 +259,15 @@ function windComponents(raw,rwy){
     direction:info.windDirection,speed:info.windSpeed}
 }
 function profileCurrentRunway(icao){
-  const d=AIRPORT_PROFILE[icao];return d&&d.runways?d.runways.find(x=>x.name===window.jeppiranSelectedRunway)||d.runways[1]||d.runways[0]:null
+  const defaultRunways=(AIRPORT_PROFILE[icao]||{}).runways||[];
+  const runways=icao==="OIII"?defaultRunways:(airportRunwayMetadata[icao]||defaultRunways);
+  return runways.find(x=>x.name===window.jeppiranSelectedRunway)||runways[0]||null
 }
 function renderAirportProfile(icao){
   const root=$("#airportProfile");if(!root||icao!==selectedAirport)return;
   const community=airportMetadata[icao]||{};
   const d={...(AIRPORT_PROFILE[icao]||{}),...(icao==="OIII"?{}:community)};
+  if(icao!=="OIII"&&airportRunwayMetadata[icao])d.runways=airportRunwayMetadata[icao];
   const legacy=AIRPORTS[icao]||["",""];
   const meta=[community.name||legacy[0]||"Airport data unavailable",community.city||legacy[1]||""];
   const raw=wxCache[icao+":metar"]||"";
@@ -273,7 +279,17 @@ function renderAirportProfile(icao){
   const name=community.name||(/airport$/i.test(nameBase)?nameBase:nameBase+" Airport");
   const country=community.country|| (icao.startsWith("OI")?"Iran":icao.startsWith("LT")?"Türkiye":icao.startsWith("OM")?"United Arab Emirates":icao.startsWith("OO")?"Oman":icao.startsWith("OR")?"Iraq":icao.startsWith("UD")?"Armenia":icao.startsWith("UG")?"Georgia":"");
   const cityName=(meta[1]||"").toLowerCase().replace(/\b\w/g,m=>m.toUpperCase());
-  const runwayRows=d.runways?d.runways.map(x=>'<button type="button" class="rwy-row'+(rw===x?' active':'')+'" data-runway="'+profileEsc(x.name)+'"><span><b>▱ '+profileEsc(x.name)+'</b><small>True '+x.headingTrue+'° / Mag '+x.headingMag+'°</small></span><span><b>'+x.length.toLocaleString()+' × '+x.width+' m</b><small>Length × width</small></span><span><b>Asphalt</b><small>Published</small></span></button>').join(""):'<div class="profile-empty">Runway dimensions not yet verified for this airport.</div>';
+  const runwayRows=d.runways&&d.runways.length?d.runways.map(x=>{
+    const trueHeading=Number.isFinite(x.headingTrue)?x.headingTrue.toFixed(1)+"°":"—";
+    const magHeading=Number.isFinite(x.headingMag)?x.headingMag.toFixed(1)+"°":"—";
+    const metric=Number.isFinite(x.length)&&Number.isFinite(x.width)?x.length.toLocaleString()+" × "+x.width+" m":"—";
+    const imperial=Number.isFinite(x.lengthFt)&&Number.isFinite(x.widthFt)?x.lengthFt.toLocaleString()+" × "+x.widthFt+" ft":"—";
+    const surface=x.surface||"Surface unknown";
+    return '<button type="button" class="rwy-row'+(rw===x?' active':'')+'" data-runway="'+profileEsc(x.name)+'">'+
+      '<span><b>RWY '+profileEsc(x.name)+'</b><small>'+(x.opposite?"Opposite "+profileEsc(x.opposite):"Direction selected")+'</small></span>'+
+      '<span><b>'+metric+'</b><small>'+imperial+'</small></span>'+
+      '<span><b>'+profileEsc(surface)+'</b><small>TRUE '+trueHeading+' • MAG '+magHeading+'</small></span></button>';
+    }).join(""):'<div class="profile-empty">Runway data unavailable; consult current ADC/AIP.</div>';
   const procCategory=profileProcedureTab;
   const procs=charts.filter(c=>c.airport===icao&&c.category===procCategory).sort((a,b)=>(a.pdf_page||0)-(b.pdf_page||0)).slice(0,100);
   root.innerHTML='<div class="profile-shell">'+
@@ -284,17 +300,17 @@ function renderAirportProfile(icao){
         '<span class="metar-raw" id="profileMetarRaw">'+profileEsc(raw||"Waiting for actual METAR…")+'</span>'+
         '<div class="weather-summary"><div class="weather-brief"><span class="weather-icon">'+wx.icon+'</span><div><strong>'+profileEsc(raw?wx.temp:"—")+'</strong><small>'+profileEsc(raw?wx.desc:"Weather unavailable")+'</small><small>'+profileEsc(raw?wx.clouds:"")+'</small></div></div>'+
         '<div class="weather-facts"><span>◉ '+profileEsc(wx.visibility)+'</span><span>➤ '+(wx.windDirection===null?"—":wx.windDirection.toString().padStart(3,"0")+"°")+' / '+(wx.windSpeed===null?"—":wx.windSpeed+" kt")+'</span><span>UTC <span class="profile-utc"></span></span></div></div></section>'+
-      '<section class="profile-card" id="profileRunways"><header><span>RUNWAYS</span><small>Dimensions and published bearings</small></header>'+runwayRows+'</section>'+
+      '<section class="profile-card" id="profileRunways"><header><span>RUNWAYS</span><small>Community measurements • verify ADC</small></header>'+runwayRows+'</section>'+
       '<section class="profile-card" id="profileCharts"><header>CHARTS &amp; PROCEDURES <small>'+charts.filter(c=>c.airport===icao).length+' charts</small></header>'+
         '<div class="profile-procedures"><nav class="profile-proc-tabs">'+categories.map(([k,n])=>'<button class="'+(procCategory===k?"active":"")+'" type="button" data-proc-tab="'+k+'">'+n+'</button>').join("")+'</nav><div class="profile-proc-list">'+(procs.length?procs.map(c=>'<button type="button" data-chart-page="'+profileEsc(c.page)+'"><span>'+profileEsc(c.name||"Chart "+c.page)+'</span><small>›</small></button>').join(""):'<div class="profile-empty">No '+profileEsc(procCategory)+' charts in this airport.</div>')+'</div></div></section>'+
       '<div class="profile-quick"><button type="button" data-quick-proc="Airport"><span>▤</span>Charts</button><button type="button" data-quick-proc="Approach"><span>✈</span>Approaches</button><button type="button" data-quick-proc="Airport"><span>▦</span>Airport Diagram</button></div>'+
     '</div><div class="profile-col">'+
       '<section class="profile-card" id="profileWind"><header><span>WIND COMPONENTS '+(rw?"("+profileEsc(rw.name)+")":"")+'</span></header>'+
       '<div class="wind-compass"><span>'+((comp)?'Wind '+comp.direction+'° / '+comp.speed+' kt':'Wind component data unavailable')+'</span><div class="rwy-visual"><span>'+profileEsc(rw?rw.name:"RUNWAY")+'</span></div></div>'+
-      '<div class="wind-data"><div><span>Runway heading (MAG)</span><b>'+(rw?rw.headingMag+"°":"—")+'</b></div><div><span>Runway heading (TRUE)</span><b>'+(rw?rw.headingTrue+"°":"—")+'</b></div><div><span>METAR wind (TRUE)</span><b>'+(comp?comp.direction+"° / "+comp.speed+" kt":"—")+'</b></div><div><span class="wind-head">↑ '+(comp?comp.headName:"Headwind")+'</span><b class="wind-head">'+(comp?comp.head+" kt":"—")+'</b></div><div><span class="wind-cross">→ Crosswind</span><b class="wind-cross">'+(comp?comp.cross+" kt "+comp.crossName:"—")+'</b></div></div></section>'+
+      '<div class="wind-data"><div><span>Runway heading (MAG)</span><b>'+(rw?(Number.isFinite(rw.headingMag)?rw.headingMag.toFixed(1)+"°":"—"):"—")+'</b></div><div><span>Runway heading (TRUE)</span><b>'+(rw?(Number.isFinite(rw.headingTrue)?rw.headingTrue.toFixed(1)+"°":"—"):"—")+'</b></div><div><span>METAR wind (TRUE)</span><b>'+(comp?comp.direction+"° / "+comp.speed+" kt":"—")+'</b></div><div><span class="wind-head">↑ '+(comp?comp.headName:"Headwind")+'</span><b class="wind-head">'+(comp?comp.head+" kt":"—")+'</b></div><div><span class="wind-cross">→ Crosswind</span><b class="wind-cross">'+(comp?comp.cross+" kt "+comp.crossName:"—")+'</b></div></div></section>'+
       '<section class="profile-card" id="profileInfo"><header>ADDITIONAL INFORMATION</header>'+
       [['ICAO',icao],['IATA',d.iata||"—"],['Field elevation',Number.isFinite(d.elevation)?d.elevation.toLocaleString()+" ft":"—"],['Coordinates',Number.isFinite(d.lat)?d.lat.toFixed(4)+"N, "+d.lon.toFixed(4)+"E":"—"],['UTC time','<span class="profile-utc"></span>'],['Frequencies','Consult current ADC / AIP'],['Fuel / Services','Consult current AIP'],['Metadata source',community.source?'OurAirports / verify AIP':'Not available — verify AIP']].map(([k,v])=>'<div class="profile-info-row"><span>'+k+'</span><b>'+v+'</b></div>').join("")+'</section>'+
-      '<div class="profile-alert" id="profileNotam">Current NOTAM: please consult a validated current source. No status is inferred from missing data.</div>'+
+      '<div class="profile-alert" id="profileNotam">Runway dimensions and TRUE headings are community reference data, not verified AIP/ADC. Current NOTAM: please consult a validated current source. No status is inferred from missing data.</div>'+
     '</div></div></div>';
   root.querySelector("#profileFavBtn").onclick=()=>{setAirportFavorite(icao);renderAirportProfile(icao)};
   root.querySelectorAll("[data-runway]").forEach(b=>b.onclick=()=>{window.jeppiranSelectedRunway=b.dataset.runway;renderAirportProfile(icao)});
