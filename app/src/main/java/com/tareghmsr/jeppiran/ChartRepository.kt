@@ -124,6 +124,12 @@ class ChartRepository(
                 ),
 
                 AirportInfo(
+                    "OICZ",
+                    "SAQEZ AIRPORT",
+                    "SAQEZ"
+                ),
+
+                AirportInfo(
                     "OIFM",
                     "ISFAHAN AIRPORT",
                     "ISFAHAN"
