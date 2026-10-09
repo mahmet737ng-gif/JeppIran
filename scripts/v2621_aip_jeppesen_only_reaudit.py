@@ -137,15 +137,23 @@ def main():
         consistent=[g for g in geo_list if g.get("airport")==row["airport"] and
                    (g.get("chartKey") or "").strip().upper()==identity(row) and
                    g.get("width")==page.rect.width and g.get("height")==page.rect.height]
-        status="EXISTING_MATCHED" if consistent else "NEEDS_GEOREF"
-        if status=="EXISTING_MATCHED":matched[kind]+=1
         h=ICAO_HEADER.search(text)
         owner=(h[1] if h else "")
         owner_mismatch=bool(owner and owner!=row["airport"] and owner in by_icao)
+        # A map assigned to the wrong printed ICAO must not be treated as safe.
+        status=("OWNER_MISMATCH_WITH_EXISTING_GEO_HOLD"
+                if owner_mismatch and consistent else
+                "EXISTING_MATCHED" if consistent else "NEEDS_GEOREF")
+        if status=="EXISTING_MATCHED":matched[kind]+=1
         not_to_scale="NOT TO SCALE" in text.upper()
         has_grid=bool(GRID.search(text))
-        radials=sorted(set(RADIAL.findall(text)))
-        slants=sorted(set(a or b for a,b in DME.findall(text)),key=lambda x:float(x))
+        # Textual labels are hints; NAVAID and chart-symbol association pending.
+        # Reject obvious ATC frequencies and visibility minima as false DME/radials.
+        radials=sorted(set(r for r in RADIAL.findall(text) if int(r) < 360))
+        slants=sorted(set(
+            a or b for a,b in DME.findall(text)
+            if 0.0 < float(a or b) <= 80.0
+        ),key=lambda x:float(x))
         anchor=anchors.get(row["airport"])
         record={
             "page":n,"airport":row["airport"],"printedHeaderICAO":owner,
@@ -167,7 +175,7 @@ def main():
                 "NOT_TESTED" if TARGET_PAGES.get(n)==row["airport"] and row["airport"] in UNTESTED_ADCS else ""),
             "jeppApproximateAnchorFound":bool(anchor),"candidateResult":"NOT_ATTEMPTED"
         }
-        if status=="NEEDS_GEOREF":
+        if status!="EXISTING_MATCHED":
             if owner_mismatch:
                 record["candidateResult"]="HEADER_OWNER_MISMATCH_REQUIRES_REINDEX"
             elif not anchor:
@@ -202,19 +210,22 @@ def main():
         if len(report)%50==0:
             print("SOURCE_ONLY_PROGRESS",len(report),"/",len(index),"candidates",len(candidates),flush=True)
     counts=Counter(x["category"] for x in report)
-    needed=Counter(x["category"] for x in report if x["baseline"]=="NEEDS_GEOREF")
+    needed=Counter(x["category"] for x in report if x["baseline"]!="EXISTING_MATCHED")
     headers=[x for x in report if x["headerOwnerMismatch"]]
     OUT.mkdir(parents=True,exist_ok=True)
     (OUT/"SOURCE_POLICY.json").write_text(json.dumps({
         "originalPdfSha256":EXPECTED_SHA,"originalPages":1654,"cycle":2621,
         "allowedAuthoritativeExternalReferenceDomains":OFFICIAL_STATE_AIS,
         "knownOfficialAipDocuments":KNOWN_OFFICIAL_AIP,
+        "aipDocumentVersionDateMustBeChecked":True,
+        "sourceAipLinksOnlyAreNotCompletedGroundControlChecks":True,
         "userValidatedAdcs":SUCCESSFUL_USER_TESTS,
         "userUnvalidatedAdcs":UNTESTED_ADCS,
         "dmeSlantMetersFormula":"horizontal_m=sqrt(max(0,(slant_nm*1852)^2 - (alt_target_m-alt_navaid_m)^2))",
         "dmeIfVerticalSeparationUnknown":"valid spherical/circular constraint with uncertainty; NEVER equate to exact horizontal range",
         "radialNeeds":"documented station, magnetic variation and date, angular uncertainty; fixes need intersecting independent source constraints",
         "aipGcpPrecision":"do not use Jepp general-info rounded Lat/Long as 10m control; require official precision and held-out fit",
+        "radialDmeLabelParsing":"preliminary textual token screening ONLY; station pairing, plotted fix position and AIP validity not verified",
         "testDoesNotImplyNavigationCertification":True,
         "noAutomaticPublication":True},indent=2,ensure_ascii=False)+"\n")
     with (OUT/"all_app_and_airport_layout_audit.csv").open("w",newline="",encoding="utf-8") as f:
@@ -236,6 +247,7 @@ def main():
                     "eligibleByType":dict(counts),"needsByType":dict(needed),
                     "jeppVectorFitProvisionalCount":len(candidates),
                     "reasonCounts":dict(rejected),"headerOwnerMismatches":headers,
+                    "existingGeorefUnderWrongPrintedIcao":sum(x["baseline"]=="OWNER_MISMATCH_WITH_EXISTING_GEO_HOLD" for x in report),
                     "noAutomaticPublish":True},
         "charts":report},indent=2,ensure_ascii=False)+"\n")
     (OUT/"JEPP_ONLY_UNAPPROVED_CANDIDATES.json").write_text(json.dumps({
