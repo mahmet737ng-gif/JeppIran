@@ -1,0 +1,155 @@
+name: Publish audited V2621 PDFs without print overlay
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/v2621-printclean.yml']
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: write
+concurrency:
+  group: v2621-printclean-production
+  cancel-in-progress: false
+jobs:
+  release-clean-pdfs:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 65
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 2
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install PyMuPDF
+        run: python -m pip install 'PyMuPDF==1.26.6'
+      - name: Validate, correct index, and rebuild PDFs without cropping
+        env:
+          RELEASE_TAG: charts-V2621-printclean-1
+        run: |
+          python - <<'PY'
+          import copy,hashlib,json,os,re
+          from pathlib import Path
+          import fitz
+          EXPECT='d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6'
+          ROOT=Path('app/src/main/assets')
+          pdf=Path('Iran2621.pdf')
+          assert hashlib.sha256(pdf.read_bytes()).hexdigest()==EXPECT, 'Unexpected original source PDF'
+          d=fitz.open(pdf)
+          assert len(d)==1654
+          source=json.loads((ROOT/'charts-manifest.json').read_text())
+          rows=json.loads((ROOT/'charts-current.json').read_text())
+          assert source['source_sha256']==EXPECT and source['version']=='V2621' and len(rows)==1494
+          fixed={
+           1091:('LTAC','10-2L','BAKIR 1N, HALIL 1M, HALIL 1N, HAY 1M, HAY 1N, TELVO 1N'),
+           347:('OIHH','16-2','CIRCLING NDB DME (CAT C & D)'),
+           348:('OIHH','16-3','CIRCLING NDB DME (CAT A & B)'),
+           387:('OIIE','21-1-0','ILS RWY 29R (TEMPORARY PLATE)'),
+           389:('OIIE','21-1A-0','CAT II ILS RWY 29R (TEMPORARY PLATE)'),
+           482:('OIIP','16-2','NDB Z RWY 30'),
+           483:('OIIP','16-3','NDB Y RWY 30 (CAT A & B)'),
+           484:('OIIP','16-4','NDB X RWY 30 (CAT C & D)'),
+           565:('OIMB','16-1','NDB A (CAT A & B)'),
+           566:('OIMB','16-2','NDB B (CAT C & D)'),
+           962:('OIZS','16-1','CIRCLING NDB DME (CAT A, B & C)'),
+           963:('OIZS','16-2','CIRCLING NDB 2 (CAT C)'),
+           964:('OIZS','16-3','CIRCLING NDB 1 (CAT A & B)')}
+          lookup={int(x['page']):x for x in rows}
+          assert len(lookup)==len(rows)
+          applied=[]
+          for num,(icao,plate,title) in fixed.items():
+              row=lookup[num]
+              assert row['airport']==('LTAE' if num==1091 else icao), f'Unexpected owner {num}'
+              assert re.search(r'(?<![A-Za-z0-9])'+re.escape(plate)+r'(?![A-Za-z0-9])',d[num-1].get_text()),f'Plate not printed: {num}'
+              applied.append({'page':num,'before':{k:row.get(k) for k in ('airport','chart_number','name')},'after':{'airport':icao,'chart_number':plate,'name':title}})
+              row.update(airport=icao,chart_number=plate,name=title)
+              if num==1091:row['category']='STAR'
+          grouped={}
+          for row in rows:grouped.setdefault(row['airport'],[]).append(row)
+          assert 'LTAE' not in grouped and 'LTAC' in grouped
+          manifest=copy.deepcopy(source)
+          tag=os.environ['RELEASE_TAG']
+          base=f'https://github.com/mahmet737ng-gif/JeppIran/releases/download/{tag}/'
+          manifest.update(release_tag=tag,base_url=base,display_transform='Print overlay removed without cropping; original PDF page boxes retained')
+          manifest['airports']={}
+          out=Path('cycle-v2621-printclean')
+          (out/'airports').mkdir(parents=True,exist_ok=True)
+          for icao,items in sorted(grouped.items()):
+              items.sort(key=lambda r:int(r['page']))
+              doc=fitz.open()
+              for local,row in enumerate(items,1):
+                  orig=d[int(row['page'])-1]
+                  doc.insert_pdf(d,from_page=int(row['page'])-1,to_page=int(row['page'])-1)
+                  p=doc[-1]
+                  before=(p.mediabox,p.cropbox,p.rect,p.rotation)
+                  from_line=[]
+                  for block in p.get_text('dict')['blocks']:
+                      if block['type']!=0:continue
+                      for line in block['lines']:
+                          s=''.join(span['text'] for span in line['spans'])
+                          if s.startswith('Printed from JeppView'):from_line.append(fitz.Rect(line['bbox']))
+                  on_line=p.search_for('Printed on 09 Oct 2026')
+                  rects=from_line or on_line
+                  assert len(rects)==1,f'Print metadata unexpected: source page {row["page"]}'
+                  r=rects[0]
+                  assert r.y1<51, f'Print header exceeds top margin: page {row["page"]}'
+                  p.add_redact_annot(fitz.Rect(r.x0+.01,r.y0+.01,r.x1-.01,r.y1-.01),fill=(1,1,1),cross_out=False)
+                  p.apply_redactions(images=0,graphics=0,text=0)
+                  assert (p.mediabox,p.cropbox,p.rect,p.rotation)==before and p.rect==orig.rect,'PDF box changed'
+                  assert not re.search(r'Printed from JeppView|Printed on\s+\d{1,2}\s+\w+\s+\d{4}',p.get_text()),'Print header remains'
+                  row['pdf_page']=local
+              path=out/'airports'/f'{icao}.pdf'
+              doc.set_metadata({})
+              doc.save(path,garbage=4,deflate=True)
+              doc.close()
+              pages=[int(x['page']) for x in items]
+              digest=hashlib.sha256(path.read_bytes()).hexdigest()
+              manifest['airports'][icao]={'file':path.name,'url':base+path.name,'sha256':digest,'size':path.stat().st_size,'pages':len(pages),'global_pages':pages}
+              print('VERIFIED',icao,len(pages),'PDF pages',flush=True)
+          assert sum(x['pages'] for x in manifest['airports'].values())==1494
+          (out/'charts-current.json').write_text(json.dumps(sorted(rows,key=lambda z:z['page']),ensure_ascii=False,indent=2)+'\n')
+          (out/'charts-manifest.json').write_text(json.dumps(manifest,ensure_ascii=False,indent=2)+'\n')
+          (out/'audited-fixes.json').write_text(json.dumps(applied,ensure_ascii=False,indent=2)+'\n')
+          (out/'VALIDATION.txt').write_text('V2621; 1494 indexed charts; 1654 source pages; no crop; print date removed; 13 source-checked metadata corrections; 0 new georeferences\n')
+          print('PACKAGE READY',len(manifest['airports']),'airport PDFs')
+          PY
+      - name: Upload isolated release while old release stays available
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tag=charts-V2621-printclean-1
+          if ! gh release view "$tag" >/dev/null 2>&1; then
+            gh release create "$tag" --title 'JEPPIRAN V2621 full-frame PDFs with print headers removed' --notes 'Source-checked ICAO, title and temporary plate repairs. Generated JeppView print lines removed, no page cropping. NO NEW GEOREFERENCE APPROVAL. NOT FOR ACTUAL NAVIGATION.'
+          fi
+          gh release upload "$tag" cycle-v2621-printclean/airports/*.pdf --clobber
+          gh release upload "$tag" cycle-v2621-printclean/audited-fixes.json cycle-v2621-printclean/VALIDATION.txt --clobber
+      - name: Commit updated manifest, index and invalidate web offline PDF cache
+        run: |
+          cp cycle-v2621-printclean/charts-current.json app/src/main/assets/charts-current.json
+          cp cycle-v2621-printclean/charts-manifest.json app/src/main/assets/charts-manifest.json
+          python - <<'PY'
+          from pathlib import Path
+          app=Path('web/app.js');s=app.read_text()
+          assert 'jeppiran-chart-pdfs-v1' in s,'Unexpected web cache version'
+          app.write_text(s.replace('jeppiran-chart-pdfs-v1','jeppiran-chart-pdfs-v2621-printclean-1'))
+          sw=Path('web/service-worker.js');s=sw.read_text()
+          assert 'jeppiran-chart-pdfs-v1' in s
+          s=s.replace('jeppiran-chart-pdfs-v1','jeppiran-chart-pdfs-v2621-printclean-1')
+          s=s.replace('jeppiran-pwa-v2621-universal-02','jeppiran-pwa-v2621-printclean-1')
+          s=s.replace('app.js?v=2621-universal-02','app.js?v=2621-printclean-1')
+          sw.write_text(s)
+          idx=Path('web/index.html');s=idx.read_text()
+          if 'app.js?v=2621-universal-02' in s:idx.write_text(s.replace('app.js?v=2621-universal-02','app.js?v=2621-printclean-1'))
+          PY
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add app/src/main/assets/charts-current.json app/src/main/assets/charts-manifest.json web/app.js web/service-worker.js web/index.html
+          git diff --cached --quiet || git commit -m 'Publish printclean V2621 airport PDFs and verified chart-index fixes'
+          git push origin HEAD:main
+      - name: Dispatch web deployment and signed Android build
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run deploy-ipad-web.yml --ref main
+          gh workflow run build-apk.yml --ref main
