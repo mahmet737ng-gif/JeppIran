@@ -1,6 +1,6 @@
-const CACHE="jeppiran-pwa-v2621-metardirect-5";
+const CACHE="jeppiran-pwa-v2621-icao-noglow-6";
 const PDF_CACHE="jeppiran-chart-pdfs-v2621-printclean-3";
-const SHELL=["./","./index.html","./styles.css?v=2621-metardirect-5","./app.js?v=2621-metardirect-5","./manifest.webmanifest","./app-icon.png","./vendor/pdf.min.mjs","./vendor/pdf.worker.min.mjs"];
+const SHELL=["./","./index.html","./styles.css?v=2621-icao-noglow-6","./app.js?v=2621-icao-noglow-6","./manifest.webmanifest","./app-icon.png","./vendor/pdf.min.mjs","./vendor/pdf.worker.min.mjs"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()));
 });
