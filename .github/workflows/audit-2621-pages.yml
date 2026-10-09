@@ -1,0 +1,55 @@
+name: Audit V2621 PDF pages and classify each chart
+
+on:
+  push:
+    branches:
+      - audit/cycle2621-page-by-page
+    paths:
+      - scripts/audit_chart_pages_2621.py
+      - .github/workflows/audit-2621-pages.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  classify-each-page:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 45
+    steps:
+      - name: Check out PDF through Git LFS
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 1
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install source PDF tools
+        run: python -m pip install "PyMuPDF==1.26.6"
+      - name: Audit all 1654 pages without modifying published app
+        run: |
+          test -s Iran2621.pdf
+          python scripts/audit_chart_pages_2621.py \
+            --pdf Iran2621.pdf \
+            --index app/src/main/assets/charts-current.json \
+            --manifest app/src/main/assets/charts-manifest.json \
+            --out docs/audits/V2621
+      - name: Upload per-page classifications and review queue
+        uses: actions/upload-artifact@v4
+        with:
+          name: JeppIran-V2621-every-page-classification
+          path: docs/audits/V2621
+          retention-days: 90
+      - name: Keep reports on this isolated audit branch
+        if: success()
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/audits/V2621
+          if ! git diff --cached --quiet; then
+            git commit -m "Report V2621 per-page chart classification and review queue"
+            git push origin HEAD:audit/cycle2621-page-by-page
+          fi
