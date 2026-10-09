@@ -477,7 +477,7 @@ class AirportChartsActivity :
         ).apply { bottomMargin = 10.dp })
         airportRailScroll = ScrollView(this).apply {
             isFillViewport = true
-            overScrollMode = View.OVER_SCROLL_IF_CONTENT_SCROLL_IF_NEEDED
+            overScrollMode = View.OVER_SCROLL_IF_CONTENT_SCROLLS
             isVerticalScrollBarEnabled = false
         }
         airportRailRows = LinearLayout(this).apply {
