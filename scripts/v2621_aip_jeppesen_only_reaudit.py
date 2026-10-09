@@ -31,17 +31,19 @@ OFFICIAL_STATE_AIS = {
     "Turkey": ["dhmi.gov.tr","ais.dhmi.gov.tr"],
     "UAE": ["gcaa.gov.ae"],
     "Qatar": ["caa.gov.qa","aim.gov.qa"],
-    "Pakistan": ["caapakistan.com.pk","pcaa.gov.pk"],
-    "Iraq": ["icaa.gov.iq"],
-    "Armenia": ["armats.am"],
-    "Georgia": ["airnav.ge"],
-    "Oman": ["caa.gov.om"],
+    # Do not accept a domain merely because it looks like an official
+    # issuer. Pakistan, Iraq and Armenia require publisher verification
+    # before additional official AIP sources enter the reference registry.
+    "Georgia": ["airnav.ge","ais.airnav.ge"],
+    "Oman": ["caa.gov.om","aim.caa.gov.om"],
 }
 KNOWN_OFFICIAL_AIP = {
     "OIBL": "https://ais.airport.ir/documents/452631/186839484/OIBL.pdf",
     "OIHH": "https://ais.airport.ir/documents/452631/186839535/OIHH.pdf",
     "OIMB": "https://ais.airport.ir/documents/452631/186839606/OIMB.pdf",
     "OIZS": "https://ais.airport.ir/documents/452631/186846259/OIZS.pdf",
+    "OTHH": "https://aim.gov.qa/AIP/11-JUN-2026/AIP-29/2026-08-06-000000/html/eAIP/QA-AD-2-OTHH-mobile-en-GB.html",
+    "OMDW": "https://www.gcaa.gov.ae/en/ais/AIPHtmlFiles/AIP/Current/AIRACs/2026-P02/pdf/AD-2.OMDW.pdf",
 }
 SUCCESSFUL_USER_TESTS = {"OIMB":561,"OIHH":342,"OIBL":118}
 UNTESTED_ADCS = {"OIZS":961}
