@@ -147,6 +147,8 @@ jobs:
             --index cycle-build/charts-current.json \
             --output cycle-build/chart-georef.json \
             --audit cycle-build/georef-audit.json \
+            --manifest cycle-build/manifest.json \
+            --previous-georef app/src/main/assets/chart-georef.json \
             --data-version "${{ steps.cycle.outputs.version }}" \
             --cycle "${{ steps.cycle.outputs.cycle }}" \
             --disable-independent-check
