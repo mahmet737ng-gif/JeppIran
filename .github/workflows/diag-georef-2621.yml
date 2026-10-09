@@ -69,7 +69,7 @@ jobs:
                       if rec.get("airport")==x.get("airport"):
                           matching_airport.append(x["page"])
                           expect="|".join((x.get("airport",""),x.get("category","").upper(),x.get("chart_number",""),x.get("name","")))
-                          if rec.get("chartKey")==expect:
+                          if (rec.get("chartKey") or "").upper()==expect.upper():
                               matching_key.append(x["page"])
                           break
               res[kind]={"total":len(group),"has_any_page_geo":len(present),
@@ -96,7 +96,7 @@ jobs:
                   owned=[g for g in gs if g.get("airport")==x.get("airport")]
                   n_matching+=bool(owned)
                   expected="|".join((x["airport"],x["category"].upper(),x.get("chart_number",""),x.get("name","")))
-                  n_exact+=any(z.get("chartKey")==expected for z in owned)
+                  n_exact+=any((z.get("chartKey") or "").upper()==expected.upper() for z in owned)
                   if not owned:unmatched.append(x["page"])
               return {"total":len(records),"with_matching_icao_georef":n_matching,"without_matching_icao_georef":len(records)-n_matching,
                       "exact_chartkey":n_exact,"without_exact_chartkey":len(records)-n_exact,"unmatched_pages":unmatched}
