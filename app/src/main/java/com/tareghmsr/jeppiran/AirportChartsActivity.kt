@@ -161,6 +161,7 @@ class AirportChartsActivity :
         }
 
         buildUi()
+        refreshAirportMetarForWind()
 
         loadCharts()
     }
@@ -177,6 +178,48 @@ class AirportChartsActivity :
      * Task 4. Photo-free airport profile in the approved JeppIran visual language.
      * Source-attributed fields only; no guessed ADC headings or operational weather.
      */
+    // Read the same real METAR cache used by WxActivity; no dummy wind is drawn.
+    private fun cachedMetarWind(): Pair<Float?, Int?> {
+        val raw = getSharedPreferences("jeppiran_wx_cache", MODE_PRIVATE)
+            .getString("metar_" + icao, "").orEmpty().uppercase(java.util.Locale.US)
+        val match = Regex("""\b(\d{3}|VRB)(\d{2,3})(?:G\d{2,3})?KT\b""").find(raw)
+        val from = match?.groupValues?.get(1)?.takeIf { it != "VRB" }?.toFloatOrNull()
+        val speed = match?.groupValues?.get(2)?.toIntOrNull()
+        return Pair(from, speed)
+    }
+
+    private fun refreshAirportMetarForWind() {
+        val requestedIcao = icao
+        Thread {
+            try {
+                val url = java.net.URL("https://aviationweather.gov/api/data/metar?ids=" + requestedIcao + "&format=raw")
+                val conn = (url.openConnection() as java.net.HttpURLConnection).apply {
+                    requestMethod = "GET"
+                    connectTimeout = 12000
+                    readTimeout = 12000
+                    setRequestProperty("Accept", "text/plain")
+                    setRequestProperty("User-Agent", "JEPPIRAN/Android")
+                }
+                val received = try {
+                    if (conn.responseCode !in 200..299) return@Thread
+                    conn.inputStream.bufferedReader().use { it.readText() }.trim()
+                } finally { conn.disconnect() }
+                if (!Regex("""\b(\d{3}|VRB)(\d{2,3})(?:G\d{2,3})?KT\b""").containsMatchIn(received) ||
+                    !received.contains(requestedIcao)) return@Thread
+                getSharedPreferences("jeppiran_wx_cache", MODE_PRIVATE).edit()
+                    .putString("metar_" + requestedIcao, received).apply()
+                runOnUiThread {
+                    if (!isFinishing && !isDestroyed && icao == requestedIcao &&
+                        ::profilePanel.isInitialized && ::root.isInitialized) {
+                        selectTrueWindRunway(selectedTrueRunway)
+                    }
+                }
+            } catch (_: Exception) {
+                // Retain previously cached METAR; never invent a wind arrow.
+            }
+        }.start()
+    }
+
     private fun buildAirportFactsPanel(): View {
         val info = try {
             org.json.JSONObject(assets.open("airport-profiles.json").bufferedReader().use { it.readText() })
@@ -323,9 +366,10 @@ class AirportChartsActivity :
                 val item=runways.optJSONObject(index) ?: continue
                 val name=item.optString("name", "—")
                 val opposite=item.optString("opposite", "")
-                val dims=rwyValue(item,"length")+" × "+rwyValue(item,"width")+" m"
+                val dims=if (item.isNull("length") || item.isNull("width")) "Dimensions not verified"
+                    else rwyValue(item,"length")+" × "+rwyValue(item,"width")+" m"
                 val heading=if (!item.isNull("headingTrue") && item.has("headingTrue"))
-                    String.format(java.util.Locale.US, "%.1f° TRUE", item.optDouble("headingTrue"))
+                    String.format(java.util.Locale.US, "%.0f° ADC", item.optDouble("headingTrue"))
                     else "TRUE heading unavailable"
                 val nameText=if (opposite.isBlank()) name else name+" / "+opposite
                 val highlighted = name == (selectedTrueRunway.ifBlank { if (icao == "OIAA") "32L" else runways.optJSONObject(0)?.optString("name", "").orEmpty() })
@@ -342,7 +386,7 @@ class AirportChartsActivity :
                 runwayCard.addView(row, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT).apply { bottomMargin=6.dp })
             }
         }
-        runwayCard.addView(title("Source: OurAirports community data. Verify with current ADC/AIP.",10f,muted))
+        runwayCard.addView(title("Source: V2621 ADC. Extracted headings require visual cross-check.",10f,muted))
         put(left,runwayCard)
 
         val shortcuts=bar()
@@ -364,17 +408,32 @@ class AirportChartsActivity :
         val windRunwayName = runwayForWind?.optString("name", "—") ?: "—"
         val trueBearing = if (runwayForWind != null && runwayForWind.has("headingTrue") && !runwayForWind.isNull("headingTrue"))
             runwayForWind.optDouble("headingTrue", Double.NaN) else Double.NaN
+        val (windFrom, windSpeed) = cachedMetarWind()
+        val windDelta = if (windFrom != null && windSpeed != null && trueBearing.isFinite())
+            Math.toRadians(windFrom.toDouble() - trueBearing) else null
+        val headValue = windDelta?.let { windSpeed!!.toDouble() * kotlin.math.cos(it) }
+        val crossValue = windDelta?.let { windSpeed!!.toDouble() * kotlin.math.sin(it) }
         val wind=card("WIND COMPONENTS  •  RWY " + windRunwayName)
         wind.addView(TrueRunwayCompassView(this).apply {
             runwayId = windRunwayName
             headingTrue = if (trueBearing.isFinite()) trueBearing.toFloat() else null
+            windFromTrue = windFrom
+            windSpeedKts = windSpeed
         }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 185.dp))
         wind.addView(entry("Runway HDG (geographic)",
             if (trueBearing.isFinite()) trueBearing.toInt().toString() + "°" else "—"))
         wind.addView(entry("Magnetic bearing", "— · not verified"))
-        wind.addView(entry("METAR wind (TRUE)", "—"))
-        wind.addView(entry("↑ Headwind", "—"))
-        wind.addView(entry("→ Crosswind", "—"))
+        wind.addView(entry("METAR wind (TRUE)",
+            if (windSpeed == null) "—"
+            else if (windSpeed == 0) "CALM"
+            else if (windFrom == null) "VRB / " + windSpeed + " kt"
+            else String.format(java.util.Locale.US, "%03d° / %d kt", windFrom.toInt(), windSpeed)))
+        wind.addView(entry("↑ Headwind",
+            headValue?.let { String.format(java.util.Locale.US, "%.1f kt %s", kotlin.math.abs(it),
+                if (it >= 0) "headwind" else "tailwind") } ?: "—"))
+        wind.addView(entry("→ Crosswind",
+            crossValue?.let { String.format(java.util.Locale.US, "%.1f kt from %s", kotlin.math.abs(it),
+                if (it >= 0) "right" else "left") } ?: "—"))
         wind.addView(title("Bearing measured clockwise from TRUE north; magnetic variation is not added.",10f,muted))
         put(right,wind)
 
