@@ -1,4 +1,5 @@
 name: Safely publish JEPPIRAN chart cycle 2621
+# Finalizer: release assets already uploaded and validated; just publish metadata.
 # Retry 4: keep committed V2621 chart output, discard only uncommitted CI intermediates before safe rebase.
 
 on:
@@ -44,7 +45,7 @@ jobs:
         run: |
           set -euo pipefail
           git fetch origin refs/heads/release/cycle2621-safe:refs/remotes/origin/release/cycle2621-safe
-          git show origin/release/cycle2621-safe:scripts/publish_cycle2621_safely.sh > /tmp/publish2621.sh
+          git show origin/release/cycle2621-safe:scripts/finalize_cycle2621_safely.sh > /tmp/publish2621.sh
           bash /tmp/publish2621.sh
 
       - name: Request fresh iPad web deployment
