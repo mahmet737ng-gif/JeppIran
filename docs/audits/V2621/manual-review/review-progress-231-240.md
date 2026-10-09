@@ -1,0 +1,1 @@
+Pages 231–240 have been reviewed against original 200-DPI images. OICS: 231 Airport diagram, 232 minimums, 233 ILS or LOC RWY 19, 234 VOR RWY 19. OICZ: 235 airport information, 236 airport diagram, 237 RNP RWY 28. OIFE: 238 airport information, 239 STAR, 240 SID. Source PDF is unchanged. No new georeference approved.
