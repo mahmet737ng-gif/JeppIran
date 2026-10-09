@@ -644,3 +644,161 @@ body.jeppiran-installed #installHelpBtn,body.jeppiran-installed .ipad-tip{displa
   @starting-style{#installDialog[open]{opacity:0;transform:translateY(10px)}}
   #installDialog[open]{opacity:1;transform:translateY(0);transition:opacity .18s ease,transform .18s ease}
 }
+
+/* ===============================================================
+   JeppIran approved 2026-10-09 visual language: no airport photos.
+   The existing PDF/GPS/FSX modules stay untouched.
+   =============================================================== */
+:root{--bg:#031020;--surface:#071b30;--surface2:#092038;--stroke:#15446b;--text:#f3f9ff;--muted:#a2bfd7;--accent:#38c8ff;--accent2:#086aff;--jepp-glow:0 0 14px rgba(4,111,255,.23)}
+body:has(#homeView.active) .topbar,body:has(#chartsView.active) .topbar{display:none}
+body:has(#homeView.active),body:has(#chartsView.active){background:#030c19}
+.flight-home.active{display:flex!important;min-height:100dvh;align-items:center;justify-content:center;background:radial-gradient(ellipse at 55% 12%,#0d3250 0,#07192c 30%,#030a15 78%)}
+.flight-home-inner{width:min(1020px,100%);min-height:100dvh;display:flex;flex-direction:column;padding:clamp(18px,3vw,38px)}
+.flight-home-horizon{position:relative;isolation:isolate;flex:1;min-height:260px;border-radius:20px;overflow:hidden;background:linear-gradient(0deg,rgba(1,12,25,.96),rgba(3,20,39,.17)),linear-gradient(140deg,#041021,#082440)}
+.flight-hero-title{position:absolute;top:clamp(16px,5vh,60px);left:0;right:0;text-align:center;z-index:2}
+.home-arrow{color:#eef8ff;font-size:24px;line-height:1;filter:drop-shadow(0 0 10px #138af5)}
+.flight-hero-title h1{font-size:clamp(39px,6vw,74px);font-style:italic;letter-spacing:-.05em;line-height:1;margin:0;font-weight:950;text-shadow:0 5px 24px #000}
+.flight-hero-title h1 span{color:#3dcfff}
+.flight-hero-title p{font-size:clamp(9px,1.05vw,14px);letter-spacing:.25em;color:#acd6f5;font-weight:650;margin:12px 16px}
+.airway-graphic{position:absolute;inset:10% 0 0;opacity:.87}
+.airway-graphic svg{display:block;width:100%;height:100%}
+.home-capsules{position:absolute;bottom:8px;left:14px;right:14px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.home-capsules span{border:1px solid rgba(56,200,255,.28);padding:6px 12px;border-radius:9px;background:#041426d4;color:#cde8fc;font:12px Menlo,monospace}
+.flight-home .home-tiles{width:100%;max-width:none;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:15px 0 0}
+.flight-home .home-card{flex-direction:column;justify-content:center;text-align:center;gap:10px;padding:16px 8px;min-height:138px;background:linear-gradient(155deg,#102e4d,#071a31 60%,#051222);border:1px solid #246396;border-radius:13px;box-shadow:0 7px 22px #0006, inset 0 1px 0 #5ccfff22}
+.flight-home .home-card:hover,.flight-home .home-card:focus-visible{border-color:#33c9ff;box-shadow:0 0 17px #006eff57}
+.flight-home .home-card .card-icon{border:0;box-shadow:none;background:none;color:#46c4ff;font-size:44px;font-weight:500;height:48px;width:58px}
+.flight-home .home-card b{font-size:clamp(16px,1.8vw,21px);margin:0;text-transform:uppercase}
+.flight-home .home-card small{display:block;font-size:12px;margin-top:4px;color:#aec8dd}
+.home-footer{display:flex;justify-content:space-between;align-items:center;gap:14px;color:#8eafc7;font-size:11px;letter-spacing:.05em;padding:15px 0 0}
+.home-sim-link{color:#38c8ff;border:0;background:transparent;font-weight:750}
+.charts-layout.active{grid-template-columns:295px minmax(0,1fr)!important;height:100dvh!important;transition:grid-template-columns .2s ease;background:#04101e}
+.charts-layout.active.chart-open{grid-template-columns:218px minmax(0,1fr)!important}
+#chartsView .airport-pane{background:linear-gradient(135deg,#071b31,#030d1c 77%);border-right:1px solid #1c4973!important}
+#chartsView .airport-pane .pane-head{min-height:73px;display:flex;flex-wrap:wrap;gap:5px;padding:13px 12px}
+#chartsView .pane-head h2{font-size:25px;font-weight:900;letter-spacing:-.035em;order:2;width:100%}
+#chartsView .back-btn{padding:4px 7px;color:#4ac7ff;background:transparent;border:0;font-size:13px}
+#chartsView .search{border:1px solid #20577e;border-radius:9px;margin:2px 10px 8px;width:calc(100% - 20px);height:42px;background:#0a233c;font-size:13px;color:white}
+.airport-filters{display:flex;gap:6px;padding:3px 10px 8px}
+.airport-filter{flex:1;min-height:33px;border-radius:7px;border:1px solid #184667;background:#082139;color:#c3dcf3;font-size:12px}
+.airport-filter.active{background:linear-gradient(110deg,#096aff,#069efe);color:#fff;border-color:#1b91ff;box-shadow:var(--jepp-glow)}
+#chartsView .airport-list{gap:5px!important;padding:3px 8px 16px!important}
+#chartsView .airport-item,#chartsView .airport-item.selected{min-height:61px!important;background:#081e33!important;background-image:none!important;border:1px solid #164164!important;border-radius:8px!important;box-shadow:none!important;padding:10px!important;display:flex;align-items:center;gap:8px}
+#chartsView .airport-item:hover{border-color:#2f8ed1!important}
+#chartsView .airport-item.selected{background:linear-gradient(98deg,#08305d,#06192e)!important;border-color:#36c8ff!important;outline:1px solid #20c7ff!important;box-shadow:var(--jepp-glow)!important}
+#chartsView .airport-item .airport-shade{display:none!important}
+#chartsView .airport-item .airport-copy{min-height:0!important;padding:0!important;display:block!important;width:100%;min-width:0}
+#chartsView .airport-item b{font-size:17px;color:#f9fcff}
+#chartsView .airport-item small{font-size:11px;color:#9dbbd4;line-height:1.3}
+#chartsView .airport-chevron{position:static;transform:none;background:none!important;font-size:21px;color:#5cc9fd;width:20px}
+#chartsView .airport-inline-tree{margin-left:10px;padding-left:8px;border-color:#1676b8}
+#chartsView .airport-inline-tree .tree-group-head{background:#0b2742;color:#55cbff;border:1px solid #144466}
+#chartsView .airport-inline-tree .tree-item{font-size:12px;border:1px solid transparent}
+#chartsView .airport-inline-tree .tree-item.selected{background:linear-gradient(100deg,#0865c9,#082a4d)!important;outline:1px solid #24baff;color:white}
+#chartsView .viewer-pane{background:#030f1e;overflow-y:auto}
+#chartsView .viewer-toolbar,#chartsView .pdf-stage{display:none}
+#chartsView.chart-open .viewer-toolbar{display:flex;background:#061d33;color:#eef7ff;border-bottom:1px solid #175584;min-height:65px;height:auto;flex-wrap:wrap}
+#chartsView.chart-open .pdf-stage{display:block;flex:1;min-height:230px}
+#chartsView.chart-open .viewer-pane{overflow:hidden}
+#chartsView .viewer-title strong{font-size:17px;color:#f4f9ff}
+#chartsView .viewer-title small{font-size:12px}
+#chartsView .viewer-actions .icon-btn{background:#0b2a49;border:1px solid #1c5a8d;color:#c3e7ff;border-radius:8px}
+#chartsView .viewer-actions .icon-btn:hover{border-color:#34c8ff}
+#chartsView .airport-profile{display:block;width:100%;min-height:100%;padding:clamp(12px,2vw,25px);overflow:auto;overscroll-behavior:contain;background:radial-gradient(ellipse at 70% 2%,#0a2944,#041122 55%,#030e1d)}
+#chartsView.chart-open .airport-profile{display:none}
+.profile-no-selection{display:grid;place-items:center;align-content:center;height:70vh;color:#9dbbd4;text-align:center}
+.profile-no-selection span{font-size:60px;color:#2baefa}
+.profile-no-selection h2{color:#f4faff;margin:10px 0}
+.profile-shell{max-width:1440px;margin:auto}
+.profile-heading{display:flex;justify-content:space-between;gap:16px;align-items:flex-start;padding-bottom:14px}
+.profile-code-row{display:flex;flex-wrap:wrap;gap:9px;align-items:center}
+.profile-icao{font-size:clamp(34px,4vw,52px);line-height:1.1;font-weight:950;letter-spacing:-.045em}
+.profile-chip{font-size:13px;color:#83cdff;border:1px solid #22628e;border-radius:5px;padding:7px 12px}
+.profile-heading h2{margin:2px 0 4px;font-size:clamp(17px,2vw,26px)}
+.profile-heading p{margin:0;color:#32c7ff;font-size:15px}
+.profile-elev{text-align:right;color:#c3def6;font-size:13px;line-height:1.85;white-space:nowrap}
+.profile-tabs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px;border-radius:12px;padding:4px;border:1px solid #164369;background:#071c30;margin-bottom:14px}
+.profile-tab{color:#d3e9fa;background:none;border:0;border-radius:9px;padding:11px 3px;font-size:13px}
+.profile-tab.active{color:white;background:#0677ed;box-shadow:0 0 17px #067fff88}
+.profile-cols{display:grid;grid-template-columns:minmax(0,1.48fr) minmax(245px,1fr);gap:14px;align-items:start}
+.profile-col{min-width:0;display:grid;gap:13px;align-content:start}
+.profile-card{border:1px solid #15446c;border-radius:13px;background:linear-gradient(145deg,#09213c,#051428);min-width:0;overflow:hidden}
+.profile-card>header{color:#3fcaff;font-size:13px;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:11px 13px;font-weight:800}
+.profile-card>header small{font-size:11px;color:#a3c1d7;font-weight:400}
+.profile-card .metar-raw{display:block;font-size:clamp(11px,1.35vw,15px);font-family:Menlo,Consolas,monospace;overflow-wrap:anywhere;line-height:1.5;padding:0 14px 8px}
+.weather-summary{display:grid;grid-template-columns:minmax(0,1fr) minmax(100px,.9fr);gap:10px;padding:7px 15px 16px}
+.weather-brief{display:flex;gap:9px;align-items:center}
+.weather-icon{font-size:clamp(31px,3.8vw,57px);filter:drop-shadow(0 2px 10px #0899ff44)}
+.weather-brief strong{font-size:clamp(27px,3vw,42px);line-height:1}
+.weather-brief small{display:block;color:#aed4f2;margin-top:5px;font-size:12px}
+.weather-facts{display:grid;gap:5px;align-content:center;border-left:1px solid #1c4564;padding-left:14px;font-size:13px;color:#c6dcec}
+.rwy-row{display:grid;grid-template-columns:minmax(85px,1.1fr) minmax(105px,1.2fr) minmax(65px,.7fr);gap:8px;padding:13px 12px;margin:5px 8px;border:1px solid #123d60;border-radius:9px;align-items:center;background:#07192d;color:#d5eaff;text-align:left;width:calc(100% - 16px);font-size:12px}
+.rwy-row span{min-width:0}.rwy-row b{display:block;font-size:15px;color:#fff}.rwy-row small{display:block;color:#9ac2dd;margin-top:4px}
+.rwy-row.active{background:linear-gradient(95deg,#073a74,#082447);border-color:#26baff;box-shadow:0 0 10px #0068f766}
+.wind-compass{margin:0 12px 5px;min-height:116px;display:flex;gap:12px;flex-direction:column;align-items:center;justify-content:center;color:#d9efff}
+.wind-compass .rwy-visual{height:28px;width:min(280px,90%);background:#0b2139;border:2px solid #b8d5eb;position:relative;display:flex;align-items:center;justify-content:center;font-size:13px;letter-spacing:.11em}
+.wind-compass .rwy-visual:before{content:"";position:absolute;left:12px;right:12px;top:50%;border-top:2px dashed #d9ebfa}
+.wind-compass .rwy-visual span{position:relative;background:#0b2139;padding:0 6px}
+.wind-data{font-size:13px;padding:0 13px 12px;display:grid;gap:8px}
+.wind-data div{display:flex;justify-content:space-between;gap:8px;border-top:1px solid #163950;padding-top:7px}
+.wind-head{color:#49ed9b}.wind-cross{color:#ffca42}
+.profile-info-row{display:flex;justify-content:space-between;gap:14px;border-top:1px solid #163d5b;padding:7px 13px;font-size:12px}
+.profile-info-row span{color:#a7c8e2}.profile-info-row b{font-weight:600;color:#e9f7ff}
+.profile-quick{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.profile-quick button{min-height:83px;border-radius:10px;border:1px solid #205587;background:linear-gradient(160deg,#0d3560,#07192d);color:#e7f6ff;display:flex;align-items:center;flex-direction:column;justify-content:center;gap:6px;font-size:13px}
+.profile-quick button span{font-size:28px;color:#41bdff}
+.profile-procedures{padding:6px 10px 13px}
+.profile-proc-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:5px;margin-bottom:6px}
+.profile-proc-tabs button{background:#072239;border:1px solid #164c78;color:#d4eeff;border-radius:7px;padding:9px 3px;font-size:12px}
+.profile-proc-tabs button.active{background:#076bdf;border-color:#399fff}
+.profile-proc-list{max-height:195px;overflow:auto}
+.profile-proc-list button{display:flex;justify-content:space-between;width:100%;border:0;border-bottom:1px solid #174362;background:transparent;color:#e5f4ff;padding:9px 3px;text-align:left;gap:10px}
+.profile-proc-list button:hover{color:#45d5ff}
+.profile-proc-list small{color:#71b8e7}
+.profile-empty{color:#9bbdd5;padding:18px;text-align:center;font-size:13px}
+.profile-alert{padding:14px;border:1px solid #19517d;border-radius:12px;background:#09223d;color:#b5d4eb;font-size:13px}
+.utc-clock{font-variant-numeric:tabular-nums}
+#chartsView.chart-open .airport-pane{overflow:hidden}
+:root.light .flight-home,:root.light #chartsView .airport-pane,:root.light #chartsView .viewer-pane,:root.light #chartsView .airport-profile{color:#eff8ff}
+/* Portrait: airport list remains present but conserves chart space. */
+@media(max-width:850px){
+  .charts-layout.active{grid-template-columns:220px minmax(0,1fr)!important}
+  .charts-layout.active.chart-open{grid-template-columns:170px minmax(0,1fr)!important}
+  .profile-cols{grid-template-columns:1fr}
+  .profile-elev{font-size:11px}
+}
+@media(max-width:620px){
+  .flight-home-inner{padding:10px}
+  .flight-home-horizon{min-height:245px}
+  .flight-home .home-tiles{gap:8px;padding-top:10px;grid-template-columns:repeat(2,1fr)}
+  .flight-home .home-card{min-height:120px}
+  .home-footer{flex-wrap:wrap;font-size:10px;padding:10px}
+  .charts-layout.active{grid-template-columns:125px minmax(0,1fr)!important}
+  .charts-layout.active.chart-open{grid-template-columns:110px minmax(0,1fr)!important}
+  #chartsView .pane-head h2{font-size:18px}
+  #chartsView .pane-head{padding:9px 6px}
+  #chartsView .search{font-size:10px;padding:6px;margin:5px;width:calc(100% - 10px)}
+  #chartsView .airport-filters{gap:2px;padding:3px 4px}
+  #chartsView .airport-filter{font-size:10px;padding:3px}
+  #chartsView .airport-list{padding:3px 4px!important}
+  #chartsView .airport-item,#chartsView .airport-item.selected{min-height:52px!important;padding:6px!important}
+  #chartsView .airport-item b{font-size:14px}
+  #chartsView .airport-item small{font-size:9px;white-space:normal}
+  #chartsView .airport-chevron{display:none}
+  #chartsView .airport-inline-tree{margin-left:4px;padding-left:4px}
+  #chartsView .airport-inline-tree .tree-item{font-size:10px}
+  #chartsView .airport-profile{padding:9px}
+  .profile-heading{display:block}
+  .profile-elev{text-align:left;white-space:normal;margin-top:6px}
+  .profile-icao{font-size:29px}
+  .profile-heading h2{font-size:15px}
+  .profile-tabs{gap:0}
+  .profile-tab{font-size:10px;padding:9px 0}
+  .weather-summary{grid-template-columns:1fr}
+  .weather-facts{border:0;border-top:1px solid #1c4564;padding:8px 0 0}
+  .rwy-row{grid-template-columns:1fr;gap:4px}
+  .profile-quick{grid-template-columns:repeat(2,1fr)}
+  #chartsView.chart-open .viewer-toolbar{min-height:90px}
+  #chartsView.chart-open .viewer-actions{max-width:100%}
+}
+@media(prefers-reduced-motion:reduce){.charts-layout.active{transition:none}.aircraft-pulse{animation:none}}
