@@ -63,14 +63,14 @@ def build(manifest_path, source=None):
         for ident, opposite, heading in pair:
             ident = (ident or "").strip().upper()
             opposite = (opposite or "").strip().upper()
-            if not re.fullmatch(r"\\d{2}[LRC]?", ident) and not re.fullmatch(r"\\d{2}", ident):
+            if not re.fullmatch(r"\d{2}[LRC]?", ident) and not re.fullmatch(r"\d{2}", ident):
                 continue
             true = numeric(heading, 0, 360)
             if true == 360:
                 true = 0.0
             runway = {
                 "name": ident,
-                "opposite": opposite if re.fullmatch(r"\\d{2}[LRC]?", opposite) else "",
+                "opposite": opposite if re.fullmatch(r"\d{2}[LRC]?", opposite) else "",
                 "headingTrue": round(true, 2) if true is not None else None,
                 "headingMag": None,
                 "length": round(length_ft * 0.3048) if length_ft is not None else None,
