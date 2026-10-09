@@ -1,6 +1,6 @@
 # V2621 pages 661–760 — reconciliation notes, 200 DPI evidence
 
-This supplement was prepared after reading the concurrent audit branch's 10-page CSV commits and independently matching plate labels and classifications to `2621(2).pdf` (1654 pages; SHA256 `d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6e46ce8a7ab6`).
+This supplement was prepared after reading the concurrent audit branch's 10-page CSV commits and independently matching plate labels and classifications to `2621(2).pdf` (1654 pages; SHA256 `d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6`).
 
 Source SHA correction: the authoritative **64-character** hash is `d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6`.
 
