@@ -1,0 +1,57 @@
+{
+  "originalPdfSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+  "originalPages": 1654,
+  "cycle": 2621,
+  "allowedAuthoritativeExternalReferenceDomains": {
+    "Iran": [
+      "ais.airport.ir"
+    ],
+    "Turkey": [
+      "dhmi.gov.tr",
+      "ais.dhmi.gov.tr"
+    ],
+    "UAE": [
+      "gcaa.gov.ae"
+    ],
+    "Qatar": [
+      "caa.gov.qa",
+      "aim.gov.qa"
+    ],
+    "Pakistan": [
+      "caapakistan.com.pk",
+      "pcaa.gov.pk"
+    ],
+    "Iraq": [
+      "icaa.gov.iq"
+    ],
+    "Armenia": [
+      "armats.am"
+    ],
+    "Georgia": [
+      "airnav.ge"
+    ],
+    "Oman": [
+      "caa.gov.om"
+    ]
+  },
+  "knownOfficialAipDocuments": {
+    "OIBL": "https://ais.airport.ir/documents/452631/186839484/OIBL.pdf",
+    "OIHH": "https://ais.airport.ir/documents/452631/186839535/OIHH.pdf",
+    "OIMB": "https://ais.airport.ir/documents/452631/186839606/OIMB.pdf",
+    "OIZS": "https://ais.airport.ir/documents/452631/186846259/OIZS.pdf"
+  },
+  "userValidatedAdcs": {
+    "OIMB": 561,
+    "OIHH": 342,
+    "OIBL": 118
+  },
+  "userUnvalidatedAdcs": {
+    "OIZS": 961
+  },
+  "dmeSlantMetersFormula": "horizontal_m=sqrt(max(0,(slant_nm*1852)^2 - (alt_target_m-alt_navaid_m)^2))",
+  "dmeIfVerticalSeparationUnknown": "valid spherical/circular constraint with uncertainty; NEVER equate to exact horizontal range",
+  "radialNeeds": "documented station, magnetic variation and date, angular uncertainty; fixes need intersecting independent source constraints",
+  "aipGcpPrecision": "do not use Jepp general-info rounded Lat/Long as 10m control; require official precision and held-out fit",
+  "testDoesNotImplyNavigationCertification": true,
+  "noAutomaticPublication": true
+}
