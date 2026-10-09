@@ -19,6 +19,10 @@ class TrueRunwayCompassView(context: Context) : View(context) {
         set(value) { field = value; invalidate() }
     var headingTrue: Float? = null
         set(value) { field = value; invalidate() }
+    var windFromTrue: Float? = null
+        set(value) { field = value; invalidate() }
+    var windSpeedKts: Int? = null
+        set(value) { field = value; invalidate() }
 
     private val ink = Paint(Paint.ANTI_ALIAS_FLAG)
     private val cyan = Color.rgb(59, 198, 255)
@@ -27,7 +31,7 @@ class TrueRunwayCompassView(context: Context) : View(context) {
 
     override fun onDraw(canvas: Canvas) {
         super.onDraw(canvas)
-        val scale = min(width / 320f, height / 210f)
+        val scale = min(width / 320f, height / 234f)
         val cx = width / 2f
         val cy = height / 2f
         canvas.save()
@@ -89,12 +93,40 @@ class TrueRunwayCompassView(context: Context) : View(context) {
         canvas.drawPath(arrow, ink)
         canvas.restore()
 
+        // METAR wind is reported FROM its TRUE direction. Draw a separate
+        // inward yellow arrow; do not rotate it along with the runway.
+        val wind = windFromTrue
+        val speed = windSpeedKts
+        if (wind != null && wind.isFinite() && speed != null && speed > 0) {
+            canvas.save()
+            canvas.rotate(((wind % 360f) + 360f) % 360f)
+            ink.color = Color.rgb(255, 210, 106)
+            ink.style = Paint.Style.STROKE
+            ink.strokeWidth = 4.5f
+            ink.strokeCap = Paint.Cap.ROUND
+            ink.strokeJoin = Paint.Join.ROUND
+            val windArrow = Path().apply {
+                moveTo(0f, -97f)
+                lineTo(0f, -58f)
+                moveTo(-10f, -70f)
+                lineTo(0f, -55f)
+                lineTo(10f, -70f)
+            }
+            canvas.drawPath(windArrow, ink)
+            canvas.restore()
+        }
+
         ink.color = light
         ink.style = Paint.Style.FILL
         ink.textSize = 12f
         ink.typeface = android.graphics.Typeface.DEFAULT_BOLD
         canvas.drawText("RWY " + runwayId + " HDG · " + h.toInt() + "°",
-            0f, 97f, ink)
+            0f, 87f, ink)
+        ink.textSize = 10f
+        ink.color = if (wind != null && speed != null && speed > 0) Color.rgb(255, 210, 106) else muted
+        canvas.drawText(if (wind != null && speed != null && speed > 0)
+            "WIND FROM " + wind.toInt() + "° / " + speed + " KT"
+            else if (speed == 0) "CALM WIND" else "WIND DIRECTION UNAVAILABLE", 0f, 105f, ink)
         canvas.restore()
     }
 }
