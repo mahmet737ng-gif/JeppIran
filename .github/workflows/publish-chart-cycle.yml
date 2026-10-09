@@ -153,6 +153,19 @@ jobs:
             --cycle "${{ steps.cycle.outputs.cycle }}" \
             --disable-independent-check
 
+      - name: Preserve reviewed unchanged Approach georeferences
+        if: steps.cycle.outputs.cycle == '2621'
+        shell: bash
+        run: |
+          python scripts/carry_forward_verified_approaches.py \
+            --pdf "${{ steps.cycle.outputs.source }}" \
+            --previous-georef app/src/main/assets/chart-georef.json \
+            --current-georef cycle-build/chart-georef.json \
+            --index cycle-build/charts-current.json \
+            --reviewed-manifest docs/georeferencing/cycle2621-unchanged-approach-carryforward-manifest.json \
+            --output cycle-build/chart-georef.json \
+            --report cycle-build/approach-carry-forward-audit.json
+
       - name: Validate bundle
         shell: bash
         run: |
