@@ -349,8 +349,16 @@ object ChartGeoreferenceStore {
             // axis invented with a conformal scale assumption. Do not
             // change legacy STAR/SID handling in this focused update.
             val chartKey = item.optString("chartKey").uppercase()
+            val independentlyReviewedLegacy =
+                validation?.optBoolean("carryForwardApproved", false) == true &&
+                validation.optBoolean("verifiedUnchangedAgainstPreviousSource", false) &&
+                validation.optBoolean("reusedUnchangedSource", false)
             if (method == "single_axis_plus_conformal_scale" &&
-                (chartKey.contains("|APPROACH|") || chartKey.contains("|AIRPORT|"))) {
+                (chartKey.contains("|APPROACH|") || chartKey.contains("|AIRPORT|")) &&
+                !independentlyReviewedLegacy) {
+                // No NEW single-axis inferred scale is accepted. Retain a
+                // previously approved calibration only for an explicitly
+                // reviewed, unchanged cycle-to-cycle chart.
                 continue
             }
 
