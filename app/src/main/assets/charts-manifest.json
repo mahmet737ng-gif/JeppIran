@@ -1,19 +1,19 @@
 {
   "version": "V2621",
-  "release_tag": "charts-V2621-printclean-1",
-  "base_url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/",
+  "release_tag": "charts-V2621-printclean-2",
+  "base_url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/",
   "source": "Iran2621.pdf",
   "source_sha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
   "cycle": "2621",
   "effective_from": "",
   "effective_to": "",
-  "generated_at": "2026-10-09T01:48:10.905674+00:00",
+  "generated_at": "2026-10-09T00:00:00Z",
   "pages": 1654,
   "airports": {
     "LTAC": {
       "file": "LTAC.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/LTAC.pdf",
-      "sha256": "c21b79292a860bd8a1683ff219002c9210a21043517b859ec127cbb3e0dc0e3e",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/LTAC.pdf",
+      "sha256": "c20390a8a2073df423fdd5f3d0e80be217920c58fb65d8b190cc5f498beb2384",
       "size": 5207147,
       "pages": 92,
       "global_pages": [
@@ -113,8 +113,8 @@
     },
     "LTFM": {
       "file": "LTFM.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/LTFM.pdf",
-      "sha256": "52a1d6f09712fe1e5a1c8a9f42371fe9851a205f11536f6f3dd2bddca18a24b4",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/LTFM.pdf",
+      "sha256": "cd6195035e567206a83d9552a48ac534fb9652fb09e3f899bf66a592cc1e220b",
       "size": 13754280,
       "pages": 175,
       "global_pages": [
@@ -297,8 +297,8 @@
     },
     "OIAA": {
       "file": "OIAA.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIAA.pdf",
-      "sha256": "cb83464318c3898c831d2bfab72a090ffc04d81f536f8fa5d01bde42f2e48390",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIAA.pdf",
+      "sha256": "4406feacfef6a768509c185d9889776de3532da7f27cc7c27b3d27252e433982",
       "size": 602098,
       "pages": 18,
       "global_pages": [
@@ -324,8 +324,8 @@
     },
     "OIAM": {
       "file": "OIAM.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIAM.pdf",
-      "sha256": "376d1d528ab49cb2641453b6154f38f6ab9477b0281567cb7a93b3a346852693",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIAM.pdf",
+      "sha256": "79aacd7cb2f939acee84263bad988ce501ef00ffc01c6dc85f787de64cbbfbe3",
       "size": 336783,
       "pages": 8,
       "global_pages": [
@@ -341,8 +341,8 @@
     },
     "OIAW": {
       "file": "OIAW.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIAW.pdf",
-      "sha256": "195b9ac0ece9be329f1a644e57f0e5d0e75f29eaaacafa62b112c67c8ed79a6d",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIAW.pdf",
+      "sha256": "50880341fcce7f9e4114555b8597a9688b27ec1eb183887ea8dc8fc2f72ad901",
       "size": 646009,
       "pages": 25,
       "global_pages": [
@@ -375,8 +375,8 @@
     },
     "OIBA": {
       "file": "OIBA.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIBA.pdf",
-      "sha256": "1e1452588cac5cb7681f421b1ae2e2c1a7ca2c9af77596c9d4baabd8ef717b44",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIBA.pdf",
+      "sha256": "68c1f9011c6250ef586ecf20a8916b8435d4b292d8c1d0856e1aff90911ba480",
       "size": 366964,
       "pages": 11,
       "global_pages": [
@@ -395,8 +395,8 @@
     },
     "OIBB": {
       "file": "OIBB.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIBB.pdf",
-      "sha256": "4fb2d0329473bf1a24ccf1aa8180d6768c5da558571fc6b5348e065877e4ef3f",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIBB.pdf",
+      "sha256": "b88bb2e70ecd742ebd18f0291e97bf097318e439c7450e638afda5b4f5be89ca",
       "size": 590124,
       "pages": 22,
       "global_pages": [
@@ -426,8 +426,8 @@
     },
     "OIBK": {
       "file": "OIBK.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIBK.pdf",
-      "sha256": "8db595e91be35cea8928bcb725be4ed57d8c49dfad01fdcb47d12487249691f9",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIBK.pdf",
+      "sha256": "b20e19762d21f87fa26faedeade5fdf8b25e3f89ab22b5328b3be6ed17143c94",
       "size": 718689,
       "pages": 23,
       "global_pages": [
@@ -458,8 +458,8 @@
     },
     "OIBL": {
       "file": "OIBL.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIBL.pdf",
-      "sha256": "3de8825b961b0c51178c3aa1313827cf56391e081bc4ed1d02fb5953da580969",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIBL.pdf",
+      "sha256": "5bfb04e323d00df236ebad7462f8a1ab2ac8fd3e4cd4fa565d89a6773a674c62",
       "size": 457624,
       "pages": 18,
       "global_pages": [
@@ -485,8 +485,8 @@
     },
     "OIBP": {
       "file": "OIBP.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIBP.pdf",
-      "sha256": "b1ad05830edc0af4c587e1c74b658def3f588503ca1e60bcae273e2af73552d2",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIBP.pdf",
+      "sha256": "523a9ae47bc2d6e0ead3a8fbc241edf569cfc562565b060d432fbd48a101afec",
       "size": 754408,
       "pages": 15,
       "global_pages": [
@@ -509,8 +509,8 @@
     },
     "OIBQ": {
       "file": "OIBQ.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIBQ.pdf",
-      "sha256": "df4d3aa7c15090dd0b93af3a8ab5e407fbc6c5bd5f2d2f7e96481ca26d17d8ea",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIBQ.pdf",
+      "sha256": "4d153eeeb9427d4a19b6a552e73b837d02d766c8cc246ddf0b339c9fa2efc535",
       "size": 538176,
       "pages": 23,
       "global_pages": [
@@ -541,8 +541,8 @@
     },
     "OIBS": {
       "file": "OIBS.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIBS.pdf",
-      "sha256": "d51690beb79fbeeee2df7fcd5b10a3d8d79f994464045071de4a5c6f5d8f3ccd",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIBS.pdf",
+      "sha256": "073518d3006a6e109a912c07cfb92aa5b8518ea7b08206b768455310259fbb21",
       "size": 265915,
       "pages": 9,
       "global_pages": [
@@ -559,8 +559,8 @@
     },
     "OIBV": {
       "file": "OIBV.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIBV.pdf",
-      "sha256": "38f74438cebcea26dfb17c5ae9726c2240c5d37157099716466117fad6f30fa0",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIBV.pdf",
+      "sha256": "ca057f8d3ad419c680fc80d58d8155164ea218df895efa4b9759f9080872fbbe",
       "size": 275662,
       "pages": 6,
       "global_pages": [
@@ -574,8 +574,8 @@
     },
     "OICC": {
       "file": "OICC.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OICC.pdf",
-      "sha256": "eac0e8a7061b15331eae2223fed30b5492c6c7eafe49c9de2a88861e1a347227",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OICC.pdf",
+      "sha256": "0909489090251ddfff23f76c9531091594331541abf66aefbf8a603ba403de99",
       "size": 1620437,
       "pages": 27,
       "global_pages": [
@@ -610,8 +610,8 @@
     },
     "OICI": {
       "file": "OICI.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OICI.pdf",
-      "sha256": "65e491fd412087ee668cddd51379e2d1272d960f912208a4bed701ad8f7525ec",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OICI.pdf",
+      "sha256": "56fae897714a078e572bff94fbca5ab49f9c83cee0ecbbe1821621290ec98b81",
       "size": 718846,
       "pages": 11,
       "global_pages": [
@@ -630,8 +630,8 @@
     },
     "OICK": {
       "file": "OICK.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OICK.pdf",
-      "sha256": "b5a390df78422c5391e5c1ad853f9ab93691c64663e296828aba841ed888833e",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OICK.pdf",
+      "sha256": "ef4bdbbfce9b9a9a5becd09bc42ef2abe4f268ec99ca83b4984a4b4b6d9a762b",
       "size": 774510,
       "pages": 10,
       "global_pages": [
@@ -649,8 +649,8 @@
     },
     "OICS": {
       "file": "OICS.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OICS.pdf",
-      "sha256": "45de1c9775ed15b12c08b5d6413daed31cde3a073714802d62c7d6e6ae7cf0ae",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OICS.pdf",
+      "sha256": "c4a218d9a9003faef7fe3a69142d68cb4fdc7286d815df2619cc2592957767bf",
       "size": 474596,
       "pages": 8,
       "global_pages": [
@@ -666,9 +666,9 @@
     },
     "OICZ": {
       "file": "OICZ.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OICZ.pdf",
-      "sha256": "cf7206f21e5fd1df1ff500dd576c9f427e8bc413040e56275b8627ef226addfc",
-      "size": 217491,
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OICZ.pdf",
+      "sha256": "02bf959723fd8e75cfd0c762c15fe10cd003ababa24a93302c93c4ac97f3611e",
+      "size": 217490,
       "pages": 3,
       "global_pages": [
         235,
@@ -678,8 +678,8 @@
     },
     "OIFE": {
       "file": "OIFE.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIFE.pdf",
-      "sha256": "f216d75bddd7a672d8f6c33badba510d621abd409db378eeb4663953d50d7aae",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIFE.pdf",
+      "sha256": "40ec9b7543b300c17325d92149d58c336ca253692343d4479aab4b408a13609d",
       "size": 325929,
       "pages": 7,
       "global_pages": [
@@ -694,8 +694,8 @@
     },
     "OIFM": {
       "file": "OIFM.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIFM.pdf",
-      "sha256": "300eb585f9f245e13d0d55fac6ee1b4e126fb8dc3dff9ba8fa5433dbb4ee88a8",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIFM.pdf",
+      "sha256": "0e760ac48c453caf5d0543124956ec0916ca22617cfefff92893b57a9968ea68",
       "size": 2262270,
       "pages": 39,
       "global_pages": [
@@ -742,8 +742,8 @@
     },
     "OIFP": {
       "file": "OIFP.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIFP.pdf",
-      "sha256": "b5b0d0301cf5cf9407b3a349243ecdffe3022d2cd16dd6b0daa8cf19fe73d376",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIFP.pdf",
+      "sha256": "95db72db0f13e1e231edad670f449884ab7728c7e4f0e9c73b6a7069e32db0a0",
       "size": 158436,
       "pages": 2,
       "global_pages": [
@@ -753,8 +753,8 @@
     },
     "OIFS": {
       "file": "OIFS.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIFS.pdf",
-      "sha256": "13dd429725b169b96053fd742b21cb8b56cde851dc8ca70b58559efab94e0f74",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIFS.pdf",
+      "sha256": "1170b83efcef6e85f52201608afb9e3b3b4912d0988909c7599474a7f9dd763d",
       "size": 628308,
       "pages": 19,
       "global_pages": [
@@ -781,8 +781,8 @@
     },
     "OIGG": {
       "file": "OIGG.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIGG.pdf",
-      "sha256": "4e5f1ee7e1f107484248465b228b45d3714104019a533533c94dc0eb9e3e2dc6",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIGG.pdf",
+      "sha256": "f510a17698371c3b13d1157c44db3fe5c697195ece1539ee7909912bd532f1a8",
       "size": 959606,
       "pages": 31,
       "global_pages": [
@@ -821,8 +821,8 @@
     },
     "OIHH": {
       "file": "OIHH.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIHH.pdf",
-      "sha256": "81a398ad49dfcfeb1f56d411820982e61c655637e0ab567d9815d0f317971ef6",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIHH.pdf",
+      "sha256": "c12da891b3cc6ab369428d71b54664797ec8bc950e9a0c368181deb22a922e64",
       "size": 501291,
       "pages": 13,
       "global_pages": [
@@ -843,8 +843,8 @@
     },
     "OIHR": {
       "file": "OIHR.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIHR.pdf",
-      "sha256": "71a18d242404c5fd58af13b11df1a2065ddbcb02f5da7748d55cfe6a4157ba84",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIHR.pdf",
+      "sha256": "84e9c6c690005ef84d48ddff673d5c62f93522ca4a0ff36e31f06bd38b22f07d",
       "size": 348840,
       "pages": 10,
       "global_pages": [
@@ -862,8 +862,8 @@
     },
     "OIIE": {
       "file": "OIIE.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIIE.pdf",
-      "sha256": "0698384c4b4a757ed50b103b3c6c2ee29f8cfdf696acbb9107fa6338e38e7399",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIIE.pdf",
+      "sha256": "9a7a512293d838ce776c6ee64f96e1ca1bc7e60463ab13b8bd294200545d06ca",
       "size": 2887090,
       "pages": 35,
       "global_pages": [
@@ -906,8 +906,8 @@
     },
     "OIII": {
       "file": "OIII.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIII.pdf",
-      "sha256": "ad900801874876fc252a3a21b2aa42685e57d59dde7ccaa090297069ea34b0e8",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIII.pdf",
+      "sha256": "b835322d5a9d2279d8cdf19e31f95873c96c41b950459e1b7ea142c647a165a9",
       "size": 2445557,
       "pages": 47,
       "global_pages": [
@@ -962,8 +962,8 @@
     },
     "OIIP": {
       "file": "OIIP.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIIP.pdf",
-      "sha256": "fd826dd1871d7f3e304739cada57a015604dc3987e376632c561ba75b987aa89",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIIP.pdf",
+      "sha256": "a8087c5425a2ffe58f7c4c619e79f39802bd062e896addacc29afe26add69c53",
       "size": 492743,
       "pages": 15,
       "global_pages": [
@@ -986,8 +986,8 @@
     },
     "OIKB": {
       "file": "OIKB.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIKB.pdf",
-      "sha256": "4499492146e60472ff251477a4c26f137995082588821b98419377b198aa5f8e",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIKB.pdf",
+      "sha256": "eef72dae57ca4ec9be0aaca9702b7f19916be848196ce25d10a25dbec11370ef",
       "size": 1412879,
       "pages": 29,
       "global_pages": [
@@ -1024,8 +1024,8 @@
     },
     "OIKJ": {
       "file": "OIKJ.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIKJ.pdf",
-      "sha256": "560104ff3c1d97cd8b139affcea2b5356f54aa712ce06b7f844d88f222cc4a77",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIKJ.pdf",
+      "sha256": "dfbb9ec1ccfd2daa0283875bdfcf5940b5a6a9294febd6fb17ec344be4af141c",
       "size": 443664,
       "pages": 7,
       "global_pages": [
@@ -1040,8 +1040,8 @@
     },
     "OIKK": {
       "file": "OIKK.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIKK.pdf",
-      "sha256": "87e984a3ff5d5c86f5dbcb017ec88296efc6e4fb8ea082b14f3136cf1cbe816e",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIKK.pdf",
+      "sha256": "6b8c59c521306c65ee505d9a73f29e5ee16416702c51385c9adc6a61dc826c50",
       "size": 496026,
       "pages": 19,
       "global_pages": [
@@ -1068,8 +1068,8 @@
     },
     "OIKM": {
       "file": "OIKM.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIKM.pdf",
-      "sha256": "30082c3f33e3a097aebc8d275fdde0915f7053049e519a8b8b71bd37a15e8455",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIKM.pdf",
+      "sha256": "90c3fbe98b2f8de35c8c456326a424e07b275be6c669adfbde11048a017819de",
       "size": 355748,
       "pages": 10,
       "global_pages": [
@@ -1087,8 +1087,8 @@
     },
     "OIKQ": {
       "file": "OIKQ.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIKQ.pdf",
-      "sha256": "1e338661156a12a630e98def2362122f9d3c8c88d702bc0bcaa7a78966375106",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIKQ.pdf",
+      "sha256": "c289f468b8c19ac7be3a3019c7f92fc33212cc86aae75d0f6b1165ab45ac8a2a",
       "size": 416326,
       "pages": 13,
       "global_pages": [
@@ -1109,8 +1109,8 @@
     },
     "OIKR": {
       "file": "OIKR.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIKR.pdf",
-      "sha256": "1ecca04cca110c069bbfa9669c1aa04dc3f156c0f845a5c7cdd7ea772f306937",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIKR.pdf",
+      "sha256": "edaa6c99c666ae152ded940327e54793131bf5856619fc4f15839e72730a34ab",
       "size": 326393,
       "pages": 10,
       "global_pages": [
@@ -1128,8 +1128,8 @@
     },
     "OIKY": {
       "file": "OIKY.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIKY.pdf",
-      "sha256": "07623f78ca5e37d80f80807d22f2823806f891a3f5f2de36e2623c3de3a70058",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIKY.pdf",
+      "sha256": "0da82efd35851cb16d2cf11dd94da1dbe11327a3aa0ea9d45b19d72ad142024b",
       "size": 277939,
       "pages": 9,
       "global_pages": [
@@ -1146,8 +1146,8 @@
     },
     "OIMB": {
       "file": "OIMB.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIMB.pdf",
-      "sha256": "3d584a34d51c82f432c41e8a68be97049cd33a484663789c6a111f69510556c8",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIMB.pdf",
+      "sha256": "c93365fa52d2e379284b0da89da5a5c5d841c519458bc607af8cc16c144430ac",
       "size": 395416,
       "pages": 15,
       "global_pages": [
@@ -1170,8 +1170,8 @@
     },
     "OIMJ": {
       "file": "OIMJ.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIMJ.pdf",
-      "sha256": "463a8c0c53c26a8a2a965e4ffef9fe6ab230dffea3749e8162959903f8d5a2eb",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIMJ.pdf",
+      "sha256": "e3aac6e552ce1ba825d2081716a267c325acd99982f83a5cb5312fcf8777ed99",
       "size": 223284,
       "pages": 4,
       "global_pages": [
@@ -1183,8 +1183,8 @@
     },
     "OIMM": {
       "file": "OIMM.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIMM.pdf",
-      "sha256": "293e06b645621defcde9bb4b047db90f3958667cb6a8985360bf684d46fa1432",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIMM.pdf",
+      "sha256": "1c6e1c04110ea119d179c7aabd9b5a40d4df8c53af6f0df32c270fd94ab26f93",
       "size": 1620802,
       "pages": 43,
       "global_pages": [
@@ -1235,8 +1235,8 @@
     },
     "OIMN": {
       "file": "OIMN.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIMN.pdf",
-      "sha256": "ef53a9b6a3870af4ea51fc890945b8c932de6473888499b0b22be80c5e203ac8",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIMN.pdf",
+      "sha256": "e2ae0517e74428694ed15f363f2730fb2032111c6bdf168ad95f3131342db546",
       "size": 558136,
       "pages": 13,
       "global_pages": [
@@ -1257,8 +1257,8 @@
     },
     "OIMS": {
       "file": "OIMS.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIMS.pdf",
-      "sha256": "f3bd9d51280b8fbee37607875eee82792ff5deba500fafaf3fc857c0b5d748e2",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIMS.pdf",
+      "sha256": "66584c53b5695507406d95b468e12bbd017ed34319485135cf9d365502338ab6",
       "size": 322087,
       "pages": 10,
       "global_pages": [
@@ -1276,8 +1276,8 @@
     },
     "OIMT": {
       "file": "OIMT.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIMT.pdf",
-      "sha256": "7dbd64e45d2611c4fb3be76f30b0655bf9ec6cbc99ae72e73ba14f73fadd889a",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIMT.pdf",
+      "sha256": "26e3bf4a7900ae64594fc49a741c47f9931b738571fc64d5d67bc771e55a04e4",
       "size": 421282,
       "pages": 11,
       "global_pages": [
@@ -1296,8 +1296,8 @@
     },
     "OINE": {
       "file": "OINE.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OINE.pdf",
-      "sha256": "da752df170303bbd0c553880495cddb2eb65adfcdc2e80433801b3b156dac987",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OINE.pdf",
+      "sha256": "46db0b41d7af9341ca2ab97b0efba363d502a5c952a9a6fc12132a9bdb581c3b",
       "size": 222894,
       "pages": 2,
       "global_pages": [
@@ -1307,8 +1307,8 @@
     },
     "OING": {
       "file": "OING.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OING.pdf",
-      "sha256": "bdff257a227c46286d0423ab25a84007f57480d6a4f367e70f8f27627f63be3d",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OING.pdf",
+      "sha256": "e2735d6e4374b39b24c94afc51434e4ea42131d95225e7f083726258bd7697ff",
       "size": 701030,
       "pages": 15,
       "global_pages": [
@@ -1331,8 +1331,8 @@
     },
     "OINN": {
       "file": "OINN.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OINN.pdf",
-      "sha256": "972fd2f64f9cbf98d3dc66f3b3f4c15639869467141497f9bbfdc34a8fbf3fff",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OINN.pdf",
+      "sha256": "dc99797e07c3bc660d2b48f503ca0305c4da8aaa819c10488ebe700ff1f7d9e4",
       "size": 270737,
       "pages": 7,
       "global_pages": [
@@ -1347,8 +1347,8 @@
     },
     "OINR": {
       "file": "OINR.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OINR.pdf",
-      "sha256": "f772018295b076d72e6dc615564d020960bafe273ee82e98cf35ae7933271e9f",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OINR.pdf",
+      "sha256": "4bf19e58bb1b2763721114e8744851bd49de909373f51c312d9e178f957220b2",
       "size": 483435,
       "pages": 13,
       "global_pages": [
@@ -1369,8 +1369,8 @@
     },
     "OINZ": {
       "file": "OINZ.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OINZ.pdf",
-      "sha256": "c6662afff4138eaea4d22c080e912d2df1b3f31fb614d43ed0b03c8ad35d59ef",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OINZ.pdf",
+      "sha256": "9e3dfbcac51697a488864794d30469b53d9828d02185e33cfcde88e989d84f18",
       "size": 407666,
       "pages": 10,
       "global_pages": [
@@ -1388,8 +1388,8 @@
     },
     "OISF": {
       "file": "OISF.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OISF.pdf",
-      "sha256": "79abf3657739a3316fed6b94ddabea57a642a2027cfa58ee264abcab4310eb54",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OISF.pdf",
+      "sha256": "01fce97b5fe145869b7957bb45ca9ec8e549ba97664ecd2fead7db1d40298680",
       "size": 190115,
       "pages": 3,
       "global_pages": [
@@ -1400,8 +1400,8 @@
     },
     "OISL": {
       "file": "OISL.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OISL.pdf",
-      "sha256": "226d082b09a8afcef65f197d00bd11eb876cb0ddc07e2e4e7234c4b7d118afa9",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OISL.pdf",
+      "sha256": "9eb2d404f728286f656ef4b366b743c9fdf467a2406073c728c2a8e497d1556b",
       "size": 405361,
       "pages": 11,
       "global_pages": [
@@ -1420,8 +1420,8 @@
     },
     "OISR": {
       "file": "OISR.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OISR.pdf",
-      "sha256": "544b810d16981e3abc3b1f2bbc9d0418ebd859ec260b63846b3108e57033cc91",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OISR.pdf",
+      "sha256": "a605c4a11de24838b983a06493ede21dbe2ba50c6203d924f60c71165a1a274e",
       "size": 337896,
       "pages": 8,
       "global_pages": [
@@ -1437,8 +1437,8 @@
     },
     "OISS": {
       "file": "OISS.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OISS.pdf",
-      "sha256": "2683855e8239f7525613be13f92caa0e5ff49160fc8bba773b48aa16ab519a55",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OISS.pdf",
+      "sha256": "9ab9ffde5c2fe1652c1cba6986060c5253028f0e1f65aa4f3d8d3c11d0e4ee6b",
       "size": 2475070,
       "pages": 44,
       "global_pages": [
@@ -1490,8 +1490,8 @@
     },
     "OISY": {
       "file": "OISY.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OISY.pdf",
-      "sha256": "c0110f3c4d37ada369883582a667771968c187dc20c286313df22d97d8772aaf",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OISY.pdf",
+      "sha256": "d8b0ff080d4d85655fa6edaeefaafcdc6e1c5f07a75fa584688abfc17ded1785",
       "size": 666551,
       "pages": 8,
       "global_pages": [
@@ -1507,8 +1507,8 @@
     },
     "OITK": {
       "file": "OITK.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OITK.pdf",
-      "sha256": "ed70d145473f99fa985b83f6a54fdd7ab0d523be53343b58718d9e81d796832d",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OITK.pdf",
+      "sha256": "80e9a7ae07384a75d08add3e40f208b915d452bd0d6a9723d168214886e4aad9",
       "size": 453890,
       "pages": 7,
       "global_pages": [
@@ -1523,8 +1523,8 @@
     },
     "OITL": {
       "file": "OITL.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OITL.pdf",
-      "sha256": "cca385ba72e7f8c86c0868430216eb1bed560c7c20a7d1a372192368bda3d485",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OITL.pdf",
+      "sha256": "c8616c8f2ff481a482e13cf4c801bc4e15652f1a4bf8f882cd8e37313e5c9535",
       "size": 667375,
       "pages": 28,
       "global_pages": [
@@ -1560,8 +1560,8 @@
     },
     "OITM": {
       "file": "OITM.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OITM.pdf",
-      "sha256": "9b55437757e5f69ccc1fd6c662a8b2ceec4473dd6a0dc216bf4f8d88ea87d50b",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OITM.pdf",
+      "sha256": "fd43cd609c11287ef6ba12570e3b3e4b971672b47a9559d6a1bebc204270337f",
       "size": 219785,
       "pages": 4,
       "global_pages": [
@@ -1573,8 +1573,8 @@
     },
     "OITR": {
       "file": "OITR.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OITR.pdf",
-      "sha256": "b8439a1515f603436926d8824a25f4bdf7a6417e5b271cf198a4aac13196ee81",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OITR.pdf",
+      "sha256": "1c489517807f078fa14de3fe2eb36ef7a9a9af1e32662a120a836fe1cab21c44",
       "size": 693463,
       "pages": 24,
       "global_pages": [
@@ -1606,8 +1606,8 @@
     },
     "OITT": {
       "file": "OITT.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OITT.pdf",
-      "sha256": "c0ce64be0aa74023a2b5b8aebcc3e5b6f69e59b911ec2491375bf08503fe8cf7",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OITT.pdf",
+      "sha256": "7d661567c10658e00ae5ee70cf088c3cd9b045cf347c2b4baab2640fac7324be",
       "size": 1501947,
       "pages": 23,
       "global_pages": [
@@ -1638,8 +1638,8 @@
     },
     "OITU": {
       "file": "OITU.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OITU.pdf",
-      "sha256": "fee7e94457b4594577c387a8480f6a7b2d93d96e87a1ee8182ffa633869c13ff",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OITU.pdf",
+      "sha256": "da8c084908b6c92a0458b9af7e4bcddd10bb174685a74c4d45f752a7f6af253d",
       "size": 191950,
       "pages": 3,
       "global_pages": [
@@ -1650,8 +1650,8 @@
     },
     "OITZ": {
       "file": "OITZ.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OITZ.pdf",
-      "sha256": "0aeba8d09405ad464a00ff30641b9c7f3a6b4b828e0c7a5d782d744c816beda1",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OITZ.pdf",
+      "sha256": "32156cb98ae6bde5cb3172cf7a1a93b1b8a63ef1ffb4dd20a851f7b025e61b02",
       "size": 440258,
       "pages": 10,
       "global_pages": [
@@ -1669,8 +1669,8 @@
     },
     "OIYY": {
       "file": "OIYY.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIYY.pdf",
-      "sha256": "8bbe3790f26f354c089e148d0c8a29f8712d466c9f25a6fd2164fc48dd96ce6b",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIYY.pdf",
+      "sha256": "f971b8be0d7212d9d68d7e7a8fbed709261c230163c441cc06a0293f8a70487b",
       "size": 955067,
       "pages": 26,
       "global_pages": [
@@ -1704,8 +1704,8 @@
     },
     "OIZB": {
       "file": "OIZB.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIZB.pdf",
-      "sha256": "0ba04c78497de9aa571109778886a5d8d44c6f72214511efbda859e301611624",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIZB.pdf",
+      "sha256": "32d886385b2e365646b4d8bf7b0d0301b090f99fab21205370da39eab7d41f63",
       "size": 329632,
       "pages": 9,
       "global_pages": [
@@ -1722,8 +1722,8 @@
     },
     "OIZC": {
       "file": "OIZC.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIZC.pdf",
-      "sha256": "78f37711d8356c2f4c731fc8618205d7239fa3ee990fde1949d28fd8e613330b",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIZC.pdf",
+      "sha256": "d122e5a7f9ddc8bb46bcefd7f447c89ee65e1e5d9f0134bb67a93fe9862a3a98",
       "size": 509622,
       "pages": 15,
       "global_pages": [
@@ -1746,8 +1746,8 @@
     },
     "OIZH": {
       "file": "OIZH.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIZH.pdf",
-      "sha256": "fc1403a4a7582051050397dcbdb77b8b01edf276e8bb5a7388bbc9c8c7eba6ad",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIZH.pdf",
+      "sha256": "db68237069c6a119af150f1551517263b1578f8da7dd8ec7392acd52a04247bf",
       "size": 1046218,
       "pages": 32,
       "global_pages": [
@@ -1787,8 +1787,8 @@
     },
     "OIZI": {
       "file": "OIZI.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIZI.pdf",
-      "sha256": "4d150d23f320ccc087ed985366fd85cf50c425690e41318675b429089f25c159",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIZI.pdf",
+      "sha256": "e2f264cc6c84d6384548c50307f50645450c3e01f04751ef0986bbfa745bec85",
       "size": 390743,
       "pages": 10,
       "global_pages": [
@@ -1806,9 +1806,9 @@
     },
     "OIZS": {
       "file": "OIZS.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OIZS.pdf",
-      "sha256": "4cc79e27c7d3da18d9beb8099f3dbc81c92d5102ad65b780ce2398d985ed8ad6",
-      "size": 275327,
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OIZS.pdf",
+      "sha256": "fae01521b27ed4ae7d83a4ea8164c94467f5adb2cb56768da8ef6e768e37970a",
+      "size": 275318,
       "pages": 7,
       "global_pages": [
         958,
@@ -1822,10 +1822,10 @@
     },
     "OMDB": {
       "file": "OMDB.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OMDB.pdf",
-      "sha256": "d5f412f577e4fcc4e09529b803c6815708cac4ad239d23979f066ad678ff988b",
-      "size": 3012171,
-      "pages": 59,
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OMDB.pdf",
+      "sha256": "72c877ad68e29832f18f690d2d5311c53d143a0cb502e3427baa2de0321a1acd",
+      "size": 2841113,
+      "pages": 56,
       "global_pages": [
         1395,
         1396,
@@ -1854,6 +1854,8 @@
         1419,
         1420,
         1421,
+        1422,
+        1423,
         1424,
         1425,
         1426,
@@ -1880,32 +1882,15 @@
         1447,
         1448,
         1449,
-        1450,
-        1460,
-        1461,
-        1466,
-        1467,
-        1470
-      ]
-    },
-    "OMDL": {
-      "file": "OMDL.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OMDL.pdf",
-      "sha256": "5b3d6573b97ca144e8afd4174fcd463494da5a9f0fbf1898021ce3ab48840a24",
-      "size": 232500,
-      "pages": 3,
-      "global_pages": [
-        1513,
-        1525,
-        1526
+        1450
       ]
     },
     "OMDW": {
       "file": "OMDW.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OMDW.pdf",
-      "sha256": "6a26e202e49b6f2f379595b323276cf9b75509cb08839c8f9630f04b8ede5eb2",
-      "size": 1345960,
-      "pages": 33,
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OMDW.pdf",
+      "sha256": "8d784a6cb9c2f27e2c02b6a7bce2e8791ee8e23918d9d7cb81730468b6a04c29",
+      "size": 1525347,
+      "pages": 38,
       "global_pages": [
         1451,
         1452,
@@ -1916,12 +1901,17 @@
         1457,
         1458,
         1459,
+        1460,
+        1461,
         1462,
         1463,
         1464,
         1465,
+        1466,
+        1467,
         1468,
         1469,
+        1470,
         1471,
         1472,
         1473,
@@ -1942,21 +1932,10 @@
         1488
       ]
     },
-    "OMQF": {
-      "file": "OMQF.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OMQF.pdf",
-      "sha256": "8ab1b967793436277603ba43a1126eac850ff196736ffab4c49da449f5d22529",
-      "size": 267521,
-      "pages": 2,
-      "global_pages": [
-        1531,
-        1532
-      ]
-    },
     "OOMS": {
       "file": "OOMS.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/OOMS.pdf",
-      "sha256": "c99c86413a3ef3d21902d075b44680210d8bd42b834be66e30ef9b4472969a81",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OOMS.pdf",
+      "sha256": "a445eef8bf5f708755d82e52055756367566bb3b9208b578470766cfb6e431e4",
       "size": 1596955,
       "pages": 34,
       "global_pages": [
@@ -1998,8 +1977,8 @@
     },
     "ORBI": {
       "file": "ORBI.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/ORBI.pdf",
-      "sha256": "cd945739f19f606b9d95209eb9645ed27824195adc18ba82fb8711e38d2cf1d9",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/ORBI.pdf",
+      "sha256": "1691602aefe793df8884c8fb38ed4b7c8358fea11a555a4d934c1c015a803ab2",
       "size": 669991,
       "pages": 13,
       "global_pages": [
@@ -2020,8 +1999,8 @@
     },
     "ORER": {
       "file": "ORER.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/ORER.pdf",
-      "sha256": "c61183999d4680cc6f2d6f980471e3866abcbe6315a778c79629fb78aab170fa",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/ORER.pdf",
+      "sha256": "2ee6d948229115d82853dc33c2d230b0773bfd8cc1f2d9d9b81cabccc882e544",
       "size": 1014370,
       "pages": 23,
       "global_pages": [
@@ -2052,8 +2031,8 @@
     },
     "ORMM": {
       "file": "ORMM.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/ORMM.pdf",
-      "sha256": "1d9063079419e3c14c98f4fc354b589f3788a87f542d3b4264d717bd4a5a2b86",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/ORMM.pdf",
+      "sha256": "d547502949c9a4654ec59b3e6e5c0834dbaa6578b8cc2a88f2136455f303ce95",
       "size": 263103,
       "pages": 7,
       "global_pages": [
@@ -2068,8 +2047,8 @@
     },
     "ORNI": {
       "file": "ORNI.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/ORNI.pdf",
-      "sha256": "0c728ff7a4097f2e66b7befa8d5d8a9465791a5888bae2e58dd08593a4d6809b",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/ORNI.pdf",
+      "sha256": "bd597e9112df053dcd3b722fdab090a93616e5aad2307be8c4d2dfddd2534192",
       "size": 724118,
       "pages": 15,
       "global_pages": [
@@ -2092,8 +2071,8 @@
     },
     "ORSJ": {
       "file": "ORSJ.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/ORSJ.pdf",
-      "sha256": "3394d336131cc11a6200c0e995c15dd06a132c30d37ae3e905a67df9f3b49264",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/ORSJ.pdf",
+      "sha256": "2cfb16a4de90116249dd5b8dbe982943a19a4126424160c39947a1e0c6b79d8d",
       "size": 671733,
       "pages": 13,
       "global_pages": [
@@ -2112,10 +2091,92 @@
         1035
       ]
     },
+    "OTHH": {
+      "file": "OTHH.pdf",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/OTHH.pdf",
+      "sha256": "74f88e48c9e95d65d4053ab78478f3b09d6d102334ca42ed1a8ab0efdbdff025",
+      "size": 2436397,
+      "pages": 73,
+      "global_pages": [
+        1489,
+        1490,
+        1491,
+        1492,
+        1493,
+        1494,
+        1495,
+        1496,
+        1497,
+        1498,
+        1499,
+        1500,
+        1501,
+        1502,
+        1503,
+        1504,
+        1505,
+        1506,
+        1507,
+        1508,
+        1509,
+        1510,
+        1511,
+        1512,
+        1513,
+        1514,
+        1515,
+        1516,
+        1517,
+        1518,
+        1519,
+        1520,
+        1521,
+        1522,
+        1523,
+        1524,
+        1525,
+        1526,
+        1527,
+        1528,
+        1529,
+        1530,
+        1531,
+        1532,
+        1533,
+        1534,
+        1535,
+        1536,
+        1537,
+        1538,
+        1539,
+        1540,
+        1541,
+        1542,
+        1543,
+        1544,
+        1545,
+        1546,
+        1547,
+        1548,
+        1549,
+        1550,
+        1551,
+        1552,
+        1553,
+        1554,
+        1555,
+        1556,
+        1557,
+        1558,
+        1559,
+        1560,
+        1561
+      ]
+    },
     "UDYZ": {
       "file": "UDYZ.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/UDYZ.pdf",
-      "sha256": "c94df55cdaf82a8c896cbff0e44cdb1a4832e1c91b9374ce6ca73638499f25d9",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/UDYZ.pdf",
+      "sha256": "0f1ff503436cb73260ed70e8daf73b12c48b24cb621c351fc8924ea6a84cea69",
       "size": 1433758,
       "pages": 20,
       "global_pages": [
@@ -2143,8 +2204,8 @@
     },
     "UGSB": {
       "file": "UGSB.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/UGSB.pdf",
-      "sha256": "31f5e26f3c32180b56c381582a1ed984d02f91cb1e6dfa0b5876bf2d51ef51e4",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/UGSB.pdf",
+      "sha256": "039a481884d3ca4e65e2e1931f13ae265f6f51ae3babcac38caf8d66776660e1",
       "size": 481570,
       "pages": 12,
       "global_pages": [
@@ -2164,8 +2225,8 @@
     },
     "UGTB": {
       "file": "UGTB.pdf",
-      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-1/UGTB.pdf",
-      "sha256": "1b0e80329357b85272a4df83b7d9775461062248b962033dbf14fc0c127503d2",
+      "url": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-2/UGTB.pdf",
+      "sha256": "2ed21be8f4d17067ef61783ed78756dc689660467a7335a8cfcbdc0cb493569f",
       "size": 2088266,
       "pages": 26,
       "global_pages": [
@@ -2198,5 +2259,6 @@
       ]
     }
   },
-  "display_transform": "Print overlay removed without cropping; original PDF page boxes retained"
+  "display_transform": "Print overlay removed without cropping; original PDF page boxes retained",
+  "chart_index_revision": "V2621-reviewed-1361-1560"
 }

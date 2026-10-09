@@ -533,7 +533,7 @@ async function getPdfBytes(url,save=true){
   let cache=null,res=null;
   if(chartCacheSupported()){
     try{
-      cache=await window.caches.open("jeppiran-chart-pdfs-v2621-printclean-1");
+      cache=await window.caches.open("jeppiran-chart-pdfs-v2621-printclean-2");
       res=await cache.match(url);
     }catch(_){
       cache=null;
