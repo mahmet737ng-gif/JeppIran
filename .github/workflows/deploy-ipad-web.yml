@@ -6,6 +6,8 @@ on:
     branches: [main]
     paths:
       - 'web/**'
+      - 'scripts/build_airport_profiles.py'
+      - 'scripts/build_airport_runways.py'
       - 'app/src/main/assets/charts-current.json'
       - 'app/src/main/assets/charts-manifest.json'
       - 'app/src/main/assets/chart-georef.json'
