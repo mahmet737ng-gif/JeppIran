@@ -370,7 +370,7 @@ class AirportChartsActivity :
                     else rwyValue(item,"length")+" × "+rwyValue(item,"width")+" m"
                 val heading=if (!item.isNull("headingAdc") && item.has("headingAdc"))
                     String.format(java.util.Locale.US, "%.0f° ADC", item.optDouble("headingAdc"))
-                    else "TRUE heading unavailable"
+                    else "ADC heading unavailable"
                 val nameText=if (opposite.isBlank()) name else name+" / "+opposite
                 val highlighted = name == (selectedTrueRunway.ifBlank { if (icao == "OIAA") "32L" else runways.optJSONObject(0)?.optString("name", "").orEmpty() })
                 val row=bar().apply {
@@ -379,7 +379,7 @@ class AirportChartsActivity :
                     addView(title("▱  "+nameText, 13f, textColor, true), LinearLayout.LayoutParams(0,LinearLayout.LayoutParams.WRAP_CONTENT,1f))
                     addView(stack().apply {
                         addView(title(dims,12f,textColor,true))
-                        addView(title(heading+" · MAG —",10f,muted))
+                        addView(title(heading,10f,muted))
                     })
                     setOnClickListener { selectTrueWindRunway(name) }
                 }
@@ -422,7 +422,6 @@ class AirportChartsActivity :
         }, LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 185.dp))
         wind.addView(entry("Runway HDG (ADC)",
             if (adcBearing.isFinite()) adcBearing.toInt().toString() + "°" else "—"))
-        wind.addView(entry("Magnetic bearing", "— · not verified"))
         wind.addView(entry("METAR wind (TRUE)",
             if (windSpeed == null) "—"
             else if (windSpeed == 0) "CALM"
