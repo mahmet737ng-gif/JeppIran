@@ -1,7 +1,7 @@
 {
   "cycle": "V2621",
-  "source": "Terminal chart cycle 2621, ADC charts 10-9/20-9 from user-provided PDF",
-  "notice": "Heading values extracted from ADC text; automated matches are provisional until checked visually. OIAA 32L and 14R independently checked against ADC. Not approved for navigation. Unextractable headings left unavailable.",
+  "source": "Terminal chart cycle V2621: headings copied from ADC runway-end annotations, not AIP/OurAirports",
+  "notice": "ADC numbers are displayed exactly as charted, with no magnetic variation calculation or conversion. Most entries await independent visual review; NOT FOR ACTUAL NAVIGATION.",
   "airport_count": 75,
   "runway_direction_count": 196,
   "airports": {
@@ -9,7 +9,7 @@
       {
         "name": "21R",
         "opposite": "",
-        "headingTrue": 210,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -18,12 +18,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1126",
         "adcPage": 1126,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 210,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "21C",
         "opposite": "",
-        "headingTrue": 210,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -32,12 +34,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1126",
         "adcPage": 1126,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 210,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "03L",
         "opposite": "",
-        "headingTrue": 30,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -46,12 +50,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1126",
         "adcPage": 1126,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 30,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "03C",
         "opposite": "",
-        "headingTrue": 30,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -60,12 +66,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1126",
         "adcPage": 1126,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 30,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "03R",
         "opposite": "",
-        "headingTrue": 30,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -74,12 +82,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1126",
         "adcPage": 1126,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 30,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "21L",
         "opposite": "",
-        "headingTrue": 210,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -88,14 +98,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1126",
         "adcPage": 1126,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 210,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIAA": [
       {
         "name": "14R",
         "opposite": "",
-        "headingTrue": 141,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -104,12 +116,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.9",
         "adcPage": 9,
-        "adcReviewed": true
+        "adcReviewed": true,
+        "headingAdc": 141,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "32L",
         "opposite": "",
-        "headingTrue": 321,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -118,14 +132,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.9",
         "adcPage": 9,
-        "adcReviewed": true
+        "adcReviewed": true,
+        "headingAdc": 321,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIAM": [
       {
         "name": "13",
         "opposite": "",
-        "headingTrue": 133,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -134,12 +150,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.22",
         "adcPage": 22,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 133,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "31",
         "opposite": "",
-        "headingTrue": 313,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -148,50 +166,50 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.22",
         "adcPage": 22,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 313,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIAW": [
       {
         "name": "30",
         "opposite": "",
-        "headingTrue": 304.13,
+        "headingTrue": null,
         "headingMag": 300,
         "length": null,
         "width": null,
         "lengthFt": null,
         "widthFt": null,
         "surface": null,
-        "source": "Iran AIP OIAW AD 2.12, published TRUE BRG; checked against Jeppesen V2621 ADC PDF p.38 (magnetic markings)",
+        "source": "Jeppesen V2621 ADC, PDF page 38 (runway end heading printed on chart)",
         "adcPage": 38,
         "adcReviewed": true,
-        "headingTrueVerified": true,
-        "headingDatum": "GEO (True)",
-        "trueHeadingSourceUrl": "https://ais.airport.ir/documents/452631/186839466/OIAW.pdf"
+        "headingAdc": 300,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "12",
         "opposite": "",
-        "headingTrue": 124.11,
+        "headingTrue": null,
         "headingMag": 120,
         "length": null,
         "width": null,
         "lengthFt": null,
         "widthFt": null,
         "surface": null,
-        "source": "Iran AIP OIAW AD 2.12, published TRUE BRG; checked against Jeppesen V2621 ADC PDF p.38 (magnetic markings)",
+        "source": "Jeppesen V2621 ADC, PDF page 38 (runway end heading printed on chart)",
         "adcPage": 38,
         "adcReviewed": true,
-        "headingTrueVerified": true,
-        "headingDatum": "GEO (True)",
-        "trueHeadingSourceUrl": "https://ais.airport.ir/documents/452631/186839466/OIAW.pdf"
+        "headingAdc": 120,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIBA": [
       {
         "name": "08",
         "opposite": "",
-        "headingTrue": 81,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -200,12 +218,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.55",
         "adcPage": 55,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 81,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "26",
         "opposite": "",
-        "headingTrue": 261,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -214,14 +234,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.55",
         "adcPage": 55,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 261,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIBB": [
       {
         "name": "31L",
         "opposite": "",
-        "headingTrue": 309,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -230,12 +252,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.71",
         "adcPage": 71,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 309,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "31R",
         "opposite": "",
-        "headingTrue": 309,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -244,12 +268,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.71",
         "adcPage": 71,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 309,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "13R",
         "opposite": "",
-        "headingTrue": 129,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -258,12 +284,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.71",
         "adcPage": 71,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 129,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "13L",
         "opposite": "",
-        "headingTrue": 129,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -272,14 +300,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.71",
         "adcPage": 71,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 129,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIBK": [
       {
         "name": "09L",
         "opposite": "",
-        "headingTrue": 95,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -288,12 +318,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.95",
         "adcPage": 95,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 95,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "27R",
         "opposite": "",
-        "headingTrue": 275,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -302,12 +334,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.95",
         "adcPage": 95,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 275,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "27L",
         "opposite": "",
-        "headingTrue": 274,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -316,12 +350,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.95",
         "adcPage": 95,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 274,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "09R",
         "opposite": "",
-        "headingTrue": 94,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -330,14 +366,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.95",
         "adcPage": 95,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 94,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIBL": [
       {
         "name": "08",
         "opposite": "",
-        "headingTrue": 79,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -346,12 +384,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.118",
         "adcPage": 118,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 79,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "26",
         "opposite": "",
-        "headingTrue": 259,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -360,14 +400,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.118",
         "adcPage": 118,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 259,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIBP": [
       {
         "name": "13",
         "opposite": "",
-        "headingTrue": 126,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -376,12 +418,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.131",
         "adcPage": 131,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 126,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "31",
         "opposite": "",
-        "headingTrue": 306,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -390,14 +434,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.131",
         "adcPage": 131,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 306,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIBQ": [
       {
         "name": "13",
         "opposite": "",
-        "headingTrue": 132,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -406,12 +452,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.150",
         "adcPage": 150,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 132,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "31",
         "opposite": "",
-        "headingTrue": 312,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -420,14 +468,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.150",
         "adcPage": 150,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 312,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIBS": [
       {
         "name": "30",
         "opposite": "",
-        "headingTrue": 304,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -436,12 +486,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.169",
         "adcPage": 169,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 304,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "12",
         "opposite": "",
-        "headingTrue": 124,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -450,14 +502,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.169",
         "adcPage": 169,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 124,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIBV": [
       {
         "name": "11",
         "opposite": "",
-        "headingTrue": 109,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -466,12 +520,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.176",
         "adcPage": 176,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 109,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "29",
         "opposite": "",
-        "headingTrue": 289,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -480,14 +536,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.176",
         "adcPage": 176,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 289,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OICC": [
       {
         "name": "11L",
         "opposite": "",
-        "headingTrue": 112,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -496,12 +554,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.195",
         "adcPage": 195,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 112,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "29R",
         "opposite": "",
-        "headingTrue": 292,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -510,12 +570,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.195",
         "adcPage": 195,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 292,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "29L",
         "opposite": "",
-        "headingTrue": 292,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -524,12 +586,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.195",
         "adcPage": 195,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 292,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "11R",
         "opposite": "",
-        "headingTrue": 112,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -538,14 +602,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.195",
         "adcPage": 195,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 112,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OICI": [
       {
         "name": "14",
         "opposite": "",
-        "headingTrue": 137,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -554,12 +620,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.211",
         "adcPage": 211,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 137,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "32",
         "opposite": "",
-        "headingTrue": 317,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -568,14 +636,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.211",
         "adcPage": 211,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 317,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OICK": [
       {
         "name": "11",
         "opposite": "",
-        "headingTrue": 109,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -584,12 +654,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.221",
         "adcPage": 221,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 109,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "29",
         "opposite": "",
-        "headingTrue": 289,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -598,14 +670,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.221",
         "adcPage": 221,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 289,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OICS": [
       {
         "name": "19",
         "opposite": "",
-        "headingTrue": 193,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -614,12 +688,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.231",
         "adcPage": 231,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 193,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "01",
         "opposite": "",
-        "headingTrue": 13,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -628,14 +704,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.231",
         "adcPage": 231,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 13,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OICZ": [
       {
         "name": "10",
         "opposite": "",
-        "headingTrue": 95,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -644,12 +722,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.236",
         "adcPage": 236,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 95,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "28",
         "opposite": "",
-        "headingTrue": 275,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -658,14 +738,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.236",
         "adcPage": 236,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 275,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIFM": [
       {
         "name": "07R",
         "opposite": "",
-        "headingTrue": 74,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -674,12 +756,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.264",
         "adcPage": 264,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 74,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "07L",
         "opposite": "",
-        "headingTrue": 74,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -688,12 +772,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.264",
         "adcPage": 264,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 74,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "25R",
         "opposite": "",
-        "headingTrue": 254,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -702,12 +788,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.264",
         "adcPage": 264,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 254,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "25L",
         "opposite": "",
-        "headingTrue": 254,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -716,14 +804,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.264",
         "adcPage": 264,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 254,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIFS": [
       {
         "name": "14",
         "opposite": "",
-        "headingTrue": 143,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -732,12 +822,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.299",
         "adcPage": 299,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 143,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "32",
         "opposite": "",
-        "headingTrue": 323,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -746,14 +838,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.299",
         "adcPage": 299,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 323,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIGG": [
       {
         "name": "27",
         "opposite": "",
-        "headingTrue": 269,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -762,12 +856,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.324",
         "adcPage": 324,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 269,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "09",
         "opposite": "",
-        "headingTrue": 89,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -776,14 +872,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.324",
         "adcPage": 324,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 89,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIHH": [
       {
         "name": "28",
         "opposite": "",
-        "headingTrue": 280,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -792,12 +890,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.342",
         "adcPage": 342,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 280,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "10",
         "opposite": "",
-        "headingTrue": 100,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -806,14 +906,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.342",
         "adcPage": 342,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 100,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIHR": [
       {
         "name": "08",
         "opposite": "",
-        "headingTrue": 74,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -822,12 +924,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.354",
         "adcPage": 354,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 74,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "26",
         "opposite": "",
-        "headingTrue": 254,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -836,14 +940,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.354",
         "adcPage": 354,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 254,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIIE": [
       {
         "name": "29L",
         "opposite": "",
-        "headingTrue": 284,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -852,12 +958,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.380",
         "adcPage": 380,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 284,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "11R",
         "opposite": "",
-        "headingTrue": 104,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -866,12 +974,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.380",
         "adcPage": 380,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 104,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "11L",
         "opposite": "",
-        "headingTrue": 104,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -880,12 +990,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.380",
         "adcPage": 380,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 104,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "29R",
         "opposite": "",
-        "headingTrue": 284,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -894,14 +1006,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.380",
         "adcPage": 380,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 284,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIII": [
       {
         "name": "29L",
         "opposite": "",
-        "headingTrue": 285,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -910,12 +1024,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.430",
         "adcPage": 430,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 285,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "11L",
         "opposite": "",
-        "headingTrue": 105,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -924,12 +1040,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.430",
         "adcPage": 430,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 105,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "29R",
         "opposite": "",
-        "headingTrue": 285,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -938,12 +1056,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.430",
         "adcPage": 430,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 285,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "11R",
         "opposite": "",
-        "headingTrue": 105,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -952,14 +1072,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.430",
         "adcPage": 430,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 105,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIIP": [
       {
         "name": "30",
         "opposite": "",
-        "headingTrue": 303,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -968,12 +1090,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.478",
         "adcPage": 478,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 303,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "12",
         "opposite": "",
-        "headingTrue": 123,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -982,14 +1106,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.478",
         "adcPage": 478,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 123,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIKB": [
       {
         "name": "03R",
         "opposite": "",
-        "headingTrue": 26,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -998,12 +1124,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.458",
         "adcPage": 458,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 26,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "03L",
         "opposite": "",
-        "headingTrue": 26,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1012,12 +1140,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.458",
         "adcPage": 458,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 26,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "21L",
         "opposite": "",
-        "headingTrue": 206,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1026,12 +1156,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.458",
         "adcPage": 458,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 206,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "21R",
         "opposite": "",
-        "headingTrue": 206,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1040,14 +1172,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.458",
         "adcPage": 458,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 206,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIKJ": [
       {
         "name": "13",
         "opposite": "",
-        "headingTrue": 126,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1056,12 +1190,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.488",
         "adcPage": 488,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 126,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "31",
         "opposite": "",
-        "headingTrue": 306,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1070,14 +1206,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.488",
         "adcPage": 488,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 306,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIKK": [
       {
         "name": "34R",
         "opposite": "",
-        "headingTrue": 335,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1086,12 +1224,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.503",
         "adcPage": 503,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 335,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "16L",
         "opposite": "",
-        "headingTrue": 155,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1100,12 +1240,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.503",
         "adcPage": 503,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 155,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "16R",
         "opposite": "",
-        "headingTrue": 155,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1114,12 +1256,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.503",
         "adcPage": 503,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 155,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "34L",
         "opposite": "",
-        "headingTrue": 335,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1128,14 +1272,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.503",
         "adcPage": 503,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 335,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIKM": [
       {
         "name": "12",
         "opposite": "",
-        "headingTrue": 120,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1144,12 +1290,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.514",
         "adcPage": 514,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 120,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "30",
         "opposite": "",
-        "headingTrue": 300,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1158,14 +1306,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.514",
         "adcPage": 514,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 300,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIKQ": [
       {
         "name": "05",
         "opposite": "",
-        "headingTrue": 48,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1174,12 +1324,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.526",
         "adcPage": 526,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 48,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "23",
         "opposite": "",
-        "headingTrue": 228,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1188,14 +1340,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.526",
         "adcPage": 526,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 228,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIKR": [
       {
         "name": "11",
         "opposite": "",
-        "headingTrue": 109,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1204,12 +1358,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.538",
         "adcPage": 538,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 109,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "29",
         "opposite": "",
-        "headingTrue": 289,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1218,14 +1374,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.538",
         "adcPage": 538,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 289,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIKY": [
       {
         "name": "13",
         "opposite": "",
-        "headingTrue": 129,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1234,12 +1392,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.548",
         "adcPage": 548,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 129,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "31",
         "opposite": "",
-        "headingTrue": 309,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1248,14 +1408,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.548",
         "adcPage": 548,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 309,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIMB": [
       {
         "name": "08",
         "opposite": "",
-        "headingTrue": 76,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1264,12 +1426,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.561",
         "adcPage": 561,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 76,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "26",
         "opposite": "",
-        "headingTrue": 256,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1278,12 +1442,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.561",
         "adcPage": 561,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 256,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "28",
         "opposite": "",
-        "headingTrue": 276,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1292,12 +1458,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.561",
         "adcPage": 561,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 276,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "10",
         "opposite": "",
-        "headingTrue": 96,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1306,14 +1474,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.561",
         "adcPage": 561,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 96,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIMJ": [
       {
         "name": "07",
         "opposite": "",
-        "headingTrue": 66,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1322,12 +1492,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.570",
         "adcPage": 570,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 66,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "25",
         "opposite": "",
-        "headingTrue": 246,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1336,14 +1508,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.570",
         "adcPage": 570,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 246,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIMM": [
       {
         "name": "13R",
         "opposite": "",
-        "headingTrue": 130,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1352,12 +1526,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.601",
         "adcPage": 601,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 130,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "13L",
         "opposite": "",
-        "headingTrue": 130,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1366,12 +1542,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.601",
         "adcPage": 601,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 130,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "31L",
         "opposite": "",
-        "headingTrue": 310,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1380,12 +1558,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.601",
         "adcPage": 601,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 310,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "31R",
         "opposite": "",
-        "headingTrue": 310,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1394,14 +1574,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.601",
         "adcPage": 601,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 310,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIMN": [
       {
         "name": "07",
         "opposite": "",
-        "headingTrue": 65,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1410,12 +1592,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.622",
         "adcPage": 622,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 65,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "25",
         "opposite": "",
-        "headingTrue": 245,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1424,14 +1608,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.622",
         "adcPage": 622,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 245,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIMS": [
       {
         "name": "27",
         "opposite": "",
-        "headingTrue": 271,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1440,12 +1626,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.632",
         "adcPage": 632,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 271,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "09",
         "opposite": "",
-        "headingTrue": 91,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1454,14 +1642,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.632",
         "adcPage": 632,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 91,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIMT": [
       {
         "name": "33",
         "opposite": "",
-        "headingTrue": 327,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1470,12 +1660,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.642",
         "adcPage": 642,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 327,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "15",
         "opposite": "",
-        "headingTrue": 147,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1484,14 +1676,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.642",
         "adcPage": 642,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 147,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OINE": [
       {
         "name": "10",
         "opposite": "",
-        "headingTrue": 100,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1500,12 +1694,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.651",
         "adcPage": 651,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 100,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "28",
         "opposite": "",
-        "headingTrue": 280,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1514,14 +1710,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.651",
         "adcPage": 651,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 280,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OING": [
       {
         "name": "13",
         "opposite": "",
-        "headingTrue": 129,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1530,12 +1728,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.659",
         "adcPage": 659,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 129,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "31",
         "opposite": "",
-        "headingTrue": 309,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1544,14 +1744,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.659",
         "adcPage": 659,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 309,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OINN": [
       {
         "name": "10",
         "opposite": "",
-        "headingTrue": 104,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1560,12 +1762,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.670",
         "adcPage": 670,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 104,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "28",
         "opposite": "",
-        "headingTrue": 284,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1574,14 +1778,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.670",
         "adcPage": 670,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 284,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OINR": [
       {
         "name": "12",
         "opposite": "",
-        "headingTrue": 118,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1590,12 +1796,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.681",
         "adcPage": 681,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 118,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "30",
         "opposite": "",
-        "headingTrue": 298,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1604,12 +1812,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.681",
         "adcPage": 681,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 298,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "31",
         "opposite": "",
-        "headingTrue": 306,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1618,12 +1828,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.681",
         "adcPage": 681,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 306,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "13",
         "opposite": "",
-        "headingTrue": 126,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1632,14 +1844,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.681",
         "adcPage": 681,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 126,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OINZ": [
       {
         "name": "16",
         "opposite": "",
-        "headingTrue": 156,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1648,12 +1862,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.692",
         "adcPage": 692,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 156,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "34",
         "opposite": "",
-        "headingTrue": 336,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1662,14 +1878,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.692",
         "adcPage": 692,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 336,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OISF": [
       {
         "name": "14",
         "opposite": "",
-        "headingTrue": 137,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1678,12 +1896,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.697",
         "adcPage": 697,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 137,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "32",
         "opposite": "",
-        "headingTrue": 317,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1692,14 +1912,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.697",
         "adcPage": 697,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 317,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OISL": [
       {
         "name": "27",
         "opposite": "",
-        "headingTrue": 266,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1708,12 +1930,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.703",
         "adcPage": 703,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 266,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "09",
         "opposite": "",
-        "headingTrue": 86,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1722,14 +1946,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.703",
         "adcPage": 703,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 86,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OISR": [
       {
         "name": "11",
         "opposite": "",
-        "headingTrue": 112,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1738,12 +1964,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.714",
         "adcPage": 714,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 112,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "29",
         "opposite": "",
-        "headingTrue": 292,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1752,14 +1980,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.714",
         "adcPage": 714,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 292,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OISS": [
       {
         "name": "11R",
         "opposite": "",
-        "headingTrue": 111,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1768,12 +1998,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.751",
         "adcPage": 751,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 111,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "29L",
         "opposite": "",
-        "headingTrue": 291,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1782,12 +2014,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.751",
         "adcPage": 751,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 291,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "11L",
         "opposite": "",
-        "headingTrue": 111,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1796,12 +2030,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.751",
         "adcPage": 751,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 111,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "29R",
         "opposite": "",
-        "headingTrue": 291,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1810,14 +2046,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.751",
         "adcPage": 751,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 291,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OISY": [
       {
         "name": "13",
         "opposite": "",
-        "headingTrue": 128,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1826,12 +2064,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.765",
         "adcPage": 765,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 128,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "31",
         "opposite": "",
-        "headingTrue": 308,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1840,14 +2080,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.765",
         "adcPage": 765,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 308,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OITK": [
       {
         "name": "15",
         "opposite": "",
-        "headingTrue": 151,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1856,12 +2098,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.773",
         "adcPage": 773,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 151,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "33",
         "opposite": "",
-        "headingTrue": 331,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1870,14 +2114,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.773",
         "adcPage": 773,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 331,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OITL": [
       {
         "name": "15",
         "opposite": "",
-        "headingTrue": 145,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1886,12 +2132,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.794",
         "adcPage": 794,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 145,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "07",
         "opposite": "",
-        "headingTrue": 70,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1900,12 +2148,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.794",
         "adcPage": 794,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 70,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "33",
         "opposite": "",
-        "headingTrue": 325,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1914,12 +2164,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.794",
         "adcPage": 794,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 325,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "25",
         "opposite": "",
-        "headingTrue": 250,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1928,14 +2180,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.794",
         "adcPage": 794,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 250,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OITM": [
       {
         "name": "08",
         "opposite": "",
-        "headingTrue": 80,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1944,12 +2198,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.808",
         "adcPage": 808,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 80,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "26",
         "opposite": "",
-        "headingTrue": 260,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1958,14 +2214,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.808",
         "adcPage": 808,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 260,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OITR": [
       {
         "name": "21",
         "opposite": "",
-        "headingTrue": 209,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1974,12 +2232,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.821",
         "adcPage": 821,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 209,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "03",
         "opposite": "",
-        "headingTrue": 29,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -1988,14 +2248,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.821",
         "adcPage": 821,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 29,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OITT": [
       {
         "name": "30R",
         "opposite": "",
-        "headingTrue": 304,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2004,12 +2266,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.841",
         "adcPage": 841,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 304,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "12L",
         "opposite": "",
-        "headingTrue": 124,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2018,12 +2282,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.841",
         "adcPage": 841,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 124,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "12R",
         "opposite": "",
-        "headingTrue": 124,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2032,12 +2298,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.841",
         "adcPage": 841,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 124,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "30L",
         "opposite": "",
-        "headingTrue": 304,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2046,14 +2314,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.841",
         "adcPage": 841,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 304,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OITU": [
       {
         "name": "11",
         "opposite": "",
-        "headingTrue": 109,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2062,12 +2332,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.854",
         "adcPage": 854,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 109,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "29",
         "opposite": "",
-        "headingTrue": 289,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2076,14 +2348,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.854",
         "adcPage": 854,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 289,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OITZ": [
       {
         "name": "12",
         "opposite": "",
-        "headingTrue": 122,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2092,12 +2366,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.859",
         "adcPage": 859,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 122,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "30",
         "opposite": "",
-        "headingTrue": 302,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2106,14 +2382,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.859",
         "adcPage": 859,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 302,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIYY": [
       {
         "name": "13",
         "opposite": "",
-        "headingTrue": 130,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2122,12 +2400,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.880",
         "adcPage": 880,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 130,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "31",
         "opposite": "",
-        "headingTrue": 310,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2136,14 +2416,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.880",
         "adcPage": 880,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 310,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIZB": [
       {
         "name": "16",
         "opposite": "",
-        "headingTrue": 164,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2152,12 +2434,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.896",
         "adcPage": 896,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 164,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "34",
         "opposite": "",
-        "headingTrue": 344,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2166,14 +2450,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.896",
         "adcPage": 896,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 344,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIZC": [
       {
         "name": "09R",
         "opposite": "",
-        "headingTrue": 90,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2182,12 +2468,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.909",
         "adcPage": 909,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 90,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "27L",
         "opposite": "",
-        "headingTrue": 270,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2196,12 +2484,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.909",
         "adcPage": 909,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 270,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "09L",
         "opposite": "",
-        "headingTrue": 90,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2210,12 +2500,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.909",
         "adcPage": 909,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 90,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "27R",
         "opposite": "",
-        "headingTrue": 270,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2224,14 +2516,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.909",
         "adcPage": 909,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 270,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIZH": [
       {
         "name": "17L",
         "opposite": "",
-        "headingTrue": 171,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2240,12 +2534,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.937",
         "adcPage": 937,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 171,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "35L",
         "opposite": "",
-        "headingTrue": 351,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2254,14 +2550,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.937",
         "adcPage": 937,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 351,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIZI": [
       {
         "name": "17",
         "opposite": "",
-        "headingTrue": 169,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2270,12 +2568,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.952",
         "adcPage": 952,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 169,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "35",
         "opposite": "",
-        "headingTrue": 349,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2284,14 +2584,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.952",
         "adcPage": 952,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 349,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OIZS": [
       {
         "name": "13",
         "opposite": "",
-        "headingTrue": 131,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2300,12 +2602,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.961",
         "adcPage": 961,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 131,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "31",
         "opposite": "",
-        "headingTrue": 311,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2314,14 +2618,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.961",
         "adcPage": 961,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 311,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OMDB": [
       {
         "name": "12L",
         "opposite": "",
-        "headingTrue": 119,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2330,12 +2636,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1424",
         "adcPage": 1424,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 119,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "12R",
         "opposite": "",
-        "headingTrue": 119,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2344,12 +2652,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1424",
         "adcPage": 1424,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 119,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "30L",
         "opposite": "",
-        "headingTrue": 299,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2358,12 +2668,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1424",
         "adcPage": 1424,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 299,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "30R",
         "opposite": "",
-        "headingTrue": 299,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2372,14 +2684,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1424",
         "adcPage": 1424,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 299,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OMDW": [
       {
         "name": "12",
         "opposite": "",
-        "headingTrue": 119,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2388,12 +2702,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1472",
         "adcPage": 1472,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 119,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "30",
         "opposite": "",
-        "headingTrue": 299,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2402,14 +2718,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1472",
         "adcPage": 1472,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 299,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OOMS": [
       {
         "name": "08L",
         "opposite": "",
-        "headingTrue": 83,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2418,12 +2736,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1049",
         "adcPage": 1049,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 83,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "26R",
         "opposite": "",
-        "headingTrue": 263,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2432,12 +2752,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1049",
         "adcPage": 1049,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 263,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "26L",
         "opposite": "",
-        "headingTrue": 263,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2446,12 +2768,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1049",
         "adcPage": 1049,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 263,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "08R",
         "opposite": "",
-        "headingTrue": 83,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2460,14 +2784,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1049",
         "adcPage": 1049,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 83,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OPIS": [
       {
         "name": "28L",
         "opposite": "",
-        "headingTrue": 278,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2476,12 +2802,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1623",
         "adcPage": 1623,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 278,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "10L",
         "opposite": "",
-        "headingTrue": 98,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2490,12 +2818,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1623",
         "adcPage": 1623,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 98,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "10R",
         "opposite": "",
-        "headingTrue": 98,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2504,12 +2834,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1623",
         "adcPage": 1623,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 98,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "28R",
         "opposite": "",
-        "headingTrue": 278,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2518,14 +2850,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1623",
         "adcPage": 1623,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 278,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OPKC": [
       {
         "name": "07R",
         "opposite": "",
-        "headingTrue": 74,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2534,12 +2868,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1580",
         "adcPage": 1580,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 74,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "25L",
         "opposite": "",
-        "headingTrue": 254,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2548,12 +2884,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1580",
         "adcPage": 1580,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 254,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "07L",
         "opposite": "",
-        "headingTrue": 74,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2562,12 +2900,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1580",
         "adcPage": 1580,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 74,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "25R",
         "opposite": "",
-        "headingTrue": 254,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2576,14 +2916,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1580",
         "adcPage": 1580,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 254,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "ORBI": [
       {
         "name": "33R",
         "opposite": "",
-        "headingTrue": 326,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2592,12 +2934,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.983",
         "adcPage": 983,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 326,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "33L",
         "opposite": "",
-        "headingTrue": 326,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2606,12 +2950,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.983",
         "adcPage": 983,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 326,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "15L",
         "opposite": "",
-        "headingTrue": 146,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2620,12 +2966,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.983",
         "adcPage": 983,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 146,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "15R",
         "opposite": "",
-        "headingTrue": 146,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2634,14 +2982,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.983",
         "adcPage": 983,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 146,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "ORER": [
       {
         "name": "18",
         "opposite": "",
-        "headingTrue": 175,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2650,12 +3000,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1001",
         "adcPage": 1001,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 175,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "36",
         "opposite": "",
-        "headingTrue": 355,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2664,14 +3016,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1001",
         "adcPage": 1001,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 355,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "ORMM": [
       {
         "name": "14",
         "opposite": "",
-        "headingTrue": 135,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2680,12 +3034,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1016",
         "adcPage": 1016,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 135,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "32",
         "opposite": "",
-        "headingTrue": 315,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2694,14 +3050,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1016",
         "adcPage": 1016,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 315,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "ORNI": [
       {
         "name": "10",
         "opposite": "",
-        "headingTrue": 100,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2710,12 +3068,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.971",
         "adcPage": 971,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 100,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "28",
         "opposite": "",
-        "headingTrue": 280,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2724,14 +3084,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.971",
         "adcPage": 971,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 280,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "ORSJ": [
       {
         "name": "31",
         "opposite": "",
-        "headingTrue": 310,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2740,12 +3102,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1027",
         "adcPage": 1027,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 310,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "13",
         "opposite": "",
-        "headingTrue": 130,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2754,14 +3118,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1027",
         "adcPage": 1027,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 130,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "OTHH": [
       {
         "name": "16R",
         "opposite": "",
-        "headingTrue": 156,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2770,12 +3136,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1536",
         "adcPage": 1536,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 156,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "16L",
         "opposite": "",
-        "headingTrue": 156,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2784,12 +3152,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1536",
         "adcPage": 1536,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 156,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "34L",
         "opposite": "",
-        "headingTrue": 336,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2798,12 +3168,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1536",
         "adcPage": 1536,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 336,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "34R",
         "opposite": "",
-        "headingTrue": 336,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2812,14 +3184,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1536",
         "adcPage": 1536,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 336,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "UDYZ": [
       {
         "name": "08",
         "opposite": "",
-        "headingTrue": 83,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2828,12 +3202,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1344",
         "adcPage": 1344,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 83,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "26",
         "opposite": "",
-        "headingTrue": 263,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2842,14 +3218,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1344",
         "adcPage": 1344,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 263,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "UGSB": [
       {
         "name": "12",
         "opposite": "",
-        "headingTrue": 124,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2858,12 +3236,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1388",
         "adcPage": 1388,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 124,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "30",
         "opposite": "",
-        "headingTrue": 304,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2872,14 +3252,16 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1388",
         "adcPage": 1388,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 304,
+        "headingSourceType": "Jeppesen ADC"
       }
     ],
     "UGTB": [
       {
         "name": "13R",
         "opposite": "",
-        "headingTrue": 130,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2888,12 +3270,14 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1368",
         "adcPage": 1368,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 130,
+        "headingSourceType": "Jeppesen ADC"
       },
       {
         "name": "31L",
         "opposite": "",
-        "headingTrue": 310,
+        "headingTrue": null,
         "headingMag": null,
         "length": null,
         "width": null,
@@ -2902,7 +3286,9 @@
         "surface": null,
         "source": "Jeppesen cycle 2621 ADC, PDF p.1368",
         "adcPage": 1368,
-        "adcReviewed": false
+        "adcReviewed": false,
+        "headingAdc": 310,
+        "headingSourceType": "Jeppesen ADC"
       }
     ]
   }
