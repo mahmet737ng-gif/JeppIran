@@ -262,7 +262,10 @@ function renderAirportProfile(icao){
   const formattedCoord=Number.isFinite(d.lat)?d.lat.toFixed(4)+"° N &nbsp; "+d.lon.toFixed(4)+"° E":"Data not available";
   const fav=new Set(getAirportFavorites());
   const categories=[["STAR","STAR"],["SID","SID"],["Airport","AIRPORT"],["Approach","APP"]];
-  const name=meta[0].toLowerCase().includes("airport")||meta[0].toLowerCase().includes("international")?meta[0]:meta[0]+" Airport";
+  const nameBase=(meta[0]||"Airport").toLowerCase().replace(/\\b\\w/g,m=>m.toUpperCase());
+  const name=/airport$/i.test(nameBase)?nameBase:nameBase+" Airport";
+  const country=icao.startsWith("OI")?"Iran":icao.startsWith("LT")?"Türkiye":icao.startsWith("OM")?"United Arab Emirates":icao.startsWith("OO")?"Oman":icao.startsWith("OR")?"Iraq":icao.startsWith("UD")?"Armenia":icao.startsWith("UG")?"Georgia":"";
+  const cityName=(meta[1]||"").toLowerCase().replace(/\\b\\w/g,m=>m.toUpperCase());
   const runwayRows=d.runways?d.runways.map(x=>'<button type="button" class="rwy-row'+(rw===x?' active':'')+'" data-runway="'+profileEsc(x.name)+'"><span><b>▱ '+profileEsc(x.name)+'</b><small>True '+x.headingTrue+'° / Mag '+x.headingMag+'°</small></span><span><b>'+x.length.toLocaleString()+' × '+x.width+' m</b><small>Length × width</small></span><span><b>Asphalt</b><small>Published</small></span></button>').join(""):'<div class="profile-empty">Runway dimensions not yet verified for this airport.</div>';
   const procCategory=profileProcedureTab;
   const procs=charts.filter(c=>c.airport===icao&&c.category===procCategory).sort((a,b)=>(a.pdf_page||0)-(b.pdf_page||0)).slice(0,100);
