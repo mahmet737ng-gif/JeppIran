@@ -929,3 +929,12 @@ body:has(#homeView.active),body:has(#chartsView.active){background:#030c19}
 :root.light #chartsView .profile-notam-details{color:#244664}
 :root.light #chartsView .profile-notam-details summary{color:#37baff}
 :root.light #chartsView .profile-notam-details p{color:#c1d5e5}
+
+/* ICAO airport list labels: remove luminous halo, keep cards and selection intact. */
+#chartsView .airport-item .airport-copy,
+#chartsView .airport-item .airport-copy b,
+#chartsView .airport-item .airport-copy small{
+  text-shadow:none!important;
+  filter:none!important;
+}
+#chartsView .airport-item.selected{box-shadow:none!important}
