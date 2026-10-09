@@ -2556,8 +2556,8 @@
         "125"
       ],
       "jeppDmeLabelsNm": [
-        "3",
         "3.0",
+        "3",
         "9.0",
         "15.0",
         "21.0"
@@ -2819,8 +2819,8 @@
         "312"
       ],
       "jeppDmeLabelsNm": [
-        "2.0",
         "2",
+        "2.0",
         "3.00",
         "5.0",
         "12.0"
@@ -2955,8 +2955,8 @@
         "220"
       ],
       "jeppDmeLabelsNm": [
-        "1",
         "1.0",
+        "1",
         "5.0",
         "10.0",
         "15.0"
@@ -4853,8 +4853,8 @@
       "jeppDmeLabelsNm": [
         "0.5",
         "1",
-        "3",
         "3.0",
+        "3",
         "8.0",
         "15.0"
       ],
@@ -7054,8 +7054,8 @@
         "200"
       ],
       "jeppDmeLabelsNm": [
-        "3",
         "3.0",
+        "3",
         "6.0",
         "11.0",
         "15.0"
@@ -7347,8 +7347,8 @@
       ],
       "jeppDmeLabelsNm": [
         "1.0",
-        "7",
         "7.0",
+        "7",
         "13.0",
         "20.0"
       ],
@@ -7387,8 +7387,8 @@
       ],
       "jeppDmeLabelsNm": [
         "1.0",
-        "7",
         "7.0",
+        "7",
         "13.0",
         "20.0"
       ],
@@ -7897,8 +7897,8 @@
         "210"
       ],
       "jeppDmeLabelsNm": [
-        "2.0",
         "2",
+        "2.0",
         "5.0",
         "8.0",
         "10.0",
@@ -11751,8 +11751,8 @@
         "11.0",
         "12.0",
         "14.0",
-        "16",
         "16.0",
+        "16",
         "21"
       ],
       "officialAipUrl": "",
@@ -12128,8 +12128,8 @@
         "355"
       ],
       "jeppDmeLabelsNm": [
-        "3",
         "3.0",
+        "3",
         "7.0",
         "10.0",
         "13.0",
@@ -14318,8 +14318,8 @@
       "jeppDmeLabelsNm": [
         "0.7",
         "6.1",
-        "12",
         "12.0",
+        "12",
         "12.8",
         "22.0",
         "29.0"
@@ -14450,8 +14450,8 @@
       ],
       "jeppDmeLabelsNm": [
         "5.4",
-        "12",
         "12.0",
+        "12",
         "22.0",
         "29.0"
       ],
@@ -21753,8 +21753,8 @@
         "240"
       ],
       "jeppDmeLabelsNm": [
-        "1",
         "1.0",
+        "1",
         "2.1",
         "3.0",
         "4.0",
@@ -23033,7 +23033,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://www.gcaa.gov.ae/en/ais/AIPHtmlFiles/AIP/Current/AIRACs/2026-P02/pdf/AD-2.OMDW.pdf",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23061,7 +23061,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://www.gcaa.gov.ae/en/ais/AIPHtmlFiles/AIP/Current/AIRACs/2026-P02/pdf/AD-2.OMDW.pdf",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23088,7 +23088,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://www.gcaa.gov.ae/en/ais/AIPHtmlFiles/AIP/Current/AIRACs/2026-P02/pdf/AD-2.OMDW.pdf",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23115,7 +23115,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://www.gcaa.gov.ae/en/ais/AIPHtmlFiles/AIP/Current/AIRACs/2026-P02/pdf/AD-2.OMDW.pdf",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23142,7 +23142,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://www.gcaa.gov.ae/en/ais/AIPHtmlFiles/AIP/Current/AIRACs/2026-P02/pdf/AD-2.OMDW.pdf",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23169,7 +23169,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://www.gcaa.gov.ae/en/ais/AIPHtmlFiles/AIP/Current/AIRACs/2026-P02/pdf/AD-2.OMDW.pdf",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23196,7 +23196,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://www.gcaa.gov.ae/en/ais/AIPHtmlFiles/AIP/Current/AIRACs/2026-P02/pdf/AD-2.OMDW.pdf",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23223,7 +23223,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://www.gcaa.gov.ae/en/ais/AIPHtmlFiles/AIP/Current/AIRACs/2026-P02/pdf/AD-2.OMDW.pdf",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23250,7 +23250,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://www.gcaa.gov.ae/en/ais/AIPHtmlFiles/AIP/Current/AIRACs/2026-P02/pdf/AD-2.OMDW.pdf",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23277,7 +23277,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://www.gcaa.gov.ae/en/ais/AIPHtmlFiles/AIP/Current/AIRACs/2026-P02/pdf/AD-2.OMDW.pdf",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23304,7 +23304,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://www.gcaa.gov.ae/en/ais/AIPHtmlFiles/AIP/Current/AIRACs/2026-P02/pdf/AD-2.OMDW.pdf",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23336,7 +23336,7 @@
         "5.8",
         "10.8"
       ],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://www.gcaa.gov.ae/en/ais/AIPHtmlFiles/AIP/Current/AIRACs/2026-P02/pdf/AD-2.OMDW.pdf",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23368,7 +23368,7 @@
         "5.8",
         "10.8"
       ],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://www.gcaa.gov.ae/en/ais/AIPHtmlFiles/AIP/Current/AIRACs/2026-P02/pdf/AD-2.OMDW.pdf",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23400,7 +23400,7 @@
         "5.7",
         "10.7"
       ],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://www.gcaa.gov.ae/en/ais/AIPHtmlFiles/AIP/Current/AIRACs/2026-P02/pdf/AD-2.OMDW.pdf",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23432,7 +23432,7 @@
         "5.7",
         "10.7"
       ],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://www.gcaa.gov.ae/en/ais/AIPHtmlFiles/AIP/Current/AIRACs/2026-P02/pdf/AD-2.OMDW.pdf",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23459,7 +23459,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://www.gcaa.gov.ae/en/ais/AIPHtmlFiles/AIP/Current/AIRACs/2026-P02/pdf/AD-2.OMDW.pdf",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23486,7 +23486,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://www.gcaa.gov.ae/en/ais/AIPHtmlFiles/AIP/Current/AIRACs/2026-P02/pdf/AD-2.OMDW.pdf",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23517,7 +23517,7 @@
       "jeppDmeLabelsNm": [
         "1"
       ],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://aim.gov.qa/AIP/11-JUN-2026/AIP-29/2026-08-06-000000/html/eAIP/QA-AD-2-OTHH-mobile-en-GB.html",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23552,7 +23552,7 @@
         "300"
       ],
       "jeppDmeLabelsNm": [],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://aim.gov.qa/AIP/11-JUN-2026/AIP-29/2026-08-06-000000/html/eAIP/QA-AD-2-OTHH-mobile-en-GB.html",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23583,7 +23583,7 @@
       "jeppDmeLabelsNm": [
         "1"
       ],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://aim.gov.qa/AIP/11-JUN-2026/AIP-29/2026-08-06-000000/html/eAIP/QA-AD-2-OTHH-mobile-en-GB.html",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23616,7 +23616,7 @@
       "jeppDmeLabelsNm": [
         "1"
       ],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://aim.gov.qa/AIP/11-JUN-2026/AIP-29/2026-08-06-000000/html/eAIP/QA-AD-2-OTHH-mobile-en-GB.html",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23647,7 +23647,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://aim.gov.qa/AIP/11-JUN-2026/AIP-29/2026-08-06-000000/html/eAIP/QA-AD-2-OTHH-mobile-en-GB.html",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23687,7 +23687,7 @@
         "306"
       ],
       "jeppDmeLabelsNm": [],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://aim.gov.qa/AIP/11-JUN-2026/AIP-29/2026-08-06-000000/html/eAIP/QA-AD-2-OTHH-mobile-en-GB.html",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23714,7 +23714,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://aim.gov.qa/AIP/11-JUN-2026/AIP-29/2026-08-06-000000/html/eAIP/QA-AD-2-OTHH-mobile-en-GB.html",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23741,7 +23741,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://aim.gov.qa/AIP/11-JUN-2026/AIP-29/2026-08-06-000000/html/eAIP/QA-AD-2-OTHH-mobile-en-GB.html",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23768,7 +23768,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://aim.gov.qa/AIP/11-JUN-2026/AIP-29/2026-08-06-000000/html/eAIP/QA-AD-2-OTHH-mobile-en-GB.html",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23795,7 +23795,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://aim.gov.qa/AIP/11-JUN-2026/AIP-29/2026-08-06-000000/html/eAIP/QA-AD-2-OTHH-mobile-en-GB.html",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23822,7 +23822,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://aim.gov.qa/AIP/11-JUN-2026/AIP-29/2026-08-06-000000/html/eAIP/QA-AD-2-OTHH-mobile-en-GB.html",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23850,7 +23850,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://aim.gov.qa/AIP/11-JUN-2026/AIP-29/2026-08-06-000000/html/eAIP/QA-AD-2-OTHH-mobile-en-GB.html",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23877,7 +23877,7 @@
       "jeppNDBTextMention": false,
       "jeppRadialLabels": [],
       "jeppDmeLabelsNm": [],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://aim.gov.qa/AIP/11-JUN-2026/AIP-29/2026-08-06-000000/html/eAIP/QA-AD-2-OTHH-mobile-en-GB.html",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23908,7 +23908,7 @@
       "jeppDmeLabelsNm": [
         "1"
       ],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://aim.gov.qa/AIP/11-JUN-2026/AIP-29/2026-08-06-000000/html/eAIP/QA-AD-2-OTHH-mobile-en-GB.html",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23948,7 +23948,7 @@
         "11.0",
         "14.6"
       ],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://aim.gov.qa/AIP/11-JUN-2026/AIP-29/2026-08-06-000000/html/eAIP/QA-AD-2-OTHH-mobile-en-GB.html",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -23981,7 +23981,7 @@
         "11.0",
         "14.6"
       ],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://aim.gov.qa/AIP/11-JUN-2026/AIP-29/2026-08-06-000000/html/eAIP/QA-AD-2-OTHH-mobile-en-GB.html",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -24019,7 +24019,7 @@
         "11.0",
         "14.5"
       ],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://aim.gov.qa/AIP/11-JUN-2026/AIP-29/2026-08-06-000000/html/eAIP/QA-AD-2-OTHH-mobile-en-GB.html",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -24057,7 +24057,7 @@
         "14.5",
         "21"
       ],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://aim.gov.qa/AIP/11-JUN-2026/AIP-29/2026-08-06-000000/html/eAIP/QA-AD-2-OTHH-mobile-en-GB.html",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -24096,7 +24096,7 @@
         "11.0",
         "14.9"
       ],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://aim.gov.qa/AIP/11-JUN-2026/AIP-29/2026-08-06-000000/html/eAIP/QA-AD-2-OTHH-mobile-en-GB.html",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -24129,7 +24129,7 @@
         "11.0",
         "14.9"
       ],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://aim.gov.qa/AIP/11-JUN-2026/AIP-29/2026-08-06-000000/html/eAIP/QA-AD-2-OTHH-mobile-en-GB.html",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -24164,7 +24164,7 @@
         "11.0",
         "14.4"
       ],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://aim.gov.qa/AIP/11-JUN-2026/AIP-29/2026-08-06-000000/html/eAIP/QA-AD-2-OTHH-mobile-en-GB.html",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -24199,7 +24199,7 @@
         "11.0",
         "14.4"
       ],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://aim.gov.qa/AIP/11-JUN-2026/AIP-29/2026-08-06-000000/html/eAIP/QA-AD-2-OTHH-mobile-en-GB.html",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -24237,7 +24237,7 @@
         "220"
       ],
       "jeppDmeLabelsNm": [],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://aim.gov.qa/AIP/11-JUN-2026/AIP-29/2026-08-06-000000/html/eAIP/QA-AD-2-OTHH-mobile-en-GB.html",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -24272,7 +24272,7 @@
         "230"
       ],
       "jeppDmeLabelsNm": [],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://aim.gov.qa/AIP/11-JUN-2026/AIP-29/2026-08-06-000000/html/eAIP/QA-AD-2-OTHH-mobile-en-GB.html",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -24310,7 +24310,7 @@
         "230"
       ],
       "jeppDmeLabelsNm": [],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://aim.gov.qa/AIP/11-JUN-2026/AIP-29/2026-08-06-000000/html/eAIP/QA-AD-2-OTHH-mobile-en-GB.html",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
@@ -24347,7 +24347,7 @@
         "230"
       ],
       "jeppDmeLabelsNm": [],
-      "officialAipUrl": "",
+      "officialAipUrl": "https://aim.gov.qa/AIP/11-JUN-2026/AIP-29/2026-08-06-000000/html/eAIP/QA-AD-2-OTHH-mobile-en-GB.html",
       "officialAipControlsIndependentVerified": false,
       "externalReferencePolicy": "Official State AIP or Jeppesen source ONLY",
       "dmeSlantPolicy": "3D range constraint; needs NAVAID elevation, target altitude, radial variation and independent point evidence",
