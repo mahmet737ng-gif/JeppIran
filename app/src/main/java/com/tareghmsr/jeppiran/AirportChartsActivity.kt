@@ -138,6 +138,12 @@ class AirportChartsActivity :
                 this
             )
 
+        // Main Home opens directly to the unified airport workspace.
+        if (icao.isBlank()) {
+            val known = repository.getAirports()
+            icao = known.find { it.icao == "OIII" }?.icao ?: known.firstOrNull()?.icao.orEmpty()
+        }
+
         if (
             airportName.isBlank()
         ) {
@@ -384,10 +390,217 @@ class AirportChartsActivity :
         return outer
     }
 
+
+    /**
+     * Task 5: a real left-side airport rail. It stays mounted while changing
+     * airports and switching between the profile and chart browser.
+     * The advanced PDF viewer remains separate until Task 6.
+     */
+    private var airportShell: LinearLayout? = null
+    private lateinit var airportRail: LinearLayout
+    private lateinit var airportRailRows: LinearLayout
+    private lateinit var airportRailScroll: ScrollView
+    private lateinit var airportRailSearch: EditText
+    private var airportRailQuery = ""
+    private val railExpanded = mutableSetOf("Airport")
+
+    private fun railBackground(selected: Boolean = false): GradientDrawable {
+        val dark = isDarkTheme()
+        return GradientDrawable().apply {
+            cornerRadius = 10.dp.toFloat()
+            setColor(if (selected) (if (dark) Color.rgb(7, 50, 91) else Color.rgb(208, 235, 255))
+                else (if (dark) Color.rgb(7, 31, 55) else Color.WHITE))
+            setStroke(1.dp, if (selected) Color.rgb(41, 185, 245)
+                else (if (dark) Color.rgb(25, 79, 125) else Color.rgb(153, 199, 229)))
+        }
+    }
+
+    private fun railText(value: String, sp: Float, muted: Boolean = false): TextView =
+        TextView(this).apply {
+            text = value
+            textSize = sp
+            setTextColor(if (muted) (if (isDarkTheme()) Color.rgb(157,191,215) else Color.rgb(73,109,139))
+                else if (isDarkTheme()) Color.rgb(244,250,255) else Color.rgb(21,47,69))
+            if (!muted) typeface = Typeface.DEFAULT_BOLD
+        }
+
+    private fun railWidth(compact: Boolean): Int =
+        if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (compact) 194.dp else 248.dp
+        } else {
+            if (compact) 114.dp else 148.dp
+        }
+
+    private fun adjustRail(compact: Boolean) {
+        if (!::airportRail.isInitialized) return
+        val lp = airportRail.layoutParams as? LinearLayout.LayoutParams ?: return
+        val width = railWidth(compact)
+        if (lp.width != width) {
+            lp.width = width
+            airportRail.layoutParams = lp
+        }
+    }
+
+    private fun buildAirportRail(): View {
+        airportRail = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            background = pageBackground()
+            setPadding(5.dp, 28.dp, 5.dp, 7.dp)
+        }
+        airportRail.addView(railText("‹ Home", 13f, true).apply {
+            setPadding(8.dp, 4.dp, 4.dp, 11.dp)
+            setOnClickListener { finish() }
+        })
+        airportRail.addView(railText("Charts", 24f).apply {
+            setPadding(8.dp, 0, 0, 9.dp)
+        })
+        airportRailSearch = EditText(this).apply {
+            hint = "Search ICAO"
+            textSize = 12f
+            isSingleLine = true
+            setTextColor(primaryTextColor())
+            setHintTextColor(secondaryTextColor())
+            setPadding(8.dp, 5.dp, 7.dp, 5.dp)
+            background = railBackground()
+            importantForAutofill = View.IMPORTANT_FOR_AUTOFILL_NO
+            addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
+                override fun afterTextChanged(s: Editable?) = Unit
+                override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                    airportRailQuery = s?.toString()?.trim()?.uppercase(java.util.Locale.US).orEmpty()
+                    renderRailAirports()
+                }
+            })
+        }
+        airportRail.addView(airportRailSearch, LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, 44.dp
+        ).apply { bottomMargin = 10.dp })
+        airportRailScroll = ScrollView(this).apply {
+            isFillViewport = true
+            overScrollMode = View.OVER_SCROLL_IF_CONTENT_SCROLL_IF_NEEDED
+            isVerticalScrollBarEnabled = false
+        }
+        airportRailRows = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+        }
+        airportRailScroll.addView(airportRailRows)
+        airportRail.addView(airportRailScroll, LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, 0, 1f
+        ))
+        return airportRail
+    }
+
+    private fun selectAirportInRail(code: String) {
+        if (code == icao) {
+            showProfileView()
+            adjustRail(false)
+            return
+        }
+        icao = code
+        airportName = ChartRepository.airportName(code)
+        city = ChartRepository.city(code)
+        selectedCategory = ""
+        searchBarAnimation?.cancel()
+        searchBarHidden = false
+        buildUi()
+        loadCharts()
+        renderRailAirports()
+    }
+
+    private fun renderRailAirports() {
+        if (!::airportRailRows.isInitialized || !::airportRailScroll.isInitialized) return
+        val oldScroll = airportRailScroll.scrollY
+        airportRailRows.removeAllViews()
+        val airports = repository.getAirports().filter {
+            airportRailQuery.isBlank() ||
+                it.icao.contains(airportRailQuery, ignoreCase = true) ||
+                it.airportName.contains(airportRailQuery, ignoreCase = true) ||
+                it.city.contains(airportRailQuery, ignoreCase = true)
+        }
+        for (airport in airports) {
+            val chosen = airport.icao == icao
+            val row = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                setPadding(9.dp, 10.dp, 5.dp, 10.dp)
+                background = railBackground(chosen)
+                isClickable = true
+                isFocusable = true
+                setOnClickListener { selectAirportInRail(airport.icao) }
+            }
+            row.addView(railText(airport.icao, 17f))
+            row.addView(railText(airport.airportName, 10f, true).apply { maxLines = 2 })
+            if (chosen) row.addView(railText(airport.city, 10f, true))
+            airportRailRows.addView(row, LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+            ).apply { bottomMargin = 7.dp })
+
+            if (chosen) {
+                val groups = repository.getDisplayChartsForAirport(icao)
+                    .groupBy { ChartRepository.normalizeCategory(it.category) }
+                for (category in listOf("STAR", "SID", "Airport", "Approach")) {
+                    val items = groups[category].orEmpty()
+                    if (items.isEmpty()) continue
+                    val expanded = railExpanded.contains(category)
+                    val name = ChartRepository.displayCategory(category)
+                    val header = railText((if (expanded) "▾ " else "▸ ") + name + " (" + items.size + ")", 12f).apply {
+                        setPadding(6.dp, 10.dp, 3.dp, 10.dp)
+                        background = railBackground()
+                        setTextColor(if (isDarkTheme()) Color.rgb(70,203,255) else Color.rgb(0,112,193))
+                        setOnClickListener {
+                            if (expanded) railExpanded.remove(category) else railExpanded.add(category)
+                            renderRailAirports()
+                        }
+                    }
+                    airportRailRows.addView(header, LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+                    ).apply { leftMargin=4.dp; bottomMargin=3.dp })
+                    if (expanded) for (chart in items) {
+                        airportRailRows.addView(railText(
+                            (if (chart.chartNumber.isBlank()) "" else chart.chartNumber + " · ") + chart.name,
+                            10f, true
+                        ).apply {
+                            setPadding(10.dp, 9.dp, 4.dp, 9.dp)
+                            setOnClickListener { openChart(chart) }
+                        }, LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT
+                        ).apply { leftMargin=7.dp })
+                    }
+                }
+            }
+        }
+        airportRailScroll.post { airportRailScroll.scrollTo(0, oldScroll) }
+    }
+
+    private fun mountAirportWorkspace() {
+        val prior = airportShell
+        if (prior == null) {
+            val newShell = LinearLayout(this).apply {
+                orientation = LinearLayout.HORIZONTAL
+                background = pageBackground()
+            }
+            newShell.addView(buildAirportRail(), LinearLayout.LayoutParams(
+                railWidth(false), LinearLayout.LayoutParams.MATCH_PARENT
+            ))
+            newShell.addView(root, LinearLayout.LayoutParams(
+                0, LinearLayout.LayoutParams.MATCH_PARENT, 1f
+            ))
+            airportShell = newShell
+            setContentView(newShell)
+            BackNavigation.install(this)
+            renderRailAirports()
+        } else {
+            prior.removeViewAt(1)
+            prior.addView(root, 1, LinearLayout.LayoutParams(
+                0, LinearLayout.LayoutParams.MATCH_PARENT, 1f
+            ))
+        }
+    }
+
     private lateinit var profilePanel: View
 
     private fun showProfileView() {
         if (!::profilePanel.isInitialized || !::root.isInitialized) return
+        adjustRail(false)
         for (i in 0 until root.childCount) {
             val child = root.getChildAt(i)
             child.visibility = if (child === profilePanel) View.VISIBLE else View.GONE
@@ -396,6 +609,7 @@ class AirportChartsActivity :
 
     private fun showChartsBrowser(category: String?) {
         if (!::profilePanel.isInitialized || !::root.isInitialized) return
+        adjustRail(true)
         for (i in 0 until root.childCount) {
             val child = root.getChildAt(i)
             child.visibility = if (child === profilePanel) View.GONE else View.VISIBLE
@@ -894,15 +1108,9 @@ class AirportChartsActivity :
 
         installSearchBarScrollBehavior()
 
-        setContentView(
-            root
-        )
+        mountAirportWorkspace()
 
         showProfileView()
-
-        BackNavigation.install(
-            this
-        )
 
         ViewCompat.setOnApplyWindowInsetsListener(
             root

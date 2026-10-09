@@ -426,7 +426,7 @@ class MainActivity :
             startActivity(
                 Intent(
                     this,
-                    ChartsActivity::class.java
+                    AirportChartsActivity::class.java
                 )
             )
         }
