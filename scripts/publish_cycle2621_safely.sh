@@ -184,6 +184,11 @@ git add -- Iran2621.pdf web/data/charts \
   app/src/main/assets/changed-airports.json
 git diff --cached --quiet && { echo 'No chart changes to publish'; exit 1; }
 git commit -m 'Publish JEPPIRAN V2621 chart data (preserve simulator and app code)'
+# The PDF-index generator rewrites tracked intermediate files. They are
+# intentionally excluded from this narrowly scoped chart-data commit.
+# Reset ONLY the uncommitted CI working-tree modifications (not the commit).
+# Rebase refuses even safe changes if they remain unstaged.
+git reset --hard HEAD
 git fetch origin main
 git rebase origin/main
 git lfs push origin HEAD
