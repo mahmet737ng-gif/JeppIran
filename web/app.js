@@ -2,6 +2,7 @@ const RAW_ROOT="./data/";
 
 const ADC_QA_MODE = new URLSearchParams(location.search).get("adc_test")==="1";
 const BIRJAND_ADC_QA_MODE = new URLSearchParams(location.search).get("adc_test")==="birjand";
+const DOHA_ADC_QA_MODE = new URLSearchParams(location.search).get("adc_test")==="doha";
 function showAdcQaMessage(message, payload=null){
   let wrap=document.getElementById("adcQaPanel");
   if(!wrap){
@@ -16,7 +17,7 @@ function showAdcQaMessage(message, payload=null){
   if(!payload)return;
   const row=document.createElement("div");row.style.cssText="display:flex;flex-wrap:wrap;gap:5px;margin-top:8px";
   for(const item of payload.charts){
-    for(const point of [...item.points,...(item.testPoints||[])].filter(p=>p.controlType==="AIP" || /^(ARP|THR08|THR26|RWY10 physical|THR28|NDB HAM|NDB LEN|VOR\/DME HAM)$/.test(p.source))){
+    for(const point of [...item.points,...(item.testPoints||[])].filter(p=>(p.controlType==="AIP" || p.controlType==="AIP_HELD_OUT") || /^(ARP|THR08|THR26|RWY10 physical|THR28|NDB HAM|NDB LEN|VOR\/DME HAM)$/.test(p.source))){
       const btn=document.createElement("button");btn.type="button";
       btn.textContent=item.airport+" · "+point.source;
       btn.style.cssText="color:#171717;background:#ffe1a1;border:0;border-radius:5px;padding:5px;cursor:pointer";
@@ -82,6 +83,29 @@ async function enableBirjandAdcQaIfRequested(m){
   }catch(error){
     showAdcQaMessage("BIRJAND QA DISABLED: "+error.message+". No production georeference was modified.");
   }
+}
+
+
+async function enableDohaAdcQaIfRequested(m){
+  if(!DOHA_ADC_QA_MODE)return;
+  try{
+    const response=await fetch("./data/othh-adc-v2621-qa.json?v=1",{cache:"no-store"});
+    if(!response.ok)throw Error("OTHH QA model missing");
+    const payload=await response.json();
+    if(!payload.testOnly||payload.charts?.length!==1||payload.source?.sha256!==m.source_sha256||
+       payload.source?.chartDataVersion!==m.version||payload.source?.pageCount!==1654)throw Error("PDF cycle mismatch");
+    const c=charts.find(x=>Number(x.page)===1536&&x.airport==="OTHH"&&x.category==="Airport"&&x.chart_number==="20-9");
+    const item=payload.charts[0];
+    if(!c||item.page!==1536||item.airport!=="OTHH"||!item.validation?.qaTestOnly||
+       item.chartKey!==[c.airport,c.category.toUpperCase(),c.chart_number,c.name.toUpperCase()].join("|")||
+       item.validation.independentAipThresholdCheckCount!==4||item.validation.maxIndependentAipThresholdErrorMeters>10)
+       throw Error("OTHH model/index identity mismatch");
+    if(georefByPage.has(1536))throw Error("Original georeference override blocked");
+    const model=makeGeoModel(item);
+    if(!model)throw Error("OTHH source graticule failed geometry checks");
+    georefByPage.set(1536,model);
+    showAdcQaMessage("DOHA OTHH · ADC 20-9 · four official AIP runway checks, provisional 10m. NOT FOR ACTUAL NAVIGATION.",payload);
+  }catch(error){showAdcQaMessage("DOHA QA DISABLED: "+error.message+". Stable georefs unchanged.");}
 }
 
 const VERSION="V2620";
@@ -210,6 +234,7 @@ async function loadData(){
     georefByPage=buildGeorefIndex(g);
     await enableAdcQaIfRequested(m);
     await enableBirjandAdcQaIfRequested(m);
+    await enableDohaAdcQaIfRequested(m);
     renderAirports();
     if(!selectedAirport && charts.some(c=>c.airport==="OIII"))selectAirport("OIII");
     if($("#homeCycle"))$("#homeCycle").textContent=(m.version||VERSION);

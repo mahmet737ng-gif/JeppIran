@@ -1,0 +1,115 @@
+name: Build isolated JEPPIRAN Doha OTHH ADC test APK
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/build-doha-adc-test.yml'
+      - 'web/data/doha-adc-v2621-qa.json'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: jeppiran-doha-adc-qa-v2621
+  cancel-in-progress: false
+
+jobs:
+  build-doha-qa:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 50
+    steps:
+      - name: Checkout stable source without modifying main
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+        with:
+          packages: 'platform-tools'
+      - name: Install SDK platform and signing tools
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager "platforms;android-36" "build-tools;36.0.0"
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+      - name: Add Doha provisional GCP only to isolated build files
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import copy,json
+          from pathlib import Path
+          root=Path('app/src/main/assets')
+          current=json.loads((root/'chart-georef.json').read_text())
+          manifest=json.loads((root/'charts-manifest.json').read_text())
+          index=json.loads((root/'charts-current.json').read_text())
+          qa=json.loads(Path('web/data/doha-adc-v2621-qa.json').read_text())
+          assert qa['testOnly'] and qa['version']==2 and len(qa['charts'])==1
+          assert qa['source']['sha256']==manifest['source_sha256']==current['source']['sha256']
+          assert manifest['version']==qa['source']['chartDataVersion']==current['source']['chartDataVersion']=='V2621'
+          assert manifest['pages']==qa['source']['pageCount']==1654
+          target=qa['charts'][0]
+          assert target['page']==1536 and target['airport']=='OTHH' and target['chartKey']=='OTHH|AIRPORT|20-9|AIRPORT DIAGRAM'
+          assert target['validation']['qaTestOnly'] and target['validation']['method']=='paired_printed_graticule_vector_ticks'
+          assert target['validation']['maxIndependentAipThresholdErrorMeters']<=10.0
+          assert len(target['points'])==8 and len(target['testPoints'])==4
+          c=next(x for x in index if x['page']==1536)
+          assert c['airport']=='OTHH' and c['category']=='Airport' and c['chart_number']=='20-9'
+          assert manifest['airports']['OTHH']['global_pages'][c['pdf_page']-1]==1536
+          assert not any(int(item['page'])==1536 for item in current['charts']),'Never replace a live georeference'
+          modified=copy.deepcopy(current)
+          modified['charts'].append(target)
+          modified['testOnly']='Doha OTHH ADC 1536 provisional test; NOT FOR ACTUAL NAVIGATION'
+          (root/'chart-georef.json').write_text(json.dumps(modified,ensure_ascii=False,indent=2)+'\n')
+          gradle=Path('app/build.gradle.kts')
+          code=gradle.read_text()
+          key='applicationId = "com.tareghmsr.jeppiran"'
+          assert code.count(key)==1
+          gradle.write_text(code.replace(key,'applicationId = "com.tareghmsr.jeppiran.dohaqa"'))
+          axml=Path('app/src/main/AndroidManifest.xml')
+          manifest_xml=axml.read_text()
+          assert 'android:label="JeppIran"' in manifest_xml
+          axml.write_text(manifest_xml.replace('android:label="JeppIran"','android:label="JEPPIRAN DOHA QA"'))
+          f=Path('app/src/main/java/com/tareghmsr/jeppiran/ChartGeoreference.kt')
+          src=f.read_text()
+          assert '"paired_printed_graticule_vector_ticks"' in src
+          (root/'DOHA_ADC_QA_ONLY.txt').write_text('EXPERIMENTAL OTHH ADC page1536. 10m provisional threshold, NOT FOR ACTUAL NAVIGATION.\n')
+          print('Isolated test prepared: one OTHH ADC, no other georef/FSX/X-Plane changes')
+          PY
+      - name: Run tests and assemble Doha isolated APK
+        env:
+          JEPPIRAN_VERSION_NAME: V2621-OTHH-QA1
+          JEPPIRAN_VERSION_CODE: 26211536
+        run: gradle testDebugUnitTest assembleDebug --stacktrace
+      - name: Verify signed APK and separate application ID
+        run: |
+          set -euo pipefail
+          apk=app/build/outputs/apk/debug/app-debug.apk
+          test -s "$apk"
+          "$ANDROID_HOME/build-tools/36.0.0/apksigner" verify --verbose "$apk"
+          "$ANDROID_HOME/build-tools/36.0.0/aapt" dump badging "$apk" | grep "package: name='com.tareghmsr.jeppiran.dohaqa'"
+          cp "$apk" JEPPIRAN-DOHA-ADC-QA-V2621.apk
+      - name: Publish isolated test prerelease (never replace production APK)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          tag=jeppiran-doha-adc-qa-v2621-1
+          gh release view "$tag" >/dev/null 2>&1 || \
+            gh release create "$tag" --prerelease \
+              --title "JEPPIRAN Doha OTHH ADC TEST only V2621" \
+              --notes "Separately installable test application ID com.tareghmsr.jeppiran.dohaqa. Only source page 1536 OTHH ADC has provisional AIP 10m GCP georeference. Existing production georef and FSX/X-Plane bridges unchanged. Not for actual navigation."
+          gh release upload "$tag" JEPPIRAN-DOHA-ADC-QA-V2621.apk web/data/doha-adc-v2621-qa.json --clobber
+          gh release view "$tag" --json assets --jq '.assets[].name'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: JEPPIRAN-DOHA-ADC-QA-V2621
+          path: JEPPIRAN-DOHA-ADC-QA-V2621.apk
+          retention-days: 30
