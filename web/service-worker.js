@@ -11,7 +11,7 @@ self.addEventListener("activate",event=>{
     // Preserve unrelated airports saved offline. Invalidate ONLY stale Maku/Tabriz PDF bundles.
     if(keys.includes(PDF_CACHE)){
       const pdfCache=await caches.open(PDF_CACHE);
-      const outdated=(await pdfCache.keys()).filter(req=>/\\/(?:OITU|OITT)\\.pdf$/i.test(new URL(req.url).pathname));
+      const outdated=(await pdfCache.keys()).filter(req=>{ const path=new URL(req.url).pathname; return path.endsWith("/OITU.pdf")||path.endsWith("/OITT.pdf"); });
       await Promise.all(outdated.map(req=>pdfCache.delete(req)));
     }
     await self.clients.claim();
