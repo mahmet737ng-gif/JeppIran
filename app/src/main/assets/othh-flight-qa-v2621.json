@@ -1,0 +1,393 @@
+{
+  "version": 2,
+  "coordinateSystem": "WGS84",
+  "coordinateSpace": "pdf_points",
+  "origin": "top_left",
+  "testOnly": false,
+  "notForActualNavigation": true,
+  "approvalScope": "USER_REPORTED_FLIGHT_TEST_QA_SIMULATOR",
+  "notice": "OTHH flight-test accepted for simulator visualization ONLY. NOT FOR ACTUAL NAVIGATION.",
+  "source": {
+    "file": "Iran2621.pdf",
+    "sha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+    "pageCount": 1654,
+    "chartDataVersion": "V2621",
+    "cycle": 2621
+  },
+  "charts": [
+    {
+      "page": 1536,
+      "airport": "OTHH",
+      "name": "AIRPORT DIAGRAM",
+      "chartKey": "OTHH|AIRPORT|20-9|AIRPORT DIAGRAM",
+      "sourceFingerprint": "77469d0cbf9ff486a03b5b2afc801a67d3a46c1d3052225b07f74054d980e22f",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 8.4,
+        "top": 18.84,
+        "right": 583.2,
+        "bottom": 762.48
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 25.25,
+          "lon": 51.6,
+          "x": 183.9600067138672,
+          "y": 734.1599731445312,
+          "source": "Printed grid 25-15 / 51-36"
+        },
+        {
+          "lat": 25.25,
+          "lon": 51.61666666666667,
+          "x": 385.67999267578125,
+          "y": 734.1599731445312,
+          "source": "Printed grid 25-15 / 51-37"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.6,
+          "x": 183.9600067138672,
+          "y": 512.4000244140625,
+          "source": "Printed grid 25-16 / 51-36"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.61666666666667,
+          "x": 385.67999267578125,
+          "y": 512.4000244140625,
+          "source": "Printed grid 25-16 / 51-37"
+        },
+        {
+          "lat": 25.283333333333335,
+          "lon": 51.6,
+          "x": 183.9600067138672,
+          "y": 290.3999938964844,
+          "source": "Printed grid 25-17 / 51-36"
+        },
+        {
+          "lat": 25.283333333333335,
+          "lon": 51.61666666666667,
+          "x": 385.67999267578125,
+          "y": 290.3999938964844,
+          "source": "Printed grid 25-17 / 51-37"
+        },
+        {
+          "lat": 25.3,
+          "lon": 51.6,
+          "x": 183.9600067138672,
+          "y": 68.6400146484375,
+          "source": "Printed grid 25-18 / 51-36"
+        },
+        {
+          "lat": 25.3,
+          "lon": 51.61666666666667,
+          "x": 385.67999267578125,
+          "y": 68.6400146484375,
+          "source": "Printed grid 25-18 / 51-37"
+        }
+      ],
+      "gridAxes": {
+        "latitude": [
+          {
+            "label": "25-15",
+            "degrees": 25.25,
+            "pdfPoint": 734.1599731445312,
+            "pixelAxis": "y",
+            "labelBounds": [
+              17.88,
+              731.9658,
+              30.9743,
+              739.0458
+            ],
+            "tickSegment": [
+              8.4,
+              734.16,
+              15.84,
+              734.16
+            ]
+          },
+          {
+            "label": "25-16",
+            "degrees": 25.266666666666666,
+            "pdfPoint": 512.4000244140625,
+            "pixelAxis": "y",
+            "labelBounds": [
+              17.88,
+              509.9658,
+              30.9743,
+              517.0458
+            ],
+            "tickSegment": [
+              8.4,
+              512.4,
+              15.84,
+              512.4
+            ]
+          },
+          {
+            "label": "25-17",
+            "degrees": 25.283333333333335,
+            "pdfPoint": 290.3999938964844,
+            "pixelAxis": "y",
+            "labelBounds": [
+              17.88,
+              288.2058,
+              30.9743,
+              295.2858
+            ],
+            "tickSegment": [
+              8.4,
+              290.4,
+              15.84,
+              290.4
+            ]
+          },
+          {
+            "label": "25-18",
+            "degrees": 25.3,
+            "pdfPoint": 68.6400146484375,
+            "pixelAxis": "y",
+            "labelBounds": [
+              18.48,
+              65.8458,
+              31.5743,
+              72.9258
+            ],
+            "tickSegment": [
+              8.4,
+              68.64,
+              15.84,
+              68.64
+            ]
+          }
+        ],
+        "longitude": [
+          {
+            "label": "51-36",
+            "degrees": 51.6,
+            "pdfPoint": 183.9600067138672,
+            "pixelAxis": "x",
+            "labelBounds": [
+              177.72,
+              748.8858,
+              190.8143,
+              755.9658
+            ],
+            "tickSegment": [
+              183.96,
+              762.84,
+              183.96,
+              755.16
+            ]
+          },
+          {
+            "label": "51-37",
+            "degrees": 51.61666666666667,
+            "pdfPoint": 385.67999267578125,
+            "pixelAxis": "x",
+            "labelBounds": [
+              379.44,
+              748.8858,
+              392.5343,
+              755.9658
+            ],
+            "tickSegment": [
+              385.68,
+              762.84,
+              385.68,
+              755.16
+            ]
+          }
+        ]
+      },
+      "airportAnchor": {
+        "lat": 25.275,
+        "lon": 51.608333333333334,
+        "sourcePage": 1489,
+        "sourceType": "Jeppesen general-information approximate Lat/Long (not a surveyed GCP)"
+      },
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "gridMaxResidualPdfPoints": 0.072028,
+        "controlPointCount": 8,
+        "method": "paired_printed_graticule_vector_ticks",
+        "measuredAxisValueCounts": {
+          "latitude": 4,
+          "longitude": 2
+        },
+        "notToScaleTextPresentElsewhereOnPage": false,
+        "sourceOnly": true,
+        "thirdPartyReferenceCount": 0,
+        "independentOfficialAipGcpValidated": true,
+        "approvedForApp": true,
+        "requiresIndependent10mHoldout": true,
+        "userTestStatus": "",
+        "qaTestOnly": false,
+        "notApprovedForNavigation": true,
+        "officialAipEffectiveDate": "2026-08-06",
+        "airac2621MatchConfirmed": false,
+        "independentAipThresholdCheckCount": 4,
+        "maxIndependentAipThresholdErrorMeters": 1.685,
+        "publicationMode": "FLIGHT_QA_SIMULATOR_ONLY",
+        "insetMaskAccepted": true,
+        "simulatorOnly": true,
+        "userReportedFlightTestPassed": true,
+        "releaseScope": "Visual geolocation for simulators; not actual navigation"
+      },
+      "testPoints": [
+        {
+          "source": "RWY 16L",
+          "lat": 25.29610277777778,
+          "lon": 51.60887777777778,
+          "x": 291.36,
+          "y": 120.54,
+          "independentTestMeters": 1.685,
+          "controlType": "AIP_HELD_OUT",
+          "fit": false
+        },
+        {
+          "source": "RWY 34R",
+          "lat": 25.255458333333333,
+          "lon": 51.626780555555555,
+          "x": 508.14,
+          "y": 661.68,
+          "independentTestMeters": 1.371,
+          "controlType": "AIP_HELD_OUT",
+          "fit": false
+        },
+        {
+          "source": "RWY 16R",
+          "lat": 25.29097777777778,
+          "lon": 51.58974166666667,
+          "x": 59.76,
+          "y": 188.82,
+          "independentTestMeters": 1.145,
+          "controlType": "AIP_HELD_OUT",
+          "fit": false
+        },
+        {
+          "source": "RWY 34L",
+          "lat": 25.255366666666667,
+          "lon": 51.60543333333334,
+          "x": 249.78,
+          "y": 662.88,
+          "independentTestMeters": 1.147,
+          "controlType": "AIP_HELD_OUT",
+          "fit": false
+        }
+      ]
+    },
+    {
+      "page": 1549,
+      "airport": "OTHH",
+      "name": "AIRPORT GROUND CHART 20-9N",
+      "chartKey": "OTHH|AIRPORT|20-9N|AIRPORT GROUND CHART 20-9N",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 8.4,
+        "top": 18.84,
+        "right": 583.2,
+        "bottom": 762.48
+      },
+      "excludedBounds": [
+        {
+          "left": 377,
+          "top": 165,
+          "right": 557,
+          "bottom": 302
+        },
+        {
+          "left": 8.4,
+          "top": 18.84,
+          "right": 289,
+          "bottom": 70
+        }
+      ],
+      "points": [
+        {
+          "lat": 25.25,
+          "lon": 51.6,
+          "x": 183.9600067138672,
+          "y": 734.1599731445312,
+          "source": "Printed grid 25-15 / 51-36"
+        },
+        {
+          "lat": 25.25,
+          "lon": 51.61666666666667,
+          "x": 385.67999267578125,
+          "y": 734.1599731445312,
+          "source": "Printed grid 25-15 / 51-37"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.6,
+          "x": 183.9600067138672,
+          "y": 512.4000244140625,
+          "source": "Printed grid 25-16 / 51-36"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.61666666666667,
+          "x": 385.67999267578125,
+          "y": 512.4000244140625,
+          "source": "Printed grid 25-16 / 51-37"
+        },
+        {
+          "lat": 25.283333333333335,
+          "lon": 51.6,
+          "x": 183.9600067138672,
+          "y": 290.3999938964844,
+          "source": "Printed grid 25-17 / 51-36"
+        },
+        {
+          "lat": 25.283333333333335,
+          "lon": 51.61666666666667,
+          "x": 385.67999267578125,
+          "y": 290.3999938964844,
+          "source": "Printed grid 25-17 / 51-37"
+        },
+        {
+          "lat": 25.3,
+          "lon": 51.6,
+          "x": 183.9600067138672,
+          "y": 68.6400146484375,
+          "source": "Printed grid 25-18 / 51-36"
+        },
+        {
+          "lat": 25.3,
+          "lon": 51.61666666666667,
+          "x": 385.67999267578125,
+          "y": 68.6400146484375,
+          "source": "Printed grid 25-18 / 51-37"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": false,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false,
+        "approvedForApp": true,
+        "simulatorOnly": true,
+        "userReportedFlightTestPassed": true,
+        "publicationMode": "FLIGHT_QA_SIMULATOR_ONLY",
+        "independentOfficialAipGcpValidated": true,
+        "independentAipThresholdCheckCount": 4,
+        "maxIndependentAipThresholdErrorMeters": 4.559,
+        "insetMaskAccepted": true,
+        "releaseScope": "Visual geolocation for simulators; not actual navigation",
+        "priorIndependentReport": true,
+        "priorIndependentMeasurementProvenance": "Earlier OTHH 1549 four-runway-threshold QA report; max 4.559 m. Individual per-point residuals not reproduced here."
+      },
+      "sourceFingerprint": "dbd34f8fa280f21562573fd09381889548eb9d1f5dcf5835c34af2c51e0e9af0"
+    }
+  ]
+}

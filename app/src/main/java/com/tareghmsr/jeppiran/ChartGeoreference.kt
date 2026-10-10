@@ -207,6 +207,9 @@ object ChartGeoreferenceStore {
     private const val OIMM_ILS_ASSET = "chart-georef-oimm-ils-experimental.json"
     private const val OIMM_ILS_SOURCE_SHA = "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6"
     private val OIMM_ILS_PAGES = setOf(605,606,607)
+    // OTHH flight-test accepted for simulator visualization only; stable 776 unchanged.
+    private const val OTHH_FLIGHT_QA_ASSET = "othh-flight-qa-v2621.json"
+    private val OTHH_FLIGHT_QA_PAGES = setOf(1536, 1549)
     private val SUPPORTED_METHODS =
         setOf(
             "paired_printed_graticule_vector_ticks",
@@ -292,6 +295,26 @@ object ChartGeoreferenceStore {
                 ) {
                     OIMM_ILS_PAGES.forEach { page ->
                         references[page] = experimental.references.getValue(page)
+                    }
+                }
+            }
+            // Separate additive overlay: do not overwrite any production georeference.
+            // OTHH user flight QA is for simulator visualization, never actual navigation.
+            if (selected.chartDataVersion == "V2621" &&
+                selected.sourceSha256 == OIMM_ILS_SOURCE_SHA
+            ) {
+                val othhFlightQa = runCatching {
+                    context.assets.open(OTHH_FLIGHT_QA_ASSET).bufferedReader()
+                        .use { it.readText() }.let(::parse)
+                }.getOrNull()
+                if (othhFlightQa != null &&
+                    othhFlightQa.chartDataVersion == selected.chartDataVersion &&
+                    othhFlightQa.sourceSha256 == selected.sourceSha256 &&
+                    OTHH_FLIGHT_QA_PAGES.all { othhFlightQa.references.containsKey(it) } &&
+                    OTHH_FLIGHT_QA_PAGES.none { references.containsKey(it) }
+                ) {
+                    OTHH_FLIGHT_QA_PAGES.forEach { page ->
+                        references[page] = othhFlightQa.references.getValue(page)
                     }
                 }
             }

@@ -79,6 +79,44 @@ function showPublishedExperimentalGeorefNotice(){
   panel.appendChild(btn);
   stage.style.position="relative";stage.appendChild(panel);
 }
+// OTHH flight-QA simulator release: additive, source-fingerprinted, and never override base.
+async function loadOthhFlightApprovedGeorefs(m){
+  try{
+    const r=await fetch("./data/othh-flight-qa-v2621.json?v=1",{cache:"no-store"});
+    if(!r.ok)throw Error("OTHH flight QA dataset unavailable");
+    const d=await r.json();
+    if(d.version!==2||d.testOnly!==false||d.notForActualNavigation!==true||
+       d.coordinateSpace!=="pdf_points"||d.origin!=="top_left"||
+       d.coordinateSystem!=="WGS84"||d.source?.sha256!==m.source_sha256||
+       d.source?.chartDataVersion!==m.version||d.source?.pageCount!==1654)
+      throw Error("OTHH source/cycle validation failed");
+    const expected=new Set([1536,1549]);
+    if(!Array.isArray(d.charts)||d.charts.length!==2)throw Error("Unexpected OTHH chart count");
+    const models=[];
+    for(const item of d.charts){
+      const page=Number(item.page);
+      if(!expected.delete(page)||item.airport!=="OTHH"||
+         !item.validation?.userReportedFlightTestPassed||
+         !item.validation?.notApprovedForNavigation||
+         !/^[a-f0-9]{64}$/.test(item.sourceFingerprint||""))
+        throw Error("OTHH chart QA identity mismatch");
+      const c=charts.find(x=>Number(x.page)===page);
+      if(!c||item.chartKey!==[c.airport,c.category.toUpperCase(),
+         c.chart_number,c.name.toUpperCase()].join("|"))
+        throw Error("OTHH index identity mismatch");
+      if(georefByPage.has(page))throw Error("Existing OTHH georeference preserved");
+      const model=makeGeoModel(item);
+      if(!model)throw Error("OTHH geo model rejected for page "+page);
+      models.push([page,model]);
+    }
+    if(expected.size)throw Error("OTHH page missing");
+    for(const [page,model] of models)georefByPage.set(page,model);
+    console.info("JEPPIRAN: two OTHH flight-reviewed simulator georefs active (NOT FOR ACTUAL NAVIGATION)");
+  }catch(error){
+    console.warn("OTHH flight QA georeferences not loaded:",error);
+  }
+}
+
 /* === END EXPERIMENTAL LAYER === */
 
 const ADC_QA_MODE = new URLSearchParams(location.search).get("adc_test")==="1";
@@ -316,6 +354,7 @@ async function loadData(){
     await enableAdcQaIfRequested(m);
     await enableBirjandAdcQaIfRequested(m);
     await enableDohaAdcQaIfRequested(m);
+    await loadOthhFlightApprovedGeorefs(m);
     await loadPublishedExperimentalGeorefs(m);
     renderAirports();
     if(!selectedAirport && charts.some(c=>c.airport==="OIII"))selectAirport("OIII");

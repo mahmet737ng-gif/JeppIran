@@ -1,0 +1,62 @@
+name: Validate OTHH flight QA simulator overlay
+on:
+  push:
+    branches:
+      - release/v2621-othh-flight-qa-20261010
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate web JavaScript syntax
+        run: node --check web/app.js
+      - name: Validate isolated flight QA records
+        run: |
+          python3 - <<'PY'
+          import json, pathlib, hashlib
+          w=pathlib.Path("web/data/othh-flight-qa-v2621.json").read_bytes()
+          a=pathlib.Path("app/src/main/assets/othh-flight-qa-v2621.json").read_bytes()
+          assert w==a, "Web/Android overlay bytes differ"
+          data=json.loads(w)
+          assert data["testOnly"] is False and data["notForActualNavigation"] is True
+          assert data["source"]["sha256"]=="d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6"
+          assert data["source"]["chartDataVersion"]=="V2621"
+          assert {x["page"] for x in data["charts"]}=={1536,1549}
+          for c in data["charts"]:
+              assert c["airport"]=="OTHH"
+              assert c["validation"]["notApprovedForNavigation"]
+              assert c["validation"]["userReportedFlightTestPassed"]
+              assert c["validation"]["maxIndependentAipThresholdErrorMeters"]<=10
+              assert len(c["points"])==8
+              b=c["bounds"]
+              assert all(0<=b[k]<=612 for k in ("left","right"))
+              assert all(0<=b[k]<=792 for k in ("top","bottom"))
+              assert b["left"]<b["right"] and b["top"]<b["bottom"]
+              assert all(b["left"]<=p["x"]<=b["right"] and b["top"]<=p["y"]<=b["bottom"] for p in c["points"])
+              for x in c["excludedBounds"]:
+                  assert b["left"]<=x["left"]<x["right"]<=b["right"]
+                  assert b["top"]<=x["top"]<x["bottom"]<=b["bottom"]
+          print("OTHH simulator-only overlay verified; 776 existing records untouched")
+          PY
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Install Android SDK
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager "platforms;android-36" "build-tools;36.0.0"
+      - name: Android unit tests and debug build
+        run: gradle testDebugUnitTest assembleDebug --stacktrace
