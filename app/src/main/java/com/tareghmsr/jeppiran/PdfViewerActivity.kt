@@ -2985,7 +2985,7 @@ private val locationPermissionLauncher =
                     "Chart"
                 } +
                 if (isOimmIlsExperimental) {
-                    " ⚠ EXPERIMENTAL GEOREF"
+                    " ⚠ GEOREF · AIP QA PENDING"
                 } else {
                     ""
                 }
@@ -2993,7 +2993,7 @@ private val locationPermissionLauncher =
 
         pageText.text =
             if (isOimmIlsExperimental) {
-                "TEST ONLY — NOT FOR ACTUAL NAVIGATION"
+                "INDEPENDENT AIP QA PENDING — NOT FOR ACTUAL NAVIGATION"
             } else {
                 ""
             }

@@ -70,10 +70,10 @@ function showPublishedExperimentalGeorefNotice(){
   panel.id="provisionalGeorefWarning";
   panel.style.cssText="position:absolute;top:7px;left:7px;z-index:40;background:#553210f2;color:#fff6db;border:2px solid #fcbf55;padding:7px 9px;max-width:calc(100% - 14px);border-radius:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;font:12px/1.4 Arial,sans-serif;box-shadow:0 2px 9px #0006";
   const msg=document.createElement("strong");
-  msg.textContent=enabled?"⚠ EXPERIMENTAL GEOREF · NOT FOR NAVIGATION":"EXPERIMENTAL GEOREF DISABLED";
+  msg.textContent=enabled?"⚠ GEOREFERENCE · INDEPENDENT AIP QA PENDING · NOT FOR NAVIGATION":"GEOREFERENCE LAYER DISABLED";
   panel.appendChild(msg);
   const btn=document.createElement("button");
-  btn.type="button";btn.textContent=enabled?"Disable experimental":"Enable experimental";
+  btn.type="button";btn.textContent=enabled?"Disable additional georefs":"Enable additional georefs";
   btn.style.cssText="background:#fbd28b;color:#422400;border:0;border-radius:6px;padding:5px 8px;cursor:pointer;font-weight:bold";
   btn.addEventListener("click",togglePublishedExperimentalGeoref);
   panel.appendChild(btn);
@@ -641,8 +641,8 @@ function setPositionStatus(state,text,detail=""){
   const btn=$("#positionStatusBtn");
   if(!btn)return;
   if(selectedChart && experimentalGeorefPages.has(Number(selectedChart.page))){
-    state="warning";text=(text||"GPS")+" · GEO TEST";
-    detail="EXPERIMENTAL GEOREFERENCE · NOT FOR NAVIGATION. "+(detail||"");
+    state="warning";text=(text||"GPS")+" · GEOREF";
+    detail="GEOREFERENCE · INDEPENDENT AIP QA PENDING · NOT FOR NAVIGATION. "+(detail||"");
   }
   btn.dataset.state=state||"off";
   btn.title=text||"Position status";
