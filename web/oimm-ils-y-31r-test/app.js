@@ -23,9 +23,9 @@ async function enableOimmIlsQaOnly(m){
     const d=await r.json();
     if(d.version!==2||d.testOnly!==true||d.origin!=="top_left"||d.coordinateSpace!=="pdf_points"||
        d.coordinateSystem!=="WGS84"||d.source?.sha256!==m.source_sha256||
-       d.source?.chartDataVersion!==m.version||d.source?.pageCount!==1654||d.charts?.length!==6)
+       d.source?.chartDataVersion!==m.version||d.source?.pageCount!==1654||d.charts?.length!==8)
       throw Error("QA source/cycle/count mismatch");
-    const allowed=new Set([606,609,611,612,613,614]);
+    const allowed=new Set([605,606,607,609,611,612,613,614]);
     const models=new Map();
     for(const item of d.charts){
       const page=Number(item.page);
@@ -39,14 +39,14 @@ async function enableOimmIlsQaOnly(m){
       if(!model)throw Error("Georeference grid geometry failed "+page);
       models.set(page,model);
     }
-    if(models.size!==6)throw Error("Six models were not validated");
+    if(models.size!==8)throw Error("Eight experimental models were not validated");
     window.OIMM_ALL_APP_MODELS=models;
     for(const [page,model] of models)georefByPage.set(page,model);
     OIMM_ILS_QA_MODEL=models.get(606);
     OIMM_ILS_QA_ACTIVE=true;
     window.JEPPIRAN_OIMM_QA_STATUS={loaded:true,pages:[...models.keys()],approvedForNavigation:false};
     const info=document.getElementById("oimmTestStatus");
-    if(info)info.textContent="6 GEOREF MODELS ACTIVE · TEST ONLY";
+    if(info)info.textContent="8 MODELS · ILS Z/X APPROXIMATE · NOT FOR NAVIGATION";
   }catch(e){
     OIMM_ILS_QA_ACTIVE=false;
     window.JEPPIRAN_OIMM_QA_STATUS={loaded:false,error:String(e.message)};
@@ -62,7 +62,7 @@ function showOimmIlsOnChartWarning(){
   if(!selectedChart||selectedChart.airport!=="OIMM"||selectedChart.category!=="Approach")return;
   const box=document.createElement("div");box.id="oimmIlsQaWarning";
   box.style.cssText="position:absolute;top:48px;left:7px;z-index:60;color:#fff7d1;background:#572c0af0;border:2px solid #ffcc68;border-radius:7px;padding:6px 9px;font:bold 12px/1.4 system-ui,sans-serif;max-width:calc(100% - 15px);box-shadow:0 3px 12px #0008";
-  box.textContent=(window.OIMM_ALL_APP_MODELS?.has(page))?"OIMM "+page+" · EXPERIMENTAL GEOREF · NOT FOR NAVIGATION":"OIMM "+page+" · HOLD · NO EXPERIMENTAL GEOREF";
+  box.textContent=(window.OIMM_ALL_APP_MODELS?.has(page))?"OIMM "+page+(page===605||page===607?" · APPROXIMATE INFERRED SCALE":" · EXPERIMENTAL GEOREF")+" · NOT FOR NAVIGATION":"OIMM "+page+" · HOLD · NO EXPERIMENTAL GEOREF";
   stage.style.position="relative";stage.appendChild(box);
 }
 function setupOimmTestToolbar(){
@@ -71,7 +71,7 @@ function setupOimmTestToolbar(){
   if(openBtn)openBtn.addEventListener("click",openOimmIlsQaChart);
   if(simBtn)simBtn.addEventListener("click",()=>route("simulator"));
   const status=document.getElementById("oimmTestStatus");
-  if(status&&OIMM_ILS_QA_ACTIVE)status.textContent="6 GEOREF MODELS ACTIVE · TEST ONLY";
+  if(status&&OIMM_ILS_QA_ACTIVE)status.textContent="8 MODELS · ILS Z/X APPROXIMATE · NOT FOR NAVIGATION";
   else if(status&&!status.textContent.startsWith("QA BLOCKED"))status.textContent="QA INACTIVE · check console or reload";
   // Prefer to open target chart on landing. Do not interrupt a direct link to simulator.
   if((location.hash||"")===""||(location.hash||"")==="#home"||(location.hash||"")==="#charts"){
