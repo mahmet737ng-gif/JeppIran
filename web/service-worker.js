@@ -1,6 +1,6 @@
-const CACHE="jeppiran-pwa-v2621-othh-flightqa-2";
+const CACHE="jeppiran-pwa-v2621-toolbar-matte-1";
 const PDF_CACHE="jeppiran-chart-pdfs-v2621-printclean-3";
-const SHELL=["./","./index.html","./styles.css?v=2621-icao-noglow-6","./app.js?v=2621-othh-flightqa-2","./manifest.webmanifest","./data/georef-provisional-v2621.json","./data/othh-flight-qa-v2621.json","./data/othh-flight-qa-extra-v2621.json","./app-icon.png","./vendor/pdf.min.mjs","./vendor/pdf.worker.min.mjs"];
+const SHELL=["./","./index.html","./styles.css?v=2621-toolbar-matte-1","./app.js?v=2621-toolbar-matte-1","./toolbar-artwork/toolbar-matte.png","./manifest.webmanifest","./data/georef-provisional-v2621.json","./data/othh-flight-qa-v2621.json","./data/othh-flight-qa-extra-v2621.json","./app-icon.png","./vendor/pdf.min.mjs","./vendor/pdf.worker.min.mjs"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()));
 });

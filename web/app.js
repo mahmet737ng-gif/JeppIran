@@ -853,11 +853,11 @@ async function renderSelectedPdf(c){
   currentPdfUrl="./charts/"+encodeURIComponent(info.file||selectedAirport+".pdf");
   if(chartCacheSupported()){
     $("#offlinePdfBtn").disabled=false;
-    $("#offlinePdfBtn").textContent="Save Offline";
+    setOfflineButtonLabel("Save Offline");
     $("#offlinePdfBtn").title="Save this airport PDF for offline use";
   }else{
     $("#offlinePdfBtn").disabled=true;
-    $("#offlinePdfBtn").textContent="Online";
+    setOfflineButtonLabel("Online");
     $("#offlinePdfBtn").title="Offline browser cache is unavailable in Local Simulator Mode";
   }
   const stage=$("#pdfStage");
@@ -1091,12 +1091,16 @@ $("#chartMetarBtn").addEventListener("click",()=>{
 $("#chartMetarClose").addEventListener("click",e=>{e.stopPropagation();hideChartMetar()});
 $("#chartMetarBanner").addEventListener("click",e=>{if(e.target.id!=="chartMetarClose")hideChartMetar()});
 
+// Keep the raster artwork intact when the offline-save status changes.
+function setOfflineButtonLabel(text){
+  $("#offlinePdfBtn .toolbar-label").textContent=text;
+}
 $("#offlinePdfBtn").addEventListener("click",async()=>{
   if(!currentPdfUrl||!chartCacheSupported())return;
-  $("#offlinePdfBtn").disabled=true; $("#offlinePdfBtn").textContent="Saving…";
-  try{await getPdfBytes(currentPdfUrl,true);$("#offlinePdfBtn").textContent="Saved Offline"}
-  catch(e){$("#offlinePdfBtn").textContent="Save Offline";dialog("Offline chart","Could not save this airport PDF: "+e.message)}
-  finally{setTimeout(()=>{$("#offlinePdfBtn").disabled=false;if($("#offlinePdfBtn").textContent==="Saved Offline")$("#offlinePdfBtn").textContent="Save Offline"},1800)}
+  $("#offlinePdfBtn").disabled=true; setOfflineButtonLabel("Saving…");
+  try{await getPdfBytes(currentPdfUrl,true);setOfflineButtonLabel("Saved Offline")}
+  catch(e){setOfflineButtonLabel("Save Offline");dialog("Offline chart","Could not save this airport PDF: "+e.message)}
+  finally{setTimeout(()=>{$("#offlinePdfBtn").disabled=false;if($("#offlinePdfBtn .toolbar-label").textContent==="Saved Offline")setOfflineButtonLabel("Save Offline")},1800)}
 });
 async function refitSelectedChartForLayout(){
   if(!selectedChart)return;
