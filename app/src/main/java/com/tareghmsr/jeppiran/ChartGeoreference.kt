@@ -210,6 +210,8 @@ object ChartGeoreferenceStore {
     // OTHH flight-test accepted for simulator visualization only; stable 776 unchanged.
     private const val OTHH_FLIGHT_QA_ASSET = "othh-flight-qa-v2621.json"
     private val OTHH_FLIGHT_QA_PAGES = setOf(1536, 1549)
+    private const val OTHH_FLIGHT_EXTRA_ASSET = "othh-flight-qa-extra-v2621.json"
+    private val OTHH_FLIGHT_EXTRA_PAGES = setOf(1538,1539,1540,1552,1553,1556,1557,1559,1560,1561)
     private const val LTFM_GRID_ASSET = "ltfm-grid-georef-v2621.json"
     private val LTFM_GRID_PAGES = setOf(1291, 1292, 1295, 1305, 1306, 1317, 1335)
     private val SUPPORTED_METHODS =
@@ -336,6 +338,26 @@ object ChartGeoreferenceStore {
                 ) {
                     LTFM_GRID_PAGES.forEach { page ->
                         references[page] = grid.references.getValue(page)
+                    }
+                }
+            }
+            // Owner flight-test visual acceptance, simulator-only. Reject any source mismatch
+            // or potential overwrite of the original 776 chart georeferences.
+            if (selected.chartDataVersion == "V2621" &&
+                selected.sourceSha256 == OIMM_ILS_SOURCE_SHA
+            ) {
+                val extra = runCatching {
+                    context.assets.open(OTHH_FLIGHT_EXTRA_ASSET).bufferedReader()
+                        .use { it.readText() }.let(::parse)
+                }.getOrNull()
+                if (extra != null &&
+                    extra.chartDataVersion == selected.chartDataVersion &&
+                    extra.sourceSha256 == selected.sourceSha256 &&
+                    OTHH_FLIGHT_EXTRA_PAGES.all { extra.references.containsKey(it) } &&
+                    OTHH_FLIGHT_EXTRA_PAGES.none { references.containsKey(it) }
+                ) {
+                    OTHH_FLIGHT_EXTRA_PAGES.forEach { page ->
+                        references[page] = extra.references.getValue(page)
                     }
                 }
             }

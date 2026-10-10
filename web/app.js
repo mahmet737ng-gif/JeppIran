@@ -117,6 +117,41 @@ async function loadOthhFlightApprovedGeorefs(m){
   }
 }
 
+// Separate, additive OTHH owner flight-test accepted overlays; never replace existing data.
+async function loadOthhFlightExtraGeorefs(m){
+  try{
+    const r=await fetch("./data/othh-flight-qa-extra-v2621.json?v=1",{cache:"no-store"});
+    if(!r.ok)throw Error("OTHH additional flight QA file missing");
+    const d=await r.json();
+    if(d.version!==2||d.testOnly!==false||d.notForActualNavigation!==true||
+       d.coordinateSpace!=="pdf_points"||d.origin!=="top_left"||d.coordinateSystem!=="WGS84"||
+       d.source?.sha256!==m.source_sha256||d.source?.chartDataVersion!==m.version||d.source?.pageCount!==1654)
+       throw Error("OTHH additional source mismatch");
+    const expected=new Set([1538,1539,1540,1552,1553,1556,1557,1559,1560,1561]);
+    if(!Array.isArray(d.charts)||d.charts.length!==10)throw Error("OTHH additional count mismatch");
+    const models=[];
+    for(const item of d.charts){
+      const page=Number(item.page);
+      if(!expected.delete(page)||item.airport!=="OTHH"||!item.validation?.userReportedFlightTestPassed||
+         !item.validation?.notApprovedForNavigation||!/^[0-9a-f]{64}$/.test(item.sourceFingerprint||""))
+         throw Error("OTHH additional identity mismatch "+page);
+      const chart=charts.find(c=>Number(c.page)===page);
+      if(!chart||item.chartKey!==[chart.airport,chart.category.toUpperCase(),
+           chart.chart_number,chart.name.toUpperCase()].join("|"))
+         throw Error("OTHH additional index mismatch "+page);
+      if(georefByPage.has(page))throw Error("Existing georeference protected "+page);
+      if(!Array.isArray(item.excludedBounds)||item.excludedBounds.length===0)
+         throw Error("OTHH mask required "+page);
+      const model=makeGeoModel(item);
+      if(!model)throw Error("OTHH affine validation failed "+page);
+      models.push([page,model]);
+    }
+    if(expected.size)throw Error("OTHH missing pages");
+    for(const [page,model] of models)georefByPage.set(page,model);
+    console.info("JEPPIRAN OTHH: 10 additional simulator-only flight accepted charts loaded.");
+  }catch(error){console.warn("OTHH extra georef safely skipped:",error)}
+}
+
 /* === END EXPERIMENTAL LAYER === */
 
 const ADC_QA_MODE = new URLSearchParams(location.search).get("adc_test")==="1";
@@ -381,6 +416,7 @@ async function loadData(){
     await enableBirjandAdcQaIfRequested(m);
     await enableDohaAdcQaIfRequested(m);
     await loadOthhFlightApprovedGeorefs(m);
+    await loadOthhFlightExtraGeorefs(m);
     await loadLtfmGridGeorefs(m);
     await loadPublishedExperimentalGeorefs(m);
     renderAirports();
