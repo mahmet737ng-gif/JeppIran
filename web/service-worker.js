@@ -1,6 +1,6 @@
-const CACHE="jeppiran-pwa-v2621-taxi-qa-1";
+const CACHE="jeppiran-pwa-v2621-metar-once-1";
 const PDF_CACHE="jeppiran-chart-pdfs-v2621-printclean-3";
-const SHELL=["./","./index.html","./styles.css?v=2621-taxi-qa-1","./app.js?v=2621-taxi-qa-1","./taxi-mode.js?v=2621-taxi-qa-1","./toolbar-artwork/toolbar-matte.png","./toolbar-artwork/position-matte.png","./toolbar-artwork/taxi-matte.png","./manifest.webmanifest","./data/georef-provisional-v2621.json","./data/othh-flight-qa-v2621.json","./data/othh-flight-qa-extra-v2621.json","./app-icon.png","./vendor/pdf.min.mjs","./vendor/pdf.worker.min.mjs"];
+const SHELL=["./","./index.html","./styles.css?v=2621-metar-once-1","./app.js?v=2621-metar-once-1","./taxi-mode.js?v=2621-taxi-qa-1","./toolbar-artwork/toolbar-matte.png","./toolbar-artwork/position-matte.png","./toolbar-artwork/taxi-matte.png","./manifest.webmanifest","./data/georef-provisional-v2621.json","./data/othh-flight-qa-v2621.json","./data/othh-flight-qa-extra-v2621.json","./app-icon.png","./vendor/pdf.min.mjs","./vendor/pdf.worker.min.mjs"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()));
 });
@@ -34,3 +34,4 @@ self.addEventListener("fetch",event=>{
     return response;
   })));
 });
+

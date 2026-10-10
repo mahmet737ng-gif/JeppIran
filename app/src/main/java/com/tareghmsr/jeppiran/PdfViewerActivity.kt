@@ -118,6 +118,8 @@ private val locationPermissionLauncher =
         private const val METAR_DISPLAY_DURATION =
             30000L
 
+        private val metarSession = MetarDisplaySession()
+
         private const val TOP_CROP_PERCENT =
             0f
 
@@ -342,6 +344,9 @@ private val locationPermissionLauncher =
 
     private var metarRequestId =
         0
+
+    private var pendingMetarIcao = ""
+    private var metarBannerIcao = ""
 
 
     private var metarRemoveRunnable:
@@ -660,6 +665,7 @@ private val locationPermissionLauncher =
             updateGpsText("POS OFF")
         }
         startGps()
+        showPendingCachedMetar()
     }
 
     override fun onPause() {
@@ -5461,42 +5467,39 @@ private val locationPermissionLauncher =
 
         handler.postDelayed(
             metarPollRunnable!!,
-            METAR_POLL_INTERVAL
+            metarSession.nextRefreshDelay(currentIcao, SystemClock.elapsedRealtime(), METAR_POLL_INTERVAL)
         )
     }
 
 
     private fun requestMetarIfAirportChanged() {
+        if (currentIcao.isBlank() || lastMetarIcao == currentIcao) return
+        if (metarBannerIcao != currentIcao) hideMetarBanner(false)
+        lastMetarIcao = currentIcao
+        lastMetarValue = metarSession.latest(currentIcao)?.text.orEmpty()
+        showPendingCachedMetar()
+        if (metarSession.needsRefresh(currentIcao, SystemClock.elapsedRealtime(), METAR_POLL_INTERVAL)) {
+            requestMetar(currentIcao, false)
+        }
+        startMetarPolling()
+    }
 
-        if (
-            currentIcao.isBlank()
-        ) {
+    private fun showPendingCachedMetar() {
+        val report = metarSession.latest(currentIcao) ?: return
+        lastMetarValue = report.text
+        displayMetarReport(report)
+    }
+
+    private fun displayMetarReport(report: MetarDisplaySession.Report, automatic: Boolean = true) {
+        if (!positionResumed || !::metarBanner.isInitialized || isFinishing || isDestroyed) return
+        if (automatic && !metarSession.shouldAutoShow(currentIcao, report.raw)) {
+            // Keep a visible report current without restarting its dismissal timer.
+            if (metarBanner.visibility == View.VISIBLE) metarBanner.text = report.text
             return
         }
-
-
-        if (
-            lastMetarIcao ==
-            currentIcao
-        ) {
-            return
-        }
-
-
-        lastMetarIcao =
-            currentIcao
-
-        lastMetarValue =
-            ""
-
-        autoMetarTransitionPending =
-            true
-
-
-        requestMetar(
-            currentIcao,
-            true
-        )
+        autoMetarTransitionPending = automatic && !metarSession.hasDisplayed(currentIcao)
+        metarSession.markDisplayed(currentIcao, report.raw)
+        showMetarBanner(report.text)
     }
 
 
@@ -5505,16 +5508,18 @@ private val locationPermissionLauncher =
         showLoading: Boolean = true
     ) {
 
-        val requestId =
-            ++metarRequestId
-
-
         if (showLoading) {
+            autoMetarTransitionPending = false
             showMetarBanner(
                 "$airportIcao METAR: loading...",
                 false
             )
         }
+
+        if (pendingMetarIcao == airportIcao) return
+        pendingMetarIcao = airportIcao
+        metarSession.recordCheck(airportIcao, SystemClock.elapsedRealtime())
+        val requestId = ++metarRequestId
 
 
         thread {
@@ -5592,36 +5597,27 @@ private val locationPermissionLauncher =
                 runOnUiThread {
 
                     if (
-                        requestId !=
-                        metarRequestId
+                        requestId != metarRequestId
                     ) {
                         return@runOnUiThread
                     }
+
+                    pendingMetarIcao = ""
+
+                    if (parsed != null) metarSession.remember(airportIcao, parsed)
+                    if (airportIcao != currentIcao) return@runOnUiThread
 
 
                     if (
                         parsed != null
                     ) {
 
-                        lastMetarValue =
-                            parsed
-
-                        if (
-                            showLoading ||
-                            (
-                                ::metarBanner.isInitialized &&
-                                metarBanner.visibility ==
-                                    View.VISIBLE
-                            )
-                        ) {
-
-                            showMetarBanner(
-                                parsed
-                            )
-                        }
+                        lastMetarValue = parsed.text
+                        displayMetarReport(parsed)
 
                     } else if (
-                        showLoading
+                        showLoading && positionResumed &&
+                        ::metarBanner.isInitialized && metarBanner.visibility == View.VISIBLE
                     ) {
 
                         showMetarBanner(
@@ -5636,9 +5632,12 @@ private val locationPermissionLauncher =
 
                 runOnUiThread {
 
+                    if (requestId == metarRequestId) pendingMetarIcao = ""
+
                     if (
                         requestId ==
                         metarRequestId &&
+                        airportIcao == currentIcao &&
                         showLoading
                     ) {
 
@@ -5660,7 +5659,7 @@ private val locationPermissionLauncher =
         response: String,
         airportIcao: String
     ):
-        String? {
+        MetarDisplaySession.Report? {
 
         if (
             response.isBlank()
@@ -5711,11 +5710,11 @@ private val locationPermissionLauncher =
                 raw.isBlank()
             ) {
 
-                return "$airportIcao METAR: data available"
+                return null
             }
 
 
-            listOf(
+            val text = listOf(
                 "$airportIcao METAR",
                 flightCategory,
                 raw
@@ -5726,6 +5725,8 @@ private val locationPermissionLauncher =
                 .joinToString(
                     "  •  "
                 )
+
+            MetarDisplaySession.Report(raw, text)
 
         } catch (
             _: Exception
@@ -5758,22 +5759,14 @@ private val locationPermissionLauncher =
         }
 
 
-        val cached =
-            lastMetarValue
-
-
-        showMetarBanner(
-            if (
-                cached.isBlank()
-            ) {
-
-                "$currentIcao METAR • no cached report yet"
-
-            } else {
-
-                cached
-            }
-        )
+        val cached = metarSession.latest(currentIcao)
+        if (cached != null) {
+            lastMetarValue = cached.text
+            displayMetarReport(cached, automatic = false)
+            requestMetar(currentIcao, false)
+        } else {
+            requestMetar(currentIcao, true)
+        }
     }
 
 
@@ -5802,6 +5795,8 @@ private val locationPermissionLauncher =
 
         metarBanner.text =
             value
+
+        metarBannerIcao = currentIcao
 
         metarBanner.alpha =
             0f
@@ -11103,3 +11098,4 @@ private val locationPermissionLauncher =
                         .density
                 ).toInt()
 }
+

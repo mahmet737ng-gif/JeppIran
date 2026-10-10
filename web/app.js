@@ -286,6 +286,9 @@ let charts=[], manifest=null, selectedAirport="", selectedChart=null, expanded=n
 let airportTreeExpanded=false;
 let chartZoom=1, chartPanX=0, chartPanY=0;
 let chartMetarTimer=null, chartMetarAirport="", chartMetarValue="";
+const CHART_METAR_POLL_INTERVAL=5*60*1000;
+// Keep this session's displayed reports when switching charts or airports.
+const chartMetarShown=new Map(), chartMetarRequests=new Map(), chartMetarCheckedAt=new Map();
 let chartPointers=new Map(), pinchStartDistance=0, pinchStartZoom=1, panStart=null, swipeStart=null, lastTapAt=0;
 let georefByPage=new Map(), githubWxCache=null, githubWxCacheAt=0;
 const $=s=>document.querySelector(s);
@@ -312,6 +315,7 @@ function renderRoute(name){
   $$(".view").forEach(v=>v.classList.remove("active"));
   document.body.classList.remove("viewer-fullscreen");
   const el=$("#"+name+"View")||$("#homeView"); el.classList.add("active");
+  if(name==="charts"&&selectedChart)showChartMetar(true,true);
   // When the app is being served by the FSX Local Web bridge, entering the
   // simulator page must always restore FSX as the active source instead of
   // falling back to a previously saved X-Plane selection.
@@ -1036,7 +1040,7 @@ function selectChart(c,options={}){
   renderAirports($("#airportSearch").value);
   refreshPositionStatus();
   $("#viewerChart").textContent=(c.chart_number?c.chart_number+" • ":"")+(c.name||("Chart "+c.page));
-  showChartMetar(true);
+  showChartMetar(true,true);
   renderSelectedPdf(c).catch(e=>{
     $("#pdfStage").innerHTML='<div class="empty-state"><img src="./app-icon.png" alt=""><b>Chart unavailable</b><span>'+escapeHtml(e.message)+'</span></div>';
   });
@@ -1050,29 +1054,63 @@ function scheduleChartMetarHide(){
   if(chartMetarTimer)clearTimeout(chartMetarTimer);
   chartMetarTimer=setTimeout(hideChartMetar,30000);
 }
-async function showChartMetar(autoHide=true){
-  if(!selectedAirport||!selectedChart)return;
-  const icao=selectedAirport;
-  const banner=$("#chartMetarBanner"),text=$("#chartMetarText");
-  if(!banner||!text)return;
+function metarReportKey(raw){
+  return String(raw||"").trim().toUpperCase().replace(/\s+/g," ").replace(/^METAR /,"").replace(/\s*=\s*$/,"");
+}
+function chartMetarViewActive(icao){
+  return icao===selectedAirport&&!!selectedChart&&!!$("#chartsView")?.classList.contains("active");
+}
+function presentChartMetar(icao,raw,autoHide=true,manual=false){
+  if(!chartMetarViewActive(icao))return;
+  const key=metarReportKey(raw),banner=$("#chartMetarBanner"),text=$("#chartMetarText");
+  if(!key||!banner||!text)return;
+  if(!manual&&chartMetarShown.get(icao)===key){
+    if(chartMetarAirport===icao&&banner.classList.contains("visible"))text.textContent=raw;
+    return;
+  }
   chartMetarAirport=icao;
-  const cached=wxCache[icao+":metar"]||"";
-  chartMetarValue=cached;
-  text.textContent=cached||("METAR "+icao+" • loading…");
+  chartMetarValue=raw;
+  chartMetarShown.set(icao,key);
+  text.textContent=raw;
   banner.classList.add("visible");
   if(autoHide)scheduleChartMetarHide();
-  try{
-    const raw=await fetchWx("metar",icao);
-    if(icao!==selectedAirport||!selectedChart)return;
-    chartMetarValue=raw;
+}
+function fetchChartMetar(icao){
+  if(chartMetarRequests.has(icao))return chartMetarRequests.get(icao);
+  chartMetarCheckedAt.set(icao,Date.now());
+  const request=Promise.resolve().then(()=>fetchWx("metar",icao)).then(raw=>{
+    if(!metarReportKey(raw))throw new Error("No METAR returned");
     wxCache[icao+":metar"]=raw;
     wxCache[icao+":time"]=Date.now();
     localStorage.setItem("wxCache",JSON.stringify(wxCache));
-    text.textContent=raw;
+    return raw;
+  }).finally(()=>chartMetarRequests.delete(icao));
+  chartMetarRequests.set(icao,request);
+  return request;
+}
+async function showChartMetar(autoHide=true,automatic=false,forceRefresh=false){
+  const icao=selectedAirport;
+  if(!chartMetarViewActive(icao))return;
+  const banner=$("#chartMetarBanner"),text=$("#chartMetarText");
+  if(!banner||!text)return;
+  const cached=wxCache[icao+":metar"]||"";
+  if(cached)presentChartMetar(icao,cached,autoHide,!automatic);
+  else if(!automatic){
+    chartMetarAirport=icao;
+    text.textContent="METAR "+icao+" • loading…";
+    banner.classList.add("visible");
+    if(autoHide)scheduleChartMetarHide();
+  }
+  if(automatic&&!forceRefresh&&cached&&chartMetarCheckedAt.has(icao)&&Date.now()-chartMetarCheckedAt.get(icao)<CHART_METAR_POLL_INTERVAL)return;
+  try{
+    const raw=await fetchChartMetar(icao);
+    // An unchanged response must not reopen a banner the user has dismissed.
+    presentChartMetar(icao,raw,autoHide);
   }catch(_){
-    if(!cached&&icao===selectedAirport)text.textContent="METAR "+icao+" unavailable";
+    if(!automatic&&!cached&&chartMetarViewActive(icao)&&banner.classList.contains("visible"))text.textContent="METAR "+icao+" unavailable";
   }
 }
+setInterval(()=>showChartMetar(true,true,true),CHART_METAR_POLL_INTERVAL);
 $("#positionStatusBtn").addEventListener("click",()=>{
   const picker=$("#positionSourceDialog");
   if(!picker.open)picker.showModal();
@@ -1665,3 +1703,4 @@ window.addEventListener("orientationchange",()=>setTimeout(()=>{window.dispatchE
 if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")) navigator.serviceWorker.register("./service-worker.js").catch(()=>{});
 loadData();
 const start=(location.hash||"#home").slice(1); const initial=["home","charts","wx","simulator"].includes(start)?start:"home"; renderRoute(initial); if(!location.hash)history.replaceState({route:initial},"","#"+initial);
+
