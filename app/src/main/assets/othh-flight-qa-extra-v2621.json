@@ -5,8 +5,8 @@
   "origin": "top_left",
   "testOnly": false,
   "notForActualNavigation": true,
-  "approvalScope": "OWNER_REPORTED_SIMULATOR_FLIGHT_TEST_VISUAL_ACCEPTANCE",
-  "notice": "V2621 OTHH 10 additional flight-tested simulator chart display overlays. NOT FOR ACTUAL NAVIGATION. Independent official AIP held-out tests remain pending where not recorded.",
+  "approvalScope": "FINAL_OWNER_FLIGHT_TEST_APPROVED_SIMULATOR_MOVING_MAP",
+  "notice": "OTHH V2621: all 10 additional moving-map charts accepted as FINAL by the application owner after successful flight tests, and active in deployed web/Android builds. For simulator use; NOT FOR ACTUAL NAVIGATION.",
   "source": {
     "file": "Iran2621.pdf",
     "sha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
@@ -1231,7 +1231,14 @@
         "notApprovedForNavigation": true,
         "chartMaskManuallyReviewedOnPdf": true,
         "toleranceMeters": 10,
-        "note": "Flight-test acceptance is visual only; AIP independent error is not claimed."
+        "note": "Owner-confirmed successful flight test is final for this chart's app moving-map display. Official AIP ground-accuracy check is a separate provenance field and is not falsely marked as completed.",
+        "userTestStatus": "PASS",
+        "qaTestOnly": false,
+        "approvedForApp": true,
+        "finalForAppSimulatorDisplay": true,
+        "flightTestFinalApprovalByOwner": true,
+        "publicationMode": "FINAL_PRODUCTION_SIMULATOR_DISPLAY",
+        "releaseScope": "Final accepted in JEPPIRAN app for simulator moving-map display; NOT FOR ACTUAL NAVIGATION."
       }
     },
     {
@@ -2639,7 +2646,14 @@
         "notApprovedForNavigation": true,
         "chartMaskManuallyReviewedOnPdf": true,
         "toleranceMeters": 10,
-        "note": "Flight-test acceptance is visual only; AIP independent error is not claimed."
+        "note": "Owner-confirmed successful flight test is final for this chart's app moving-map display. Official AIP ground-accuracy check is a separate provenance field and is not falsely marked as completed.",
+        "userTestStatus": "PASS",
+        "qaTestOnly": false,
+        "approvedForApp": true,
+        "finalForAppSimulatorDisplay": true,
+        "flightTestFinalApprovalByOwner": true,
+        "publicationMode": "FINAL_PRODUCTION_SIMULATOR_DISPLAY",
+        "releaseScope": "Final accepted in JEPPIRAN app for simulator moving-map display; NOT FOR ACTUAL NAVIGATION."
       }
     },
     {
@@ -3606,7 +3620,14 @@
         "notApprovedForNavigation": true,
         "chartMaskManuallyReviewedOnPdf": true,
         "toleranceMeters": 10,
-        "note": "Flight-test acceptance is visual only; AIP independent error is not claimed."
+        "note": "Owner-confirmed successful flight test is final for this chart's app moving-map display. Official AIP ground-accuracy check is a separate provenance field and is not falsely marked as completed.",
+        "userTestStatus": "PASS",
+        "qaTestOnly": false,
+        "approvedForApp": true,
+        "finalForAppSimulatorDisplay": true,
+        "flightTestFinalApprovalByOwner": true,
+        "publicationMode": "FINAL_PRODUCTION_SIMULATOR_DISPLAY",
+        "releaseScope": "Final accepted in JEPPIRAN app for simulator moving-map display; NOT FOR ACTUAL NAVIGATION."
       }
     },
     {
@@ -3691,7 +3712,14 @@
         "notApprovedForNavigation": true,
         "chartMaskManuallyReviewedOnPdf": true,
         "toleranceMeters": 100,
-        "note": "Flight-test acceptance is visual only; AIP independent error is not claimed."
+        "note": "Owner-confirmed successful flight test is final for this chart's app moving-map display. Official AIP ground-accuracy check is a separate provenance field and is not falsely marked as completed.",
+        "userTestStatus": "PASS",
+        "qaTestOnly": false,
+        "approvedForApp": true,
+        "finalForAppSimulatorDisplay": true,
+        "flightTestFinalApprovalByOwner": true,
+        "publicationMode": "FINAL_PRODUCTION_SIMULATOR_DISPLAY",
+        "releaseScope": "Final accepted in JEPPIRAN app for simulator moving-map display; NOT FOR ACTUAL NAVIGATION."
       }
     },
     {
@@ -3818,7 +3846,14 @@
         "notApprovedForNavigation": true,
         "chartMaskManuallyReviewedOnPdf": true,
         "toleranceMeters": 100,
-        "note": "Flight-test acceptance is visual only; AIP independent error is not claimed."
+        "note": "Owner-confirmed successful flight test is final for this chart's app moving-map display. Official AIP ground-accuracy check is a separate provenance field and is not falsely marked as completed.",
+        "userTestStatus": "PASS",
+        "qaTestOnly": false,
+        "approvedForApp": true,
+        "finalForAppSimulatorDisplay": true,
+        "flightTestFinalApprovalByOwner": true,
+        "publicationMode": "FINAL_PRODUCTION_SIMULATOR_DISPLAY",
+        "releaseScope": "Final accepted in JEPPIRAN app for simulator moving-map display; NOT FOR ACTUAL NAVIGATION."
       }
     },
     {
@@ -3917,7 +3952,14 @@
         "notApprovedForNavigation": true,
         "chartMaskManuallyReviewedOnPdf": true,
         "toleranceMeters": 100,
-        "note": "Flight-test acceptance is visual only; AIP independent error is not claimed."
+        "note": "Owner-confirmed successful flight test is final for this chart's app moving-map display. Official AIP ground-accuracy check is a separate provenance field and is not falsely marked as completed.",
+        "userTestStatus": "PASS",
+        "qaTestOnly": false,
+        "approvedForApp": true,
+        "finalForAppSimulatorDisplay": true,
+        "flightTestFinalApprovalByOwner": true,
+        "publicationMode": "FINAL_PRODUCTION_SIMULATOR_DISPLAY",
+        "releaseScope": "Final accepted in JEPPIRAN app for simulator moving-map display; NOT FOR ACTUAL NAVIGATION."
       }
     },
     {
@@ -4023,7 +4065,14 @@
         "notApprovedForNavigation": true,
         "chartMaskManuallyReviewedOnPdf": true,
         "toleranceMeters": 100,
-        "note": "Flight-test acceptance is visual only; AIP independent error is not claimed."
+        "note": "Owner-confirmed successful flight test is final for this chart's app moving-map display. Official AIP ground-accuracy check is a separate provenance field and is not falsely marked as completed.",
+        "userTestStatus": "PASS",
+        "qaTestOnly": false,
+        "approvedForApp": true,
+        "finalForAppSimulatorDisplay": true,
+        "flightTestFinalApprovalByOwner": true,
+        "publicationMode": "FINAL_PRODUCTION_SIMULATOR_DISPLAY",
+        "releaseScope": "Final accepted in JEPPIRAN app for simulator moving-map display; NOT FOR ACTUAL NAVIGATION."
       }
     },
     {
@@ -4108,7 +4157,14 @@
         "notApprovedForNavigation": true,
         "chartMaskManuallyReviewedOnPdf": true,
         "toleranceMeters": 100,
-        "note": "Flight-test acceptance is visual only; AIP independent error is not claimed."
+        "note": "Owner-confirmed successful flight test is final for this chart's app moving-map display. Official AIP ground-accuracy check is a separate provenance field and is not falsely marked as completed.",
+        "userTestStatus": "PASS",
+        "qaTestOnly": false,
+        "approvedForApp": true,
+        "finalForAppSimulatorDisplay": true,
+        "flightTestFinalApprovalByOwner": true,
+        "publicationMode": "FINAL_PRODUCTION_SIMULATOR_DISPLAY",
+        "releaseScope": "Final accepted in JEPPIRAN app for simulator moving-map display; NOT FOR ACTUAL NAVIGATION."
       }
     },
     {
@@ -4220,7 +4276,14 @@
         "notApprovedForNavigation": true,
         "chartMaskManuallyReviewedOnPdf": true,
         "toleranceMeters": 100,
-        "note": "Flight-test acceptance is visual only; AIP independent error is not claimed."
+        "note": "Owner-confirmed successful flight test is final for this chart's app moving-map display. Official AIP ground-accuracy check is a separate provenance field and is not falsely marked as completed.",
+        "userTestStatus": "PASS",
+        "qaTestOnly": false,
+        "approvedForApp": true,
+        "finalForAppSimulatorDisplay": true,
+        "flightTestFinalApprovalByOwner": true,
+        "publicationMode": "FINAL_PRODUCTION_SIMULATOR_DISPLAY",
+        "releaseScope": "Final accepted in JEPPIRAN app for simulator moving-map display; NOT FOR ACTUAL NAVIGATION."
       }
     },
     {
@@ -4353,8 +4416,18 @@
         "notApprovedForNavigation": true,
         "chartMaskManuallyReviewedOnPdf": true,
         "toleranceMeters": 100,
-        "note": "Flight-test acceptance is visual only; AIP independent error is not claimed."
+        "note": "Owner-confirmed successful flight test is final for this chart's app moving-map display. Official AIP ground-accuracy check is a separate provenance field and is not falsely marked as completed.",
+        "userTestStatus": "PASS",
+        "qaTestOnly": false,
+        "approvedForApp": true,
+        "finalForAppSimulatorDisplay": true,
+        "flightTestFinalApprovalByOwner": true,
+        "publicationMode": "FINAL_PRODUCTION_SIMULATOR_DISPLAY",
+        "releaseScope": "Final accepted in JEPPIRAN app for simulator moving-map display; NOT FOR ACTUAL NAVIGATION."
       }
     }
-  ]
+  ],
+  "finalForAppSimulatorDisplay": true,
+  "finalApprovalDate": "2026-10-10",
+  "publicationStatus": "FINAL_PUBLISHED_WEB_ANDROID"
 }
