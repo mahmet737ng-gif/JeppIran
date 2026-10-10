@@ -68,7 +68,7 @@ function shortest(graph,start,goal,requested){
   return {path:reverse.reverse(),holds:rawHolds.map(i=>reverse.length-1-i),length:final.w};
 }
 function graphOk(d,icao){
-  return d&&d.verified===true&&d.airport===icao&&d.cycle===manifest?.version&&
+  return d&&d.verified===true&&d.airport===icao&&String(d.cycle)===String(manifest?.cycle)&&
     d.nodes&&typeof d.nodes==="object"&&Object.keys(d.nodes).length>1&&
     Array.isArray(d.edges)&&d.edges.length>0&&Object.values(d.nodes).every(n=>
       Number.isFinite(n.lat)&&Number.isFinite(n.lon)&&Math.abs(n.lat)<=90&&Math.abs(n.lon)<=180);
