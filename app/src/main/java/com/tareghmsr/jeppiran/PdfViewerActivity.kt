@@ -1598,6 +1598,18 @@ private val locationPermissionLauncher =
             toolbarButtonParams(42.dp)
         )
 
+        actionRow.addView(
+            graphicToolbarButton(ChartToolbarArtwork.Icon.TAXI, "TAXI · Open Taxi Mode").apply {
+                setOnClickListener {
+                    if (currentIcao.isNotBlank()) {
+                        startActivity(android.content.Intent(this@PdfViewerActivity, TaxiModeActivity::class.java).apply {
+                            putExtra("ICAO", currentIcao)
+                        })
+                    }
+                }
+            }, toolbarButtonParams(42.dp)
+        )
+
 
         actionRow.addView(
             toolbarButton(

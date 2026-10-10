@@ -14,7 +14,7 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./app-icon.png" type="image/png">
   <link rel="apple-touch-icon" sizes="256x256" href="./app-icon.png">
-  <link rel="stylesheet" href="./styles.css?v=2621-toolbar-position-2">
+  <link rel="stylesheet" href="./styles.css?v=2621-toolbar-taxi-1">
 <style id="universal-sim-ui">#useXpBtn,#useFsxBtn{display:none!important}#simulatorView .sim-card:has(#bridgeUrl){display:none!important}</style>
 </head>
 <body>
@@ -101,6 +101,7 @@
             </div>
             <button id="chartMetarBtn" class="icon-btn metar-toolbar-btn raster-btn" title="Show or hide airport METAR"><span class="toolbar-art art-metar" aria-hidden="true"></span><span class="toolbar-label">METAR</span></button>
             <button id="chartCdfaBtn" class="icon-btn raster-btn" disabled title="CDFA chart data is not available yet" aria-label="CDFA chart data is not available yet"><span class="toolbar-art art-cdfa" aria-hidden="true"></span><span class="toolbar-label">CDFA</span></button>
+            <button id="chartTaxiBtn" class="icon-btn raster-btn" type="button" title="TAXI · Open airport diagram" aria-label="TAXI · Open airport diagram"><span class="toolbar-art art-taxi" aria-hidden="true"></span><span class="toolbar-label">TAXI</span></button>
             <button id="positionStatusBtn" class="icon-btn position-status-btn raster-btn" data-state="off" type="button" aria-label="POS OFF" aria-haspopup="dialog" aria-controls="positionSourceDialog">
               <span class="toolbar-art art-position" aria-hidden="true"></span><span class="position-status-label">POS OFF</span>
             </button>
@@ -344,6 +345,6 @@
     });
   })();
   </script>
-  <script src="./app.js?v=2621-toolbar-position-2" defer></script>
+  <script src="./app.js?v=2621-toolbar-taxi-1" defer></script>
 </body>
 </html>

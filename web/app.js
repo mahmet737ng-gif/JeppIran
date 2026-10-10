@@ -1093,6 +1093,19 @@ $("#selectSimulatorPositionBtn").addEventListener("click",()=>{
   $("#fsxPcIp")?.focus();
 });
 
+function openTaxiDiagram(){
+  if(!selectedAirport)return;
+  const airportCharts=charts.filter(c=>c.airport===selectedAirport&&c.category==="Airport");
+  const diagram=airportCharts.find(c=>/\b(?:AIRPORT|AERODROME)\s+(?:DIAGRAM|LAYOUT)\b|\bADC\b/i.test(c.name||""))
+    ||airportCharts.find(c=>/^10-0?9$/i.test((c.chart_number||"").trim()));
+  if(!diagram){
+    dialog("TAXI","Airport diagram not available for "+selectedAirport+".");
+    return;
+  }
+  if(Number(selectedChart?.page)!==Number(diagram.page))selectChart(diagram);
+}
+$("#chartTaxiBtn").addEventListener("click",openTaxiDiagram);
+
 $("#chartMetarBtn").addEventListener("click",()=>{
   const banner=$("#chartMetarBanner");
   if(banner&&banner.classList.contains("visible"))hideChartMetar();

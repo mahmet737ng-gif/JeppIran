@@ -95,6 +95,21 @@ class InlineAirportChartView(
         center.addView(title)
         center.addView(status)
         toolbar.addView(center, LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+        toolbar.addView(button("TAXI") {
+            current?.let { chart ->
+                owner.startActivity(android.content.Intent(owner, TaxiModeActivity::class.java).apply {
+                    putExtra("ICAO", chart.icao)
+                })
+            }
+        }.apply {
+            contentDescription = "TAXI · Open Taxi Mode"
+            setTextColor(Color.rgb(229, 237, 242))
+            background = back(Color.rgb(24, 38, 49), Color.rgb(89, 106, 120))
+            compoundDrawablePadding = 4.dp
+            val art = ChartToolbarArtwork.drawable(owner, ChartToolbarArtwork.Icon.TAXI)
+            art.setBounds(0, 0, 34.dp, 27.dp)
+            setCompoundDrawables(art, null, null, null)
+        })
         toolbar.addView(button("⛶ Full") { current?.let { advanced(it) } })
         addView(toolbar, LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT))
 
@@ -285,3 +300,4 @@ class InlineAirportChartView(
         super.onDetachedFromWindow()
     }
 }
+

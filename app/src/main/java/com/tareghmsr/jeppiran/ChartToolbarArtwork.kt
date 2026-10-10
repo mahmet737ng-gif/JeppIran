@@ -18,14 +18,22 @@ object ChartToolbarArtwork {
         ZOOM_IN(918, 75, 270), ZOOM_OUT(1350, 75, 270),
         METAR(52, 437, 296), CDFA(487, 437, 296),
         FULLSCREEN(918, 437, 296), OFFLINE(1350, 437, 296),
-        POSITION(0, 0, 0)
+        POSITION(0, 0, 0), TAXI(0, 0, 0)
     }
 
     private var bitmap: Bitmap? = null
     private var positionBitmap: Bitmap? = null
+    private var taxiBitmap: Bitmap? = null
 
     @Synchronized
     fun drawable(context: Context, icon: Icon): Drawable {
+        if (icon == Icon.TAXI) {
+            val taxi = taxiBitmap ?: BitmapFactory.decodeResource(
+                context.resources, R.drawable.chart_toolbar_taxi,
+                BitmapFactory.Options().apply { inScaled = false }
+            ).also { taxiBitmap = it }
+            return ArtworkDrawable(taxi, Rect(0, 0, taxi.width, taxi.height))
+        }
         if (icon == Icon.POSITION) {
             val position = positionBitmap ?: BitmapFactory.decodeResource(
                 context.resources, R.drawable.chart_toolbar_position,

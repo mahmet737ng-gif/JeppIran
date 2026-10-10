@@ -973,6 +973,10 @@ body:has(#homeView.active),body:has(#chartsView.active){background:#030c19}
   aspect-ratio:380 / 296;background-image:url('./toolbar-artwork/position-matte.png');
   background-size:100% 100%;background-position:center
 }
+.art-taxi{
+  aspect-ratio:380 / 296;background-image:url('./toolbar-artwork/taxi-matte.png');
+  background-size:100% 100%;background-position:center
+}
 #chartsView .viewer-actions .position-status-label{display:inline}
 #chartsView .viewer-actions .position-status-btn[data-state="live"]{border-color:#75b99d}
 #chartsView .viewer-actions .position-status-btn[data-state="warning"],
