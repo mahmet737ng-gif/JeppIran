@@ -16,43 +16,39 @@ function openOimmIlsQaChart(){
   route("charts");
   selectChart(c);
 }
+const OIMM_ILS_EMBEDDED_MODELS={"version":2,"coordinateSystem":"WGS84","coordinateSpace":"pdf_points","origin":"top_left","testOnly":true,"source":{"file":"Iran2621.pdf","sha256":"d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6","pageCount":1654,"chartDataVersion":"V2621","cycle":2621},"charts":[{"page":605,"airport":"OIMM","name":"ILS Z OR LOC Z RWY 31R","chartKey":"OIMM|APPROACH|11-1|ILS Z OR LOC Z RWY 31R","coordinateSpace":"pdf_points","origin":"top_left","width":612,"height":792,"bounds":{"left":90.72,"top":168.12,"right":531.6,"bottom":503.28},"excludedBounds":[{"left":117,"top":168.12,"right":188,"bottom":228}],"points":[{"lat":36.25,"lon":59.666666666666664,"x":228.84,"y":228.66000000000003,"source":"DERIVED_FROM_ADJACENT_JEPPESEN_606_GRID_SCALE_NOT_PRINTED_LATITUDE","controlType":"SYNTHETIC_INFERRED_GRID_POINT","inferred":true},{"lat":36.25,"lon":59.833333333333336,"x":378.84,"y":228.66000000000003,"source":"DERIVED_FROM_ADJACENT_JEPPESEN_606_GRID_SCALE_NOT_PRINTED_LATITUDE","controlType":"SYNTHETIC_INFERRED_GRID_POINT","inferred":true},{"lat":36.166666666666664,"lon":59.666666666666664,"x":228.84,"y":321.36,"source":"JEPPESEN_PRINTED_LONGITUDE_TICK_AND_LATITUDE_AXIS","controlType":"PRINTED_PLUS_GRID_ASSUMPTION","inferred":false},{"lat":36.166666666666664,"lon":59.833333333333336,"x":378.84,"y":321.36,"source":"JEPPESEN_PRINTED_LONGITUDE_TICK_AND_LATITUDE_AXIS","controlType":"PRINTED_PLUS_GRID_ASSUMPTION","inferred":false},{"lat":36.083333333333336,"lon":59.666666666666664,"x":228.84,"y":414.06,"source":"DERIVED_FROM_ADJACENT_JEPPESEN_606_GRID_SCALE_NOT_PRINTED_LATITUDE","controlType":"SYNTHETIC_INFERRED_GRID_POINT","inferred":true},{"lat":36.083333333333336,"lon":59.833333333333336,"x":378.84,"y":414.06,"source":"DERIVED_FROM_ADJACENT_JEPPESEN_606_GRID_SCALE_NOT_PRINTED_LATITUDE","controlType":"SYNTHETIC_INFERRED_GRID_POINT","inferred":true}],"maxResidualPdfPoints":1.5,"validation":{"method":"single_axis_plus_conformal_scale","qaTestOnly":true,"notApprovedForNavigation":true,"approvedForApp":false,"independentOfficialAipGcpValidated":false,"independentOfficialAipHeldoutCount":0,"airac2621MatchConfirmed":false,"chartGraticuleStatus":"SINGLE_PRINTED_LATITUDE_AXIS; 2 ADDITIONAL LATITUDE ROWS DERIVED FROM PAGE 606 SCALE","sourcePages":[605,606],"thirdPartySourceCount":0,"horizontalGeometryAssumption":"LINEAR_LATITUDE_SCALE_FROM_ADJACENT_JEPPESEN_PAGE_606","modelStatus":"SIMULATOR_TEST_ONLY_APPROXIMATE_NOT_SURVEYED","simulatorToleranceClaim":"NONE"}},{"page":606,"airport":"OIMM","name":"ILS Y OR LOC Y RWY 31R","chartKey":"OIMM|APPROACH|11-2|ILS Y OR LOC Y RWY 31R","sourceFingerprint":"6729bb9d6f765e59807e1322fb8fcc0fbce231930627b9c86b0c3a61b0124934","coordinateSpace":"pdf_points","origin":"top_left","width":612,"height":792,"bounds":{"left":90.72,"top":168.12,"right":531.6,"bottom":503.28},"excludedBounds":[{"left":147.6,"top":168.12,"right":214.92,"bottom":224.04}],"points":[{"lat":36.333333333333,"lon":59.5,"x":140.52,"y":174.12,"source":"Jeppesen V2621 printed graticule ticks"},{"lat":36.333333333333,"lon":59.666666666667,"x":290.76,"y":174.12,"source":"Jeppesen V2621 printed graticule ticks"},{"lat":36.333333333333,"lon":59.833333333333,"x":440.88,"y":174.12,"source":"Jeppesen V2621 printed graticule ticks"},{"lat":36.166666666667,"lon":59.5,"x":140.52,"y":359.52,"source":"Jeppesen V2621 printed graticule ticks"},{"lat":36.166666666667,"lon":59.666666666667,"x":290.76,"y":359.52,"source":"Jeppesen V2621 printed graticule ticks"},{"lat":36.166666666667,"lon":59.833333333333,"x":440.88,"y":359.52,"source":"Jeppesen V2621 printed graticule ticks"}],"maxResidualPdfPoints":0.75,"validation":{"method":"paired_printed_graticule_vector_ticks","qaTestOnly":true,"notApprovedForNavigation":true,"independentOfficialAipGcpValidated":false,"independentOfficialAipHeldoutCount":0,"airac2621MatchConfirmed":false,"modelStatus":"PROVISIONAL_SIM_TEST_ONLY"}},{"page":607,"airport":"OIMM","name":"ILS X OR LOC X RWY 31R CAT C & D","chartKey":"OIMM|APPROACH|11-3|ILS X OR LOC X RWY 31R CAT C & D","coordinateSpace":"pdf_points","origin":"top_left","width":612,"height":792,"bounds":{"left":90.72,"top":168.12,"right":531.6,"bottom":503.28},"excludedBounds":[{"left":182,"top":168.12,"right":243,"bottom":229}],"points":[{"lat":36.25,"lon":59.5,"x":150.84,"y":256.86,"source":"DERIVED_FROM_ADJACENT_JEPPESEN_606_GRID_SCALE_NOT_PRINTED_LATITUDE","controlType":"SYNTHETIC_INFERRED_GRID_POINT","inferred":true},{"lat":36.25,"lon":59.666666666666664,"x":300.96,"y":256.86,"source":"DERIVED_FROM_ADJACENT_JEPPESEN_606_GRID_SCALE_NOT_PRINTED_LATITUDE","controlType":"SYNTHETIC_INFERRED_GRID_POINT","inferred":true},{"lat":36.25,"lon":59.833333333333336,"x":451.08,"y":256.86,"source":"DERIVED_FROM_ADJACENT_JEPPESEN_606_GRID_SCALE_NOT_PRINTED_LATITUDE","controlType":"SYNTHETIC_INFERRED_GRID_POINT","inferred":true},{"lat":36.166666666666664,"lon":59.5,"x":150.84,"y":349.56,"source":"JEPPESEN_PRINTED_LONGITUDE_TICK_AND_LATITUDE_AXIS","controlType":"PRINTED_PLUS_GRID_ASSUMPTION","inferred":false},{"lat":36.166666666666664,"lon":59.666666666666664,"x":300.96,"y":349.56,"source":"JEPPESEN_PRINTED_LONGITUDE_TICK_AND_LATITUDE_AXIS","controlType":"PRINTED_PLUS_GRID_ASSUMPTION","inferred":false},{"lat":36.166666666666664,"lon":59.833333333333336,"x":451.08,"y":349.56,"source":"JEPPESEN_PRINTED_LONGITUDE_TICK_AND_LATITUDE_AXIS","controlType":"PRINTED_PLUS_GRID_ASSUMPTION","inferred":false},{"lat":36.083333333333336,"lon":59.5,"x":150.84,"y":442.26,"source":"DERIVED_FROM_ADJACENT_JEPPESEN_606_GRID_SCALE_NOT_PRINTED_LATITUDE","controlType":"SYNTHETIC_INFERRED_GRID_POINT","inferred":true},{"lat":36.083333333333336,"lon":59.666666666666664,"x":300.96,"y":442.26,"source":"DERIVED_FROM_ADJACENT_JEPPESEN_606_GRID_SCALE_NOT_PRINTED_LATITUDE","controlType":"SYNTHETIC_INFERRED_GRID_POINT","inferred":true},{"lat":36.083333333333336,"lon":59.833333333333336,"x":451.08,"y":442.26,"source":"DERIVED_FROM_ADJACENT_JEPPESEN_606_GRID_SCALE_NOT_PRINTED_LATITUDE","controlType":"SYNTHETIC_INFERRED_GRID_POINT","inferred":true}],"maxResidualPdfPoints":1.5,"validation":{"method":"single_axis_plus_conformal_scale","qaTestOnly":true,"notApprovedForNavigation":true,"approvedForApp":false,"independentOfficialAipGcpValidated":false,"independentOfficialAipHeldoutCount":0,"airac2621MatchConfirmed":false,"chartGraticuleStatus":"SINGLE_PRINTED_LATITUDE_AXIS; 2 ADDITIONAL LATITUDE ROWS DERIVED FROM PAGE 606 SCALE","sourcePages":[607,606],"thirdPartySourceCount":0,"horizontalGeometryAssumption":"LINEAR_LATITUDE_SCALE_FROM_ADJACENT_JEPPESEN_PAGE_606","modelStatus":"SIMULATOR_TEST_ONLY_APPROXIMATE_NOT_SURVEYED","simulatorToleranceClaim":"NONE"}}]};
 async function enableOimmIlsQaOnly(m){
-  try{
-    const r=await fetch("./data/oimm-all-app-v2621-qa.json?v=20261010-2",{cache:"no-store"});
-    if(!r.ok)throw Error("QA data HTTP "+r.status);
-    const d=await r.json();
-    if(d.version!==2||d.testOnly!==true||d.origin!=="top_left"||d.coordinateSpace!=="pdf_points"||
-       d.coordinateSystem!=="WGS84"||d.source?.sha256!==m.source_sha256||
-       d.source?.chartDataVersion!==m.version||d.source?.pageCount!==1654||d.charts?.length!==8)
-      throw Error("QA source/cycle/count mismatch");
-    const allowed=new Set([605,606,607,609,611,612,613,614]);
-    const models=new Map();
-    for(const item of d.charts){
-      const page=Number(item.page);
-      const c=charts.find(x=>Number(x.page)===page&&x.airport==="OIMM"&&x.category==="Approach");
-      if(!allowed.has(page)||models.has(page)||!c||item.airport!=="OIMM"||
-        item.chartKey!==[c.airport,c.category.toUpperCase(),c.chart_number,c.name.toUpperCase()].join("|")||
-        !item.validation?.qaTestOnly||!item.validation?.notApprovedForNavigation||
-        item.validation?.independentOfficialAipGcpValidated!==false)
-        throw Error("OIMM chart identity mismatch "+page);
-      const model=makeGeoModel(item);
-      if(!model)throw Error("Georeference grid geometry failed "+page);
-      models.set(page,model);
-    }
-    if(models.size!==8)throw Error("Eight experimental models were not validated");
-    window.OIMM_ALL_APP_MODELS=models;
-    for(const [page,model] of models)georefByPage.set(page,model);
-    OIMM_ILS_QA_MODEL=models.get(606);
-    OIMM_ILS_QA_ACTIVE=true;
-    window.JEPPIRAN_OIMM_QA_STATUS={loaded:true,pages:[...models.keys()],approvedForNavigation:false};
-    const info=document.getElementById("oimmTestStatus");
-    if(info)info.textContent="8 MODELS · ILS Z/X APPROXIMATE · NOT FOR NAVIGATION";
-  }catch(e){
-    OIMM_ILS_QA_ACTIVE=false;
-    window.JEPPIRAN_OIMM_QA_STATUS={loaded:false,error:String(e.message)};
-    const info=document.getElementById("oimmTestStatus");
-    if(info)info.textContent="QA BLOCKED: "+e.message;
+  const info=document.getElementById("oimmTestStatus");
+  const errors=[];
+  const loaded=[];
+  const d=OIMM_ILS_EMBEDDED_MODELS;
+  if(d.source?.sha256!==m.source_sha256||d.source?.chartDataVersion!==m.version){
+    if(info)info.textContent="QA BLOCKED: V2621 PDF/source mismatch";
+    window.JEPPIRAN_OIMM_QA_STATUS={loaded:false,error:"source mismatch"};
+    return;
   }
+  const models=new Map();
+  for(const item of d.charts){
+    const page=Number(item.page);
+    const c=charts.find(x=>Number(x.page)===page&&x.airport==="OIMM"&&x.category==="Approach");
+    if(!c||item.airport!=="OIMM"||item.chartKey!==[c.airport,c.category.toUpperCase(),c.chart_number,c.name.toUpperCase()].join("|")){
+      errors.push(page+": CHART_KEY");continue;
+    }
+    if(!item.validation?.qaTestOnly||!item.validation?.notApprovedForNavigation){
+      errors.push(page+": NOT_QA");continue;
+    }
+    const model=makeGeoModel(item);
+    if(!model){errors.push(page+": INVALID_AFFINE");continue}
+    models.set(page,model);
+    georefByPage.set(page,model);
+    loaded.push(page);
+  }
+  window.OIMM_ALL_APP_MODELS=models;
+  OIMM_ILS_QA_MODEL=models.get(606)||null;
+  OIMM_ILS_QA_ACTIVE=loaded.length>0;
+  window.JEPPIRAN_OIMM_QA_STATUS={loaded:loaded.length===3,pages:loaded,errors,approvedForNavigation:false,
+    note:"Grid-only. VOR/runway/fix independent AIP checks NOT complete."};
+  if(info)info.textContent=(loaded.length===3?"ILS Z/Y/X GEOREF LOADED":"PARTIAL GEOREF "+loaded.join(","))+" · GRID-ONLY · NOT FOR NAVIGATION";
 }
 function showOimmIlsOnChartWarning(){
   const stage=document.getElementById("pdfStage");
@@ -71,7 +67,7 @@ function setupOimmTestToolbar(){
   if(openBtn)openBtn.addEventListener("click",openOimmIlsQaChart);
   if(simBtn)simBtn.addEventListener("click",()=>route("simulator"));
   const status=document.getElementById("oimmTestStatus");
-  if(status&&OIMM_ILS_QA_ACTIVE)status.textContent="8 MODELS · ILS Z/X APPROXIMATE · NOT FOR NAVIGATION";
+  if(status&&OIMM_ILS_QA_ACTIVE)status.textContent="ILS Z/Y/X MODELS · AIP HOLD";
   else if(status&&!status.textContent.startsWith("QA BLOCKED"))status.textContent="QA INACTIVE · check console or reload";
   // Prefer to open target chart on landing. Do not interrupt a direct link to simulator.
   if((location.hash||"")===""||(location.hash||"")==="#home"||(location.hash||"")==="#charts"){
@@ -716,7 +712,7 @@ function renderedGeoHeading(model,lat,heading,canvas){
 function setPositionStatus(state,text,detail=""){
   const btn=$("#positionStatusBtn");
   if(!btn)return;
-  if(selectedChart && experimentalGeorefPages.has(Number(selectedChart.page))){
+  if(selectedChart && (experimentalGeorefPages.has(Number(selectedChart.page))||window.OIMM_ALL_APP_MODELS?.has(Number(selectedChart.page)))){
     state="warning";text=(text||"GPS")+" · GEO TEST";
     detail="EXPERIMENTAL GEOREFERENCE · NOT FOR NAVIGATION. "+(detail||"");
   }
