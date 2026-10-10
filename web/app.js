@@ -883,6 +883,7 @@ async function renderSelectedPdf(c){
   stage.querySelector(".pdf-loading")?.remove();
   applyChartTransform();
   updateAircraftMarker();
+  window.dispatchEvent(new CustomEvent("jeppiran-chart-rendered",{detail:{page:Number(c.page)}}));
 }
 function airportChartSequence(){
   return charts.filter(c=>c.airport===selectedAirport)
