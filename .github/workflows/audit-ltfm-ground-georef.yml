@@ -41,3 +41,19 @@ jobs:
           print("BASE_LTFM_GEO_PAGES",json.dumps(sorted(x["page"] for x in geos if x.get("airport")=="LTFM")))
           print("AUDIT_FINISHED")
           PY
+      - name: Check browser acceptance and ARP visibility for LTFM
+        shell: bash
+        run: |
+          node <<'JS'
+          const fs=require('fs');
+          const code=fs.readFileSync('web/app.js','utf8');
+          const from=code.indexOf('function geoNum(');
+          const to=code.indexOf('function buildGeorefIndex(',from);
+          if(from<0||to<0)throw Error('Web geo calculation source not found');
+          const f=new Function('item','pos',code.slice(from,to)+'\nreturn {model:makeGeoModel(item),point:makeGeoModel(item)?projectGeo(makeGeoModel(item),pos.lat,pos.lon):null};');
+          const g=JSON.parse(fs.readFileSync('app/src/main/assets/chart-georef.json','utf8'));
+          for(const item of g.charts.filter(c=>c.airport==='LTFM' && c.page>=1244 && c.page<=1288)){
+            const out=f(item,{lat:41.275,lon:28.7516666667});
+            console.log('BROWSER_PROJECTION',JSON.stringify({page:item.page,number:item.chartKey.split('|')[2],accepted:!!out.model,airportArpInside:!!out.point,airportArpPx:out.point,orientation:out.model?(out.model.xLon*out.model.yLat-out.model.xLat*out.model.yLon):null}));
+          }
+          JS
