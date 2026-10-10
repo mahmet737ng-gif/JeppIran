@@ -159,7 +159,14 @@ function nearest(graph,pos){
   }
   return d<=250?node:null;
 }
+function syncAirport(){
+  if(!taxi.active||taxi.airport===selectedAirport)return;
+  taxi.airport=selectedAirport;taxi.graph=null;taxi.route=null;taxi.prompted="";
+  $("taxiQaAirport").textContent=selectedAirport;
+  loadGraph(selectedAirport);
+}
 function go(){
+  syncAirport();
   const p=parse($("taxiQaInput").value);
   if(p.error){message(p.error,true);return}
   taxi.trace=false;$("taxiQaTrace").classList.remove("on");
@@ -249,6 +256,7 @@ function paintPath(svg,pts,holds,width){
   }
 }
 function draw(){
+  syncAirport();
   const layer=$("chartTransformLayer"),canvas=$("pdfCanvas");if(!layer||!canvas)return;
   layer.querySelector(".taxi-qa-overlay")?.remove();
   if(!taxi.active)return;
