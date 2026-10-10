@@ -1,0 +1,43 @@
+name: Audit LTFM ground chart georeferencing
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/audit-ltfm-ground-georef.yml'
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Inspect V2621 LTFM ground charts and active base georeference
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import json, pathlib, collections
+          root=pathlib.Path("app/src/main/assets")
+          m=json.loads((root/"charts-manifest.json").read_text())
+          raw=json.loads((root/"charts-current.json").read_text())
+          charts=raw if isinstance(raw,list) else raw.get("charts",[])
+          g=json.loads((root/"chart-georef.json").read_text())
+          geos=g.get("charts",[]) if isinstance(g,dict) else g
+          page_map={int(item["page"]):item for item in geos if "page" in item}
+          print("AUDIT SOURCE",json.dumps({"manifestCycle":m.get("cycle"),"manifestVersion":m.get("version"),"georefVersion":g.get("version"),"coordinateSpace":g.get("coordinateSpace"),"totalGeorefs":len(geos),"ltfmTotal":sum(x.get("airport")=="LTFM" for x in charts)}))
+          print("LTFM_GROUND_START")
+          for c in charts:
+            if c.get("airport")!="LTFM" or c.get("category")!="Airport":continue
+            page=int(c["page"])
+            title=c.get("name","")
+            is_ground=page>=1244 and page<=1288
+            if not is_ground:continue
+            geo=page_map.get(page)
+            fields={"page":page,"pdf_page":c.get("pdf_page"),"number":c.get("chart_number"),"title":title,"georef":bool(geo)}
+            if geo:
+              fields.update({"geo_airport":geo.get("airport"),"geo_name":geo.get("name"),"geo_chartKey":geo.get("chartKey"),"width":geo.get("width"),"height":geo.get("height"),"bounds":geo.get("bounds"),"excludedBounds":geo.get("excludedBounds"),"points":len(geo.get("points",[])),"validation":geo.get("validation")})
+            print("LTFM_GROUND",json.dumps(fields,ensure_ascii=False,separators=(',',':')))
+          print("LTFM_GROUND_END")
+          print("BASE_LTFM_GEO_PAGES",json.dumps(sorted(x["page"] for x in geos if x.get("airport")=="LTFM")))
+          print("AUDIT_FINISHED")
+          PY
