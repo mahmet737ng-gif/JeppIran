@@ -1,0 +1,297 @@
+/* JEPPIRAN TAXI preview · verified graphs only · NOT FOR ACTUAL NAVIGATION */
+(function(){
+"use strict";
+const ns="http://www.w3.org/2000/svg", taxi={active:false,trace:false,airport:"",graph:null,route:null,manual:new Map(),prompted:""};
+const $=id=>document.getElementById(id);
+const name=s=>String(s||"").trim().toUpperCase().replace(/\s+/g," ");
+function parse(raw){
+  const s=name(raw);
+  if(!s)return {error:"Enter a stand, taxiway sequence or published procedure"};
+  if(/^(ST|P)\d{1,4}[A-Z]?$/.test(s))return {kind:"stand",destination:s};
+  if(/^\d{2}[LRC]?\s+[A-Z0-9-]+$/.test(s))return {kind:"procedure",key:s};
+  const parts=s.replace(/[,→>]+/g," ").split(" ").filter(Boolean), stops=[],taxiways=[];
+  let destination=null;
+  if(parts.length>1&&/^(ST|P)\d{1,4}[A-Z]?$/.test(parts[parts.length-1]))destination=parts.pop();
+  for(const part of parts){
+    if(!/^\/?[A-Z][A-Z0-9-]{0,11}$/.test(part))return {error:"Unknown token: "+part};
+    if(part.startsWith("/"))stops.push(taxiways.length);
+    taxiways.push(part.replace(/^\//,""));
+  }
+  return taxiways.length?{kind:"sequence",taxiways,stops,destination}:{error:"No taxiways entered"};
+}
+const dist=(a,b)=>Math.hypot((Number(a.lat)-Number(b.lat))*111195,
+  (Number(a.lon)-Number(b.lon))*111195*Math.cos((Number(a.lat)+Number(b.lat))*Math.PI/360));
+function adjacent(graph){
+  const links={};
+  for(const e of graph.edges){
+    if(e.closed||e.runway||!graph.nodes[e.from]||!graph.nodes[e.to])continue;
+    const d=dist(graph.nodes[e.from],graph.nodes[e.to]);
+    if(!(d>0.1&&d<12000))continue;
+    (links[e.from]??=[]).push({to:e.to,way:name(e.taxiway),cost:d});
+    if(e.bidirectional!==false)(links[e.to]??=[]).push({to:e.from,way:name(e.taxiway),cost:d});
+  }
+  return links;
+}
+function shortest(graph,start,goal,requested){
+  const edges=adjacent(graph),ways=requested?.taxiways||[],slash=requested?.stops||[];
+  // Dijkstra state: graph node, requested taxiway index, whether segment used.
+  const key=(n,i,u)=>n+"~"+i+"~"+u,first=key(start,0,0),
+    seen=new Map([[first,0]]),previous=new Map(),open=[{n:start,i:0,u:0,w:0,k:first}];
+  let final=null,limit=0;
+  while(open.length&&limit++<50000){
+    open.sort((a,b)=>a.w-b.w);
+    const p=open.shift();if(p.w!==seen.get(p.k))continue;
+    if((!goal||p.n===goal)&&(!ways.length||(p.i===ways.length-1&&p.u===1))){
+      final=p;break;
+    }
+    function add(n,i,u,extra,hold,move){
+      const k=key(n,i,u),w=p.w+extra;
+      if(w>=(seen.get(k)??Infinity))return;
+      seen.set(k,w);previous.set(k,{prev:p.k,n:p.n,hold,move});
+      open.push({n,i,u,w,k});
+    }
+    if(ways.length&&p.u&&p.i+1<ways.length)
+      add(p.n,p.i+1,0,0,slash.includes(p.i+1),false);
+    for(const e of edges[p.n]||[]){
+      if(ways.length&&e.way!==ways[p.i])continue;
+      add(e.to,p.i,1,e.cost,false,true);
+    }
+  }
+  if(!final)return null;
+  const reverse=[final.n],rawHolds=[];
+  for(let k=final.k;previous.has(k);){
+    const p=previous.get(k);
+    if(p.hold)rawHolds.push(reverse.length-1);
+    if(p.move)reverse.push(p.n);
+    k=p.prev;
+  }
+  return {path:reverse.reverse(),holds:rawHolds.map(i=>reverse.length-1-i),length:final.w};
+}
+function graphOk(d,icao){
+  return d&&d.verified===true&&d.airport===icao&&d.cycle===manifest?.version&&
+    d.nodes&&typeof d.nodes==="object"&&Object.keys(d.nodes).length>1&&
+    Array.isArray(d.edges)&&d.edges.length>0&&Object.values(d.nodes).every(n=>
+      Number.isFinite(n.lat)&&Number.isFinite(n.lon)&&Math.abs(n.lat)<=90&&Math.abs(n.lon)<=180);
+}
+function message(s,warning=false){
+  const t=$("taxiQaStatus");if(t){t.textContent=s;t.classList.toggle("warning",warning);}
+}
+async function loadGraph(icao){
+  taxi.graph=null;
+  message("Checking verified ground network for "+icao+"…");
+  try{
+    const r=await fetch("./data/taxi-networks/"+encodeURIComponent(icao)+".json",{cache:"no-store"});
+    if(!r.ok)throw Error("Not digitized");
+    const d=await r.json();
+    if(!graphOk(d,icao))throw Error("Invalid, unverified, or wrong-cycle network");
+    if(taxi.airport!==icao)return;
+    taxi.graph=d;message("Verified network loaded. Ready for taxi route input.");
+  }catch(e){
+    if(taxi.airport!==icao)return;
+    message("No verified ground network yet for "+icao+". Automatic routing disabled; use TRACE QA to test drawing on this chart.",true);
+  }
+}
+function isAdc(c){
+  return c?.category==="Airport"&&(/AIRPORT DIAGRAM|AERODROME CHART|AERODROME LAYOUT|\bADC\b/i.test(c.name||"")||
+    /^(10|20|30)-9$/i.test(c.chart_number||""));
+}
+function overview(){
+  return charts.find(c=>c.airport===selectedAirport&&isAdc(c))||null;
+}
+function openAdc(){
+  const c=overview();if(!c){message("ADC overview not found",true);return}
+  if(Number(selectedChart?.page)!==Number(c.page))selectChart(c);
+}
+function view(){
+  if($("taxiQaPanel"))return;
+  const panel=document.createElement("section");
+  panel.id="taxiQaPanel";panel.className="taxi-qa-panel";panel.hidden=true;
+  panel.innerHTML='<div class="taxi-qa-title"><strong>TAXI <small>QA TEST</small></strong><span id="taxiQaAirport"></span><button id="taxiQaClose" type="button">×</button></div>'+
+    '<label for="taxiQaInput">ST204 · C11 Z K /Y T ST204 · 34L 1A</label>'+
+    '<div class="taxi-qa-entry"><input id="taxiQaInput" autocomplete="off" spellcheck="false" placeholder="Taxi clearance or stand"><button id="taxiQaGo" type="button">GO</button></div>'+
+    '<div class="taxi-qa-buttons"><button id="taxiQaAdc" type="button">ADC</button><button id="taxiQaTrace" type="button">TRACE QA</button><button id="taxiQaHold" type="button">HOLD HERE</button><button id="taxiQaUndo" type="button">UNDO</button><button id="taxiQaClear" type="button">CLEAR</button></div>'+
+    '<div id="taxiQaStatus" role="status"></div><small class="taxi-qa-warning">NOT FOR ACTUAL NAVIGATION. Ground clearance and chart validation remain mandatory.</small>';
+  document.querySelector("#chartsView .viewer-pane")?.appendChild(panel);
+  $("taxiQaClose").onclick=()=>toggle(false);
+  $("taxiQaGo").onclick=go;
+  $("taxiQaInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();go()}};
+  $("taxiQaAdc").onclick=openAdc;
+  $("taxiQaTrace").onclick=()=>{taxi.trace=!taxi.trace;taxi.route=null;
+    $("taxiQaTrace").classList.toggle("on",taxi.trace);
+    message(taxi.trace?"Manual QA mode: TAP ALONG the printed taxiway centerline; mark STOP with HOLD HERE.":"Manual trace paused.");
+    draw();};
+  $("taxiQaHold").onclick=()=>{
+    const p=currentManual();if(!p.points.length){message("Add a centerline point first.",true);return}
+    if(!p.holds.includes(p.points.length-1))p.holds.push(p.points.length-1);
+    draw();message("Red perpendicular hold-short marker at the selected point.");
+  };
+  $("taxiQaUndo").onclick=()=>{
+    const p=currentManual();p.points.pop();p.holds=p.holds.filter(i=>i<p.points.length);draw();
+  };
+  $("taxiQaClear").onclick=()=>{
+    taxi.route=null;taxi.manual.delete(Number(selectedChart?.page));taxi.trace=false;
+    $("taxiQaTrace").classList.remove("on");draw();message("Cleared.");
+  };
+  $("pdfStage")?.addEventListener("pointerup",mark);
+}
+function toggle(on){
+  view();taxi.active=on;
+  $("taxiQaPanel").hidden=!on;
+  if(!on){taxi.trace=false;$("taxiQaTrace").classList.remove("on")}
+  if(on){
+    $("taxiQaAirport").textContent=selectedAirport;
+    if(taxi.airport!==selectedAirport){taxi.airport=selectedAirport;taxi.route=null;loadGraph(selectedAirport);}
+    $("taxiQaInput").focus();
+  }
+  draw();
+}
+function openTaxi(){
+  if(!selectedAirport)return;
+  const c=overview();
+  if(!c){dialog("TAXI","No ADC chart for "+selectedAirport);return}
+  if(!isAdc(selectedChart))selectChart(c);
+  toggle(true);
+}
+function nearest(graph,pos){
+  let node=null,d=Infinity;
+  for(const [id,p] of Object.entries(graph.nodes)){
+    const x=dist(pos,p);if(x<d){d=x;node=id}
+  }
+  return d<=250?node:null;
+}
+function go(){
+  const p=parse($("taxiQaInput").value);
+  if(p.error){message(p.error,true);return}
+  taxi.trace=false;$("taxiQaTrace").classList.remove("on");
+  if(!taxi.graph){
+    message("Parsed "+p.kind+". Route cannot be generated until verified taxiway and stand topology is published for "+selectedAirport+".",true);
+    return;
+  }
+  if(!lastPosition){message("No live aircraft fix. Connect GPS or simulator first.",true);return}
+  const start=nearest(taxi.graph,lastPosition);
+  if(!start){message("Aircraft >250 m from verified taxi graph.",true);return}
+  let planned=null,info="";
+  if(p.kind==="procedure"){
+    const choices=(taxi.graph.procedures||[]).filter(x=>name(x.key)===p.key&&
+      Array.isArray(x.nodes)&&x.nodes.length>1&&x.nodes.every(id=>taxi.graph.nodes[id]));
+    if(!choices.length){message("Published procedure not digitized: "+p.key,true);return}
+    choices.sort((a,b)=>dist(lastPosition,taxi.graph.nodes[a.nodes[0]])-dist(lastPosition,taxi.graph.nodes[b.nodes[0]]));
+    if(dist(lastPosition,taxi.graph.nodes[choices[0].nodes[0]])>700 ||
+      (choices[1]&&dist(lastPosition,taxi.graph.nodes[choices[1].nodes[0]])-
+        dist(lastPosition,taxi.graph.nodes[choices[0].nodes[0]])<35)){
+      message("Procedure start location is ambiguous. Do not guess arrival/departure.",true);return;
+    }
+    planned={path:choices[0].nodes,holds:choices[0].holdIndices||[]};
+    info="Nearest verified PROCEDURE START · "+(choices[0].operation||"");
+  }else{
+    const stand=p.destination,stands=taxi.graph.stands||{},
+      goal=typeof stands[stand]==="string"?stands[stand]:stands[stand]?.node;
+    if(stand&&!taxi.graph.nodes[goal]){message("Stand "+stand+" is not mapped.",true);return}
+    if(!goal&&p.kind==="stand"){message("Stand not mapped.",true);return}
+    if(goal)planned=shortest(taxi.graph,start,goal,p.kind==="sequence"?p:null);
+    else {
+      for(const id of Object.keys(taxi.graph.nodes)){
+        const candidate=shortest(taxi.graph,start,id,p);
+        if(candidate&&(!planned||candidate.length<planned.length))planned=candidate;
+      }
+    }
+    info=p.kind==="stand"?"SHORTEST DISTANCE SUGGESTION · NOT ATC CLEARANCE":"TAXIWAY SEQUENCE";
+  }
+  if(!planned||planned.path.length<2){message("No connected permitted route exists. Chart/clearance required.",true);return}
+  taxi.route={...planned,graph:taxi.graph,airport:selectedAirport};
+  message(info+" · "+planned.path.length+" nodes.");
+  draw();
+}
+function currentManual(){
+  const page=Number(selectedChart?.page);
+  if(!taxi.manual.has(page))taxi.manual.set(page,{points:[],holds:[]});
+  return taxi.manual.get(page);
+}
+function mark(e){
+  if(!taxi.active||!taxi.trace||!isAdc(selectedChart)||e.button!==0)return;
+  const canvas=$("pdfCanvas");if(!canvas)return;
+  const r=canvas.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
+  if(!(x>=0&&x<=1&&y>=0&&y<=1))return;
+  currentManual().points.push({x,y});draw();
+  message("MANUAL TRACE QA: "+currentManual().points.length+" points. Never use as automatically calculated taxi guidance.");
+}
+function s(tag,attrs){
+  const t=document.createElementNS(ns,tag);
+  for(const [k,v] of Object.entries(attrs))t.setAttribute(k,v);
+  return t;
+}
+function paintPath(svg,pts,holds,width){
+  if(pts.length<2)return;
+  // Minimal corner rounding; never use broad splines that cut taxiway corners.
+  let d="M "+pts[0].x+" "+pts[0].y;
+  for(let i=1;i<pts.length;i++){
+    const p=pts[i];
+    if(i<pts.length-1){
+      const prev=pts[i-1],next=pts[i+1],a=Math.hypot(p.x-prev.x,p.y-prev.y),b=Math.hypot(next.x-p.x,next.y-p.y);
+      if(a>0&&b>0){
+        const r=Math.min(2,a*.08,b*.08);
+        d+=" L "+(p.x+(prev.x-p.x)*r/a)+" "+(p.y+(prev.y-p.y)*r/a);
+        d+=" Q "+p.x+" "+p.y+" "+(p.x+(next.x-p.x)*r/b)+" "+(p.y+(next.y-p.y)*r/b);
+        continue;
+      }
+    }
+    d+=" L "+p.x+" "+p.y;
+  }
+  const stroke=Math.max(2,width*.0035);
+  svg.appendChild(s("path",{d,fill:"none",stroke:"#1c0630","stroke-width":stroke+2,"stroke-linejoin":"round","stroke-linecap":"round"}));
+  svg.appendChild(s("path",{d,fill:"none",stroke:"#f200d9","stroke-width":stroke,"stroke-linejoin":"round","stroke-linecap":"round"}));
+  for(const i of holds){
+    const p=pts[i];if(!p)continue;
+    const a=pts[Math.max(0,i-1)],b=pts[Math.min(pts.length-1,i+1)],
+      dx=b.x-a.x,dy=b.y-a.y,len=Math.hypot(dx,dy)||1,nx=-dy/len,ny=dx/len,q=stroke*3;
+    svg.appendChild(s("line",{x1:p.x+nx*q,y1:p.y+ny*q,x2:p.x-nx*q,y2:p.y-ny*q,
+      stroke:"#ff1626","stroke-width":stroke*1.6,"stroke-linecap":"square"}));
+  }
+}
+function draw(){
+  const layer=$("chartTransformLayer"),canvas=$("pdfCanvas");if(!layer||!canvas)return;
+  layer.querySelector(".taxi-qa-overlay")?.remove();
+  if(!taxi.active)return;
+  const model=georefByPage.get(Number(selectedChart?.page)),w=model?.width||1000,h=model?.height||1000;
+  const svg=s("svg",{class:"taxi-qa-overlay",viewBox:"0 0 "+w+" "+h,preserveAspectRatio:"none"});
+  svg.style.cssText="position:absolute;inset:0;width:100%;height:100%;z-index:12;pointer-events:none";
+  const r=taxi.route;
+  if(r&&r.airport===selectedAirport&&model){
+    let segment=[],holdPositions=[];
+    for(let i=0;i<r.path.length;i++){
+      const pt=r.graph.nodes[r.path[i]],p=pt?projectGeo(model,pt.lat,pt.lon):null;
+      if(!p){paintPath(svg,segment,holdPositions,w);segment=[];holdPositions=[];continue;}
+      if(r.holds.includes(i))holdPositions.push(segment.length);
+      segment.push(p);
+    }
+    paintPath(svg,segment,holdPositions,w);
+  }
+  const manual=taxi.manual.get(Number(selectedChart?.page));
+  if(manual)paintPath(svg,manual.points.map(p=>({x:p.x*w,y:p.y*h})),manual.holds,w);
+  layer.appendChild(svg);
+}
+function chartHint(){
+  if(!taxi.active||!lastPosition||!selectedChart||!isAdc(selectedChart))return;
+  const base=overview();if(!base)return;
+  const candidates=charts.filter(c=>c.airport===selectedAirport&&c.category==="Airport"&&
+    Number(c.page)!==Number(base.page)&&
+    /PARKING|DOCKING|APRON|TAXI ROUTE/i.test(c.name||""));
+  const match=candidates.find(c=>{
+    const m=georefByPage.get(Number(c.page));if(!m)return false;
+    const p=projectGeo(m,lastPosition.lat,lastPosition.lon);
+    return p&&p.x>m.width*.1&&p.x<m.width*.9&&p.y>m.height*.1&&p.y<m.height*.9;
+  });
+  if(!match||taxi.prompted===String(match.page))return;
+  taxi.prompted=String(match.page);
+  document.querySelector(".taxi-chart-hint")?.remove();
+  const bar=document.createElement("div");bar.className="taxi-chart-hint";
+  const label=document.createElement("span");label.textContent="Detailed chart available: "+(match.chart_number||match.name);
+  const jump=document.createElement("button");jump.textContent="SWITCH";jump.onclick=()=>{bar.remove();selectChart(match)};
+  const no=document.createElement("button");no.textContent="×";no.onclick=()=>bar.remove();
+  bar.append(label,jump,no);document.querySelector("#chartsView .viewer-pane")?.appendChild(bar);
+  setTimeout(()=>bar.remove(),12000);
+}
+window.JEPPIRAN_TAXI={open:openTaxi,parse,openAdc,draw};
+window.addEventListener("jeppiran-chart-rendered",()=>{draw();chartHint()});
+window.addEventListener("jeppiran-position",chartHint);
+})();
