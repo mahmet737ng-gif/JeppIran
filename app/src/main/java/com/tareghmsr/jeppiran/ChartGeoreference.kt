@@ -210,6 +210,8 @@ object ChartGeoreferenceStore {
     // OTHH flight-test accepted for simulator visualization only; stable 776 unchanged.
     private const val OTHH_FLIGHT_QA_ASSET = "othh-flight-qa-v2621.json"
     private val OTHH_FLIGHT_QA_PAGES = setOf(1536, 1549)
+    private const val LTFM_GRID_ASSET = "ltfm-grid-georef-v2621.json"
+    private val LTFM_GRID_PAGES = setOf(1291, 1292, 1295, 1305, 1306, 1317, 1335)
     private val SUPPORTED_METHODS =
         setOf(
             "paired_printed_graticule_vector_ticks",
@@ -315,6 +317,25 @@ object ChartGeoreferenceStore {
                 ) {
                     OTHH_FLIGHT_QA_PAGES.forEach { page ->
                         references[page] = othhFlightQa.references.getValue(page)
+                    }
+                }
+            }
+            // Additional measured LTFM maps, no replacement of published base models.
+            if (selected.chartDataVersion == "V2621" &&
+                selected.sourceSha256 == OIMM_ILS_SOURCE_SHA
+            ) {
+                val grid = runCatching {
+                    context.assets.open(LTFM_GRID_ASSET).bufferedReader()
+                        .use { it.readText() }.let(::parse)
+                }.getOrNull()
+                if (grid != null &&
+                    grid.chartDataVersion == selected.chartDataVersion &&
+                    grid.sourceSha256 == selected.sourceSha256 &&
+                    LTFM_GRID_PAGES.all { grid.references.containsKey(it) } &&
+                    LTFM_GRID_PAGES.none { references.containsKey(it) }
+                ) {
+                    LTFM_GRID_PAGES.forEach { page ->
+                        references[page] = grid.references.getValue(page)
                     }
                 }
             }

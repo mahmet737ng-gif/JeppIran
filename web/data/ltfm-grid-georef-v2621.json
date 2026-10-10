@@ -1,0 +1,1912 @@
+{
+  "version": 2,
+  "coordinateSystem": "WGS84",
+  "coordinateSpace": "pdf_points",
+  "origin": "top_left",
+  "notForActualNavigation": true,
+  "notice": "PDF graticule measured LTFM maps (simulator positioning only). NOT FOR ACTUAL NAVIGATION.",
+  "source": {
+    "file": "Iran2621.pdf",
+    "sha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+    "pageCount": 1654,
+    "chartDataVersion": "V2621",
+    "cycle": 2621
+  },
+  "charts": [
+    {
+      "page": 1291,
+      "airport": "LTFM",
+      "name": "ILS Y RWY 16R",
+      "chartKey": "LTFM|APPROACH|31-2|ILS Y RWY 16R",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 25,
+        "top": 405,
+        "right": 605,
+        "bottom": 767
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 41.333333333333336,
+          "lon": 28.333333333333332,
+          "x": 414.48,
+          "y": 715.8,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 28.5,
+          "x": 414.48,
+          "y": 641.64,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 28.666666666666668,
+          "x": 414.48,
+          "y": 567.48,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 28.833333333333332,
+          "x": 414.48,
+          "y": 493.56,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 29,
+          "x": 414.48,
+          "y": 419.4,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 28.333333333333332,
+          "x": 316.08,
+          "y": 715.8,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 28.5,
+          "x": 316.08,
+          "y": 641.64,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 28.666666666666668,
+          "x": 316.08,
+          "y": 567.48,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 28.833333333333332,
+          "x": 316.08,
+          "y": 493.56,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 29,
+          "x": 316.08,
+          "y": 419.4,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 28.333333333333332,
+          "x": 217.32,
+          "y": 715.8,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 28.5,
+          "x": 217.32,
+          "y": 641.64,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 28.666666666666668,
+          "x": 217.32,
+          "y": 567.48,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 28.833333333333332,
+          "x": 217.32,
+          "y": 493.56,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 29,
+          "x": 217.32,
+          "y": 419.4,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.833333333333336,
+          "lon": 28.333333333333332,
+          "x": 118.56,
+          "y": 715.8,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.833333333333336,
+          "lon": 28.5,
+          "x": 118.56,
+          "y": 641.64,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.833333333333336,
+          "lon": 28.666666666666668,
+          "x": 118.56,
+          "y": 567.48,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.833333333333336,
+          "lon": 28.833333333333332,
+          "x": 118.56,
+          "y": 493.56,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.833333333333336,
+          "lon": 29,
+          "x": 118.56,
+          "y": 419.4,
+          "source": "Printed Jeppesen graticule vector tick"
+        }
+      ],
+      "gridAxes": {
+        "latitude": [
+          {
+            "degrees": 41.333333333333336,
+            "pdfPoint": 414.48,
+            "pixelAxis": "x"
+          },
+          {
+            "degrees": 41.5,
+            "pdfPoint": 316.08,
+            "pixelAxis": "x"
+          },
+          {
+            "degrees": 41.666666666666664,
+            "pdfPoint": 217.32,
+            "pixelAxis": "x"
+          },
+          {
+            "degrees": 41.833333333333336,
+            "pdfPoint": 118.56,
+            "pixelAxis": "x"
+          }
+        ],
+        "longitude": [
+          {
+            "degrees": 28.333333333333332,
+            "pdfPoint": 715.8,
+            "pixelAxis": "y"
+          },
+          {
+            "degrees": 28.5,
+            "pdfPoint": 641.64,
+            "pixelAxis": "y"
+          },
+          {
+            "degrees": 28.666666666666668,
+            "pdfPoint": 567.48,
+            "pixelAxis": "y"
+          },
+          {
+            "degrees": 28.833333333333332,
+            "pdfPoint": 493.56,
+            "pixelAxis": "y"
+          },
+          {
+            "degrees": 29,
+            "pdfPoint": 419.4,
+            "pixelAxis": "y"
+          }
+        ]
+      },
+      "airportAnchor": {
+        "sourcePage": 1162,
+        "lat": 41.275,
+        "lon": 28.751666666666665
+      },
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "controlPointCount": 20,
+        "maxAffineFitErrorMeters": 32.48,
+        "maxGridIntersectionLeaveOneOutErrorMeters": 34.56,
+        "officialAipFixCrossCheckMaxMeters": 44.6,
+        "simulatorOnly": true,
+        "notApprovedForNavigation": true
+      }
+    },
+    {
+      "page": 1292,
+      "airport": "LTFM",
+      "name": "CAT II/III ILS Y RWY 16R",
+      "chartKey": "LTFM|APPROACH|31-2A|CAT II/III ILS Y RWY 16R",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 25,
+        "top": 405,
+        "right": 605,
+        "bottom": 767
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 41.333333333333336,
+          "lon": 28.333333333333332,
+          "x": 414.48,
+          "y": 715.2,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 28.5,
+          "x": 414.48,
+          "y": 641.04,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 28.666666666666668,
+          "x": 414.48,
+          "y": 566.88,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 28.833333333333332,
+          "x": 414.48,
+          "y": 492.72,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 29,
+          "x": 414.48,
+          "y": 418.8,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 28.333333333333332,
+          "x": 316.08,
+          "y": 715.2,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 28.5,
+          "x": 316.08,
+          "y": 641.04,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 28.666666666666668,
+          "x": 316.08,
+          "y": 566.88,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 28.833333333333332,
+          "x": 316.08,
+          "y": 492.72,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 29,
+          "x": 316.08,
+          "y": 418.8,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 28.333333333333332,
+          "x": 217.32,
+          "y": 715.2,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 28.5,
+          "x": 217.32,
+          "y": 641.04,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 28.666666666666668,
+          "x": 217.32,
+          "y": 566.88,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 28.833333333333332,
+          "x": 217.32,
+          "y": 492.72,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 29,
+          "x": 217.32,
+          "y": 418.8,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.833333333333336,
+          "lon": 28.333333333333332,
+          "x": 118.56,
+          "y": 715.2,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.833333333333336,
+          "lon": 28.5,
+          "x": 118.56,
+          "y": 641.04,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.833333333333336,
+          "lon": 28.666666666666668,
+          "x": 118.56,
+          "y": 566.88,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.833333333333336,
+          "lon": 28.833333333333332,
+          "x": 118.56,
+          "y": 492.72,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.833333333333336,
+          "lon": 29,
+          "x": 118.56,
+          "y": 418.8,
+          "source": "Printed Jeppesen graticule vector tick"
+        }
+      ],
+      "gridAxes": {
+        "latitude": [
+          {
+            "degrees": 41.333333333333336,
+            "pdfPoint": 414.48,
+            "pixelAxis": "x"
+          },
+          {
+            "degrees": 41.5,
+            "pdfPoint": 316.08,
+            "pixelAxis": "x"
+          },
+          {
+            "degrees": 41.666666666666664,
+            "pdfPoint": 217.32,
+            "pixelAxis": "x"
+          },
+          {
+            "degrees": 41.833333333333336,
+            "pdfPoint": 118.56,
+            "pixelAxis": "x"
+          }
+        ],
+        "longitude": [
+          {
+            "degrees": 28.333333333333332,
+            "pdfPoint": 715.2,
+            "pixelAxis": "y"
+          },
+          {
+            "degrees": 28.5,
+            "pdfPoint": 641.04,
+            "pixelAxis": "y"
+          },
+          {
+            "degrees": 28.666666666666668,
+            "pdfPoint": 566.88,
+            "pixelAxis": "y"
+          },
+          {
+            "degrees": 28.833333333333332,
+            "pdfPoint": 492.72,
+            "pixelAxis": "y"
+          },
+          {
+            "degrees": 29,
+            "pdfPoint": 418.8,
+            "pixelAxis": "y"
+          }
+        ]
+      },
+      "airportAnchor": {
+        "sourcePage": 1162,
+        "lat": 41.275,
+        "lon": 28.751666666666665
+      },
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "controlPointCount": 20,
+        "maxAffineFitErrorMeters": 32.48,
+        "maxGridIntersectionLeaveOneOutErrorMeters": 38.67,
+        "officialAipFixCrossCheckMaxMeters": null,
+        "simulatorOnly": true,
+        "notApprovedForNavigation": true
+      }
+    },
+    {
+      "page": 1295,
+      "airport": "LTFM",
+      "name": "VOR Z RWY 16R",
+      "chartKey": "LTFM|APPROACH|31-3|VOR Z RWY 16R",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 25,
+        "top": 405,
+        "right": 605,
+        "bottom": 767
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 41.333333333333336,
+          "lon": 28.333333333333332,
+          "x": 414.48,
+          "y": 715.2,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 28.5,
+          "x": 414.48,
+          "y": 641.04,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 28.666666666666668,
+          "x": 414.48,
+          "y": 566.88,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 28.833333333333332,
+          "x": 414.48,
+          "y": 492.96,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 29,
+          "x": 414.48,
+          "y": 418.8,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 28.333333333333332,
+          "x": 316.08,
+          "y": 715.2,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 28.5,
+          "x": 316.08,
+          "y": 641.04,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 28.666666666666668,
+          "x": 316.08,
+          "y": 566.88,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 28.833333333333332,
+          "x": 316.08,
+          "y": 492.96,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 29,
+          "x": 316.08,
+          "y": 418.8,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 28.333333333333332,
+          "x": 217.32,
+          "y": 715.2,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 28.5,
+          "x": 217.32,
+          "y": 641.04,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 28.666666666666668,
+          "x": 217.32,
+          "y": 566.88,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 28.833333333333332,
+          "x": 217.32,
+          "y": 492.96,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 29,
+          "x": 217.32,
+          "y": 418.8,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.833333333333336,
+          "lon": 28.333333333333332,
+          "x": 118.56,
+          "y": 715.2,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.833333333333336,
+          "lon": 28.5,
+          "x": 118.56,
+          "y": 641.04,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.833333333333336,
+          "lon": 28.666666666666668,
+          "x": 118.56,
+          "y": 566.88,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.833333333333336,
+          "lon": 28.833333333333332,
+          "x": 118.56,
+          "y": 492.96,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.833333333333336,
+          "lon": 29,
+          "x": 118.56,
+          "y": 418.8,
+          "source": "Printed Jeppesen graticule vector tick"
+        }
+      ],
+      "gridAxes": {
+        "latitude": [
+          {
+            "degrees": 41.333333333333336,
+            "pdfPoint": 414.48,
+            "pixelAxis": "x"
+          },
+          {
+            "degrees": 41.5,
+            "pdfPoint": 316.08,
+            "pixelAxis": "x"
+          },
+          {
+            "degrees": 41.666666666666664,
+            "pdfPoint": 217.32,
+            "pixelAxis": "x"
+          },
+          {
+            "degrees": 41.833333333333336,
+            "pdfPoint": 118.56,
+            "pixelAxis": "x"
+          }
+        ],
+        "longitude": [
+          {
+            "degrees": 28.333333333333332,
+            "pdfPoint": 715.2,
+            "pixelAxis": "y"
+          },
+          {
+            "degrees": 28.5,
+            "pdfPoint": 641.04,
+            "pixelAxis": "y"
+          },
+          {
+            "degrees": 28.666666666666668,
+            "pdfPoint": 566.88,
+            "pixelAxis": "y"
+          },
+          {
+            "degrees": 28.833333333333332,
+            "pdfPoint": 492.96,
+            "pixelAxis": "y"
+          },
+          {
+            "degrees": 29,
+            "pdfPoint": 418.8,
+            "pixelAxis": "y"
+          }
+        ]
+      },
+      "airportAnchor": {
+        "sourcePage": 1162,
+        "lat": 41.275,
+        "lon": 28.751666666666665
+      },
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "controlPointCount": 20,
+        "maxAffineFitErrorMeters": 32.48,
+        "maxGridIntersectionLeaveOneOutErrorMeters": 34.56,
+        "officialAipFixCrossCheckMaxMeters": null,
+        "simulatorOnly": true,
+        "notApprovedForNavigation": true
+      }
+    },
+    {
+      "page": 1305,
+      "airport": "LTFM",
+      "name": "ILS Y RWY 18",
+      "chartKey": "LTFM|APPROACH|31-7B|ILS Y RWY 18",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 25,
+        "top": 405,
+        "right": 605,
+        "bottom": 767
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 41,
+          "lon": 28.333333333333332,
+          "x": 541.56,
+          "y": 758.88,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41,
+          "lon": 28.5,
+          "x": 541.56,
+          "y": 684.96,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41,
+          "lon": 28.666666666666668,
+          "x": 541.56,
+          "y": 610.8,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41,
+          "lon": 28.833333333333332,
+          "x": 541.56,
+          "y": 537,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41,
+          "lon": 29,
+          "x": 541.56,
+          "y": 463.2,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.166666666666664,
+          "lon": 28.333333333333332,
+          "x": 443.76,
+          "y": 758.88,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.166666666666664,
+          "lon": 28.5,
+          "x": 443.76,
+          "y": 684.96,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.166666666666664,
+          "lon": 28.666666666666668,
+          "x": 443.76,
+          "y": 610.8,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.166666666666664,
+          "lon": 28.833333333333332,
+          "x": 443.76,
+          "y": 537,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.166666666666664,
+          "lon": 29,
+          "x": 443.76,
+          "y": 463.2,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 28.333333333333332,
+          "x": 345.6,
+          "y": 758.88,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 28.5,
+          "x": 345.6,
+          "y": 684.96,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 28.666666666666668,
+          "x": 345.6,
+          "y": 610.8,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 28.833333333333332,
+          "x": 345.6,
+          "y": 537,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 29,
+          "x": 345.6,
+          "y": 463.2,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 28.333333333333332,
+          "x": 247.44,
+          "y": 758.88,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 28.5,
+          "x": 247.44,
+          "y": 684.96,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 28.666666666666668,
+          "x": 247.44,
+          "y": 610.8,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 28.833333333333332,
+          "x": 247.44,
+          "y": 537,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 29,
+          "x": 247.44,
+          "y": 463.2,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 28.333333333333332,
+          "x": 149.04,
+          "y": 758.88,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 28.5,
+          "x": 149.04,
+          "y": 684.96,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 28.666666666666668,
+          "x": 149.04,
+          "y": 610.8,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 28.833333333333332,
+          "x": 149.04,
+          "y": 537,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 29,
+          "x": 149.04,
+          "y": 463.2,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.833333333333336,
+          "lon": 28.333333333333332,
+          "x": 50.28,
+          "y": 758.88,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.833333333333336,
+          "lon": 28.5,
+          "x": 50.28,
+          "y": 684.96,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.833333333333336,
+          "lon": 28.666666666666668,
+          "x": 50.28,
+          "y": 610.8,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.833333333333336,
+          "lon": 28.833333333333332,
+          "x": 50.28,
+          "y": 537,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.833333333333336,
+          "lon": 29,
+          "x": 50.28,
+          "y": 463.2,
+          "source": "Printed Jeppesen graticule vector tick"
+        }
+      ],
+      "gridAxes": {
+        "latitude": [
+          {
+            "degrees": 41,
+            "pdfPoint": 541.56,
+            "pixelAxis": "x"
+          },
+          {
+            "degrees": 41.166666666666664,
+            "pdfPoint": 443.76,
+            "pixelAxis": "x"
+          },
+          {
+            "degrees": 41.333333333333336,
+            "pdfPoint": 345.6,
+            "pixelAxis": "x"
+          },
+          {
+            "degrees": 41.5,
+            "pdfPoint": 247.44,
+            "pixelAxis": "x"
+          },
+          {
+            "degrees": 41.666666666666664,
+            "pdfPoint": 149.04,
+            "pixelAxis": "x"
+          },
+          {
+            "degrees": 41.833333333333336,
+            "pdfPoint": 50.28,
+            "pixelAxis": "x"
+          }
+        ],
+        "longitude": [
+          {
+            "degrees": 28.333333333333332,
+            "pdfPoint": 758.88,
+            "pixelAxis": "y"
+          },
+          {
+            "degrees": 28.5,
+            "pdfPoint": 684.96,
+            "pixelAxis": "y"
+          },
+          {
+            "degrees": 28.666666666666668,
+            "pdfPoint": 610.8,
+            "pixelAxis": "y"
+          },
+          {
+            "degrees": 28.833333333333332,
+            "pdfPoint": 537,
+            "pixelAxis": "y"
+          },
+          {
+            "degrees": 29,
+            "pdfPoint": 463.2,
+            "pixelAxis": "y"
+          }
+        ]
+      },
+      "airportAnchor": {
+        "sourcePage": 1162,
+        "lat": 41.275,
+        "lon": 28.751666666666665
+      },
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "controlPointCount": 30,
+        "maxAffineFitErrorMeters": 77.71,
+        "maxGridIntersectionLeaveOneOutErrorMeters": 88.47,
+        "officialAipFixCrossCheckMaxMeters": null,
+        "simulatorOnly": true,
+        "notApprovedForNavigation": true
+      }
+    },
+    {
+      "page": 1306,
+      "airport": "LTFM",
+      "name": "CAT II/III ILS Y RWY 18",
+      "chartKey": "LTFM|APPROACH|31-7C|CAT II/III ILS Y RWY 18",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 25,
+        "top": 405,
+        "right": 605,
+        "bottom": 767
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 41,
+          "lon": 28.333333333333332,
+          "x": 541.56,
+          "y": 758.88,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41,
+          "lon": 28.5,
+          "x": 541.56,
+          "y": 684.96,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41,
+          "lon": 28.666666666666668,
+          "x": 541.56,
+          "y": 610.8,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41,
+          "lon": 28.833333333333332,
+          "x": 541.56,
+          "y": 537,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41,
+          "lon": 29,
+          "x": 541.56,
+          "y": 463.2,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.166666666666664,
+          "lon": 28.333333333333332,
+          "x": 443.76,
+          "y": 758.88,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.166666666666664,
+          "lon": 28.5,
+          "x": 443.76,
+          "y": 684.96,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.166666666666664,
+          "lon": 28.666666666666668,
+          "x": 443.76,
+          "y": 610.8,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.166666666666664,
+          "lon": 28.833333333333332,
+          "x": 443.76,
+          "y": 537,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.166666666666664,
+          "lon": 29,
+          "x": 443.76,
+          "y": 463.2,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 28.333333333333332,
+          "x": 345.6,
+          "y": 758.88,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 28.5,
+          "x": 345.6,
+          "y": 684.96,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 28.666666666666668,
+          "x": 345.6,
+          "y": 610.8,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 28.833333333333332,
+          "x": 345.6,
+          "y": 537,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 29,
+          "x": 345.6,
+          "y": 463.2,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 28.333333333333332,
+          "x": 247.44,
+          "y": 758.88,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 28.5,
+          "x": 247.44,
+          "y": 684.96,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 28.666666666666668,
+          "x": 247.44,
+          "y": 610.8,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 28.833333333333332,
+          "x": 247.44,
+          "y": 537,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 29,
+          "x": 247.44,
+          "y": 463.2,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 28.333333333333332,
+          "x": 149.04,
+          "y": 758.88,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 28.5,
+          "x": 149.04,
+          "y": 684.96,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 28.666666666666668,
+          "x": 149.04,
+          "y": 610.8,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 28.833333333333332,
+          "x": 149.04,
+          "y": 537,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 29,
+          "x": 149.04,
+          "y": 463.2,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.833333333333336,
+          "lon": 28.333333333333332,
+          "x": 50.28,
+          "y": 758.88,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.833333333333336,
+          "lon": 28.5,
+          "x": 50.28,
+          "y": 684.96,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.833333333333336,
+          "lon": 28.666666666666668,
+          "x": 50.28,
+          "y": 610.8,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.833333333333336,
+          "lon": 28.833333333333332,
+          "x": 50.28,
+          "y": 537,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.833333333333336,
+          "lon": 29,
+          "x": 50.28,
+          "y": 463.2,
+          "source": "Printed Jeppesen graticule vector tick"
+        }
+      ],
+      "gridAxes": {
+        "latitude": [
+          {
+            "degrees": 41,
+            "pdfPoint": 541.56,
+            "pixelAxis": "x"
+          },
+          {
+            "degrees": 41.166666666666664,
+            "pdfPoint": 443.76,
+            "pixelAxis": "x"
+          },
+          {
+            "degrees": 41.333333333333336,
+            "pdfPoint": 345.6,
+            "pixelAxis": "x"
+          },
+          {
+            "degrees": 41.5,
+            "pdfPoint": 247.44,
+            "pixelAxis": "x"
+          },
+          {
+            "degrees": 41.666666666666664,
+            "pdfPoint": 149.04,
+            "pixelAxis": "x"
+          },
+          {
+            "degrees": 41.833333333333336,
+            "pdfPoint": 50.28,
+            "pixelAxis": "x"
+          }
+        ],
+        "longitude": [
+          {
+            "degrees": 28.333333333333332,
+            "pdfPoint": 758.88,
+            "pixelAxis": "y"
+          },
+          {
+            "degrees": 28.5,
+            "pdfPoint": 684.96,
+            "pixelAxis": "y"
+          },
+          {
+            "degrees": 28.666666666666668,
+            "pdfPoint": 610.8,
+            "pixelAxis": "y"
+          },
+          {
+            "degrees": 28.833333333333332,
+            "pdfPoint": 537,
+            "pixelAxis": "y"
+          },
+          {
+            "degrees": 29,
+            "pdfPoint": 463.2,
+            "pixelAxis": "y"
+          }
+        ]
+      },
+      "airportAnchor": {
+        "sourcePage": 1162,
+        "lat": 41.275,
+        "lon": 28.751666666666665
+      },
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "controlPointCount": 30,
+        "maxAffineFitErrorMeters": 77.71,
+        "maxGridIntersectionLeaveOneOutErrorMeters": 88.47,
+        "officialAipFixCrossCheckMaxMeters": null,
+        "simulatorOnly": true,
+        "notApprovedForNavigation": true
+      }
+    },
+    {
+      "page": 1317,
+      "airport": "LTFM",
+      "name": "ILS Z RWY 35R",
+      "chartKey": "LTFM|APPROACH|31-14|ILS Z RWY 35R",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 25,
+        "top": 405,
+        "right": 605,
+        "bottom": 767
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 40.833333333333336,
+          "lon": 28.333333333333332,
+          "x": 554.52,
+          "y": 747.48,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 40.833333333333336,
+          "lon": 28.5,
+          "x": 554.52,
+          "y": 673.68,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 40.833333333333336,
+          "lon": 28.666666666666668,
+          "x": 554.52,
+          "y": 599.52,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 40.833333333333336,
+          "lon": 28.833333333333332,
+          "x": 554.52,
+          "y": 525.36,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 40.833333333333336,
+          "lon": 29,
+          "x": 554.52,
+          "y": 451.2,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41,
+          "lon": 28.333333333333332,
+          "x": 456.96,
+          "y": 747.48,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41,
+          "lon": 28.5,
+          "x": 456.96,
+          "y": 673.68,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41,
+          "lon": 28.666666666666668,
+          "x": 456.96,
+          "y": 599.52,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41,
+          "lon": 28.833333333333332,
+          "x": 456.96,
+          "y": 525.36,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41,
+          "lon": 29,
+          "x": 456.96,
+          "y": 451.2,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.166666666666664,
+          "lon": 28.333333333333332,
+          "x": 358.8,
+          "y": 747.48,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.166666666666664,
+          "lon": 28.5,
+          "x": 358.8,
+          "y": 673.68,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.166666666666664,
+          "lon": 28.666666666666668,
+          "x": 358.8,
+          "y": 599.52,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.166666666666664,
+          "lon": 28.833333333333332,
+          "x": 358.8,
+          "y": 525.36,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.166666666666664,
+          "lon": 29,
+          "x": 358.8,
+          "y": 451.2,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 28.333333333333332,
+          "x": 260.64,
+          "y": 747.48,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 28.5,
+          "x": 260.64,
+          "y": 673.68,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 28.666666666666668,
+          "x": 260.64,
+          "y": 599.52,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 28.833333333333332,
+          "x": 260.64,
+          "y": 525.36,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 29,
+          "x": 260.64,
+          "y": 451.2,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 28.333333333333332,
+          "x": 162.24,
+          "y": 747.48,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 28.5,
+          "x": 162.24,
+          "y": 673.68,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 28.666666666666668,
+          "x": 162.24,
+          "y": 599.52,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 28.833333333333332,
+          "x": 162.24,
+          "y": 525.36,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 29,
+          "x": 162.24,
+          "y": 451.2,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 28.333333333333332,
+          "x": 63.72,
+          "y": 747.48,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 28.5,
+          "x": 63.72,
+          "y": 673.68,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 28.666666666666668,
+          "x": 63.72,
+          "y": 599.52,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 28.833333333333332,
+          "x": 63.72,
+          "y": 525.36,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 29,
+          "x": 63.72,
+          "y": 451.2,
+          "source": "Printed Jeppesen graticule vector tick"
+        }
+      ],
+      "gridAxes": {
+        "latitude": [
+          {
+            "degrees": 40.833333333333336,
+            "pdfPoint": 554.52,
+            "pixelAxis": "x"
+          },
+          {
+            "degrees": 41,
+            "pdfPoint": 456.96,
+            "pixelAxis": "x"
+          },
+          {
+            "degrees": 41.166666666666664,
+            "pdfPoint": 358.8,
+            "pixelAxis": "x"
+          },
+          {
+            "degrees": 41.333333333333336,
+            "pdfPoint": 260.64,
+            "pixelAxis": "x"
+          },
+          {
+            "degrees": 41.5,
+            "pdfPoint": 162.24,
+            "pixelAxis": "x"
+          },
+          {
+            "degrees": 41.666666666666664,
+            "pdfPoint": 63.72,
+            "pixelAxis": "x"
+          }
+        ],
+        "longitude": [
+          {
+            "degrees": 28.333333333333332,
+            "pdfPoint": 747.48,
+            "pixelAxis": "y"
+          },
+          {
+            "degrees": 28.5,
+            "pdfPoint": 673.68,
+            "pixelAxis": "y"
+          },
+          {
+            "degrees": 28.666666666666668,
+            "pdfPoint": 599.52,
+            "pixelAxis": "y"
+          },
+          {
+            "degrees": 28.833333333333332,
+            "pdfPoint": 525.36,
+            "pixelAxis": "y"
+          },
+          {
+            "degrees": 29,
+            "pdfPoint": 451.2,
+            "pixelAxis": "y"
+          }
+        ]
+      },
+      "airportAnchor": {
+        "sourcePage": 1162,
+        "lat": 41.275,
+        "lon": 28.751666666666665
+      },
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "controlPointCount": 30,
+        "maxAffineFitErrorMeters": 82.23,
+        "maxGridIntersectionLeaveOneOutErrorMeters": 99.22,
+        "officialAipFixCrossCheckMaxMeters": null,
+        "simulatorOnly": true,
+        "notApprovedForNavigation": true
+      }
+    },
+    {
+      "page": 1335,
+      "airport": "LTFM",
+      "name": "RNP Z RWY 35R",
+      "chartKey": "LTFM|APPROACH|32-5|RNP Z RWY 35R",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 25,
+        "top": 405,
+        "right": 605,
+        "bottom": 767
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 40.833333333333336,
+          "lon": 28.333333333333332,
+          "x": 564.12,
+          "y": 747.24,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 40.833333333333336,
+          "lon": 28.5,
+          "x": 564.12,
+          "y": 673.08,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 40.833333333333336,
+          "lon": 28.666666666666668,
+          "x": 564.12,
+          "y": 598.92,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 40.833333333333336,
+          "lon": 28.833333333333332,
+          "x": 564.12,
+          "y": 525.12,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 40.833333333333336,
+          "lon": 29,
+          "x": 564.12,
+          "y": 450.96,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41,
+          "lon": 28.333333333333332,
+          "x": 466.2,
+          "y": 747.24,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41,
+          "lon": 28.5,
+          "x": 466.2,
+          "y": 673.08,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41,
+          "lon": 28.666666666666668,
+          "x": 466.2,
+          "y": 598.92,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41,
+          "lon": 28.833333333333332,
+          "x": 466.2,
+          "y": 525.12,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41,
+          "lon": 29,
+          "x": 466.2,
+          "y": 450.96,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.166666666666664,
+          "lon": 28.333333333333332,
+          "x": 368.64,
+          "y": 747.24,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.166666666666664,
+          "lon": 28.5,
+          "x": 368.64,
+          "y": 673.08,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.166666666666664,
+          "lon": 28.666666666666668,
+          "x": 368.64,
+          "y": 598.92,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.166666666666664,
+          "lon": 28.833333333333332,
+          "x": 368.64,
+          "y": 525.12,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.166666666666664,
+          "lon": 29,
+          "x": 368.64,
+          "y": 450.96,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 28.333333333333332,
+          "x": 270.48,
+          "y": 747.24,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 28.5,
+          "x": 270.48,
+          "y": 673.08,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 28.666666666666668,
+          "x": 270.48,
+          "y": 598.92,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 28.833333333333332,
+          "x": 270.48,
+          "y": 525.12,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.333333333333336,
+          "lon": 29,
+          "x": 270.48,
+          "y": 450.96,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 28.333333333333332,
+          "x": 172.08,
+          "y": 747.24,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 28.5,
+          "x": 172.08,
+          "y": 673.08,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 28.666666666666668,
+          "x": 172.08,
+          "y": 598.92,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 28.833333333333332,
+          "x": 172.08,
+          "y": 525.12,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.5,
+          "lon": 29,
+          "x": 172.08,
+          "y": 450.96,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 28.333333333333332,
+          "x": 73.56,
+          "y": 747.24,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 28.5,
+          "x": 73.56,
+          "y": 673.08,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 28.666666666666668,
+          "x": 73.56,
+          "y": 598.92,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 28.833333333333332,
+          "x": 73.56,
+          "y": 525.12,
+          "source": "Printed Jeppesen graticule vector tick"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 29,
+          "x": 73.56,
+          "y": 450.96,
+          "source": "Printed Jeppesen graticule vector tick"
+        }
+      ],
+      "gridAxes": {
+        "latitude": [
+          {
+            "degrees": 40.833333333333336,
+            "pdfPoint": 564.12,
+            "pixelAxis": "x"
+          },
+          {
+            "degrees": 41,
+            "pdfPoint": 466.2,
+            "pixelAxis": "x"
+          },
+          {
+            "degrees": 41.166666666666664,
+            "pdfPoint": 368.64,
+            "pixelAxis": "x"
+          },
+          {
+            "degrees": 41.333333333333336,
+            "pdfPoint": 270.48,
+            "pixelAxis": "x"
+          },
+          {
+            "degrees": 41.5,
+            "pdfPoint": 172.08,
+            "pixelAxis": "x"
+          },
+          {
+            "degrees": 41.666666666666664,
+            "pdfPoint": 73.56,
+            "pixelAxis": "x"
+          }
+        ],
+        "longitude": [
+          {
+            "degrees": 28.333333333333332,
+            "pdfPoint": 747.24,
+            "pixelAxis": "y"
+          },
+          {
+            "degrees": 28.5,
+            "pdfPoint": 673.08,
+            "pixelAxis": "y"
+          },
+          {
+            "degrees": 28.666666666666668,
+            "pdfPoint": 598.92,
+            "pixelAxis": "y"
+          },
+          {
+            "degrees": 28.833333333333332,
+            "pdfPoint": 525.12,
+            "pixelAxis": "y"
+          },
+          {
+            "degrees": 29,
+            "pdfPoint": 450.96,
+            "pixelAxis": "y"
+          }
+        ]
+      },
+      "airportAnchor": {
+        "sourcePage": 1162,
+        "lat": 41.275,
+        "lon": 28.751666666666665
+      },
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "controlPointCount": 30,
+        "maxAffineFitErrorMeters": 82.46,
+        "maxGridIntersectionLeaveOneOutErrorMeters": 88.72,
+        "officialAipFixCrossCheckMaxMeters": null,
+        "simulatorOnly": true,
+        "notApprovedForNavigation": true
+      }
+    }
+  ]
+}

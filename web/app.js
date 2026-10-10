@@ -338,6 +338,32 @@ $("#themeBtn").addEventListener("click",()=>{
 });
 if(localStorage.getItem("theme")==="light") document.documentElement.classList.add("light");
 
+async function loadLtfmGridGeorefs(m){
+  try{
+    const res=await fetch("./data/ltfm-grid-georef-v2621.json?v=1",{cache:"no-store"});
+    if(!res.ok)throw Error("LTFM grid data HTTP "+res.status);
+    const d=await res.json(),required=new Set([1291,1292,1295,1305,1306,1317,1335]);
+    if(d.version!==2||d.source?.sha256!==m.source_sha256||
+       d.source?.chartDataVersion!==m.version||d.source?.pageCount!==1654||
+       d.notForActualNavigation!==true||!Array.isArray(d.charts)||d.charts.length!==7)
+      throw Error("LTFM source mismatch");
+    const newModels=[];
+    for(const item of d.charts){
+      const page=Number(item.page),c=charts.find(x=>x.page===page);
+      if(!required.delete(page)||!c||c.airport!=="LTFM"||
+         item.chartKey!==[c.airport,c.category.toUpperCase(),c.chart_number,c.name.toUpperCase()].join("|")||
+         item.validation?.maxAffineFitErrorMeters>=100||
+         item.validation?.maxGridIntersectionLeaveOneOutErrorMeters>=100||
+         georefByPage.has(page))throw Error("LTFM page/QA mismatch "+page);
+      const model=makeGeoModel(item);
+      if(!model)throw Error("LTFM mapping invalid "+page);
+      newModels.push([page,model]);
+    }
+    if(required.size)throw Error("Missing LTFM pages");
+    for(const [page,model] of newModels)georefByPage.set(page,model);
+    console.info("JEPPIRAN: "+newModels.length+" LTFM simulator chart models loaded");
+  }catch(e){console.warn("LTFM overlays skipped; previous georefs unchanged",e)}
+}
 async function loadData(){
   try{
     const [m,c,g,profiles,runways]=await Promise.all([
@@ -355,6 +381,7 @@ async function loadData(){
     await enableBirjandAdcQaIfRequested(m);
     await enableDohaAdcQaIfRequested(m);
     await loadOthhFlightApprovedGeorefs(m);
+    await loadLtfmGridGeorefs(m);
     await loadPublishedExperimentalGeorefs(m);
     renderAirports();
     if(!selectedAirport && charts.some(c=>c.airport==="OIII"))selectAirport("OIII");
