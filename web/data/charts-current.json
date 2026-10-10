@@ -5770,12 +5770,12 @@
   },
   {
     "page": 642,
-    "airport": "OIMB",
+    "airport": "OIMT",
     "country": "Iran",
     "category": "Airport",
     "chart_number": "10-9",
     "name": "Airport Diagram Chart (ADC)",
-    "pdf_page": 15
+    "pdf_page": 5
   },
   {
     "page": 643,
@@ -5784,7 +5784,7 @@
     "category": "Airport",
     "chart_number": "10-9S",
     "name": "MINIMUMS",
-    "pdf_page": 5
+    "pdf_page": 6
   },
   {
     "page": 644,
@@ -5793,7 +5793,7 @@
     "category": "Approach",
     "chart_number": "13-1",
     "name": "VOR DME RWY 33 CAT C & D",
-    "pdf_page": 6
+    "pdf_page": 7
   },
   {
     "page": 645,
@@ -5802,7 +5802,7 @@
     "category": "Approach",
     "chart_number": "13-2",
     "name": "VOR DME RWY 33 CAT A & B",
-    "pdf_page": 7
+    "pdf_page": 8
   },
   {
     "page": 646,
@@ -5811,7 +5811,7 @@
     "category": "Approach",
     "chart_number": "13-3",
     "name": "APPROACH 13-3",
-    "pdf_page": 8
+    "pdf_page": 9
   },
   {
     "page": 647,
@@ -5820,7 +5820,7 @@
     "category": "Approach",
     "chart_number": "13-4",
     "name": "APPROACH 13-4",
-    "pdf_page": 9
+    "pdf_page": 10
   },
   {
     "page": 648,
@@ -5829,7 +5829,7 @@
     "category": "Approach",
     "chart_number": "16-1",
     "name": "NDB RWY 33 CAT C & D",
-    "pdf_page": 10
+    "pdf_page": 11
   },
   {
     "page": 649,
@@ -5838,7 +5838,7 @@
     "category": "Approach",
     "chart_number": "16-2",
     "name": "APPROACH 16-2",
-    "pdf_page": 11
+    "pdf_page": 12
   },
   {
     "page": 650,
@@ -7651,30 +7651,30 @@
   },
   {
     "page": 851,
-    "airport": "OITT",
+    "airport": "OITU",
     "country": "Iran",
     "category": "STAR",
     "chart_number": "10-2",
     "name": "TBZ 1N",
-    "pdf_page": 21
+    "pdf_page": 2
   },
   {
     "page": 852,
-    "airport": "OITT",
+    "airport": "OITU",
     "country": "Iran",
     "category": "STAR",
     "chart_number": "10-2A",
     "name": "TBZ 1P",
-    "pdf_page": 22
+    "pdf_page": 3
   },
   {
     "page": 853,
-    "airport": "OITT",
+    "airport": "OITU",
     "country": "Iran",
     "category": "SID",
     "chart_number": "10-3",
     "name": "TBZ 1A",
-    "pdf_page": 23
+    "pdf_page": 4
   },
   {
     "page": 854,
@@ -7683,7 +7683,7 @@
     "category": "Airport",
     "chart_number": "10-9",
     "name": "Airport Diagram Chart (ADC)",
-    "pdf_page": 2
+    "pdf_page": 5
   },
   {
     "page": 855,
@@ -7692,7 +7692,7 @@
     "category": "Approach",
     "chart_number": "13-1",
     "name": "VOR DME RWY 29",
-    "pdf_page": 3
+    "pdf_page": 6
   },
   {
     "page": 856,
@@ -14049,30 +14049,732 @@
     "pdf_page": 73
   },
   {
-    "page": 1643,
-    "airport": "OITR",
-    "country": "Iran",
+    "page": 1562,
+    "airport": "OPKC",
+    "country": "Pakistan",
     "category": "Airport",
-    "chart_number": "20-1P6",
-    "name": "AIRPORT BRIEFING",
+    "chart_number": "",
+    "name": "AIRPORT INFORMATION PAGE 1",
+    "pdf_page": 1
+  },
+  {
+    "page": 1563,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "Airport",
+    "chart_number": "",
+    "name": "AIRPORT INFORMATION PAGE 2",
+    "pdf_page": 2
+  },
+  {
+    "page": 1564,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "Airport",
+    "chart_number": "10-1R",
+    "name": "RADAR MINIMUM ALTITUDES",
+    "pdf_page": 3
+  },
+  {
+    "page": 1565,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "STAR",
+    "chart_number": "10-2",
+    "name": "CHORE 1B",
+    "pdf_page": 4
+  },
+  {
+    "page": 1566,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "STAR",
+    "chart_number": "10-2A",
+    "name": "DOSTI 1D, DOSTI 1E, LAKIV 1B, LAKIV 1C",
+    "pdf_page": 5
+  },
+  {
+    "page": 1567,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "STAR",
+    "chart_number": "10-2B",
+    "name": "DOSTI 2C, LAKIV 2A",
+    "pdf_page": 6
+  },
+  {
+    "page": 1568,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "STAR",
+    "chart_number": "10-2C",
+    "name": "CHOR 1A, DOSTI 2A, DOSTI 2B",
+    "pdf_page": 7
+  },
+  {
+    "page": 1569,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "STAR",
+    "chart_number": "10-2D",
+    "name": "LOTAT 2A, LOTAT 2B, MINAR 2",
+    "pdf_page": 8
+  },
+  {
+    "page": 1570,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "STAR",
+    "chart_number": "10-2E",
+    "name": "NAWABSHAH 2A, NAWABSHAH 2B",
+    "pdf_page": 9
+  },
+  {
+    "page": 1571,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "SID",
+    "chart_number": "10-3",
+    "name": "BADUL 1D",
+    "pdf_page": 10
+  },
+  {
+    "page": 1572,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "SID",
+    "chart_number": "10-3A",
+    "name": "DANGI 1C, DANGI 1D, DANGI 1E",
+    "pdf_page": 11
+  },
+  {
+    "page": 1573,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "SID",
+    "chart_number": "10-3B",
+    "name": "NIROL 1C, NIROL 1D, NIROL 1E",
+    "pdf_page": 12
+  },
+  {
+    "page": 1574,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "SID",
+    "chart_number": "10-3C",
+    "name": "MELOM 1F, MELOM 1G",
+    "pdf_page": 13
+  },
+  {
+    "page": 1575,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "SID",
+    "chart_number": "10-3D",
+    "name": "MELOM 1H, MELOM 1J, MELOM 1L, MELOM 1M",
+    "pdf_page": 14
+  },
+  {
+    "page": 1576,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "SID",
+    "chart_number": "10-3E",
+    "name": "BADUL 3A, BADUL 3B, BADUL 3C",
+    "pdf_page": 15
+  },
+  {
+    "page": 1577,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "SID",
+    "chart_number": "10-3F",
+    "name": "DANGI 3A, DANGI 3B",
+    "pdf_page": 16
+  },
+  {
+    "page": 1578,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "SID",
+    "chart_number": "10-3G",
+    "name": "MELOM 4A, MELOM 4B, MELOM 4D, MELOM 4E",
+    "pdf_page": 17
+  },
+  {
+    "page": 1579,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "SID",
+    "chart_number": "10-3H",
+    "name": "NIROL 3A, NIROL 3B, PUNAM 3A, PUNAM 3B",
+    "pdf_page": 18
+  },
+  {
+    "page": 1580,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "Airport",
+    "chart_number": "10-9",
+    "name": "AIRPORT DIAGRAM",
+    "pdf_page": 19
+  },
+  {
+    "page": 1581,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "Airport",
+    "chart_number": "10-9A",
+    "name": "PARKING STANDS & INS COORDINATES",
+    "pdf_page": 20
+  },
+  {
+    "page": 1582,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "Airport",
+    "chart_number": "10-9B",
+    "name": "TAXI AND START-UP/PUSH-BACK PROCEDURES",
+    "pdf_page": 21
+  },
+  {
+    "page": 1583,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "Airport",
+    "chart_number": "10-9S",
+    "name": "MINIMUMS PART 1",
     "pdf_page": 22
   },
   {
-    "page": 1644,
-    "airport": "OITR",
-    "country": "Iran",
+    "page": 1584,
+    "airport": "OPKC",
+    "country": "Pakistan",
     "category": "Airport",
-    "chart_number": "20-1P6",
-    "name": "AIRPORT BRIEFING",
+    "chart_number": "10-9S1",
+    "name": "MINIMUMS PART 2",
     "pdf_page": 23
   },
   {
-    "page": 1645,
-    "airport": "OITR",
-    "country": "Iran",
-    "category": "Airport",
-    "chart_number": "20-1P6",
-    "name": "AIRPORT BRIEFING",
+    "page": 1585,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "11-1",
+    "name": "ILS OR LOC Z RWY 25L",
     "pdf_page": 24
+  },
+  {
+    "page": 1586,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "11-2",
+    "name": "ILS OR LOC Y RWY 25L",
+    "pdf_page": 25
+  },
+  {
+    "page": 1587,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "11-3",
+    "name": "ILS OR LOC Z RWY 25R",
+    "pdf_page": 26
+  },
+  {
+    "page": 1588,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "11-4",
+    "name": "ILS OR LOC Y RWY 25R",
+    "pdf_page": 27
+  },
+  {
+    "page": 1589,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "12-1",
+    "name": "RNP RWY 07L",
+    "pdf_page": 28
+  },
+  {
+    "page": 1590,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "12-2",
+    "name": "RNP RWY 07R",
+    "pdf_page": 29
+  },
+  {
+    "page": 1591,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "12-3",
+    "name": "RNP RWY 25L",
+    "pdf_page": 30
+  },
+  {
+    "page": 1592,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "12-4",
+    "name": "RNP RWY 25R",
+    "pdf_page": 31
+  },
+  {
+    "page": 1593,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "13-1",
+    "name": "VOR Z RWY 25L",
+    "pdf_page": 32
+  },
+  {
+    "page": 1594,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "13-2",
+    "name": "VOR Y RWY 25L",
+    "pdf_page": 33
+  },
+  {
+    "page": 1595,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "13-3",
+    "name": "VOR Z RWY 25R",
+    "pdf_page": 34
+  },
+  {
+    "page": 1596,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "13-4",
+    "name": "VOR Y RWY 25R",
+    "pdf_page": 35
+  },
+  {
+    "page": 1597,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "16-1",
+    "name": "NDB A RWY 25L/R",
+    "pdf_page": 36
+  },
+  {
+    "page": 1598,
+    "airport": "OPKC",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "18-1",
+    "name": "SRA RWY 07L/25R",
+    "pdf_page": 37
+  },
+  {
+    "page": 1599,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "Airport",
+    "chart_number": "",
+    "name": "AIRPORT INFORMATION PAGE 1",
+    "pdf_page": 1
+  },
+  {
+    "page": 1600,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "Airport",
+    "chart_number": "",
+    "name": "AIRPORT INFORMATION PAGE 2",
+    "pdf_page": 2
+  },
+  {
+    "page": 1601,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "Airport",
+    "chart_number": "20-1P",
+    "name": "AIRPORT BRIEFING PART 1",
+    "pdf_page": 3
+  },
+  {
+    "page": 1602,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "Airport",
+    "chart_number": "20-1P1",
+    "name": "AIRPORT BRIEFING PART 2",
+    "pdf_page": 4
+  },
+  {
+    "page": 1603,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "Airport",
+    "chart_number": "20-1P2",
+    "name": "AIRPORT BRIEFING PART 3",
+    "pdf_page": 5
+  },
+  {
+    "page": 1604,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "Airport",
+    "chart_number": "20-1R",
+    "name": "RADAR MINIMUM ALTITUDES",
+    "pdf_page": 6
+  },
+  {
+    "page": 1605,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "STAR",
+    "chart_number": "20-2",
+    "name": "BOBAM 1J",
+    "pdf_page": 7
+  },
+  {
+    "page": 1606,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "STAR",
+    "chart_number": "20-2A",
+    "name": "BELKO 1C, DAMTO 1D, INDEK 1A, KALMI 1A",
+    "pdf_page": 8
+  },
+  {
+    "page": 1607,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "STAR",
+    "chart_number": "20-2B",
+    "name": "BOBAM 1K",
+    "pdf_page": 9
+  },
+  {
+    "page": 1608,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "STAR",
+    "chart_number": "20-2C",
+    "name": "BELKO 1D, DAMTO 1E, INDEK 1B, KALMI 1B",
+    "pdf_page": 10
+  },
+  {
+    "page": 1609,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "SID",
+    "chart_number": "20-3",
+    "name": "BOBAM 2L",
+    "pdf_page": 11
+  },
+  {
+    "page": 1610,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "SID",
+    "chart_number": "20-3A",
+    "name": "BOBAM 2M",
+    "pdf_page": 12
+  },
+  {
+    "page": 1611,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "SID",
+    "chart_number": "20-3B",
+    "name": "BOBAM 1Q",
+    "pdf_page": 13
+  },
+  {
+    "page": 1612,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "SID",
+    "chart_number": "20-3C",
+    "name": "BOBAM 1R",
+    "pdf_page": 14
+  },
+  {
+    "page": 1613,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "SID",
+    "chart_number": "20-3D",
+    "name": "BELKO 2E, DAMTO 2F, INDEK 2C, KALMI 2C",
+    "pdf_page": 15
+  },
+  {
+    "page": 1614,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "SID",
+    "chart_number": "20-3E",
+    "name": "BELKO 2F, DAMTO 2G, INDEK 2D, KALMI 2D",
+    "pdf_page": 16
+  },
+  {
+    "page": 1615,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "SID",
+    "chart_number": "20-3F",
+    "name": "BELKO 1J, DAMTO 1K, INDEK 1G, KALMI 1E",
+    "pdf_page": 17
+  },
+  {
+    "page": 1616,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "SID",
+    "chart_number": "20-3G",
+    "name": "BELKO 1K, DAMTO 1L, INDEK 1H, KALMI 1J",
+    "pdf_page": 18
+  },
+  {
+    "page": 1617,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "SID",
+    "chart_number": "20-3H",
+    "name": "BOBAM 2N",
+    "pdf_page": 19
+  },
+  {
+    "page": 1618,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "SID",
+    "chart_number": "20-3J",
+    "name": "BOBAM 2P",
+    "pdf_page": 20
+  },
+  {
+    "page": 1619,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "SID",
+    "chart_number": "20-3K",
+    "name": "BELKO 2G, INDEK 2E",
+    "pdf_page": 21
+  },
+  {
+    "page": 1620,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "SID",
+    "chart_number": "20-3L",
+    "name": "BELKO 2H, INDEK 2F",
+    "pdf_page": 22
+  },
+  {
+    "page": 1621,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "SID",
+    "chart_number": "20-3M",
+    "name": "DAMTO 2H, KALMI 2F",
+    "pdf_page": 23
+  },
+  {
+    "page": 1622,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "SID",
+    "chart_number": "20-3N",
+    "name": "DAMTO 2J, KALMI 2G, KALMI 2H",
+    "pdf_page": 24
+  },
+  {
+    "page": 1623,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "Airport",
+    "chart_number": "20-9",
+    "name": "AIRPORT DIAGRAM",
+    "pdf_page": 25
+  },
+  {
+    "page": 1624,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "Airport",
+    "chart_number": "20-9A",
+    "name": "PARKING STANDS & INS COORDINATES",
+    "pdf_page": 26
+  },
+  {
+    "page": 1625,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "Airport",
+    "chart_number": "20-9S",
+    "name": "MINIMUMS PART 1",
+    "pdf_page": 27
+  },
+  {
+    "page": 1626,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "Airport",
+    "chart_number": "20-9S1",
+    "name": "MINIMUMS PART 2",
+    "pdf_page": 28
+  },
+  {
+    "page": 1627,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "21-1",
+    "name": "ILS OR LOC Z RWY 10R",
+    "pdf_page": 29
+  },
+  {
+    "page": 1628,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "21-2",
+    "name": "ILS OR LOC Y RWY 10R",
+    "pdf_page": 30
+  },
+  {
+    "page": 1629,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "21-3",
+    "name": "ILS OR LOC Z RWY 28L",
+    "pdf_page": 31
+  },
+  {
+    "page": 1630,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "21-3A",
+    "name": "CAT II/III ILS OR LOC Z RWY 28L",
+    "pdf_page": 32
+  },
+  {
+    "page": 1631,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "21-4",
+    "name": "ILS OR LOC Y RWY 28L",
+    "pdf_page": 33
+  },
+  {
+    "page": 1632,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "21-4A",
+    "name": "CAT II/III ILS OR LOC Y RWY 28L",
+    "pdf_page": 34
+  },
+  {
+    "page": 1633,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "21-5",
+    "name": "ILS OR LOC Z RWY 28R",
+    "pdf_page": 35
+  },
+  {
+    "page": 1634,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "21-6",
+    "name": "ILS OR LOC Y RWY 28R",
+    "pdf_page": 36
+  },
+  {
+    "page": 1635,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "22-1",
+    "name": "RNP RWY 10L",
+    "pdf_page": 37
+  },
+  {
+    "page": 1636,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "22-2",
+    "name": "RNP RWY 10R",
+    "pdf_page": 38
+  },
+  {
+    "page": 1637,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "22-3",
+    "name": "RNP RWY 28L",
+    "pdf_page": 39
+  },
+  {
+    "page": 1638,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "22-4",
+    "name": "RNP RWY 28R",
+    "pdf_page": 40
+  },
+  {
+    "page": 1639,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "23-1",
+    "name": "VOR RWY 10L",
+    "pdf_page": 41
+  },
+  {
+    "page": 1640,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "23-2",
+    "name": "VOR RWY 10R",
+    "pdf_page": 42
+  },
+  {
+    "page": 1641,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "23-3",
+    "name": "VOR RWY 28L",
+    "pdf_page": 43
+  },
+  {
+    "page": 1642,
+    "airport": "OPIS",
+    "country": "Pakistan",
+    "category": "Approach",
+    "chart_number": "23-4",
+    "name": "VOR RWY 28R",
+    "pdf_page": 44
   }
 ]
