@@ -983,3 +983,41 @@ body:has(#homeView.active),body:has(#chartsView.active){background:#030c19}
 #chartsView .viewer-actions .position-status-btn[data-state="outside"]{border-color:#bca56d}
 #chartsView .viewer-actions .position-status-btn[data-state="error"]{border-color:#b5767d}
 .position-source-options{display:grid;gap:10px;margin:16px 0}
+
+
+/* TAXI QA · non-intrusive floating ADC planning panel */
+#chartsView .viewer-pane{position:relative}
+.taxi-qa-panel{
+ position:absolute;top:70px;right:12px;z-index:60;
+ width:min(465px,calc(100% - 24px));max-height:min(62vh,460px);overflow-y:auto;
+ background:rgba(5,22,39,.97);color:#f1f8ff;border:1px solid #497492;border-radius:13px;
+ padding:12px;box-shadow:0 14px 40px rgba(0,0,0,.48);font:13px/1.45 system-ui,sans-serif;
+ backdrop-filter:blur(12px)
+}
+.taxi-qa-panel[hidden]{display:none!important}
+.taxi-qa-title{display:flex;align-items:center;gap:8px;justify-content:space-between;margin-bottom:10px}
+.taxi-qa-title strong{font-size:17px;letter-spacing:.09em}
+.taxi-qa-title small{font-size:10px;color:#ffb1f6;letter-spacing:.01em;padding:3px 5px;border:1px solid #9e5097;border-radius:4px}
+#taxiQaAirport{margin-left:auto;font-weight:800;color:#9bd9ff}
+.taxi-qa-title button{background:#1b3449;border:1px solid #3a6180;color:#fff;border-radius:7px;min-width:31px;height:30px;font-size:20px;cursor:pointer}
+.taxi-qa-panel label{display:block;font:11px system-ui,sans-serif;opacity:.84;margin-bottom:7px}
+.taxi-qa-entry{display:flex;gap:7px}
+.taxi-qa-entry input{min-width:0;flex:1;background:#061526;border:1px solid #547b96;border-radius:7px;color:#fff;padding:10px;font-size:14px;text-transform:uppercase}
+.taxi-qa-entry input::placeholder{color:#88a2b7;text-transform:none}
+.taxi-qa-entry>button{min-width:60px;background:#ca12bb;border:1px solid #fa84f2;color:white;border-radius:7px;font-weight:900;cursor:pointer}
+.taxi-qa-buttons{display:flex;flex-wrap:wrap;gap:5px;margin:9px 0}
+.taxi-qa-buttons button{padding:7px 10px;background:#10344f;color:#e6f7ff;border:1px solid #426b86;border-radius:6px;font-size:11px;font-weight:800;cursor:pointer}
+.taxi-qa-buttons button.on{background:#743d79;border-color:#ffa6f1}
+#taxiQaStatus{border:1px solid #23516c;background:#0a2e44;padding:8px 10px;min-height:32px;border-radius:7px}
+#taxiQaStatus.warning{background:#45321f;color:#ffe4bc;border-color:#996b37}
+.taxi-qa-warning{display:block;color:#b3c6d2;margin-top:8px;font-size:10px;letter-spacing:.02em}
+.taxi-chart-hint{position:absolute;bottom:16px;left:50%;transform:translateX(-50%);z-index:65;
+ display:flex;align-items:center;gap:9px;max-width:95%;padding:10px 12px;background:#041e35f5;
+ border:1px solid #6b92b1;border-radius:10px;color:white;box-shadow:0 8px 25px #0008}
+.taxi-chart-hint span{font-size:12px;font-weight:700}
+.taxi-chart-hint button{border:1px solid #527e9a;border-radius:5px;background:#113b59;color:white;padding:6px 9px;cursor:pointer}
+@media(max-width:680px){
+ .taxi-qa-panel{top:92px;right:7px;width:calc(100% - 14px);max-height:48vh;font-size:12px}
+ .taxi-qa-entry input{font-size:12px}
+ .taxi-qa-buttons button{font-size:10px;padding:6px 7px}
+}
