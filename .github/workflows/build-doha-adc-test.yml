@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/build-doha-adc-test.yml'
-      - 'web/data/doha-adc-v2621-qa.json'
+      - 'web/data/othh-adc-v2621-qa.json'
   workflow_dispatch:
 
 permissions:
@@ -50,7 +50,7 @@ jobs:
           current=json.loads((root/'chart-georef.json').read_text())
           manifest=json.loads((root/'charts-manifest.json').read_text())
           index=json.loads((root/'charts-current.json').read_text())
-          qa=json.loads(Path('web/data/doha-adc-v2621-qa.json').read_text())
+          qa=json.loads(Path('web/data/othh-adc-v2621-qa.json').read_text())
           assert qa['testOnly'] and qa['version']==2 and len(qa['charts'])==1
           assert qa['source']['sha256']==manifest['source_sha256']==current['source']['sha256']
           assert manifest['version']==qa['source']['chartDataVersion']==current['source']['chartDataVersion']=='V2621'
@@ -106,7 +106,7 @@ jobs:
             gh release create "$tag" --prerelease \
               --title "JEPPIRAN Doha OTHH ADC TEST only V2621" \
               --notes "Separately installable test application ID com.tareghmsr.jeppiran.dohaqa. Only source page 1536 OTHH ADC has provisional AIP 10m GCP georeference. Existing production georef and FSX/X-Plane bridges unchanged. Not for actual navigation."
-          gh release upload "$tag" JEPPIRAN-DOHA-ADC-QA-V2621.apk web/data/doha-adc-v2621-qa.json --clobber
+          gh release upload "$tag" JEPPIRAN-DOHA-ADC-QA-V2621.apk web/data/othh-adc-v2621-qa.json --clobber
           gh release view "$tag" --json assets --jq '.assets[].name'
       - uses: actions/upload-artifact@v4
         with:
