@@ -5,13 +5,16 @@ const RAW_ROOT="./data/";
  */
 let experimentalGeorefPages=new Set();
 let experimentalEligibleGeoModels=new Map();
+let experimentalOimmPreviousModels=new Map();
+const EXPERIMENTAL_OIMM_ILS_PAGES=new Set([605,606,607]);
 const EXP_GEO_KEY="jeppiran-v2621-experimental-georef-enabled";
 function experimentalGeorefOn(){try{return localStorage.getItem(EXP_GEO_KEY)!=="off"}catch(_){return true}}
 async function loadPublishedExperimentalGeorefs(m){
   experimentalGeorefPages=new Set();
   experimentalEligibleGeoModels=new Map();
+  experimentalOimmPreviousModels=new Map();
   try{
-    const r=await fetch("./data/georef-provisional-v2621.json?v=1",{cache:"no-store"});
+    const r=await fetch("./data/georef-provisional-v2621.json?v=oimm-ils-prod-1",{cache:"no-store"});
     if(!r.ok)throw Error("Experimental dataset HTTP "+r.status);
     const d=await r.json();
     if(d.version!==2||d.coordinateSpace!=="pdf_points"||d.origin!=="top_left"||d.coordinateSystem!=="WGS84"||
@@ -27,10 +30,11 @@ async function loadPublishedExperimentalGeorefs(m){
       if(!c||c.airport!==item.airport||
          item.chartKey!==[c.airport,c.category.toUpperCase(),c.chart_number,c.name.toUpperCase()].join("|"))continue;
       // Never override an original georeference or a separate QA override.
-      if(georefByPage.has(page))continue;
+      if(georefByPage.has(page)&&!EXPERIMENTAL_OIMM_ILS_PAGES.has(page))continue;
       const model=makeGeoModel(item);
       if(!model)continue;
       experimentalEligibleGeoModels.set(page,model);
+      if(EXPERIMENTAL_OIMM_ILS_PAGES.has(page))experimentalOimmPreviousModels.set(page,georefByPage.get(page)||null);
       if(experimentalGeorefOn()){georefByPage.set(page,model);experimentalGeorefPages.add(page)}
     }
     console.info("JEPPIRAN experimental georefs:",experimentalGeorefPages.size,"enabled; web only; not approved for navigation.");
@@ -42,8 +46,14 @@ function togglePublishedExperimentalGeoref(){
   experimentalGeorefPages.clear();
   for(const [page,model] of experimentalEligibleGeoModels){
     if(enabled){
-      if(!georefByPage.has(page)){georefByPage.set(page,model);experimentalGeorefPages.add(page)}
-    }else if(georefByPage.get(page)===model){georefByPage.delete(page)}
+      if(EXPERIMENTAL_OIMM_ILS_PAGES.has(page)||!georefByPage.has(page)){
+        georefByPage.set(page,model);experimentalGeorefPages.add(page)
+      }
+    }else if(georefByPage.get(page)===model){
+      const old=experimentalOimmPreviousModels.get(page);
+      if(EXPERIMENTAL_OIMM_ILS_PAGES.has(page)&&old)georefByPage.set(page,old);
+      else georefByPage.delete(page);
+    }
   }
   showPublishedExperimentalGeorefNotice();
   updateAircraftMarker();

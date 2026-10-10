@@ -1,0 +1,321 @@
+{
+  "version": 2,
+  "coordinateSystem": "WGS84",
+  "coordinateSpace": "pdf_points",
+  "origin": "top_left",
+  "testOnly": true,
+  "notice": "EXPERIMENTAL OIMM ILS Z/Y/X; NOT FOR ACTUAL NAVIGATION. NO INDEPENDENT AIP VALIDATION.",
+  "source": {
+    "file": "Iran2621.pdf",
+    "sha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+    "pageCount": 1654,
+    "chartDataVersion": "V2621",
+    "cycle": 2621
+  },
+  "charts": [
+    {
+      "page": 605,
+      "airport": "OIMM",
+      "name": "ILS Z OR LOC Z RWY 31R",
+      "chartKey": "OIMM|APPROACH|11-1|ILS Z OR LOC Z RWY 31R",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.72,
+        "top": 168.12,
+        "right": 531.6,
+        "bottom": 503.28
+      },
+      "excludedBounds": [
+        {
+          "left": 117,
+          "top": 168.12,
+          "right": 188,
+          "bottom": 228
+        }
+      ],
+      "points": [
+        {
+          "lat": 36.25,
+          "lon": 59.666666666666664,
+          "x": 228.84,
+          "y": 228.66000000000003,
+          "source": "DERIVED_FROM_ADJACENT_JEPPESEN_606_GRID_SCALE_NOT_PRINTED_LATITUDE",
+          "controlType": "SYNTHETIC_INFERRED_GRID_POINT",
+          "inferred": true
+        },
+        {
+          "lat": 36.25,
+          "lon": 59.833333333333336,
+          "x": 378.84,
+          "y": 228.66000000000003,
+          "source": "DERIVED_FROM_ADJACENT_JEPPESEN_606_GRID_SCALE_NOT_PRINTED_LATITUDE",
+          "controlType": "SYNTHETIC_INFERRED_GRID_POINT",
+          "inferred": true
+        },
+        {
+          "lat": 36.166666666666664,
+          "lon": 59.666666666666664,
+          "x": 228.84,
+          "y": 321.36,
+          "source": "JEPPESEN_PRINTED_LONGITUDE_TICK_AND_LATITUDE_AXIS",
+          "controlType": "PRINTED_PLUS_GRID_ASSUMPTION",
+          "inferred": false
+        },
+        {
+          "lat": 36.166666666666664,
+          "lon": 59.833333333333336,
+          "x": 378.84,
+          "y": 321.36,
+          "source": "JEPPESEN_PRINTED_LONGITUDE_TICK_AND_LATITUDE_AXIS",
+          "controlType": "PRINTED_PLUS_GRID_ASSUMPTION",
+          "inferred": false
+        },
+        {
+          "lat": 36.083333333333336,
+          "lon": 59.666666666666664,
+          "x": 228.84,
+          "y": 414.06,
+          "source": "DERIVED_FROM_ADJACENT_JEPPESEN_606_GRID_SCALE_NOT_PRINTED_LATITUDE",
+          "controlType": "SYNTHETIC_INFERRED_GRID_POINT",
+          "inferred": true
+        },
+        {
+          "lat": 36.083333333333336,
+          "lon": 59.833333333333336,
+          "x": 378.84,
+          "y": 414.06,
+          "source": "DERIVED_FROM_ADJACENT_JEPPESEN_606_GRID_SCALE_NOT_PRINTED_LATITUDE",
+          "controlType": "SYNTHETIC_INFERRED_GRID_POINT",
+          "inferred": true
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "single_axis_plus_conformal_scale",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "approvedForApp": false,
+        "independentOfficialAipGcpValidated": false,
+        "independentOfficialAipHeldoutCount": 0,
+        "airac2621MatchConfirmed": false,
+        "chartGraticuleStatus": "SINGLE_PRINTED_LATITUDE_AXIS; 2 ADDITIONAL LATITUDE ROWS DERIVED FROM PAGE 606 SCALE",
+        "sourcePages": [
+          605,
+          606
+        ],
+        "thirdPartySourceCount": 0,
+        "horizontalGeometryAssumption": "LINEAR_LATITUDE_SCALE_FROM_ADJACENT_JEPPESEN_PAGE_606",
+        "modelStatus": "SIMULATOR_TEST_ONLY_APPROXIMATE_NOT_SURVEYED",
+        "simulatorToleranceClaim": "NONE"
+      }
+    },
+    {
+      "page": 606,
+      "airport": "OIMM",
+      "name": "ILS Y OR LOC Y RWY 31R",
+      "chartKey": "OIMM|APPROACH|11-2|ILS Y OR LOC Y RWY 31R",
+      "sourceFingerprint": "6729bb9d6f765e59807e1322fb8fcc0fbce231930627b9c86b0c3a61b0124934",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.72,
+        "top": 168.12,
+        "right": 531.6,
+        "bottom": 503.28
+      },
+      "excludedBounds": [
+        {
+          "left": 147.6,
+          "top": 168.12,
+          "right": 214.92,
+          "bottom": 224.04
+        }
+      ],
+      "points": [
+        {
+          "lat": 36.333333333333,
+          "lon": 59.5,
+          "x": 140.52,
+          "y": 174.12,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.333333333333,
+          "lon": 59.666666666667,
+          "x": 290.76,
+          "y": 174.12,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.333333333333,
+          "lon": 59.833333333333,
+          "x": 440.88,
+          "y": 174.12,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.166666666667,
+          "lon": 59.5,
+          "x": 140.52,
+          "y": 359.52,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.166666666667,
+          "lon": 59.666666666667,
+          "x": 290.76,
+          "y": 359.52,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.166666666667,
+          "lon": 59.833333333333,
+          "x": 440.88,
+          "y": 359.52,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        }
+      ],
+      "maxResidualPdfPoints": 0.75,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "independentOfficialAipGcpValidated": false,
+        "independentOfficialAipHeldoutCount": 0,
+        "airac2621MatchConfirmed": false,
+        "modelStatus": "PROVISIONAL_SIM_TEST_ONLY"
+      }
+    },
+    {
+      "page": 607,
+      "airport": "OIMM",
+      "name": "ILS X OR LOC X RWY 31R CAT C & D",
+      "chartKey": "OIMM|APPROACH|11-3|ILS X OR LOC X RWY 31R CAT C & D",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.72,
+        "top": 168.12,
+        "right": 531.6,
+        "bottom": 503.28
+      },
+      "excludedBounds": [
+        {
+          "left": 182,
+          "top": 168.12,
+          "right": 243,
+          "bottom": 229
+        }
+      ],
+      "points": [
+        {
+          "lat": 36.25,
+          "lon": 59.5,
+          "x": 150.84,
+          "y": 256.86,
+          "source": "DERIVED_FROM_ADJACENT_JEPPESEN_606_GRID_SCALE_NOT_PRINTED_LATITUDE",
+          "controlType": "SYNTHETIC_INFERRED_GRID_POINT",
+          "inferred": true
+        },
+        {
+          "lat": 36.25,
+          "lon": 59.666666666666664,
+          "x": 300.96,
+          "y": 256.86,
+          "source": "DERIVED_FROM_ADJACENT_JEPPESEN_606_GRID_SCALE_NOT_PRINTED_LATITUDE",
+          "controlType": "SYNTHETIC_INFERRED_GRID_POINT",
+          "inferred": true
+        },
+        {
+          "lat": 36.25,
+          "lon": 59.833333333333336,
+          "x": 451.08,
+          "y": 256.86,
+          "source": "DERIVED_FROM_ADJACENT_JEPPESEN_606_GRID_SCALE_NOT_PRINTED_LATITUDE",
+          "controlType": "SYNTHETIC_INFERRED_GRID_POINT",
+          "inferred": true
+        },
+        {
+          "lat": 36.166666666666664,
+          "lon": 59.5,
+          "x": 150.84,
+          "y": 349.56,
+          "source": "JEPPESEN_PRINTED_LONGITUDE_TICK_AND_LATITUDE_AXIS",
+          "controlType": "PRINTED_PLUS_GRID_ASSUMPTION",
+          "inferred": false
+        },
+        {
+          "lat": 36.166666666666664,
+          "lon": 59.666666666666664,
+          "x": 300.96,
+          "y": 349.56,
+          "source": "JEPPESEN_PRINTED_LONGITUDE_TICK_AND_LATITUDE_AXIS",
+          "controlType": "PRINTED_PLUS_GRID_ASSUMPTION",
+          "inferred": false
+        },
+        {
+          "lat": 36.166666666666664,
+          "lon": 59.833333333333336,
+          "x": 451.08,
+          "y": 349.56,
+          "source": "JEPPESEN_PRINTED_LONGITUDE_TICK_AND_LATITUDE_AXIS",
+          "controlType": "PRINTED_PLUS_GRID_ASSUMPTION",
+          "inferred": false
+        },
+        {
+          "lat": 36.083333333333336,
+          "lon": 59.5,
+          "x": 150.84,
+          "y": 442.26,
+          "source": "DERIVED_FROM_ADJACENT_JEPPESEN_606_GRID_SCALE_NOT_PRINTED_LATITUDE",
+          "controlType": "SYNTHETIC_INFERRED_GRID_POINT",
+          "inferred": true
+        },
+        {
+          "lat": 36.083333333333336,
+          "lon": 59.666666666666664,
+          "x": 300.96,
+          "y": 442.26,
+          "source": "DERIVED_FROM_ADJACENT_JEPPESEN_606_GRID_SCALE_NOT_PRINTED_LATITUDE",
+          "controlType": "SYNTHETIC_INFERRED_GRID_POINT",
+          "inferred": true
+        },
+        {
+          "lat": 36.083333333333336,
+          "lon": 59.833333333333336,
+          "x": 451.08,
+          "y": 442.26,
+          "source": "DERIVED_FROM_ADJACENT_JEPPESEN_606_GRID_SCALE_NOT_PRINTED_LATITUDE",
+          "controlType": "SYNTHETIC_INFERRED_GRID_POINT",
+          "inferred": true
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "single_axis_plus_conformal_scale",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "approvedForApp": false,
+        "independentOfficialAipGcpValidated": false,
+        "independentOfficialAipHeldoutCount": 0,
+        "airac2621MatchConfirmed": false,
+        "chartGraticuleStatus": "SINGLE_PRINTED_LATITUDE_AXIS; 2 ADDITIONAL LATITUDE ROWS DERIVED FROM PAGE 606 SCALE",
+        "sourcePages": [
+          607,
+          606
+        ],
+        "thirdPartySourceCount": 0,
+        "horizontalGeometryAssumption": "LINEAR_LATITUDE_SCALE_FROM_ADJACENT_JEPPESEN_PAGE_606",
+        "modelStatus": "SIMULATOR_TEST_ONLY_APPROXIMATE_NOT_SURVEYED",
+        "simulatorToleranceClaim": "NONE"
+      }
+    }
+  ]
+}

@@ -2975,16 +2975,28 @@ private val locationPermissionLauncher =
         )
 
 
+        val isOimmIlsExperimental =
+            currentIcao == "OIMM" && currentChartGlobalPage() in 605..607
+
         titleText.text =
             currentIcao +
                 " • " +
                 chartTitle.ifBlank {
                     "Chart"
+                } +
+                if (isOimmIlsExperimental) {
+                    " ⚠ EXPERIMENTAL GEOREF"
+                } else {
+                    ""
                 }
 
 
         pageText.text =
-            ""
+            if (isOimmIlsExperimental) {
+                "TEST ONLY — NOT FOR ACTUAL NAVIGATION"
+            } else {
+                ""
+            }
 
 
         loadAnnotationsForCurrentChart()

@@ -203,6 +203,10 @@ data class GeoReference(
 
 object ChartGeoreferenceStore {
     private const val ASSET = "chart-georef.json"
+    // Experimental-only V2621 OIMM ILS Z/Y/X. The base JSON stays unchanged.
+    private const val OIMM_ILS_ASSET = "chart-georef-oimm-ils-experimental.json"
+    private const val OIMM_ILS_SOURCE_SHA = "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6"
+    private val OIMM_ILS_PAGES = setOf(605,606,607)
     private val SUPPORTED_METHODS =
         setOf(
             "paired_printed_graticule_vector_ticks",
@@ -274,6 +278,23 @@ object ChartGeoreferenceStore {
 
             chartDataVersion = selected.chartDataVersion
             references.putAll(selected.references)
+            if (selected.chartDataVersion == "V2621" &&
+                selected.sourceSha256 == OIMM_ILS_SOURCE_SHA
+            ) {
+                val experimental = runCatching {
+                    context.assets.open(OIMM_ILS_ASSET).bufferedReader()
+                        .use { it.readText() }.let(::parse)
+                }.getOrNull()
+                if (experimental != null &&
+                    experimental.chartDataVersion == selected.chartDataVersion &&
+                    experimental.sourceSha256 == selected.sourceSha256 &&
+                    OIMM_ILS_PAGES.all { experimental.references.containsKey(it) }
+                ) {
+                    OIMM_ILS_PAGES.forEach { page ->
+                        references[page] = experimental.references.getValue(page)
+                    }
+                }
+            }
         } catch (_: Exception) {
             references.clear()
         } finally {
