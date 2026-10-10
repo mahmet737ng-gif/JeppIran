@@ -1,0 +1,443 @@
+{
+  "version": 2,
+  "coordinateSystem": "WGS84",
+  "coordinateSpace": "pdf_points",
+  "origin": "top_left",
+  "testOnly": true,
+  "notice": "SIX EXPERIMENTAL OIMM APP GRID MODELS. OFFICIAL AIP 10 METRE INDEPENDENT QA NOT COMPLETED. NOT FOR NAVIGATION.",
+  "source": {
+    "file": "Iran2621.pdf",
+    "sha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+    "pageCount": 1654,
+    "chartDataVersion": "V2621",
+    "cycle": 2621
+  },
+  "heldPages": [
+    605,
+    607,
+    608,
+    610
+  ],
+  "charts": [
+    {
+      "page": 606,
+      "airport": "OIMM",
+      "name": "ILS Y OR LOC Y RWY 31R",
+      "chartKey": "OIMM|APPROACH|11-2|ILS Y OR LOC Y RWY 31R",
+      "sourceFingerprint": "6729bb9d6f765e59807e1322fb8fcc0fbce231930627b9c86b0c3a61b0124934",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.72,
+        "top": 168.12,
+        "right": 531.6,
+        "bottom": 503.28
+      },
+      "excludedBounds": [
+        {
+          "left": 147.6,
+          "top": 168.12,
+          "right": 214.92,
+          "bottom": 224.04
+        }
+      ],
+      "points": [
+        {
+          "lat": 36.333333333333,
+          "lon": 59.5,
+          "x": 140.52,
+          "y": 174.12,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.333333333333,
+          "lon": 59.666666666667,
+          "x": 290.76,
+          "y": 174.12,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.333333333333,
+          "lon": 59.833333333333,
+          "x": 440.88,
+          "y": 174.12,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.166666666667,
+          "lon": 59.5,
+          "x": 140.52,
+          "y": 359.52,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.166666666667,
+          "lon": 59.666666666667,
+          "x": 290.76,
+          "y": 359.52,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.166666666667,
+          "lon": 59.833333333333,
+          "x": 440.88,
+          "y": 359.52,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        }
+      ],
+      "maxResidualPdfPoints": 0.75,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "independentOfficialAipGcpValidated": false,
+        "independentOfficialAipHeldoutCount": 0,
+        "airac2621MatchConfirmed": false,
+        "modelStatus": "PROVISIONAL_SIM_TEST_ONLY"
+      }
+    },
+    {
+      "page": 609,
+      "airport": "OIMM",
+      "name": "VOR Y RWY 13L",
+      "chartKey": "OIMM|APPROACH|13-2|VOR Y RWY 13L",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.72,
+        "top": 168.12,
+        "right": 531.6,
+        "bottom": 503.28
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 36.166666666667,
+          "lon": 59.5,
+          "x": 235.19,
+          "y": 477.24,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.166666666667,
+          "lon": 59.666666666667,
+          "x": 385.43,
+          "y": 477.24,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.333333333333,
+          "lon": 59.5,
+          "x": 235.19,
+          "y": 291.96,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.333333333333,
+          "lon": 59.666666666667,
+          "x": 385.43,
+          "y": 291.96,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "independentOfficialAipGcpValidated": false,
+        "independentOfficialAipHeldoutCount": 0,
+        "airac2621MatchConfirmed": false,
+        "modelStatus": "PROVISIONAL_SIM_TEST_ONLY"
+      }
+    },
+    {
+      "page": 611,
+      "airport": "OIMM",
+      "name": "VOR Y RWY 31R",
+      "chartKey": "OIMM|APPROACH|13-4|VOR Y RWY 31R",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.72,
+        "top": 168.12,
+        "right": 531.6,
+        "bottom": 503.28
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 36.166666666667,
+          "lon": 59.5,
+          "x": 118.91,
+          "y": 392.52,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.166666666667,
+          "lon": 59.666666666667,
+          "x": 269.03,
+          "y": 392.52,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.166666666667,
+          "lon": 59.833333333333,
+          "x": 419.15,
+          "y": 392.52,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.333333333333,
+          "lon": 59.5,
+          "x": 118.91,
+          "y": 207.36,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.333333333333,
+          "lon": 59.666666666667,
+          "x": 269.03,
+          "y": 207.36,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.333333333333,
+          "lon": 59.833333333333,
+          "x": 419.15,
+          "y": 207.36,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "independentOfficialAipGcpValidated": false,
+        "independentOfficialAipHeldoutCount": 0,
+        "airac2621MatchConfirmed": false,
+        "modelStatus": "PROVISIONAL_SIM_TEST_ONLY"
+      }
+    },
+    {
+      "page": 612,
+      "airport": "OIMM",
+      "name": "NDB RWY 31L",
+      "chartKey": "OIMM|APPROACH|16-1|NDB RWY 31L",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.72,
+        "top": 168.12,
+        "right": 531.6,
+        "bottom": 503.28
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 36.166666666667,
+          "lon": 59.5,
+          "x": 140.75,
+          "y": 378,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.166666666667,
+          "lon": 59.666666666667,
+          "x": 290.99,
+          "y": 378,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.166666666667,
+          "lon": 59.833333333333,
+          "x": 441.11,
+          "y": 378,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.333333333333,
+          "lon": 59.5,
+          "x": 140.75,
+          "y": 192.6,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.333333333333,
+          "lon": 59.666666666667,
+          "x": 290.99,
+          "y": 192.6,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.333333333333,
+          "lon": 59.833333333333,
+          "x": 441.11,
+          "y": 192.6,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "independentOfficialAipGcpValidated": false,
+        "independentOfficialAipHeldoutCount": 0,
+        "airac2621MatchConfirmed": false,
+        "modelStatus": "PROVISIONAL_SIM_TEST_ONLY"
+      }
+    },
+    {
+      "page": 613,
+      "airport": "OIMM",
+      "name": "NDB RWY 31R",
+      "chartKey": "OIMM|APPROACH|16-2|NDB RWY 31R",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.72,
+        "top": 168.12,
+        "right": 531.6,
+        "bottom": 503.28
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 36.166666666667,
+          "lon": 59.5,
+          "x": 140.99,
+          "y": 377.64,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.166666666667,
+          "lon": 59.666666666667,
+          "x": 290.99,
+          "y": 377.64,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.166666666667,
+          "lon": 59.833333333333,
+          "x": 441.11,
+          "y": 377.64,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.333333333333,
+          "lon": 59.5,
+          "x": 140.99,
+          "y": 192.36,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.333333333333,
+          "lon": 59.666666666667,
+          "x": 290.99,
+          "y": 192.36,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.333333333333,
+          "lon": 59.833333333333,
+          "x": 441.11,
+          "y": 192.36,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "independentOfficialAipGcpValidated": false,
+        "independentOfficialAipHeldoutCount": 0,
+        "airac2621MatchConfirmed": false,
+        "modelStatus": "PROVISIONAL_SIM_TEST_ONLY"
+      }
+    },
+    {
+      "page": 614,
+      "airport": "OIMM",
+      "name": "CHART PAGE 403",
+      "chartKey": "OIMM|APPROACH|16-3|CHART PAGE 403",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.72,
+        "top": 168.12,
+        "right": 531.6,
+        "bottom": 503.28
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 36.166666666667,
+          "lon": 59.5,
+          "x": 184.91,
+          "y": 454.68,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.166666666667,
+          "lon": 59.666666666667,
+          "x": 335.03,
+          "y": 454.68,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.166666666667,
+          "lon": 59.833333333333,
+          "x": 485.27,
+          "y": 454.68,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.333333333333,
+          "lon": 59.5,
+          "x": 184.91,
+          "y": 269.16,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.333333333333,
+          "lon": 59.666666666667,
+          "x": 335.03,
+          "y": 269.16,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        },
+        {
+          "lat": 36.333333333333,
+          "lon": 59.833333333333,
+          "x": 485.27,
+          "y": 269.16,
+          "source": "Jeppesen V2621 printed graticule ticks"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "independentOfficialAipGcpValidated": false,
+        "independentOfficialAipHeldoutCount": 0,
+        "airac2621MatchConfirmed": false,
+        "modelStatus": "PROVISIONAL_SIM_TEST_ONLY"
+      }
+    }
+  ]
+}
