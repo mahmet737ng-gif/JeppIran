@@ -294,4 +294,5 @@ function chartHint(){
 window.JEPPIRAN_TAXI={open:openTaxi,parse,openAdc,draw};
 window.addEventListener("jeppiran-chart-rendered",()=>{draw();chartHint()});
 window.addEventListener("jeppiran-position",chartHint);
+document.getElementById("chartTaxiBtn")?.addEventListener("click",openTaxi);
 })();
