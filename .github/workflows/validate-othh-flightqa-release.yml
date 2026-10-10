@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - release/v2621-othh-flight-qa-20261010
+      - release/v2621-othh-extra10-flightqa-20261010
   workflow_dispatch:
 
 permissions:
@@ -45,6 +46,33 @@ jobs:
                   assert b["left"]<=x["left"]<x["right"]<=b["right"]
                   assert b["top"]<=x["top"]<x["bottom"]<=b["bottom"]
           print("OTHH simulator-only overlay verified; 776 existing records untouched")
+          PY
+      - name: Validate additional 10 OTHH overlays and masks
+        run: |
+          python3 - <<'PY'
+          import json,pathlib,math
+          a=pathlib.Path("app/src/main/assets/othh-flight-qa-extra-v2621.json").read_bytes()
+          b=pathlib.Path("web/data/othh-flight-qa-extra-v2621.json").read_bytes()
+          assert a==b
+          d=json.loads(a)
+          assert d['testOnly'] is False and d['notForActualNavigation'] is True
+          assert d['source']['sha256']=="d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6"
+          assert d['source']['chartDataVersion']=="V2621"
+          assert {x['page'] for x in d['charts']}=={1538,1539,1540,1552,1553,1556,1557,1559,1560,1561}
+          for c in d['charts']:
+              assert c['airport']=="OTHH" and c['validation']['userReportedFlightTestPassed']
+              assert not c['validation']['independentOfficialAipGcpValidated']
+              assert c['validation']['notApprovedForNavigation'] is True
+              assert len(c['sourceFingerprint'])==64
+              assert len(c['points'])>=4 and len(c['excludedBounds'])>=1
+              b=c['bounds']
+              assert 0<=b['left']<b['right']<=c['width'] and 0<=b['top']<b['bottom']<=c['height']
+              assert all(b['left']<=p['x']<=b['right'] and b['top']<=p['y']<=b['bottom'] for p in c['points'])
+              for mask in c['excludedBounds']:
+                  assert b['left']<=mask['left']<mask['right']<=b['right']
+                  assert b['top']<=mask['top']<mask['bottom']<=b['bottom']
+                  assert not all(mask['left']<=p['x']<=mask['right'] and mask['top']<=p['y']<=mask['bottom'] for p in c['points'])
+          print("All 10 OTHH owner-flight-test simulator overlays match chart source/masks")
           PY
       - uses: actions/setup-java@v4
         with:
