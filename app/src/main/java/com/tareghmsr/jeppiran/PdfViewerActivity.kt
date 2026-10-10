@@ -1325,9 +1325,9 @@ private val locationPermissionLauncher =
 
 
         primaryRow.addView(
-            toolbarButton(
-                "‹",
-                25f
+            graphicToolbarButton(
+                ChartToolbarArtwork.Icon.BACK,
+                "Back"
             ).apply {
 
                 contentDescription =
@@ -1518,9 +1518,9 @@ private val locationPermissionLauncher =
 
 
         actionRow.addView(
-            toolbarButton(
-                "‹",
-                25f
+            graphicToolbarButton(
+                ChartToolbarArtwork.Icon.BACK,
+                "Previous chart"
             ).apply {
 
                 contentDescription =
@@ -1539,9 +1539,9 @@ private val locationPermissionLauncher =
 
 
         actionRow.addView(
-            toolbarButton(
-                "›",
-                25f
+            graphicToolbarButton(
+                ChartToolbarArtwork.Icon.NEXT,
+                "Next chart"
             ).apply {
 
                 contentDescription =
@@ -1559,21 +1559,22 @@ private val locationPermissionLauncher =
         )
 
 
+        actionRow.addView(
+            graphicToolbarButton(ChartToolbarArtwork.Icon.ZOOM_OUT, "Zoom out").apply {
+                setOnClickListener { chartView.zoomByFactor(1f / 1.25f) }
+            }, toolbarButtonParams(42.dp)
+        )
+        actionRow.addView(
+            graphicToolbarButton(ChartToolbarArtwork.Icon.ZOOM_IN, "Zoom in").apply {
+                setOnClickListener { chartView.zoomByFactor(1.25f) }
+            }, toolbarButtonParams(42.dp)
+        )
+
         metarIcon =
-            toolbarButton(
-                "",
-                10f
+            graphicToolbarButton(
+                ChartToolbarArtwork.Icon.METAR,
+                "METAR"
             ).apply {
-
-                contentDescription =
-                    "Weather"
-
-                setCompoundDrawablesWithIntrinsicBounds(
-                    R.drawable.ic_weather,
-                    0,
-                    0,
-                    0
-                )
 
                 setOnClickListener {
                     toggleCachedMetarBanner()
@@ -1586,6 +1587,15 @@ private val locationPermissionLauncher =
             toolbarButtonParams(
                 42.dp
             )
+        )
+
+        // This visual release prepares CDFA artwork; chart-specific data follows.
+        actionRow.addView(
+            graphicToolbarButton(
+                ChartToolbarArtwork.Icon.CDFA,
+                "CDFA chart data is not available yet"
+            ).apply { isEnabled = false; alpha = 0.45f },
+            toolbarButtonParams(42.dp)
         )
 
 
@@ -1686,9 +1696,15 @@ private val locationPermissionLauncher =
 
 
         actionRow.addView(
-            toolbarButton(
-                "⛶",
-                18f
+            graphicToolbarButton(ChartToolbarArtwork.Icon.OFFLINE, "Save offline").apply {
+                setOnClickListener { showOfflineChartStatus() }
+            }, toolbarButtonParams(42.dp)
+        )
+
+        actionRow.addView(
+            graphicToolbarButton(
+                ChartToolbarArtwork.Icon.FULLSCREEN,
+                "Fullscreen"
             ).apply {
 
                 contentDescription =
@@ -1742,7 +1758,14 @@ private val locationPermissionLauncher =
 
 
         topToolbar.addView(
-            actionRow,
+            HorizontalScrollView(this).apply {
+                isHorizontalScrollBarEnabled = false
+                isFillViewport = true
+                addView(actionRow, FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT
+                ))
+            },
             LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 46.dp
@@ -6731,6 +6754,32 @@ private val locationPermissionLauncher =
     }
 
 
+    private fun graphicToolbarButton(
+        icon: ChartToolbarArtwork.Icon,
+        label: String
+    ): TextView = toolbarButton("", 10f).apply {
+        contentDescription = label
+        background = ChartToolbarArtwork.drawable(this@PdfViewerActivity, icon)
+        elevation = 1.dp.toFloat()
+        foreground = android.graphics.drawable.RippleDrawable(
+            android.content.res.ColorStateList.valueOf(Color.argb(48, 180, 211, 229)),
+            null, roundedBackground(Color.WHITE, Color.TRANSPARENT, 8)
+        )
+    }
+
+    private fun showOfflineChartStatus() {
+        val saved = currentPdfFile?.let { it.exists() && it.length() > 0L } == true
+        AlertDialog.Builder(this)
+            .setTitle("Offline charts")
+            .setMessage(if (saved) {
+                "$currentIcao charts are saved on this device and can be opened without an internet connection."
+            } else {
+                "Open an airport chart and let its download finish to save it on this device."
+            })
+            .setPositiveButton("OK", null)
+            .show()
+    }
+
     private fun toolbarButton(
         text: String,
         size: Float
@@ -7593,6 +7642,19 @@ private val locationPermissionLauncher =
             invalidate()
         }
 
+
+        fun zoomByFactor(factor: Float) {
+            if (bitmap == null || !factor.isFinite() || factor <= 0f) return
+            zoomAnimator?.cancel()
+            val target = (scale * factor).coerceIn(1f, MAX_ZOOM)
+            val ratio = target / scale
+            offsetX *= ratio
+            offsetY *= ratio
+            scale = target
+            alignTopOnNextDraw = false
+            constrainPan()
+            invalidate()
+        }
 
         fun setNeighborBitmaps(
             previousBitmap: Bitmap?,

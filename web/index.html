@@ -14,7 +14,7 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./app-icon.png" type="image/png">
   <link rel="apple-touch-icon" sizes="256x256" href="./app-icon.png">
-  <link rel="stylesheet" href="./styles.css?v=2621-icao-noglow-6">
+  <link rel="stylesheet" href="./styles.css?v=2621-toolbar-matte-1">
 <style id="universal-sim-ui">#useXpBtn,#useFsxBtn{display:none!important}#simulatorView .sim-card:has(#bridgeUrl){display:none!important}</style>
 </head>
 <body>
@@ -91,20 +91,21 @@
           </div>
           <div class="viewer-actions">
             <div class="viewer-nav-group" aria-label="Chart navigation">
-              <button id="prevChartBtn" class="icon-btn compact-btn" title="Previous chart">‹</button>
-              <button id="nextChartBtn" class="icon-btn compact-btn" title="Next chart">›</button>
+              <button id="prevChartBtn" class="icon-btn compact-btn raster-btn raster-only" title="Previous chart" aria-label="Previous chart"><span class="toolbar-art art-back" aria-hidden="true"></span></button>
+              <button id="nextChartBtn" class="icon-btn compact-btn raster-btn raster-only" title="Next chart" aria-label="Next chart"><span class="toolbar-art art-next" aria-hidden="true"></span></button>
             </div>
             <div class="viewer-zoom-group" aria-label="Chart zoom">
-              <button id="zoomOutBtn" class="icon-btn compact-btn" title="Zoom out">−</button>
+              <button id="zoomOutBtn" class="icon-btn compact-btn raster-btn raster-only" title="Zoom out" aria-label="Zoom out"><span class="toolbar-art art-zoom-out" aria-hidden="true"></span></button>
               <button id="zoomResetBtn" class="icon-btn zoom-value" title="Reset zoom"><span id="zoomValue">100%</span></button>
-              <button id="zoomInBtn" class="icon-btn compact-btn" title="Zoom in">+</button>
+              <button id="zoomInBtn" class="icon-btn compact-btn raster-btn raster-only" title="Zoom in" aria-label="Zoom in"><span class="toolbar-art art-zoom-in" aria-hidden="true"></span></button>
             </div>
-            <button id="chartMetarBtn" class="icon-btn metar-toolbar-btn">METAR</button>
+            <button id="chartMetarBtn" class="icon-btn metar-toolbar-btn raster-btn" title="Show or hide airport METAR"><span class="toolbar-art art-metar" aria-hidden="true"></span><span class="toolbar-label">METAR</span></button>
+            <button id="chartCdfaBtn" class="icon-btn raster-btn" disabled title="CDFA chart data is not available yet" aria-label="CDFA chart data is not available yet"><span class="toolbar-art art-cdfa" aria-hidden="true"></span><span class="toolbar-label">CDFA</span></button>
             <button id="positionStatusBtn" class="icon-btn position-status-btn" data-state="off" type="button" aria-label="GPS OFF">
               <span class="position-status-dot"></span><span class="position-status-label">GPS OFF</span>
             </button>
-            <button id="offlinePdfBtn" class="icon-btn" disabled>Save Offline</button>
-            <button id="fullscreenBtn" class="icon-btn">Fullscreen</button>
+            <button id="offlinePdfBtn" class="icon-btn raster-btn" disabled aria-live="polite"><span class="toolbar-art art-offline" aria-hidden="true"></span><span class="toolbar-label">Save Offline</span></button>
+            <button id="fullscreenBtn" class="icon-btn raster-btn" title="Fullscreen"><span class="toolbar-art art-fullscreen" aria-hidden="true"></span><span class="toolbar-label">Fullscreen</span></button>
           </div>
         </div>
         <div id="chartMetarBanner" class="chart-metar-banner" role="status" aria-live="polite">
@@ -332,6 +333,6 @@
     });
   })();
   </script>
-  <script src="./app.js?v=2621-othh-flightqa-2" defer></script>
+  <script src="./app.js?v=2621-toolbar-matte-1" defer></script>
 </body>
 </html>

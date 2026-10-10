@@ -938,3 +938,34 @@ body:has(#homeView.active),body:has(#chartsView.active){background:#030c19}
   filter:none!important;
 }
 #chartsView .airport-item.selected{box-shadow:none!important}
+
+/* Approved matte PNG artwork; crop the original board without recoloring it. */
+#chartsView .viewer-actions .raster-btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  min-height:42px;padding:5px 8px;flex-shrink:0;
+  background:#182631;border-color:#596a78;border-radius:6px;
+  box-shadow:0 1px 3px rgba(0,0,0,.22);color:#e5edf2
+}
+#chartsView .viewer-actions .raster-only{width:42px;min-width:42px;padding:3px}
+#chartsView .viewer-actions .raster-btn:focus-visible{outline:2px solid #b6d4e4;outline-offset:2px}
+#chartsView .viewer-actions .raster-btn:disabled{opacity:.45;cursor:default}
+#chartsView .viewer-actions .viewer-nav-group{display:flex}
+.toolbar-art{
+  display:block;flex:0 0 auto;width:34px;aspect-ratio:380 / 270;
+  background-image:url('./toolbar-artwork/toolbar-matte.png');
+  background-repeat:no-repeat;background-size:466.842105% 328.518519%;
+  background-position:var(--art-x) 12.155592%;pointer-events:none
+}
+.art-back{--art-x:3.730273%}
+.art-next{--art-x:34.935438%}
+.art-zoom-in{--art-x:65.853659%}
+.art-zoom-out{--art-x:96.843615%}
+.art-metar,.art-cdfa,.art-fullscreen,.art-offline{
+  aspect-ratio:380 / 296;background-size:466.842105% 299.662162%;
+  background-position:var(--art-x) 73.942470%
+}
+.art-metar{--art-x:3.730273%}
+.art-cdfa{--art-x:34.935438%}
+.art-fullscreen{--art-x:65.853659%}
+.art-offline{--art-x:96.843615%}
+.toolbar-label{white-space:nowrap}
