@@ -1,0 +1,5777 @@
+{
+  "version": 2,
+  "coordinateSystem": "WGS84",
+  "coordinateSpace": "pdf_points",
+  "origin": "top_left",
+  "testOnly": true,
+  "notice": "EXPERIMENTAL / NOT FOR ACTUAL NAVIGATION. No existing certified georeferences may be overwritten.",
+  "source": {
+    "file": "Iran2621.pdf",
+    "sha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+    "pageCount": 1654,
+    "chartDataVersion": "V2621",
+    "cycle": 2621
+  },
+  "restorationBranch": "backup/pre-v2621-experimental-web-georef-20261010",
+  "excludedPages": {
+    "565": "OIMB independent AIP VOR/DME error ~35.467 metres; rejected",
+    "566": "OIMB independent AIP VOR/DME error ~35.467 metres; rejected",
+    "642": "PDF page identity mismatch against current web index"
+  },
+  "charts": [
+    {
+      "page": 118,
+      "airport": "OIBL",
+      "name": "Airport Diagram Chart (ADC)",
+      "chartKey": "OIBL|AIRPORT|10-9|AIRPORT DIAGRAM CHART (ADC)",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 85.44,
+        "top": 83.52,
+        "right": 526.08,
+        "bottom": 454.68
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "x": 155.46,
+          "y": 301.44,
+          "lat": 26.530452778,
+          "lon": 54.812438889,
+          "source": "THR08"
+        },
+        {
+          "x": 456,
+          "y": 251.88,
+          "lat": 26.534127778,
+          "lon": 54.837191667,
+          "source": "THR26"
+        },
+        {
+          "x": 409.26,
+          "y": 297.78,
+          "lat": 26.530694444,
+          "lon": 54.833333333,
+          "source": "NDB LEN"
+        },
+        {
+          "x": 338.46,
+          "y": 288.42,
+          "lat": 26.531388889,
+          "lon": 54.8275,
+          "source": "ARP"
+        },
+        {
+          "x": 206.88,
+          "y": 262.2,
+          "lat": 26.533333333,
+          "lon": 54.816666667,
+          "source": "26-32 x 54-49"
+        },
+        {
+          "x": 409.32,
+          "y": 262.2,
+          "lat": 26.533333333,
+          "lon": 54.833333333,
+          "source": "26-32 x 54-50"
+        }
+      ],
+      "maxResidualPdfPoints": 0.75,
+      "validation": {
+        "method": "aip_and_printed_grid_10m_test_only",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 342,
+      "airport": "OIHH",
+      "name": "Airport Diagram Chart (ADC)",
+      "chartKey": "OIHH|AIRPORT|10-9|AIRPORT DIAGRAM CHART (ADC)",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 85.44,
+        "top": 83.52,
+        "right": 526.2,
+        "bottom": 454.8
+      },
+      "excludedBounds": [
+        {
+          "left": 85.44,
+          "top": 317.64,
+          "right": 211.32,
+          "bottom": 454.68
+        }
+      ],
+      "points": [
+        {
+          "x": 118.26,
+          "y": 220.74,
+          "lat": 34.871072222,
+          "lon": 48.539263889,
+          "source": "RWY10 physical"
+        },
+        {
+          "x": 490.98,
+          "y": 319.74,
+          "lat": 34.862272222,
+          "lon": 48.579419444,
+          "source": "THR28"
+        },
+        {
+          "x": 180.78,
+          "y": 300.9,
+          "lat": 34.863944444,
+          "lon": 48.546,
+          "source": "NDB HAM"
+        },
+        {
+          "x": 220.38,
+          "y": 267.78,
+          "lat": 34.866888889,
+          "lon": 48.550277778,
+          "source": "VOR/DME HAM"
+        },
+        {
+          "x": 223.02,
+          "y": 238.98,
+          "lat": 34.869444444,
+          "lon": 48.550555556,
+          "source": "ARP"
+        },
+        {
+          "x": 217.8,
+          "y": 270.48,
+          "lat": 34.866666667,
+          "lon": 48.55,
+          "source": "34-52 x 48-33"
+        },
+        {
+          "x": 372.72,
+          "y": 270.48,
+          "lat": 34.866666667,
+          "lon": 48.566666667,
+          "source": "34-52 x 48-34"
+        }
+      ],
+      "maxResidualPdfPoints": 0.75,
+      "validation": {
+        "method": "aip_and_printed_grid_10m_test_only",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 347,
+      "airport": "OIHH",
+      "name": "CIRCLING NDB DME (CAT C & D)",
+      "chartKey": "OIHH|APPROACH|16-2|CIRCLING NDB DME (CAT C & D)",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 91.08,
+        "top": 165.48,
+        "right": 531.84,
+        "bottom": 503.4
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 34.75,
+          "lon": 48.5,
+          "x": 98.5199966430664,
+          "y": 425.760009765625,
+          "source": "Printed grid 34-45 / 48-30"
+        },
+        {
+          "lat": 34.75,
+          "lon": 48.666666666666664,
+          "x": 251.0399932861328,
+          "y": 425.760009765625,
+          "source": "Printed grid 34-45 / 48-40"
+        },
+        {
+          "lat": 34.75,
+          "lon": 48.833333333333336,
+          "x": 403.79998779296875,
+          "y": 425.760009765625,
+          "source": "Printed grid 34-45 / 48-50"
+        },
+        {
+          "lat": 34.833333333333336,
+          "lon": 48.5,
+          "x": 98.5199966430664,
+          "y": 332.8800048828125,
+          "source": "Printed grid 34-50 / 48-30"
+        },
+        {
+          "lat": 34.833333333333336,
+          "lon": 48.666666666666664,
+          "x": 251.0399932861328,
+          "y": 332.8800048828125,
+          "source": "Printed grid 34-50 / 48-40"
+        },
+        {
+          "lat": 34.833333333333336,
+          "lon": 48.833333333333336,
+          "x": 403.79998779296875,
+          "y": 332.8800048828125,
+          "source": "Printed grid 34-50 / 48-50"
+        },
+        {
+          "lat": 34.916666666666664,
+          "lon": 48.5,
+          "x": 98.5199966430664,
+          "y": 240,
+          "source": "Printed grid 34-55 / 48-30"
+        },
+        {
+          "lat": 34.916666666666664,
+          "lon": 48.666666666666664,
+          "x": 251.0399932861328,
+          "y": 240,
+          "source": "Printed grid 34-55 / 48-40"
+        },
+        {
+          "lat": 34.916666666666664,
+          "lon": 48.833333333333336,
+          "x": 403.79998779296875,
+          "y": 240,
+          "source": "Printed grid 34-55 / 48-50"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 348,
+      "airport": "OIHH",
+      "name": "CIRCLING NDB DME (CAT A & B)",
+      "chartKey": "OIHH|APPROACH|16-3|CIRCLING NDB DME (CAT A & B)",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.96,
+        "top": 165.48,
+        "right": 531.72,
+        "bottom": 503.4
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 34.75,
+          "lon": 48.5,
+          "x": 98.4000015258789,
+          "y": 425.760009765625,
+          "source": "Printed grid 34-45 / 48-30"
+        },
+        {
+          "lat": 34.75,
+          "lon": 48.666666666666664,
+          "x": 250.9199981689453,
+          "y": 425.760009765625,
+          "source": "Printed grid 34-45 / 48-40"
+        },
+        {
+          "lat": 34.75,
+          "lon": 48.833333333333336,
+          "x": 403.67999267578125,
+          "y": 425.760009765625,
+          "source": "Printed grid 34-45 / 48-50"
+        },
+        {
+          "lat": 34.833333333333336,
+          "lon": 48.5,
+          "x": 98.4000015258789,
+          "y": 332.8800048828125,
+          "source": "Printed grid 34-50 / 48-30"
+        },
+        {
+          "lat": 34.833333333333336,
+          "lon": 48.666666666666664,
+          "x": 250.9199981689453,
+          "y": 332.8800048828125,
+          "source": "Printed grid 34-50 / 48-40"
+        },
+        {
+          "lat": 34.833333333333336,
+          "lon": 48.833333333333336,
+          "x": 403.67999267578125,
+          "y": 332.8800048828125,
+          "source": "Printed grid 34-50 / 48-50"
+        },
+        {
+          "lat": 34.916666666666664,
+          "lon": 48.5,
+          "x": 98.4000015258789,
+          "y": 240,
+          "source": "Printed grid 34-55 / 48-30"
+        },
+        {
+          "lat": 34.916666666666664,
+          "lon": 48.666666666666664,
+          "x": 250.9199981689453,
+          "y": 240,
+          "source": "Printed grid 34-55 / 48-40"
+        },
+        {
+          "lat": 34.916666666666664,
+          "lon": 48.833333333333336,
+          "x": 403.67999267578125,
+          "y": 240,
+          "source": "Printed grid 34-55 / 48-50"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 482,
+      "airport": "OIIP",
+      "name": "NDB Z RWY 30",
+      "chartKey": "OIIP|APPROACH|16-2|NDB Z RWY 30",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.84,
+        "top": 168.36,
+        "right": 531.6,
+        "bottom": 503.4
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 35.666666666666664,
+          "lon": 50.666666666666664,
+          "x": 120.83999633789062,
+          "y": 425.0400085449219,
+          "source": "Printed grid 35-40 / 50-40"
+        },
+        {
+          "lat": 35.666666666666664,
+          "lon": 50.833333333333336,
+          "x": 272.0400085449219,
+          "y": 425.0400085449219,
+          "source": "Printed grid 35-40 / 50-50"
+        },
+        {
+          "lat": 35.666666666666664,
+          "lon": 51,
+          "x": 422.8800048828125,
+          "y": 425.0400085449219,
+          "source": "Printed grid 35-40 / 51-00"
+        },
+        {
+          "lat": 35.833333333333336,
+          "lon": 50.666666666666664,
+          "x": 120.83999633789062,
+          "y": 239.8800048828125,
+          "source": "Printed grid 35-50 / 50-40"
+        },
+        {
+          "lat": 35.833333333333336,
+          "lon": 50.833333333333336,
+          "x": 272.0400085449219,
+          "y": 239.8800048828125,
+          "source": "Printed grid 35-50 / 50-50"
+        },
+        {
+          "lat": 35.833333333333336,
+          "lon": 51,
+          "x": 422.8800048828125,
+          "y": 239.8800048828125,
+          "source": "Printed grid 35-50 / 51-00"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 483,
+      "airport": "OIIP",
+      "name": "NDB Y RWY 30 (CAT A & B)",
+      "chartKey": "OIIP|APPROACH|16-3|NDB Y RWY 30 (CAT A & B)",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.72,
+        "top": 168.36,
+        "right": 531.72,
+        "bottom": 503.28
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 35.666666666666664,
+          "lon": 50.666666666666664,
+          "x": 132.47999572753906,
+          "y": 432.239990234375,
+          "source": "Printed grid 35-40 / 50-40"
+        },
+        {
+          "lat": 35.666666666666664,
+          "lon": 50.833333333333336,
+          "x": 283.67999267578125,
+          "y": 432.239990234375,
+          "source": "Printed grid 35-40 / 50-50"
+        },
+        {
+          "lat": 35.666666666666664,
+          "lon": 51,
+          "x": 434.760009765625,
+          "y": 432.239990234375,
+          "source": "Printed grid 35-40 / 51-00"
+        },
+        {
+          "lat": 35.833333333333336,
+          "lon": 50.666666666666664,
+          "x": 132.47999572753906,
+          "y": 246.719970703125,
+          "source": "Printed grid 35-50 / 50-40"
+        },
+        {
+          "lat": 35.833333333333336,
+          "lon": 50.833333333333336,
+          "x": 283.67999267578125,
+          "y": 246.719970703125,
+          "source": "Printed grid 35-50 / 50-50"
+        },
+        {
+          "lat": 35.833333333333336,
+          "lon": 51,
+          "x": 434.760009765625,
+          "y": 246.719970703125,
+          "source": "Printed grid 35-50 / 51-00"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 484,
+      "airport": "OIIP",
+      "name": "NDB X RWY 30 (CAT C & D)",
+      "chartKey": "OIIP|APPROACH|16-4|NDB X RWY 30 (CAT C & D)",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.84,
+        "top": 168.36,
+        "right": 531.6,
+        "bottom": 503.4
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 35.666666666666664,
+          "lon": 50.666666666666664,
+          "x": 132.60000610351562,
+          "y": 432.1199951171875,
+          "source": "Printed grid 35-40 / 50-40"
+        },
+        {
+          "lat": 35.666666666666664,
+          "lon": 50.833333333333336,
+          "x": 283.79998779296875,
+          "y": 432.1199951171875,
+          "source": "Printed grid 35-40 / 50-50"
+        },
+        {
+          "lat": 35.666666666666664,
+          "lon": 51,
+          "x": 434.760009765625,
+          "y": 432.1199951171875,
+          "source": "Printed grid 35-40 / 51-00"
+        },
+        {
+          "lat": 35.833333333333336,
+          "lon": 50.666666666666664,
+          "x": 132.60000610351562,
+          "y": 246.84002685546875,
+          "source": "Printed grid 35-50 / 50-40"
+        },
+        {
+          "lat": 35.833333333333336,
+          "lon": 50.833333333333336,
+          "x": 283.79998779296875,
+          "y": 246.84002685546875,
+          "source": "Printed grid 35-50 / 50-50"
+        },
+        {
+          "lat": 35.833333333333336,
+          "lon": 51,
+          "x": 434.760009765625,
+          "y": 246.84002685546875,
+          "source": "Printed grid 35-50 / 51-00"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 561,
+      "airport": "OIMB",
+      "name": "Airport Diagram Chart (ADC)",
+      "chartKey": "OIMB|AIRPORT|10-9|AIRPORT DIAGRAM CHART (ADC)",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 85.44,
+        "top": 83.52,
+        "right": 526.2,
+        "bottom": 454.8
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "x": 216.18,
+          "y": 228.78,
+          "lat": 32.8980555556,
+          "lon": 59.2661111111,
+          "source": "ARP",
+          "controlType": "AIP"
+        },
+        {
+          "x": 154.8,
+          "y": 248.7,
+          "lat": 32.8951083333,
+          "lon": 59.2553277778,
+          "source": "RWY08 physical",
+          "controlType": "AIP"
+        },
+        {
+          "x": 284.88,
+          "y": 222.54,
+          "lat": 32.8989583333,
+          "lon": 59.2781444444,
+          "source": "RWY26 physical",
+          "controlType": "AIP"
+        },
+        {
+          "x": 236.52,
+          "y": 239.16,
+          "lat": 32.8965194444,
+          "lon": 59.2696805556,
+          "source": "RWY10 physical",
+          "controlType": "AIP"
+        },
+        {
+          "x": 465.06,
+          "y": 274.08,
+          "lat": 32.8913333333,
+          "lon": 59.3097972222,
+          "source": "RWY28 physical",
+          "controlType": "AIP"
+        },
+        {
+          "x": 292.02,
+          "y": 275.7,
+          "lat": 32.8911111111,
+          "lon": 59.2794444444,
+          "source": "NDB BRN",
+          "controlType": "AIP"
+        },
+        {
+          "x": 300.9,
+          "y": 231.9,
+          "lat": 32.8976388889,
+          "lon": 59.2809722222,
+          "source": "VOR/DME BRN",
+          "controlType": "AIP"
+        },
+        {
+          "x": 219.36,
+          "y": 328.08,
+          "lat": 32.8833333333,
+          "lon": 59.2666666667,
+          "source": "32-53 x 59-16",
+          "controlType": "GRID"
+        },
+        {
+          "x": 219.36,
+          "y": 215.52,
+          "lat": 32.9,
+          "lon": 59.2666666667,
+          "source": "32-54 x 59-16",
+          "controlType": "GRID"
+        },
+        {
+          "x": 314.16,
+          "y": 215.52,
+          "lat": 32.9,
+          "lon": 59.2833333333,
+          "source": "32-54 x 59-17",
+          "controlType": "GRID"
+        },
+        {
+          "x": 409.08,
+          "y": 215.52,
+          "lat": 32.9,
+          "lon": 59.3,
+          "source": "32-54 x 59-18",
+          "controlType": "GRID"
+        }
+      ],
+      "maxResidualPdfPoints": 0.75,
+      "validation": {
+        "method": "aip_and_printed_grid_10m_test_only",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 963,
+      "airport": "OIZS",
+      "name": "CIRCLING NDB 2 (CAT C)",
+      "chartKey": "OIZS|APPROACH|16-2|CIRCLING NDB 2 (CAT C)",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.72,
+        "top": 168.12,
+        "right": 531.72,
+        "bottom": 503.4
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 27.25,
+          "lon": 62.166666666666664,
+          "x": 149.0399932861328,
+          "y": 438.00385614585207,
+          "source": "Derived orthogonal conformal grid intersection"
+        },
+        {
+          "lat": 27.25,
+          "lon": 62.333333333333336,
+          "x": 314.2799987792969,
+          "y": 438.00385614585207,
+          "source": "Derived orthogonal conformal grid intersection"
+        },
+        {
+          "lat": 27.25,
+          "lon": 62.5,
+          "x": 479.5199890136719,
+          "y": 438.00385614585207,
+          "source": "Derived orthogonal conformal grid intersection"
+        },
+        {
+          "lat": 27.333333333333332,
+          "lon": 62.166666666666664,
+          "x": 149.0399932861328,
+          "y": 345,
+          "source": "Printed grid 27-20 / 62-10"
+        },
+        {
+          "lat": 27.333333333333332,
+          "lon": 62.333333333333336,
+          "x": 314.2799987792969,
+          "y": 345,
+          "source": "Printed grid 27-20 / 62-20"
+        },
+        {
+          "lat": 27.333333333333332,
+          "lon": 62.5,
+          "x": 479.5199890136719,
+          "y": 345,
+          "source": "Printed grid 27-20 / 62-30"
+        }
+      ],
+      "maxResidualPdfPoints": 0.75,
+      "validation": {
+        "method": "single_axis_plus_conformal_scale",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 964,
+      "airport": "OIZS",
+      "name": "CIRCLING NDB 1 (CAT A & B)",
+      "chartKey": "OIZS|APPROACH|16-3|CIRCLING NDB 1 (CAT A & B)",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.72,
+        "top": 168.12,
+        "right": 531.72,
+        "bottom": 503.4
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 27.25,
+          "lon": 62.166666666666664,
+          "x": 149.0399932861328,
+          "y": 438.00385614585207,
+          "source": "Derived orthogonal conformal grid intersection"
+        },
+        {
+          "lat": 27.25,
+          "lon": 62.333333333333336,
+          "x": 314.2799987792969,
+          "y": 438.00385614585207,
+          "source": "Derived orthogonal conformal grid intersection"
+        },
+        {
+          "lat": 27.25,
+          "lon": 62.5,
+          "x": 479.5199890136719,
+          "y": 438.00385614585207,
+          "source": "Derived orthogonal conformal grid intersection"
+        },
+        {
+          "lat": 27.333333333333332,
+          "lon": 62.166666666666664,
+          "x": 149.0399932861328,
+          "y": 345,
+          "source": "Printed grid 27-20 / 62-10"
+        },
+        {
+          "lat": 27.333333333333332,
+          "lon": 62.333333333333336,
+          "x": 314.2799987792969,
+          "y": 345,
+          "source": "Printed grid 27-20 / 62-20"
+        },
+        {
+          "lat": 27.333333333333332,
+          "lon": 62.5,
+          "x": 479.5199890136719,
+          "y": 345,
+          "source": "Printed grid 27-20 / 62-30"
+        }
+      ],
+      "maxResidualPdfPoints": 0.75,
+      "validation": {
+        "method": "single_axis_plus_conformal_scale",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 1347,
+      "airport": "UDYZ",
+      "name": "ILS DME RWY 08",
+      "chartKey": "UDYZ|APPROACH|11-1|ILS DME RWY 08",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.72,
+        "top": 188.88,
+        "right": 531.72,
+        "bottom": 480.12
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 40.083333333333336,
+          "lon": 44.166666666666664,
+          "x": 231.72000122070312,
+          "y": 411.1199951171875,
+          "source": "Printed grid 40-05 / 44-10"
+        },
+        {
+          "lat": 40.083333333333336,
+          "lon": 44.333333333333336,
+          "x": 374.0400085449219,
+          "y": 411.1199951171875,
+          "source": "Printed grid 40-05 / 44-20"
+        },
+        {
+          "lat": 40.083333333333336,
+          "lon": 44.5,
+          "x": 516.47998046875,
+          "y": 411.1199951171875,
+          "source": "Printed grid 40-05 / 44-30"
+        },
+        {
+          "lat": 40.25,
+          "lon": 44.166666666666664,
+          "x": 231.72000122070312,
+          "y": 225.3599853515625,
+          "source": "Printed grid 40-15 / 44-10"
+        },
+        {
+          "lat": 40.25,
+          "lon": 44.333333333333336,
+          "x": 374.0400085449219,
+          "y": 225.3599853515625,
+          "source": "Printed grid 40-15 / 44-20"
+        },
+        {
+          "lat": 40.25,
+          "lon": 44.5,
+          "x": 516.47998046875,
+          "y": 225.3599853515625,
+          "source": "Printed grid 40-15 / 44-30"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 1348,
+      "airport": "UDYZ",
+      "name": "CAT II ILS DME RWY 08",
+      "chartKey": "UDYZ|APPROACH|11-1A|CAT II ILS DME RWY 08",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.72,
+        "top": 196.44,
+        "right": 531.72,
+        "bottom": 503.4
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 40.083333333333336,
+          "lon": 44.166666666666664,
+          "x": 231.83999633789062,
+          "y": 429.1199951171875,
+          "source": "Printed grid 40-05 / 44-10"
+        },
+        {
+          "lat": 40.083333333333336,
+          "lon": 44.333333333333336,
+          "x": 374.1600036621094,
+          "y": 429.1199951171875,
+          "source": "Printed grid 40-05 / 44-20"
+        },
+        {
+          "lat": 40.083333333333336,
+          "lon": 44.5,
+          "x": 516.5999755859375,
+          "y": 429.1199951171875,
+          "source": "Printed grid 40-05 / 44-30"
+        },
+        {
+          "lat": 40.25,
+          "lon": 44.166666666666664,
+          "x": 231.83999633789062,
+          "y": 242.760009765625,
+          "source": "Printed grid 40-15 / 44-10"
+        },
+        {
+          "lat": 40.25,
+          "lon": 44.333333333333336,
+          "x": 374.1600036621094,
+          "y": 242.760009765625,
+          "source": "Printed grid 40-15 / 44-20"
+        },
+        {
+          "lat": 40.25,
+          "lon": 44.5,
+          "x": 516.5999755859375,
+          "y": 242.760009765625,
+          "source": "Printed grid 40-15 / 44-30"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 1350,
+      "airport": "UDYZ",
+      "name": "RNP Z RWY 26",
+      "chartKey": "UDYZ|APPROACH|12-2|RNP Z RWY 26",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.72,
+        "top": 186.96,
+        "right": 531.84,
+        "bottom": 480.24
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 40,
+          "lon": 44.333333333333336,
+          "x": 133.9199981689453,
+          "y": 472.67999267578125,
+          "source": "Printed grid 40-00 / 44-20"
+        },
+        {
+          "lat": 40,
+          "lon": 44.5,
+          "x": 276.239990234375,
+          "y": 472.67999267578125,
+          "source": "Printed grid 40-00 / 44-30"
+        },
+        {
+          "lat": 40.166666666666664,
+          "lon": 44.333333333333336,
+          "x": 133.9199981689453,
+          "y": 286.89443761585727,
+          "source": "Derived orthogonal conformal grid intersection"
+        },
+        {
+          "lat": 40.166666666666664,
+          "lon": 44.5,
+          "x": 276.239990234375,
+          "y": 286.89443761585727,
+          "source": "Derived orthogonal conformal grid intersection"
+        }
+      ],
+      "maxResidualPdfPoints": 0.75,
+      "validation": {
+        "method": "single_axis_plus_conformal_scale",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 1351,
+      "airport": "UDYZ",
+      "name": "RNP Y RWY 26",
+      "chartKey": "UDYZ|APPROACH|12-3|RNP Y RWY 26",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.48,
+        "top": 187.2,
+        "right": 531.72,
+        "bottom": 480.12
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 40,
+          "lon": 44.333333333333336,
+          "x": 186.24000549316406,
+          "y": 472.55999755859375,
+          "source": "Printed grid 40-00 / 44-20"
+        },
+        {
+          "lat": 40,
+          "lon": 44.5,
+          "x": 328.79998779296875,
+          "y": 472.55999755859375,
+          "source": "Printed grid 40-00 / 44-30"
+        },
+        {
+          "lat": 40.166666666666664,
+          "lon": 44.333333333333336,
+          "x": 186.24000549316406,
+          "y": 287.1600036621094,
+          "source": "Printed grid 40-10 / 44-20"
+        },
+        {
+          "lat": 40.166666666666664,
+          "lon": 44.5,
+          "x": 328.79998779296875,
+          "y": 287.1600036621094,
+          "source": "Printed grid 40-10 / 44-30"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 1391,
+      "airport": "UGSB",
+      "name": "LOC Z RWY 12",
+      "chartKey": "UGSB|APPROACH|11-2|LOC Z RWY 12",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 612,
+        "bottom": 792
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 41.666666666666664,
+          "lon": 41.333333333333336,
+          "x": 180.24000549316406,
+          "y": 382.32000732421875,
+          "source": "Printed grid 41-40 / 41-20"
+        },
+        {
+          "lat": 41.666666666666664,
+          "lon": 41.5,
+          "x": 319.3986133019649,
+          "y": 382.32000732421875,
+          "source": "Derived orthogonal conformal grid intersection"
+        },
+        {
+          "lat": 41.833333333333336,
+          "lon": 41.333333333333336,
+          "x": 180.24000549316406,
+          "y": 196.20001220703125,
+          "source": "Printed grid 41-50 / 41-20"
+        },
+        {
+          "lat": 41.833333333333336,
+          "lon": 41.5,
+          "x": 319.3986133019649,
+          "y": 196.20001220703125,
+          "source": "Derived orthogonal conformal grid intersection"
+        }
+      ],
+      "maxResidualPdfPoints": 0.75,
+      "validation": {
+        "method": "single_axis_plus_conformal_scale",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 1439,
+      "airport": "OMDB",
+      "name": "ILS RWY 12R",
+      "chartKey": "OMDB|APPROACH|11-2|ILS RWY 12R",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.6,
+        "top": 179.76,
+        "right": 531.6,
+        "bottom": 480.24
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 25.25,
+          "lon": 55.166666666666664,
+          "x": 177.60000610351562,
+          "y": 400.45659446520756,
+          "source": "Derived orthogonal conformal grid intersection"
+        },
+        {
+          "lat": 25.25,
+          "lon": 55.333333333333336,
+          "x": 345.9599914550781,
+          "y": 400.45659446520756,
+          "source": "Derived orthogonal conformal grid intersection"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 55.166666666666664,
+          "x": 177.60000610351562,
+          "y": 307.32000732421875,
+          "source": "Printed grid 25-20 / 55-10"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 55.333333333333336,
+          "x": 345.9599914550781,
+          "y": 307.32000732421875,
+          "source": "Printed grid 25-20 / 55-20"
+        }
+      ],
+      "maxResidualPdfPoints": 0.75,
+      "validation": {
+        "method": "single_axis_plus_conformal_scale",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 1440,
+      "airport": "OMDB",
+      "name": "CAT II/III ILS RWY 12R",
+      "chartKey": "OMDB|APPROACH|11-2A|CAT II/III ILS RWY 12R",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.6,
+        "top": 180,
+        "right": 531.48,
+        "bottom": 489.24
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 25.25,
+          "lon": 55.166666666666664,
+          "x": 177.36000061035156,
+          "y": 409.4029889762719,
+          "source": "Derived orthogonal conformal grid intersection"
+        },
+        {
+          "lat": 25.25,
+          "lon": 55.333333333333336,
+          "x": 345.8399963378906,
+          "y": 409.4029889762719,
+          "source": "Derived orthogonal conformal grid intersection"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 55.166666666666664,
+          "x": 177.36000061035156,
+          "y": 316.20001220703125,
+          "source": "Printed grid 25-20 / 55-10"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 55.333333333333336,
+          "x": 345.8399963378906,
+          "y": 316.20001220703125,
+          "source": "Printed grid 25-20 / 55-20"
+        }
+      ],
+      "maxResidualPdfPoints": 0.75,
+      "validation": {
+        "method": "single_axis_plus_conformal_scale",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 1441,
+      "airport": "OMDB",
+      "name": "ILS RWY 30L",
+      "chartKey": "OMDB|APPROACH|11-3|ILS RWY 30L",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 612,
+        "bottom": 792
+      },
+      "excludedBounds": [
+        {
+          "left": 90.72,
+          "top": 186.12,
+          "right": 531.6,
+          "bottom": 489
+        }
+      ],
+      "points": [
+        {
+          "lat": 25,
+          "lon": 55.333333333333336,
+          "x": 171.83999633789062,
+          "y": 556.3252367260445,
+          "source": "Derived orthogonal conformal grid intersection"
+        },
+        {
+          "lat": 25,
+          "lon": 55.5,
+          "x": 340.0799865722656,
+          "y": 556.3252367260445,
+          "source": "Derived orthogonal conformal grid intersection"
+        },
+        {
+          "lat": 25,
+          "lon": 55.666666666666664,
+          "x": 508.32000732421875,
+          "y": 556.3252367260445,
+          "source": "Derived orthogonal conformal grid intersection"
+        },
+        {
+          "lat": 25.166666666666668,
+          "lon": 55.333333333333336,
+          "x": 171.83999633789062,
+          "y": 370.44000244140625,
+          "source": "Printed grid 25-10 / 55-20"
+        },
+        {
+          "lat": 25.166666666666668,
+          "lon": 55.5,
+          "x": 340.0799865722656,
+          "y": 370.44000244140625,
+          "source": "Printed grid 25-10 / 55-30"
+        },
+        {
+          "lat": 25.166666666666668,
+          "lon": 55.666666666666664,
+          "x": 508.32000732421875,
+          "y": 370.44000244140625,
+          "source": "Printed grid 25-10 / 55-40"
+        }
+      ],
+      "maxResidualPdfPoints": 0.75,
+      "validation": {
+        "method": "single_axis_plus_conformal_scale",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 1442,
+      "airport": "OMDB",
+      "name": "CAT II/III ILS RWY 30L",
+      "chartKey": "OMDB|APPROACH|11-3A|CAT II/III ILS RWY 30L",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 612,
+        "bottom": 792
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 25.166666666666668,
+          "lon": 55.333333333333336,
+          "x": 170.63999938964844,
+          "y": 384.239990234375,
+          "source": "Printed grid 25-10 / 55-20"
+        },
+        {
+          "lat": 25.166666666666668,
+          "lon": 55.5,
+          "x": 339,
+          "y": 384.239990234375,
+          "source": "Printed grid 25-10 / 55-30"
+        },
+        {
+          "lat": 25.166666666666668,
+          "lon": 55.666666666666664,
+          "x": 507.239990234375,
+          "y": 384.239990234375,
+          "source": "Printed grid 25-10 / 55-40"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 55.333333333333336,
+          "x": 170.63999938964844,
+          "y": 199.08001708984375,
+          "source": "Printed grid 25-20 / 55-20"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 55.5,
+          "x": 339,
+          "y": 199.08001708984375,
+          "source": "Printed grid 25-20 / 55-30"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 55.666666666666664,
+          "x": 507.239990234375,
+          "y": 199.08001708984375,
+          "source": "Printed grid 25-20 / 55-40"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 1447,
+      "airport": "OMDB",
+      "name": "RNP RWY 30L",
+      "chartKey": "OMDB|APPROACH|12-3|RNP RWY 30L",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 612,
+        "bottom": 792
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 25.166666666666668,
+          "lon": 55.333333333333336,
+          "x": 167.27999877929688,
+          "y": 378.3599853515625,
+          "source": "Printed grid 25-10 / 55-20"
+        },
+        {
+          "lat": 25.166666666666668,
+          "lon": 55.5,
+          "x": 335.5199890136719,
+          "y": 378.3599853515625,
+          "source": "Printed grid 25-10 / 55-30"
+        },
+        {
+          "lat": 25.166666666666668,
+          "lon": 55.666666666666664,
+          "x": 504.1199951171875,
+          "y": 378.3599853515625,
+          "source": "Printed grid 25-10 / 55-40"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 55.333333333333336,
+          "x": 167.27999877929688,
+          "y": 193.20001220703125,
+          "source": "Printed grid 25-20 / 55-20"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 55.5,
+          "x": 335.5199890136719,
+          "y": 193.20001220703125,
+          "source": "Printed grid 25-20 / 55-30"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 55.666666666666664,
+          "x": 504.1199951171875,
+          "y": 193.20001220703125,
+          "source": "Printed grid 25-20 / 55-40"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 1536,
+      "airport": "OTHH",
+      "name": "AIRPORT DIAGRAM",
+      "chartKey": "OTHH|AIRPORT|20-9|AIRPORT DIAGRAM",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 8.4,
+        "top": 18.84,
+        "right": 583.2,
+        "bottom": 762.48
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 25.25,
+          "lon": 51.6,
+          "x": 183.9600067138672,
+          "y": 734.1599731445312,
+          "source": "Printed grid 25-15 / 51-36"
+        },
+        {
+          "lat": 25.25,
+          "lon": 51.61666666666667,
+          "x": 385.67999267578125,
+          "y": 734.1599731445312,
+          "source": "Printed grid 25-15 / 51-37"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.6,
+          "x": 183.9600067138672,
+          "y": 512.4000244140625,
+          "source": "Printed grid 25-16 / 51-36"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.61666666666667,
+          "x": 385.67999267578125,
+          "y": 512.4000244140625,
+          "source": "Printed grid 25-16 / 51-37"
+        },
+        {
+          "lat": 25.283333333333335,
+          "lon": 51.6,
+          "x": 183.9600067138672,
+          "y": 290.3999938964844,
+          "source": "Printed grid 25-17 / 51-36"
+        },
+        {
+          "lat": 25.283333333333335,
+          "lon": 51.61666666666667,
+          "x": 385.67999267578125,
+          "y": 290.3999938964844,
+          "source": "Printed grid 25-17 / 51-37"
+        },
+        {
+          "lat": 25.3,
+          "lon": 51.6,
+          "x": 183.9600067138672,
+          "y": 68.6400146484375,
+          "source": "Printed grid 25-18 / 51-36"
+        },
+        {
+          "lat": 25.3,
+          "lon": 51.61666666666667,
+          "x": 385.67999267578125,
+          "y": 68.6400146484375,
+          "source": "Printed grid 25-18 / 51-37"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 4,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 1538,
+      "airport": "OTHH",
+      "name": "APRON AND PARKING STAND COORDINATES 20-9B",
+      "chartKey": "OTHH|AIRPORT|20-9B|APRON AND PARKING STAND COORDINATES 20-9B",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 29.28,
+        "top": 20.52,
+        "right": 604.32,
+        "bottom": 764.76
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 25.27166666666667,
+          "lon": 51.593333333333334,
+          "x": 588.9600219726562,
+          "y": 716.4000244140625,
+          "source": "Printed grid 25-16.3 / 51-35.6"
+        },
+        {
+          "lat": 25.27166666666667,
+          "lon": 51.595,
+          "x": 588.9600219726562,
+          "y": 671.1600341796875,
+          "source": "Printed grid 25-16.3 / 51-35.7"
+        },
+        {
+          "lat": 25.27166666666667,
+          "lon": 51.596666666666664,
+          "x": 588.9600219726562,
+          "y": 625.4400024414062,
+          "source": "Printed grid 25-16.3 / 51-35.8"
+        },
+        {
+          "lat": 25.27166666666667,
+          "lon": 51.598333333333336,
+          "x": 588.9600219726562,
+          "y": 580.4400024414062,
+          "source": "Printed grid 25-16.3 / 51-35.9"
+        },
+        {
+          "lat": 25.27166666666667,
+          "lon": 51.6,
+          "x": 588.9600219726562,
+          "y": 535.5599975585938,
+          "source": "Printed grid 25-16.3 / 51-36.0"
+        },
+        {
+          "lat": 25.27166666666667,
+          "lon": 51.60166666666667,
+          "x": 588.9600219726562,
+          "y": 490.0799865722656,
+          "source": "Printed grid 25-16.3 / 51-36.1"
+        },
+        {
+          "lat": 25.27166666666667,
+          "lon": 51.60333333333333,
+          "x": 588.9600219726562,
+          "y": 445.20001220703125,
+          "source": "Printed grid 25-16.3 / 51-36.2"
+        },
+        {
+          "lat": 25.27166666666667,
+          "lon": 51.605,
+          "x": 588.9600219726562,
+          "y": 399.9599914550781,
+          "source": "Printed grid 25-16.3 / 51-36.3"
+        },
+        {
+          "lat": 25.27166666666667,
+          "lon": 51.608333333333334,
+          "x": 588.9600219726562,
+          "y": 309.6000061035156,
+          "source": "Printed grid 25-16.3 / 51-36.5"
+        },
+        {
+          "lat": 25.27166666666667,
+          "lon": 51.61,
+          "x": 588.9600219726562,
+          "y": 264.3599853515625,
+          "source": "Printed grid 25-16.3 / 51-36.6"
+        },
+        {
+          "lat": 25.27166666666667,
+          "lon": 51.61333333333333,
+          "x": 588.9600219726562,
+          "y": 173.8800048828125,
+          "source": "Printed grid 25-16.3 / 51-36.8"
+        },
+        {
+          "lat": 25.27166666666667,
+          "lon": 51.615,
+          "x": 588.9600219726562,
+          "y": 128.760009765625,
+          "source": "Printed grid 25-16.3 / 51-36.9"
+        },
+        {
+          "lat": 25.27166666666667,
+          "lon": 51.61666666666667,
+          "x": 588.9600219726562,
+          "y": 83.52001953125,
+          "source": "Printed grid 25-16.3 / 51-37"
+        },
+        {
+          "lat": 25.27166666666667,
+          "lon": 51.61833333333333,
+          "x": 588.9600219726562,
+          "y": 38.280029296875,
+          "source": "Printed grid 25-16.3 / 51-37.1"
+        },
+        {
+          "lat": 25.273333333333333,
+          "lon": 51.593333333333334,
+          "x": 539.4000244140625,
+          "y": 716.4000244140625,
+          "source": "Printed grid 25-16.4 / 51-35.6"
+        },
+        {
+          "lat": 25.273333333333333,
+          "lon": 51.595,
+          "x": 539.4000244140625,
+          "y": 671.1600341796875,
+          "source": "Printed grid 25-16.4 / 51-35.7"
+        },
+        {
+          "lat": 25.273333333333333,
+          "lon": 51.596666666666664,
+          "x": 539.4000244140625,
+          "y": 625.4400024414062,
+          "source": "Printed grid 25-16.4 / 51-35.8"
+        },
+        {
+          "lat": 25.273333333333333,
+          "lon": 51.598333333333336,
+          "x": 539.4000244140625,
+          "y": 580.4400024414062,
+          "source": "Printed grid 25-16.4 / 51-35.9"
+        },
+        {
+          "lat": 25.273333333333333,
+          "lon": 51.6,
+          "x": 539.4000244140625,
+          "y": 535.5599975585938,
+          "source": "Printed grid 25-16.4 / 51-36.0"
+        },
+        {
+          "lat": 25.273333333333333,
+          "lon": 51.60166666666667,
+          "x": 539.4000244140625,
+          "y": 490.0799865722656,
+          "source": "Printed grid 25-16.4 / 51-36.1"
+        },
+        {
+          "lat": 25.273333333333333,
+          "lon": 51.60333333333333,
+          "x": 539.4000244140625,
+          "y": 445.20001220703125,
+          "source": "Printed grid 25-16.4 / 51-36.2"
+        },
+        {
+          "lat": 25.273333333333333,
+          "lon": 51.605,
+          "x": 539.4000244140625,
+          "y": 399.9599914550781,
+          "source": "Printed grid 25-16.4 / 51-36.3"
+        },
+        {
+          "lat": 25.273333333333333,
+          "lon": 51.608333333333334,
+          "x": 539.4000244140625,
+          "y": 309.6000061035156,
+          "source": "Printed grid 25-16.4 / 51-36.5"
+        },
+        {
+          "lat": 25.273333333333333,
+          "lon": 51.61,
+          "x": 539.4000244140625,
+          "y": 264.3599853515625,
+          "source": "Printed grid 25-16.4 / 51-36.6"
+        },
+        {
+          "lat": 25.273333333333333,
+          "lon": 51.61333333333333,
+          "x": 539.4000244140625,
+          "y": 173.8800048828125,
+          "source": "Printed grid 25-16.4 / 51-36.8"
+        },
+        {
+          "lat": 25.273333333333333,
+          "lon": 51.615,
+          "x": 539.4000244140625,
+          "y": 128.760009765625,
+          "source": "Printed grid 25-16.4 / 51-36.9"
+        },
+        {
+          "lat": 25.273333333333333,
+          "lon": 51.61666666666667,
+          "x": 539.4000244140625,
+          "y": 83.52001953125,
+          "source": "Printed grid 25-16.4 / 51-37"
+        },
+        {
+          "lat": 25.273333333333333,
+          "lon": 51.61833333333333,
+          "x": 539.4000244140625,
+          "y": 38.280029296875,
+          "source": "Printed grid 25-16.4 / 51-37.1"
+        },
+        {
+          "lat": 25.275,
+          "lon": 51.593333333333334,
+          "x": 489.9599914550781,
+          "y": 716.4000244140625,
+          "source": "Printed grid 25-16.5 / 51-35.6"
+        },
+        {
+          "lat": 25.275,
+          "lon": 51.595,
+          "x": 489.9599914550781,
+          "y": 671.1600341796875,
+          "source": "Printed grid 25-16.5 / 51-35.7"
+        },
+        {
+          "lat": 25.275,
+          "lon": 51.596666666666664,
+          "x": 489.9599914550781,
+          "y": 625.4400024414062,
+          "source": "Printed grid 25-16.5 / 51-35.8"
+        },
+        {
+          "lat": 25.275,
+          "lon": 51.598333333333336,
+          "x": 489.9599914550781,
+          "y": 580.4400024414062,
+          "source": "Printed grid 25-16.5 / 51-35.9"
+        },
+        {
+          "lat": 25.275,
+          "lon": 51.6,
+          "x": 489.9599914550781,
+          "y": 535.5599975585938,
+          "source": "Printed grid 25-16.5 / 51-36.0"
+        },
+        {
+          "lat": 25.275,
+          "lon": 51.60166666666667,
+          "x": 489.9599914550781,
+          "y": 490.0799865722656,
+          "source": "Printed grid 25-16.5 / 51-36.1"
+        },
+        {
+          "lat": 25.275,
+          "lon": 51.60333333333333,
+          "x": 489.9599914550781,
+          "y": 445.20001220703125,
+          "source": "Printed grid 25-16.5 / 51-36.2"
+        },
+        {
+          "lat": 25.275,
+          "lon": 51.605,
+          "x": 489.9599914550781,
+          "y": 399.9599914550781,
+          "source": "Printed grid 25-16.5 / 51-36.3"
+        },
+        {
+          "lat": 25.275,
+          "lon": 51.608333333333334,
+          "x": 489.9599914550781,
+          "y": 309.6000061035156,
+          "source": "Printed grid 25-16.5 / 51-36.5"
+        },
+        {
+          "lat": 25.275,
+          "lon": 51.61,
+          "x": 489.9599914550781,
+          "y": 264.3599853515625,
+          "source": "Printed grid 25-16.5 / 51-36.6"
+        },
+        {
+          "lat": 25.275,
+          "lon": 51.61333333333333,
+          "x": 489.9599914550781,
+          "y": 173.8800048828125,
+          "source": "Printed grid 25-16.5 / 51-36.8"
+        },
+        {
+          "lat": 25.275,
+          "lon": 51.615,
+          "x": 489.9599914550781,
+          "y": 128.760009765625,
+          "source": "Printed grid 25-16.5 / 51-36.9"
+        },
+        {
+          "lat": 25.275,
+          "lon": 51.61666666666667,
+          "x": 489.9599914550781,
+          "y": 83.52001953125,
+          "source": "Printed grid 25-16.5 / 51-37"
+        },
+        {
+          "lat": 25.275,
+          "lon": 51.61833333333333,
+          "x": 489.9599914550781,
+          "y": 38.280029296875,
+          "source": "Printed grid 25-16.5 / 51-37.1"
+        },
+        {
+          "lat": 25.276666666666667,
+          "lon": 51.593333333333334,
+          "x": 440.3999938964844,
+          "y": 716.4000244140625,
+          "source": "Printed grid 25-16.6 / 51-35.6"
+        },
+        {
+          "lat": 25.276666666666667,
+          "lon": 51.595,
+          "x": 440.3999938964844,
+          "y": 671.1600341796875,
+          "source": "Printed grid 25-16.6 / 51-35.7"
+        },
+        {
+          "lat": 25.276666666666667,
+          "lon": 51.596666666666664,
+          "x": 440.3999938964844,
+          "y": 625.4400024414062,
+          "source": "Printed grid 25-16.6 / 51-35.8"
+        },
+        {
+          "lat": 25.276666666666667,
+          "lon": 51.598333333333336,
+          "x": 440.3999938964844,
+          "y": 580.4400024414062,
+          "source": "Printed grid 25-16.6 / 51-35.9"
+        },
+        {
+          "lat": 25.276666666666667,
+          "lon": 51.6,
+          "x": 440.3999938964844,
+          "y": 535.5599975585938,
+          "source": "Printed grid 25-16.6 / 51-36.0"
+        },
+        {
+          "lat": 25.276666666666667,
+          "lon": 51.60166666666667,
+          "x": 440.3999938964844,
+          "y": 490.0799865722656,
+          "source": "Printed grid 25-16.6 / 51-36.1"
+        },
+        {
+          "lat": 25.276666666666667,
+          "lon": 51.60333333333333,
+          "x": 440.3999938964844,
+          "y": 445.20001220703125,
+          "source": "Printed grid 25-16.6 / 51-36.2"
+        },
+        {
+          "lat": 25.276666666666667,
+          "lon": 51.605,
+          "x": 440.3999938964844,
+          "y": 399.9599914550781,
+          "source": "Printed grid 25-16.6 / 51-36.3"
+        },
+        {
+          "lat": 25.276666666666667,
+          "lon": 51.608333333333334,
+          "x": 440.3999938964844,
+          "y": 309.6000061035156,
+          "source": "Printed grid 25-16.6 / 51-36.5"
+        },
+        {
+          "lat": 25.276666666666667,
+          "lon": 51.61,
+          "x": 440.3999938964844,
+          "y": 264.3599853515625,
+          "source": "Printed grid 25-16.6 / 51-36.6"
+        },
+        {
+          "lat": 25.276666666666667,
+          "lon": 51.61333333333333,
+          "x": 440.3999938964844,
+          "y": 173.8800048828125,
+          "source": "Printed grid 25-16.6 / 51-36.8"
+        },
+        {
+          "lat": 25.276666666666667,
+          "lon": 51.615,
+          "x": 440.3999938964844,
+          "y": 128.760009765625,
+          "source": "Printed grid 25-16.6 / 51-36.9"
+        },
+        {
+          "lat": 25.276666666666667,
+          "lon": 51.61666666666667,
+          "x": 440.3999938964844,
+          "y": 83.52001953125,
+          "source": "Printed grid 25-16.6 / 51-37"
+        },
+        {
+          "lat": 25.276666666666667,
+          "lon": 51.61833333333333,
+          "x": 440.3999938964844,
+          "y": 38.280029296875,
+          "source": "Printed grid 25-16.6 / 51-37.1"
+        },
+        {
+          "lat": 25.278333333333332,
+          "lon": 51.593333333333334,
+          "x": 390.8399963378906,
+          "y": 716.4000244140625,
+          "source": "Printed grid 25-16.7 / 51-35.6"
+        },
+        {
+          "lat": 25.278333333333332,
+          "lon": 51.595,
+          "x": 390.8399963378906,
+          "y": 671.1600341796875,
+          "source": "Printed grid 25-16.7 / 51-35.7"
+        },
+        {
+          "lat": 25.278333333333332,
+          "lon": 51.596666666666664,
+          "x": 390.8399963378906,
+          "y": 625.4400024414062,
+          "source": "Printed grid 25-16.7 / 51-35.8"
+        },
+        {
+          "lat": 25.278333333333332,
+          "lon": 51.598333333333336,
+          "x": 390.8399963378906,
+          "y": 580.4400024414062,
+          "source": "Printed grid 25-16.7 / 51-35.9"
+        },
+        {
+          "lat": 25.278333333333332,
+          "lon": 51.6,
+          "x": 390.8399963378906,
+          "y": 535.5599975585938,
+          "source": "Printed grid 25-16.7 / 51-36.0"
+        },
+        {
+          "lat": 25.278333333333332,
+          "lon": 51.60166666666667,
+          "x": 390.8399963378906,
+          "y": 490.0799865722656,
+          "source": "Printed grid 25-16.7 / 51-36.1"
+        },
+        {
+          "lat": 25.278333333333332,
+          "lon": 51.60333333333333,
+          "x": 390.8399963378906,
+          "y": 445.20001220703125,
+          "source": "Printed grid 25-16.7 / 51-36.2"
+        },
+        {
+          "lat": 25.278333333333332,
+          "lon": 51.605,
+          "x": 390.8399963378906,
+          "y": 399.9599914550781,
+          "source": "Printed grid 25-16.7 / 51-36.3"
+        },
+        {
+          "lat": 25.278333333333332,
+          "lon": 51.608333333333334,
+          "x": 390.8399963378906,
+          "y": 309.6000061035156,
+          "source": "Printed grid 25-16.7 / 51-36.5"
+        },
+        {
+          "lat": 25.278333333333332,
+          "lon": 51.61,
+          "x": 390.8399963378906,
+          "y": 264.3599853515625,
+          "source": "Printed grid 25-16.7 / 51-36.6"
+        },
+        {
+          "lat": 25.278333333333332,
+          "lon": 51.61333333333333,
+          "x": 390.8399963378906,
+          "y": 173.8800048828125,
+          "source": "Printed grid 25-16.7 / 51-36.8"
+        },
+        {
+          "lat": 25.278333333333332,
+          "lon": 51.615,
+          "x": 390.8399963378906,
+          "y": 128.760009765625,
+          "source": "Printed grid 25-16.7 / 51-36.9"
+        },
+        {
+          "lat": 25.278333333333332,
+          "lon": 51.61666666666667,
+          "x": 390.8399963378906,
+          "y": 83.52001953125,
+          "source": "Printed grid 25-16.7 / 51-37"
+        },
+        {
+          "lat": 25.278333333333332,
+          "lon": 51.61833333333333,
+          "x": 390.8399963378906,
+          "y": 38.280029296875,
+          "source": "Printed grid 25-16.7 / 51-37.1"
+        },
+        {
+          "lat": 25.28,
+          "lon": 51.593333333333334,
+          "x": 340.79998779296875,
+          "y": 716.4000244140625,
+          "source": "Printed grid 25-16.8 / 51-35.6"
+        },
+        {
+          "lat": 25.28,
+          "lon": 51.595,
+          "x": 340.79998779296875,
+          "y": 671.1600341796875,
+          "source": "Printed grid 25-16.8 / 51-35.7"
+        },
+        {
+          "lat": 25.28,
+          "lon": 51.596666666666664,
+          "x": 340.79998779296875,
+          "y": 625.4400024414062,
+          "source": "Printed grid 25-16.8 / 51-35.8"
+        },
+        {
+          "lat": 25.28,
+          "lon": 51.598333333333336,
+          "x": 340.79998779296875,
+          "y": 580.4400024414062,
+          "source": "Printed grid 25-16.8 / 51-35.9"
+        },
+        {
+          "lat": 25.28,
+          "lon": 51.6,
+          "x": 340.79998779296875,
+          "y": 535.5599975585938,
+          "source": "Printed grid 25-16.8 / 51-36.0"
+        },
+        {
+          "lat": 25.28,
+          "lon": 51.60166666666667,
+          "x": 340.79998779296875,
+          "y": 490.0799865722656,
+          "source": "Printed grid 25-16.8 / 51-36.1"
+        },
+        {
+          "lat": 25.28,
+          "lon": 51.60333333333333,
+          "x": 340.79998779296875,
+          "y": 445.20001220703125,
+          "source": "Printed grid 25-16.8 / 51-36.2"
+        },
+        {
+          "lat": 25.28,
+          "lon": 51.605,
+          "x": 340.79998779296875,
+          "y": 399.9599914550781,
+          "source": "Printed grid 25-16.8 / 51-36.3"
+        },
+        {
+          "lat": 25.28,
+          "lon": 51.608333333333334,
+          "x": 340.79998779296875,
+          "y": 309.6000061035156,
+          "source": "Printed grid 25-16.8 / 51-36.5"
+        },
+        {
+          "lat": 25.28,
+          "lon": 51.61,
+          "x": 340.79998779296875,
+          "y": 264.3599853515625,
+          "source": "Printed grid 25-16.8 / 51-36.6"
+        },
+        {
+          "lat": 25.28,
+          "lon": 51.61333333333333,
+          "x": 340.79998779296875,
+          "y": 173.8800048828125,
+          "source": "Printed grid 25-16.8 / 51-36.8"
+        },
+        {
+          "lat": 25.28,
+          "lon": 51.615,
+          "x": 340.79998779296875,
+          "y": 128.760009765625,
+          "source": "Printed grid 25-16.8 / 51-36.9"
+        },
+        {
+          "lat": 25.28,
+          "lon": 51.61666666666667,
+          "x": 340.79998779296875,
+          "y": 83.52001953125,
+          "source": "Printed grid 25-16.8 / 51-37"
+        },
+        {
+          "lat": 25.28,
+          "lon": 51.61833333333333,
+          "x": 340.79998779296875,
+          "y": 38.280029296875,
+          "source": "Printed grid 25-16.8 / 51-37.1"
+        },
+        {
+          "lat": 25.281666666666666,
+          "lon": 51.593333333333334,
+          "x": 291.239990234375,
+          "y": 716.4000244140625,
+          "source": "Printed grid 25-16.9 / 51-35.6"
+        },
+        {
+          "lat": 25.281666666666666,
+          "lon": 51.595,
+          "x": 291.239990234375,
+          "y": 671.1600341796875,
+          "source": "Printed grid 25-16.9 / 51-35.7"
+        },
+        {
+          "lat": 25.281666666666666,
+          "lon": 51.596666666666664,
+          "x": 291.239990234375,
+          "y": 625.4400024414062,
+          "source": "Printed grid 25-16.9 / 51-35.8"
+        },
+        {
+          "lat": 25.281666666666666,
+          "lon": 51.598333333333336,
+          "x": 291.239990234375,
+          "y": 580.4400024414062,
+          "source": "Printed grid 25-16.9 / 51-35.9"
+        },
+        {
+          "lat": 25.281666666666666,
+          "lon": 51.6,
+          "x": 291.239990234375,
+          "y": 535.5599975585938,
+          "source": "Printed grid 25-16.9 / 51-36.0"
+        },
+        {
+          "lat": 25.281666666666666,
+          "lon": 51.60166666666667,
+          "x": 291.239990234375,
+          "y": 490.0799865722656,
+          "source": "Printed grid 25-16.9 / 51-36.1"
+        },
+        {
+          "lat": 25.281666666666666,
+          "lon": 51.60333333333333,
+          "x": 291.239990234375,
+          "y": 445.20001220703125,
+          "source": "Printed grid 25-16.9 / 51-36.2"
+        },
+        {
+          "lat": 25.281666666666666,
+          "lon": 51.605,
+          "x": 291.239990234375,
+          "y": 399.9599914550781,
+          "source": "Printed grid 25-16.9 / 51-36.3"
+        },
+        {
+          "lat": 25.281666666666666,
+          "lon": 51.608333333333334,
+          "x": 291.239990234375,
+          "y": 309.6000061035156,
+          "source": "Printed grid 25-16.9 / 51-36.5"
+        },
+        {
+          "lat": 25.281666666666666,
+          "lon": 51.61,
+          "x": 291.239990234375,
+          "y": 264.3599853515625,
+          "source": "Printed grid 25-16.9 / 51-36.6"
+        },
+        {
+          "lat": 25.281666666666666,
+          "lon": 51.61333333333333,
+          "x": 291.239990234375,
+          "y": 173.8800048828125,
+          "source": "Printed grid 25-16.9 / 51-36.8"
+        },
+        {
+          "lat": 25.281666666666666,
+          "lon": 51.615,
+          "x": 291.239990234375,
+          "y": 128.760009765625,
+          "source": "Printed grid 25-16.9 / 51-36.9"
+        },
+        {
+          "lat": 25.281666666666666,
+          "lon": 51.61666666666667,
+          "x": 291.239990234375,
+          "y": 83.52001953125,
+          "source": "Printed grid 25-16.9 / 51-37"
+        },
+        {
+          "lat": 25.281666666666666,
+          "lon": 51.61833333333333,
+          "x": 291.239990234375,
+          "y": 38.280029296875,
+          "source": "Printed grid 25-16.9 / 51-37.1"
+        },
+        {
+          "lat": 25.283333333333335,
+          "lon": 51.593333333333334,
+          "x": 242.0399932861328,
+          "y": 716.4000244140625,
+          "source": "Printed grid 25-17 / 51-35.6"
+        },
+        {
+          "lat": 25.283333333333335,
+          "lon": 51.595,
+          "x": 242.0399932861328,
+          "y": 671.1600341796875,
+          "source": "Printed grid 25-17 / 51-35.7"
+        },
+        {
+          "lat": 25.283333333333335,
+          "lon": 51.596666666666664,
+          "x": 242.0399932861328,
+          "y": 625.4400024414062,
+          "source": "Printed grid 25-17 / 51-35.8"
+        },
+        {
+          "lat": 25.283333333333335,
+          "lon": 51.598333333333336,
+          "x": 242.0399932861328,
+          "y": 580.4400024414062,
+          "source": "Printed grid 25-17 / 51-35.9"
+        },
+        {
+          "lat": 25.283333333333335,
+          "lon": 51.6,
+          "x": 242.0399932861328,
+          "y": 535.5599975585938,
+          "source": "Printed grid 25-17 / 51-36.0"
+        },
+        {
+          "lat": 25.283333333333335,
+          "lon": 51.60166666666667,
+          "x": 242.0399932861328,
+          "y": 490.0799865722656,
+          "source": "Printed grid 25-17 / 51-36.1"
+        },
+        {
+          "lat": 25.283333333333335,
+          "lon": 51.60333333333333,
+          "x": 242.0399932861328,
+          "y": 445.20001220703125,
+          "source": "Printed grid 25-17 / 51-36.2"
+        },
+        {
+          "lat": 25.283333333333335,
+          "lon": 51.605,
+          "x": 242.0399932861328,
+          "y": 399.9599914550781,
+          "source": "Printed grid 25-17 / 51-36.3"
+        },
+        {
+          "lat": 25.283333333333335,
+          "lon": 51.608333333333334,
+          "x": 242.0399932861328,
+          "y": 309.6000061035156,
+          "source": "Printed grid 25-17 / 51-36.5"
+        },
+        {
+          "lat": 25.283333333333335,
+          "lon": 51.61,
+          "x": 242.0399932861328,
+          "y": 264.3599853515625,
+          "source": "Printed grid 25-17 / 51-36.6"
+        },
+        {
+          "lat": 25.283333333333335,
+          "lon": 51.61333333333333,
+          "x": 242.0399932861328,
+          "y": 173.8800048828125,
+          "source": "Printed grid 25-17 / 51-36.8"
+        },
+        {
+          "lat": 25.283333333333335,
+          "lon": 51.615,
+          "x": 242.0399932861328,
+          "y": 128.760009765625,
+          "source": "Printed grid 25-17 / 51-36.9"
+        },
+        {
+          "lat": 25.283333333333335,
+          "lon": 51.61666666666667,
+          "x": 242.0399932861328,
+          "y": 83.52001953125,
+          "source": "Printed grid 25-17 / 51-37"
+        },
+        {
+          "lat": 25.283333333333335,
+          "lon": 51.61833333333333,
+          "x": 242.0399932861328,
+          "y": 38.280029296875,
+          "source": "Printed grid 25-17 / 51-37.1"
+        },
+        {
+          "lat": 25.285,
+          "lon": 51.593333333333334,
+          "x": 192.24000549316406,
+          "y": 716.4000244140625,
+          "source": "Printed grid 25-17.1 / 51-35.6"
+        },
+        {
+          "lat": 25.285,
+          "lon": 51.595,
+          "x": 192.24000549316406,
+          "y": 671.1600341796875,
+          "source": "Printed grid 25-17.1 / 51-35.7"
+        },
+        {
+          "lat": 25.285,
+          "lon": 51.596666666666664,
+          "x": 192.24000549316406,
+          "y": 625.4400024414062,
+          "source": "Printed grid 25-17.1 / 51-35.8"
+        },
+        {
+          "lat": 25.285,
+          "lon": 51.598333333333336,
+          "x": 192.24000549316406,
+          "y": 580.4400024414062,
+          "source": "Printed grid 25-17.1 / 51-35.9"
+        },
+        {
+          "lat": 25.285,
+          "lon": 51.6,
+          "x": 192.24000549316406,
+          "y": 535.5599975585938,
+          "source": "Printed grid 25-17.1 / 51-36.0"
+        },
+        {
+          "lat": 25.285,
+          "lon": 51.60166666666667,
+          "x": 192.24000549316406,
+          "y": 490.0799865722656,
+          "source": "Printed grid 25-17.1 / 51-36.1"
+        },
+        {
+          "lat": 25.285,
+          "lon": 51.60333333333333,
+          "x": 192.24000549316406,
+          "y": 445.20001220703125,
+          "source": "Printed grid 25-17.1 / 51-36.2"
+        },
+        {
+          "lat": 25.285,
+          "lon": 51.605,
+          "x": 192.24000549316406,
+          "y": 399.9599914550781,
+          "source": "Printed grid 25-17.1 / 51-36.3"
+        },
+        {
+          "lat": 25.285,
+          "lon": 51.608333333333334,
+          "x": 192.24000549316406,
+          "y": 309.6000061035156,
+          "source": "Printed grid 25-17.1 / 51-36.5"
+        },
+        {
+          "lat": 25.285,
+          "lon": 51.61,
+          "x": 192.24000549316406,
+          "y": 264.3599853515625,
+          "source": "Printed grid 25-17.1 / 51-36.6"
+        },
+        {
+          "lat": 25.285,
+          "lon": 51.61333333333333,
+          "x": 192.24000549316406,
+          "y": 173.8800048828125,
+          "source": "Printed grid 25-17.1 / 51-36.8"
+        },
+        {
+          "lat": 25.285,
+          "lon": 51.615,
+          "x": 192.24000549316406,
+          "y": 128.760009765625,
+          "source": "Printed grid 25-17.1 / 51-36.9"
+        },
+        {
+          "lat": 25.285,
+          "lon": 51.61666666666667,
+          "x": 192.24000549316406,
+          "y": 83.52001953125,
+          "source": "Printed grid 25-17.1 / 51-37"
+        },
+        {
+          "lat": 25.285,
+          "lon": 51.61833333333333,
+          "x": 192.24000549316406,
+          "y": 38.280029296875,
+          "source": "Printed grid 25-17.1 / 51-37.1"
+        },
+        {
+          "lat": 25.286666666666665,
+          "lon": 51.593333333333334,
+          "x": 142.44000244140625,
+          "y": 716.4000244140625,
+          "source": "Printed grid 25-17.2 / 51-35.6"
+        },
+        {
+          "lat": 25.286666666666665,
+          "lon": 51.595,
+          "x": 142.44000244140625,
+          "y": 671.1600341796875,
+          "source": "Printed grid 25-17.2 / 51-35.7"
+        },
+        {
+          "lat": 25.286666666666665,
+          "lon": 51.596666666666664,
+          "x": 142.44000244140625,
+          "y": 625.4400024414062,
+          "source": "Printed grid 25-17.2 / 51-35.8"
+        },
+        {
+          "lat": 25.286666666666665,
+          "lon": 51.598333333333336,
+          "x": 142.44000244140625,
+          "y": 580.4400024414062,
+          "source": "Printed grid 25-17.2 / 51-35.9"
+        },
+        {
+          "lat": 25.286666666666665,
+          "lon": 51.6,
+          "x": 142.44000244140625,
+          "y": 535.5599975585938,
+          "source": "Printed grid 25-17.2 / 51-36.0"
+        },
+        {
+          "lat": 25.286666666666665,
+          "lon": 51.60166666666667,
+          "x": 142.44000244140625,
+          "y": 490.0799865722656,
+          "source": "Printed grid 25-17.2 / 51-36.1"
+        },
+        {
+          "lat": 25.286666666666665,
+          "lon": 51.60333333333333,
+          "x": 142.44000244140625,
+          "y": 445.20001220703125,
+          "source": "Printed grid 25-17.2 / 51-36.2"
+        },
+        {
+          "lat": 25.286666666666665,
+          "lon": 51.605,
+          "x": 142.44000244140625,
+          "y": 399.9599914550781,
+          "source": "Printed grid 25-17.2 / 51-36.3"
+        },
+        {
+          "lat": 25.286666666666665,
+          "lon": 51.608333333333334,
+          "x": 142.44000244140625,
+          "y": 309.6000061035156,
+          "source": "Printed grid 25-17.2 / 51-36.5"
+        },
+        {
+          "lat": 25.286666666666665,
+          "lon": 51.61,
+          "x": 142.44000244140625,
+          "y": 264.3599853515625,
+          "source": "Printed grid 25-17.2 / 51-36.6"
+        },
+        {
+          "lat": 25.286666666666665,
+          "lon": 51.61333333333333,
+          "x": 142.44000244140625,
+          "y": 173.8800048828125,
+          "source": "Printed grid 25-17.2 / 51-36.8"
+        },
+        {
+          "lat": 25.286666666666665,
+          "lon": 51.615,
+          "x": 142.44000244140625,
+          "y": 128.760009765625,
+          "source": "Printed grid 25-17.2 / 51-36.9"
+        },
+        {
+          "lat": 25.286666666666665,
+          "lon": 51.61666666666667,
+          "x": 142.44000244140625,
+          "y": 83.52001953125,
+          "source": "Printed grid 25-17.2 / 51-37"
+        },
+        {
+          "lat": 25.286666666666665,
+          "lon": 51.61833333333333,
+          "x": 142.44000244140625,
+          "y": 38.280029296875,
+          "source": "Printed grid 25-17.2 / 51-37.1"
+        },
+        {
+          "lat": 25.288333333333334,
+          "lon": 51.593333333333334,
+          "x": 92.87999725341797,
+          "y": 716.4000244140625,
+          "source": "Printed grid 25-17.3 / 51-35.6"
+        },
+        {
+          "lat": 25.288333333333334,
+          "lon": 51.595,
+          "x": 92.87999725341797,
+          "y": 671.1600341796875,
+          "source": "Printed grid 25-17.3 / 51-35.7"
+        },
+        {
+          "lat": 25.288333333333334,
+          "lon": 51.596666666666664,
+          "x": 92.87999725341797,
+          "y": 625.4400024414062,
+          "source": "Printed grid 25-17.3 / 51-35.8"
+        },
+        {
+          "lat": 25.288333333333334,
+          "lon": 51.598333333333336,
+          "x": 92.87999725341797,
+          "y": 580.4400024414062,
+          "source": "Printed grid 25-17.3 / 51-35.9"
+        },
+        {
+          "lat": 25.288333333333334,
+          "lon": 51.6,
+          "x": 92.87999725341797,
+          "y": 535.5599975585938,
+          "source": "Printed grid 25-17.3 / 51-36.0"
+        },
+        {
+          "lat": 25.288333333333334,
+          "lon": 51.60166666666667,
+          "x": 92.87999725341797,
+          "y": 490.0799865722656,
+          "source": "Printed grid 25-17.3 / 51-36.1"
+        },
+        {
+          "lat": 25.288333333333334,
+          "lon": 51.60333333333333,
+          "x": 92.87999725341797,
+          "y": 445.20001220703125,
+          "source": "Printed grid 25-17.3 / 51-36.2"
+        },
+        {
+          "lat": 25.288333333333334,
+          "lon": 51.605,
+          "x": 92.87999725341797,
+          "y": 399.9599914550781,
+          "source": "Printed grid 25-17.3 / 51-36.3"
+        },
+        {
+          "lat": 25.288333333333334,
+          "lon": 51.608333333333334,
+          "x": 92.87999725341797,
+          "y": 309.6000061035156,
+          "source": "Printed grid 25-17.3 / 51-36.5"
+        },
+        {
+          "lat": 25.288333333333334,
+          "lon": 51.61,
+          "x": 92.87999725341797,
+          "y": 264.3599853515625,
+          "source": "Printed grid 25-17.3 / 51-36.6"
+        },
+        {
+          "lat": 25.288333333333334,
+          "lon": 51.61333333333333,
+          "x": 92.87999725341797,
+          "y": 173.8800048828125,
+          "source": "Printed grid 25-17.3 / 51-36.8"
+        },
+        {
+          "lat": 25.288333333333334,
+          "lon": 51.615,
+          "x": 92.87999725341797,
+          "y": 128.760009765625,
+          "source": "Printed grid 25-17.3 / 51-36.9"
+        },
+        {
+          "lat": 25.288333333333334,
+          "lon": 51.61666666666667,
+          "x": 92.87999725341797,
+          "y": 83.52001953125,
+          "source": "Printed grid 25-17.3 / 51-37"
+        },
+        {
+          "lat": 25.288333333333334,
+          "lon": 51.61833333333333,
+          "x": 92.87999725341797,
+          "y": 38.280029296875,
+          "source": "Printed grid 25-17.3 / 51-37.1"
+        },
+        {
+          "lat": 25.29,
+          "lon": 51.593333333333334,
+          "x": 43.31999969482422,
+          "y": 716.4000244140625,
+          "source": "Printed grid 25-17.4 / 51-35.6"
+        },
+        {
+          "lat": 25.29,
+          "lon": 51.595,
+          "x": 43.31999969482422,
+          "y": 671.1600341796875,
+          "source": "Printed grid 25-17.4 / 51-35.7"
+        },
+        {
+          "lat": 25.29,
+          "lon": 51.596666666666664,
+          "x": 43.31999969482422,
+          "y": 625.4400024414062,
+          "source": "Printed grid 25-17.4 / 51-35.8"
+        },
+        {
+          "lat": 25.29,
+          "lon": 51.598333333333336,
+          "x": 43.31999969482422,
+          "y": 580.4400024414062,
+          "source": "Printed grid 25-17.4 / 51-35.9"
+        },
+        {
+          "lat": 25.29,
+          "lon": 51.6,
+          "x": 43.31999969482422,
+          "y": 535.5599975585938,
+          "source": "Printed grid 25-17.4 / 51-36.0"
+        },
+        {
+          "lat": 25.29,
+          "lon": 51.60166666666667,
+          "x": 43.31999969482422,
+          "y": 490.0799865722656,
+          "source": "Printed grid 25-17.4 / 51-36.1"
+        },
+        {
+          "lat": 25.29,
+          "lon": 51.60333333333333,
+          "x": 43.31999969482422,
+          "y": 445.20001220703125,
+          "source": "Printed grid 25-17.4 / 51-36.2"
+        },
+        {
+          "lat": 25.29,
+          "lon": 51.605,
+          "x": 43.31999969482422,
+          "y": 399.9599914550781,
+          "source": "Printed grid 25-17.4 / 51-36.3"
+        },
+        {
+          "lat": 25.29,
+          "lon": 51.608333333333334,
+          "x": 43.31999969482422,
+          "y": 309.6000061035156,
+          "source": "Printed grid 25-17.4 / 51-36.5"
+        },
+        {
+          "lat": 25.29,
+          "lon": 51.61,
+          "x": 43.31999969482422,
+          "y": 264.3599853515625,
+          "source": "Printed grid 25-17.4 / 51-36.6"
+        },
+        {
+          "lat": 25.29,
+          "lon": 51.61333333333333,
+          "x": 43.31999969482422,
+          "y": 173.8800048828125,
+          "source": "Printed grid 25-17.4 / 51-36.8"
+        },
+        {
+          "lat": 25.29,
+          "lon": 51.615,
+          "x": 43.31999969482422,
+          "y": 128.760009765625,
+          "source": "Printed grid 25-17.4 / 51-36.9"
+        },
+        {
+          "lat": 25.29,
+          "lon": 51.61666666666667,
+          "x": 43.31999969482422,
+          "y": 83.52001953125,
+          "source": "Printed grid 25-17.4 / 51-37"
+        },
+        {
+          "lat": 25.29,
+          "lon": 51.61833333333333,
+          "x": 43.31999969482422,
+          "y": 38.280029296875,
+          "source": "Printed grid 25-17.4 / 51-37.1"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 1539,
+      "airport": "OTHH",
+      "name": "APRON AND PARKING STAND COORDINATES 20-9C",
+      "chartKey": "OTHH|AIRPORT|20-9C|APRON AND PARKING STAND COORDINATES 20-9C",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 8.04,
+        "top": 18.84,
+        "right": 585.24,
+        "bottom": 763.08
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 25.25,
+          "lon": 51.60333333333333,
+          "x": 49.91999816894531,
+          "y": 758.760009765625,
+          "source": "Printed grid 25-15 / 51-36.2"
+        },
+        {
+          "lat": 25.25,
+          "lon": 51.605,
+          "x": 91.68000030517578,
+          "y": 758.760009765625,
+          "source": "Printed grid 25-15 / 51-36.3"
+        },
+        {
+          "lat": 25.25,
+          "lon": 51.60666666666667,
+          "x": 133.8000030517578,
+          "y": 758.760009765625,
+          "source": "Printed grid 25-15 / 51-36.4"
+        },
+        {
+          "lat": 25.25,
+          "lon": 51.608333333333334,
+          "x": 175.67999267578125,
+          "y": 758.760009765625,
+          "source": "Printed grid 25-15 / 51-36.5"
+        },
+        {
+          "lat": 25.25,
+          "lon": 51.61,
+          "x": 217.44000244140625,
+          "y": 758.760009765625,
+          "source": "Printed grid 25-15 / 51-36.6"
+        },
+        {
+          "lat": 25.25,
+          "lon": 51.611666666666665,
+          "x": 259.32000732421875,
+          "y": 758.760009765625,
+          "source": "Printed grid 25-15 / 51-36.7"
+        },
+        {
+          "lat": 25.25,
+          "lon": 51.61333333333333,
+          "x": 301.20001220703125,
+          "y": 758.760009765625,
+          "source": "Printed grid 25-15 / 51-36.8"
+        },
+        {
+          "lat": 25.25,
+          "lon": 51.615,
+          "x": 342.9599914550781,
+          "y": 758.760009765625,
+          "source": "Printed grid 25-15 / 51-36.9"
+        },
+        {
+          "lat": 25.25,
+          "lon": 51.61666666666667,
+          "x": 385.0799865722656,
+          "y": 758.760009765625,
+          "source": "Printed grid 25-15 / 51-37"
+        },
+        {
+          "lat": 25.25,
+          "lon": 51.61833333333333,
+          "x": 426.9599914550781,
+          "y": 758.760009765625,
+          "source": "Printed grid 25-15 / 51-37.1"
+        },
+        {
+          "lat": 25.25,
+          "lon": 51.62,
+          "x": 468.7200012207031,
+          "y": 758.760009765625,
+          "source": "Printed grid 25-15 / 51-37.2"
+        },
+        {
+          "lat": 25.25,
+          "lon": 51.62166666666667,
+          "x": 510.8399963378906,
+          "y": 758.760009765625,
+          "source": "Printed grid 25-15 / 51-37.3"
+        },
+        {
+          "lat": 25.25,
+          "lon": 51.623333333333335,
+          "x": 552.719970703125,
+          "y": 758.760009765625,
+          "source": "Printed grid 25-15 / 51-37.4"
+        },
+        {
+          "lat": 25.251666666666665,
+          "lon": 51.60333333333333,
+          "x": 49.91999816894531,
+          "y": 712.9199829101562,
+          "source": "Printed grid 25-15.1 / 51-36.2"
+        },
+        {
+          "lat": 25.251666666666665,
+          "lon": 51.605,
+          "x": 91.68000030517578,
+          "y": 712.9199829101562,
+          "source": "Printed grid 25-15.1 / 51-36.3"
+        },
+        {
+          "lat": 25.251666666666665,
+          "lon": 51.60666666666667,
+          "x": 133.8000030517578,
+          "y": 712.9199829101562,
+          "source": "Printed grid 25-15.1 / 51-36.4"
+        },
+        {
+          "lat": 25.251666666666665,
+          "lon": 51.608333333333334,
+          "x": 175.67999267578125,
+          "y": 712.9199829101562,
+          "source": "Printed grid 25-15.1 / 51-36.5"
+        },
+        {
+          "lat": 25.251666666666665,
+          "lon": 51.61,
+          "x": 217.44000244140625,
+          "y": 712.9199829101562,
+          "source": "Printed grid 25-15.1 / 51-36.6"
+        },
+        {
+          "lat": 25.251666666666665,
+          "lon": 51.611666666666665,
+          "x": 259.32000732421875,
+          "y": 712.9199829101562,
+          "source": "Printed grid 25-15.1 / 51-36.7"
+        },
+        {
+          "lat": 25.251666666666665,
+          "lon": 51.61333333333333,
+          "x": 301.20001220703125,
+          "y": 712.9199829101562,
+          "source": "Printed grid 25-15.1 / 51-36.8"
+        },
+        {
+          "lat": 25.251666666666665,
+          "lon": 51.615,
+          "x": 342.9599914550781,
+          "y": 712.9199829101562,
+          "source": "Printed grid 25-15.1 / 51-36.9"
+        },
+        {
+          "lat": 25.251666666666665,
+          "lon": 51.61666666666667,
+          "x": 385.0799865722656,
+          "y": 712.9199829101562,
+          "source": "Printed grid 25-15.1 / 51-37"
+        },
+        {
+          "lat": 25.251666666666665,
+          "lon": 51.61833333333333,
+          "x": 426.9599914550781,
+          "y": 712.9199829101562,
+          "source": "Printed grid 25-15.1 / 51-37.1"
+        },
+        {
+          "lat": 25.251666666666665,
+          "lon": 51.62,
+          "x": 468.7200012207031,
+          "y": 712.9199829101562,
+          "source": "Printed grid 25-15.1 / 51-37.2"
+        },
+        {
+          "lat": 25.251666666666665,
+          "lon": 51.62166666666667,
+          "x": 510.8399963378906,
+          "y": 712.9199829101562,
+          "source": "Printed grid 25-15.1 / 51-37.3"
+        },
+        {
+          "lat": 25.251666666666665,
+          "lon": 51.623333333333335,
+          "x": 552.719970703125,
+          "y": 712.9199829101562,
+          "source": "Printed grid 25-15.1 / 51-37.4"
+        },
+        {
+          "lat": 25.253333333333334,
+          "lon": 51.60333333333333,
+          "x": 49.91999816894531,
+          "y": 666.8399658203125,
+          "source": "Printed grid 25-15.2 / 51-36.2"
+        },
+        {
+          "lat": 25.253333333333334,
+          "lon": 51.605,
+          "x": 91.68000030517578,
+          "y": 666.8399658203125,
+          "source": "Printed grid 25-15.2 / 51-36.3"
+        },
+        {
+          "lat": 25.253333333333334,
+          "lon": 51.60666666666667,
+          "x": 133.8000030517578,
+          "y": 666.8399658203125,
+          "source": "Printed grid 25-15.2 / 51-36.4"
+        },
+        {
+          "lat": 25.253333333333334,
+          "lon": 51.608333333333334,
+          "x": 175.67999267578125,
+          "y": 666.8399658203125,
+          "source": "Printed grid 25-15.2 / 51-36.5"
+        },
+        {
+          "lat": 25.253333333333334,
+          "lon": 51.61,
+          "x": 217.44000244140625,
+          "y": 666.8399658203125,
+          "source": "Printed grid 25-15.2 / 51-36.6"
+        },
+        {
+          "lat": 25.253333333333334,
+          "lon": 51.611666666666665,
+          "x": 259.32000732421875,
+          "y": 666.8399658203125,
+          "source": "Printed grid 25-15.2 / 51-36.7"
+        },
+        {
+          "lat": 25.253333333333334,
+          "lon": 51.61333333333333,
+          "x": 301.20001220703125,
+          "y": 666.8399658203125,
+          "source": "Printed grid 25-15.2 / 51-36.8"
+        },
+        {
+          "lat": 25.253333333333334,
+          "lon": 51.615,
+          "x": 342.9599914550781,
+          "y": 666.8399658203125,
+          "source": "Printed grid 25-15.2 / 51-36.9"
+        },
+        {
+          "lat": 25.253333333333334,
+          "lon": 51.61666666666667,
+          "x": 385.0799865722656,
+          "y": 666.8399658203125,
+          "source": "Printed grid 25-15.2 / 51-37"
+        },
+        {
+          "lat": 25.253333333333334,
+          "lon": 51.61833333333333,
+          "x": 426.9599914550781,
+          "y": 666.8399658203125,
+          "source": "Printed grid 25-15.2 / 51-37.1"
+        },
+        {
+          "lat": 25.253333333333334,
+          "lon": 51.62,
+          "x": 468.7200012207031,
+          "y": 666.8399658203125,
+          "source": "Printed grid 25-15.2 / 51-37.2"
+        },
+        {
+          "lat": 25.253333333333334,
+          "lon": 51.62166666666667,
+          "x": 510.8399963378906,
+          "y": 666.8399658203125,
+          "source": "Printed grid 25-15.2 / 51-37.3"
+        },
+        {
+          "lat": 25.253333333333334,
+          "lon": 51.623333333333335,
+          "x": 552.719970703125,
+          "y": 666.8399658203125,
+          "source": "Printed grid 25-15.2 / 51-37.4"
+        },
+        {
+          "lat": 25.255,
+          "lon": 51.60333333333333,
+          "x": 49.91999816894531,
+          "y": 620.760009765625,
+          "source": "Printed grid 25-15.3 / 51-36.2"
+        },
+        {
+          "lat": 25.255,
+          "lon": 51.605,
+          "x": 91.68000030517578,
+          "y": 620.760009765625,
+          "source": "Printed grid 25-15.3 / 51-36.3"
+        },
+        {
+          "lat": 25.255,
+          "lon": 51.60666666666667,
+          "x": 133.8000030517578,
+          "y": 620.760009765625,
+          "source": "Printed grid 25-15.3 / 51-36.4"
+        },
+        {
+          "lat": 25.255,
+          "lon": 51.608333333333334,
+          "x": 175.67999267578125,
+          "y": 620.760009765625,
+          "source": "Printed grid 25-15.3 / 51-36.5"
+        },
+        {
+          "lat": 25.255,
+          "lon": 51.61,
+          "x": 217.44000244140625,
+          "y": 620.760009765625,
+          "source": "Printed grid 25-15.3 / 51-36.6"
+        },
+        {
+          "lat": 25.255,
+          "lon": 51.611666666666665,
+          "x": 259.32000732421875,
+          "y": 620.760009765625,
+          "source": "Printed grid 25-15.3 / 51-36.7"
+        },
+        {
+          "lat": 25.255,
+          "lon": 51.61333333333333,
+          "x": 301.20001220703125,
+          "y": 620.760009765625,
+          "source": "Printed grid 25-15.3 / 51-36.8"
+        },
+        {
+          "lat": 25.255,
+          "lon": 51.615,
+          "x": 342.9599914550781,
+          "y": 620.760009765625,
+          "source": "Printed grid 25-15.3 / 51-36.9"
+        },
+        {
+          "lat": 25.255,
+          "lon": 51.61666666666667,
+          "x": 385.0799865722656,
+          "y": 620.760009765625,
+          "source": "Printed grid 25-15.3 / 51-37"
+        },
+        {
+          "lat": 25.255,
+          "lon": 51.61833333333333,
+          "x": 426.9599914550781,
+          "y": 620.760009765625,
+          "source": "Printed grid 25-15.3 / 51-37.1"
+        },
+        {
+          "lat": 25.255,
+          "lon": 51.62,
+          "x": 468.7200012207031,
+          "y": 620.760009765625,
+          "source": "Printed grid 25-15.3 / 51-37.2"
+        },
+        {
+          "lat": 25.255,
+          "lon": 51.62166666666667,
+          "x": 510.8399963378906,
+          "y": 620.760009765625,
+          "source": "Printed grid 25-15.3 / 51-37.3"
+        },
+        {
+          "lat": 25.255,
+          "lon": 51.623333333333335,
+          "x": 552.719970703125,
+          "y": 620.760009765625,
+          "source": "Printed grid 25-15.3 / 51-37.4"
+        },
+        {
+          "lat": 25.256666666666668,
+          "lon": 51.60333333333333,
+          "x": 49.91999816894531,
+          "y": 574.9199829101562,
+          "source": "Printed grid 25-15.4 / 51-36.2"
+        },
+        {
+          "lat": 25.256666666666668,
+          "lon": 51.605,
+          "x": 91.68000030517578,
+          "y": 574.9199829101562,
+          "source": "Printed grid 25-15.4 / 51-36.3"
+        },
+        {
+          "lat": 25.256666666666668,
+          "lon": 51.60666666666667,
+          "x": 133.8000030517578,
+          "y": 574.9199829101562,
+          "source": "Printed grid 25-15.4 / 51-36.4"
+        },
+        {
+          "lat": 25.256666666666668,
+          "lon": 51.608333333333334,
+          "x": 175.67999267578125,
+          "y": 574.9199829101562,
+          "source": "Printed grid 25-15.4 / 51-36.5"
+        },
+        {
+          "lat": 25.256666666666668,
+          "lon": 51.61,
+          "x": 217.44000244140625,
+          "y": 574.9199829101562,
+          "source": "Printed grid 25-15.4 / 51-36.6"
+        },
+        {
+          "lat": 25.256666666666668,
+          "lon": 51.611666666666665,
+          "x": 259.32000732421875,
+          "y": 574.9199829101562,
+          "source": "Printed grid 25-15.4 / 51-36.7"
+        },
+        {
+          "lat": 25.256666666666668,
+          "lon": 51.61333333333333,
+          "x": 301.20001220703125,
+          "y": 574.9199829101562,
+          "source": "Printed grid 25-15.4 / 51-36.8"
+        },
+        {
+          "lat": 25.256666666666668,
+          "lon": 51.615,
+          "x": 342.9599914550781,
+          "y": 574.9199829101562,
+          "source": "Printed grid 25-15.4 / 51-36.9"
+        },
+        {
+          "lat": 25.256666666666668,
+          "lon": 51.61666666666667,
+          "x": 385.0799865722656,
+          "y": 574.9199829101562,
+          "source": "Printed grid 25-15.4 / 51-37"
+        },
+        {
+          "lat": 25.256666666666668,
+          "lon": 51.61833333333333,
+          "x": 426.9599914550781,
+          "y": 574.9199829101562,
+          "source": "Printed grid 25-15.4 / 51-37.1"
+        },
+        {
+          "lat": 25.256666666666668,
+          "lon": 51.62,
+          "x": 468.7200012207031,
+          "y": 574.9199829101562,
+          "source": "Printed grid 25-15.4 / 51-37.2"
+        },
+        {
+          "lat": 25.256666666666668,
+          "lon": 51.62166666666667,
+          "x": 510.8399963378906,
+          "y": 574.9199829101562,
+          "source": "Printed grid 25-15.4 / 51-37.3"
+        },
+        {
+          "lat": 25.256666666666668,
+          "lon": 51.623333333333335,
+          "x": 552.719970703125,
+          "y": 574.9199829101562,
+          "source": "Printed grid 25-15.4 / 51-37.4"
+        },
+        {
+          "lat": 25.258333333333333,
+          "lon": 51.60333333333333,
+          "x": 49.91999816894531,
+          "y": 529.0799560546875,
+          "source": "Printed grid 25-15.5 / 51-36.2"
+        },
+        {
+          "lat": 25.258333333333333,
+          "lon": 51.605,
+          "x": 91.68000030517578,
+          "y": 529.0799560546875,
+          "source": "Printed grid 25-15.5 / 51-36.3"
+        },
+        {
+          "lat": 25.258333333333333,
+          "lon": 51.60666666666667,
+          "x": 133.8000030517578,
+          "y": 529.0799560546875,
+          "source": "Printed grid 25-15.5 / 51-36.4"
+        },
+        {
+          "lat": 25.258333333333333,
+          "lon": 51.608333333333334,
+          "x": 175.67999267578125,
+          "y": 529.0799560546875,
+          "source": "Printed grid 25-15.5 / 51-36.5"
+        },
+        {
+          "lat": 25.258333333333333,
+          "lon": 51.61,
+          "x": 217.44000244140625,
+          "y": 529.0799560546875,
+          "source": "Printed grid 25-15.5 / 51-36.6"
+        },
+        {
+          "lat": 25.258333333333333,
+          "lon": 51.611666666666665,
+          "x": 259.32000732421875,
+          "y": 529.0799560546875,
+          "source": "Printed grid 25-15.5 / 51-36.7"
+        },
+        {
+          "lat": 25.258333333333333,
+          "lon": 51.61333333333333,
+          "x": 301.20001220703125,
+          "y": 529.0799560546875,
+          "source": "Printed grid 25-15.5 / 51-36.8"
+        },
+        {
+          "lat": 25.258333333333333,
+          "lon": 51.615,
+          "x": 342.9599914550781,
+          "y": 529.0799560546875,
+          "source": "Printed grid 25-15.5 / 51-36.9"
+        },
+        {
+          "lat": 25.258333333333333,
+          "lon": 51.61666666666667,
+          "x": 385.0799865722656,
+          "y": 529.0799560546875,
+          "source": "Printed grid 25-15.5 / 51-37"
+        },
+        {
+          "lat": 25.258333333333333,
+          "lon": 51.61833333333333,
+          "x": 426.9599914550781,
+          "y": 529.0799560546875,
+          "source": "Printed grid 25-15.5 / 51-37.1"
+        },
+        {
+          "lat": 25.258333333333333,
+          "lon": 51.62,
+          "x": 468.7200012207031,
+          "y": 529.0799560546875,
+          "source": "Printed grid 25-15.5 / 51-37.2"
+        },
+        {
+          "lat": 25.258333333333333,
+          "lon": 51.62166666666667,
+          "x": 510.8399963378906,
+          "y": 529.0799560546875,
+          "source": "Printed grid 25-15.5 / 51-37.3"
+        },
+        {
+          "lat": 25.258333333333333,
+          "lon": 51.623333333333335,
+          "x": 552.719970703125,
+          "y": 529.0799560546875,
+          "source": "Printed grid 25-15.5 / 51-37.4"
+        },
+        {
+          "lat": 25.26,
+          "lon": 51.60333333333333,
+          "x": 49.91999816894531,
+          "y": 482.8800048828125,
+          "source": "Printed grid 25-15.6 / 51-36.2"
+        },
+        {
+          "lat": 25.26,
+          "lon": 51.605,
+          "x": 91.68000030517578,
+          "y": 482.8800048828125,
+          "source": "Printed grid 25-15.6 / 51-36.3"
+        },
+        {
+          "lat": 25.26,
+          "lon": 51.60666666666667,
+          "x": 133.8000030517578,
+          "y": 482.8800048828125,
+          "source": "Printed grid 25-15.6 / 51-36.4"
+        },
+        {
+          "lat": 25.26,
+          "lon": 51.608333333333334,
+          "x": 175.67999267578125,
+          "y": 482.8800048828125,
+          "source": "Printed grid 25-15.6 / 51-36.5"
+        },
+        {
+          "lat": 25.26,
+          "lon": 51.61,
+          "x": 217.44000244140625,
+          "y": 482.8800048828125,
+          "source": "Printed grid 25-15.6 / 51-36.6"
+        },
+        {
+          "lat": 25.26,
+          "lon": 51.611666666666665,
+          "x": 259.32000732421875,
+          "y": 482.8800048828125,
+          "source": "Printed grid 25-15.6 / 51-36.7"
+        },
+        {
+          "lat": 25.26,
+          "lon": 51.61333333333333,
+          "x": 301.20001220703125,
+          "y": 482.8800048828125,
+          "source": "Printed grid 25-15.6 / 51-36.8"
+        },
+        {
+          "lat": 25.26,
+          "lon": 51.615,
+          "x": 342.9599914550781,
+          "y": 482.8800048828125,
+          "source": "Printed grid 25-15.6 / 51-36.9"
+        },
+        {
+          "lat": 25.26,
+          "lon": 51.61666666666667,
+          "x": 385.0799865722656,
+          "y": 482.8800048828125,
+          "source": "Printed grid 25-15.6 / 51-37"
+        },
+        {
+          "lat": 25.26,
+          "lon": 51.61833333333333,
+          "x": 426.9599914550781,
+          "y": 482.8800048828125,
+          "source": "Printed grid 25-15.6 / 51-37.1"
+        },
+        {
+          "lat": 25.26,
+          "lon": 51.62,
+          "x": 468.7200012207031,
+          "y": 482.8800048828125,
+          "source": "Printed grid 25-15.6 / 51-37.2"
+        },
+        {
+          "lat": 25.26,
+          "lon": 51.62166666666667,
+          "x": 510.8399963378906,
+          "y": 482.8800048828125,
+          "source": "Printed grid 25-15.6 / 51-37.3"
+        },
+        {
+          "lat": 25.26,
+          "lon": 51.623333333333335,
+          "x": 552.719970703125,
+          "y": 482.8800048828125,
+          "source": "Printed grid 25-15.6 / 51-37.4"
+        },
+        {
+          "lat": 25.265,
+          "lon": 51.60333333333333,
+          "x": 49.91999816894531,
+          "y": 344.8800048828125,
+          "source": "Printed grid 25-15.9 / 51-36.2"
+        },
+        {
+          "lat": 25.265,
+          "lon": 51.605,
+          "x": 91.68000030517578,
+          "y": 344.8800048828125,
+          "source": "Printed grid 25-15.9 / 51-36.3"
+        },
+        {
+          "lat": 25.265,
+          "lon": 51.60666666666667,
+          "x": 133.8000030517578,
+          "y": 344.8800048828125,
+          "source": "Printed grid 25-15.9 / 51-36.4"
+        },
+        {
+          "lat": 25.265,
+          "lon": 51.608333333333334,
+          "x": 175.67999267578125,
+          "y": 344.8800048828125,
+          "source": "Printed grid 25-15.9 / 51-36.5"
+        },
+        {
+          "lat": 25.265,
+          "lon": 51.61,
+          "x": 217.44000244140625,
+          "y": 344.8800048828125,
+          "source": "Printed grid 25-15.9 / 51-36.6"
+        },
+        {
+          "lat": 25.265,
+          "lon": 51.611666666666665,
+          "x": 259.32000732421875,
+          "y": 344.8800048828125,
+          "source": "Printed grid 25-15.9 / 51-36.7"
+        },
+        {
+          "lat": 25.265,
+          "lon": 51.61333333333333,
+          "x": 301.20001220703125,
+          "y": 344.8800048828125,
+          "source": "Printed grid 25-15.9 / 51-36.8"
+        },
+        {
+          "lat": 25.265,
+          "lon": 51.615,
+          "x": 342.9599914550781,
+          "y": 344.8800048828125,
+          "source": "Printed grid 25-15.9 / 51-36.9"
+        },
+        {
+          "lat": 25.265,
+          "lon": 51.61666666666667,
+          "x": 385.0799865722656,
+          "y": 344.8800048828125,
+          "source": "Printed grid 25-15.9 / 51-37"
+        },
+        {
+          "lat": 25.265,
+          "lon": 51.61833333333333,
+          "x": 426.9599914550781,
+          "y": 344.8800048828125,
+          "source": "Printed grid 25-15.9 / 51-37.1"
+        },
+        {
+          "lat": 25.265,
+          "lon": 51.62,
+          "x": 468.7200012207031,
+          "y": 344.8800048828125,
+          "source": "Printed grid 25-15.9 / 51-37.2"
+        },
+        {
+          "lat": 25.265,
+          "lon": 51.62166666666667,
+          "x": 510.8399963378906,
+          "y": 344.8800048828125,
+          "source": "Printed grid 25-15.9 / 51-37.3"
+        },
+        {
+          "lat": 25.265,
+          "lon": 51.623333333333335,
+          "x": 552.719970703125,
+          "y": 344.8800048828125,
+          "source": "Printed grid 25-15.9 / 51-37.4"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.60333333333333,
+          "x": 49.91999816894531,
+          "y": 298.67999267578125,
+          "source": "Printed grid 25-16 / 51-36.2"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.605,
+          "x": 91.68000030517578,
+          "y": 298.67999267578125,
+          "source": "Printed grid 25-16 / 51-36.3"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.60666666666667,
+          "x": 133.8000030517578,
+          "y": 298.67999267578125,
+          "source": "Printed grid 25-16 / 51-36.4"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.608333333333334,
+          "x": 175.67999267578125,
+          "y": 298.67999267578125,
+          "source": "Printed grid 25-16 / 51-36.5"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.61,
+          "x": 217.44000244140625,
+          "y": 298.67999267578125,
+          "source": "Printed grid 25-16 / 51-36.6"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.611666666666665,
+          "x": 259.32000732421875,
+          "y": 298.67999267578125,
+          "source": "Printed grid 25-16 / 51-36.7"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.61333333333333,
+          "x": 301.20001220703125,
+          "y": 298.67999267578125,
+          "source": "Printed grid 25-16 / 51-36.8"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.615,
+          "x": 342.9599914550781,
+          "y": 298.67999267578125,
+          "source": "Printed grid 25-16 / 51-36.9"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.61666666666667,
+          "x": 385.0799865722656,
+          "y": 298.67999267578125,
+          "source": "Printed grid 25-16 / 51-37"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.61833333333333,
+          "x": 426.9599914550781,
+          "y": 298.67999267578125,
+          "source": "Printed grid 25-16 / 51-37.1"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.62,
+          "x": 468.7200012207031,
+          "y": 298.67999267578125,
+          "source": "Printed grid 25-16 / 51-37.2"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.62166666666667,
+          "x": 510.8399963378906,
+          "y": 298.67999267578125,
+          "source": "Printed grid 25-16 / 51-37.3"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.623333333333335,
+          "x": 552.719970703125,
+          "y": 298.67999267578125,
+          "source": "Printed grid 25-16 / 51-37.4"
+        },
+        {
+          "lat": 25.268333333333334,
+          "lon": 51.60333333333333,
+          "x": 49.91999816894531,
+          "y": 252.5999755859375,
+          "source": "Printed grid 25-16.1 / 51-36.2"
+        },
+        {
+          "lat": 25.268333333333334,
+          "lon": 51.605,
+          "x": 91.68000030517578,
+          "y": 252.5999755859375,
+          "source": "Printed grid 25-16.1 / 51-36.3"
+        },
+        {
+          "lat": 25.268333333333334,
+          "lon": 51.60666666666667,
+          "x": 133.8000030517578,
+          "y": 252.5999755859375,
+          "source": "Printed grid 25-16.1 / 51-36.4"
+        },
+        {
+          "lat": 25.268333333333334,
+          "lon": 51.608333333333334,
+          "x": 175.67999267578125,
+          "y": 252.5999755859375,
+          "source": "Printed grid 25-16.1 / 51-36.5"
+        },
+        {
+          "lat": 25.268333333333334,
+          "lon": 51.61,
+          "x": 217.44000244140625,
+          "y": 252.5999755859375,
+          "source": "Printed grid 25-16.1 / 51-36.6"
+        },
+        {
+          "lat": 25.268333333333334,
+          "lon": 51.611666666666665,
+          "x": 259.32000732421875,
+          "y": 252.5999755859375,
+          "source": "Printed grid 25-16.1 / 51-36.7"
+        },
+        {
+          "lat": 25.268333333333334,
+          "lon": 51.61333333333333,
+          "x": 301.20001220703125,
+          "y": 252.5999755859375,
+          "source": "Printed grid 25-16.1 / 51-36.8"
+        },
+        {
+          "lat": 25.268333333333334,
+          "lon": 51.615,
+          "x": 342.9599914550781,
+          "y": 252.5999755859375,
+          "source": "Printed grid 25-16.1 / 51-36.9"
+        },
+        {
+          "lat": 25.268333333333334,
+          "lon": 51.61666666666667,
+          "x": 385.0799865722656,
+          "y": 252.5999755859375,
+          "source": "Printed grid 25-16.1 / 51-37"
+        },
+        {
+          "lat": 25.268333333333334,
+          "lon": 51.61833333333333,
+          "x": 426.9599914550781,
+          "y": 252.5999755859375,
+          "source": "Printed grid 25-16.1 / 51-37.1"
+        },
+        {
+          "lat": 25.268333333333334,
+          "lon": 51.62,
+          "x": 468.7200012207031,
+          "y": 252.5999755859375,
+          "source": "Printed grid 25-16.1 / 51-37.2"
+        },
+        {
+          "lat": 25.268333333333334,
+          "lon": 51.62166666666667,
+          "x": 510.8399963378906,
+          "y": 252.5999755859375,
+          "source": "Printed grid 25-16.1 / 51-37.3"
+        },
+        {
+          "lat": 25.268333333333334,
+          "lon": 51.623333333333335,
+          "x": 552.719970703125,
+          "y": 252.5999755859375,
+          "source": "Printed grid 25-16.1 / 51-37.4"
+        },
+        {
+          "lat": 25.27,
+          "lon": 51.60333333333333,
+          "x": 49.91999816894531,
+          "y": 206.4000244140625,
+          "source": "Printed grid 25-16.2 / 51-36.2"
+        },
+        {
+          "lat": 25.27,
+          "lon": 51.605,
+          "x": 91.68000030517578,
+          "y": 206.4000244140625,
+          "source": "Printed grid 25-16.2 / 51-36.3"
+        },
+        {
+          "lat": 25.27,
+          "lon": 51.60666666666667,
+          "x": 133.8000030517578,
+          "y": 206.4000244140625,
+          "source": "Printed grid 25-16.2 / 51-36.4"
+        },
+        {
+          "lat": 25.27,
+          "lon": 51.608333333333334,
+          "x": 175.67999267578125,
+          "y": 206.4000244140625,
+          "source": "Printed grid 25-16.2 / 51-36.5"
+        },
+        {
+          "lat": 25.27,
+          "lon": 51.61,
+          "x": 217.44000244140625,
+          "y": 206.4000244140625,
+          "source": "Printed grid 25-16.2 / 51-36.6"
+        },
+        {
+          "lat": 25.27,
+          "lon": 51.611666666666665,
+          "x": 259.32000732421875,
+          "y": 206.4000244140625,
+          "source": "Printed grid 25-16.2 / 51-36.7"
+        },
+        {
+          "lat": 25.27,
+          "lon": 51.61333333333333,
+          "x": 301.20001220703125,
+          "y": 206.4000244140625,
+          "source": "Printed grid 25-16.2 / 51-36.8"
+        },
+        {
+          "lat": 25.27,
+          "lon": 51.615,
+          "x": 342.9599914550781,
+          "y": 206.4000244140625,
+          "source": "Printed grid 25-16.2 / 51-36.9"
+        },
+        {
+          "lat": 25.27,
+          "lon": 51.61666666666667,
+          "x": 385.0799865722656,
+          "y": 206.4000244140625,
+          "source": "Printed grid 25-16.2 / 51-37"
+        },
+        {
+          "lat": 25.27,
+          "lon": 51.61833333333333,
+          "x": 426.9599914550781,
+          "y": 206.4000244140625,
+          "source": "Printed grid 25-16.2 / 51-37.1"
+        },
+        {
+          "lat": 25.27,
+          "lon": 51.62,
+          "x": 468.7200012207031,
+          "y": 206.4000244140625,
+          "source": "Printed grid 25-16.2 / 51-37.2"
+        },
+        {
+          "lat": 25.27,
+          "lon": 51.62166666666667,
+          "x": 510.8399963378906,
+          "y": 206.4000244140625,
+          "source": "Printed grid 25-16.2 / 51-37.3"
+        },
+        {
+          "lat": 25.27,
+          "lon": 51.623333333333335,
+          "x": 552.719970703125,
+          "y": 206.4000244140625,
+          "source": "Printed grid 25-16.2 / 51-37.4"
+        },
+        {
+          "lat": 25.27166666666667,
+          "lon": 51.60333333333333,
+          "x": 49.91999816894531,
+          "y": 160.67999267578125,
+          "source": "Printed grid 25-16.3 / 51-36.2"
+        },
+        {
+          "lat": 25.27166666666667,
+          "lon": 51.605,
+          "x": 91.68000030517578,
+          "y": 160.67999267578125,
+          "source": "Printed grid 25-16.3 / 51-36.3"
+        },
+        {
+          "lat": 25.27166666666667,
+          "lon": 51.60666666666667,
+          "x": 133.8000030517578,
+          "y": 160.67999267578125,
+          "source": "Printed grid 25-16.3 / 51-36.4"
+        },
+        {
+          "lat": 25.27166666666667,
+          "lon": 51.608333333333334,
+          "x": 175.67999267578125,
+          "y": 160.67999267578125,
+          "source": "Printed grid 25-16.3 / 51-36.5"
+        },
+        {
+          "lat": 25.27166666666667,
+          "lon": 51.61,
+          "x": 217.44000244140625,
+          "y": 160.67999267578125,
+          "source": "Printed grid 25-16.3 / 51-36.6"
+        },
+        {
+          "lat": 25.27166666666667,
+          "lon": 51.611666666666665,
+          "x": 259.32000732421875,
+          "y": 160.67999267578125,
+          "source": "Printed grid 25-16.3 / 51-36.7"
+        },
+        {
+          "lat": 25.27166666666667,
+          "lon": 51.61333333333333,
+          "x": 301.20001220703125,
+          "y": 160.67999267578125,
+          "source": "Printed grid 25-16.3 / 51-36.8"
+        },
+        {
+          "lat": 25.27166666666667,
+          "lon": 51.615,
+          "x": 342.9599914550781,
+          "y": 160.67999267578125,
+          "source": "Printed grid 25-16.3 / 51-36.9"
+        },
+        {
+          "lat": 25.27166666666667,
+          "lon": 51.61666666666667,
+          "x": 385.0799865722656,
+          "y": 160.67999267578125,
+          "source": "Printed grid 25-16.3 / 51-37"
+        },
+        {
+          "lat": 25.27166666666667,
+          "lon": 51.61833333333333,
+          "x": 426.9599914550781,
+          "y": 160.67999267578125,
+          "source": "Printed grid 25-16.3 / 51-37.1"
+        },
+        {
+          "lat": 25.27166666666667,
+          "lon": 51.62,
+          "x": 468.7200012207031,
+          "y": 160.67999267578125,
+          "source": "Printed grid 25-16.3 / 51-37.2"
+        },
+        {
+          "lat": 25.27166666666667,
+          "lon": 51.62166666666667,
+          "x": 510.8399963378906,
+          "y": 160.67999267578125,
+          "source": "Printed grid 25-16.3 / 51-37.3"
+        },
+        {
+          "lat": 25.27166666666667,
+          "lon": 51.623333333333335,
+          "x": 552.719970703125,
+          "y": 160.67999267578125,
+          "source": "Printed grid 25-16.3 / 51-37.4"
+        },
+        {
+          "lat": 25.273333333333333,
+          "lon": 51.60333333333333,
+          "x": 49.91999816894531,
+          "y": 114.47998046875,
+          "source": "Printed grid 25-16.4 / 51-36.2"
+        },
+        {
+          "lat": 25.273333333333333,
+          "lon": 51.605,
+          "x": 91.68000030517578,
+          "y": 114.47998046875,
+          "source": "Printed grid 25-16.4 / 51-36.3"
+        },
+        {
+          "lat": 25.273333333333333,
+          "lon": 51.60666666666667,
+          "x": 133.8000030517578,
+          "y": 114.47998046875,
+          "source": "Printed grid 25-16.4 / 51-36.4"
+        },
+        {
+          "lat": 25.273333333333333,
+          "lon": 51.608333333333334,
+          "x": 175.67999267578125,
+          "y": 114.47998046875,
+          "source": "Printed grid 25-16.4 / 51-36.5"
+        },
+        {
+          "lat": 25.273333333333333,
+          "lon": 51.61,
+          "x": 217.44000244140625,
+          "y": 114.47998046875,
+          "source": "Printed grid 25-16.4 / 51-36.6"
+        },
+        {
+          "lat": 25.273333333333333,
+          "lon": 51.611666666666665,
+          "x": 259.32000732421875,
+          "y": 114.47998046875,
+          "source": "Printed grid 25-16.4 / 51-36.7"
+        },
+        {
+          "lat": 25.273333333333333,
+          "lon": 51.61333333333333,
+          "x": 301.20001220703125,
+          "y": 114.47998046875,
+          "source": "Printed grid 25-16.4 / 51-36.8"
+        },
+        {
+          "lat": 25.273333333333333,
+          "lon": 51.615,
+          "x": 342.9599914550781,
+          "y": 114.47998046875,
+          "source": "Printed grid 25-16.4 / 51-36.9"
+        },
+        {
+          "lat": 25.273333333333333,
+          "lon": 51.61666666666667,
+          "x": 385.0799865722656,
+          "y": 114.47998046875,
+          "source": "Printed grid 25-16.4 / 51-37"
+        },
+        {
+          "lat": 25.273333333333333,
+          "lon": 51.61833333333333,
+          "x": 426.9599914550781,
+          "y": 114.47998046875,
+          "source": "Printed grid 25-16.4 / 51-37.1"
+        },
+        {
+          "lat": 25.273333333333333,
+          "lon": 51.62,
+          "x": 468.7200012207031,
+          "y": 114.47998046875,
+          "source": "Printed grid 25-16.4 / 51-37.2"
+        },
+        {
+          "lat": 25.273333333333333,
+          "lon": 51.62166666666667,
+          "x": 510.8399963378906,
+          "y": 114.47998046875,
+          "source": "Printed grid 25-16.4 / 51-37.3"
+        },
+        {
+          "lat": 25.273333333333333,
+          "lon": 51.623333333333335,
+          "x": 552.719970703125,
+          "y": 114.47998046875,
+          "source": "Printed grid 25-16.4 / 51-37.4"
+        },
+        {
+          "lat": 25.275,
+          "lon": 51.60333333333333,
+          "x": 49.91999816894531,
+          "y": 69,
+          "source": "Printed grid 25-16.5 / 51-36.2"
+        },
+        {
+          "lat": 25.275,
+          "lon": 51.605,
+          "x": 91.68000030517578,
+          "y": 69,
+          "source": "Printed grid 25-16.5 / 51-36.3"
+        },
+        {
+          "lat": 25.275,
+          "lon": 51.60666666666667,
+          "x": 133.8000030517578,
+          "y": 69,
+          "source": "Printed grid 25-16.5 / 51-36.4"
+        },
+        {
+          "lat": 25.275,
+          "lon": 51.608333333333334,
+          "x": 175.67999267578125,
+          "y": 69,
+          "source": "Printed grid 25-16.5 / 51-36.5"
+        },
+        {
+          "lat": 25.275,
+          "lon": 51.61,
+          "x": 217.44000244140625,
+          "y": 69,
+          "source": "Printed grid 25-16.5 / 51-36.6"
+        },
+        {
+          "lat": 25.275,
+          "lon": 51.611666666666665,
+          "x": 259.32000732421875,
+          "y": 69,
+          "source": "Printed grid 25-16.5 / 51-36.7"
+        },
+        {
+          "lat": 25.275,
+          "lon": 51.61333333333333,
+          "x": 301.20001220703125,
+          "y": 69,
+          "source": "Printed grid 25-16.5 / 51-36.8"
+        },
+        {
+          "lat": 25.275,
+          "lon": 51.615,
+          "x": 342.9599914550781,
+          "y": 69,
+          "source": "Printed grid 25-16.5 / 51-36.9"
+        },
+        {
+          "lat": 25.275,
+          "lon": 51.61666666666667,
+          "x": 385.0799865722656,
+          "y": 69,
+          "source": "Printed grid 25-16.5 / 51-37"
+        },
+        {
+          "lat": 25.275,
+          "lon": 51.61833333333333,
+          "x": 426.9599914550781,
+          "y": 69,
+          "source": "Printed grid 25-16.5 / 51-37.1"
+        },
+        {
+          "lat": 25.275,
+          "lon": 51.62,
+          "x": 468.7200012207031,
+          "y": 69,
+          "source": "Printed grid 25-16.5 / 51-37.2"
+        },
+        {
+          "lat": 25.275,
+          "lon": 51.62166666666667,
+          "x": 510.8399963378906,
+          "y": 69,
+          "source": "Printed grid 25-16.5 / 51-37.3"
+        },
+        {
+          "lat": 25.275,
+          "lon": 51.623333333333335,
+          "x": 552.719970703125,
+          "y": 69,
+          "source": "Printed grid 25-16.5 / 51-37.4"
+        },
+        {
+          "lat": 25.276666666666667,
+          "lon": 51.60333333333333,
+          "x": 49.91999816894531,
+          "y": 22.79998779296875,
+          "source": "Printed grid 25-16.6 / 51-36.2"
+        },
+        {
+          "lat": 25.276666666666667,
+          "lon": 51.605,
+          "x": 91.68000030517578,
+          "y": 22.79998779296875,
+          "source": "Printed grid 25-16.6 / 51-36.3"
+        },
+        {
+          "lat": 25.276666666666667,
+          "lon": 51.60666666666667,
+          "x": 133.8000030517578,
+          "y": 22.79998779296875,
+          "source": "Printed grid 25-16.6 / 51-36.4"
+        },
+        {
+          "lat": 25.276666666666667,
+          "lon": 51.608333333333334,
+          "x": 175.67999267578125,
+          "y": 22.79998779296875,
+          "source": "Printed grid 25-16.6 / 51-36.5"
+        },
+        {
+          "lat": 25.276666666666667,
+          "lon": 51.61,
+          "x": 217.44000244140625,
+          "y": 22.79998779296875,
+          "source": "Printed grid 25-16.6 / 51-36.6"
+        },
+        {
+          "lat": 25.276666666666667,
+          "lon": 51.611666666666665,
+          "x": 259.32000732421875,
+          "y": 22.79998779296875,
+          "source": "Printed grid 25-16.6 / 51-36.7"
+        },
+        {
+          "lat": 25.276666666666667,
+          "lon": 51.61333333333333,
+          "x": 301.20001220703125,
+          "y": 22.79998779296875,
+          "source": "Printed grid 25-16.6 / 51-36.8"
+        },
+        {
+          "lat": 25.276666666666667,
+          "lon": 51.615,
+          "x": 342.9599914550781,
+          "y": 22.79998779296875,
+          "source": "Printed grid 25-16.6 / 51-36.9"
+        },
+        {
+          "lat": 25.276666666666667,
+          "lon": 51.61666666666667,
+          "x": 385.0799865722656,
+          "y": 22.79998779296875,
+          "source": "Printed grid 25-16.6 / 51-37"
+        },
+        {
+          "lat": 25.276666666666667,
+          "lon": 51.61833333333333,
+          "x": 426.9599914550781,
+          "y": 22.79998779296875,
+          "source": "Printed grid 25-16.6 / 51-37.1"
+        },
+        {
+          "lat": 25.276666666666667,
+          "lon": 51.62,
+          "x": 468.7200012207031,
+          "y": 22.79998779296875,
+          "source": "Printed grid 25-16.6 / 51-37.2"
+        },
+        {
+          "lat": 25.276666666666667,
+          "lon": 51.62166666666667,
+          "x": 510.8399963378906,
+          "y": 22.79998779296875,
+          "source": "Printed grid 25-16.6 / 51-37.3"
+        },
+        {
+          "lat": 25.276666666666667,
+          "lon": 51.623333333333335,
+          "x": 552.719970703125,
+          "y": 22.79998779296875,
+          "source": "Printed grid 25-16.6 / 51-37.4"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 1540,
+      "airport": "OTHH",
+      "name": "APRON AND PARKING STAND COORDINATES 20-9D",
+      "chartKey": "OTHH|AIRPORT|20-9D|APRON AND PARKING STAND COORDINATES 20-9D",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 28.92,
+        "top": 331.2,
+        "right": 603.72,
+        "bottom": 764.76
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 25.25,
+          "lon": 51.58833333333333,
+          "x": 560.0399780273438,
+          "y": 750.3599853515625,
+          "source": "Printed grid 25-15 / 51-35.3"
+        },
+        {
+          "lat": 25.25,
+          "lon": 51.59,
+          "x": 560.0399780273438,
+          "y": 709.6801147460938,
+          "source": "Printed grid 25-15 / 51-35.4"
+        },
+        {
+          "lat": 25.25,
+          "lon": 51.59166666666667,
+          "x": 560.0399780273438,
+          "y": 669.47998046875,
+          "source": "Printed grid 25-15 / 51-35.5"
+        },
+        {
+          "lat": 25.25,
+          "lon": 51.593333333333334,
+          "x": 560.0399780273438,
+          "y": 629.1600341796875,
+          "source": "Printed grid 25-15 / 51-35.6"
+        },
+        {
+          "lat": 25.25,
+          "lon": 51.595,
+          "x": 560.0399780273438,
+          "y": 588.8399658203125,
+          "source": "Printed grid 25-15 / 51-35.7"
+        },
+        {
+          "lat": 25.25,
+          "lon": 51.596666666666664,
+          "x": 560.0399780273438,
+          "y": 548.52001953125,
+          "source": "Printed grid 25-15 / 51-35.8"
+        },
+        {
+          "lat": 25.25,
+          "lon": 51.598333333333336,
+          "x": 560.0399780273438,
+          "y": 508.32000732421875,
+          "source": "Printed grid 25-15 / 51-35.9"
+        },
+        {
+          "lat": 25.25,
+          "lon": 51.6,
+          "x": 560.0399780273438,
+          "y": 467.6400146484375,
+          "source": "Printed grid 25-15 / 51-36"
+        },
+        {
+          "lat": 25.25,
+          "lon": 51.60166666666667,
+          "x": 560.0399780273438,
+          "y": 427.44000244140625,
+          "source": "Printed grid 25-15 / 51-36.1"
+        },
+        {
+          "lat": 25.25,
+          "lon": 51.60333333333333,
+          "x": 560.0399780273438,
+          "y": 387.1199951171875,
+          "source": "Printed grid 25-15 / 51-36.2"
+        },
+        {
+          "lat": 25.25,
+          "lon": 51.605,
+          "x": 560.0399780273438,
+          "y": 346.79998779296875,
+          "source": "Printed grid 25-15 / 51-36.3"
+        },
+        {
+          "lat": 25.251666666666665,
+          "lon": 51.58833333333333,
+          "x": 515.760009765625,
+          "y": 750.3599853515625,
+          "source": "Printed grid 25-15.1 / 51-35.3"
+        },
+        {
+          "lat": 25.251666666666665,
+          "lon": 51.59,
+          "x": 515.760009765625,
+          "y": 709.6801147460938,
+          "source": "Printed grid 25-15.1 / 51-35.4"
+        },
+        {
+          "lat": 25.251666666666665,
+          "lon": 51.59166666666667,
+          "x": 515.760009765625,
+          "y": 669.47998046875,
+          "source": "Printed grid 25-15.1 / 51-35.5"
+        },
+        {
+          "lat": 25.251666666666665,
+          "lon": 51.593333333333334,
+          "x": 515.760009765625,
+          "y": 629.1600341796875,
+          "source": "Printed grid 25-15.1 / 51-35.6"
+        },
+        {
+          "lat": 25.251666666666665,
+          "lon": 51.595,
+          "x": 515.760009765625,
+          "y": 588.8399658203125,
+          "source": "Printed grid 25-15.1 / 51-35.7"
+        },
+        {
+          "lat": 25.251666666666665,
+          "lon": 51.596666666666664,
+          "x": 515.760009765625,
+          "y": 548.52001953125,
+          "source": "Printed grid 25-15.1 / 51-35.8"
+        },
+        {
+          "lat": 25.251666666666665,
+          "lon": 51.598333333333336,
+          "x": 515.760009765625,
+          "y": 508.32000732421875,
+          "source": "Printed grid 25-15.1 / 51-35.9"
+        },
+        {
+          "lat": 25.251666666666665,
+          "lon": 51.6,
+          "x": 515.760009765625,
+          "y": 467.6400146484375,
+          "source": "Printed grid 25-15.1 / 51-36"
+        },
+        {
+          "lat": 25.251666666666665,
+          "lon": 51.60166666666667,
+          "x": 515.760009765625,
+          "y": 427.44000244140625,
+          "source": "Printed grid 25-15.1 / 51-36.1"
+        },
+        {
+          "lat": 25.251666666666665,
+          "lon": 51.60333333333333,
+          "x": 515.760009765625,
+          "y": 387.1199951171875,
+          "source": "Printed grid 25-15.1 / 51-36.2"
+        },
+        {
+          "lat": 25.251666666666665,
+          "lon": 51.605,
+          "x": 515.760009765625,
+          "y": 346.79998779296875,
+          "source": "Printed grid 25-15.1 / 51-36.3"
+        },
+        {
+          "lat": 25.253333333333334,
+          "lon": 51.58833333333333,
+          "x": 471.1199951171875,
+          "y": 750.3599853515625,
+          "source": "Printed grid 25-15.2 / 51-35.3"
+        },
+        {
+          "lat": 25.253333333333334,
+          "lon": 51.59,
+          "x": 471.1199951171875,
+          "y": 709.6801147460938,
+          "source": "Printed grid 25-15.2 / 51-35.4"
+        },
+        {
+          "lat": 25.253333333333334,
+          "lon": 51.59166666666667,
+          "x": 471.1199951171875,
+          "y": 669.47998046875,
+          "source": "Printed grid 25-15.2 / 51-35.5"
+        },
+        {
+          "lat": 25.253333333333334,
+          "lon": 51.593333333333334,
+          "x": 471.1199951171875,
+          "y": 629.1600341796875,
+          "source": "Printed grid 25-15.2 / 51-35.6"
+        },
+        {
+          "lat": 25.253333333333334,
+          "lon": 51.595,
+          "x": 471.1199951171875,
+          "y": 588.8399658203125,
+          "source": "Printed grid 25-15.2 / 51-35.7"
+        },
+        {
+          "lat": 25.253333333333334,
+          "lon": 51.596666666666664,
+          "x": 471.1199951171875,
+          "y": 548.52001953125,
+          "source": "Printed grid 25-15.2 / 51-35.8"
+        },
+        {
+          "lat": 25.253333333333334,
+          "lon": 51.598333333333336,
+          "x": 471.1199951171875,
+          "y": 508.32000732421875,
+          "source": "Printed grid 25-15.2 / 51-35.9"
+        },
+        {
+          "lat": 25.253333333333334,
+          "lon": 51.6,
+          "x": 471.1199951171875,
+          "y": 467.6400146484375,
+          "source": "Printed grid 25-15.2 / 51-36"
+        },
+        {
+          "lat": 25.253333333333334,
+          "lon": 51.60166666666667,
+          "x": 471.1199951171875,
+          "y": 427.44000244140625,
+          "source": "Printed grid 25-15.2 / 51-36.1"
+        },
+        {
+          "lat": 25.253333333333334,
+          "lon": 51.60333333333333,
+          "x": 471.1199951171875,
+          "y": 387.1199951171875,
+          "source": "Printed grid 25-15.2 / 51-36.2"
+        },
+        {
+          "lat": 25.253333333333334,
+          "lon": 51.605,
+          "x": 471.1199951171875,
+          "y": 346.79998779296875,
+          "source": "Printed grid 25-15.2 / 51-36.3"
+        },
+        {
+          "lat": 25.255,
+          "lon": 51.58833333333333,
+          "x": 426.8399963378906,
+          "y": 750.3599853515625,
+          "source": "Printed grid 25-15.3 / 51-35.3"
+        },
+        {
+          "lat": 25.255,
+          "lon": 51.59,
+          "x": 426.8399963378906,
+          "y": 709.6801147460938,
+          "source": "Printed grid 25-15.3 / 51-35.4"
+        },
+        {
+          "lat": 25.255,
+          "lon": 51.59166666666667,
+          "x": 426.8399963378906,
+          "y": 669.47998046875,
+          "source": "Printed grid 25-15.3 / 51-35.5"
+        },
+        {
+          "lat": 25.255,
+          "lon": 51.593333333333334,
+          "x": 426.8399963378906,
+          "y": 629.1600341796875,
+          "source": "Printed grid 25-15.3 / 51-35.6"
+        },
+        {
+          "lat": 25.255,
+          "lon": 51.595,
+          "x": 426.8399963378906,
+          "y": 588.8399658203125,
+          "source": "Printed grid 25-15.3 / 51-35.7"
+        },
+        {
+          "lat": 25.255,
+          "lon": 51.596666666666664,
+          "x": 426.8399963378906,
+          "y": 548.52001953125,
+          "source": "Printed grid 25-15.3 / 51-35.8"
+        },
+        {
+          "lat": 25.255,
+          "lon": 51.598333333333336,
+          "x": 426.8399963378906,
+          "y": 508.32000732421875,
+          "source": "Printed grid 25-15.3 / 51-35.9"
+        },
+        {
+          "lat": 25.255,
+          "lon": 51.6,
+          "x": 426.8399963378906,
+          "y": 467.6400146484375,
+          "source": "Printed grid 25-15.3 / 51-36"
+        },
+        {
+          "lat": 25.255,
+          "lon": 51.60166666666667,
+          "x": 426.8399963378906,
+          "y": 427.44000244140625,
+          "source": "Printed grid 25-15.3 / 51-36.1"
+        },
+        {
+          "lat": 25.255,
+          "lon": 51.60333333333333,
+          "x": 426.8399963378906,
+          "y": 387.1199951171875,
+          "source": "Printed grid 25-15.3 / 51-36.2"
+        },
+        {
+          "lat": 25.255,
+          "lon": 51.605,
+          "x": 426.8399963378906,
+          "y": 346.79998779296875,
+          "source": "Printed grid 25-15.3 / 51-36.3"
+        },
+        {
+          "lat": 25.256666666666668,
+          "lon": 51.58833333333333,
+          "x": 382.55999755859375,
+          "y": 750.3599853515625,
+          "source": "Printed grid 25-15.4 / 51-35.3"
+        },
+        {
+          "lat": 25.256666666666668,
+          "lon": 51.59,
+          "x": 382.55999755859375,
+          "y": 709.6801147460938,
+          "source": "Printed grid 25-15.4 / 51-35.4"
+        },
+        {
+          "lat": 25.256666666666668,
+          "lon": 51.59166666666667,
+          "x": 382.55999755859375,
+          "y": 669.47998046875,
+          "source": "Printed grid 25-15.4 / 51-35.5"
+        },
+        {
+          "lat": 25.256666666666668,
+          "lon": 51.593333333333334,
+          "x": 382.55999755859375,
+          "y": 629.1600341796875,
+          "source": "Printed grid 25-15.4 / 51-35.6"
+        },
+        {
+          "lat": 25.256666666666668,
+          "lon": 51.595,
+          "x": 382.55999755859375,
+          "y": 588.8399658203125,
+          "source": "Printed grid 25-15.4 / 51-35.7"
+        },
+        {
+          "lat": 25.256666666666668,
+          "lon": 51.596666666666664,
+          "x": 382.55999755859375,
+          "y": 548.52001953125,
+          "source": "Printed grid 25-15.4 / 51-35.8"
+        },
+        {
+          "lat": 25.256666666666668,
+          "lon": 51.598333333333336,
+          "x": 382.55999755859375,
+          "y": 508.32000732421875,
+          "source": "Printed grid 25-15.4 / 51-35.9"
+        },
+        {
+          "lat": 25.256666666666668,
+          "lon": 51.6,
+          "x": 382.55999755859375,
+          "y": 467.6400146484375,
+          "source": "Printed grid 25-15.4 / 51-36"
+        },
+        {
+          "lat": 25.256666666666668,
+          "lon": 51.60166666666667,
+          "x": 382.55999755859375,
+          "y": 427.44000244140625,
+          "source": "Printed grid 25-15.4 / 51-36.1"
+        },
+        {
+          "lat": 25.256666666666668,
+          "lon": 51.60333333333333,
+          "x": 382.55999755859375,
+          "y": 387.1199951171875,
+          "source": "Printed grid 25-15.4 / 51-36.2"
+        },
+        {
+          "lat": 25.256666666666668,
+          "lon": 51.605,
+          "x": 382.55999755859375,
+          "y": 346.79998779296875,
+          "source": "Printed grid 25-15.4 / 51-36.3"
+        },
+        {
+          "lat": 25.258333333333333,
+          "lon": 51.58833333333333,
+          "x": 338.2799987792969,
+          "y": 750.3599853515625,
+          "source": "Printed grid 25-15.5 / 51-35.3"
+        },
+        {
+          "lat": 25.258333333333333,
+          "lon": 51.59,
+          "x": 338.2799987792969,
+          "y": 709.6801147460938,
+          "source": "Printed grid 25-15.5 / 51-35.4"
+        },
+        {
+          "lat": 25.258333333333333,
+          "lon": 51.59166666666667,
+          "x": 338.2799987792969,
+          "y": 669.47998046875,
+          "source": "Printed grid 25-15.5 / 51-35.5"
+        },
+        {
+          "lat": 25.258333333333333,
+          "lon": 51.593333333333334,
+          "x": 338.2799987792969,
+          "y": 629.1600341796875,
+          "source": "Printed grid 25-15.5 / 51-35.6"
+        },
+        {
+          "lat": 25.258333333333333,
+          "lon": 51.595,
+          "x": 338.2799987792969,
+          "y": 588.8399658203125,
+          "source": "Printed grid 25-15.5 / 51-35.7"
+        },
+        {
+          "lat": 25.258333333333333,
+          "lon": 51.596666666666664,
+          "x": 338.2799987792969,
+          "y": 548.52001953125,
+          "source": "Printed grid 25-15.5 / 51-35.8"
+        },
+        {
+          "lat": 25.258333333333333,
+          "lon": 51.598333333333336,
+          "x": 338.2799987792969,
+          "y": 508.32000732421875,
+          "source": "Printed grid 25-15.5 / 51-35.9"
+        },
+        {
+          "lat": 25.258333333333333,
+          "lon": 51.6,
+          "x": 338.2799987792969,
+          "y": 467.6400146484375,
+          "source": "Printed grid 25-15.5 / 51-36"
+        },
+        {
+          "lat": 25.258333333333333,
+          "lon": 51.60166666666667,
+          "x": 338.2799987792969,
+          "y": 427.44000244140625,
+          "source": "Printed grid 25-15.5 / 51-36.1"
+        },
+        {
+          "lat": 25.258333333333333,
+          "lon": 51.60333333333333,
+          "x": 338.2799987792969,
+          "y": 387.1199951171875,
+          "source": "Printed grid 25-15.5 / 51-36.2"
+        },
+        {
+          "lat": 25.258333333333333,
+          "lon": 51.605,
+          "x": 338.2799987792969,
+          "y": 346.79998779296875,
+          "source": "Printed grid 25-15.5 / 51-36.3"
+        },
+        {
+          "lat": 25.26,
+          "lon": 51.58833333333333,
+          "x": 293.760009765625,
+          "y": 750.3599853515625,
+          "source": "Printed grid 25-15.6 / 51-35.3"
+        },
+        {
+          "lat": 25.26,
+          "lon": 51.59,
+          "x": 293.760009765625,
+          "y": 709.6801147460938,
+          "source": "Printed grid 25-15.6 / 51-35.4"
+        },
+        {
+          "lat": 25.26,
+          "lon": 51.59166666666667,
+          "x": 293.760009765625,
+          "y": 669.47998046875,
+          "source": "Printed grid 25-15.6 / 51-35.5"
+        },
+        {
+          "lat": 25.26,
+          "lon": 51.593333333333334,
+          "x": 293.760009765625,
+          "y": 629.1600341796875,
+          "source": "Printed grid 25-15.6 / 51-35.6"
+        },
+        {
+          "lat": 25.26,
+          "lon": 51.595,
+          "x": 293.760009765625,
+          "y": 588.8399658203125,
+          "source": "Printed grid 25-15.6 / 51-35.7"
+        },
+        {
+          "lat": 25.26,
+          "lon": 51.596666666666664,
+          "x": 293.760009765625,
+          "y": 548.52001953125,
+          "source": "Printed grid 25-15.6 / 51-35.8"
+        },
+        {
+          "lat": 25.26,
+          "lon": 51.598333333333336,
+          "x": 293.760009765625,
+          "y": 508.32000732421875,
+          "source": "Printed grid 25-15.6 / 51-35.9"
+        },
+        {
+          "lat": 25.26,
+          "lon": 51.6,
+          "x": 293.760009765625,
+          "y": 467.6400146484375,
+          "source": "Printed grid 25-15.6 / 51-36"
+        },
+        {
+          "lat": 25.26,
+          "lon": 51.60166666666667,
+          "x": 293.760009765625,
+          "y": 427.44000244140625,
+          "source": "Printed grid 25-15.6 / 51-36.1"
+        },
+        {
+          "lat": 25.26,
+          "lon": 51.60333333333333,
+          "x": 293.760009765625,
+          "y": 387.1199951171875,
+          "source": "Printed grid 25-15.6 / 51-36.2"
+        },
+        {
+          "lat": 25.26,
+          "lon": 51.605,
+          "x": 293.760009765625,
+          "y": 346.79998779296875,
+          "source": "Printed grid 25-15.6 / 51-36.3"
+        },
+        {
+          "lat": 25.261666666666667,
+          "lon": 51.58833333333333,
+          "x": 249.47999572753906,
+          "y": 750.3599853515625,
+          "source": "Printed grid 25-15.7 / 51-35.3"
+        },
+        {
+          "lat": 25.261666666666667,
+          "lon": 51.59,
+          "x": 249.47999572753906,
+          "y": 709.6801147460938,
+          "source": "Printed grid 25-15.7 / 51-35.4"
+        },
+        {
+          "lat": 25.261666666666667,
+          "lon": 51.59166666666667,
+          "x": 249.47999572753906,
+          "y": 669.47998046875,
+          "source": "Printed grid 25-15.7 / 51-35.5"
+        },
+        {
+          "lat": 25.261666666666667,
+          "lon": 51.593333333333334,
+          "x": 249.47999572753906,
+          "y": 629.1600341796875,
+          "source": "Printed grid 25-15.7 / 51-35.6"
+        },
+        {
+          "lat": 25.261666666666667,
+          "lon": 51.595,
+          "x": 249.47999572753906,
+          "y": 588.8399658203125,
+          "source": "Printed grid 25-15.7 / 51-35.7"
+        },
+        {
+          "lat": 25.261666666666667,
+          "lon": 51.596666666666664,
+          "x": 249.47999572753906,
+          "y": 548.52001953125,
+          "source": "Printed grid 25-15.7 / 51-35.8"
+        },
+        {
+          "lat": 25.261666666666667,
+          "lon": 51.598333333333336,
+          "x": 249.47999572753906,
+          "y": 508.32000732421875,
+          "source": "Printed grid 25-15.7 / 51-35.9"
+        },
+        {
+          "lat": 25.261666666666667,
+          "lon": 51.6,
+          "x": 249.47999572753906,
+          "y": 467.6400146484375,
+          "source": "Printed grid 25-15.7 / 51-36"
+        },
+        {
+          "lat": 25.261666666666667,
+          "lon": 51.60166666666667,
+          "x": 249.47999572753906,
+          "y": 427.44000244140625,
+          "source": "Printed grid 25-15.7 / 51-36.1"
+        },
+        {
+          "lat": 25.261666666666667,
+          "lon": 51.60333333333333,
+          "x": 249.47999572753906,
+          "y": 387.1199951171875,
+          "source": "Printed grid 25-15.7 / 51-36.2"
+        },
+        {
+          "lat": 25.261666666666667,
+          "lon": 51.605,
+          "x": 249.47999572753906,
+          "y": 346.79998779296875,
+          "source": "Printed grid 25-15.7 / 51-36.3"
+        },
+        {
+          "lat": 25.263333333333332,
+          "lon": 51.58833333333333,
+          "x": 205.0800018310547,
+          "y": 750.3599853515625,
+          "source": "Printed grid 25-15.8 / 51-35.3"
+        },
+        {
+          "lat": 25.263333333333332,
+          "lon": 51.59,
+          "x": 205.0800018310547,
+          "y": 709.6801147460938,
+          "source": "Printed grid 25-15.8 / 51-35.4"
+        },
+        {
+          "lat": 25.263333333333332,
+          "lon": 51.59166666666667,
+          "x": 205.0800018310547,
+          "y": 669.47998046875,
+          "source": "Printed grid 25-15.8 / 51-35.5"
+        },
+        {
+          "lat": 25.263333333333332,
+          "lon": 51.593333333333334,
+          "x": 205.0800018310547,
+          "y": 629.1600341796875,
+          "source": "Printed grid 25-15.8 / 51-35.6"
+        },
+        {
+          "lat": 25.263333333333332,
+          "lon": 51.595,
+          "x": 205.0800018310547,
+          "y": 588.8399658203125,
+          "source": "Printed grid 25-15.8 / 51-35.7"
+        },
+        {
+          "lat": 25.263333333333332,
+          "lon": 51.596666666666664,
+          "x": 205.0800018310547,
+          "y": 548.52001953125,
+          "source": "Printed grid 25-15.8 / 51-35.8"
+        },
+        {
+          "lat": 25.263333333333332,
+          "lon": 51.598333333333336,
+          "x": 205.0800018310547,
+          "y": 508.32000732421875,
+          "source": "Printed grid 25-15.8 / 51-35.9"
+        },
+        {
+          "lat": 25.263333333333332,
+          "lon": 51.6,
+          "x": 205.0800018310547,
+          "y": 467.6400146484375,
+          "source": "Printed grid 25-15.8 / 51-36"
+        },
+        {
+          "lat": 25.263333333333332,
+          "lon": 51.60166666666667,
+          "x": 205.0800018310547,
+          "y": 427.44000244140625,
+          "source": "Printed grid 25-15.8 / 51-36.1"
+        },
+        {
+          "lat": 25.263333333333332,
+          "lon": 51.60333333333333,
+          "x": 205.0800018310547,
+          "y": 387.1199951171875,
+          "source": "Printed grid 25-15.8 / 51-36.2"
+        },
+        {
+          "lat": 25.263333333333332,
+          "lon": 51.605,
+          "x": 205.0800018310547,
+          "y": 346.79998779296875,
+          "source": "Printed grid 25-15.8 / 51-36.3"
+        },
+        {
+          "lat": 25.265,
+          "lon": 51.58833333333333,
+          "x": 160.55999755859375,
+          "y": 750.3599853515625,
+          "source": "Printed grid 25-15.9 / 51-35.3"
+        },
+        {
+          "lat": 25.265,
+          "lon": 51.59,
+          "x": 160.55999755859375,
+          "y": 709.6801147460938,
+          "source": "Printed grid 25-15.9 / 51-35.4"
+        },
+        {
+          "lat": 25.265,
+          "lon": 51.59166666666667,
+          "x": 160.55999755859375,
+          "y": 669.47998046875,
+          "source": "Printed grid 25-15.9 / 51-35.5"
+        },
+        {
+          "lat": 25.265,
+          "lon": 51.593333333333334,
+          "x": 160.55999755859375,
+          "y": 629.1600341796875,
+          "source": "Printed grid 25-15.9 / 51-35.6"
+        },
+        {
+          "lat": 25.265,
+          "lon": 51.595,
+          "x": 160.55999755859375,
+          "y": 588.8399658203125,
+          "source": "Printed grid 25-15.9 / 51-35.7"
+        },
+        {
+          "lat": 25.265,
+          "lon": 51.596666666666664,
+          "x": 160.55999755859375,
+          "y": 548.52001953125,
+          "source": "Printed grid 25-15.9 / 51-35.8"
+        },
+        {
+          "lat": 25.265,
+          "lon": 51.598333333333336,
+          "x": 160.55999755859375,
+          "y": 508.32000732421875,
+          "source": "Printed grid 25-15.9 / 51-35.9"
+        },
+        {
+          "lat": 25.265,
+          "lon": 51.6,
+          "x": 160.55999755859375,
+          "y": 467.6400146484375,
+          "source": "Printed grid 25-15.9 / 51-36"
+        },
+        {
+          "lat": 25.265,
+          "lon": 51.60166666666667,
+          "x": 160.55999755859375,
+          "y": 427.44000244140625,
+          "source": "Printed grid 25-15.9 / 51-36.1"
+        },
+        {
+          "lat": 25.265,
+          "lon": 51.60333333333333,
+          "x": 160.55999755859375,
+          "y": 387.1199951171875,
+          "source": "Printed grid 25-15.9 / 51-36.2"
+        },
+        {
+          "lat": 25.265,
+          "lon": 51.605,
+          "x": 160.55999755859375,
+          "y": 346.79998779296875,
+          "source": "Printed grid 25-15.9 / 51-36.3"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.58833333333333,
+          "x": 116.27999877929688,
+          "y": 750.3599853515625,
+          "source": "Printed grid 25-16 / 51-35.3"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.59,
+          "x": 116.27999877929688,
+          "y": 709.6801147460938,
+          "source": "Printed grid 25-16 / 51-35.4"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.59166666666667,
+          "x": 116.27999877929688,
+          "y": 669.47998046875,
+          "source": "Printed grid 25-16 / 51-35.5"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.593333333333334,
+          "x": 116.27999877929688,
+          "y": 629.1600341796875,
+          "source": "Printed grid 25-16 / 51-35.6"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.595,
+          "x": 116.27999877929688,
+          "y": 588.8399658203125,
+          "source": "Printed grid 25-16 / 51-35.7"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.596666666666664,
+          "x": 116.27999877929688,
+          "y": 548.52001953125,
+          "source": "Printed grid 25-16 / 51-35.8"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.598333333333336,
+          "x": 116.27999877929688,
+          "y": 508.32000732421875,
+          "source": "Printed grid 25-16 / 51-35.9"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.6,
+          "x": 116.27999877929688,
+          "y": 467.6400146484375,
+          "source": "Printed grid 25-16 / 51-36"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.60166666666667,
+          "x": 116.27999877929688,
+          "y": 427.44000244140625,
+          "source": "Printed grid 25-16 / 51-36.1"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.60333333333333,
+          "x": 116.27999877929688,
+          "y": 387.1199951171875,
+          "source": "Printed grid 25-16 / 51-36.2"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.605,
+          "x": 116.27999877929688,
+          "y": 346.79998779296875,
+          "source": "Printed grid 25-16 / 51-36.3"
+        },
+        {
+          "lat": 25.268333333333334,
+          "lon": 51.58833333333333,
+          "x": 72,
+          "y": 750.3599853515625,
+          "source": "Printed grid 25-16.1 / 51-35.3"
+        },
+        {
+          "lat": 25.268333333333334,
+          "lon": 51.59,
+          "x": 72,
+          "y": 709.6801147460938,
+          "source": "Printed grid 25-16.1 / 51-35.4"
+        },
+        {
+          "lat": 25.268333333333334,
+          "lon": 51.59166666666667,
+          "x": 72,
+          "y": 669.47998046875,
+          "source": "Printed grid 25-16.1 / 51-35.5"
+        },
+        {
+          "lat": 25.268333333333334,
+          "lon": 51.593333333333334,
+          "x": 72,
+          "y": 629.1600341796875,
+          "source": "Printed grid 25-16.1 / 51-35.6"
+        },
+        {
+          "lat": 25.268333333333334,
+          "lon": 51.595,
+          "x": 72,
+          "y": 588.8399658203125,
+          "source": "Printed grid 25-16.1 / 51-35.7"
+        },
+        {
+          "lat": 25.268333333333334,
+          "lon": 51.596666666666664,
+          "x": 72,
+          "y": 548.52001953125,
+          "source": "Printed grid 25-16.1 / 51-35.8"
+        },
+        {
+          "lat": 25.268333333333334,
+          "lon": 51.598333333333336,
+          "x": 72,
+          "y": 508.32000732421875,
+          "source": "Printed grid 25-16.1 / 51-35.9"
+        },
+        {
+          "lat": 25.268333333333334,
+          "lon": 51.6,
+          "x": 72,
+          "y": 467.6400146484375,
+          "source": "Printed grid 25-16.1 / 51-36"
+        },
+        {
+          "lat": 25.268333333333334,
+          "lon": 51.60166666666667,
+          "x": 72,
+          "y": 427.44000244140625,
+          "source": "Printed grid 25-16.1 / 51-36.1"
+        },
+        {
+          "lat": 25.268333333333334,
+          "lon": 51.60333333333333,
+          "x": 72,
+          "y": 387.1199951171875,
+          "source": "Printed grid 25-16.1 / 51-36.2"
+        },
+        {
+          "lat": 25.268333333333334,
+          "lon": 51.605,
+          "x": 72,
+          "y": 346.79998779296875,
+          "source": "Printed grid 25-16.1 / 51-36.3"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 1549,
+      "airport": "OTHH",
+      "name": "AIRPORT GROUND CHART 20-9N",
+      "chartKey": "OTHH|AIRPORT|20-9N|AIRPORT GROUND CHART 20-9N",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 612,
+        "bottom": 792
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 25.25,
+          "lon": 51.6,
+          "x": 183.9600067138672,
+          "y": 734.1599731445312,
+          "source": "Printed grid 25-15 / 51-36"
+        },
+        {
+          "lat": 25.25,
+          "lon": 51.61666666666667,
+          "x": 385.67999267578125,
+          "y": 734.1599731445312,
+          "source": "Printed grid 25-15 / 51-37"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.6,
+          "x": 183.9600067138672,
+          "y": 512.4000244140625,
+          "source": "Printed grid 25-16 / 51-36"
+        },
+        {
+          "lat": 25.266666666666666,
+          "lon": 51.61666666666667,
+          "x": 385.67999267578125,
+          "y": 512.4000244140625,
+          "source": "Printed grid 25-16 / 51-37"
+        },
+        {
+          "lat": 25.283333333333335,
+          "lon": 51.6,
+          "x": 183.9600067138672,
+          "y": 290.3999938964844,
+          "source": "Printed grid 25-17 / 51-36"
+        },
+        {
+          "lat": 25.283333333333335,
+          "lon": 51.61666666666667,
+          "x": 385.67999267578125,
+          "y": 290.3999938964844,
+          "source": "Printed grid 25-17 / 51-37"
+        },
+        {
+          "lat": 25.3,
+          "lon": 51.6,
+          "x": 183.9600067138672,
+          "y": 68.6400146484375,
+          "source": "Printed grid 25-18 / 51-36"
+        },
+        {
+          "lat": 25.3,
+          "lon": 51.61666666666667,
+          "x": 385.67999267578125,
+          "y": 68.6400146484375,
+          "source": "Printed grid 25-18 / 51-37"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 1552,
+      "airport": "OTHH",
+      "name": "ILS RWY 16R",
+      "chartKey": "OTHH|APPROACH|21-2|ILS RWY 16R",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.72,
+        "top": 226.92,
+        "right": 531.48,
+        "bottom": 493.68
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 25.166666666666668,
+          "lon": 51.5,
+          "x": 237.60000610351562,
+          "y": 490.44000244140625,
+          "source": "Printed grid 25-10 / 51-30"
+        },
+        {
+          "lat": 25.166666666666668,
+          "lon": 51.666666666666664,
+          "x": 349.9200134277344,
+          "y": 490.44000244140625,
+          "source": "Printed grid 25-10 / 51-40"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 51.5,
+          "x": 237.60000610351562,
+          "y": 369.9599914550781,
+          "source": "Printed grid 25-20 / 51-30"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 51.666666666666664,
+          "x": 349.9200134277344,
+          "y": 369.9599914550781,
+          "source": "Printed grid 25-20 / 51-40"
+        },
+        {
+          "lat": 25.5,
+          "lon": 51.5,
+          "x": 237.60000610351562,
+          "y": 246.239990234375,
+          "source": "Printed grid 25-30 / 51-30"
+        },
+        {
+          "lat": 25.5,
+          "lon": 51.666666666666664,
+          "x": 349.9200134277344,
+          "y": 246.239990234375,
+          "source": "Printed grid 25-30 / 51-40"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 1553,
+      "airport": "OTHH",
+      "name": "CAT II/III ILS RWY 16R",
+      "chartKey": "OTHH|APPROACH|21-2A|CAT II/III ILS RWY 16R",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 612,
+        "bottom": 792
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 25.166666666666668,
+          "lon": 51.333333333333336,
+          "x": 125.5199966430664,
+          "y": 510.1199951171875,
+          "source": "Printed grid 25-10 / 51-20"
+        },
+        {
+          "lat": 25.166666666666668,
+          "lon": 51.5,
+          "x": 237.60000610351562,
+          "y": 510.1199951171875,
+          "source": "Printed grid 25-10 / 51-30"
+        },
+        {
+          "lat": 25.166666666666668,
+          "lon": 51.666666666666664,
+          "x": 350.0400085449219,
+          "y": 510.1199951171875,
+          "source": "Printed grid 25-10 / 51-40"
+        },
+        {
+          "lat": 25.166666666666668,
+          "lon": 51.833333333333336,
+          "x": 462.239990234375,
+          "y": 510.1199951171875,
+          "source": "Printed grid 25-10 / 51-50"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 51.333333333333336,
+          "x": 125.5199966430664,
+          "y": 386.6400146484375,
+          "source": "Printed grid 25-20 / 51-20"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 51.5,
+          "x": 237.60000610351562,
+          "y": 386.6400146484375,
+          "source": "Printed grid 25-20 / 51-30"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 51.666666666666664,
+          "x": 350.0400085449219,
+          "y": 386.6400146484375,
+          "source": "Printed grid 25-20 / 51-40"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 51.833333333333336,
+          "x": 462.239990234375,
+          "y": 386.6400146484375,
+          "source": "Printed grid 25-20 / 51-50"
+        },
+        {
+          "lat": 25.5,
+          "lon": 51.333333333333336,
+          "x": 125.5199966430664,
+          "y": 263.03997802734375,
+          "source": "Printed grid 25-30 / 51-20"
+        },
+        {
+          "lat": 25.5,
+          "lon": 51.5,
+          "x": 237.60000610351562,
+          "y": 263.03997802734375,
+          "source": "Printed grid 25-30 / 51-30"
+        },
+        {
+          "lat": 25.5,
+          "lon": 51.666666666666664,
+          "x": 350.0400085449219,
+          "y": 263.03997802734375,
+          "source": "Printed grid 25-30 / 51-40"
+        },
+        {
+          "lat": 25.5,
+          "lon": 51.833333333333336,
+          "x": 462.239990234375,
+          "y": 263.03997802734375,
+          "source": "Printed grid 25-30 / 51-50"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 1556,
+      "airport": "OTHH",
+      "name": "ILS RWY 34R",
+      "chartKey": "OTHH|APPROACH|21-4|ILS RWY 34R",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.72,
+        "top": 242.64,
+        "right": 531.72,
+        "bottom": 502.56
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 25.166666666666668,
+          "lon": 51.5,
+          "x": 188.8800048828125,
+          "y": 390.9599914550781,
+          "source": "Printed grid 25-10 / 51-30"
+        },
+        {
+          "lat": 25.166666666666668,
+          "lon": 51.666666666666664,
+          "x": 301.20001220703125,
+          "y": 390.9599914550781,
+          "source": "Printed grid 25-10 / 51-40"
+        },
+        {
+          "lat": 25.166666666666668,
+          "lon": 51.833333333333336,
+          "x": 413.3999938964844,
+          "y": 390.9599914550781,
+          "source": "Printed grid 25-10 / 51-50"
+        },
+        {
+          "lat": 25.166666666666668,
+          "lon": 52,
+          "x": 525.47998046875,
+          "y": 390.9599914550781,
+          "source": "Printed grid 25-10 / 52-00"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 51.5,
+          "x": 188.8800048828125,
+          "y": 267.3599853515625,
+          "source": "Printed grid 25-20 / 51-30"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 51.666666666666664,
+          "x": 301.20001220703125,
+          "y": 267.3599853515625,
+          "source": "Printed grid 25-20 / 51-40"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 51.833333333333336,
+          "x": 413.3999938964844,
+          "y": 267.3599853515625,
+          "source": "Printed grid 25-20 / 51-50"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 52,
+          "x": 525.47998046875,
+          "y": 267.3599853515625,
+          "source": "Printed grid 25-20 / 52-00"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 1557,
+      "airport": "OTHH",
+      "name": "CAT II/III ILS RWY 34R",
+      "chartKey": "OTHH|APPROACH|21-4A|CAT II/III ILS RWY 34R",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.72,
+        "top": 243.12,
+        "right": 531.72,
+        "bottom": 527.4
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 25,
+          "lon": 51.5,
+          "x": 188.8800048828125,
+          "y": 518.760009765625,
+          "source": "Printed grid 25-00 / 51-30"
+        },
+        {
+          "lat": 25,
+          "lon": 51.666666666666664,
+          "x": 301.20001220703125,
+          "y": 518.760009765625,
+          "source": "Printed grid 25-00 / 51-40"
+        },
+        {
+          "lat": 25,
+          "lon": 51.833333333333336,
+          "x": 413.3999938964844,
+          "y": 518.760009765625,
+          "source": "Printed grid 25-00 / 51-50"
+        },
+        {
+          "lat": 25.166666666666668,
+          "lon": 51.5,
+          "x": 188.8800048828125,
+          "y": 395.6400146484375,
+          "source": "Printed grid 25-10 / 51-30"
+        },
+        {
+          "lat": 25.166666666666668,
+          "lon": 51.666666666666664,
+          "x": 301.20001220703125,
+          "y": 395.6400146484375,
+          "source": "Printed grid 25-10 / 51-40"
+        },
+        {
+          "lat": 25.166666666666668,
+          "lon": 51.833333333333336,
+          "x": 413.3999938964844,
+          "y": 395.6400146484375,
+          "source": "Printed grid 25-10 / 51-50"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 51.5,
+          "x": 188.8800048828125,
+          "y": 272.15997314453125,
+          "source": "Printed grid 25-20 / 51-30"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 51.666666666666664,
+          "x": 301.20001220703125,
+          "y": 272.15997314453125,
+          "source": "Printed grid 25-20 / 51-40"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 51.833333333333336,
+          "x": 413.3999938964844,
+          "y": 272.15997314453125,
+          "source": "Printed grid 25-20 / 51-50"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 1559,
+      "airport": "OTHH",
+      "name": "RNP RWY 16R",
+      "chartKey": "OTHH|APPROACH|22-2|RNP RWY 16R",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.72,
+        "top": 210.84,
+        "right": 531.72,
+        "bottom": 486.36
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 25.333333333333332,
+          "lon": 51.333333333333336,
+          "x": 107.27999877929688,
+          "y": 403.55999755859375,
+          "source": "Printed grid 25-20 / 51-20"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 51.5,
+          "x": 219.72000122070312,
+          "y": 403.55999755859375,
+          "source": "Printed grid 25-20 / 51-30"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 51.666666666666664,
+          "x": 331.79998779296875,
+          "y": 403.55999755859375,
+          "source": "Printed grid 25-20 / 51-40"
+        },
+        {
+          "lat": 25.5,
+          "lon": 51.333333333333336,
+          "x": 107.27999877929688,
+          "y": 280.0799865722656,
+          "source": "Printed grid 25-30 / 51-20"
+        },
+        {
+          "lat": 25.5,
+          "lon": 51.5,
+          "x": 219.72000122070312,
+          "y": 280.0799865722656,
+          "source": "Printed grid 25-30 / 51-30"
+        },
+        {
+          "lat": 25.5,
+          "lon": 51.666666666666664,
+          "x": 331.79998779296875,
+          "y": 280.0799865722656,
+          "source": "Printed grid 25-30 / 51-40"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 1560,
+      "airport": "OTHH",
+      "name": "RNP RWY 34L",
+      "chartKey": "OTHH|APPROACH|22-3|RNP RWY 34L",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 612,
+        "bottom": 792
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 25,
+          "lon": 51.5,
+          "x": 164.39999389648438,
+          "y": 462.1199951171875,
+          "source": "Printed grid 25-00 / 51-30"
+        },
+        {
+          "lat": 25,
+          "lon": 51.666666666666664,
+          "x": 276.8399963378906,
+          "y": 462.1199951171875,
+          "source": "Printed grid 25-00 / 51-40"
+        },
+        {
+          "lat": 25,
+          "lon": 51.833333333333336,
+          "x": 389.0400085449219,
+          "y": 462.1199951171875,
+          "source": "Printed grid 25-00 / 51-50"
+        },
+        {
+          "lat": 25.166666666666668,
+          "lon": 51.5,
+          "x": 164.39999389648438,
+          "y": 339,
+          "source": "Printed grid 25-10 / 51-30"
+        },
+        {
+          "lat": 25.166666666666668,
+          "lon": 51.666666666666664,
+          "x": 276.8399963378906,
+          "y": 339,
+          "source": "Printed grid 25-10 / 51-40"
+        },
+        {
+          "lat": 25.166666666666668,
+          "lon": 51.833333333333336,
+          "x": 389.0400085449219,
+          "y": 339,
+          "source": "Printed grid 25-10 / 51-50"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 51.5,
+          "x": 164.39999389648438,
+          "y": 215.52001953125,
+          "source": "Printed grid 25-20 / 51-30"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 51.666666666666664,
+          "x": 276.8399963378906,
+          "y": 215.52001953125,
+          "source": "Printed grid 25-20 / 51-40"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 51.833333333333336,
+          "x": 389.0400085449219,
+          "y": 215.52001953125,
+          "source": "Printed grid 25-20 / 51-50"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    },
+    {
+      "page": 1561,
+      "airport": "OTHH",
+      "name": "RNP RWY 34R",
+      "chartKey": "OTHH|APPROACH|22-4|RNP RWY 34R",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 612,
+        "bottom": 792
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 25,
+          "lon": 51.5,
+          "x": 164.16000366210938,
+          "y": 487.67999267578125,
+          "source": "Printed grid 25-00 / 51-30"
+        },
+        {
+          "lat": 25,
+          "lon": 51.666666666666664,
+          "x": 276.9599914550781,
+          "y": 487.67999267578125,
+          "source": "Printed grid 25-00 / 51-40"
+        },
+        {
+          "lat": 25,
+          "lon": 51.833333333333336,
+          "x": 389.3999938964844,
+          "y": 487.67999267578125,
+          "source": "Printed grid 25-00 / 51-50"
+        },
+        {
+          "lat": 25,
+          "lon": 52,
+          "x": 501.8399963378906,
+          "y": 487.67999267578125,
+          "source": "Printed grid 25-00 / 52-00"
+        },
+        {
+          "lat": 25.166666666666668,
+          "lon": 51.5,
+          "x": 164.16000366210938,
+          "y": 364.20001220703125,
+          "source": "Printed grid 25-10 / 51-30"
+        },
+        {
+          "lat": 25.166666666666668,
+          "lon": 51.666666666666664,
+          "x": 276.9599914550781,
+          "y": 364.20001220703125,
+          "source": "Printed grid 25-10 / 51-40"
+        },
+        {
+          "lat": 25.166666666666668,
+          "lon": 51.833333333333336,
+          "x": 389.3999938964844,
+          "y": 364.20001220703125,
+          "source": "Printed grid 25-10 / 51-50"
+        },
+        {
+          "lat": 25.166666666666668,
+          "lon": 52,
+          "x": 501.8399963378906,
+          "y": 364.20001220703125,
+          "source": "Printed grid 25-10 / 52-00"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 51.5,
+          "x": 164.16000366210938,
+          "y": 240.3599853515625,
+          "source": "Printed grid 25-20 / 51-30"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 51.666666666666664,
+          "x": 276.9599914550781,
+          "y": 240.3599853515625,
+          "source": "Printed grid 25-20 / 51-40"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 51.833333333333336,
+          "x": 389.3999938964844,
+          "y": 240.3599853515625,
+          "source": "Printed grid 25-20 / 51-50"
+        },
+        {
+          "lat": 25.333333333333332,
+          "lon": 52,
+          "x": 501.8399963378906,
+          "y": 240.3599853515625,
+          "source": "Printed grid 25-20 / 52-00"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "officialAipIndependentCheck": 0,
+        "airac2621MatchConfirmed": false
+      }
+    }
+  ]
+}

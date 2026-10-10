@@ -1,5 +1,76 @@
 const RAW_ROOT="./data/";
 
+/* === V2621 REVERSIBLE EXPERIMENTAL GEOREF LAYER (WEB ONLY) ===
+ * Stable chart-georef.json remains unchanged; every experimental model is explicitly TEST ONLY.
+ */
+let experimentalGeorefPages=new Set();
+let experimentalEligibleGeoModels=new Map();
+const EXP_GEO_KEY="jeppiran-v2621-experimental-georef-enabled";
+function experimentalGeorefOn(){try{return localStorage.getItem(EXP_GEO_KEY)!=="off"}catch(_){return true}}
+async function loadPublishedExperimentalGeorefs(m){
+  experimentalGeorefPages=new Set();
+  experimentalEligibleGeoModels=new Map();
+  try{
+    const r=await fetch("./data/georef-provisional-v2621.json?v=1",{cache:"no-store"});
+    if(!r.ok)throw Error("Experimental dataset HTTP "+r.status);
+    const d=await r.json();
+    if(d.version!==2||d.coordinateSpace!=="pdf_points"||d.origin!=="top_left"||d.coordinateSystem!=="WGS84"||
+       d.testOnly!==true||d.source?.sha256!==m.source_sha256||
+       d.source?.chartDataVersion!==m.version||d.source?.pageCount!==1654)throw Error("Experiment source/cycle mismatch");
+    const seen=new Set();
+    for(const item of d.charts||[]){
+      const page=Number(item.page);
+      if(!Number.isInteger(page)||seen.has(page)||!item.validation?.qaTestOnly||!item.validation?.notApprovedForNavigation||
+        [565,566,642].includes(page))continue;
+      seen.add(page);
+      const c=charts.find(x=>Number(x.page)===page);
+      if(!c||c.airport!==item.airport||
+         item.chartKey!==[c.airport,c.category.toUpperCase(),c.chart_number,c.name.toUpperCase()].join("|"))continue;
+      // Never override an original georeference or a separate QA override.
+      if(georefByPage.has(page))continue;
+      const model=makeGeoModel(item);
+      if(!model)continue;
+      experimentalEligibleGeoModels.set(page,model);
+      if(experimentalGeorefOn()){georefByPage.set(page,model);experimentalGeorefPages.add(page)}
+    }
+    console.info("JEPPIRAN experimental georefs:",experimentalGeorefPages.size,"enabled; web only; not approved for navigation.");
+  }catch(error){console.warn("Experimental georeferences skipped; stable set preserved.",error)}
+}
+function togglePublishedExperimentalGeoref(){
+  const enabled=!experimentalGeorefOn();
+  try{localStorage.setItem(EXP_GEO_KEY,enabled?"on":"off")}catch(_){}
+  experimentalGeorefPages.clear();
+  for(const [page,model] of experimentalEligibleGeoModels){
+    if(enabled){
+      if(!georefByPage.has(page)){georefByPage.set(page,model);experimentalGeorefPages.add(page)}
+    }else if(georefByPage.get(page)===model){georefByPage.delete(page)}
+  }
+  showPublishedExperimentalGeorefNotice();
+  updateAircraftMarker();
+  refreshPositionStatus();
+}
+function showPublishedExperimentalGeorefNotice(){
+  const stage=document.getElementById("pdfStage");
+  if(!stage)return;
+  stage.querySelector("#provisionalGeorefWarning")?.remove();
+  const page=Number(selectedChart?.page);
+  if(!experimentalEligibleGeoModels.has(page))return;
+  const enabled=experimentalGeorefPages.has(page);
+  const panel=document.createElement("div");
+  panel.id="provisionalGeorefWarning";
+  panel.style.cssText="position:absolute;top:7px;left:7px;z-index:40;background:#553210f2;color:#fff6db;border:2px solid #fcbf55;padding:7px 9px;max-width:calc(100% - 14px);border-radius:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;font:12px/1.4 Arial,sans-serif;box-shadow:0 2px 9px #0006";
+  const msg=document.createElement("strong");
+  msg.textContent=enabled?"⚠ EXPERIMENTAL GEOREF · NOT FOR NAVIGATION":"EXPERIMENTAL GEOREF DISABLED";
+  panel.appendChild(msg);
+  const btn=document.createElement("button");
+  btn.type="button";btn.textContent=enabled?"Disable experimental":"Enable experimental";
+  btn.style.cssText="background:#fbd28b;color:#422400;border:0;border-radius:6px;padding:5px 8px;cursor:pointer;font-weight:bold";
+  btn.addEventListener("click",togglePublishedExperimentalGeoref);
+  panel.appendChild(btn);
+  stage.style.position="relative";stage.appendChild(panel);
+}
+/* === END EXPERIMENTAL LAYER === */
+
 const ADC_QA_MODE = new URLSearchParams(location.search).get("adc_test")==="1";
 const BIRJAND_ADC_QA_MODE = new URLSearchParams(location.search).get("adc_test")==="birjand";
 const DOHA_ADC_QA_MODE = new URLSearchParams(location.search).get("adc_test")==="doha";
@@ -235,6 +306,7 @@ async function loadData(){
     await enableAdcQaIfRequested(m);
     await enableBirjandAdcQaIfRequested(m);
     await enableDohaAdcQaIfRequested(m);
+    await loadPublishedExperimentalGeorefs(m);
     renderAirports();
     if(!selectedAirport && charts.some(c=>c.airport==="OIII"))selectAirport("OIII");
     if($("#homeCycle"))$("#homeCycle").textContent=(m.version||VERSION);
@@ -558,6 +630,10 @@ function renderedGeoHeading(model,lat,heading,canvas){
 function setPositionStatus(state,text,detail=""){
   const btn=$("#positionStatusBtn");
   if(!btn)return;
+  if(selectedChart && experimentalGeorefPages.has(Number(selectedChart.page))){
+    state="warning";text=(text||"GPS")+" · GEO TEST";
+    detail="EXPERIMENTAL GEOREFERENCE · NOT FOR NAVIGATION. "+(detail||"");
+  }
   btn.dataset.state=state||"off";
   btn.title=text||"Position status";
   btn.setAttribute("aria-label",text||"Position status");
@@ -674,6 +750,7 @@ async function renderSelectedPdf(c){
   }
   const stage=$("#pdfStage");
   stage.innerHTML='<div class="pdf-loading">Loading chart…</div><div class="pdf-canvas-wrap"><div id="chartTransformLayer" class="chart-transform-layer"><canvas id="pdfCanvas"></canvas></div></div>';
+  showPublishedExperimentalGeorefNotice();
   const lib=await pdfJs(), bytes=await getPdfBytes(currentPdfUrl,true);
   if(token!==pdfRenderToken)return;
   const doc=await lib.getDocument({data:bytes}).promise;
