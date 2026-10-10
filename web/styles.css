@@ -969,3 +969,13 @@ body:has(#homeView.active),body:has(#chartsView.active){background:#030c19}
 .art-fullscreen{--art-x:65.853659%}
 .art-offline{--art-x:96.843615%}
 .toolbar-label{white-space:nowrap}
+.art-position{
+  aspect-ratio:380 / 296;background-image:url('./toolbar-artwork/position-matte.png');
+  background-size:100% 100%;background-position:center
+}
+#chartsView .viewer-actions .position-status-label{display:inline}
+#chartsView .viewer-actions .position-status-btn[data-state="live"]{border-color:#75b99d}
+#chartsView .viewer-actions .position-status-btn[data-state="warning"],
+#chartsView .viewer-actions .position-status-btn[data-state="outside"]{border-color:#bca56d}
+#chartsView .viewer-actions .position-status-btn[data-state="error"]{border-color:#b5767d}
+.position-source-options{display:grid;gap:10px;margin:16px 0}
