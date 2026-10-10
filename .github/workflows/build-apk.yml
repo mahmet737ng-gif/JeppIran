@@ -7,6 +7,7 @@ on:
       - main
       - work-no-build
       - pilot-ops-suite
+      - ui-position-selector-44ad8727
 
 # Subsequent APK runs must not race the published version counter.
 concurrency:
@@ -538,3 +539,4 @@ jobs:
             --version-code "$JEPPIRAN_VERSION_CODE" \
             --version-name "$JEPPIRAN_VERSION_NAME" \
             --limit 20
+

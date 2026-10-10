@@ -657,7 +657,7 @@ private val locationPermissionLauncher =
         super.onResume()
         positionResumed = true
         if (::aircraftPositionButton.isInitialized) {
-            updateToggleButton(aircraftPositionButton, AircraftPositionStore.isEnabled(this))
+            updateGpsText("POS OFF")
         }
         startGps()
     }
@@ -1617,80 +1617,15 @@ private val locationPermissionLauncher =
 
 
         aircraftPositionButton =
-            toolbarButton(
-                "✈",
-                18f
-            ).apply {
-
-                contentDescription =
-                    "Aircraft position"
-            }
-
-
-        updateToggleButton(
-            aircraftPositionButton,
-            AircraftPositionStore
-                .isEnabled(
-                    this
-                )
-        )
-
-
-        aircraftPositionButton
-            .setOnClickListener {
-
-                val enabled =
-                    !AircraftPositionStore
-                        .isEnabled(
-                            this
-                        )
-
-                AircraftPositionStore
-                    .setEnabled(
-                        this,
-                        enabled
-                    )
-
-                updateToggleButton(
-                    aircraftPositionButton,
-                    enabled
-                )
-
-                if (
-                    enabled
-                ) {
-
-                    locationPermissionRequested =
-                        false
-
-                    startGps()
-                    updateGpsLabel()
-
-                } else {
-
-                    stopGps()
-
-                    handler.removeCallbacks(
-                        simulatorUpdateRunnable
-                    )
-
-                    updateGpsText(
-                        "Aircraft position OFF"
-                    )
-
-                    if (
-                        ::chartView.isInitialized
-                    ) {
-                        chartView.invalidate()
-                    }
-                }
+            positionToolbarButton().apply {
+                setOnClickListener { showPositionSourcePicker() }
             }
 
 
         actionRow.addView(
             aircraftPositionButton,
             toolbarButtonParams(
-                42.dp
+                110.dp
             )
         )
 
@@ -6156,7 +6091,7 @@ private val locationPermissionLauncher =
                     !positionResumed ||
                     !AircraftPositionStore.isEnabled(
                         this@PdfViewerActivity
-                    )
+                    ) || AircraftPositionStore.source(this@PdfViewerActivity) == AircraftPositionStore.Source.DEVICE
                 ) {
                     return
                 }
@@ -6164,6 +6099,11 @@ private val locationPermissionLauncher =
                 updateSimulatorLabel()
 
                 when {
+
+                    AircraftPositionStore.source(this@PdfViewerActivity) == AircraftPositionStore.Source.SIMULATOR -> {
+                        stopGps()
+                        handler.postDelayed(this, 500L)
+                    }
 
                     SimulatorLocationStore.isConnected() -> {
 
@@ -6200,12 +6140,12 @@ private val locationPermissionLauncher =
         ) {
             stopGps()
             handler.removeCallbacks(simulatorUpdateRunnable)
-            updateGpsText("Aircraft position OFF")
+            updateGpsText("POS OFF")
             return
         }
 
         if (
-            SimulatorLocationStore.isConnected()
+            AircraftPositionStore.usesSimulator(this)
         ) {
             stopGps()
 
@@ -6225,7 +6165,7 @@ private val locationPermissionLauncher =
         )
 
         if (
-            SimulatorLocationStore.isConnecting()
+            AircraftPositionStore.source(this) != AircraftPositionStore.Source.DEVICE && SimulatorLocationStore.isConnecting()
         ) {
 
             handler.post(
@@ -6345,7 +6285,7 @@ private val locationPermissionLauncher =
                     if (!positionResumed ||
                         generation != gpsGeneration ||
                         !AircraftPositionStore.isEnabled(this@PdfViewerActivity) ||
-                        SimulatorLocationStore.isConnected()
+                        AircraftPositionStore.usesSimulator(this@PdfViewerActivity)
                     ) return
 
                     lastGpsLocation =
@@ -6412,7 +6352,7 @@ private val locationPermissionLauncher =
 
 
         if (
-            SimulatorLocationStore.isConnected()
+            AircraftPositionStore.usesSimulator(this)
         ) {
 
             updateSimulatorLabel()
@@ -6472,7 +6412,7 @@ private val locationPermissionLauncher =
 
 
         val position =
-            SimulatorLocationStore.getPosition()
+            if (SimulatorLocationStore.isConnected()) SimulatorLocationStore.getPosition() else null
 
 
         if (
@@ -6504,6 +6444,16 @@ private val locationPermissionLauncher =
     private fun updateGpsText(
         value: String
     ) {
+
+        if (::aircraftPositionButton.isInitialized) {
+            val live = AircraftPositionStore.isEnabled(this) && value.endsWith("ACTIVE")
+            aircraftPositionButton.text = if (live) "POS ON" else "POS OFF"
+            aircraftPositionButton.contentDescription = "${aircraftPositionButton.text} · $value · Choose position source"
+            aircraftPositionButton.background = roundedBackground(
+                Color.rgb(24, 38, 49),
+                if (live) Color.rgb(117, 185, 157) else Color.rgb(89, 106, 120), 6
+            )
+        }
 
         if (
             ::gpsText
@@ -6753,6 +6703,41 @@ private val locationPermissionLauncher =
             .show()
     }
 
+
+    private fun positionToolbarButton(): TextView = toolbarButton("POS OFF", 10f).apply {
+        contentDescription = "POS OFF · Choose position source"
+        setTextColor(Color.rgb(229, 237, 242))
+        background = roundedBackground(Color.rgb(24, 38, 49), Color.rgb(89, 106, 120), 6)
+        elevation = 1.dp.toFloat()
+        setPadding(8.dp, 0, 8.dp, 0)
+        compoundDrawablePadding = 4.dp
+        val art = ChartToolbarArtwork.drawable(this@PdfViewerActivity, ChartToolbarArtwork.Icon.POSITION)
+        art.setBounds(0, 0, 30.dp, 24.dp)
+        setCompoundDrawables(art, null, null, null)
+        foreground = android.graphics.drawable.RippleDrawable(
+            android.content.res.ColorStateList.valueOf(Color.argb(48, 180, 211, 229)),
+            null, roundedBackground(Color.WHITE, Color.TRANSPARENT, 6)
+        )
+    }
+
+    private fun showPositionSourcePicker() {
+        AlertDialog.Builder(this)
+            .setTitle("Position source")
+            .setItems(arrayOf("Simulator Position", "Device Position")) { _, selected ->
+                val source = if (selected == 0) AircraftPositionStore.Source.SIMULATOR else AircraftPositionStore.Source.DEVICE
+                AircraftPositionStore.setSource(this, source)
+                AircraftPositionStore.setEnabled(this, true)
+                locationPermissionRequested = false
+                updateGpsText("POS OFF")
+                startGps()
+                if (source == AircraftPositionStore.Source.SIMULATOR &&
+                    !SimulatorLocationStore.isConnected() && !SimulatorLocationStore.isConnecting()) {
+                    startActivity(android.content.Intent(this, SimulatorActivity::class.java))
+                }
+            }
+            .setNegativeButton("Cancel", null)
+            .show()
+    }
 
     private fun graphicToolbarButton(
         icon: ChartToolbarArtwork.Icon,
@@ -8298,9 +8283,11 @@ private val locationPermissionLauncher =
             }
 
 
+            if (AircraftPositionStore.usesSimulator(this@PdfViewerActivity) && !SimulatorLocationStore.isConnected()) return
+
             val position =
                 if (
-                    SimulatorLocationStore.isConnected()
+                    AircraftPositionStore.usesSimulator(this@PdfViewerActivity)
                 ) {
 
                     SimulatorLocationStore

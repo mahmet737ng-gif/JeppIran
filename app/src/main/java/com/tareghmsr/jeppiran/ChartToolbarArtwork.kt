@@ -17,23 +17,31 @@ object ChartToolbarArtwork {
         BACK(52, 75, 270), NEXT(487, 75, 270),
         ZOOM_IN(918, 75, 270), ZOOM_OUT(1350, 75, 270),
         METAR(52, 437, 296), CDFA(487, 437, 296),
-        FULLSCREEN(918, 437, 296), OFFLINE(1350, 437, 296)
+        FULLSCREEN(918, 437, 296), OFFLINE(1350, 437, 296),
+        POSITION(0, 0, 0)
     }
 
     private var bitmap: Bitmap? = null
+    private var positionBitmap: Bitmap? = null
 
     @Synchronized
     fun drawable(context: Context, icon: Icon): Drawable {
+        if (icon == Icon.POSITION) {
+            val position = positionBitmap ?: BitmapFactory.decodeResource(
+                context.resources, R.drawable.chart_toolbar_position,
+                BitmapFactory.Options().apply { inScaled = false }
+            ).also { positionBitmap = it }
+            return ArtworkDrawable(position, Rect(0, 0, position.width, position.height))
+        }
         val atlas = bitmap ?: BitmapFactory.decodeResource(
             context.resources, R.drawable.chart_toolbar_matte,
             BitmapFactory.Options().apply { inScaled = false }
         ).also { bitmap = it }
-        return ArtworkDrawable(atlas, icon)
+        return ArtworkDrawable(atlas, Rect(icon.x, icon.y, icon.x + 380, icon.y + icon.height))
     }
 
-    private class ArtworkDrawable(private val atlas: Bitmap, icon: Icon) : Drawable() {
+    private class ArtworkDrawable(private val atlas: Bitmap, private val source: Rect) : Drawable() {
         private val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
-        private val source = Rect(icon.x, icon.y, icon.x + 380, icon.y + icon.height)
         private val target = RectF()
 
         override fun draw(canvas: Canvas) {
