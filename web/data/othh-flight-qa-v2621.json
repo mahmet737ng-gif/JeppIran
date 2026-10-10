@@ -384,55 +384,10 @@
         "maxIndependentAipThresholdErrorMeters": 4.559,
         "insetMaskAccepted": true,
         "releaseScope": "Visual geolocation for simulators; not actual navigation",
-        "priorIndependentReport": true
+        "priorIndependentReport": true,
+        "priorIndependentMeasurementProvenance": "Earlier OTHH 1549 four-runway-threshold QA report; max 4.559 m. Individual per-point residuals not reproduced here."
       },
-      "sourceFingerprint": "dbd34f8fa280f21562573fd09381889548eb9d1f5dcf5835c34af2c51e0e9af0",
-      "testPoints": [
-        {
-          "source": "RWY 16L",
-          "lat": 25.29610277777778,
-          "lon": 51.60887777777778,
-          "x": 291.36,
-          "y": 120.54,
-          "independentTestMeters": 1.685,
-          "controlType": "AIP_HELD_OUT",
-          "fit": false,
-          "sourceNote": "Same printed ground geometry; prior independent 1549 check max 4.559 m"
-        },
-        {
-          "source": "RWY 34R",
-          "lat": 25.255458333333333,
-          "lon": 51.626780555555555,
-          "x": 508.14,
-          "y": 661.68,
-          "independentTestMeters": 1.371,
-          "controlType": "AIP_HELD_OUT",
-          "fit": false,
-          "sourceNote": "Same printed ground geometry; prior independent 1549 check max 4.559 m"
-        },
-        {
-          "source": "RWY 16R",
-          "lat": 25.29097777777778,
-          "lon": 51.58974166666667,
-          "x": 59.76,
-          "y": 188.82,
-          "independentTestMeters": 1.145,
-          "controlType": "AIP_HELD_OUT",
-          "fit": false,
-          "sourceNote": "Same printed ground geometry; prior independent 1549 check max 4.559 m"
-        },
-        {
-          "source": "RWY 34L",
-          "lat": 25.255366666666667,
-          "lon": 51.60543333333334,
-          "x": 249.78,
-          "y": 662.88,
-          "independentTestMeters": 1.147,
-          "controlType": "AIP_HELD_OUT",
-          "fit": false,
-          "sourceNote": "Same printed ground geometry; prior independent 1549 check max 4.559 m"
-        }
-      ]
+      "sourceFingerprint": "dbd34f8fa280f21562573fd09381889548eb9d1f5dcf5835c34af2c51e0e9af0"
     }
   ]
 }
