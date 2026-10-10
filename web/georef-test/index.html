@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JEPPIRAN | Georeference Test V2621</title>
+<style>
+:root{color-scheme:dark;font-family:Tahoma,Arial,sans-serif}*{box-sizing:border-box}body{margin:0;background:#101725;color:#eaf0fa}
+header{background:#1c2b44;border-bottom:1px solid #47617e;padding:16px 22px}
+h1{font-size:21px;margin:0 0 6px}.warning{font-size:12px;font-weight:bold;color:#ffd48b}
+.layout{display:grid;grid-template-columns:340px minmax(0,1fr);min-height:calc(100vh - 87px)}
+aside{padding:15px;background:#18253a;border-left:1px solid #334760}
+main{padding:14px;overflow:auto}label{display:block;color:#bdd1e8;font-size:13px;margin:14px 0 5px}
+input,select,button{width:100%;border:1px solid #476483;border-radius:8px;background:#293c58;color:#fff;padding:10px;font-size:14px}
+button{background:#2869a9;cursor:pointer;margin-top:8px}button:disabled{opacity:.5;cursor:default}
+.status{white-space:pre-wrap;background:#0d1728;color:#dae8fa;border:1px solid #2d435d;border-radius:9px;padding:12px;line-height:1.9;margin-top:15px;font-size:12px}
+.hint{font-size:12px;line-height:1.7;color:#b8cce2}.viewer{position:relative;display:inline-block;max-width:100%;background:#fff;line-height:0}
+canvas{display:block;max-width:100%;height:auto}.marker{display:none;position:absolute;width:17px;height:17px;transform:translate(-50%,-50%) rotate(45deg);background:#f42ca4;border:3px solid white;box-shadow:0 0 0 7px #ef3ca855,0 0 22px #f42ca4;pointer-events:none;z-index:2}
+a{color:#8ed2ff}@media(max-width:850px){.layout{display:block}aside{border-left:0;border-bottom:1px solid #334760}}
+</style>
+</head>
+<body><header><h1>JEPPIRAN · Georeference Test Lab</h1><div class="warning">EXPERIMENTAL — NOT FOR NAVIGATION · هیچ ژئورفرنس آزمایشی در نسخه عمومی فعال نمی‌شود</div></header>
+<div class="layout"><aside>
+<label>فرودگاه و چارت تست</label><select id="preset">
+<option value="561">بیرجند OIMB — ADC 561</option>
+<option value="565">بیرجند OIMB — APP 565 (آزمون دقت رد شده)</option>
+<option value="566">بیرجند OIMB — APP 566 (آزمون دقت رد شده)</option>
+<option value="961">سراوان OIZS — ADC 961 (تست نشده)</option>
+<option value="963">سراوان OIZS — APP 963</option>
+<option value="964">سراوان OIZS — APP 964</option>
+<option value="342">همدان OIHH — ADC 342</option>
+<option value="347">همدان OIHH — APP 347</option>
+<option value="348">همدان OIHH — APP 348</option>
+<option value="118">بندر لنگه OIBL — ADC 118</option>
+<option value="1536">دوحه OTHH — ADC 1536</option>
+<option value="1549">دوحه OTHH — Airport Ground 1549</option>
+</select>
+<label>PDF اصلی V2621 (۱۶۵۴ صفحه)</label><input type="file" id="pdf" accept=".pdf,application/pdf">
+<div class="hint">PDF را از دستگاه انتخاب کن. فایل فقط در مرورگر خودت خوانده می‌شود و آپلود نمی‌شود.</div>
+<label>داده ژئورفرنس آزمایشی</label><button id="load">دریافت ۵۲ کاندید از شاخه audit</button><input type="file" id="json" accept=".json,application/json">
+<div class="hint">فقط کاندیدهای موجود نمایش داده می‌شوند. برای ADC بدون مدل، نقطه‌ای جعل نمی‌شود.</div>
+<label>Latitude</label><input type="number" id="lat" step="0.000001" placeholder="مختصات از AIP رسمی">
+<label>Longitude</label><input type="number" id="lon" step="0.000001" placeholder="مختصات از AIP رسمی">
+<button id="plot">نمایش نشانگر صورتی</button><button id="clear">پاک کردن نشانگر</button>
+<div id="status" class="status">برای شروع PDF را انتخاب کن. داده کاندیدها در صورت اتصال به اینترنت دریافت می‌شود.</div>
+<button id="copy">کپی گزارش تست</button>
+</aside><main>
+<p class="hint">چارت PDF اصلی با شماره صفحه نمایش داده می‌شود. نشانگر محاسبه‌شده صرفاً برای بررسی بصری است؛ تأیید ۱۰ متر به نقاط کنترل مستقل AIP نیاز دارد.</p>
+<div class="viewer" id="viewer"><canvas id="canvas"></canvas><div class="marker" id="marker"></div></div>
+</main></div>
+<script type="module">
+const $=id=>document.getElementById(id),status=$('status'),canvas=$('canvas'),marker=$('marker');
+const source='https://raw.githubusercontent.com/mahmet737ng-gif/JeppIran/audit/v2621-visual-batches-201-400/docs/audits/V2621/aip-jeppesen-only/JEPP_ONLY_UNAPPROVED_CANDIDATES.json';
+let doc=null,model=null,candidates=[],drawn=false,renderCounter=0;
+function show(s){status.textContent=s}
+function choose(){const p=Number($('preset').value);model=candidates.find(x=>Number(x.page)===p)||null;marker.style.display='none';show('صفحه '+p+'\nکاندید آزمایشی: '+(model?'موجود؛ تأیید نشده':'برای این صفحه در داده آزمایشی موجود نیست')+'\n'+(model?'نام: '+(model.name||'—'):'در صورت نبود مدل، نشانگر ساخته نمی‌شود.'));if(doc)render()}
+async function pdfjs(){return await import('https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.min.mjs')}
+async function render(){const serial=++renderCounter;if(!doc)return;const n=Number($('preset').value);if(n>doc.numPages){show('PDF باید ۱۶۵۴ صفحه داشته باشد. فایل انتخاب‌شده '+doc.numPages+' صفحه دارد.');return}
+try{const p=await doc.getPage(n);if(serial!==renderCounter)return;const vp=p.getViewport({scale:1.5});canvas.width=Math.ceil(vp.width);canvas.height=Math.ceil(vp.height);await p.render({canvasContext:canvas.getContext('2d'),viewport:vp}).promise;drawn=true;marker.style.display='none'}catch(e){show('خطای نمایش صفحه: '+e.message)}}
+$('pdf').onchange=async e=>{const file=e.target.files[0];if(!file)return;try{show('در حال بازکردن PDF...');const lib=await pdfjs();lib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/4.10.38/pdf.worker.min.mjs';doc=await lib.getDocument({data:await file.arrayBuffer()}).promise;show('PDF باز شد: '+doc.numPages+' صفحه');choose()}catch(e){show('خطای PDF: '+e.message)}};
+$('preset').onchange=choose;
+$('json').onchange=async e=>{try{const f=e.target.files[0];if(!f)return;const d=JSON.parse(await f.text());candidates=Array.isArray(d)?d:(d.charts||[]);choose()}catch(e){show('خطای JSON: '+e.message)}};
+$('load').onclick=async()=>{try{show('دریافت JSON از GitHub...');const r=await fetch(source,{cache:'no-store'});if(!r.ok)throw Error('HTTP '+r.status);const j=await r.json();candidates=j.charts||[];choose()}catch(e){show('دریافت کاندید از GitHub ناموفق: '+e.message)}};
+function fit(c,lat,lon){const pts=(c.points||[]).filter(p=>[p.lat,p.lon,p.x,p.y].every(Number.isFinite));if(pts.length<3)throw Error('نقاط چاپ‌شده برای برازش ۲بعدی کافی نیستند');function solve(key){let m=Array.from({length:3},()=>[0,0,0,0]);for(const p of pts){const a=[1,p.lon,p.lat];for(let i=0;i<3;i++){for(let j=0;j<3;j++)m[i][j]+=a[i]*a[j];m[i][3]+=a[i]*p[key]}}for(let i=0;i<3;i++){let k=i;for(let j=i+1;j<3;j++)if(Math.abs(m[j][i])>Math.abs(m[k][i]))k=j;if(Math.abs(m[k][i])<1e-11)throw Error('نقاط کنترل تکین هستند');[m[i],m[k]]=[m[k],m[i]];let v=m[i][i];for(let j=i;j<4;j++)m[i][j]/=v;for(let t=0;t<3;t++)if(t!==i){v=m[t][i];for(let j=i;j<4;j++)m[t][j]-=v*m[i][j]}}const a=m.map(r=>r[3]);return a[0]+a[1]*lon+a[2]*lat}return{x:solve('x'),y:solve('y')}}
+$('plot').onclick=()=>{try{if(!doc||!drawn)throw Error('اول PDF را انتخاب کن');if(!model)throw Error('برای این چارت مدل ژئورفرنس آزمایشی وجود ندارد');const lat=Number($('lat').value),lon=Number($('lon').value);if(!$('lat').value||!$('lon').value||!Number.isFinite(lat)||!Number.isFinite(lon))throw Error('مختصات را وارد کن');const q=fit(model,lat,lon);const w=Number(model.width||612),h=Number(model.height||792);if(q.x<0||q.x>w||q.y<0||q.y>h)throw Error('مختصات خارج از PDF است');const b=model.bounds;if(b&&(q.x<b.left||q.x>b.right||q.y<b.top||q.y>b.bottom))throw Error('نقطه خارج محدوده نقشه اصلی است');if((model.excludedBounds||[]).some(r=>q.x>=r.left&&q.x<=r.right&&q.y>=r.top&&q.y<=r.bottom))throw Error('نقطه در inset/ناحیه ممنوع است');marker.style.left=(q.x/w*100)+'%';marker.style.top=(q.y/h*100)+'%';marker.style.display='block';show('TEST ONLY\nصفحه '+model.page+'\nLat '+lat+' | Lon '+lon+'\nPDF x='+q.x.toFixed(2)+' y='+q.y.toFixed(2)+'\nاین برازش آزمایشی است و به معنی تأیید دقت ۱۰ متر نیست.')}catch(e){marker.style.display='none';show('نشانگر نمایش داده نشد: '+e.message)}};
+$('clear').onclick=()=>{marker.style.display='none';choose()};
+$('copy').onclick=()=>{const r='JEPPIRAN V2621 GEOREF TEST\n'+$('preset').selectedOptions[0].text+'\n'+status.textContent+'\nUSER APPROVAL: PENDING';if(navigator.clipboard)navigator.clipboard.writeText(r).then(()=>show(status.textContent+'\nگزارش کپی شد')).catch(()=>show(status.textContent+'\nامکان کپی خودکار وجود ندارد'));else show(status.textContent+'\nClipboard unavailable')};
+choose();$('load').click();
+</script></body></html>
