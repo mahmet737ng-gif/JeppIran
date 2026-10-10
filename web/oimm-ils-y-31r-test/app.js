@@ -18,48 +18,52 @@ function openOimmIlsQaChart(){
 }
 async function enableOimmIlsQaOnly(m){
   try{
-    const r=await fetch("./data/oimm-ils-y-31r-v2621-qa.json?v=20261010-1",{cache:"no-store"});
-    if(!r.ok)throw Error("QA JSON HTTP "+r.status);
+    const r=await fetch("./data/oimm-all-app-v2621-qa.json?v=20261010-2",{cache:"no-store"});
+    if(!r.ok)throw Error("QA data HTTP "+r.status);
     const d=await r.json();
-    if(d.version!==2||d.testOnly!==true||d.origin!=="top_left"||
-       d.coordinateSpace!=="pdf_points"||d.coordinateSystem!=="WGS84"||
-       d.source?.sha256!==m.source_sha256||d.source?.chartDataVersion!==m.version||
-       d.source?.pageCount!==1654||d.charts?.length!==1)throw Error("Source/cycle mismatch");
-    const item=d.charts[0];
-    const c=charts.find(x=>Number(x.page)===606&&x.airport==="OIMM"&&x.category==="Approach"&&x.chart_number==="11-2");
-    if(!c||item.page!==606||item.airport!=="OIMM"||!item.validation?.qaTestOnly||
-       !item.validation?.notApprovedForNavigation||item.validation?.independentOfficialAipGcpValidated!==false||
-       item.chartKey!==[c.airport,c.category.toUpperCase(),c.chart_number,c.name.toUpperCase()].join("|")||
-       !/^[0-9a-f]{64}$/.test(item.sourceFingerprint))throw Error("Chart identity or QA guard failed");
-    const model=makeGeoModel(item);
-    if(!model)throw Error("Jeppesen grid affine geometry rejected");
-    OIMM_ILS_QA_ORIGINAL=georefByPage.get(606)||null;
-    OIMM_ILS_QA_MODEL=model;
-    georefByPage.set(606,model);   // Stage-only in-memory test; original model preserved.
+    if(d.version!==2||d.testOnly!==true||d.origin!=="top_left"||d.coordinateSpace!=="pdf_points"||
+       d.coordinateSystem!=="WGS84"||d.source?.sha256!==m.source_sha256||
+       d.source?.chartDataVersion!==m.version||d.source?.pageCount!==1654||d.charts?.length!==6)
+      throw Error("QA source/cycle/count mismatch");
+    const allowed=new Set([606,609,611,612,613,614]);
+    const models=new Map();
+    for(const item of d.charts){
+      const page=Number(item.page);
+      const c=charts.find(x=>Number(x.page)===page&&x.airport==="OIMM"&&x.category==="Approach");
+      if(!allowed.has(page)||models.has(page)||!c||item.airport!=="OIMM"||
+        item.chartKey!==[c.airport,c.category.toUpperCase(),c.chart_number,c.name.toUpperCase()].join("|")||
+        !item.validation?.qaTestOnly||!item.validation?.notApprovedForNavigation||
+        item.validation?.independentOfficialAipGcpValidated!==false)
+        throw Error("OIMM chart identity mismatch "+page);
+      const model=makeGeoModel(item);
+      if(!model)throw Error("Georeference grid geometry failed "+page);
+      models.set(page,model);
+    }
+    if(models.size!==6)throw Error("Six models were not validated");
+    window.OIMM_ALL_APP_MODELS=models;
+    for(const [page,model] of models)georefByPage.set(page,model);
+    OIMM_ILS_QA_MODEL=models.get(606);
     OIMM_ILS_QA_ACTIVE=true;
-    window.JEPPIRAN_OIMM_QA_STATUS={page:606,loaded:true,approvedForNavigation:false};
-    const testInfo=document.getElementById("oimmTestStatus");
-    if(testInfo)testInfo.textContent="GEOREF ACTIVE · 606 · GRID ONLY";
-    console.info("OIMM 11-2 staged model enabled; independent AIP accuracy NOT confirmed.");
+    window.JEPPIRAN_OIMM_QA_STATUS={loaded:true,pages:[...models.keys()],approvedForNavigation:false};
+    const info=document.getElementById("oimmTestStatus");
+    if(info)info.textContent="6 GEOREF MODELS ACTIVE · TEST ONLY";
   }catch(e){
-    OIMM_ILS_QA_ACTIVE=false;OIMM_ILS_QA_MODEL=null;
-    console.warn("OIMM 11-2 QA unavailable",e);
-    const el=document.getElementById("oimmTestStatus");
-    if(el)el.textContent="QA BLOCKED: "+e.message;
-    window.JEPPIRAN_OIMM_QA_STATUS={page:606,loaded:false,error:String(e.message)};
+    OIMM_ILS_QA_ACTIVE=false;
+    window.JEPPIRAN_OIMM_QA_STATUS={loaded:false,error:String(e.message)};
+    const info=document.getElementById("oimmTestStatus");
+    if(info)info.textContent="QA BLOCKED: "+e.message;
   }
 }
 function showOimmIlsOnChartWarning(){
   const stage=document.getElementById("pdfStage");
   if(!stage)return;
   stage.querySelector("#oimmIlsQaWarning")?.remove();
-  if(Number(selectedChart?.page)!==606)return;
-  const box=document.createElement("div");
-  box.id="oimmIlsQaWarning";
+  const page=Number(selectedChart?.page);
+  if(!selectedChart||selectedChart.airport!=="OIMM"||selectedChart.category!=="Approach")return;
+  const box=document.createElement("div");box.id="oimmIlsQaWarning";
   box.style.cssText="position:absolute;top:48px;left:7px;z-index:60;color:#fff7d1;background:#572c0af0;border:2px solid #ffcc68;border-radius:7px;padding:6px 9px;font:bold 12px/1.4 system-ui,sans-serif;max-width:calc(100% - 15px);box-shadow:0 3px 12px #0008";
-  box.textContent=OIMM_ILS_QA_ACTIVE?"OIMM 11-2 · EXPERIMENTAL GEOREF · NOT FOR NAVIGATION":"OIMM 11-2 · QA GEOREFERENCE UNAVAILABLE";
-  stage.style.position="relative";
-  stage.appendChild(box);
+  box.textContent=(window.OIMM_ALL_APP_MODELS?.has(page))?"OIMM "+page+" · EXPERIMENTAL GEOREF · NOT FOR NAVIGATION":"OIMM "+page+" · HOLD · NO EXPERIMENTAL GEOREF";
+  stage.style.position="relative";stage.appendChild(box);
 }
 function setupOimmTestToolbar(){
   const openBtn=document.getElementById("oimmTestOpen");
@@ -67,7 +71,7 @@ function setupOimmTestToolbar(){
   if(openBtn)openBtn.addEventListener("click",openOimmIlsQaChart);
   if(simBtn)simBtn.addEventListener("click",()=>route("simulator"));
   const status=document.getElementById("oimmTestStatus");
-  if(status&&OIMM_ILS_QA_ACTIVE)status.textContent="GEOREF ACTIVE · 606 · GRID ONLY";
+  if(status&&OIMM_ILS_QA_ACTIVE)status.textContent="6 GEOREF MODELS ACTIVE · TEST ONLY";
   else if(status&&!status.textContent.startsWith("QA BLOCKED"))status.textContent="QA INACTIVE · check console or reload";
   // Prefer to open target chart on landing. Do not interrupt a direct link to simulator.
   if((location.hash||"")===""||(location.hash||"")==="#home"||(location.hash||"")==="#charts"){
@@ -386,7 +390,7 @@ async function loadData(){
     await enableOimmIlsQaOnly(m);
     // Stage diagnostics: source mode and georeference existence are visible after every reload.
     window.JEPPIRAN_OIMM_QA_STATUS=Object.assign(window.JEPPIRAN_OIMM_QA_STATUS||{},{
-      page:606,georefPresent:georefByPage.has(606),chartIndexPresent:charts.some(c=>Number(c.page)===606&&c.airport==="OIMM")
+      page:606,georefPresent:georefByPage.has(606),chartIndexPresent:charts.some(c=>Number(c.page)===606&&c.airport==="OIMM"),activePages:[...(window.OIMM_ALL_APP_MODELS?.keys()||[])]
     });
     renderAirports();
     if(!selectedAirport && charts.some(c=>c.airport==="OIII"))selectAirport("OIII");
