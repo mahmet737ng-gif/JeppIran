@@ -17,7 +17,14 @@ from pathlib import Path
 
 REPOSITORY = "mahmet737ng-gif/JeppIran"
 RELEASE = "jeppiran-test"
-RELEASE_BASE = f"https://github.com/{REPOSITORY}/releases/download/{RELEASE}/"
+# The stable release is at GitHub's 1000-asset limit; do not add new APKs.
+# Keep its app-update.json pointer and historical APKs intact.
+# Store each target's full APK and verified deltas under a distinct release.
+def target_release(version_code):
+    return f"jeppiran-android-{version_code}"
+
+def asset_base(release_tag):
+    return f"https://github.com/{REPOSITORY}/releases/download/{release_tag}/"
 NUMERIC_APK = re.compile(r"\d+\.\d+\.apk\Z")
 VERSION_CODE = re.compile(r"\bversionCode='(\d+)'")
 
@@ -54,6 +61,8 @@ def publish(apk, target_code, version_name, limit, aapt):
     sha = checksum(apk)
     total = apk.stat().st_size
     current_name = f"{version_name}.apk"
+    bundle_tag = target_release(target_code)
+    bundle_base = asset_base(bundle_tag)
     if not NUMERIC_APK.fullmatch(current_name):
         raise ValueError("Only numeric versionName APK releases are supported")
 
@@ -108,7 +117,7 @@ def publish(apk, target_code, version_name, limit, aapt):
                     "toVersionCode": target_code,
                     "fromSha256": source_sha,
                     "toSha256": sha,
-                    "patchUrl": RELEASE_BASE + patch_name,
+                    "patchUrl": bundle_base + patch_name,
                     "patchSha256": checksum(delta),
                     "patchSizeBytes": delta.stat().st_size
                 })
@@ -125,7 +134,7 @@ def publish(apk, target_code, version_name, limit, aapt):
         metadata = {
             "versionCode": target_code,
             "versionName": version_name,
-            "apkUrl": RELEASE_BASE + current_name,
+            "apkUrl": bundle_base + current_name,
             "apkSizeBytes": total,
             "sha256": sha,
             "publishedAt": datetime.datetime.now(
@@ -134,14 +143,21 @@ def publish(apk, target_code, version_name, limit, aapt):
             "patches": patches,
         }
 
-        # Full APK first. Then the verified binary patches. Atomic final switch
-        # happens only when the metadata is uploaded successfully.
-        execute("gh", "release", "upload", RELEASE, apk,
-                "--clobber")
+        # Publish under a fresh version-specific tag: the stable release
+        # already has 1000 assets and cannot accept new APKs or patch names.
+        try:
+            execute("gh", "release", "view", bundle_tag)
+        except subprocess.CalledProcessError:
+            execute("gh", "release", "create", bundle_tag,
+                    "--title", f"JEPPIRAN Android {version_name} ({target_code})",
+                    "--notes", "Signed APK and independently verified one-hop updates.")
+        execute("gh", "release", "upload", bundle_tag, apk, "--clobber")
         for patch in patches:
             patch_path = workspace / Path(patch["patchUrl"]).name
-            execute("gh", "release", "upload", RELEASE, patch_path,
+            execute("gh", "release", "upload", bundle_tag, patch_path,
                     "--clobber")
+        # Atomically point installed apps to the new release LAST.
+        # This replaces the existing stable pointer asset, not a new asset.
         destination = workspace / "app-update.json"
         destination.write_text(json.dumps(metadata, indent=2) + "\n",
                                encoding="utf-8")
