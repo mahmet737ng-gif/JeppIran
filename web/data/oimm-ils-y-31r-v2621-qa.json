@@ -1,0 +1,116 @@
+{
+  "version": 2,
+  "coordinateSystem": "WGS84",
+  "coordinateSpace": "pdf_points",
+  "origin": "top_left",
+  "testOnly": true,
+  "notice": "V2621 Mashhad ILS Y RWY31R: TEST ONLY, NOT FOR NAVIGATION. No official AIP independent holdout validation.",
+  "source": {
+    "file": "Iran2621.pdf",
+    "sha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+    "pageCount": 1654,
+    "chartDataVersion": "V2621",
+    "cycle": 2621
+  },
+  "charts": [
+    {
+      "page": 606,
+      "airport": "OIMM",
+      "name": "ILS Y OR LOC Y RWY 31R",
+      "chartKey": "OIMM|APPROACH|11-2|ILS Y OR LOC Y RWY 31R",
+      "sourceFingerprint": "6729bb9d6f765e59807e1322fb8fcc0fbce231930627b9c86b0c3a61b0124934",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.72,
+        "top": 168.12,
+        "right": 531.6,
+        "bottom": 503.28
+      },
+      "excludedBounds": [
+        {
+          "left": 147.6,
+          "top": 168.12,
+          "right": 214.92,
+          "bottom": 224.04
+        }
+      ],
+      "points": [
+        {
+          "lat": 36.333333333333,
+          "lon": 59.5,
+          "x": 140.52,
+          "y": 174.12,
+          "source": "Jeppesen 11-2 graticule vector ticks; 36-10/36-20 and 59-30/59-40/59-50",
+          "controlType": "JEPPESEN_PRINTED_GRID_VECTOR_TICKS"
+        },
+        {
+          "lat": 36.333333333333,
+          "lon": 59.666666666667,
+          "x": 290.76,
+          "y": 174.12,
+          "source": "Jeppesen 11-2 graticule vector ticks; 36-10/36-20 and 59-30/59-40/59-50",
+          "controlType": "JEPPESEN_PRINTED_GRID_VECTOR_TICKS"
+        },
+        {
+          "lat": 36.333333333333,
+          "lon": 59.833333333333,
+          "x": 440.88,
+          "y": 174.12,
+          "source": "Jeppesen 11-2 graticule vector ticks; 36-10/36-20 and 59-30/59-40/59-50",
+          "controlType": "JEPPESEN_PRINTED_GRID_VECTOR_TICKS"
+        },
+        {
+          "lat": 36.166666666667,
+          "lon": 59.5,
+          "x": 140.52,
+          "y": 359.52,
+          "source": "Jeppesen 11-2 graticule vector ticks; 36-10/36-20 and 59-30/59-40/59-50",
+          "controlType": "JEPPESEN_PRINTED_GRID_VECTOR_TICKS"
+        },
+        {
+          "lat": 36.166666666667,
+          "lon": 59.666666666667,
+          "x": 290.76,
+          "y": 359.52,
+          "source": "Jeppesen 11-2 graticule vector ticks; 36-10/36-20 and 59-30/59-40/59-50",
+          "controlType": "JEPPESEN_PRINTED_GRID_VECTOR_TICKS"
+        },
+        {
+          "lat": 36.166666666667,
+          "lon": 59.833333333333,
+          "x": 440.88,
+          "y": 359.52,
+          "source": "Jeppesen 11-2 graticule vector ticks; 36-10/36-20 and 59-30/59-40/59-50",
+          "controlType": "JEPPESEN_PRINTED_GRID_VECTOR_TICKS"
+        }
+      ],
+      "maxResidualPdfPoints": 0.75,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "approvedForApp": false,
+        "sourceOnly": true,
+        "thirdPartyReferenceCount": 0,
+        "sourceImageReviewedAtDpi": 200,
+        "gridPointCount": 6,
+        "gridMaximumResidualPdfPoints": 0.04,
+        "gridResidualNotIndependentAipError": true,
+        "independentOfficialAipGcpValidated": false,
+        "independentOfficialAipHeldoutCount": 0,
+        "airac2621MatchConfirmed": false,
+        "officialAipDownloadAccessible": false,
+        "officialAipUrl": "https://ais.airport.ir/documents/452631/186839618/OIMM.pdf",
+        "notToScaleInsetMasked": true,
+        "insetMaskAccepted": false,
+        "magneticCoursePrintedDeg": 309,
+        "magneticVariationIndependentVerified": false,
+        "modelStatus": "HOLD_OFFICIAL_AIP_AD2_INDEPENDENT_POINTS_AND_AIRAC_AND_MARKER_CHECK",
+        "userSimulatorTestStatus": "NOT_TESTED"
+      }
+    }
+  ]
+}

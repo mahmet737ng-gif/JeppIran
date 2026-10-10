@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <base href="../">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=yes">
+  <meta name="theme-color" content="#07121b">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="JeppIran">
+  <title>JEPPIRAN · OIMM ILS Y RWY 31R · TEST ONLY</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./app-icon.png" type="image/png">
+  <link rel="apple-touch-icon" sizes="256x256" href="./app-icon.png">
+  <link rel="stylesheet" href="./styles.css?v=2621-icao-noglow-6">
+<style id="universal-sim-ui">#useXpBtn,#useFsxBtn{display:none!important}#simulatorView .sim-card:has(#bridgeUrl){display:none!important}</style>
+</head>
+<body>
+
+<div id="oimmQaToolbar" style="position:fixed;z-index:99999;right:8px;left:8px;bottom:8px;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;box-sizing:border-box;padding:8px;border:1px solid #f3b561;border-radius:12px;background:#142335f5;color:#ffebbd;font:12px/1.35 Arial,sans-serif;box-shadow:0 4px 24px #0009">
+  <strong>OIMM · ILS Y RWY 31R · EXPERIMENTAL · NOT FOR NAVIGATION</strong>
+  <span id="oimmTestStatus">LOADING GEOREF…</span>
+  <button id="oimmTestOpen" type="button" style="background:#2673aa;color:white;border-radius:6px;padding:7px 11px;border:0;font:inherit;cursor:pointer">OPEN CHART</button>
+  <button id="oimmTestSimulator" type="button" style="background:#2673aa;color:white;border-radius:6px;padding:7px 11px;border:0;font:inherit;cursor:pointer">SIMULATOR</button>
+  <a href="../" style="color:#a9e4ff;font-weight:bold">PUBLIC WEB</a>
+  <button type="button" aria-label="Hide test toolbar" onclick="document.getElementById('oimmQaToolbar').style.display='none'" style="border:0;background:transparent;color:white;cursor:pointer;font-size:17px">×</button>
+</div>
+
+  <div id="app">
+    <header class="topbar">
+      <button class="brand" data-route="home" aria-label="Home">
+        <img src="./app-icon.png" alt="">
+        <span>
+          <strong>JeppIran</strong>
+          <small>V2621 • iPad Web</small>
+        </span>
+      </button>
+      <div class="top-actions">
+        <button id="installHelpBtn" class="icon-btn" type="button" aria-haspopup="dialog" aria-controls="installDialog">Install</button>
+        <button id="themeBtn" class="icon-btn" aria-label="Toggle theme">◐</button>
+      </div>
+    </header>
+
+    <main id="homeView" class="view active flight-home">
+      <div class="flight-home-inner">
+        <div class="flight-home-horizon">
+          <div class="flight-hero-title">
+            <div class="home-arrow" aria-hidden="true">✈</div>
+            <h1>Jepp<span>Iran</span></h1>
+            <p>AVIATION CHARTS FOR A HIGHER PERSPECTIVE</p>
+          </div>
+          <div class="airway-graphic" aria-hidden="true">
+            <svg viewBox="0 0 1080 370" preserveAspectRatio="xMidYMid slice">
+              <defs><pattern id="navGrid" width="60" height="60" patternUnits="userSpaceOnUse"><path d="M60 0H0V60" fill="none" stroke="#125788" stroke-width=".65" opacity=".45"/></pattern></defs>
+              <rect width="1080" height="370" fill="url(#navGrid)"/>
+              <g fill="none" stroke="#2264a5" stroke-width="1.3" opacity=".75">
+                <path d="M0 98L146 176L326 44L528 150L733 32L1080 145M5 345L146 176L338 274L528 150L803 315L1080 145M326 44L338 274L733 32M338 274L803 315"/>
+                <path d="M80 0L234 370M375 0L425 370M820 0L910 370" stroke-dasharray="5 9"/>
+              </g>
+              <g stroke="#35b8ef" stroke-width="2" fill="#071725"><circle cx="146" cy="176" r="6"/><circle cx="326" cy="44" r="6"/><circle cx="528" cy="150" r="7"/><circle cx="733" cy="32" r="6"/><circle cx="803" cy="315" r="6"/><circle cx="338" cy="274" r="6"/></g>
+              <path d="M105 240L528 150L934 87" stroke="#40cbfc" stroke-width="2.8" fill="none" stroke-dasharray="18 7"/><circle cx="528" cy="150" r="25" fill="none" stroke="#27cdf1" opacity=".65"/>
+              <g fill="#b5dbf5" font-size="16" font-family="Arial,sans-serif"><text x="155" y="156">PAROT</text><text x="345" y="49">B412</text><text x="544" y="133">TAREQ</text><text x="745" y="30">DALAN</text><text x="818" y="313">NIVAK</text><text x="356" y="270">FL340</text><text x="887" y="70">M739</text></g>
+              <path d="M583 133l24-7 9-18 7 2-2 20 32 8 4 8-37-1-18 19-7-3 9-22-23-1z" fill="#f1f8ff" stroke="#49c9fb" stroke-width="1"/>
+            </svg>
+          </div>
+          <div class="home-capsules"><span class="utc-clock" id="homeUtc">--:--Z&nbsp; UTC</span><span class="cycle-pill">DATA CYCLE <b id="homeCycle">V2620</b></span></div>
+        </div>
+        <section class="cards home-tiles" aria-label="Main navigation">
+          <button class="home-card" data-route="charts"><span class="card-icon">▱</span><span><b>Charts</b><small>Airport charts</small></span></button>
+          <button class="home-card" id="enrouteHomeBtn"><span class="card-icon">✈</span><span><b>Enroute</b><small>Low / High charts</small></span></button>
+          <button class="home-card" data-route="wx"><span class="card-icon">☁</span><span><b>Weather</b><small>METAR / TAF</small></span></button>
+          <button class="home-card" id="updateCard"><span class="card-icon">⟳</span><span><b>Update</b><small id="updateSubtitle">Check for updates</small></span></button>
+          <button class="home-card" id="settingsHomeBtn"><span class="card-icon">⚙</span><span><b>Settings</b><small>App preferences</small></span></button>
+          <button class="home-card" id="infoCard"><span class="card-icon">ⓘ</span><span><b>Info</b><small>About JeppIran</small></span></button>
+        </section>
+        <footer class="home-footer"><span>◉ &nbsp; JEPPIRAN</span><span>FOR PERSONAL USE ONLY • NOT FOR ACTUAL NAVIGATION</span><button data-route="simulator" class="home-sim-link">Connect to Simulator →</button></footer>
+      </div>
+    </main>
+
+    <main id="chartsView" class="view charts-layout">
+      <aside class="airport-pane panel">
+        <div class="pane-head">
+          <button class="back-btn" data-route="home">‹ Home</button>
+          <h2>Charts</h2>
+        </div>
+        <input id="airportSearch" class="search" type="search" placeholder="Search ICAO or city">
+        <div class="airport-filters"><button type="button" class="airport-filter active" data-airport-filter="all">All</button><button type="button" class="airport-filter" data-airport-filter="favorites">Favorites</button></div><div id="airportList" class="airport-list"></div>
+      </aside>
+
+      <section class="viewer-pane">
+        <div id="airportProfile" class="airport-profile" aria-live="polite">
+          <div class="profile-no-selection"><span>✈</span><h2>Select an airport</h2><p>Choose an airport on the left to view its profile and procedures.</p></div>
+        </div>
+
+        <div class="viewer-toolbar">
+          <div class="viewer-title">
+            <strong id="viewerAirport">Select an airport</strong>
+            <small id="viewerChart">Choose a chart from the tree</small>
+          </div>
+          <div class="viewer-actions">
+            <div class="viewer-nav-group" aria-label="Chart navigation">
+              <button id="prevChartBtn" class="icon-btn compact-btn" title="Previous chart">‹</button>
+              <button id="nextChartBtn" class="icon-btn compact-btn" title="Next chart">›</button>
+            </div>
+            <div class="viewer-zoom-group" aria-label="Chart zoom">
+              <button id="zoomOutBtn" class="icon-btn compact-btn" title="Zoom out">−</button>
+              <button id="zoomResetBtn" class="icon-btn zoom-value" title="Reset zoom"><span id="zoomValue">100%</span></button>
+              <button id="zoomInBtn" class="icon-btn compact-btn" title="Zoom in">+</button>
+            </div>
+            <button id="chartMetarBtn" class="icon-btn metar-toolbar-btn">METAR</button>
+            <button id="positionStatusBtn" class="icon-btn position-status-btn" data-state="off" type="button" aria-label="GPS OFF">
+              <span class="position-status-dot"></span><span class="position-status-label">GPS OFF</span>
+            </button>
+            <button id="offlinePdfBtn" class="icon-btn" disabled>Save Offline</button>
+            <button id="fullscreenBtn" class="icon-btn">Fullscreen</button>
+          </div>
+        </div>
+        <div id="chartMetarBanner" class="chart-metar-banner" role="status" aria-live="polite">
+          <span id="chartMetarText"></span>
+          <button id="chartMetarClose" type="button" aria-label="Hide METAR">✕</button>
+        </div>
+        <div id="pdfStage" class="pdf-stage"><div id="pdfLoading" class="pdf-loading hidden">Loading chart…</div>
+          <div class="empty-state">
+            <img src="./app-icon.png" alt="">
+            <b>Select an airport and chart</b>
+            <span>The selected airport PDF will appear here.</span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <main id="simulatorView" class="view">
+      <section class="sim-shell panel">
+        <div class="pane-head">
+          <button class="back-btn" data-route="home">‹ Home</button>
+          <h2>SIMULATOR / GPS</h2>
+        </div>
+
+        <div class="sim-source-grid">
+          <button id="useGpsBtn" class="source-card">
+            <b>DEVICE GPS</b>
+            <small>Use this iPhone/iPad location</small>
+          </button>
+          <button id="useXpBtn" class="source-card" hidden style="display:none">
+            <b>X-PLANE 11.5</b>
+            <small>Receive position through JEPPIRAN Bridge</small>
+          </button>
+          <button id="useFsxBtn" class="source-card" hidden style="display:none">
+            <b>FSX</b>
+            <small>SimConnect position through JEPPIRAN Bridge</small>
+          </button>
+        </div>
+
+        <article class="sim-card">
+          <div class="sim-card-head">
+            <div><b>LIVE POSITION</b><small id="positionSource">No source selected</small></div>
+            <span id="positionDot" class="status-dot"></span>
+          </div>
+          <div id="positionGrid" class="position-grid">
+            <div><small>LAT</small><b id="posLat">—</b></div>
+            <div><small>LON</small><b id="posLon">—</b></div>
+            <div><small>ALT</small><b id="posAlt">—</b></div>
+            <div><small>HDG</small><b id="posHdg">—</b></div>
+            <div><small>GS</small><b id="posGs">—</b></div>
+            <div><small>ACCURACY</small><b id="posAcc">—</b></div>
+          </div>
+          <div id="simStatus" class="status">Disconnected</div>
+        </article>
+
+        <article class="sim-card" hidden style="display:none">
+          <h3 style="display:none">X-PLANE 11.5 BRIDGE</h3>
+          <p class="sim-help">X-Plane 11.5 sends UDP, which Safari cannot receive directly. Run the JEPPIRAN X-Plane Bridge on the simulator PC, then connect here using its WebSocket address.</p>
+          <label class="field-label" for="bridgeUrl">X-Plane Bridge WebSocket URL</label>
+          <input id="bridgeUrl" class="wide-input" value="ws://192.168.1.50:8765" autocapitalize="off" autocomplete="off" spellcheck="false">
+          <div class="sim-buttons">
+            <button id="connectBridgeBtn">CONNECT X-PLANE</button>
+          </div>
+        </article>
+
+        <article class="sim-card">
+          <h3>UNIVERSAL SIMULATOR BRIDGE</h3>
+          <p class="sim-help">Run JEPPIRAN Universal Bridge on the simulator PC. Enter the Windows IPv4 address printed by the bridge. X-Plane live telemetry is supported by the new test bridge; keep the existing FSX Bridge v1.4 for FSX live telemetry. Connection stays active between JEPPIRAN pages.</p>
+          <label class="field-label" for="fsxPcIp">Simulator PC IPv4 Address</label>
+          <input id="fsxPcIp" class="wide-input" placeholder="e.g. 10.31.2.70" autocapitalize="off" autocomplete="off" spellcheck="false">
+          <div class="sim-buttons">
+            <button id="connectFsxBtn" type="button" onclick="this.textContent='CONNECTING…';this.disabled=true;var b=this,s=document.getElementById('fsxInlineStatus');if(s)s.textContent='Starting simulator connection…';try{if(window.jeppiranConnectFsx){sessionStorage.removeItem('jeppiranFsxCoreRetry');window.jeppiranConnectFsx();}else if(!sessionStorage.getItem('jeppiranFsxCoreRetry')){sessionStorage.setItem('jeppiranFsxCoreRetry','1');if(s)s.textContent='Refreshing JEPPIRAN core…';var reload=function(){location.reload();};if('caches' in window){caches.keys().then(function(keys){return Promise.all(keys.filter(function(k){return k.indexOf('jeppiran-pwa-')===0;}).map(function(k){return caches.delete(k);}));}).finally(reload);}else{reload();}}else{if(s)s.textContent='JEPPIRAN core did not initialize. Close this tab, reopen the main JEPPIRAN URL, then try again.';}}catch(e){if(s)s.textContent='Simulator connect error: '+e.message;}setTimeout(function(){b.disabled=false;if(b.textContent==='CONNECTING…')b.textContent='CONNECT SIMULATOR';},2500);">CONNECT SIMULATOR</button>
+            <button id="disconnectPositionBtn" class="secondary-btn">DISCONNECT</button>
+          </div>
+          <div id="fsxInlineStatus" class="status" style="margin-top:10px">Simulator ready to connect.</div>
+          <small class="sim-note">Use the actual LAN/hotspot IPv4 address, usually the address on the same network as your iPad. No certificate, profile, or port entry is required. <b>Web build 2621-Universal-02</b>.</small>
+        </article>
+
+        <article class="sim-card">
+          <h3>DEVICE GPS</h3>
+          <p class="sim-help">Uses iOS/iPadOS Location Services. Safari will ask for permission the first time. High-accuracy mode is requested automatically.</p>
+          <button id="startGpsBtn">START DEVICE GPS</button>
+        </article>
+      </section>
+    </main>
+
+    <main id="wxView" class="view">
+      <section class="wx-shell panel">
+        <div class="pane-head">
+          <button class="back-btn" data-route="home">‹ Home</button>
+          <h2>WX</h2>
+        </div>
+
+        <label class="field-label" for="icaoInput">Insert ICAO Code</label>
+        <div class="wx-entry">
+          <input id="icaoInput" maxlength="4" autocomplete="off" autocapitalize="characters" placeholder="Type ICAO code">
+          <button id="getWxBtn">GET DATA</button>
+        </div>
+
+        <div class="wx-options">
+          <label><input id="metarCheck" type="checkbox" checked> METAR</label>
+          <label><input id="tafCheck" type="checkbox"> TAF</label>
+          <label><input id="decodedCheck" type="checkbox"> DECODED</label>
+        </div>
+
+        <div id="wxStatus" class="status"></div>
+
+        <article id="metarBlock" class="wx-block hidden">
+          <h3>METAR</h3><pre id="metarText"></pre>
+        </article>
+        <article id="tafBlock" class="wx-block hidden">
+          <h3>TAF</h3><pre id="tafText"></pre>
+        </article>
+        <article id="decodedBlock" class="wx-block hidden">
+          <h3>DECODED</h3><div id="decodedText" class="decoded"></div>
+        </article>
+      </section>
+    </main>
+  </div>
+
+  <button id="fullscreenExitBtn" class="fullscreen-exit" type="button" aria-label="Exit fullscreen">✕ Exit Fullscreen</button>
+
+
+  <dialog id="installDialog" class="install-dialog" aria-labelledby="installGuideTitle" aria-describedby="installGuideDesc">
+    <div class="install-sheet">
+      <div class="install-guide-header">
+        <span class="install-heading-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 3v12m-4-4 4 4 4-4"/><path d="M4 17v3h16v-3"/>
+          </svg>
+        </span>
+        <div class="install-heading-text">
+          <h2 id="installGuideTitle">Install JeppIran</h2>
+          <p>ADD TO YOUR HOME SCREEN</p>
+        </div>
+        <button id="installGuideClose" class="install-close" type="button" aria-label="Close installation guide">×</button>
+      </div>
+      <div class="install-app-overview">
+        <img class="install-app-logo" src="./app-icon.png" alt="JEPPIRAN logo">
+        <div>
+          <strong>JeppIran</strong>
+          <p id="installGuideDesc">Install JeppIran on your iPhone or iPad for quick access and a full-screen app experience.</p>
+        </div>
+      </div>
+      <h3 class="install-section-label">FOLLOW THESE STEPS</h3>
+      <ol class="install-steps">
+        <li class="install-step">
+          <span class="install-step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="9"/><path d="m15.9 8.1-2.3 5.5-5.5 2.3 2.3-5.5z"/>
+            </svg>
+          </span>
+          <span><strong>1. Open in Safari</strong><small>Use Safari on your iPhone or iPad.</small></span>
+        </li>
+        <li class="install-step">
+          <span class="install-step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M12 15V3m-4 4 4-4 4 4"/><path d="M8 10H5v11h14V10h-3"/>
+            </svg>
+          </span>
+          <span><strong>2. Tap the Share icon</strong><small>Open the Safari Share menu.</small></span>
+        </li>
+        <li class="install-step">
+          <span class="install-step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="3" y="3" width="18" height="18" rx="3"/><path d="M12 7v10M7 12h10"/>
+            </svg>
+          </span>
+          <span><strong>3. Add to Home Screen</strong><small>Choose “Add to Home Screen” from the menu.</small></span>
+        </li>
+        <li class="install-step">
+          <span class="install-step-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m5 12 4.5 4.5L19 7"/>
+            </svg>
+          </span>
+          <span><strong>4. Tap Add</strong><small>Enable “Open as Web App” if shown, then tap Add.</small></span>
+        </li>
+      </ol>
+      <div class="install-tip">
+        <div class="install-tip-heading">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"/><path d="M12 11v5m0-9h.01"/>
+          </svg>
+          <strong>Quick tip</strong>
+        </div>
+        <p>Once installed, launch JEPPIRAN directly from your Home Screen.</p>
+      </div>
+      <button id="installGuideDone" class="install-done" type="button">Got it</button>
+    </div>
+  </dialog>
+
+  <dialog id="messageDialog">
+    <div class="dialog-body">
+      <h3 id="dialogTitle">JEPPIRAN</h3>
+      <p id="dialogText"></p>
+      <button id="dialogClose">OK</button>
+    </div>
+  </dialog>
+
+  <script id="JEPPIRAN_NAV_FALLBACK">
+  (function(){
+    function showRoute(name){
+      var views=document.querySelectorAll(".view");
+      for(var i=0;i<views.length;i++) views[i].classList.remove("active");
+      document.body.classList.remove("viewer-fullscreen");
+      var el=document.getElementById(name+"View")||document.getElementById("homeView");
+      if(el) el.classList.add("active");
+    }
+    document.addEventListener("click",function(e){
+      if(window.JEPPIRAN_NAV_READY) return;
+      var node=e.target;
+      while(node && node!==document && !(node.getAttribute && node.getAttribute("data-route"))) node=node.parentNode;
+      if(!node || node===document) return;
+      e.preventDefault();
+      var name=node.getAttribute("data-route")||"home";
+      showRoute(name);
+      var hash="#"+name;
+      if(location.hash!==hash) history.pushState({route:name},"",hash);
+    },false);
+    window.addEventListener("popstate",function(){
+      if(!window.JEPPIRAN_NAV_READY) showRoute((location.hash||"#home").slice(1));
+    });
+    document.addEventListener("DOMContentLoaded",function(){
+      if(!window.JEPPIRAN_NAV_READY) showRoute((location.hash||"#home").slice(1));
+    });
+  })();
+  </script>
+  <script src="./oimm-ils-y-31r-test/app.js?v=2621-oimm606-qa1" defer></script>
+</body>
+</html>
