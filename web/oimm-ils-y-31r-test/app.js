@@ -37,12 +37,16 @@ async function enableOimmIlsQaOnly(m){
     OIMM_ILS_QA_MODEL=model;
     georefByPage.set(606,model);   // Stage-only in-memory test; original model preserved.
     OIMM_ILS_QA_ACTIVE=true;
+    window.JEPPIRAN_OIMM_QA_STATUS={page:606,loaded:true,approvedForNavigation:false};
+    const testInfo=document.getElementById("oimmTestStatus");
+    if(testInfo)testInfo.textContent="GEOREF ACTIVE · 606 · GRID ONLY";
     console.info("OIMM 11-2 staged model enabled; independent AIP accuracy NOT confirmed.");
   }catch(e){
     OIMM_ILS_QA_ACTIVE=false;OIMM_ILS_QA_MODEL=null;
     console.warn("OIMM 11-2 QA unavailable",e);
     const el=document.getElementById("oimmTestStatus");
     if(el)el.textContent="QA BLOCKED: "+e.message;
+    window.JEPPIRAN_OIMM_QA_STATUS={page:606,loaded:false,error:String(e.message)};
   }
 }
 function showOimmIlsOnChartWarning(){
@@ -63,7 +67,8 @@ function setupOimmTestToolbar(){
   if(openBtn)openBtn.addEventListener("click",openOimmIlsQaChart);
   if(simBtn)simBtn.addEventListener("click",()=>route("simulator"));
   const status=document.getElementById("oimmTestStatus");
-  if(status && OIMM_ILS_QA_ACTIVE) status.textContent="GEOREF TEST READY · chart 11-2";
+  if(status&&OIMM_ILS_QA_ACTIVE)status.textContent="GEOREF ACTIVE · 606 · GRID ONLY";
+  else if(status&&!status.textContent.startsWith("QA BLOCKED"))status.textContent="QA INACTIVE · check console or reload";
   // Prefer to open target chart on landing. Do not interrupt a direct link to simulator.
   if((location.hash||"")===""||(location.hash||"")==="#home"||(location.hash||"")==="#charts"){
     openOimmIlsQaChart();
@@ -379,6 +384,10 @@ async function loadData(){
     await enableDohaAdcQaIfRequested(m);
     await loadPublishedExperimentalGeorefs(m);
     await enableOimmIlsQaOnly(m);
+    // Stage diagnostics: source mode and georeference existence are visible after every reload.
+    window.JEPPIRAN_OIMM_QA_STATUS=Object.assign(window.JEPPIRAN_OIMM_QA_STATUS||{},{
+      page:606,georefPresent:georefByPage.has(606),chartIndexPresent:charts.some(c=>Number(c.page)===606&&c.airport==="OIMM")
+    });
     renderAirports();
     if(!selectedAirport && charts.some(c=>c.airport==="OIII"))selectAirport("OIII");
     setupOimmTestToolbar();
@@ -732,6 +741,11 @@ function refreshPositionStatus(){
   if(!selectedChart){
     const code=activePositionSource==="gps"?"GPS":activePositionSource==="fsx"?"FSX":"XPLANE";
     setPositionStatus("live",code+" LIVE","Position is live. Open a chart to display the aircraft.");
+    return;
+  }
+  if(!model && Number(selectedChart?.page)===606){
+    const status=window.JEPPIRAN_OIMM_QA_STATUS;
+    setPositionStatus("warning","OIMM 606 QA NOT LOADED","Model not loaded: "+(status?.error||"Open this exact /oimm-ils-y-31r-test/ link and reload."));
     return;
   }
   if(!model){
