@@ -97,7 +97,7 @@ function adcMidline(graph){
   const earth=111195,c=Math.cos(mid.lat*Math.PI/180);
   const dx=(end.lon-mid.lon)*earth*c,dy=(end.lat-mid.lat)*earth;
   const sq=dx*dx+dy*dy,width=Math.hypot((m.lon-h.lon)*earth*c,(m.lat-h.lat)*earth);
-  if(!(sq>2500**2&&sq<5000**2&&width>70&&width<250))return null;
+  if(!(sq>2500**2&&sq<5000**2&&width>70&&width<450))return null;
   const project=p=>{
     const px=(p.lon-mid.lon)*earth*c,py=(p.lat-mid.lat)*earth;
     const rawT=(px*dx+py*dy)/sq,t=Math.max(0,Math.min(1,rawT));
