@@ -1,0 +1,32 @@
+name: OIMM TAXI routing regression
+on:
+  pull_request:
+    paths:
+      - 'web/taxi-mode.js'
+      - 'tests/oimm-taxi.test.cjs'
+      - 'web/data/taxi-networks/OIMM.json'
+      - '.github/workflows/oimm-taxi-tests.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'web/taxi-mode.js'
+      - 'tests/oimm-taxi.test.cjs'
+      - 'web/data/taxi-networks/OIMM.json'
+      - '.github/workflows/oimm-taxi-tests.yml'
+permissions:
+  contents: read
+jobs:
+  oimm-taxi:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: JavaScript syntax
+        run: |
+          node --check web/taxi-mode.js
+          node --check tests/oimm-taxi.test.cjs
+      - name: Stand connectivity, explicit runway authorization and pending-load QA
+        run: node tests/oimm-taxi.test.cjs
