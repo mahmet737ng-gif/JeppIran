@@ -145,7 +145,7 @@ function view(){
     '<label for="taxiQaInput">Stand C51L · K Z /Y · 34L2A (format example, not a DXB route)</label>'+
     '<div class="taxi-qa-entry"><input id="taxiQaInput" autocomplete="off" spellcheck="false" placeholder="Taxi clearance or stand"><button id="taxiQaGo" type="button">GO</button></div>'+
     '<div class="taxi-qa-buttons"><button id="taxiQaAdc" type="button">ADC</button><button id="taxiQaStands" type="button" aria-pressed="false">STANDS</button><button id="taxiQaTrace" type="button">TRACE QA</button><button id="taxiQaHold" type="button">HOLD HERE</button><button id="taxiQaUndo" type="button">UNDO</button><button id="taxiQaClear" type="button">CLEAR</button></div>'+
-    '<div id="taxiQaStatus" role="status"></div><small class="taxi-qa-warning">NOT FOR ACTUAL NAVIGATION. Ground clearance and chart validation remain mandatory.</small>';
+    '<div id="taxiQaStatus" role="status"></div><div id="taxiQaStandMap" hidden aria-label="Geographic reference-only stand map"></div><small class="taxi-qa-warning">NOT FOR ACTUAL NAVIGATION. Ground clearance and chart validation remain mandatory.</small>';
   document.querySelector("#chartsView .viewer-pane")?.appendChild(panel);
   $("taxiQaClose").onclick=()=>toggle(false);
   $("taxiQaGo").onclick=go;
@@ -307,8 +307,50 @@ function paintPath(svg,pts,holds,width){
       stroke:"#ff1626","stroke-width":stroke*1.6,"stroke-linecap":"square"}));
   }
 }
+function drawStandMap(){
+  const el=$("taxiQaStandMap");
+  if(!el)return;
+  el.hidden=!(taxi.active&&taxi.showStands&&taxi.standReference);
+  if(el.hidden)return;
+  const entries=Object.entries(taxi.standReference.stands);
+  const W=380,H=208,pad=14,latMin=Math.min(...entries.map(([,v])=>v.lat)),
+    latMax=Math.max(...entries.map(([,v])=>v.lat)),lonMin=Math.min(...entries.map(([,v])=>v.lon)),
+    lonMax=Math.max(...entries.map(([,v])=>v.lon)),cos=Math.cos((latMin+latMax)*Math.PI/360);
+  const extentX=Math.max(0.00001,(lonMax-lonMin)*cos),extentY=Math.max(0.00001,latMax-latMin),
+    scale=Math.min((W-2*pad)/extentX,(H-2*pad-25)/extentY);
+  const offsetX=(W-extentX*scale)/2,offsetY=25+(H-25-extentY*scale)/2;
+  el.style.cssText="margin:8px 0 0;padding:8px;border:1px solid #426b86;border-radius:8px;background:#091a2a";
+  el.replaceChildren();
+  const label=document.createElement("div");label.textContent=entries.length+" surveyed stand reference points · WGS84 · not a taxiway chart";
+  label.style.cssText="font-size:10px;color:#abc7da;padding:0 0 6px";
+  el.appendChild(label);
+  const svg=s("svg",{viewBox:"0 0 "+W+" "+H,role:"img","aria-label":"Georeferenced position-only sketch of OMDB stands, by apron"});
+  svg.style.cssText="display:block;width:100%;max-height:240px;background:#0d2b42;border-radius:6px";
+  const colors={C:"#38d4fb",E:"#8cfd9e",G:"#fc9d4d",H:"#c69aff",Q:"#ff9ad1"};
+  for(const [id,p] of entries){
+    const x=offsetX+(p.lon-lonMin)*cos*scale,y=offsetY+(latMax-p.lat)*scale;
+    const active=taxi.selectedStand===id;
+    const dot=s("circle",{cx:x,cy:y,r:active?5:2.1,fill:active?"#fff099":(colors[p.apron]||"#9bd9ff"),stroke:"#092130","stroke-width":active?2:0.6});
+    const tooltip=s("title",{});tooltip.textContent=id+" · "+p.lat.toFixed(6)+", "+p.lon.toFixed(6);
+    dot.appendChild(tooltip);svg.appendChild(dot);
+    if(active){const txt=s("text",{x:x+7,y:y-7,fill:"#fff5af","font-size":"12","font-weight":"bold",stroke:"#10243a","stroke-width":"3","paint-order":"stroke"});txt.textContent=id;svg.appendChild(txt)}
+  }
+  let lx=12;
+  for(const [apron,color] of Object.entries(colors)){
+    svg.appendChild(s("circle",{cx:lx,cy:12,r:4,fill:color}));
+    const txt=s("text",{x:lx+7,y:15,fill:"#d9ecfa","font-size":"10"});
+    txt.textContent="APRON "+apron;svg.appendChild(txt);lx+=67;
+  }
+  const n=s("text",{x:W-10,y:H-10,fill:"#8ab9d3","font-size":"11","text-anchor":"end"});n.textContent="N ↑";svg.appendChild(n);
+  el.appendChild(svg);
+  const note=document.createElement("small");
+  note.textContent="Geographically scaled point sketch only. No centreline, pushback, turn, hold or routing connections are implied.";
+  note.style.cssText="display:block;color:#c4d9ea;margin-top:5px;font-size:10px";
+  el.appendChild(note);
+}
 function draw(){
   syncAirport();
+  drawStandMap();
   const layer=$("chartTransformLayer"),canvas=$("pdfCanvas");if(!layer||!canvas)return;
   layer.querySelector(".taxi-qa-overlay")?.remove();
   if(!taxi.active)return;
