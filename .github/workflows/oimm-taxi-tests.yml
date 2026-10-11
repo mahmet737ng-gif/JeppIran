@@ -4,6 +4,8 @@ on:
     paths:
       - 'web/taxi-mode.js'
       - 'web/taxi-auto-router.js'
+      - 'web/taxi-runway-access.js'
+      - 'tests/oimm-runway-access.test.cjs'
       - 'tests/oimm-taxi-auto.test.cjs'
       - 'tests/oimm-taxi.test.cjs'
       - 'web/data/taxi-networks/OIMM.json'
@@ -13,6 +15,8 @@ on:
     paths:
       - 'web/taxi-mode.js'
       - 'web/taxi-auto-router.js'
+      - 'web/taxi-runway-access.js'
+      - 'tests/oimm-runway-access.test.cjs'
       - 'tests/oimm-taxi-auto.test.cjs'
       - 'tests/oimm-taxi.test.cjs'
       - 'web/data/taxi-networks/OIMM.json'
@@ -32,9 +36,12 @@ jobs:
         run: |
           node --check web/taxi-mode.js
           node --check web/taxi-auto-router.js
+          node --check web/taxi-runway-access.js
+          node --check tests/oimm-runway-access.test.cjs
           node --check tests/oimm-taxi.test.cjs
           node --check tests/oimm-taxi-auto.test.cjs
       - name: Stand connectivity, explicit runway authorization and pending-load QA
         run: |
           node tests/oimm-taxi.test.cjs
           node tests/oimm-taxi-auto.test.cjs
+          node tests/oimm-runway-access.test.cjs

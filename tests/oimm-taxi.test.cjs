@@ -1,5 +1,6 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
 const graph=JSON.parse(fs.readFileSync('web/data/taxi-networks/OIMM.json','utf8'));
+const runway=require('../web/taxi-runway-access.js');
 const elements=new Map();
 const auto=require('../web/taxi-auto-router.js');
 function el(id){if(['pdfCanvas','chartTransformLayer','taxiQaStandMap'].includes(id))return null;
@@ -7,7 +8,7 @@ function el(id){if(['pdfCanvas','chartTransformLayer','taxiQaStandMap'].includes
 const mockNode=()=>({textContent:'',setAttribute(){},appendChild(){}});
 const ctx={window:{addEventListener(){}},document:{getElementById:el,querySelector:()=>({textContent:''}),createElement:mockNode,createElementNS:mockNode},
  selectedAirport:'OIMM',selectedChart:{page:601,category:'Airport',chart_number:'10-9'},manifest:{cycle:'2621'},
- lastPosition:null,georefByPage:new Map(),charts:[],console};ctx.window.JEPPIRAN_TAXI_AUTO=auto;vm.createContext(ctx);
+ lastPosition:null,georefByPage:new Map(),charts:[],console};ctx.window.JEPPIRAN_TAXI_AUTO=auto;ctx.window.JEPPIRAN_TAXI_RUNWAY=runway;vm.createContext(ctx);
 let code=fs.readFileSync('web/taxi-mode.js','utf8');code=code.replace('})();','window.test={taxi,parse,shortest,adjacent,graphOk,go,routeDeviationMeters};})();');vm.runInContext(code,ctx);
 const t=ctx.window.test;t.taxi.airport='OIMM';t.taxi.graph=graph;t.taxi.active=true;t.taxi.standReference={stands:graph.stands};
 assert.equal(t.graphOk(graph,'OIMM'),true);assert.equal(t.graphOk({...graph,cycle:'2620'},'OIMM'),false);
@@ -15,6 +16,8 @@ assert.equal(Object.keys(graph.stands).length,34);assert.equal(Object.keys(graph
 for(const s of Object.values(graph.stands))assert(s.node&&graph.nodes[s.node]&&s.labelBounds&&s.publishedINS);
 for(const form of ['ST101 A','101 A','STAND 101 A','P101 A'])assert.equal(t.parse(form).startStand,'101');
 assert.equal(t.parse('STD109 J BT13R H').startStand,'109');
+assert.equal(t.parse('RAMP').destination,'MAIN APRON');
+assert.equal(t.parse('ST113 RAMP').startStand,'113');
 for(const form of ['ST101','101','STAND 101','P101'])assert.equal(t.parse(form).destination,'101');
 const links=t.adjacent(graph);let checks=0;
 for(const [id,stand] of Object.entries(graph.stands))for(const way of ['J','Q','A','B']){
@@ -43,6 +46,27 @@ assert.equal(t.taxi.route.path.at(-1),graph.taxiways.D.nodes[1]);
 const backtrackEdges=new Set(t.taxi.route.path.slice(0,-1).map((n,i)=>n+'>'+t.taxi.route.path[i+1]));
 assert(graph.edges.some(e=>e.runway&&e.taxiway==='BT31L'&&backtrackEdges.has(e.from+'>'+e.to)));
 assert.equal(t.adjacent(graph)[graph.taxiways.A.exitNode]?.some(e=>e.way==='BT31L'),false);
+// All explicit runway-entry plans must be derived from actual chart-labelled
+// holds and their restricted projected RWY intersections, not hardcoded J/A.
+for(const input of ['ST109 Q BT31L D','ST109 Q BT13R H','ST109 B BT31L D']){
+ el('taxiQaInput').value=input;t.go();
+ assert(t.taxi.route?.path?.length>2,input+' should reach the mapped requested runway-end taxiway');
+ const runwayToken=input.match(/BT(?:13R|31L)/)[0];
+ const routeGraph=t.taxi.route.graph;
+ const segments=t.taxi.route.path.slice(0,-1).map((n,i)=>[n,t.taxi.route.path[i+1]]);
+ assert(segments.some(([a,b])=>routeGraph.edges.some(e=>
+  e.runway&&e.taxiway===runwayToken&&e.from===a&&e.to===b)),
+  input+' must actually traverse named explicit runway graph edges');
+ assert(!t.adjacent(graph)[graph.taxiways.A.exitNode]?.some(e=>e.way===runwayToken),
+   'unrequested runway traversal cannot appear in ordinary adjacency');
+}
+// A mapped taxiway on the far side can use its own documented hold
+// without borrowing the Q/J apron lead-in or silently crossing another runway.
+ctx.lastPosition=graph.nodes[graph.taxiways.F.nodes[0]];
+el('taxiQaInput').value='F BT13R H';t.go();
+assert(t.taxi.route?.path.length>2,'F → BT13R → H should use F chart hold QA junction');
+assert(t.taxi.route.graph.edges.some(e=>e.fromTaxiway==='F'&&e.runwayAccessCandidate));
+ctx.lastPosition=null;
 el('taxiQaInput').value='ST113 A D';t.go();assert.equal(t.taxi.route,null,'implicit runway crossing forbidden');
 el('taxiQaInput').value='ST113 BT31L D';t.go();assert.equal(t.taxi.route,null,'explicit A approach required');
 el('taxiQaInput').value='ST109 BT13R H';t.go();assert.equal(t.taxi.route,null,'explicit J approach required');

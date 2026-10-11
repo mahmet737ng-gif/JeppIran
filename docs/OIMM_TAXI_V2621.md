@@ -159,3 +159,38 @@ are NOT runway departure thresholds, and no validated civilian automatic
 runway exit is therefore not automatically routed to a stand until the
 aircraft has reached an accurately mapped civil taxiway. Do not silently
 treat a nearest-looking apron segment as an approved stand connector.
+
+## R17 · generalized taxiway-to-runway and apron connections (2026-10-11)
+
+The original published ground network (`OIMM.json`) remains unmodified and is
+still tied to Jeppesen V2621. The separate `taxi-runway-access.js` **simulator
+QA** layer anchors a potential runway entrance ONLY at a printed civilian
+hold node (`holdNodes`) and projects it onto existing chart-derived RWY
+13R/31L axis segments. J and A are no longer special-cased as sole entrances.
+A 1,062 m chart-axis bridge joins the geometrically aligned J→H and A→D
+runway-axis portions, strictly for simulator preview.
+
+Regression-tested runway access candidate taxonomy:
+- BT13R axis: **J, Q, A, F, G** from their own printed hold locations
+- BT31L axis: **J, Q, A, B, C1, C2, F**
+- Hold-to-axis projections of <=115 m are *chart-hold QA*, never surveyed.
+  Longer projections of 116–180 m (including B/F/C1/C2) are marked
+  **LONG-REACH QA UNVERIFIED**, and may traverse unmapped pavement; they
+  require chart/flight visual review before any geometry promotion.
+- These links exist **only after the explicit BT runway-use token**
+  (`ST109 Q BT31L D`, `ST109 B BT31L D`,
+  `ST109 Q BT13R H`). ATC runway permission is separate and mandatory.
+  Unrequested runway edges remain excluded from normal routing; no transition
+  between nearby pavement names is invented.
+- For civilian/main ramp arrival, `RAMP`, `APRON`, `MAIN APRON` and
+  `ST113 RAMP` select the shortest reachable mapped APRON segment.
+  Every published stand has a tested path to a main-apron vertex. Other
+  aprons without mapped entrances/numbers are not silently connected.
+- The DEMO START label and the residual QA START marker have been removed
+  from the full-size ADC overlay. Internal preview positions still work.
+
+**Limitations:** These additions are QA candidate geometries, *not surveyed
+runway entry centerlines or validated taxi clearances*. RWY 13L/31R geometry
+and some non-main ramp connectors are still absent. Android's native auto
+stand/hold route uses the original shared graph and is unchanged by this
+web-specific runway-access QA overlay. No real-world aircraft navigation.

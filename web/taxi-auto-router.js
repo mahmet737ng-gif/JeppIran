@@ -49,6 +49,19 @@ function goal(graph,token){
   if(m&&graph.stands?.[m[1]]){
     return {kind:"stand",name:"ST"+m[1],node:graph.stands[m[1]].node};
   }
+  if(/^(?:RAMP|APRON|MAIN APRON)$/.test(wanted)){
+    const stands=new Set(Object.values(graph.stands||{}).map(x=>x.node||x));
+    const valid=new Set();
+    for(const e of graph.edges||[]){
+      if(e.runway||e.closed||e.military||norm(e.taxiway)!=="APRON")continue;
+      if(graph.nodes[e.from]&&!stands.has(e.from))valid.add(e.from);
+      if(graph.nodes[e.to]&&!stands.has(e.to))valid.add(e.to);
+    }
+    return valid.size?
+      {kind:"apron",name:"MAIN APRON",nodes:[...valid],
+        warning:"Only chart-connected main apron pavements; no implied new ramp entry"}:
+      {error:"No chart-connected civilian apron nodes were recorded"};
+  }
   if(/^\d{2}[LRC]?$/.test(wanted)){
     const way=graph.runwayBacktracks?.["BT"+wanted]?.fromTaxiway;
     const hold=way&&graph.taxiways?.[way]?.exitNode;
@@ -74,33 +87,34 @@ function bestStart(graph,position,maxSnapMeters=65){
 }
 function solve(graph,start,finish,{sourceStand=null}={}){
   const data=index(graph),links=data.links;
-  if(!graph.nodes[start]||!graph.nodes[finish])return null;
+  const targets=finish instanceof Set?finish:new Set([finish]);
+  if(!graph.nodes[start]||![...targets].some(x=>graph.nodes[x]))return null;
   const q=new Heap(),score=new Map([[start,0]]),prev=new Map();
   q.push({node:start,cost:0});
-  let steps=0;
+  let steps=0,reached=null;
   while(q.size&&steps++<240000){
     const cur=q.pop();
     if(cur.cost!==score.get(cur.node))continue;
-    if(cur.node===finish)break;
+    if(targets.has(cur.node)){reached=cur.node;break}
     for(const e of links.get(cur.node)||[]){
       // Never traverse another aircraft's stand as an intermediate connector.
-      if(data.standNodes.has(e.to)&&e.to!==finish)continue;
-      if(data.standNodes.has(cur.node)&&cur.node!==start&&cur.node!==finish)continue;
+      if(data.standNodes.has(e.to)&&!targets.has(e.to))continue;
+      if(data.standNodes.has(cur.node)&&cur.node!==start&&!targets.has(cur.node))continue;
       const next=cur.cost+e.length;
       if(next>=(score.get(e.to)??Infinity))continue;
       score.set(e.to,next);prev.set(e.to,{from:cur.node,way:e.way});q.push({node:e.to,cost:next});
     }
   }
-  if(!score.has(finish))return null;
-  const path=[finish],ways=[];
-  for(let n=finish;n!==start;){
+  if(!reached||!score.has(reached))return null;
+  const path=[reached],ways=[];
+  for(let n=reached;n!==start;){
     const step=prev.get(n);if(!step)return null;
     ways.push(step.way);n=step.from;path.push(n);
   }
   path.reverse();ways.reverse();
   const names=[];
   for(const way of ways)if(way&&way!=="APRON"&&way!=="UNNAMED"&&names.at(-1)!==way)names.push(way);
-  return {path,holds:[],length:Math.round(score.get(finish)),taxiways:names,
+  return {path,holds:[],length:Math.round(score.get(reached)),taxiways:names,
     graph,sourceStand,source:"CHART_GRAPH_ONLY"};
 }
 function route(graph,options={}){
@@ -114,8 +128,10 @@ function route(graph,options={}){
   const stand=options.startStand&&graph.stands?.[String(options.startStand).replace(/^ST/i,"")];
   const source=stand?{node:stand.node,distanceMeters:0}:bestStart(graph,options.position);
   if(!source)return {error:"No connected ground centreline within 65 m of position. Select SET START at a mapped taxiway, or connect simulator. No guessed runway exit."};
-  const found=solve(graph,source.node,target.node,{sourceStand:stand?options.startStand:null});
-  if(!found)return {error:"No approved connection in existing OIMM ground graph; runways, military-only areas and unverified exits are excluded."};
+  const targetIds=target.kind==="apron"?new Set(target.nodes):target.node;
+  const found=solve(graph,source.node,targetIds,{sourceStand:stand?options.startStand:null});
+  if(!found)return {error:"No connected chart-centreline path to the requested apron/stand/holding point. No runway or military shortcut was created."};
+  if(target.kind==="apron")target.node=found.path.at(-1);
   found.holds=found.path.flatMap((n,i)=>graph.holdNodes?.[n]?[i]:[]);
   if(target.kind==="runway-hold"&&!found.holds.includes(found.path.length-1))found.holds.push(found.path.length-1);
   return {route:found,target,snapMeters:source.distanceMeters};
