@@ -326,22 +326,32 @@ function view(){
   if($("taxiQaPanel"))return;
   const panel=document.createElement("section");
   panel.id="taxiQaPanel";panel.className="taxi-qa-panel";panel.hidden=true;
-  panel.innerHTML='<div class="taxi-qa-title"><strong>TAXI <small>QA TEST</small></strong><span id="taxiQaAirport"></span><button id="taxiQaClose" type="button">×</button></div>'+
-    '<label for="taxiQaInput">LTFM example: A4 A A7 B B8A · Hold: /B8A · 34L2A format</label>'+
-    '<div class="taxi-qa-entry"><input id="taxiQaInput" autocomplete="off" spellcheck="false" placeholder="Taxi clearance or stand"><button id="taxiQaGo" type="button">GO</button></div>'+
-    '<div class="taxi-qa-buttons"><button id="taxiQaAdc" type="button">ADC</button><button id="taxiQaNetworkBtn" type="button" aria-pressed="false">NETWORK</button><button id="taxiQaStart" type="button" aria-pressed="false">SET START</button><button id="taxiQaDemo" type="button">DEMO ROUTE</button><button id="taxiQaStands" type="button" aria-pressed="false">STANDS</button><button id="taxiQaTrace" type="button">TRACE QA</button><button id="taxiQaHold" type="button">HOLD HERE</button><button id="taxiQaUndo" type="button">UNDO</button><button id="taxiQaClear" type="button">CLEAR</button></div>'+
-    '<div id="taxiQaStatus" role="status"></div>'+
-    '<details id="taxiQaStatusDetails" class="taxi-status-details" hidden><summary>Show complete message / pushback instructions</summary><div id="taxiQaFullMessage"></div></details>'+
-    '<div id="taxiQaRoutePreview" class="taxi-route-preview" hidden aria-label="Mapped segment preview"></div>'+
+  panel.innerHTML='<div class="taxi-qa-title"><strong>TAXI <small>QA TEST</small></strong>'+
+    '<span id="taxiQaAirport"></span><button id="taxiQaToolsBtn" type="button" aria-expanded="false" aria-controls="taxiQaButtons">TOOLS ▾</button>'+
+    '<button id="taxiQaClose" type="button" aria-label="Close taxi panel">×</button></div>'+
+    '<label for="taxiQaInput">Stand STD3 T5 N2 · Hold /N2 · Procedure 34L2A</label>'+
+    '<div class="taxi-qa-entry"><input id="taxiQaInput" autocomplete="off" spellcheck="false" placeholder="Stand / taxiways / procedure"><button id="taxiQaGo" type="button">GO</button></div>'+
+    '<div id="taxiQaRoutePreview" class="taxi-route-preview" hidden aria-label="Mapped taxiway segment preview"></div>'+
+    '<div id="taxiQaStatus" role="status" aria-live="polite"></div>'+
+    '<details id="taxiQaStatusDetails" class="taxi-status-details" hidden><summary>Pushback details / full message</summary><div id="taxiQaFullMessage"></div></details>'+
+    '<div id="taxiQaButtons" class="taxi-qa-buttons"><button id="taxiQaAdc" type="button">ADC</button><button id="taxiQaNetworkBtn" type="button" aria-pressed="false">NETWORK</button><button id="taxiQaStart" type="button" aria-pressed="false">SET START</button><button id="taxiQaDemo" type="button">DEMO ROUTE</button><button id="taxiQaStands" type="button" aria-pressed="false">STANDS</button><button id="taxiQaTrace" type="button">TRACE QA</button><button id="taxiQaHold" type="button">HOLD HERE</button><button id="taxiQaUndo" type="button">UNDO</button><button id="taxiQaClear" type="button">CLEAR</button></div>'+
     '<section id="taxiQaNetwork" class="taxi-audit-panel" hidden><strong>ISTANBUL · TAXIWAY INVENTORY / SIM QA ONLY</strong>'+
     '<input id="taxiQaFilter" type="search" autocomplete="off" spellcheck="false" placeholder="Find A, T5, N2…">'+
     '<select id="taxiQaNames" size="8" aria-label="Select mapped taxiway"></select>'+
     '<div id="taxiQaDetails" role="status"></div>'+
     '<div class="taxi-audit-row"><button id="taxiQaD3" type="button">STAND D3 PUSHBACK</button><button id="taxiQaParking" type="button">PARKING 30-9B</button></div>'+
     '<small>OSM segments are NOT official clearance or verified stand connectors.</small></section>'+
-    '<div id="taxiQaStandMap" hidden aria-label="Geographic reference-only stand map"></div><small class="taxi-qa-warning">NOT FOR ACTUAL NAVIGATION. Ground clearance and chart validation remain mandatory.</small>';
+    '<div id="taxiQaStandMap" hidden aria-label="Geographic reference-only stand map"></div>'+
+    '<small class="taxi-qa-warning">SIMULATOR QA ONLY · NOT FOR ACTUAL NAVIGATION</small>';
   document.querySelector("#chartsView .viewer-pane")?.appendChild(panel);
   $("taxiQaClose").onclick=()=>toggle(false);
+  const setToolsOpen=open=>{
+    panel.classList.toggle("tools-expanded",!!open);
+    const btn=$("taxiQaToolsBtn");
+    btn.setAttribute("aria-expanded",String(!!open));
+    btn.textContent=open?"TOOLS ▴":"TOOLS ▾";
+  };
+  $("taxiQaToolsBtn").onclick=()=>setToolsOpen(!panel.classList.contains("tools-expanded"));
   $("taxiQaGo").onclick=go;
   $("taxiQaInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();go()}};
   $("taxiQaAdc").onclick=openAdc;
@@ -703,8 +713,25 @@ function drawStandMap(){
 function renderRoutePreview(){
   const container=$("taxiQaRoutePreview"),r=taxi.route;
   if(!container)return;
+  const panel=$("taxiQaPanel");
   container.hidden=!(taxi.active&&r?.airport===selectedAirport&&r.path?.length>1);
-  if(container.hidden){container.replaceChildren();return}
+  if(container.hidden){
+    container.replaceChildren();container.dataset.routeKey="";
+    panel?.classList.remove("has-preview");
+    return;
+  }
+  // A new route must appear ABOVE the actions/status on the first tap of GO.
+  // Collapse tools only when the preview changes, not on ordinary redraws.
+  const routeKey=[r.airport,r.startStand||"",r.path?.[0],r.path?.at(-1),
+    r.path?.length,r.length||0].join("|");
+  if(container.dataset.routeKey!==routeKey){
+    container.dataset.routeKey=routeKey;
+    panel?.classList.remove("tools-expanded");
+    const button=$("taxiQaToolsBtn");
+    if(button){button.textContent="TOOLS ▾";button.setAttribute("aria-expanded","false")}
+    if(panel)panel.scrollTop=0;
+  }
+  panel?.classList.add("has-preview");
   const nodes=r.path.map(id=>r.graph.nodes[id]).filter(Boolean);
   if(nodes.length<2){container.hidden=true;return}
   const lat0=nodes.reduce((a,p)=>a+p.lat,0)/nodes.length;
@@ -729,7 +756,11 @@ function renderRoutePreview(){
   caption.textContent=(r.startStand?"UNMAPPED STAND "+r.startStand+" → ":"")+
     (r.taxiways?.join(" → ")||"MAPPED QA SECTION")+" · "+(r.length||0)+" m";
   const warning=document.createElement("small");
-  warning.textContent="OSM geometry only · not on a validated ADC · no stand/pushback connector · NOT FOR NAVIGATION";
+  const model=georefByPage.get(Number(selectedChart?.page));
+  warning.textContent=(model?
+    "OSM-only QA: overlay on georeferenced chart is unapproved.":
+    "No usable ADC georeference: route shown here, NOT positioned on printed chart.")+
+    " Stand D3 lead-out NOT mapped · NOT FOR NAVIGATION.";
   container.replaceChildren(caption,root,warning);
 }
 function draw(){
