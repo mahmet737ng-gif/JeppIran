@@ -5,6 +5,8 @@ on:
       - 'web/taxi-mode.js'
       - 'web/taxi-auto-router.js'
       - 'web/taxi-runway-access.js'
+      - 'web/taxi-runway-render.js'
+      - 'tests/oimm-runway-render.test.cjs'
       - 'tests/oimm-runway-access.test.cjs'
       - 'tests/oimm-taxi-auto.test.cjs'
       - 'tests/oimm-taxi.test.cjs'
@@ -16,6 +18,8 @@ on:
       - 'web/taxi-mode.js'
       - 'web/taxi-auto-router.js'
       - 'web/taxi-runway-access.js'
+      - 'web/taxi-runway-render.js'
+      - 'tests/oimm-runway-render.test.cjs'
       - 'tests/oimm-runway-access.test.cjs'
       - 'tests/oimm-taxi-auto.test.cjs'
       - 'tests/oimm-taxi.test.cjs'
@@ -37,6 +41,8 @@ jobs:
           node --check web/taxi-mode.js
           node --check web/taxi-auto-router.js
           node --check web/taxi-runway-access.js
+          node --check web/taxi-runway-render.js
+          node --check tests/oimm-runway-render.test.cjs
           node --check tests/oimm-runway-access.test.cjs
           node --check tests/oimm-taxi.test.cjs
           node --check tests/oimm-taxi-auto.test.cjs
@@ -45,3 +51,4 @@ jobs:
           node tests/oimm-taxi.test.cjs
           node tests/oimm-taxi-auto.test.cjs
           node tests/oimm-runway-access.test.cjs
+          node tests/oimm-runway-render.test.cjs
