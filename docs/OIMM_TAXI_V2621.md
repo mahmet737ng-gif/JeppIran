@@ -222,3 +222,35 @@ still be verified using the detailed Jeppesen/AIP runway exit diagram before
 it can become a solid, accurate connector. R19 fixes misleading drawing and
 terminal-route truncation; it does **not** certify centimetre- or metre-accurate
 ground-centreline geometry and does not approve real aircraft navigation.
+
+## R24 · runway suffix, straight chart axis and H → 13L (2026-10-11)
+
+- `ST115 J BT13R H 13L` and `ST115 J BT13R H RWY 13L` are parsed as
+  stand + ordered taxiways + **final runway destination**, rather than wrongly
+  treating `13L` as a taxiway name. The route is forced to use the complete
+  digitized H chart axis, ending at the far H endpoint.
+- All four OIMM runway designators 13R, 31L, 13L and 31R are now recognized.
+  Runway goal assignment is explicitly differentiated:
+  - 13R: existing chart-labelled J hold-short.
+  - 31L: existing chart-labelled A hold-short.
+  - 13L: **far H paved connector endpoint** on ADC 10-9, marked
+    `H ACCESS QA`. This is NOT a measured runway 13L threshold or hold-short.
+  - 31R: recognized but no independently grounded destination vertex; refuse
+    to invent threshold or connector geometry.
+- The sampled BT13R (J→H) and BT31L (A→D) runway **middle-axis** edges
+  are drawn as solid aligned magenta. Their original shoulder-to-axis legs
+  are graphical estimates, now separately classified **dashed amber**, so
+  the misleading diagonal "early turn" is not passed off as runway centreline.
+  Each selected taxiway's final mapped vertex remains the path destination.
+- The ordinary AUTO solver never traverses runways. Entering a BT requires an
+  explicit token, and this entire module remains FOR SIMULATOR QA ONLY.
+  Real-world taxi and takeoff clearance still comes from ATC and current charts.
+- Core chart PDF, original OIMM graph, FSX/X-Plane simulator bridge, all
+  previous user-approved home backgrounds and LTFM task code are untouched.
+
+### Geometry still requiring source verification
+The V2621 runway axis and H endpoint are digitized from an ADC schematic,
+not measured with survey-grade control. **R24 does not assert that the
+RWY 13L threshold is located at the far H endpoint.** Completing an actual
+threshold route requires independent AIP/Jeppesen holding/threshold coordinates
+and validated mapped connectors. `31R` currently refuses a route without them.

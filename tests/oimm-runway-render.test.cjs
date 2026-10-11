@@ -34,4 +34,21 @@ assert.deepEqual(segments.runs.at(-1).nodes,["D0","D1"],"D must extend to last c
 const noEdge=overlay.parts({...graph,edges:edges.filter(e=>e.from!=="RW1")},
   {path:sequence,taxiways:["Q","BT31L","D"]});
 assert.equal(noEdge.invalid.length,1,"no straight-line replacement for a missing runway edge");
+// The old V2621 graphic centerline contains a shoulder leg on either end.
+// Those MUST NOT be drawn as uninterrupted solid runway axes.
+const shoulderGraph={airport:"OIMM",nodes,edges:[
+  {from:"HOLD",to:"RW0",taxiway:"BT13R",runway:true,bidirectional:false,
+   geometry:"reviewed-ADC-runway-axis"},
+  {from:"RW0",to:"RW1",taxiway:"BT13R",runway:true,bidirectional:false,
+   geometry:"reviewed-ADC-runway-axis"},
+  {from:"RW1",to:"D0",taxiway:"BT13R",runway:true,bidirectional:false,
+   geometry:"reviewed-ADC-runway-axis"},
+  {from:"D0",to:"D1",taxiway:"H",bidirectional:true}
+],taxiways:{J:{exitNode:"HOLD"},H:{nodes:["D0","D1"]}},
+runwayBacktracks:{BT13R:{fromTaxiway:"J",toTaxiway:"H"}}};
+const typed=overlay.parts(shoulderGraph,{path:["HOLD","RW0","RW1","D0","D1"],
+  taxiways:["J","BT13R","H"]});
+assert.equal(typed.runway.length,1,"only the middle runway axis is solid");
+assert.equal(typed.projections.length,2,"BT entry/exit shoulder legs must be amber dashed");
+assert.equal(typed.runs.at(-1).way,"H");
 console.log("OIMM EXACT AXIS / COMPLETE D / PROJECTED ACCESS DISPLAY QA: PASS");

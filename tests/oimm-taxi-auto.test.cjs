@@ -1,6 +1,7 @@
 // OIMM destination-only taxi graph QA. No manual edge, runway crossing,
 // arbitrary "nearest stand" shortcut, or assumed runway-entry connection.
 const fs=require("node:fs"),assert=require("node:assert/strict");
+const goals=require("../web/taxi-runway-goals.js");
 const auto=require("../web/taxi-auto-router.js");
 const graph=JSON.parse(fs.readFileSync("web/data/taxi-networks/OIMM.json","utf8"));
 assert.equal(graph.airport,"OIMM");
@@ -40,9 +41,14 @@ for(const id of ["101","109","113","137"]){
   verify(result,graph.stands["130"].node,"live position "+id+" → ST130");
   assert.equal(result.route.path[0],graph.stands[id].node);
 }
-for(const rwy of ["13L","31R"]){
-  const d=auto.goal(graph,rwy);assert(d.error&& !d.node,"missing runway hold must not be guessed");
-}
+const terminal=auto.goal(graph,"13L");
+assert.equal(terminal.node,graph.taxiways.H.nodes.at(-1));
+assert.equal(terminal.kind,"runway-access-qa");
+assert.match(terminal.warning,/NOT A SURVEYED/);
+const r31=auto.goal(graph,"31R");
+assert(r31.error&&!r31.node,"31R must be recognized but not invented");
+assert.deepEqual(goals.knownRunways,["13R","31L","13L","31R"]);
+
 assert.equal(auto.route(graph,{destination:"ST109",position:{lat:0,lon:0}}).route,undefined);
 assert.equal(auto.route(graph,{destination:"ST109",startStand:"999"}).route,undefined);
 // Verify no implicit crossing, even if a direct one-way runway edge exists.

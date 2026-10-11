@@ -25,9 +25,24 @@ function lookup(graph){
   cache.set(graph,edges);
   return edges;
 }
-function classify(edge){
+function classify(edge,graph){
   if(edge.runwayAccessCandidate&&/projected-hold-to-runway/i.test(edge.geometry||""))
     return {type:"projected-access",confidence:edge.confidence||"CHART-PROJECTION-QA"};
+  // R17 chart-digitized BT geometry is a centreline plus TWO shoulder
+  // projections. The first/last leg leaves the runway axis and must never
+  // appear as a straight solid line across pavement to a named taxiway.
+  // Tag based on the original chart graph anchors, not pixel coordinates.
+  const bt=graph?.runwayBacktracks?.[upper(edge.taxiway)];
+  if(bt&&edge.runway&&!edge.runwayAccessCandidate&&
+     edge.geometry==="reviewed-ADC-runway-axis"){
+    const first=graph.taxiways?.[bt.fromTaxiway]?.exitNode;
+    const to=graph.taxiways?.[bt.toTaxiway];
+    const last=to?.nodes?.[0]||to?.exitNode;
+    if(edge.from===first||edge.to===last){
+      return {type:"projected-access",
+        confidence:"ADC SHOULDER-TO-AXIS TRANSITION QA · NOT SURVEYED"};
+    }
+  }
   if(edge.runway){
     if(/^(reviewed-ADC-runway-axis|axis-between-reviewed-runway-vectors-QA-NOT-SURVEYED|QA runway-axis segment split)$/.test(edge.geometry||""))
       return {type:"runway-axis",confidence:edge.geometry};
@@ -46,7 +61,7 @@ function parts(graph,route){
     // than classifying a coincident spatial neighbour as verified pavement.
     const match=candidates.find(e=>e.runway&&upper(route.taxiways?.join(" ")).includes(upper(e.taxiway)))||
       candidates.find(e=>!e.runway)||candidates[0];
-    const meta=match?classify(match):{type:"unverified",confidence:"MISSING PHYSICAL EDGE"};
+    const meta=match?classify(match,graph):{type:"unverified",confidence:"MISSING PHYSICAL EDGE"};
     const item={from,to,edge:match||null,way:upper(match?.taxiway),...meta};
     steps.push(item);
     if(!run||run.type!==item.type){
