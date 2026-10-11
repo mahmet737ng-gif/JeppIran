@@ -95,14 +95,14 @@ async function loadStandReference(icao){
     const d=await response.json(),entries=Object.entries(d.stands||{});
     if(d.airport!=="OMDB"||d.kind!=="stand-position-reference"||d.coordinateSystem!=="WGS84"||
        d.verifiedForTaxiRouting!==false||String(d.forCycle)!==String(manifest?.cycle)||
-       !entries.length||entries.some(([id,p])=>!/^C\\d{2}[LR]?$/.test(id)||
+       !entries.length||entries.some(([id,p])=>!/^[A-HQS]\\d{1,3}[LR]?$/.test(id)||
           !Number.isFinite(p.lat)||!Number.isFinite(p.lon)||
           p.lat<25.2||p.lat>25.35||p.lon<55.2||p.lon>55.5))
       throw Error("Invalid or mismatched stand reference");
     if(taxi.airport!==icao)return;
     taxi.standReference=d;
     if(button)button.textContent="STANDS ("+entries.length+")";
-    message("OMDB Apron C: "+entries.length+" published stand positions loaded for overlay QA. TAXIWAY CONNECTIVITY NOT VERIFIED; routing remains unavailable.",true);
+    message("OMDB: "+entries.length+" AIP stand positions across "+new Set(entries.map(([,v])=>v.apron)).size+" aprons. STAND POSITIONS ONLY; routing disabled until connectivity QA.",true);
     draw();
   }catch(error){
     if(taxi.airport===icao)message("Stand reference unavailable: "+error.message,true);
@@ -157,7 +157,7 @@ function view(){
     $("taxiQaStands").setAttribute("aria-pressed",String(taxi.showStands));
     draw();
     if(!taxi.standReference)message("No AIP stand-position reference loaded for this airport.",true);
-    else message("AIP Apron C stand POSITIONS only. No lead-in, pushback or taxiway topology is validated.",true);
+    else message("AIP stand POSITIONS only. No lead-in, pushback or taxiway topology is validated.",true);
   };
   $("taxiQaTrace").onclick=()=>{taxi.trace=!taxi.trace;taxi.route=null;
     $("taxiQaTrace").classList.toggle("on",taxi.trace);
@@ -220,7 +220,7 @@ function go(){
       $("taxiQaStands").classList.add("on");
       $("taxiQaStands").setAttribute("aria-pressed","true");
       draw();
-      message("Stand "+p.destination+": published AIP POSITION highlighted. Taxiway/lead-in topology has not passed QA, so no route is calculated.",true);
+      message("Stand "+p.destination+": published AIP POSITION selected"+(georefByPage.get(Number(selectedChart?.page))?" and highlighted.":", but this chart has no validated georeferencing to display the point.")+" Taxiway/lead-in topology has not passed QA; no route generated.",true);
     }else message("Parsed "+p.kind+". No verified taxiway + stand connector network for "+selectedAirport+"; automatic routing is disabled.",true);
     return;
   }
@@ -320,7 +320,7 @@ function draw(){
       if(!p)continue;
       const selected=taxi.selectedStand===id;
       pins.appendChild(s("circle",{cx:p.x,cy:p.y,r:selected?6:2.4,
-        fill:selected?"#fff099":"#38d4fb",stroke:"#062238","stroke-width":selected?1.7:0.8}));
+        fill:selected?"#fff099":({"C":"#38d4fb","E":"#8cfd9e","G":"#fc9d4d","H":"#c69aff","Q":"#ff9ad1"}[coord.apron]||"#38d4fb"),stroke:"#062238","stroke-width":selected?1.7:0.8}));
       if(selected){
         const label=s("text",{x:p.x+8,y:p.y-8,fill:"#f9faff","font-size":"14",
           "font-weight":"900",stroke:"#052333","stroke-width":"3","paint-order":"stroke"});
