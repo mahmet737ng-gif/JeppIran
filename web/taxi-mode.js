@@ -451,11 +451,16 @@ function message(s,warning=false){
     detail.open=false;
   }
 }
+const OIAW_QA_REVISION="2621-oiaw-inset-registration-r3";
 async function fetchGraph(icao){
   taxi.graph=null;taxi.genericEngine=null;taxi.genericMonitor=null;
   message("Checking verified ground network for "+icao+"…");
   try{
-    const r=await fetch("./data/taxi-networks/"+encodeURIComponent(icao)+".json",{cache:"no-store"});
+    // OIAW screenshot-registered QA overlay must not be mixed with a stale
+    // offline graph whose page-space centreline geometry differs.
+    const url="./data/taxi-networks/"+encodeURIComponent(icao)+".json"+
+      (icao==="OIAW"?"?v="+OIAW_QA_REVISION:"");
+    const r=await fetch(url,{cache:"no-store"});
     if(!r.ok)throw Error("Not digitized");
     const d=await r.json();
     if(d.engineVersion===1&&icao!=="OIMM"&&icao!=="LTFM"){
@@ -467,6 +472,17 @@ async function fetchGraph(icao){
          d.airport!==icao||String(d.cycle)!==String(manifest?.cycle))
         throw Error("New-airport engine, QA preview data or matching cycle unavailable");
       const engine=factory.create(d);
+      if(icao==="OIAW"&&qaPreview){
+        if(d.qaGeometryRevision!==OIAW_QA_REVISION)
+          throw Error("Stale OIAW parking-inset data: "+
+            (d.qaGeometryRevision||"missing revision")+"; expected "+OIAW_QA_REVISION);
+        const renderer=window.JEPPIRAN_TAXI_INSET;
+        if(!renderer?.route)throw Error("OIAW parking-inset renderer script unavailable");
+        const smoke=engine.plan("ST4 A B",{allowProjectedQA:true});
+        if(!smoke.route)throw Error("OIAW ST4 A B QA route rejected: "+smoke.error);
+        const reg=renderer.route(d,smoke.route.path,38);
+        if(!reg?.ok)throw Error("OIAW parking-inset alignment rejected: "+(reg?.error||"unknown"));
+      }
       if(taxi.airport!==icao)return null;
       taxi.graph=d;taxi.genericEngine=engine;
       fillGenericTaxiDestinations(engine);
@@ -502,7 +518,9 @@ async function fetchGraph(icao){
     return d;
   }catch(e){
     if(taxi.airport!==icao)return;
-    message("No verified ground network yet for "+icao+". Automatic routing disabled; use TRACE QA to test drawing on this chart.",true);
+    message(icao==="OIAW"?
+      "OIAW QA inset unavailable: "+String(e?.message||e)+". No route was drawn. Reopen TAXI after refresh.":
+      "No verified ground network yet for "+icao+". Automatic routing disabled; use TRACE QA to test drawing on this chart.",true);
     return null;
   }
 }
@@ -510,6 +528,7 @@ async function fetchGraph(icao){
 // no-store downloads and prevent a stale request from clobbering a new route.
 function loadGraph(icao){
   if(taxi.graph?.airport===icao&&
+      (icao!=="OIAW"||taxi.graph.qaGeometryRevision===OIAW_QA_REVISION)&&
       (graphOk(taxi.graph,icao)||(taxi.genericEngine&&
       String(taxi.graph.cycle)===String(manifest?.cycle))))
     return Promise.resolve(taxi.graph);
@@ -586,11 +605,13 @@ function genericGo(typed){
     taxi.genericMonitor={command,route:route,monitor:{count:0,last:0}};
   draw();
   const inset=qaPreview?window.JEPPIRAN_TAXI_INSET?.route(taxi.graph,route.path,Number(selectedChart?.page)):null;
+  const insetError=!window.JEPPIRAN_TAXI_INSET?.route?
+    "INSET RENDERER UNAVAILABLE":inset?.error||"UNREGISTERED CHART";
   message((qaPreview?"UNVERIFIED SCHEMATIC · ":"SIM QA · ")+taxi.airport+" · "+
     (route.taxiways.join(" → ")||"SOURCE-CONNECTED TAXIWAY")+
     " → "+route.destination+" · "+(qaPreview?"LENGTH UNVERIFIED":route.lengthMetres+" m")+
     " · "+(allowProjectedQA?"PROJECTED / DASHED AMBER · ":"")+
-    (qaPreview?(inset?.ok?"PARKING INSET ONLY · ":"INSET GEOMETRY NOT REGISTERED — NO LINE DRAWN · ")+
+    (qaPreview?(inset?.ok?"PARKING INSET ONLY · ":"NO LINE DRAWN: "+insetError+" · ")+
       "Stand lead-outs and taxi centerlines are NOT surveyed. ":"")+
     "NOT FOR ACTUAL NAVIGATION / ATC CLEARANCE.",qaPreview);
 }
