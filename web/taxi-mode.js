@@ -13,14 +13,14 @@ function parse(raw){
   if(/^\d{2}[LRC]?\d+[A-Z][A-Z0-9-]*$/.test(s))return {kind:"procedure",key:s};
   const registered=Object.prototype.hasOwnProperty.call(taxi.standReference?.stands||{},s)||
     Object.prototype.hasOwnProperty.call(taxi.graph?.stands||{},s);
-  if(registered||/^(ST|P)\d{1,4}[A-Z]?$/.test(s)||/^[A-HQS]\d{1,3}[LR]?$/.test(s))
+  if(registered||/^(ST|P)\d{1,4}[A-Z]?$/.test(s)||(taxi.airport==="OMDB"&&/^[A-HQS]\d{1,3}[LR]$/.test(s)))
     return {kind:"stand",destination:s};
   const parts=s.replace(/[,→>]+/g," ").split(" ").filter(Boolean),stops=[],taxiways=[];
   let destination=null;
   if(parts.length>1&&(/^(ST|P)\d{1,4}[A-Z]?$/.test(parts[parts.length-1])||
       Object.prototype.hasOwnProperty.call(taxi.standReference?.stands||{},parts[parts.length-1])||
       Object.prototype.hasOwnProperty.call(taxi.graph?.stands||{},parts[parts.length-1])||
-      /^[A-HQS]\d{1,3}[LR]?$/.test(parts[parts.length-1])))
+      (taxi.airport==="OMDB"&&/^[A-HQS]\d{1,3}[LR]$/.test(parts[parts.length-1]))))
     destination=parts.pop();
   for(const part of parts){
     if(!/^\/?[A-Z][A-Z0-9-]{0,11}$/.test(part))return {error:"Unknown token: "+part};
