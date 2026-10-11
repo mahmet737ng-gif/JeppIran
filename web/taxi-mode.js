@@ -662,7 +662,7 @@ function nearest(graph,pos,firstTaxiway=null){
 }
 function syncAirport(){
   if(!taxi.active||taxi.airport===selectedAirport)return;
-  taxi.airport=selectedAirport;taxi.graph=null;taxi.route=null;taxi.auto=null;taxi.testStart=null;taxi.prompted="";
+  taxi.airport=selectedAirport;taxi.graph=null;taxi.route=null;taxi.auto=null;taxi.standPreview=null;taxi.testStart=null;taxi.prompted="";
   taxi.networkAudit=null;taxi.highlightTaxiway="";
   $("taxiQaAirport").textContent=selectedAirport;
   updateAirportControls();
@@ -818,7 +818,7 @@ function go(options={}){
   const publisher=window.JEPPIRAN_PUBLISHED_TAXI;
   const typed=$("taxiQaInput")?.value||"";
   if(publisher?.recognize(typed,taxi.airport)){
-    taxi.route=null;taxi.auto=null;draw();
+    taxi.route=null;taxi.auto=null;taxi.standPreview=null;draw();
     publisher.go(typed,taxi.airport);
     return;
   }
@@ -857,6 +857,7 @@ function go(options={}){
     });
     return;
   }
+  taxi.standPreview=null;
   const p=parse($("taxiQaInput").value);
   if(p.error){message(p.error,true);return}
   taxi.trace=false;$("taxiQaTrace").classList.remove("on");
