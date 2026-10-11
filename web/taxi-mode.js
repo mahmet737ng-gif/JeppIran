@@ -1800,7 +1800,7 @@ function draw(){
       }));
     }
     }
-  }else if(r&&r.airport===selectedAirport&&model){
+  }else if(r&&!r.surveyPDFRoute&&r.airport===selectedAirport&&model){
     const spec=r.airport==="OIMM"&&r.runwayRender&&
       window.JEPPIRAN_TAXI_RENDER?.displayRuns?.(r.graph,r);
     if(spec){
