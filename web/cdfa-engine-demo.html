@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JEPPIRAN — CDFA Engine QA Lab</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Segoe UI",Tahoma,sans-serif;color-scheme:dark;background:#080f20;color:#e8ecf8}
+*{box-sizing:border-box}body{margin:0;padding:24px;max-width:1150px;margin-inline:auto}
+h1{font-size:1.55rem;margin:0 0 8px;color:#eef7ff}p{color:#a9b6cb;line-height:1.7}
+.banner{background:#302510;border:1px solid #ad8b31;color:#ffe4a3;padding:14px;border-radius:12px;margin:15px 0}
+.grid{display:grid;grid-template-columns:repeat(4,minmax(130px,1fr));gap:13px}
+label{display:flex;flex-direction:column;gap:7px;font-size:.85rem;color:#b5c3d9}
+input,select,textarea{font:inherit;background:#121e34;color:#f2f5ff;border:1px solid #344362;border-radius:9px;padding:11px;min-width:0;width:100%}
+input:focus,select:focus,textarea:focus{outline:2px solid #52cadd}textarea{direction:ltr;min-height:88px}
+.card{padding:18px;border:1px solid #253653;background:#10192c;border-radius:14px;margin:18px 0}
+.btn{background:#26abc4;color:#06131e;font-weight:800;border:none;border-radius:9px;padding:12px 23px;cursor:pointer}
+.btn.secondary{background:#2a3751;color:#f0f7ff;margin-inline-start:10px}
+.err{color:#ff8792}.ok{color:#67d6bd}.muted{color:#acb9cd}
+.tablewrap{overflow:auto}table{border-collapse:collapse;min-width:680px;width:100%;direction:ltr}th,td{border-bottom:1px solid #2b3654;text-align:center;padding:10px}th{color:#92c5ed;background:#15213a}
+tr.bad td{color:#ffa8a8}tr.model td{color:#d6c08c}
+#resultHead{font-weight:700;margin-bottom:10px;direction:ltr}
+@media(max-width:700px){.grid{grid-template-columns:repeat(2,minmax(110px,1fr))}body{padding:12px}}
+</style></head>
+<body>
+<h1>JEPPIRAN • CDFA Engine Lab</h1>
+<p>انجین محاسبهٔ فاصله–ارتفاع بر اساس مرجع DME که از هدر چارت مشخص شده است. نمونهٔ اولیه کاملاً <b>فرضی</b> است و به فرودگاه واقعی تعلق ندارد.</p>
+<div class="banner"><b>QA / SIMULATOR ONLY — NOT FOR ACTUAL NAVIGATION.</b> برای استفاده روی چارت واقعی، محل فرستنده، فاصله جانبی، ارتفاع آستانه، TCH، محدودیت‌ها و محدوده زاویه باید از چارت معتبر تأیید شوند.</div>
+<div class="card"><div class="grid">
+<label>ICAO/Chart ID<input id="chart" value="TRAINING-ONLY"></label>
+<label>مرجع DME هدر چارت<input id="ref" value="DEMO"></label>
+<label>شناسه دستگاه منتخب<input id="station" value="DEMO"></label>
+<label>ارتفاع آستانه (ft MSL)<input type="number" id="elev" value="100" step="1"></label>
+<label>حداقل ارتفاع نزول MDA (ft، اختیاری)<input type="number" id="mda" placeholder="نامشخص"></label>
+<label>Threshold Crossing Height (ft)<input type="number" id="tch" value="50" step="1"></label>
+<label>زاویه نزول (deg)<input type="number" id="angle" value="3" step="0.01"></label>
+<label>محل دستگاه نسبت به آستانه<select id="placement"><option value="after_threshold">بعد از آستانه</option><option value="before_threshold">قبل از آستانه</option><option value="at_threshold">روی آستانه</option></select></label>
+<label>فاصله طولی دستگاه (NM)<input type="number" id="offset" value="0.5" step="0.01"></label>
+<label>فاصله جانبی دستگاه از محور (NM)<input type="number" id="lateral" value="0" step="0.01"></label>
+<label>سمت هواپیما نسبت به دستگاه<select id="branch"><option value="before_station">قبل از رسیدن به دستگاه</option><option value="between_station_and_threshold">بین دستگاه و آستانه</option></select></label>
+<label>ارتفاع دستگاه (برای اصلاح Slant DME، اختیاری)<input type="number" id="stationElev" placeholder="نامشخص"></label>
+<label>آخرین DME<input type="number" id="max" value="10" min="1" max="60" step="1"></label>
+<label>آغاز بخش زاویهٔ معتبر DME<input type="number" id="rangeStart" value="1" step="0.1"></label>
+<label>پایان بخش زاویهٔ معتبر DME<input type="number" id="rangeEnd" value="10" step="0.1"></label>
+</div><p>محدودیت‌های منتشرشده (فقط مقادیر مستند چارت، بدون گردکردن). نوع: minimum / mandatory / maximum</p>
+<textarea id="fixes">[]</textarea><div style="margin-top:16px"><button class="btn" id="calc">محاسبه</button><button class="btn secondary" id="export">خروجی JSON</button></div></div>
+<div class="card"><div id="resultHead" class="muted"></div><div id="issues"></div><div class="tablewrap"><table><thead><tr><th>DME NM</th><th>To THR NM</th><th>Raw ft MSL</th><th>Rounded ft MSL</th><th>Published ft</th><th>QA status</th></tr></thead><tbody id="output"></tbody></table></div></div>
+<script src="./cdfa-engine.js"></script>
+<script>
+(function(){
+const el=id=>document.getElementById(id);
+let last=null;
+function calculate(){
+  try{
+    let fixes=JSON.parse(el('fixes').value);
+    const cfg={ chartId:el('chart').value, chartDmeId:el('ref').value,
+      thresholdElevationFt:Number(el('elev').value), tchFt:Number(el('tch').value),angleDeg:Number(el('angle').value),
+      station:{id:el('station').value,placement:el('placement').value,offsetNm:Number(el('offset').value),lateralNm:Number(el('lateral').value),branch:el('branch').value},
+      dmeReadingsNm:Array.from({length:Number(el('max').value)},(_,i)=>i+1),
+      validAngleDmeRange:{from:Number(el('rangeStart').value),to:Number(el('rangeEnd').value)},publishedConstraints:fixes};
+    if(el('stationElev').value.trim()) cfg.station.elevationFt=Number(el('stationElev').value);
+    if(el('mda').value.trim()) cfg.mdaFt=Number(el('mda').value);
+    last=JeppIranCdfaEngine.buildTable(cfg);
+    el('resultHead').textContent='STATUS: '+last.status+'   |   THR CROSSING: '+last.parameters.crossingAltitudeFt+' ft   |   GRADIENT: '+last.parameters.gradientFtPerNm.toFixed(3)+' ft/NM';
+    el('resultHead').className=last.status==='BLOCKED_BY_QA'?'err':'ok';
+    el('issues').textContent=last.issues.length?last.issues.map(x=>x.code+' at D'+x.dmeNm).join('; '):'No published-fix conflict found; still requires independent chart and operational QA.';
+    el('output').replaceChildren(...last.rows.map(r=>{
+      const tr=document.createElement('tr');tr.className=r.status==='CONFLICT'||r.status==='UNRESOLVED'?'bad':r.status==='MODEL_ONLY'?'model':'';
+      const vals=[r.dmeNm,r.thresholdDistanceNm??'–',r.rawAltitudeFt??'–',r.roundedAltitudeFt??'–',r.published.map(x=>x.type+': '+x.altitudeFt).join('; ')||'–',r.status];
+      for(const value of vals){const td=document.createElement('td');td.textContent=value;tr.append(td)}
+      return tr;
+    }));
+  }catch(err){last=null;el('resultHead').textContent='ERROR: '+err.message;el('resultHead').className='err';el('issues').textContent='';el('output').replaceChildren()}
+}
+el('calc').addEventListener('click',calculate);
+el('export').addEventListener('click',()=>{
+  if(!last) return;
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(last,null,2)],{type:'application/json'}));
+  a.download='jeppiran-cdfa-engine-QA.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),500);
+});
+calculate();
+})();
+</script>
+</body></html>
