@@ -1024,14 +1024,14 @@ body:has(#homeView.active),body:has(#chartsView.active){background:#030c19}
 
 /* JEPPIRAN Web · aircraft marker concept #4: Dual Layer Ops. Visual only. */
 .aircraft-marker{
-  width:30px;height:30px;z-index:25;
+  width:20px;height:20px;z-index:25;
   --aircraft-heading:0deg;
   --marker-inverse-scale:1;
 }
 .aircraft-dual-arrow{
-  display:block;position:absolute;inset:0;width:30px;height:30px;
+  display:block;position:absolute;inset:0;width:20px;height:20px;
   overflow:visible;
-  filter:drop-shadow(0 1px 1.8px rgba(0,0,0,.94)) drop-shadow(0 0 3px rgba(23,201,255,.58));
+  filter:drop-shadow(0 1px 1px rgba(0,0,0,.90)) drop-shadow(0 0 1.5px rgba(23,201,255,.48));
 }
 .aircraft-arrow-outline{
   fill:#071a2c;stroke:#50dcff;stroke-width:2.7;
@@ -1044,17 +1044,17 @@ body:has(#homeView.active),body:has(#chartsView.active){background:#030c19}
   stroke:#ffdafa;stroke-width:1.35;stroke-linecap:round;opacity:.8
 }
 .aircraft-marker .aircraft-pulse{
-  width:36px;height:36px;margin:-18px 0 0 -18px;
-  background:rgba(244,33,162,.16);
-  box-shadow:0 0 0 1.3px rgba(252,45,181,.6),0 0 12px rgba(240,47,162,.3);
+  width:26px;height:26px;margin:-13px 0 0 -13px;
+  background:rgba(244,33,162,.13);
+  box-shadow:0 0 0 1px rgba(252,45,181,.50),0 0 7px rgba(240,47,162,.26);
   animation:aircraftPulse 1.55s ease-out infinite;
 }
 .aircraft-marker::before{
   content:"";position:absolute;left:50%;top:50%;
-  width:24px;height:24px;border-radius:50%;
+  width:18px;height:18px;border-radius:50%;
   transform:translate(-50%,-50%);
-  border:1px solid rgba(79,223,255,.54);
-  box-shadow:0 0 9px rgba(51,197,255,.4);
+  border:1px solid rgba(79,223,255,.44);
+  box-shadow:0 0 5px rgba(51,197,255,.3);
   pointer-events:none
 }
 /* Red alert when the live simulated position departs a mapped QA taxi route.
@@ -1080,7 +1080,7 @@ body:has(#homeView.active),body:has(#chartsView.active){background:#030c19}
 .aircraft-follow-btn{
   position:absolute;z-index:45;right:12px;top:12px;
   display:flex;align-items:center;justify-content:center;gap:6px;
-  min-height:41px;min-width:101px;padding:7px 9px;
+  min-height:41px;min-width:94px;padding:7px 9px;
   border:1px solid #2f8ca7;border-radius:10px;
   background:rgba(4,24,39,.91);color:#8eeaff;
   font:800 11px/1.15 system-ui,-apple-system,Segoe UI,sans-serif;
