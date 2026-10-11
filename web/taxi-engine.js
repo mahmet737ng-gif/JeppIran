@@ -201,6 +201,8 @@ function create(data){
       opt.startNode&&nodes[opt.startNode]?{id:opt.startNode}:
       nearest(opt.position,opt.maxSnapMeters??65);
     if(!from||from.error)return {error:from?.error||"No mapped start within 65 m; select an explicit stand or valid simulator position"};
+    const originId=from.id||from.node;
+    if(!originId||!nodes[originId])return {error:"Start position is not on a mapped graph node"};
     const goal=destinationNode(cmd.destination);
     if(goal?.error)return {error:goal.error};
     // Bare taxiway commands run to their SOURCE-DEFINED terminal, never the
@@ -211,8 +213,8 @@ function create(data){
     const target=goal?.id||inferred;
     const queue=new MinHeap(),prev=new Map(),scores=new Map();
     const key=(node,phase)=>node+"|"+phase;
-    const origin=key(from.id,0);
-    scores.set(origin,0);queue.push({node:from.id,phase:0,cost:0});
+    const origin=key(originId,0);
+    scores.set(origin,0);queue.push({node:originId,phase:0,cost:0});
     let answer=null,iterations=0;
     while(queue.length&&iterations++<500000){
       const cur=queue.pop(),curKey=key(cur.node,cur.phase);
@@ -222,7 +224,7 @@ function create(data){
       }
       for(const e of adj.get(cur.node)||[]){
         if(standNodes.has(e.to)&&e.to!==target)continue;
-        if(standNodes.has(cur.node)&&cur.node!==from.id)continue;
+        if(standNodes.has(cur.node)&&cur.node!==originId)continue;
         if(e.quality==="projected"&&!opt.allowProjectedQA)continue;
         let phase=cur.phase;
         if(!waypoints.length){
