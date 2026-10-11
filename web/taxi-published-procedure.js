@@ -43,6 +43,8 @@ function clear() {
   document.querySelectorAll(".taxi-published-vector-layer").forEach(x=>x.remove());
 }
 function paint() {
+  // A route from the previous airport must never reappear after airport switch.
+  if(active&&typeof selectedAirport!=="undefined"&&selectedAirport!=="LTFM"){clear();return}
   document.querySelectorAll(".taxi-published-vector-layer").forEach(x=>x.remove());
   if(!active||typeof selectedAirport==="undefined"||selectedAirport!=="LTFM"||
      typeof selectedChart==="undefined"||norm(selectedChart?.chart_number)!=="30-9")return;
