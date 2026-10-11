@@ -1,7 +1,7 @@
 /* JEPPIRAN TAXI preview · verified graphs only · NOT FOR ACTUAL NAVIGATION */
 (function(){
 "use strict";
-const ns="http://www.w3.org/2000/svg", taxi={auto:null,graphRequest:null,active:false,trace:false,startSelect:false,testStart:null,airport:"",graph:null,standReference:null,selectedStand:"",showStands:false,showNetwork:false,route:null,manual:new Map(),prompted:"",goTicket:0,networkAudit:null,networkOpen:false,highlightTaxiway:"",insGroups:null,standGroupAudit:null,standGroupOpen:false};
+const ns="http://www.w3.org/2000/svg", taxi={auto:null,graphRequest:null,active:false,trace:false,startSelect:false,testStart:null,airport:"",graph:null,standReference:null,selectedStand:"",showStands:false,showNetwork:false,route:null,survey:null,surveyEngine:null,manual:new Map(),prompted:"",goTicket:0,networkAudit:null,networkOpen:false,highlightTaxiway:"",insGroups:null,standGroupAudit:null,standGroupOpen:false};
 const $=id=>document.getElementById(id);
 const name=s=>String(s||"").trim().toUpperCase().replace(/\s+/g," ");
 function parse(raw){
@@ -454,8 +454,32 @@ function message(s,warning=false){
 const OIAW_QA_REVISION="2621-oiaw-inset-registration-r3";
 async function fetchGraph(icao){
   taxi.graph=null;taxi.genericEngine=null;taxi.genericMonitor=null;
+  taxi.survey=null;taxi.surveyEngine=null;
   message("Checking verified ground network for "+icao+"…");
   try{
+    // The ADC inventory is the sole OIAW source until source PDF curves and
+    // hold lines have been fully traced. Previous projected OIAW.json routes
+    // MUST NEVER be presented as mapped taxi centreline geometry.
+    if(icao==="OIAW"){
+      const surveyApi=window.JEPPIRAN_TAXI_SURVEY;
+      if(!surveyApi?.index)throw Error("ADC inventory engine script not loaded");
+      const resp=await fetch("./data/taxi-surveys/OIAW.json?v=2621-adc-inventory-r1",{cache:"no-store"});
+      if(!resp.ok)throw Error("ADC inventory HTTP "+resp.status);
+      const inventory=await resp.json();
+      if(inventory.airport!==icao||String(inventory.cycle)!==String(manifest?.cycle)||
+         inventory.routeGeometryApproved!==false)
+        throw Error("ADC survey identity/geometry approval mismatch");
+      const compiled=surveyApi.index(inventory);
+      if(taxi.airport!==icao)return null;
+      taxi.survey=inventory;taxi.surveyEngine=compiled;
+      $("taxiQaInput").placeholder="ST2 A B · ST4 A B (ADC topology, geometry pending)";
+      $("taxiQaStands").textContent="STANDS ("+compiled.stands.length+")";
+      message("OIAW ADC INVENTORY · "+compiled.stands.length+
+        " stand curves · "+compiled.taxiways.length+" named taxiways · "+
+        compiled.connections.length+" observed graph links · RUNWAY GATES AND "+
+        "TRUE CURVE GEOMETRY NOT VERIFIED. No guessed chart lines are drawn.",true);
+      draw();return inventory;
+    }
     // OIAW screenshot-registered QA overlay must not be mixed with a stale
     // offline graph whose page-space centreline geometry differs.
     const url="./data/taxi-networks/"+encodeURIComponent(icao)+".json"+
@@ -527,6 +551,9 @@ async function fetchGraph(icao){
 // Share an in-flight graph load across TAXI open and GO. Avoid duplicate
 // no-store downloads and prevent a stale request from clobbering a new route.
 function loadGraph(icao){
+  if(taxi.surveyEngine&&taxi.survey?.airport===icao&&
+     String(taxi.survey.cycle)===String(manifest?.cycle))
+    return Promise.resolve(taxi.survey);
   if(taxi.graph?.airport===icao&&
       (icao!=="OIAW"||taxi.graph.qaGeometryRevision===OIAW_QA_REVISION)&&
       (graphOk(taxi.graph,icao)||(taxi.genericEngine&&
@@ -594,6 +621,22 @@ function focusQaParkingInset(bounds){
     Math.round(centerY-stage.clientHeight*.43)));
   if(Math.abs(stage.scrollTop-target)>Math.min(80,stage.clientHeight*.13))
     stage.scrollTo({top:target,behavior:"smooth"});
+}
+function surveyGo(typed){
+  const audit=taxi.surveyEngine?.parse(typed);
+  taxi.route=null;taxi.auto=null;taxi.genericMonitor=null;
+  draw();
+  if(!audit){
+    message("No airport survey index loaded. No path invented.",true);return;
+  }
+  if(!audit.ok){
+    message("OIAW ADC INVENTORY · "+audit.error+" · LINEWORK NOT DRAWN.",true);return;
+  }
+  message("OIAW ADC TOPOLOGY · "+audit.tokens.join(" → ")+
+    " · "+audit.segments.length+" observed adjacency links. "+
+    "Exact stand lead-out curves and taxiway centreline remain UNTRACED "+
+    "from the source PDF. No guessed route is drawn; runway access requires "+
+    "separate hold-short QA.",true);
 }
 function genericGo(typed){
   const engine=taxi.genericEngine;
@@ -805,7 +848,7 @@ function nearest(graph,pos,firstTaxiway=null){
 }
 function syncAirport(){
   if(!taxi.active||taxi.airport===selectedAirport)return;
-  taxi.goTicket++;taxi.airport=selectedAirport;taxi.graph=null;taxi.genericEngine=null;taxi.genericMonitor=null;
+  taxi.goTicket++;taxi.airport=selectedAirport;taxi.graph=null;taxi.genericEngine=null;taxi.genericMonitor=null;taxi.survey=null;taxi.surveyEngine=null;
   taxi.route=null;taxi.auto=null;taxi.standPreview=null;taxi.standEgress=null;taxi.standLead=null;taxi.standQaRoute=null;taxi.testStart=null;taxi.prompted="";
   taxi.networkAudit=null;taxi.highlightTaxiway="";
   $("taxiQaAirport").textContent=selectedAirport;
@@ -825,7 +868,7 @@ function updateAirportControls(){
   if(taxi.genericEngine)fillGenericTaxiDestinations(taxi.genericEngine);
   document.querySelector('label[for="taxiQaInput"]').textContent=oimm?
     "Mashhad: ST109 Q BT31L D · ST109 B BT31L D · ST113 RAMP · ST109":
-    selectedAirport==="OIAW"?"OIAW QA: ST4 A B · projected dashed route inside parking inset":
+    selectedAirport==="OIAW"?"OIAW ADC: ST2 A B · ST4 A B · topology scanned, curves not calibrated":
     "LTFM example: A4 A A7 B B8A · Hold: /B8A · 34L2A format";
 }
 // AUTO requires an actual start (simulator/device/SET START) or an explicit
@@ -1011,6 +1054,7 @@ function go(options={}){
     return;
   }
   publisher?.clear();
+  if(taxi.surveyEngine){surveyGo(typed);return}
   if(taxi.genericEngine){
     genericGo(typed);
     return;
@@ -1029,11 +1073,11 @@ function go(options={}){
     loadGraph(airport).then(loaded=>{
       if(goTicket!==taxi.goTicket||!taxi.active||taxi.airport!==airport||
          selectedAirport!==airport||$("taxiQaInput")?.value!==input)return;
-      if(!loaded||!taxi.genericEngine){
-        message(airport+" ground network unavailable; no route was fabricated.",true);
+      if(!loaded||(!taxi.genericEngine&&!taxi.surveyEngine)){
+        message(airport+" ADC inventory/ground network unavailable; no route was fabricated.",true);
         return;
       }
-      genericGo(input);
+      if(taxi.surveyEngine)surveyGo(input);else genericGo(input);
     }).catch(error=>{
       if(goTicket===taxi.goTicket&&taxi.active&&taxi.airport===airport)
         message(airport+" network load failed: "+String(error?.message||error)+
