@@ -20,6 +20,64 @@ In the LTFM TAXI panel, user may type:
 
 The selected unmapped taxi label can also be highlighted as a **cyan dashed LABEL ONLY marker** on the ADC to assist QA. It is not a centerline, route or runway crossing.
 
+## ORIGINAL parking-stand centerline geometry: breakthrough (11 October 2026)
+
+The initial airport OSM importer mistakenly queried `parking_position` NODES,
+missing almost all `parking_position` WAYS. The dedicated OSM way audit
+(`scripts/fetch_ltfm_osm_parking_leads.py`) recovered actual **original
+vector way vertices** for Istanbul stands. The source geometry is kept
+distinct from merely projected nearest taxiway names.
+
+**Completed and committed data:**
+
+- `web/data/taxi-parking-ways/LTFM.json`: 742 OSM parking-position ways
+  and 18 parking-position nodes, 360 of the 379 chart-mentioned stand
+  identifiers matched by exact published ID.
+- `web/data/taxi-stand-leads/LTFM.json`: 355 stand IDs with full original
+  parking-way source vertex polylines touching the existing taxiway/taxilane
+  network via an IDENTICAL source OSM node ID (not distance snapping).
+  237 stand IDs have exactly one connected source-way variant; others
+  may have legitimate size/alternative variants and require selection.
+  24 stand IDs remain without an exactly joined OSM way.
+- `web/data/taxi-stand-egress-routes/LTFM.json`: 311 stand IDs with
+  480 exact graph-continuous source path variants to the taxiway NAME
+  recorded in the Jeppesen 30-9J pushback chart. Every point comes
+  either from the original OSM parking-position way or from its
+  shared-node connected taxiway graph, with no artificial segments.
+  No runway edges are traversed.
+
+**D3 independently measured test case**:
+
+- Original OSM parking-position way `918835328`: four original vertices,
+  ST D3 coordinate at `41.2636483,28.7413378`, shared graph node
+  `O7920605848` after 122.60 m of source-mapped parking centerline.
+  This point is approx 5.5 m from the text anchor in printed Jeppesen
+  parking chart 30-9B.
+- From that exact node the graph reaches published pushback **T5** using
+  195.84 m of existing taxiway source edges (11 edges); resulting
+  stand-to-T5 SIM QA candidate total **318.44 m** across 15 original
+  vertices. An alternate T3 SIM graph candidate measures **368.07 m**
+  across 21 original vertices.
+- Jeppesen 30-9J4 explicitly mentions T5 and T3 for ST D3, but neither
+  the chart nor this source graph confirms the detailed **direction of
+  pushback/tow, preferred option, aircraft type restriction, or ATC
+  clearance**. These graph routes are not approved operating procedures.
+
+The Web Taxi panel supports `STD3` to inspect stand and ORIGINAL
+parking-way geometry and `STD3 T5` / `STD3 T3` to overlay a SOURCE-ONLY
+physical graph path in magenta; `ST100 N6` is another matched example.
+When multiple original OSM variants exist, the user must select one
+explicitly in the source-route dropdown. Long-route designators (e.g.
+`STD3 17R2F`) still need a separately validated transition to
+the published procedure's first taxiway: a valid parking-position
+centerline alone does not confer an ATC route through the rest of
+the airport.
+
+The entire work is **simulator QA only** and no navigation or ATC
+clearance is implied. `operationallyVerifiedPushbacks=0` means
+zero routes are authorized, even though the underlying OSM source
+geometry is real and continuous.
+
 ## Geometry extraction update (11 October 2026)
 
 **The exact source line segments now exist in a standalone indexed file:**
