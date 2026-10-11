@@ -1,0 +1,1909 @@
+{
+  "airport": "LTFM",
+  "cycle": "2621",
+  "kind": "published-pushback-taxiway-references",
+  "simulationOnly": true,
+  "routable": false,
+  "warning": "Published pushback names only, no node connectivity or authorization. Alternate routes/aircraft restrictions must be read from original chart.",
+  "stats": {
+    "tableRows": 66,
+    "standNamesCovered": 250,
+    "charts": 11
+  },
+  "rows": [
+    {
+      "sourceChart": "30-9J2",
+      "sourcePdfPage": 114,
+      "standField": "A3L thru A7R",
+      "standIds": [
+        "A3L",
+        "A4",
+        "A5",
+        "A6",
+        "A7R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "T2"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY T2 facing north.\nAircraft shall be pushed back onto the centerline of\nTWY T2 facing north.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J2",
+      "sourcePdfPage": 114,
+      "standField": "A8L thru A8R",
+      "standIds": [
+        "A8L",
+        "A8",
+        "A8R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "T2",
+        "E5"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAircraft shall be pushed back onto the centerline of \nTWY T2 facing north and TWY E5 shall be left clear.\nAlternate Pushback:\nTWY T2 facing south.\nAircraft shall be pushed back onto the centerline of",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J2",
+      "sourcePdfPage": 114,
+      "standField": "A9",
+      "standIds": [
+        "A9"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "T2"
+      ],
+      "publishedInstruction": "Alternate Pushback:\nStandard Pushback:\nAircraft shall be pushed back onto the centerline of \nTWY T2 facing south.\nAircraft shall be pushed back onto the centerline of\nTWY T2 facing north and then pulled forward until\nabeam stand A8.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J2",
+      "sourcePdfPage": 114,
+      "standField": "A10 A11",
+      "standIds": [
+        "A10",
+        "A11"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "E5",
+        "E3"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAircraft shall be pushed back along the centerline of\nTWY E5 onto TWY E3 facing north until the nose gear\nis at PSN 5.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J2",
+      "sourcePdfPage": 114,
+      "standField": "A10L, A10R A11L, A11R",
+      "standIds": [
+        "A10L",
+        "A10R",
+        "A11L",
+        "A11R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "E5",
+        "E3",
+        "E2"
+      ],
+      "publishedInstruction": "Standard Pushback:\nR\nR\nAlternate Pushback:\nAircraft shall be pushed back along the centerline of\nTWY E5 onto TWY E3 facing north until the nose gear\nis at PSN 5.\nAircraft shall be pushed back along the centerline of\nTWY E5 onto TWY E2 facing north until TWY E5 is\nleft clear.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J2",
+      "sourcePdfPage": 114,
+      "standField": "B1L thru B1R",
+      "standIds": [
+        "B1L",
+        "B1",
+        "B1R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "T2",
+        "E8"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY T2 facing south until TWY E8 is left clear.\nAircraft shall be pushed back onto the centerline of\nTWY T2 facing north until TWY E8 is left clear.\nTERMINAL CONTACT APRON - Northw",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J2",
+      "sourcePdfPage": 114,
+      "standField": "B3L thru B3R B5L thru B5R B7L thru B7R B9L thru B9R B12L thru B12R B13",
+      "standIds": [
+        "B3L",
+        "B3",
+        "B3R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "T2"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nR\nR\nR\nR\nAircraft shall be pushed back onto the centerline of\nTWY T2 facing south.\nAircraft shall be pushed back onto the centerline of\nTWY T2 facing north.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J3",
+      "sourcePdfPage": 115,
+      "standField": "B14",
+      "standIds": [
+        "B14"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "NW"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY NW facing west.\nAircraft shall be pushed back onto the centerline of\nTWY NW facing east and then pulled forward until\nabeam stand B15.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J3",
+      "sourcePdfPage": 115,
+      "standField": "B10L thru B10R B17 B18L thru B18R",
+      "standIds": [
+        "B10L",
+        "B10",
+        "B10R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "T3",
+        "TC"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY T3 facing south. Aircraft shall taxi via TWY TC.\nAircraft shall be pushed back onto the centerline of\nTWY T3 facing north.\nTERMINAL CONTACT APRON - West Cul-",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J3",
+      "sourcePdfPage": 115,
+      "standField": "D11 D13 D15 D17",
+      "standIds": [
+        "D11",
+        "D13",
+        "D15",
+        "D17"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "T5"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY T5 facing north.\nAircraft shall be pushed back onto the centerline of\nTWY T5 facing south.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J3",
+      "sourcePdfPage": 115,
+      "standField": "D19",
+      "standIds": [
+        "D19"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "T5",
+        "NW",
+        "T3"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY T5 facing north.\nAircraft shall be pushed back onto the centerline of\nTWY NW facing east, pushback shall continue until\nTWY T3 is left clear.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J3",
+      "sourcePdfPage": 115,
+      "standField": "B4",
+      "standIds": [
+        "B4"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "T3",
+        "TC",
+        "T5"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY T3 facing south until the nose gear is at PSN 1.\nAircraft shall taxi via TWY TC.\nAircraft shall be pushed back onto the centerline of\nTWY T3 facing south and then pulled forward until the\nnose gear is at PSN 2 on TWY T5 facing north.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J3",
+      "sourcePdfPage": 115,
+      "standField": "B6L thru B6R B8L thru B8R",
+      "standIds": [
+        "B6L",
+        "B6",
+        "B6R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "T3",
+        "TC"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY T3 facing south until the nose gear is at PSN 1.\nAircraft shall taxi via TWY TC.\nAircraft shall be pushed back onto the centerline of\nTWY T3 facing north and then pulled forward until\nabeam stand B6.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J4",
+      "sourcePdfPage": 116,
+      "standField": "B2 C3 C4",
+      "standIds": [
+        "B2",
+        "C3",
+        "C4"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "T3",
+        "T5"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY T3 facing south. Aircraft shall taxi via TWY T5.\nAlternate Pushback (1):\nAircraft shall be pushed back onto the centerline of\nTWY facing west until abeam stand C2. Aircraft shall\ntaxi via TWY T3.\nAlternate Pushback (2):\nAircraft shall be pushed back onto the centerline of\nTWY T5 facing south until abeam stand D7. Aircraft\nshall taxi via TWY T3.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J4",
+      "sourcePdfPage": 116,
+      "standField": "C1 C2 D1 D3 D5",
+      "standIds": [
+        "C1",
+        "C2",
+        "D1",
+        "D3",
+        "D5"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "T5",
+        "T3"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY facing east until abeam stand C3. Aircraft shall\ntaxi via TWY T5.\nAlternate Pushback (1):\nAircraft shall be pushed back onto the centerline of\nTWY T3 facing south. Aircraft shall taxi via TWY T5.\nAlternate Pushback (2):\nAircraft shall be pushed back onto the centerline of\nT5 taxiway facing south until abeam stand D7.\nAircraft shall taxi via TWY T3.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J4",
+      "sourcePdfPage": 116,
+      "standField": "D10 D12 D14 D16",
+      "standIds": [
+        "D10",
+        "D12",
+        "D14",
+        "D16"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "T7"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY T7 facing north.\nAircraft shall be pushed back onto the centerline of\nTWY T7 facing south.\nTERMINAL CONTACT APRON - East Cul-",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J4",
+      "sourcePdfPage": 116,
+      "standField": "D20",
+      "standIds": [
+        "D20"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "T7",
+        "NE",
+        "T9"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY T7 facing north.\nAircraft shall be pushed back onto the centerline of\nTWY NE facing west, pushback shall continue until\nTWY T9 is left clear.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J4",
+      "sourcePdfPage": 116,
+      "standField": "F12L thru F12R F14",
+      "standIds": [
+        "F12L",
+        "F12",
+        "F12R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "T9"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY T9 facing south.\nAircraft shall be pushed back onto the centerline of\nTWY T9 facing north.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J5",
+      "sourcePdfPage": 117,
+      "standField": "F4L thru F4R",
+      "standIds": [
+        "F4L",
+        "F4",
+        "F4R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "T9",
+        "T7"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback (2):\nAircraft shall be pushed back onto the centerline of \nTWY T9 facing south until the nose gear is at PSN 3.\nAircraft shall be pushed back onto the centerline of\nTWY T9 facing south and then pulled forward until the\nnose gear is at PSN 4 on TWY T7 facing north. (F4 only)",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J5",
+      "sourcePdfPage": 117,
+      "standField": "F6L thru F6R F8L thru F8R",
+      "standIds": [
+        "F6L",
+        "F6",
+        "F6R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "T9",
+        "TD"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY T9 facing south until the nose gear is at PSN 3.\nAlternate Pushback (1):\nAircraft shall be pushed back onto the centerline of\nTWY T9 facing north until abeam stand F6, TWY TD\nshall be left clear.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J5",
+      "sourcePdfPage": 117,
+      "standField": "D2 D4 E1 E2 E3",
+      "standIds": [
+        "D2",
+        "D4",
+        "E1",
+        "E2",
+        "E3"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "T7",
+        "T9"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback (1):\nAlternate Pushback (2):\nAircraft shall be pushed back onto the centerline of\nTWY facing west until abeam stand E3. Aircraft shall\ntaxi via TWY T7.\nAircraft shall be pushed back onto the centerline of\nTWY T9 facing south until abeam stand F4. Aircraft\nshall taxi via TWY T7.\nAircraft shall be pushed back onto the centerline of\nTWY T7 taxiway facing south until abeam stand D6.\nAircraft shall taxi via TWY T9.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J5",
+      "sourcePdfPage": 117,
+      "standField": "E4 F2 F4L F4R",
+      "standIds": [
+        "E4",
+        "F2",
+        "F4L",
+        "F4R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "T7",
+        "T9"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback (2):\nAlternate Pushback (1):\nAircraft shall be pushed back onto the centerline of\nTWY T7 facing south until abeam stand D6. Aircraft\nshall taxi via TWY T9.\nAircraft shall be pushed back onto the centerline of\nTWY facing east until abeam stand E3. Aircraft shall\ntaxi via TWY T9.\nAircraft shall be pushed back onto the centerline of\nTWY T9 facing south until abeam stand F4. Aircraft\nshall taxi via TWY T7.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J5",
+      "sourcePdfPage": 117,
+      "standField": "F1L thru F1R",
+      "standIds": [
+        "F1L",
+        "F1",
+        "F1R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "T11",
+        "F6"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY T11 facing south until TWY F6 is left clear.\nAircraft shall be pushed back onto the centerline of\nTWY T11 facing north until TWY F6 is left clear.\nTERMINAL CONTACT APRON - Northw",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J6",
+      "sourcePdfPage": 118,
+      "standField": "F16 F17",
+      "standIds": [
+        "F16",
+        "F17"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "NE"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY NE facing west.\nAircraft shall be pushed back onto the centerline of\nTWY NE facing east.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J6",
+      "sourcePdfPage": 118,
+      "standField": "F15",
+      "standIds": [
+        "F15"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "NE"
+      ],
+      "publishedInstruction": "Aircraft shall be pushed back onto the centerline of\nTWY NE facing west.\nStandard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY NE facing east and then pulled forward until\nabeam stand F16.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J6",
+      "sourcePdfPage": 118,
+      "standField": "G2L thru G2R",
+      "standIds": [
+        "G2L",
+        "G2",
+        "G2R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "T11",
+        "F6"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY T11 facing north until TWY F6 is left clear.\nAircraft shall be pushed back onto the centerline of\nTWY T11 facing south until TWY F6 is left clear.\nTERMINAL CONTACT APRON - Southe",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J6",
+      "sourcePdfPage": 118,
+      "standField": "G4L thru G8R",
+      "standIds": [
+        "G4L",
+        "G5",
+        "G6",
+        "G7",
+        "G8R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "T11"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY T11 facing south.\nAircraft shall be pushed back onto the centerline of\nTWY T11 facing north.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J6",
+      "sourcePdfPage": 118,
+      "standField": "G9L thru G9R",
+      "standIds": [
+        "G9L",
+        "G9",
+        "G9R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "F1",
+        "F3",
+        "LINES"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back along the centerline of\nTWY onto TWY F1 facing north until the nose gear is\nat PSN 10.\nAircraft shall be pushed back onto the centerline of\nTWY F3 facing west, then following the TWY\nlines facing south until the nose gear is at PSN 6.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J6",
+      "sourcePdfPage": 118,
+      "standField": "G10L thru G11R",
+      "standIds": [
+        "G10L",
+        "G11R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "F3",
+        "F1",
+        "LINES",
+        "THE"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY F3 facing west, then along the taxiway centerline\nonto TWY F1 facing north until the nose gear is at\nPSN 10.\nAircraft shall be pushed back onto the centerline of\nTWY F3 facing west, then following the TWY lines\nfacing south until the nose gear is at PSN 6.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J7",
+      "sourcePdfPage": 119,
+      "standField": "100 thru 108",
+      "standIds": [
+        "100",
+        "101",
+        "102",
+        "103",
+        "104",
+        "105",
+        "106",
+        "107",
+        "108"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "N6"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY N6 facing west.\nAircraft shall be pushed back onto the centerline of\nTWY N6 facing east.\nAPRON 1",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J7",
+      "sourcePdfPage": 119,
+      "standField": "109",
+      "standIds": [
+        "109"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "N6"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY N6 facing east.\nAircraft shall be pushed back onto the centerline of\nTWY N6 facing west and then pulled forward until\nabeam stand 108.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J7",
+      "sourcePdfPage": 119,
+      "standField": "110",
+      "standIds": [
+        "110"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "N6"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY N6 facing west.\nAircraft shall be pushed back onto the centerline of\nTWY N6 facing east and then pulled forward  until\nabeam stand 111.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J7",
+      "sourcePdfPage": 119,
+      "standField": "111 thru 120",
+      "standIds": [
+        "111",
+        "112",
+        "113",
+        "114",
+        "115",
+        "116",
+        "117",
+        "118",
+        "119",
+        "120"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "N6"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY N6 facing west.\nAircraft shall be pushed back onto the centerline of\nTWY N6 facing east.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J7",
+      "sourcePdfPage": 119,
+      "standField": "121",
+      "standIds": [
+        "121"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "N6"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY N6 facing west and then pulled forward until\nabeam stand 120.\nAircraft shall be pushed back onto the centerline of\nTWY N6 facing east.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J7",
+      "sourcePdfPage": 119,
+      "standField": "122",
+      "standIds": [
+        "122"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "N6"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY N6 facing west.\nAircraft shall be pushed back onto the centerline of\nTWY N6 facing east and then pulled forward until\nabeam stand 123.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J7",
+      "sourcePdfPage": 119,
+      "standField": "123 thru 131",
+      "standIds": [
+        "123",
+        "124",
+        "125",
+        "126",
+        "127",
+        "128",
+        "129",
+        "130",
+        "131"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "N6"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY N6 facing west.\nAircraft shall be pushed back onto the centerline of\nTWY N6 facing east.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J7",
+      "sourcePdfPage": 119,
+      "standField": "132 133 134 135 136",
+      "standIds": [
+        "132",
+        "133",
+        "134",
+        "135",
+        "136"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "N5"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY N5 facing east.\nAircraft shall be pushed back onto the centerline of\nTWY N5 facing west.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J8",
+      "sourcePdfPage": 120,
+      "standField": "137L thru 137R",
+      "standIds": [
+        "137L",
+        "137",
+        "137R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "N5"
+      ],
+      "publishedInstruction": "Aircraft shall be pushed back onto the centerline of\nTWY N5 facing east.\nStandard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY N5 facing west and then pulled forward until\nabeam stand 136.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J8",
+      "sourcePdfPage": 120,
+      "standField": "138L thru 138R",
+      "standIds": [
+        "138L",
+        "138",
+        "138R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "N5"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY N5 facing east and then pulled forward until\nabeam stand 139.\nAircraft shall be pushed back onto the centerline of\nTWY N5 facing west.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J8",
+      "sourcePdfPage": 120,
+      "standField": "139 140 141 142",
+      "standIds": [
+        "139",
+        "140",
+        "141",
+        "142"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "N5"
+      ],
+      "publishedInstruction": "Aircraft shall be pushed back onto the centerline of\nTWY N5 facing east.\nStandard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY N5 facing west.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J8",
+      "sourcePdfPage": 120,
+      "standField": "139L, 139R 140L, 140R 141L, 141R 142L, 142R",
+      "standIds": [
+        "139L",
+        "139R",
+        "140L",
+        "140R",
+        "141L",
+        "141R",
+        "142L",
+        "142R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "N5"
+      ],
+      "publishedInstruction": "Aircraft shall be pushed back onto the centerline of\nTWY N5 facing east.\nStandard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY N5 facing west.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J8",
+      "sourcePdfPage": 120,
+      "standField": "143L thru 143R",
+      "standIds": [
+        "143L",
+        "143",
+        "143R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "N5"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY N5 facing east.\nAircraft shall be pushed back onto the centerline of\nTWY N5 facing west and then pulled forward until\nabeam stand 142.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J8",
+      "sourcePdfPage": 120,
+      "standField": "144L thru 144R",
+      "standIds": [
+        "144L",
+        "144",
+        "144R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "N5"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY N5 facing west.\nAircraft shall be pushed back onto the centerline of\nTWY N5 facing east and then pulled forward until\nabeam stand 145.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J8",
+      "sourcePdfPage": 120,
+      "standField": "145 146 147 148 149",
+      "standIds": [
+        "145",
+        "146",
+        "147",
+        "148",
+        "149"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "N5"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY N5 facing west.\nAircraft shall be pushed back onto the centerline of\nTWY N5 facing east.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J9",
+      "sourcePdfPage": 121,
+      "standField": "200 thru 207",
+      "standIds": [
+        "200",
+        "201",
+        "202",
+        "203",
+        "204",
+        "205",
+        "206",
+        "207"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "E2"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY E2 facing north.\nAircraft shall be pushed back onto the centerline of\nTWY E2 facing south.\nAPRON 2",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J9",
+      "sourcePdfPage": 121,
+      "standField": "215L thru 217R",
+      "standIds": [
+        "215L",
+        "216",
+        "217R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "E3"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY E3 facing north.\nAircraft shall be pushed back onto the centerline of\nTWY E3 facing south.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J9",
+      "sourcePdfPage": 121,
+      "standField": "208 thru 212",
+      "standIds": [
+        "208",
+        "209",
+        "210",
+        "211",
+        "212"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "E2"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY E2 facing north.\nAircraft shall be pushed back onto the centerline of\nTWY E2 facing south.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J9",
+      "sourcePdfPage": 121,
+      "standField": "213 214",
+      "standIds": [
+        "213",
+        "214"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "E2",
+        "D"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY E2 facing south.\nAircraft shall be pushed back onto the centerline of\nTWY D facing east.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J9",
+      "sourcePdfPage": 121,
+      "standField": "218L thru 218R",
+      "standIds": [
+        "218L",
+        "218",
+        "218R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "D"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY D facing north and then pulled forward until the\nnose gear is at PSN 7.\nAircraft shall be pushed back onto the centerline of\nTWY D facing south and then pulled forward until\nabeam stand 219.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J9",
+      "sourcePdfPage": 121,
+      "standField": "219L thru 219R",
+      "standIds": [
+        "219L",
+        "219",
+        "219R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "D"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY D facing north and then pulled forward until the\nnose gear is at PSN 7.\nAircraft shall be pushed back onto the centerline of\nTWY D facing south.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J9",
+      "sourcePdfPage": 121,
+      "standField": "220L thru 220R",
+      "standIds": [
+        "220L",
+        "220",
+        "220R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "D",
+        "E3"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY D facing east.\nAircraft shall be pushed back along the centerline of\nTWY onto TWY E3 facing south, pushback shall\ncontinue until TWY D is left clear.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J10",
+      "sourcePdfPage": 122,
+      "standField": "222L thru 222R",
+      "standIds": [
+        "222L",
+        "222",
+        "222R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "D"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY D facing east.\nAircraft shall be pushed back onto the centerline of\nTWY D facing west.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J10",
+      "sourcePdfPage": 122,
+      "standField": "223L thru 223R",
+      "standIds": [
+        "223L",
+        "223",
+        "223R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "D"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY D facing east and then pulled forward until\nabeam stand 223.\nAircraft shall be pushed back onto the centerline of\nTWY D facing west.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J10",
+      "sourcePdfPage": 122,
+      "standField": "224L thru 224R",
+      "standIds": [
+        "224L",
+        "224",
+        "224R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "D"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY D facing south.\nAircraft shall be pushed back onto the centerline of\nTWY D facing west.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J10",
+      "sourcePdfPage": 122,
+      "standField": "300 thru 312",
+      "standIds": [
+        "300",
+        "301",
+        "302",
+        "303",
+        "304",
+        "305",
+        "306",
+        "307",
+        "308",
+        "309",
+        "310",
+        "311",
+        "312"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "F2"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY F2 facing south.\nAircraft shall be pushed back onto the centerline of\nTWY F2 facing north.\nAPRON 3",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J10",
+      "sourcePdfPage": 122,
+      "standField": "313L thru 315R",
+      "standIds": [
+        "313L",
+        "314",
+        "315R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "F1"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY F1 facing south.\nAircraft shall be pushed back onto the centerline of\nTWY F1 facing north.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J10",
+      "sourcePdfPage": 122,
+      "standField": "316L thru 317R",
+      "standIds": [
+        "316L",
+        "317R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "F1"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY F1 facing south until the nose gear is at PSN 8.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J10",
+      "sourcePdfPage": 122,
+      "standField": "318L thru 319R",
+      "standIds": [
+        "318L",
+        "319R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "G",
+        "LINES",
+        "G1"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY G facing south, then following the TWY lines onto\nTWY G1 facing east until the nose gear is at PSN 9.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J11",
+      "sourcePdfPage": 123,
+      "standField": "K1L thru K1R",
+      "standIds": [
+        "K1L",
+        "K1",
+        "K1R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "A4"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY A4 facing east and then pulled forward until\nabeam stand K2.\nAircraft shall be pushed back onto the centerline of\nTWY A4 facing west.\nCARGO APRON",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J11",
+      "sourcePdfPage": 123,
+      "standField": "K2 K3 K4 K5 K6 K7 K8",
+      "standIds": [
+        "K2",
+        "K3",
+        "K4",
+        "K5",
+        "K6",
+        "K7",
+        "K8"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "A4"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY A4 facing east.\nAircraft shall be pushed back onto the centerline of\nTWY A4 facing west.\nAlternate Pushback:",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J11",
+      "sourcePdfPage": 123,
+      "standField": "K2L, K2R K3L, K3R K4L, K4R K5L, K5R K6L, K6R K7L, K7R K8L, K8R",
+      "standIds": [
+        "K2L",
+        "K2R",
+        "K3L",
+        "K3R",
+        "K4L",
+        "K4R",
+        "K5L",
+        "K5R",
+        "K6L",
+        "K6R",
+        "K7L",
+        "K7R",
+        "K8L",
+        "K8R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "A4"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY A4 facing east.\nAircraft shall be pushed back onto the centerline of\nTWY A4 facing west.\nAlternate Pushback:",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J11",
+      "sourcePdfPage": 123,
+      "standField": "K9L thru K9R",
+      "standIds": [
+        "K9L",
+        "K9",
+        "K9R"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "A4"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY A4 facing east.\nAircraft shall be pushed back onto the centerline of\nTWY A4 facing west and then pulled forward until\nabeam stand K8.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J11",
+      "sourcePdfPage": 123,
+      "standField": "K10 thru K21",
+      "standIds": [
+        "K10",
+        "K11",
+        "K12",
+        "K13",
+        "K14",
+        "K15",
+        "K16",
+        "K17",
+        "K18",
+        "K19",
+        "K20",
+        "K21"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "B"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY B facing south.\nAircraft shall be pushed back onto the centerline of\nTWY B facing north.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J11",
+      "sourcePdfPage": 123,
+      "standField": "K25 K26",
+      "standIds": [
+        "K25",
+        "K26"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "B"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY B facing south.\nAircraft shall be pushed back onto the centerline of\nTWY B facing north.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J11",
+      "sourcePdfPage": 123,
+      "standField": "K27",
+      "standIds": [
+        "K27"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "B"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY B facing north.\nAircraft shall be pushed back onto the centerline of\nTWY B facing south and then pulled forward until\nabeam stand K26.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    },
+    {
+      "sourceChart": "30-9J12",
+      "sourcePdfPage": 124,
+      "standField": "K54 thru K57",
+      "standIds": [
+        "K54",
+        "K55",
+        "K56",
+        "K57"
+      ],
+      "publishedTaxiwaysMentioned": [
+        "A"
+      ],
+      "publishedInstruction": "Standard Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY A facing north.\nAlternate Pushback:\nAircraft shall be pushed back onto the centerline of\nTWY A facing south.",
+      "pushbackGeometryVerified": false,
+      "routable": false
+    }
+  ],
+  "standRows": {
+    "A3L": [
+      0
+    ],
+    "A4": [
+      0
+    ],
+    "A5": [
+      0
+    ],
+    "A6": [
+      0
+    ],
+    "A7R": [
+      0
+    ],
+    "A8L": [
+      1
+    ],
+    "A8": [
+      1
+    ],
+    "A8R": [
+      1
+    ],
+    "A9": [
+      2
+    ],
+    "A10": [
+      3
+    ],
+    "A11": [
+      3
+    ],
+    "A10L": [
+      4
+    ],
+    "A10R": [
+      4
+    ],
+    "A11L": [
+      4
+    ],
+    "A11R": [
+      4
+    ],
+    "B1L": [
+      5
+    ],
+    "B1": [
+      5
+    ],
+    "B1R": [
+      5
+    ],
+    "B3L": [
+      6
+    ],
+    "B3": [
+      6
+    ],
+    "B3R": [
+      6
+    ],
+    "B14": [
+      7
+    ],
+    "B10L": [
+      8
+    ],
+    "B10": [
+      8
+    ],
+    "B10R": [
+      8
+    ],
+    "D11": [
+      9
+    ],
+    "D13": [
+      9
+    ],
+    "D15": [
+      9
+    ],
+    "D17": [
+      9
+    ],
+    "D19": [
+      10
+    ],
+    "B4": [
+      11
+    ],
+    "B6L": [
+      12
+    ],
+    "B6": [
+      12
+    ],
+    "B6R": [
+      12
+    ],
+    "B2": [
+      13
+    ],
+    "C3": [
+      13
+    ],
+    "C4": [
+      13
+    ],
+    "C1": [
+      14
+    ],
+    "C2": [
+      14
+    ],
+    "D1": [
+      14
+    ],
+    "D3": [
+      14
+    ],
+    "D5": [
+      14
+    ],
+    "D10": [
+      15
+    ],
+    "D12": [
+      15
+    ],
+    "D14": [
+      15
+    ],
+    "D16": [
+      15
+    ],
+    "D20": [
+      16
+    ],
+    "F12L": [
+      17
+    ],
+    "F12": [
+      17
+    ],
+    "F12R": [
+      17
+    ],
+    "F4L": [
+      18,
+      21
+    ],
+    "F4": [
+      18
+    ],
+    "F4R": [
+      18,
+      21
+    ],
+    "F6L": [
+      19
+    ],
+    "F6": [
+      19
+    ],
+    "F6R": [
+      19
+    ],
+    "D2": [
+      20
+    ],
+    "D4": [
+      20
+    ],
+    "E1": [
+      20
+    ],
+    "E2": [
+      20
+    ],
+    "E3": [
+      20
+    ],
+    "E4": [
+      21
+    ],
+    "F2": [
+      21
+    ],
+    "F1L": [
+      22
+    ],
+    "F1": [
+      22
+    ],
+    "F1R": [
+      22
+    ],
+    "F16": [
+      23
+    ],
+    "F17": [
+      23
+    ],
+    "F15": [
+      24
+    ],
+    "G2L": [
+      25
+    ],
+    "G2": [
+      25
+    ],
+    "G2R": [
+      25
+    ],
+    "G4L": [
+      26
+    ],
+    "G5": [
+      26
+    ],
+    "G6": [
+      26
+    ],
+    "G7": [
+      26
+    ],
+    "G8R": [
+      26
+    ],
+    "G9L": [
+      27
+    ],
+    "G9": [
+      27
+    ],
+    "G9R": [
+      27
+    ],
+    "G10L": [
+      28
+    ],
+    "G11R": [
+      28
+    ],
+    "100": [
+      29
+    ],
+    "101": [
+      29
+    ],
+    "102": [
+      29
+    ],
+    "103": [
+      29
+    ],
+    "104": [
+      29
+    ],
+    "105": [
+      29
+    ],
+    "106": [
+      29
+    ],
+    "107": [
+      29
+    ],
+    "108": [
+      29
+    ],
+    "109": [
+      30
+    ],
+    "110": [
+      31
+    ],
+    "111": [
+      32
+    ],
+    "112": [
+      32
+    ],
+    "113": [
+      32
+    ],
+    "114": [
+      32
+    ],
+    "115": [
+      32
+    ],
+    "116": [
+      32
+    ],
+    "117": [
+      32
+    ],
+    "118": [
+      32
+    ],
+    "119": [
+      32
+    ],
+    "120": [
+      32
+    ],
+    "121": [
+      33
+    ],
+    "122": [
+      34
+    ],
+    "123": [
+      35
+    ],
+    "124": [
+      35
+    ],
+    "125": [
+      35
+    ],
+    "126": [
+      35
+    ],
+    "127": [
+      35
+    ],
+    "128": [
+      35
+    ],
+    "129": [
+      35
+    ],
+    "130": [
+      35
+    ],
+    "131": [
+      35
+    ],
+    "132": [
+      36
+    ],
+    "133": [
+      36
+    ],
+    "134": [
+      36
+    ],
+    "135": [
+      36
+    ],
+    "136": [
+      36
+    ],
+    "137L": [
+      37
+    ],
+    "137": [
+      37
+    ],
+    "137R": [
+      37
+    ],
+    "138L": [
+      38
+    ],
+    "138": [
+      38
+    ],
+    "138R": [
+      38
+    ],
+    "139": [
+      39
+    ],
+    "140": [
+      39
+    ],
+    "141": [
+      39
+    ],
+    "142": [
+      39
+    ],
+    "139L": [
+      40
+    ],
+    "139R": [
+      40
+    ],
+    "140L": [
+      40
+    ],
+    "140R": [
+      40
+    ],
+    "141L": [
+      40
+    ],
+    "141R": [
+      40
+    ],
+    "142L": [
+      40
+    ],
+    "142R": [
+      40
+    ],
+    "143L": [
+      41
+    ],
+    "143": [
+      41
+    ],
+    "143R": [
+      41
+    ],
+    "144L": [
+      42
+    ],
+    "144": [
+      42
+    ],
+    "144R": [
+      42
+    ],
+    "145": [
+      43
+    ],
+    "146": [
+      43
+    ],
+    "147": [
+      43
+    ],
+    "148": [
+      43
+    ],
+    "149": [
+      43
+    ],
+    "200": [
+      44
+    ],
+    "201": [
+      44
+    ],
+    "202": [
+      44
+    ],
+    "203": [
+      44
+    ],
+    "204": [
+      44
+    ],
+    "205": [
+      44
+    ],
+    "206": [
+      44
+    ],
+    "207": [
+      44
+    ],
+    "215L": [
+      45
+    ],
+    "216": [
+      45
+    ],
+    "217R": [
+      45
+    ],
+    "208": [
+      46
+    ],
+    "209": [
+      46
+    ],
+    "210": [
+      46
+    ],
+    "211": [
+      46
+    ],
+    "212": [
+      46
+    ],
+    "213": [
+      47
+    ],
+    "214": [
+      47
+    ],
+    "218L": [
+      48
+    ],
+    "218": [
+      48
+    ],
+    "218R": [
+      48
+    ],
+    "219L": [
+      49
+    ],
+    "219": [
+      49
+    ],
+    "219R": [
+      49
+    ],
+    "220L": [
+      50
+    ],
+    "220": [
+      50
+    ],
+    "220R": [
+      50
+    ],
+    "222L": [
+      51
+    ],
+    "222": [
+      51
+    ],
+    "222R": [
+      51
+    ],
+    "223L": [
+      52
+    ],
+    "223": [
+      52
+    ],
+    "223R": [
+      52
+    ],
+    "224L": [
+      53
+    ],
+    "224": [
+      53
+    ],
+    "224R": [
+      53
+    ],
+    "300": [
+      54
+    ],
+    "301": [
+      54
+    ],
+    "302": [
+      54
+    ],
+    "303": [
+      54
+    ],
+    "304": [
+      54
+    ],
+    "305": [
+      54
+    ],
+    "306": [
+      54
+    ],
+    "307": [
+      54
+    ],
+    "308": [
+      54
+    ],
+    "309": [
+      54
+    ],
+    "310": [
+      54
+    ],
+    "311": [
+      54
+    ],
+    "312": [
+      54
+    ],
+    "313L": [
+      55
+    ],
+    "314": [
+      55
+    ],
+    "315R": [
+      55
+    ],
+    "316L": [
+      56
+    ],
+    "317R": [
+      56
+    ],
+    "318L": [
+      57
+    ],
+    "319R": [
+      57
+    ],
+    "K1L": [
+      58
+    ],
+    "K1": [
+      58
+    ],
+    "K1R": [
+      58
+    ],
+    "K2": [
+      59
+    ],
+    "K3": [
+      59
+    ],
+    "K4": [
+      59
+    ],
+    "K5": [
+      59
+    ],
+    "K6": [
+      59
+    ],
+    "K7": [
+      59
+    ],
+    "K8": [
+      59
+    ],
+    "K2L": [
+      60
+    ],
+    "K2R": [
+      60
+    ],
+    "K3L": [
+      60
+    ],
+    "K3R": [
+      60
+    ],
+    "K4L": [
+      60
+    ],
+    "K4R": [
+      60
+    ],
+    "K5L": [
+      60
+    ],
+    "K5R": [
+      60
+    ],
+    "K6L": [
+      60
+    ],
+    "K6R": [
+      60
+    ],
+    "K7L": [
+      60
+    ],
+    "K7R": [
+      60
+    ],
+    "K8L": [
+      60
+    ],
+    "K8R": [
+      60
+    ],
+    "K9L": [
+      61
+    ],
+    "K9": [
+      61
+    ],
+    "K9R": [
+      61
+    ],
+    "K10": [
+      62
+    ],
+    "K11": [
+      62
+    ],
+    "K12": [
+      62
+    ],
+    "K13": [
+      62
+    ],
+    "K14": [
+      62
+    ],
+    "K15": [
+      62
+    ],
+    "K16": [
+      62
+    ],
+    "K17": [
+      62
+    ],
+    "K18": [
+      62
+    ],
+    "K19": [
+      62
+    ],
+    "K20": [
+      62
+    ],
+    "K21": [
+      62
+    ],
+    "K25": [
+      63
+    ],
+    "K26": [
+      63
+    ],
+    "K27": [
+      64
+    ],
+    "K54": [
+      65
+    ],
+    "K55": [
+      65
+    ],
+    "K56": [
+      65
+    ],
+    "K57": [
+      65
+    ]
+  }
+}
