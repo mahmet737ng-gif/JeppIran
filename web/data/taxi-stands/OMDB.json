@@ -724,5 +724,62 @@
   "notes": [
     "E30–E38 published as BOX STAND PARKING without individual point coordinates on OMDB AD 2-22B. Never fabricate locations.",
     "MARS child positions E44L/E44R, E45L/E45R are independent spatial points and do not represent taxi connectivity."
-  ]
+  ],
+  "publishedLeadInTopology": {
+    "source": {
+      "authority": "UAE GCAA eAIP",
+      "section": "OMDB AD 2.8 MARS Stands",
+      "url": "https://www.gcaa.gov.ae/en/ais/AIPHtmlFiles/AIP/Current/AIRACs/2026-P08/html/eAIP/AD-2.OMDB-en-GB.html"
+    },
+    "routable": false,
+    "cases": {
+      "C51L": {
+        "publishedApproach": [
+          "TWY K",
+          "TXL Z"
+        ],
+        "directionNote": "Westbound, C51L lead-in precedes C51 lead-in.",
+        "status": "published textual stand lead-in reference; unlocated geometric connector"
+      },
+      "C51": {
+        "publishedApproach": [
+          "TWY K",
+          "TXL Z"
+        ],
+        "directionNote": "Westbound, C51 lead-in is beyond C51L lead-in.",
+        "status": "published textual stand lead-in reference; unlocated geometric connector"
+      },
+      "C51R": {
+        "publishedApproach": [
+          "TXL Z1"
+        ],
+        "directionNote": "Lead-in originates from taxilane Z1, not from the C51/C51L lead-in.",
+        "status": "published textual stand lead-in reference; unlocated geometric connector"
+      }
+    }
+  },
+  "publishedOperationalRestrictions": {
+    "source": {
+      "authority": "UAE GCAA eAIP",
+      "section": "OMDB AD 2.8 Taxiway Restrictions",
+      "url": "https://www.gcaa.gov.ae/en/ais/AIPHtmlFiles/AIP/Current/AIRACs/2026-P08/html/eAIP/AD-2.OMDB-en-GB.html"
+    },
+    "taxiSpeedMaximumKt": 15,
+    "speedLimitTaxilanes": [
+      "J",
+      "J1",
+      "J2",
+      "J3",
+      "U",
+      "W",
+      "Y",
+      "Z"
+    ],
+    "chartReportedClosedSegments": [
+      "TWY K east of K18",
+      "TWY V5"
+    ],
+    "requireAtcClearanceForCrossovers": true,
+    "note": "Restrictions from source text are not a time-current NOTAM closure model; applicability requires current AIP and NOTAM verification."
+  }
 }
