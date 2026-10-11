@@ -130,7 +130,9 @@ goals remain unrouteable. `runway` edges also require a matching physical ID.
 
 ```js
 const Engine = require("./web/taxi-engine.js");
-const graph = JSON.parse(/* trusted JSON source here */);
+const fs = require("node:fs");
+const graph = JSON.parse(fs.readFileSync(
+  "./web/data/taxi-networks/OISS.json", "utf8"));
 const taxi = Engine.create(graph);
 
 const auto = taxi.plan("ST101 ST109"); // no runway edges ever
