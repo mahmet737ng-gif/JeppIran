@@ -1,7 +1,7 @@
 /* JEPPIRAN TAXI preview · verified graphs only · NOT FOR ACTUAL NAVIGATION */
 (function(){
 "use strict";
-const ns="http://www.w3.org/2000/svg", taxi={active:false,trace:false,startSelect:false,testStart:null,airport:"",graph:null,standReference:null,selectedStand:"",showStands:false,showNetwork:false,route:null,manual:new Map(),prompted:"",networkAudit:null,networkOpen:false,highlightTaxiway:"",insGroups:null,standGroupAudit:null,standGroupOpen:false};
+const ns="http://www.w3.org/2000/svg", taxi={graphRequest:null,active:false,trace:false,startSelect:false,testStart:null,airport:"",graph:null,standReference:null,selectedStand:"",showStands:false,showNetwork:false,route:null,manual:new Map(),prompted:"",networkAudit:null,networkOpen:false,highlightTaxiway:"",insGroups:null,standGroupAudit:null,standGroupOpen:false};
 const $=id=>document.getElementById(id);
 const name=s=>String(s||"").trim().toUpperCase().replace(/\s+/g," ");
 function parse(raw){
@@ -372,7 +372,7 @@ function message(s,warning=false){
     detail.open=false;
   }
 }
-async function loadGraph(icao){
+async function fetchGraph(icao){
   taxi.graph=null;
   message("Checking verified ground network for "+icao+"…");
   try{
@@ -380,7 +380,7 @@ async function loadGraph(icao){
     if(!r.ok)throw Error("Not digitized");
     const d=await r.json();
     if(!graphOk(d,icao))throw Error("Invalid, unverified, or wrong-cycle network");
-    if(taxi.airport!==icao)return;
+    if(taxi.airport!==icao)return null;
     taxi.graph=d;
     refreshStandGroupAudit();
     if(taxi.networkOpen)renderNetworkAudit();
@@ -389,15 +389,27 @@ async function loadGraph(icao){
       $("taxiQaStands").textContent="STANDS (34)";
       $("taxiQaInput").placeholder="ST109 J BT13R H · ST113 A BT31L D";
       message("OIMM · 34 stands · 18 taxiways · Jeppesen 10-9 / 10-9B. Explicit backtracks: ST109 J BT13R H or ST113 A BT31L D. PARKING opens the detail chart.");
-      draw();return;
+      draw();return d;
     }
     message(d.simulatorTestOnly?
       "LTFM SIM QA · "+d.edges.length+" mapped OSM taxi centerlines · © OpenStreetMap contributors (ODbL). NOT AIP-VERIFIED. Connect simulator or choose SET START.":
       "Verified airport ground graph loaded.");
+    return d;
   }catch(e){
     if(taxi.airport!==icao)return;
     message("No verified ground network yet for "+icao+". Automatic routing disabled; use TRACE QA to test drawing on this chart.",true);
+    return null;
   }
+}
+// Share an in-flight graph load across TAXI open and GO. Avoid duplicate
+// no-store downloads and prevent a stale request from clobbering a new route.
+function loadGraph(icao){
+  if(taxi.graph?.airport===icao&&graphOk(taxi.graph,icao))return Promise.resolve(taxi.graph);
+  if(taxi.graphRequest?.airport===icao)return taxi.graphRequest.promise;
+  const promise=fetchGraph(icao);
+  taxi.graphRequest={airport:icao,promise};
+  promise.then(()=>{if(taxi.graphRequest?.promise===promise)taxi.graphRequest=null;});
+  return promise;
 }
 function isAdc(c){
   return c?.category==="Airport"&&(/AIRPORT DIAGRAM|AERODROME CHART|AERODROME LAYOUT|\bADC\b/i.test(c.name||"")||
@@ -415,7 +427,7 @@ function view(){
   const panel=document.createElement("section");
   panel.id="taxiQaPanel";panel.className="taxi-qa-panel";panel.hidden=true;
   panel.innerHTML='<div class="taxi-qa-title"><strong>TAXI <small>QA TEST</small></strong>'+
-    '<span id="taxiQaAirport"></span><span class="taxi-qa-build">R10</span><button id="taxiQaToolsBtn" type="button" aria-expanded="false" aria-controls="taxiQaButtons">TOOLS ▾</button>'+
+    '<span id="taxiQaAirport"></span><span class="taxi-qa-build">R11</span><button id="taxiQaToolsBtn" type="button" aria-expanded="false" aria-controls="taxiQaButtons">TOOLS ▾</button>'+
     '<button id="taxiQaClose" type="button" aria-label="Close taxi panel">×</button></div>'+
     '<label for="taxiQaInput">Stand STD3 T5 N2 · Hold /N2 · Procedure 34L2A</label>'+
     '<div class="taxi-qa-entry"><input id="taxiQaInput" autocomplete="off" spellcheck="false" placeholder="Stand / taxiways / procedure"><button id="taxiQaGo" type="button">GO</button></div>'+
@@ -651,12 +663,19 @@ function oimmGo(p,options){
 }
 function go(options={}){
   syncAirport();
-  if(taxi.airport==="OIMM"&&!taxi.graph&&!options.graphRetried){
+  if(taxi.airport==="OIMM"&&!taxi.graph){
+    // An unavailable graph must never leave a previously drawn taxi route.
+    taxi.route=null;draw();
+    if(options.graphRetried){
+      message("Mashhad taxi graph is unavailable. Check your offline download or connection and reopen TAXI.",true);
+      return;
+    }
     const airport=taxi.airport,input=$("taxiQaInput").value;
     message("Loading Mashhad stand and taxiway network…");
-    loadGraph(airport).then(()=>{
-      if(taxi.active&&taxi.airport===airport&&$("taxiQaInput")?.value===input)
-        go({...options,graphRetried:true});
+    loadGraph(airport).then(loaded=>{
+      if(!taxi.active||taxi.airport!==airport||$("taxiQaInput")?.value!==input)return;
+      if(loaded)go({...options,graphRetried:true});
+      else message("Mashhad taxi graph could not be loaded. No route was drawn; retry after reconnecting.",true);
     });
     return;
   }
