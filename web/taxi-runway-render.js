@@ -135,6 +135,49 @@ function displayRuns(graph,route){
     }
     return {...run,type,coordinates};
   });
+  // Explicit runway BACKTRACK must be exactly one continuous, straight
+  // line BETWEEN the user's chosen entry/exit taxiway stations.
+  // The old graph can attach a selected holding bar to an intermediate
+  // runway sample near a different named taxiway (e.g. G instead of J).
+  // A mathematically straight path through those old samples is still
+  // misleading if the first displayed station is not the J intersection.
+  // Only the visual geometry changes; route permissions and graph stay intact.
+  const tokens=route.taxiways||[];
+  const btIndex=tokens.findIndex(x=>graph.runwayBacktracks?.[upper(x)]);
+  if(axis&&btIndex>0&&btIndex<tokens.length-1){
+    const bt=upper(tokens[btIndex]),entryWay=upper(tokens[btIndex-1]),
+      exitWay=upper(tokens[btIndex+1]),before=graph.taxiways?.[entryWay],
+      after=graph.taxiways?.[exitWay],
+      startNode=before?.exitNode,finishNode=after?.nodes?.[0]||after?.exitNode;
+    const first=startNode&&graph.nodes[startNode],
+      last=finishNode&&graph.nodes[finishNode];
+    const center=runs.filter(x=>x.type==="runway-axis");
+    if(first&&last&&center.length===1){
+      const p=axis.project(first),q=axis.project(last),
+        direction=bt==="BT13R"?-1:1;
+      if(p.rawT>=-.05&&p.rawT<=1.05&&q.rawT>=-.05&&q.rawT<=1.05&&
+         direction*(q.rawT-p.rawT)>.015){
+        const centerRun=center[0],idx=runs.indexOf(centerRun),
+          inbound=runs[idx-1],outbound=runs[idx+1];
+        // Require real mapped transitions immediately adjacent to the BT.
+        if(inbound?.type==="projected-access"&&
+           outbound?.type==="projected-access"&&
+           inbound.nodes[0]===startNode&&
+           outbound.nodes.at(-1)===finishNode){
+          centerRun.coordinates=[{lat:p.lat,lon:p.lon},{lat:q.lat,lon:q.lon}];
+          inbound.coordinates=[{lat:first.lat,lon:first.lon},
+            {lat:p.lat,lon:p.lon}];
+          outbound.coordinates=[{lat:q.lat,lon:q.lon},
+            {lat:last.lat,lon:last.lon}];
+          centerRun.chartJunctions={from:entryWay,to:exitWay,
+            entryNode:startNode,exitNode:finishNode,
+            originStationMetres:Math.round(p.t*axis.spanMetres),
+            finalStationMetres:Math.round(q.t*axis.spanMetres),
+            graphicOnly:true};
+        }
+      }
+    }
+  }
   for(let i=0;i<runs.length;i++){
     const run=runs[i];if(run.type!=="projected-access")continue;
     // Anchor both ends of every QA connection to its neighbouring
