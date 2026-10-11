@@ -15,7 +15,8 @@ for(const filename of files){
     if(!checked.ok)throw Error(checked.errors.join("\n  - "));
     const instance=engine.create(config),d=instance.destinations();
     if(config.enabled!==true)throw Error("Graph valid but enabled is not true: keep disabled until QA signed off");
-    if(config.source.reviewStatus==="NOT REVIEWED")throw Error("Source was not reviewed");
+    if(config.source.reviewStatus!=="SIM_QA_REVIEWED")
+      throw Error("Source must be explicitly marked SIM_QA_REVIEWED after source review");
     console.log("PASS "+config.airport+" "+config.cycle+" nodes="+
       Object.keys(config.nodes).length+" edges="+config.edges.length+
       " stands="+d.stands.length+" runway designators="+d.runways.length);
