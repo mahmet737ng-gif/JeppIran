@@ -1,7 +1,7 @@
 /* JEPPIRAN TAXI preview · verified graphs only · NOT FOR ACTUAL NAVIGATION */
 (function(){
 "use strict";
-const ns="http://www.w3.org/2000/svg", taxi={graphRequest:null,active:false,trace:false,startSelect:false,testStart:null,airport:"",graph:null,standReference:null,selectedStand:"",showStands:false,showNetwork:false,route:null,manual:new Map(),prompted:"",networkAudit:null,networkOpen:false,highlightTaxiway:"",insGroups:null,standGroupAudit:null,standGroupOpen:false};
+const ns="http://www.w3.org/2000/svg", taxi={auto:null,graphRequest:null,active:false,trace:false,startSelect:false,testStart:null,airport:"",graph:null,standReference:null,selectedStand:"",showStands:false,showNetwork:false,route:null,manual:new Map(),prompted:"",networkAudit:null,networkOpen:false,highlightTaxiway:"",insGroups:null,standGroupAudit:null,standGroupOpen:false};
 const $=id=>document.getElementById(id);
 const name=s=>String(s||"").trim().toUpperCase().replace(/\s+/g," ");
 function parse(raw){
@@ -14,6 +14,14 @@ function parse(raw){
     const stand=t=>{const k=t.replace(/^(ST|P)/,"");
       return taxi.graph.stands[k]?k:(/^D\d+$/.test(k)&&taxi.graph.stands[k.slice(1)]?k.slice(1):null)};
     if(tokens.length===1&&stand(tokens[0]))return {kind:"stand",destination:stand(tokens[0])};
+    const runwayToken=t=>/^(?:RWY)?(?:13R|13L|31R|31L)$/.test(t)||
+      /^RUNWAY(?:13R|13L|31R|31L)$/.test(t);
+    if(tokens.length===1&&runwayToken(tokens[0]))
+      return {kind:"auto",destination:tokens[0]};
+    if(tokens.length===2&&stand(tokens[0])&&runwayToken(tokens[1]))
+      return {kind:"auto",startStand:stand(tokens[0]),destination:tokens[1]};
+    if(tokens.length===3&&tokens[0]==="RUNWAY"&&runwayToken(tokens[1])&&stand(tokens[2]))
+      return {kind:"auto",destination:stand(tokens[2])};
     const startStand=tokens.length>1?stand(tokens[0]):null;if(startStand)tokens.shift();
     const destination=tokens.length?stand(tokens[tokens.length-1]):null;if(destination)tokens.pop();
     const taxiways=[],stops=[];
@@ -420,7 +428,8 @@ async function fetchGraph(icao){
     if(icao==="OIMM"){
       taxi.standReference={stands:d.stands,airport:icao,source:d.source};
       $("taxiQaStands").textContent="STANDS (34)";
-      $("taxiQaInput").placeholder="ST109 J BT13R H · ST113 A BT31L D";
+      $("taxiQaInput").placeholder="ST109 · 13R · ST113 31L · ST109 J BT13R H";
+      fillOimmQuickDestinations(d);
       message("OIMM · 34 stands · 18 taxiways · Jeppesen 10-9 / 10-9B. Explicit backtracks: ST109 J BT13R H or ST113 A BT31L D. PARKING opens the detail chart.");
       draw();return d;
     }
@@ -455,6 +464,19 @@ function openAdc(){
   const c=overview();if(!c){message("ADC overview not found",true);return}
   if(Number(selectedChart?.page)!==Number(c.page))selectChart(c);
 }
+function fillOimmQuickDestinations(graph){
+  const row=$("taxiQaAutoRow"),select=$("taxiQaAutoDestination");
+  if(!row||!select)return;
+  row.hidden=false;
+  const runwayOptions=["13R","31L","13L","31R"].map(id=>{
+    const ok=!!window.JEPPIRAN_TAXI_AUTO?.goal(graph,id).node;
+    return '<option value="'+id+'"'+(ok?'':' disabled')+'>RWY '+id+
+      (ok?' · HOLD SHORT':' · NOT MAPPED')+'</option>';
+  }).join("");
+  select.innerHTML='<option value="">Choose a destination (live position or SET START)</option>'+
+    runwayOptions+Object.keys(graph.stands).sort((a,b)=>Number(a)-Number(b))
+      .map(id=>'<option value="ST'+id+'">STAND '+id+'</option>').join("");
+}
 function view(){
   if($("taxiQaPanel"))return;
   const panel=document.createElement("section");
@@ -464,6 +486,7 @@ function view(){
     '<button id="taxiQaClose" type="button" aria-label="Close taxi panel">×</button></div>'+
     '<label for="taxiQaInput">Stand STD3 T5 N2 · Hold /N2 · Procedure 34L2A</label>'+
     '<div class="taxi-qa-entry"><input id="taxiQaInput" autocomplete="off" spellcheck="false" placeholder="Stand / taxiways / procedure"><button id="taxiQaGo" type="button">GO</button></div>'+
+    '<div id="taxiQaAutoRow" class="taxi-qa-entry" hidden><select id="taxiQaAutoDestination" aria-label="Select stand or runway hold" style="min-width:0;width:100%;background:#112c45;color:#e6f7ff;border:1px solid #467c9a;border-radius:10px;padding:10px;font-size:14px"></select></div>'+
     '<div id="taxiQaRoutePreview" class="taxi-route-preview" hidden aria-label="Mapped taxiway segment preview"></div>'+
     '<div id="taxiQaStatus" role="status" aria-live="polite"></div>'+
     '<details id="taxiQaStatusDetails" class="taxi-status-details" hidden><summary>Pushback details / full message</summary><div id="taxiQaFullMessage"></div></details>'+
@@ -491,6 +514,10 @@ function view(){
   };
   $("taxiQaToolsBtn").onclick=()=>setToolsOpen(!panel.classList.contains("tools-expanded"));
   $("taxiQaGo").onclick=go;
+  $("taxiQaAutoDestination").addEventListener("change",()=>{
+    const value=$("taxiQaAutoDestination").value;
+    if(value)$("taxiQaInput").value=value;
+  });
   $("taxiQaInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();go()}};
   $("taxiQaAdc").onclick=openAdc;
   $("taxiQaNetworkBtn").onclick=()=>{
@@ -579,7 +606,7 @@ function view(){
     const p=currentManual();p.points.pop();p.holds=p.holds.filter(i=>i<p.points.length);draw();
   };
   $("taxiQaClear").onclick=()=>{
-    taxi.route=null;taxi.manual.delete(Number(selectedChart?.page));taxi.trace=false;taxi.testStart=null;taxi.startSelect=false;
+    taxi.auto=null;taxi.route=null;taxi.manual.delete(Number(selectedChart?.page));taxi.trace=false;taxi.testStart=null;taxi.startSelect=false;
     $("taxiQaStart").classList.remove("on");$("taxiQaStart").setAttribute("aria-pressed","false");
     $("taxiQaTrace").classList.remove("on");draw();message("Cleared.");
   };
@@ -592,7 +619,7 @@ function toggle(on){
   if(on){
     $("taxiQaAirport").textContent=selectedAirport;
     updateAirportControls();
-    if(taxi.airport!==selectedAirport){taxi.airport=selectedAirport;taxi.route=null;taxi.testStart=null;loadGraph(selectedAirport);loadStandReference(selectedAirport);loadNetworkAudit(selectedAirport);loadStandGroups(selectedAirport);}
+    if(taxi.airport!==selectedAirport){taxi.airport=selectedAirport;taxi.route=null;taxi.auto=null;taxi.testStart=null;loadGraph(selectedAirport);loadStandReference(selectedAirport);loadNetworkAudit(selectedAirport);loadStandGroups(selectedAirport);}
     $("taxiQaInput").focus();
   }
   renderNetworkAudit();renderStandGroupPanel();draw();
@@ -619,7 +646,7 @@ function nearest(graph,pos,firstTaxiway=null){
 }
 function syncAirport(){
   if(!taxi.active||taxi.airport===selectedAirport)return;
-  taxi.airport=selectedAirport;taxi.graph=null;taxi.route=null;taxi.testStart=null;taxi.prompted="";
+  taxi.airport=selectedAirport;taxi.graph=null;taxi.route=null;taxi.auto=null;taxi.testStart=null;taxi.prompted="";
   taxi.networkAudit=null;taxi.highlightTaxiway="";
   $("taxiQaAirport").textContent=selectedAirport;
   updateAirportControls();
@@ -633,9 +660,48 @@ function updateAirportControls(){
   const oimm=selectedAirport==="OIMM";
   $("taxiQaOimmParking").hidden=!oimm;$("taxiQaOimmNetwork").hidden=!oimm;
   $("taxiQaNetworkBtn").hidden=oimm;
+  if($("taxiQaAutoRow"))$("taxiQaAutoRow").hidden=!oimm;
+  if(oimm&&taxi.graph)fillOimmQuickDestinations(taxi.graph);
   document.querySelector('label[for="taxiQaInput"]').textContent=oimm?
     "Mashhad: ST109 J BT13R H · ST113 A BT31L D · 114 (stand)":
     "LTFM example: A4 A A7 B B8A · Hold: /B8A · 34L2A format";
+}
+// AUTO requires an actual start (simulator/device/SET START) or an explicit
+// stand. It NEVER silently guesses a departure point on a taxiway.
+function oimmAutoGo(p){
+  const engine=window.JEPPIRAN_TAXI_AUTO;
+  if(!engine){message("AUTO routing module not loaded. Reload this PWA.",true);return}
+  const explicitStart=p.startStand&&taxi.graph.stands[p.startStand];
+  const actual=taxi.testStart||lastPosition;
+  if(!explicitStart&&!actual){
+    const place=engine.goal(taxi.graph,p.destination);
+    if(place.kind==="stand"){
+      taxi.selectedStand=place.name.slice(2);taxi.showStands=true;
+      $("taxiQaStands").classList.add("on");draw();
+    }
+    message("Select SIMULATOR / DEVICE POSITION, use SET START, or enter a start stand (ST113 13R). No departure point has been assumed.",true);
+    return;
+  }
+  const result=engine.route(taxi.graph,{destination:p.destination,
+    startStand:p.startStand,position:explicitStart?null:actual});
+  if(!result.route){message(result.error,true);return}
+  const preview=!!explicitStart||!!taxi.testStart&&!lastPosition;
+  const r={...result.route,airport:"OIMM",previewOnly:preview,
+    startStand:p.startStand||null};
+  taxi.route=r;
+  taxi.auto={target:result.target,route:r,monitor:{count:0,last:0},
+    airport:"OIMM",previewOnly:preview};
+  if(result.target.kind==="stand"){
+    taxi.selectedStand=result.target.name.slice(2);
+    taxi.showStands=true;$("taxiQaStands").classList.add("on");
+  }
+  const from=explicitStart?"ST"+p.startStand+" → ":"POSITION → ";
+  const routeNames=result.route.taxiways.join(" → ")||"CONNECTED APRON CENTRELINE";
+  message((preview?"CHART PREVIEW":"LIVE AUTO ROUTE")+" · "+from+routeNames+
+    " → "+result.target.name+" · "+result.route.length+" m"+
+    (result.target.warning?" · "+result.target.warning:"")+
+    " · GRAPH ONLY, NOT ATC TAXI CLEARANCE.");
+  draw();
 }
 function oimmGo(p,options){
   const g=taxi.graph,ways=p.taxiways||[],stand=g.stands[p.destination];
@@ -716,7 +782,7 @@ function go(options={}){
   if(p.error){message(p.error,true);return}
   taxi.trace=false;$("taxiQaTrace").classList.remove("on");
   // Never leave an old route on the ADC after a new route fails validation.
-  taxi.route=null;draw();
+  taxi.route=null;taxi.auto=null;draw();
   if(p.kind==="publishedStand"){
     message(publishedStandMessage(p.destination)||"This stand has no approved digitized pushback geometry.",true);
     return;
@@ -735,7 +801,13 @@ function go(options={}){
     }else message("Parsed "+p.kind+". No verified taxiway + stand connector network for "+selectedAirport+"; automatic routing is disabled.",true);
     return;
   }
-  if(taxi.airport==="OIMM"){oimmGo(p,options);return}
+  if(taxi.airport==="OIMM"){
+    if(p.kind==="stand"&&p.destination){
+      oimmAutoGo({kind:"auto",destination:p.destination});return;
+    }
+    if(p.kind==="auto"){oimmAutoGo(p);return}
+    oimmGo(p,options);return
+  }
   if(p.kind==="sequence"){
     const nameConflict=p.taxiways.find(n=>taxi.networkAudit?.taxiways?.[n]?.chartTokenSeen===false);
     if(nameConflict){
@@ -1224,7 +1296,33 @@ function chartHint(){
 }
 window.JEPPIRAN_TAXI={open:openTaxi,parse,openAdc,draw,routeDeviationMeters};
 window.addEventListener("jeppiran-chart-rendered",()=>{draw();chartHint()});
-window.addEventListener("jeppiran-position",chartHint);
+function monitorOimmAuto(e){
+  chartHint();
+  const state=taxi.auto,pos=e?.detail;
+  if(!taxi.active||taxi.airport!=="OIMM"||!state||state.previewOnly||
+     !taxi.graph||!pos||taxi.route!==state.route)return;
+  const engine=window.JEPPIRAN_TAXI_AUTO;
+  if(!engine)return;
+  // At the target hold/stand, stop monitoring, rather than proposing an
+  // unauthorized movement after reaching the end of the planned segment.
+  const finish=taxi.graph.nodes[state.target.node];
+  if(finish&&engine.metres(finish,pos)<20){
+    state.monitor.count=0;return;
+  }
+  const change=engine.reroute(taxi.graph,state,pos);
+  if(change.action==="replanned"){
+    taxi.route={...change.route,airport:"OIMM",previewOnly:false};
+    taxi.auto={target:state.target,route:taxi.route,monitor:state.monitor,
+      airport:"OIMM",previewOnly:false};
+    message("AUTO RE-ROUTE · New connected route: "+taxi.route.taxiways.join(" → ")+
+      " → "+state.target.name+" · "+taxi.route.length+
+      " m. Recheck ATC clearance; runway crossing still prohibited.");
+    draw();
+  }else if(change.action==="unmapped"){
+    message("OFF ROUTE · "+change.error+" Existing route is not an authorized clearance.",true);
+  }
+}
+window.addEventListener("jeppiran-position",monitorOimmAuto);
 // The chart toolbar owns the TAXI button and opens this API after the script
 // loads. Do not attach a second listener: its button may be rebuilt mid-render.
 })();
