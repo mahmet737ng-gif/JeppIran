@@ -3,6 +3,8 @@ on:
   pull_request:
     paths:
       - 'web/taxi-mode.js'
+      - 'web/taxi-auto-router.js'
+      - 'tests/oimm-taxi-auto.test.cjs'
       - 'tests/oimm-taxi.test.cjs'
       - 'web/data/taxi-networks/OIMM.json'
       - '.github/workflows/oimm-taxi-tests.yml'
@@ -10,6 +12,8 @@ on:
     branches: [main]
     paths:
       - 'web/taxi-mode.js'
+      - 'web/taxi-auto-router.js'
+      - 'tests/oimm-taxi-auto.test.cjs'
       - 'tests/oimm-taxi.test.cjs'
       - 'web/data/taxi-networks/OIMM.json'
       - '.github/workflows/oimm-taxi-tests.yml'
@@ -27,6 +31,10 @@ jobs:
       - name: JavaScript syntax
         run: |
           node --check web/taxi-mode.js
+          node --check web/taxi-auto-router.js
           node --check tests/oimm-taxi.test.cjs
+          node --check tests/oimm-taxi-auto.test.cjs
       - name: Stand connectivity, explicit runway authorization and pending-load QA
-        run: node tests/oimm-taxi.test.cjs
+        run: |
+          node tests/oimm-taxi.test.cjs
+          node tests/oimm-taxi-auto.test.cjs

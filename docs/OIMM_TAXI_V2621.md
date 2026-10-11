@@ -88,3 +88,38 @@ was not completed. The map overlay itself was rendered and visually reviewed.
 - Adds automated tests for duplicate request prevention, queued route generation,
   cache reuse, and failure without a misleading route. The graph, simulator bridge,
   live position source and original runway authorization gating are unchanged.
+
+## R13 · destination-only shortest connected route and off-route recalculation
+
+This is a simulator-only graph route over the existing OIMM Jeppesen V2621
+geometry; not a flight-validated clearance, NOT FOR ACTUAL NAVIGATION.
+
+- With a live simulator/device ground fix or the TEST START point, type **ST109**
+  to route over existing connected civilian centreline edges to stand 109.
+  No live ground position: only the stand can be marked (no invented origin).
+- **13R** / **RWY 13R** resolves to the graph's existing J holding point,
+  **31L** resolves to the existing A holding point, as indicated by the
+  corresponding existing explicit BT13R/BT31L starts. These are **HOLD SHORT**
+  routes, **NOT runway threshold or takeoff-position routes**. RWY 13L and 31R
+  have no individually reviewed entry/hold goal in this network and are
+  intentionally refused.
+- **ST113 13R** previews a route from a known stand to the J holding point.
+  Drop-down destinations include all 34 stands and only mapped runway holds.
+- AUTO traverses only existing source-attributed graph edges; it excludes
+  military segments, closed segments, all runway edges, unmapped transitions,
+  and intermediate stand stops. No taxiway-to-runway crossing is inferred
+  from proximity or a published stand's rounded INS coordinate.
+- While a live AUTO route is active, consecutive accurate ground positions
+  more than 45 m off the existing path trigger shortest-path recalculation
+  (cooldown 3 seconds). Snap-to-graph must be <=65 m, accuracy <=35 m and
+  ground speed <=23 m/s. If mapping is ambiguous/out of range, the app reports
+  the gap rather than drawing a speculative replacement. Explicit manual
+  sequences remain fixed, never silently rewritten.
+- Simulator bridge and flight-position transport are unchanged.
+
+A landing aircraft still on an unmapped runway cannot safely be assigned a
+runway-exit connector: taxi suggestions begin only when its real position
+is sufficiently near an already drawn ground-centreline node. For full
+runway-to-stand coverage, published RWY 13L/31R exit and threshold geometry,
+explicit holds, intersections and access constraints must be reviewed and
+digitized before being promoted to routeable graph edges.
