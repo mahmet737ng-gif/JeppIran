@@ -176,3 +176,41 @@ runway gates, stand endpoints or unpublished taxi junctions.
 - Native Android currently uses its own OIMM Kotlin implementation.
   The JSON contract can be reused to build a Kotlin adapter later; this
   release does NOT silently claim Android parity or change its bridge.
+
+## Airport onboarding and audit (reusable across every ICAO)
+
+The generic engine is shared; no new JavaScript router should be authored for
+each airport. After creating the inactive network with
+`node scripts/taxi-engine/new-airport.cjs ICAO CYCLE`, digitize real
+source-provenance WGS84 nodes, geometry for every stand lead-in and taxiway
+segment, all actual intersections, independent runway axes and held access
+nodes in `web/data/taxi-networks/ICAO.json`.
+
+Run a **draft audit at any stage**:
+
+```powershell
+node scripts/taxi-engine/audit-airport.cjs OISS
+```
+
+Its machine-readable report includes graph validation issues, runway source
+gaps, individual stand and runway coverage counts, and sampled automatic
+stand-to-stand / stand-to-runway connectivity. A route marked `connected:false`
+means its existing source graph has a gap: **do not connect endpoints based on
+physical closeness alone**.
+
+When the real chart-source graph is complete, run the publication gate:
+
+```powershell
+node scripts/taxi-engine/audit-airport.cjs OISS --strict
+node scripts/taxi-engine/validate.cjs web/data/taxi-networks/OISS.json
+node tests/taxi-engine.test.cjs
+node tests/taxi-engine-onboarding.test.cjs
+```
+
+Strict mode refuses to pass until the graph is structurally valid,
+`enabled:true`, and source status is `SIM_QA_REVIEWED`. A successful
+sample audit is **not** a declaration that every stand and runway is mapped;
+review all stand/exit pairs and the original ADC overlays before enabling.
+The reusable PWA loader then discovers the new ICAO data without new
+airport-specific UI handlers. Android remains a separate implementation
+and must not be claimed updated by this web/Node-only feature.
