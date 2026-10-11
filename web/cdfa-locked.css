@@ -1,4 +1,4 @@
-/* JEPPIRAN CDFA_SIDE_TABLE_V1 — owner-approved locked layout.
+/* JEPPIRAN CDFA_SIDE_TABLE_V1.1 — owner-approved locked layout.
    Do not change without explicit owner approval. Never write into PDF canvas. */
 #chartsView .jp-cdfa-workspace{display:none;flex:1 1 auto;min-width:0;min-height:0;width:100%;overflow:hidden}
 #chartsView.chart-open .jp-cdfa-workspace{display:flex;flex-direction:row;align-items:stretch}
@@ -12,10 +12,10 @@
  width:clamp(155px,12vw,208px);height:100%;min-height:0;
  overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;
  border-left:2px solid #161616;background:#fff;color:#000;
- padding:12px 8px 16px;scrollbar-width:thin;
+ padding:clamp(50px,12vh,108px) 8px 24px;scrollbar-width:thin;
 }
 #chartsView .jp-cdfa-table{width:100%;border-collapse:collapse;table-layout:fixed;
- color:inherit;font-family:Arial,"Segoe UI",sans-serif;font-variant-numeric:tabular-nums}
+ background:#000;color:#fff;font-family:Arial,"Segoe UI",sans-serif;font-variant-numeric:tabular-nums}
 #chartsView .jp-cdfa-table th,#chartsView .jp-cdfa-table td{
  border:1.5px solid currentColor;padding:7px 3px;text-align:center;
  font-size:clamp(16px,1.2vw,21px);font-weight:800;line-height:1.12;
@@ -28,10 +28,21 @@
 #chartsView .jp-cdfa-vdp-row td{font-weight:900}
 #chartsView .jp-cdfa-qa-note{font:600 10px/1.35 Arial,sans-serif;margin:9px 1px 0;
  text-align:center;color:inherit;opacity:.82}
-:root:not(.light) #chartsView .jp-cdfa-side{background:#000;color:#fff;border-left-color:#fff}
+/* The page theme is not chart inversion. Keep the blank chart gutter WHITE
+   even while the application's navigation chrome uses the dark theme. */
+:root:not(.light) #chartsView .jp-cdfa-side,
 :root.light #chartsView .jp-cdfa-side{background:#fff;color:#000;border-left-color:#000}
+/* Only invert the gutter and the table when the CHART itself is inverted. */
+body.chart-inverted #chartsView .jp-cdfa-side,
+#chartsView .jp-cdfa-side.jp-cdfa-inverted{
+ background:#000;color:#fff;border-left-color:#fff
+}
+body.chart-inverted #chartsView .jp-cdfa-table,
+#chartsView .jp-cdfa-side.jp-cdfa-inverted .jp-cdfa-table{
+ background:#fff;color:#000
+}
 @media(max-width:670px){
- #chartsView .jp-cdfa-side{flex-basis:142px;width:142px;padding:6px 3px}
+ #chartsView .jp-cdfa-side{flex-basis:142px;width:142px;padding:44px 3px 16px}
  #chartsView .jp-cdfa-table th,#chartsView .jp-cdfa-table td{font-size:16px;padding:7px 1px}
 }
 body.viewer-fullscreen #chartsView.chart-open .jp-cdfa-workspace{

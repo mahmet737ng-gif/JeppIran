@@ -3836,16 +3836,19 @@ private val locationPermissionLauncher =
         }
 
         if (cdfaSidebarVisible) {
-            val table = CdfaQaDialog.createPanel(this, currentChartGlobalPage(), currentIcao)
+            val table = CdfaQaDialog.createPanel(this, currentChartGlobalPage(), currentIcao, invertChart)
             if (table != null) {
                 cdfaSidebar = table
+                // Insert behind the toolbar so the WHITE gutter extends above and below
+                // the black table without covering any chart-viewer controls.
                 root.addView(
                     table,
+                    1,
                     FrameLayout.LayoutParams(
                         cdfaSidebarWidth(),
                         FrameLayout.LayoutParams.MATCH_PARENT,
                         Gravity.END or Gravity.TOP
-                    ).apply { topMargin = 94.dp }
+                    )
                 )
             } else {
                 cdfaSidebarVisible = false

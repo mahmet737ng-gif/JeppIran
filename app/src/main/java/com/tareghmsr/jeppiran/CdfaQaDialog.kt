@@ -103,16 +103,18 @@ object CdfaQaDialog {
             }
         }
 
-    fun createPanel(context: Context, page: Int, icao: String): ScrollView? {
+    fun createPanel(context: Context, page: Int, icao: String, inverted: Boolean = false): ScrollView? {
         val record = find(context, page, icao) ?: return null
-        val dark = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK ==
-            Configuration.UI_MODE_NIGHT_YES
-        val bg = if (dark) Color.BLACK else Color.WHITE
-        val fg = if (dark) Color.WHITE else Color.BLACK
+        // Only the TABLE is black. The outside chart margin stays paper white.
+        // Actual chart inversion reverses both surfaces, independently of UI dark mode.
+        val bg = if (inverted) Color.WHITE else Color.BLACK
+        val fg = if (inverted) Color.BLACK else Color.WHITE
+        val gutterBg = if (inverted) Color.BLACK else Color.WHITE
+        val gutterFg = if (inverted) Color.WHITE else Color.BLACK
         val body = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dp(context, 5), dp(context, 12), dp(context, 5), dp(context, 12))
-            setBackgroundColor(bg)
+            setPadding(dp(context, 5), dp(context, 106), dp(context, 5), dp(context, 24))
+            setBackgroundColor(gutterBg)
         }
         body.addView(label(context, "CDFA DATA", 19f, fg, bg),
             LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
@@ -136,12 +138,12 @@ object CdfaQaDialog {
             textSize = 10f
             typeface = Typeface.DEFAULT_BOLD
             gravity = Gravity.CENTER
-            setTextColor(fg)
+            setTextColor(gutterFg)
             setPadding(dp(context, 2), dp(context, 10), dp(context, 2), dp(context, 4))
         }
         body.addView(notice)
         return ScrollView(context).apply {
-            setBackgroundColor(bg)
+            setBackgroundColor(gutterBg)
             isFillViewport = false
             isVerticalScrollBarEnabled = true
             addView(body, ViewGroup.LayoutParams(

@@ -13,6 +13,14 @@ test('locked CDFA table renders next to PDF rather than over it',()=>{
  assert.match(js,/right:'VDP'/);
  assert.doesNotMatch(js,/pdfCanvas|chartTransformLayer|createElement\('canvas'\)/);
  assert.match(css,/flex:1 1 0/);
- assert.match(css,/:root\.light .*jp-cdfa-side/);
- assert.match(css,/:root:not\(\.light\) .*jp-cdfa-side/);
+ assert.match(css,/:root\.light #chartsView \.jp-cdfa-side\{background:#fff;color:#000/);
+ assert.match(css,/:root:not\(\.light\) #chartsView \.jp-cdfa-side/);
+ assert.match(css,/#chartsView \.jp-cdfa-table\{[\s\S]*?background:#000;color:#fff/);
+ assert.match(css,/body\.chart-inverted #chartsView \.jp-cdfa-table/);
+ const native=read('app/src/main/java/com/tareghmsr/jeppiran/CdfaQaDialog.kt');
+ const viewer=read('app/src/main/java/com/tareghmsr/jeppiran/PdfViewerActivity.kt');
+ assert.match(native,/val gutterBg = if \(inverted\) Color\.BLACK else Color\.WHITE/);
+ assert.match(native,/val bg = if \(inverted\) Color\.WHITE else Color\.BLACK/);
+ assert.match(viewer,/CdfaQaDialog\.createPanel\(this, currentChartGlobalPage\(\), currentIcao, invertChart\)/);
+ assert.doesNotMatch(css,/#chartsView \.jp-cdfa-side\{background:#000;color:#fff/);
 });
