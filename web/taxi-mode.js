@@ -8,7 +8,9 @@ function parse(raw){
   const s=name(raw);
   if(!s)return {error:"Enter a stand, taxiway sequence or published procedure"};
   if(taxi.airport==="OIMM"&&taxi.graph){
-    const tokens=s.replace(/STAND\s*/g,"ST").replace(/[,→>]+/g," ").split(/\s+/).filter(Boolean);
+    const tokens=s.replace(/STAND\s*/g,"ST")
+      .replace(/\b(RWY|RUNWAY)\s+(?=[0-3][0-9][LRC]?\b)/g,"$1")
+      .replace(/[,→>]+/g," ").split(/\s+/).filter(Boolean);
     // In Mashhad, STD109 is a common slip for ST109; preserve STD3 for
     // airports that actually have letter-prefixed stand D3.
     const stand=t=>{const k=t.replace(/^(ST|P)/,"");
@@ -41,6 +43,19 @@ function parse(raw){
       runwayDestination=window.JEPPIRAN_OIMM_RUNWAY_GOALS?.canon(tokens.pop())||
         tokens.at(-1);
       if(["RWY","RUNWAY"].includes(tokens.at(-1)))tokens.pop();
+    }
+    // In a multi-leg command, e.g. ST115 J 13R H 13L, 13R is a
+    // backtrack segment and the final 13L remains the runway destination.
+    // Use the airport's actual BT index; do not invent a runway link.
+    const normalizeRunway=window.JEPPIRAN_TAXI_ENGINE?.intermediateRunway;
+    for(let i=0;i<tokens.length;i++){
+      const raw=tokens[i];
+      if(!/^(?:(?:RWY|RUNWAY))?(?:13R|13L|31R|31L)$/.test(raw))continue;
+      const segment=normalizeRunway?
+        normalizeRunway(raw,taxi.graph):
+        {error:"Runway shorthand engine unavailable; reload the application"};
+      if(segment.error)return {error:segment.error};
+      tokens[i]=segment.label;
     }
     const taxiways=[],stops=[];
     for(const t of tokens){
