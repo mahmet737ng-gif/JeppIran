@@ -67,7 +67,7 @@ for(const input of ['ST109 Q BT31L D','ST109 Q BT13R H','ST109 B BT31L D']){
  const routeGraph=t.taxi.route.graph;
  const spec=t.taxi.route.runwayRender;
  assert(spec&&spec.runway.length>0,input+' must traverse non-projected runway axis edges');
- const exitWay=input.trim().split(/\\s+/).at(-1);
+ const exitWay=input.trim().split(" ").at(-1);
  assert(spec.runs.some(x=>x.type==='taxiway'&&x.way===exitWay&&
    x.nodes.at(-1)===(graph.taxiways[exitWay].nodes?.at(-1)||graph.taxiways[exitWay].exitNode)),
    input+' must finish all the way through '+exitWay+', not stop at its first node');
