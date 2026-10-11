@@ -1,7 +1,7 @@
 'use strict';
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { buildTable, round20, gradientForAngle, horizontalDistanceFromDme } = require('../cdfa-engine.js');
+const { buildTable, round20, gradientForAngle, horizontalDistanceFromDme } = require('../web/cdfa-engine.js');
 const base = () => ({
   chartId: 'TRAINING-ONLY', chartDmeId: 'DEMO',
   thresholdElevationFt: 100, tchFt: 50, angleDeg: 3,
@@ -180,7 +180,7 @@ test('disagreeing chart angle properties require correction', () => {
 test('v1.2: automatic table extends to both 10 NM from runway threshold and DME 10', () => {
   const c=base(); c.dmeReadingsNm=[1,2,3,10]; c.validAngleDmeRange={from:1,to:10};
   const r=buildTable(c);
-  assert.equal(r.version,'1.5.0');
+  assert.equal(r.version,'1.6.0');
   assert.equal(r.coverage.requiredThresholdDistanceNm,10);
   assert.equal(r.coverage.requiredDmeReadoutNm,10);
   assert.equal(r.coverage.dmeAtRequiredThresholdNm,10.5);
@@ -357,7 +357,7 @@ test('v1.4: height conflicts remain blocked when airport fallback is used',()=>{
 });
 
 // v1.5: chart header determines PROCEDURE navaid; DME is independent distance aid.
-const { identifyProcedureReference } = require('../cdfa-engine.js');
+const { identifyProcedureReference } = require('../web/cdfa-engine.js');
 test('v1.5: NDB source header resolves navaid, not a VOR', () => {
  assert.deepEqual(identifyProcedureReference('NDB ABD 210'),{type:'NDB',id:'ABD',frequency:210,unit:'kHz',source:'VISUALLY_TRANSCRIBED_CHART_HEADER'});
  assert.equal(identifyProcedureReference('NDB ABM 285').type,'NDB');
@@ -389,4 +389,37 @@ test('v1.5: DME source must match station id, cannot borrow another navaid',()=>
 test('v1.5: heading not read or ambiguous fails closed',()=>{
  assert.throws(()=>identifyProcedureReference('NDB ABM 285 VOR ABD 115.1'),/AMBIGUOUS/);
  assert.throws(()=>identifyProcedureReference('NDB only'),/NOT_FOUND/);
+});
+
+
+test('v1.6: TCH defaults to 50 ONLY when absent; zero remains a valid explicitly published TCH',()=>{
+ const a=base(); delete a.tchFt; const r=buildTable(a);
+ assert.equal(r.parameters.tchFt,50); assert.equal(r.parameters.tchSource,'DEFAULT_ASSUMED_50_FT_QA');
+ assert.ok(r.rows[0].reasons.includes('DEFAULT_50_FT_TCH_ASSUMED_NOT_PUBLISHED'));
+ const b=base(); b.tchFt=0; const t=buildTable(b); assert.equal(t.parameters.tchFt,0); assert.equal(t.parameters.tchSource,'PUBLISHED_CHART_VALUE');
+});
+test('v1.6: Mandatory altitude intersection stops table BEFORE 10 miles, but does not move the chart D10 mandatory fix',()=>{
+ const c=base();c.chartId='OIGG-DIAGNOSTIC'; c.thresholdElevationFt=-51;c.tchFt=50;
+ c.station.offsetNm=1.2232704402515724; c.publishedConstraints=[
+ {dmeNm:5,altitudeFt:1200,type:'minimum'}, {dmeNm:10,altitudeFt:1300,type:'mandatory'}];
+ c.mandatoryStopMode='calculated_altitude_intercept';
+ const r=buildTable(c);
+ assert.equal(r.coverage.mandatoryAltitudeStop.calculatedIntersectionDmeDisplay,'D5.3');
+ assert.equal(r.coverage.mandatoryAltitudeStop.publishedFixDmeNm,10);
+ assert.deepEqual(r.rows.map(x=>x.dmeNm),[2,3,4,5]);
+ assert.equal(r.coverage.mandatoryStopOverridesTenNmDisplayRequirement,true);
+ assert.equal(r.status,'BLOCKED_BY_QA');
+ assert.ok(r.issues.some(x=>x.code==='MANDATORY_ALTITUDE_CONFLICT'));
+ assert.equal(r.candidateRows.length,0);
+});
+test('v1.6: requesting mandatory intersection without a published mandatory fix is rejected',()=>{
+ const c=base();c.mandatoryStopMode='calculated_altitude_intercept';
+ assert.throws(()=>buildTable(c),/MANDATORY_FIX_REQUIRED/);
+});
+test('v1.6: D13 and D15 extension are integer-DME grids, angle remains the chart value',()=>{
+ const c=base();c.publishedAngleDeg=3.03;delete c.angleDeg;c.minimumDmeCoverageNm=15;
+ const r=buildTable(c);assert.ok(r.rows.some(x=>x.dmeNm===15));
+ assert.ok(r.rows.every(x=>Number.isInteger(x.dmeNm)));
+ assert.equal(r.parameters.angleDeg,3.03);
+ assert.ok(r.rows.find(x=>x.dmeNm===15).reasons.includes('OUTSIDE_PUBLISHED_ANGLE_SCOPE'));
 });
