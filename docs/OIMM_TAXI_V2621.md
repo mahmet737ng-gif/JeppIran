@@ -123,3 +123,39 @@ is sufficiently near an already drawn ground-centreline node. For full
 runway-to-stand coverage, published RWY 13L/31R exit and threshold geometry,
 explicit holds, intersections and access constraints must be reviewed and
 digitized before being promoted to routeable graph edges.
+
+## Native Android graph parity (OIMM / V2621) · 2026-10-11
+
+- `app/src/main/java/com/tareghmsr/jeppiran/OimmTaxiRouter.kt`
+  uses exactly the same chart-sourced `web/data/taxi-networks/OIMM.json` that the
+  Web/PWA uses; the Android Gradle asset source set bundles it offline.
+  The source SHA and chart cycle must match. No second Android geometry source
+  is fabricated.
+- Android TAXI entry now offers all 34 individually printed stands and the
+  existing 13R and 31L hold-short goals. Text such as `ST109`, `13R` and
+  `ST113 13R` is recognized. A live simulator or sufficiently accurate
+  device-GPS fix is required for destination-only routing. Named stand start
+  is a preview, not a published pushback clearance.
+- The mapped route is painted as a restrained translucent magenta line inside
+  the native PDF canvas on OIMM layouts **601 (ADC)** and **603 (parking detail)**,
+  respecting native zoom, pan and source-matched georeferencing. No taxi
+  overlay is shown on approach plates or charts with invalid georeferences.
+- Native live AUTO path monitoring samples the current position every 1.2 s,
+  requiring two consecutive >45 m deviations, sane ground speed / accuracy
+  and a 3 s replanning cooldown. The simulator bridge, selected position
+  source, and its reconnect state are untouched. Explicit manual route
+  expressions remain text-only in native until separately mapped.
+- A stale airport chart cycle, missing position, disconnected graph, or
+  unavailable 13L/31R runway hold is shown as a clear unrouteable state.
+  **Never invent entry/exit taxi links across airport runways or military areas**.
+
+### Remaining source-data gaps
+
+This is graph-connected **simulator QA**, not an AIP-approved aircraft taxi
+clearance. From the supplied chart's current mapped edges, 34 stands connect
+to holding nodes for runway names **13R** and **31L**. Those two goal points
+are NOT runway departure thresholds, and no validated civilian automatic
+`RWY 13L / 31R` stop-point connectors are stored. Landing from an uncharted
+runway exit is therefore not automatically routed to a stand until the
+aircraft has reached an accurately mapped civil taxiway. Do not silently
+treat a nearest-looking apron segment as an approved stand connector.
