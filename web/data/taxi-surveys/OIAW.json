@@ -1,0 +1,252 @@
+{
+  "schemaVersion": 1,
+  "airport": "OIAW",
+  "cycle": "2621",
+  "chart": {
+    "globalPage": 38,
+    "airportPdfPage": 12,
+    "chartNumber": "10-9",
+    "title": "Airport Diagram Chart (ADC)",
+    "source": "Jeppesen terminal chart V2621 10-9, dated 14 JUL 2023",
+    "airportDiagramScale": "not calibrated for taxi centerlines"
+  },
+  "stage": "VISUAL_TOPOLOGY_INVENTORY",
+  "routeGeometryApproved": false,
+  "simulatorOnly": true,
+  "review": {
+    "scannedComponents": [
+      "runway designators",
+      "printed runway length",
+      "taxiway labels A B C D E",
+      "parking inset ST1–ST6",
+      "curved parking leads",
+      "main-runway black strip and isolated parking position"
+    ],
+    "unresolved": [
+      "Original PDF vector centerline data could not be accessed during this pass",
+      "Individual stand WGS84 coordinates are not given (only rounded position groups)",
+      "Hold-short, runway entry and crossing gates require surveyed or chart-validated points",
+      "Inset-to-full-ADC calibration awaits vector map / full PDF geometry"
+    ],
+    "supersedes": "Do not use OIAW.json projected stand/taxiway edges as chart-confirmed routing; they are previous hand-created approximation"
+  },
+  "physicalRunways": [
+    {
+      "id": "12_30",
+      "ends": [
+        "12",
+        "30"
+      ],
+      "lengthMeters": 3397,
+      "recognition": "single bold black runway strip; the white strip alongside is not a second runway",
+      "source": "Jeppesen OIAW 10-9"
+    }
+  ],
+  "taxiways": [
+    {
+      "id": "A",
+      "description": "Main apron taxiway alongside stands 1–6"
+    },
+    {
+      "id": "B",
+      "description": "Leftmost connector toward runway 12"
+    },
+    {
+      "id": "C",
+      "description": "Right apron-side connector"
+    },
+    {
+      "id": "D",
+      "description": "Right apron-side branched connector"
+    },
+    {
+      "id": "E",
+      "description": "Isolated parking position connector; no asserted main-apron link"
+    }
+  ],
+  "stands": [
+    {
+      "id": "1",
+      "label": "ST1",
+      "publishedPositionGroup": "N31 20.7 E048 44.8",
+      "exactCoordinatesKnown": false,
+      "diagram": "PARKING_INSET",
+      "leadStatus": "visible_curve_not_vectorized"
+    },
+    {
+      "id": "2",
+      "label": "ST2",
+      "publishedPositionGroup": "N31 20.6 E048 44.8",
+      "exactCoordinatesKnown": false,
+      "diagram": "PARKING_INSET",
+      "leadStatus": "visible_curve_not_vectorized"
+    },
+    {
+      "id": "3",
+      "label": "ST3",
+      "publishedPositionGroup": "N31 20.6 E048 44.8",
+      "exactCoordinatesKnown": false,
+      "diagram": "PARKING_INSET",
+      "leadStatus": "visible_curve_not_vectorized"
+    },
+    {
+      "id": "4",
+      "label": "ST4",
+      "publishedPositionGroup": "N31 20.6 E048 44.9",
+      "exactCoordinatesKnown": false,
+      "diagram": "PARKING_INSET",
+      "leadStatus": "visible_curve_not_vectorized"
+    },
+    {
+      "id": "5",
+      "label": "ST5",
+      "publishedPositionGroup": "N31 20.6 E048 44.9",
+      "exactCoordinatesKnown": false,
+      "diagram": "PARKING_INSET",
+      "leadStatus": "visible_curve_not_vectorized"
+    },
+    {
+      "id": "6",
+      "label": "ST6",
+      "publishedPositionGroup": "N31 20.5 E048 45.0",
+      "exactCoordinatesKnown": false,
+      "diagram": "PARKING_INSET",
+      "leadStatus": "visible_curve_not_vectorized"
+    }
+  ],
+  "connections": [
+    {
+      "from": "ST1",
+      "to": "A",
+      "kind": "stand_lead",
+      "confidence": "visually_observed",
+      "evidence": "Jeppesen OIAW 10-9 parking inset: black curved parking lead joins common apron taxi centerline",
+      "geometryStatus": "untraced",
+      "notes": "Stand alignment and turn geometry require PDF vector extraction"
+    },
+    {
+      "from": "ST2",
+      "to": "A",
+      "kind": "stand_lead",
+      "confidence": "visually_observed",
+      "evidence": "Jeppesen OIAW 10-9 parking inset: black curved parking lead joins common apron taxi centerline",
+      "geometryStatus": "untraced",
+      "notes": "Stand alignment and turn geometry require PDF vector extraction"
+    },
+    {
+      "from": "ST3",
+      "to": "A",
+      "kind": "stand_lead",
+      "confidence": "visually_observed",
+      "evidence": "Jeppesen OIAW 10-9 parking inset: black curved parking lead joins common apron taxi centerline",
+      "geometryStatus": "untraced",
+      "notes": "Stand alignment and turn geometry require PDF vector extraction"
+    },
+    {
+      "from": "ST4",
+      "to": "A",
+      "kind": "stand_lead",
+      "confidence": "visually_observed",
+      "evidence": "Jeppesen OIAW 10-9 parking inset: black curved parking lead joins common apron taxi centerline",
+      "geometryStatus": "untraced",
+      "notes": "Stand alignment and turn geometry require PDF vector extraction"
+    },
+    {
+      "from": "ST5",
+      "to": "A",
+      "kind": "stand_lead",
+      "confidence": "visually_observed",
+      "evidence": "Jeppesen OIAW 10-9 parking inset: black curved parking lead joins common apron taxi centerline",
+      "geometryStatus": "untraced",
+      "notes": "Stand alignment and turn geometry require PDF vector extraction"
+    },
+    {
+      "from": "ST6",
+      "to": "A",
+      "kind": "stand_lead",
+      "confidence": "visually_observed",
+      "evidence": "Jeppesen OIAW 10-9 parking inset: black curved parking lead joins common apron taxi centerline",
+      "geometryStatus": "untraced",
+      "notes": "Stand alignment and turn geometry require PDF vector extraction"
+    },
+    {
+      "from": "A",
+      "to": "B",
+      "kind": "taxiway_junction",
+      "confidence": "visually_observed",
+      "evidence": "Jeppesen OIAW 10-9 parking inset left junction",
+      "geometryStatus": "untraced"
+    },
+    {
+      "from": "A",
+      "to": "C",
+      "kind": "taxiway_junction",
+      "confidence": "visually_observed",
+      "evidence": "Jeppesen OIAW 10-9 parking inset right junction",
+      "geometryStatus": "untraced"
+    },
+    {
+      "from": "A",
+      "to": "D",
+      "kind": "taxiway_junction",
+      "confidence": "visually_observed",
+      "evidence": "Jeppesen OIAW 10-9 parking inset right branched taxi connector",
+      "geometryStatus": "untraced"
+    }
+  ],
+  "candidateConnections": [
+    {
+      "from": "B",
+      "to": "RWY12/30",
+      "kind": "runway_access",
+      "confidence": "needs_threshold_hold_validation",
+      "evidence": "Jeppesen OIAW 10-9 main ADC and inset: paved connection toward RWY 12",
+      "geometryStatus": "untraced",
+      "notes": "Cannot infer crossing permission or exact holding position"
+    },
+    {
+      "from": "C",
+      "to": "RWY12/30",
+      "kind": "runway_access",
+      "confidence": "needs_threshold_hold_validation",
+      "evidence": "Jeppesen OIAW 10-9 main ADC: access close to ramp",
+      "geometryStatus": "untraced",
+      "notes": "Exact runway interface geometry unresolved"
+    },
+    {
+      "from": "D",
+      "to": "RWY12/30",
+      "kind": "runway_access",
+      "confidence": "needs_threshold_hold_validation",
+      "evidence": "Jeppesen OIAW 10-9 main ADC: gray connector marked D",
+      "geometryStatus": "untraced",
+      "notes": "Holding position unresolved"
+    },
+    {
+      "from": "E",
+      "to": "RWY12/30",
+      "kind": "runway_access",
+      "confidence": "needs_threshold_hold_validation",
+      "evidence": "Jeppesen OIAW 10-9 ADC isolated parking position E",
+      "geometryStatus": "untraced",
+      "notes": "E is separate from main apron; never connect E to A/B/C/D without evidence"
+    }
+  ],
+  "disconnectedComponents": [
+    {
+      "id": "E",
+      "reason": "No observed centerline link from isolated parking spur E to main apron A–D"
+    }
+  ],
+  "geometry": {
+    "coordinateSpace": "NOT_CALIBRATED",
+    "approval": "BLOCKED",
+    "editablePaths": [],
+    "expectedSource": "Trace high-resolution source PDF vector centerlines and parking lead-curves; then transform to chart PDF points; verify at 100% and zoom 200%"
+  },
+  "restrictions": {
+    "disallowStraightLineToNearestTaxiway": true,
+    "disallowImpliedRunwayAccess": true,
+    "disallowPreviewAsRealRoute": true
+  }
+}
