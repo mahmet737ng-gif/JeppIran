@@ -1,0 +1,6523 @@
+{
+  "schemaVersion": 1,
+  "kind": "taxiway-adjacency-cache",
+  "airport": "LTFM",
+  "cycle": "2621",
+  "verifiedForNavigation": false,
+  "simulationOnly": true,
+  "source": "OpenStreetMap contributors",
+  "note": "Junctions require a shared mapped node. No inferred stand links, runway crossings or missing geometry.",
+  "stats": {
+    "namedTaxiways": 131,
+    "chartOnlyLabels": 41,
+    "physicalNodes": 4008,
+    "physicalEdges": 4603
+  },
+  "taxiways": {
+    "A": {
+      "label": "A",
+      "segments": 37,
+      "nodeCount": 38,
+      "lengthMeters": 3642,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7922827345",
+          "lat": 41.2981704,
+          "lon": 28.7114983
+        },
+        {
+          "node": "O5501867325",
+          "lat": 41.2654215,
+          "lon": 28.712158
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A3",
+          "junctions": [
+            {
+              "node": "O6023430539",
+              "lat": 41.2668702,
+              "lon": 28.7121288
+            }
+          ]
+        },
+        {
+          "taxiway": "A3B",
+          "junctions": [
+            {
+              "node": "O6023430539",
+              "lat": 41.2668702,
+              "lon": 28.7121288
+            }
+          ]
+        },
+        {
+          "taxiway": "A4",
+          "junctions": [
+            {
+              "node": "O6023430538",
+              "lat": 41.267746,
+              "lon": 28.7121112
+            }
+          ]
+        },
+        {
+          "taxiway": "A5B",
+          "junctions": [
+            {
+              "node": "O5501867131",
+              "lat": 41.2747923,
+              "lon": 28.7119692
+            }
+          ]
+        },
+        {
+          "taxiway": "A6B",
+          "junctions": [
+            {
+              "node": "O12337194342",
+              "lat": 41.2744977,
+              "lon": 28.7119752
+            }
+          ]
+        },
+        {
+          "taxiway": "A7",
+          "junctions": [
+            {
+              "node": "O6023430540",
+              "lat": 41.2850114,
+              "lon": 28.7117634
+            }
+          ]
+        },
+        {
+          "taxiway": "A7B",
+          "junctions": [
+            {
+              "node": "O6023430540",
+              "lat": 41.2850114,
+              "lon": 28.7117634
+            }
+          ]
+        },
+        {
+          "taxiway": "A8B",
+          "junctions": [
+            {
+              "node": "O5501866245",
+              "lat": 41.2916229,
+              "lon": 28.7116302
+            }
+          ]
+        },
+        {
+          "taxiway": "A9B",
+          "junctions": [
+            {
+              "node": "O5501866308",
+              "lat": 41.2926557,
+              "lon": 28.7116094
+            }
+          ]
+        },
+        {
+          "taxiway": "A10B",
+          "junctions": [
+            {
+              "node": "O6023430541",
+              "lat": 41.2965983,
+              "lon": 28.71153
+            }
+          ]
+        },
+        {
+          "taxiway": "A11B",
+          "junctions": [
+            {
+              "node": "O5501866978",
+              "lat": 41.2972569,
+              "lon": 28.7115167
+            }
+          ]
+        },
+        {
+          "taxiway": "A12B",
+          "junctions": [
+            {
+              "node": "O7922827345",
+              "lat": 41.2981704,
+              "lon": 28.7114983
+            }
+          ]
+        },
+        {
+          "taxiway": "B10",
+          "junctions": [
+            {
+              "node": "O6023430541",
+              "lat": 41.2965983,
+              "lon": 28.71153
+            }
+          ]
+        }
+      ]
+    },
+    "A1": {
+      "label": "A1",
+      "segments": 17,
+      "nodeCount": 18,
+      "lengthMeters": 795,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O6023430504",
+          "lat": 41.2651161,
+          "lon": 28.7217308
+        },
+        {
+          "node": "O10965928834",
+          "lat": 41.2650033,
+          "lon": 28.7122157
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A1B",
+          "junctions": [
+            {
+              "node": "O10965928834",
+              "lat": 41.2650033,
+              "lon": 28.7122157
+            }
+          ]
+        },
+        {
+          "taxiway": "E1",
+          "junctions": [
+            {
+              "node": "O6023430504",
+              "lat": 41.2651161,
+              "lon": 28.7217308
+            }
+          ]
+        },
+        {
+          "taxiway": "E1D",
+          "junctions": [
+            {
+              "node": "O6023430504",
+              "lat": 41.2651161,
+              "lon": 28.7217308
+            }
+          ]
+        }
+      ]
+    },
+    "A1A": {
+      "label": "A1A",
+      "segments": 5,
+      "nodeCount": 6,
+      "lengthMeters": 210,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5336182412",
+          "lat": 41.2649758,
+          "lon": 28.7098994
+        },
+        {
+          "node": "O7932229964",
+          "lat": 41.264946,
+          "lon": 28.7073872
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A1B",
+          "junctions": [
+            {
+              "node": "O5336182412",
+              "lat": 41.2649758,
+              "lon": 28.7098994
+            }
+          ]
+        },
+        {
+          "taxiway": "A1C",
+          "junctions": [
+            {
+              "node": "O7932229964",
+              "lat": 41.264946,
+              "lon": 28.7073872
+            }
+          ]
+        }
+      ]
+    },
+    "A1B": {
+      "label": "A1B",
+      "segments": 4,
+      "nodeCount": 5,
+      "lengthMeters": 194,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O10965928834",
+          "lat": 41.2650033,
+          "lon": 28.7122157
+        },
+        {
+          "node": "O5336182412",
+          "lat": 41.2649758,
+          "lon": 28.7098994
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A1",
+          "junctions": [
+            {
+              "node": "O10965928834",
+              "lat": 41.2650033,
+              "lon": 28.7122157
+            }
+          ]
+        },
+        {
+          "taxiway": "A1A",
+          "junctions": [
+            {
+              "node": "O5336182412",
+              "lat": 41.2649758,
+              "lon": 28.7098994
+            }
+          ]
+        }
+      ]
+    },
+    "A1C": {
+      "label": "A1C",
+      "segments": 18,
+      "nodeCount": 19,
+      "lengthMeters": 529,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7932229964",
+          "lat": 41.264946,
+          "lon": 28.7073872
+        },
+        {
+          "node": "O6573505905",
+          "lat": 41.2681882,
+          "lon": 28.7050796
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A1A",
+          "junctions": [
+            {
+              "node": "O7932229964",
+              "lat": 41.264946,
+              "lon": 28.7073872
+            }
+          ]
+        }
+      ]
+    },
+    "A2A": {
+      "label": "A2A",
+      "segments": 4,
+      "nodeCount": 5,
+      "lengthMeters": 166,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5336182414",
+          "lat": 41.2658499,
+          "lon": 28.7098819
+        },
+        {
+          "node": "O5501867174",
+          "lat": 41.2658287,
+          "lon": 28.7078997
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A2B",
+          "junctions": [
+            {
+              "node": "O5336182414",
+              "lat": 41.2658499,
+              "lon": 28.7098819
+            }
+          ]
+        }
+      ]
+    },
+    "A2B": {
+      "label": "A2B",
+      "segments": 3,
+      "nodeCount": 4,
+      "lengthMeters": 147,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5501867186",
+          "lat": 41.2658686,
+          "lon": 28.7116401
+        },
+        {
+          "node": "O5336182414",
+          "lat": 41.2658499,
+          "lon": 28.7098819
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A2A",
+          "junctions": [
+            {
+              "node": "O5336182414",
+              "lat": 41.2658499,
+              "lon": 28.7098819
+            }
+          ]
+        }
+      ]
+    },
+    "A3": {
+      "label": "A3",
+      "segments": 24,
+      "nodeCount": 25,
+      "lengthMeters": 897,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O6023430533",
+          "lat": 41.2669902,
+          "lon": 28.7228585
+        },
+        {
+          "node": "O6023430539",
+          "lat": 41.2668702,
+          "lon": 28.7121288
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A",
+          "junctions": [
+            {
+              "node": "O6023430539",
+              "lat": 41.2668702,
+              "lon": 28.7121288
+            }
+          ]
+        },
+        {
+          "taxiway": "A3B",
+          "junctions": [
+            {
+              "node": "O6023430539",
+              "lat": 41.2668702,
+              "lon": 28.7121288
+            }
+          ]
+        },
+        {
+          "taxiway": "A4A",
+          "junctions": [
+            {
+              "node": "O7297534109",
+              "lat": 41.2669335,
+              "lon": 28.7177895
+            },
+            {
+              "node": "O7918203635",
+              "lat": 41.2669217,
+              "lon": 28.7167305
+            }
+          ]
+        },
+        {
+          "taxiway": "B",
+          "junctions": [
+            {
+              "node": "O6023430533",
+              "lat": 41.2669902,
+              "lon": 28.7228585
+            }
+          ]
+        },
+        {
+          "taxiway": "B4A",
+          "junctions": [
+            {
+              "node": "O6023430533",
+              "lat": 41.2669902,
+              "lon": 28.7228585
+            }
+          ]
+        },
+        {
+          "taxiway": "E1",
+          "junctions": [
+            {
+              "node": "O6023430503",
+              "lat": 41.2669772,
+              "lon": 28.7216942
+            }
+          ]
+        }
+      ]
+    },
+    "A3A": {
+      "label": "A3A",
+      "segments": 4,
+      "nodeCount": 5,
+      "lengthMeters": 165,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5336182416",
+          "lat": 41.2668448,
+          "lon": 28.7098619
+        },
+        {
+          "node": "O5501867170",
+          "lat": 41.2668227,
+          "lon": 28.7078874
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A3B",
+          "junctions": [
+            {
+              "node": "O5336182416",
+              "lat": 41.2668448,
+              "lon": 28.7098619
+            }
+          ]
+        }
+      ]
+    },
+    "A3B": {
+      "label": "A3B",
+      "segments": 4,
+      "nodeCount": 5,
+      "lengthMeters": 189,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O6023430539",
+          "lat": 41.2668702,
+          "lon": 28.7121288
+        },
+        {
+          "node": "O5336182416",
+          "lat": 41.2668448,
+          "lon": 28.7098619
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A",
+          "junctions": [
+            {
+              "node": "O6023430539",
+              "lat": 41.2668702,
+              "lon": 28.7121288
+            }
+          ]
+        },
+        {
+          "taxiway": "A3",
+          "junctions": [
+            {
+              "node": "O6023430539",
+              "lat": 41.2668702,
+              "lon": 28.7121288
+            }
+          ]
+        },
+        {
+          "taxiway": "A3A",
+          "junctions": [
+            {
+              "node": "O5336182416",
+              "lat": 41.2668448,
+              "lon": 28.7098619
+            }
+          ]
+        }
+      ]
+    },
+    "A4": {
+      "label": "A4",
+      "segments": 42,
+      "nodeCount": 43,
+      "lengthMeters": 996,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5680519887",
+          "lat": 41.2678758,
+          "lon": 28.72229
+        },
+        {
+          "node": "O5680519880",
+          "lat": 41.2677238,
+          "lon": 28.710374
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A",
+          "junctions": [
+            {
+              "node": "O6023430538",
+              "lat": 41.267746,
+              "lon": 28.7121112
+            }
+          ]
+        },
+        {
+          "taxiway": "A4A",
+          "junctions": [
+            {
+              "node": "O7297534110",
+              "lat": 41.2678179,
+              "lon": 28.7177537
+            },
+            {
+              "node": "O7918203639",
+              "lat": 41.2678048,
+              "lon": 28.7167223
+            }
+          ]
+        }
+      ]
+    },
+    "A4A": {
+      "label": "A4A",
+      "segments": 17,
+      "nodeCount": 18,
+      "lengthMeters": 280,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7297534110",
+          "lat": 41.2678179,
+          "lon": 28.7177537
+        },
+        {
+          "node": "O7297534109",
+          "lat": 41.2669335,
+          "lon": 28.7177895
+        },
+        {
+          "node": "O7918203635",
+          "lat": 41.2669217,
+          "lon": 28.7167305
+        },
+        {
+          "node": "O7918203639",
+          "lat": 41.2678048,
+          "lon": 28.7167223
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A3",
+          "junctions": [
+            {
+              "node": "O7297534109",
+              "lat": 41.2669335,
+              "lon": 28.7177895
+            },
+            {
+              "node": "O7918203635",
+              "lat": 41.2669217,
+              "lon": 28.7167305
+            }
+          ]
+        },
+        {
+          "taxiway": "A4",
+          "junctions": [
+            {
+              "node": "O7297534110",
+              "lat": 41.2678179,
+              "lon": 28.7177537
+            },
+            {
+              "node": "O7918203639",
+              "lat": 41.2678048,
+              "lon": 28.7167223
+            }
+          ]
+        }
+      ]
+    },
+    "A5A": {
+      "label": "A5A",
+      "segments": 5,
+      "nodeCount": 6,
+      "lengthMeters": 488,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5501867143",
+          "lat": 41.2747497,
+          "lon": 28.7093986
+        },
+        {
+          "node": "O5501867150",
+          "lat": 41.278734,
+          "lon": 28.7071198
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A5B",
+          "junctions": [
+            {
+              "node": "O5501867143",
+              "lat": 41.2747497,
+              "lon": 28.7093986
+            }
+          ]
+        }
+      ]
+    },
+    "A5B": {
+      "label": "A5B",
+      "segments": 10,
+      "nodeCount": 11,
+      "lengthMeters": 254,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5501867131",
+          "lat": 41.2747923,
+          "lon": 28.7119692
+        },
+        {
+          "node": "O5501867143",
+          "lat": 41.2747497,
+          "lon": 28.7093986
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A",
+          "junctions": [
+            {
+              "node": "O5501867131",
+              "lat": 41.2747923,
+              "lon": 28.7119692
+            }
+          ]
+        },
+        {
+          "taxiway": "A5A",
+          "junctions": [
+            {
+              "node": "O5501867143",
+              "lat": 41.2747497,
+              "lon": 28.7093986
+            }
+          ]
+        },
+        {
+          "taxiway": "A6B",
+          "junctions": [
+            {
+              "node": "O12337194341",
+              "lat": 41.2747009,
+              "lon": 28.7119465
+            }
+          ]
+        }
+      ]
+    },
+    "A6A": {
+      "label": "A6A",
+      "segments": 7,
+      "nodeCount": 8,
+      "lengthMeters": 529,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5501866257",
+          "lat": 41.2822509,
+          "lon": 28.7070516
+        },
+        {
+          "node": "O4875388458",
+          "lat": 41.2779628,
+          "lon": 28.7096388
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A6B",
+          "junctions": [
+            {
+              "node": "O4875388458",
+              "lat": 41.2779628,
+              "lon": 28.7096388
+            }
+          ]
+        },
+        {
+          "taxiway": "A7A",
+          "junctions": [
+            {
+              "node": "O5501866258",
+              "lat": 41.2817202,
+              "lon": 28.7071489
+            }
+          ]
+        }
+      ]
+    },
+    "A6B": {
+      "label": "A6B",
+      "segments": 6,
+      "nodeCount": 7,
+      "lengthMeters": 436,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O4875388458",
+          "lat": 41.2779628,
+          "lon": 28.7096388
+        },
+        {
+          "node": "O12337194342",
+          "lat": 41.2744977,
+          "lon": 28.7119752
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A",
+          "junctions": [
+            {
+              "node": "O12337194342",
+              "lat": 41.2744977,
+              "lon": 28.7119752
+            }
+          ]
+        },
+        {
+          "taxiway": "A5B",
+          "junctions": [
+            {
+              "node": "O12337194341",
+              "lat": 41.2747009,
+              "lon": 28.7119465
+            }
+          ]
+        },
+        {
+          "taxiway": "A6A",
+          "junctions": [
+            {
+              "node": "O4875388458",
+              "lat": 41.2779628,
+              "lon": 28.7096388
+            }
+          ]
+        }
+      ]
+    },
+    "A7": {
+      "label": "A7",
+      "segments": 14,
+      "nodeCount": 15,
+      "lengthMeters": 898,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O6023430540",
+          "lat": 41.2850114,
+          "lon": 28.7117634
+        },
+        {
+          "node": "O7918203858",
+          "lat": 41.2851343,
+          "lon": 28.7225056
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A",
+          "junctions": [
+            {
+              "node": "O6023430540",
+              "lat": 41.2850114,
+              "lon": 28.7117634
+            }
+          ]
+        },
+        {
+          "taxiway": "A7B",
+          "junctions": [
+            {
+              "node": "O6023430540",
+              "lat": 41.2850114,
+              "lon": 28.7117634
+            }
+          ]
+        },
+        {
+          "taxiway": "B",
+          "junctions": [
+            {
+              "node": "O7918203858",
+              "lat": 41.2851343,
+              "lon": 28.7225056
+            }
+          ]
+        },
+        {
+          "taxiway": "B8A",
+          "junctions": [
+            {
+              "node": "O7918203858",
+              "lat": 41.2851343,
+              "lon": 28.7225056
+            }
+          ]
+        }
+      ]
+    },
+    "A7A": {
+      "label": "A7A",
+      "segments": 12,
+      "nodeCount": 13,
+      "lengthMeters": 598,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5336182424",
+          "lat": 41.2810494,
+          "lon": 28.7070749
+        },
+        {
+          "node": "O5501866267",
+          "lat": 41.286044,
+          "lon": 28.7094766
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A6A",
+          "junctions": [
+            {
+              "node": "O5501866258",
+              "lat": 41.2817202,
+              "lon": 28.7071489
+            }
+          ]
+        }
+      ]
+    },
+    "A7B": {
+      "label": "A7B",
+      "segments": 4,
+      "nodeCount": 5,
+      "lengthMeters": 189,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5501866278",
+          "lat": 41.284964,
+          "lon": 28.7094982
+        },
+        {
+          "node": "O6023430540",
+          "lat": 41.2850114,
+          "lon": 28.7117634
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A",
+          "junctions": [
+            {
+              "node": "O6023430540",
+              "lat": 41.2850114,
+              "lon": 28.7117634
+            }
+          ]
+        },
+        {
+          "taxiway": "A7",
+          "junctions": [
+            {
+              "node": "O6023430540",
+              "lat": 41.2850114,
+              "lon": 28.7117634
+            }
+          ]
+        }
+      ]
+    },
+    "A8A": {
+      "label": "A8A",
+      "segments": 10,
+      "nodeCount": 11,
+      "lengthMeters": 574,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5501866292",
+          "lat": 41.2839618,
+          "lon": 28.7070184
+        },
+        {
+          "node": "O5501866282",
+          "lat": 41.2887331,
+          "lon": 28.7094226
+        }
+      ],
+      "neighbors": []
+    },
+    "A8B": {
+      "label": "A8B",
+      "segments": 6,
+      "nodeCount": 7,
+      "lengthMeters": 424,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O4879852491",
+          "lat": 41.288219,
+          "lon": 28.7094207
+        },
+        {
+          "node": "O5501866245",
+          "lat": 41.2916229,
+          "lon": 28.7116302
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A",
+          "junctions": [
+            {
+              "node": "O5501866245",
+              "lat": 41.2916229,
+              "lon": 28.7116302
+            }
+          ]
+        }
+      ]
+    },
+    "A9A": {
+      "label": "A9A",
+      "segments": 9,
+      "nodeCount": 10,
+      "lengthMeters": 581,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5501866283",
+          "lat": 41.2879172,
+          "lon": 28.7069417
+        },
+        {
+          "node": "O5501866315",
+          "lat": 41.2927615,
+          "lon": 28.7093417
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A9B",
+          "junctions": [
+            {
+              "node": "O5501866315",
+              "lat": 41.2927615,
+              "lon": 28.7093417
+            }
+          ]
+        }
+      ]
+    },
+    "A9B": {
+      "label": "A9B",
+      "segments": 10,
+      "nodeCount": 11,
+      "lengthMeters": 240,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5501866308",
+          "lat": 41.2926557,
+          "lon": 28.7116094
+        },
+        {
+          "node": "O5501866315",
+          "lat": 41.2927615,
+          "lon": 28.7093417
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A",
+          "junctions": [
+            {
+              "node": "O5501866308",
+              "lat": 41.2926557,
+              "lon": 28.7116094
+            }
+          ]
+        },
+        {
+          "taxiway": "A9A",
+          "junctions": [
+            {
+              "node": "O5501866315",
+              "lat": 41.2927615,
+              "lon": 28.7093417
+            }
+          ]
+        }
+      ]
+    },
+    "A10A": {
+      "label": "A10A",
+      "segments": 8,
+      "nodeCount": 9,
+      "lengthMeters": 230,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O4879852495",
+          "lat": 41.2965736,
+          "lon": 28.7092652
+        },
+        {
+          "node": "O5501866932",
+          "lat": 41.2961639,
+          "lon": 28.7067817
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A10B",
+          "junctions": [
+            {
+              "node": "O4879852495",
+              "lat": 41.2965736,
+              "lon": 28.7092652
+            }
+          ]
+        }
+      ]
+    },
+    "A10B": {
+      "label": "A10B",
+      "segments": 4,
+      "nodeCount": 5,
+      "lengthMeters": 189,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O6023430541",
+          "lat": 41.2965983,
+          "lon": 28.71153
+        },
+        {
+          "node": "O4879852495",
+          "lat": 41.2965736,
+          "lon": 28.7092652
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A",
+          "junctions": [
+            {
+              "node": "O6023430541",
+              "lat": 41.2965983,
+              "lon": 28.71153
+            }
+          ]
+        },
+        {
+          "taxiway": "A10A",
+          "junctions": [
+            {
+              "node": "O4879852495",
+              "lat": 41.2965736,
+              "lon": 28.7092652
+            }
+          ]
+        },
+        {
+          "taxiway": "B10",
+          "junctions": [
+            {
+              "node": "O6023430541",
+              "lat": 41.2965983,
+              "lon": 28.71153
+            }
+          ]
+        }
+      ]
+    },
+    "A11A": {
+      "label": "A11A",
+      "segments": 9,
+      "nodeCount": 10,
+      "lengthMeters": 233,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5501866951",
+          "lat": 41.2972114,
+          "lon": 28.7067614
+        },
+        {
+          "node": "O4879852497",
+          "lat": 41.2976457,
+          "lon": 28.7092437
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A11B",
+          "junctions": [
+            {
+              "node": "O4879852497",
+              "lat": 41.2976457,
+              "lon": 28.7092437
+            }
+          ]
+        }
+      ]
+    },
+    "A11B": {
+      "label": "A11B",
+      "segments": 7,
+      "nodeCount": 8,
+      "lengthMeters": 215,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O4879852497",
+          "lat": 41.2976457,
+          "lon": 28.7092437
+        },
+        {
+          "node": "O5501866978",
+          "lat": 41.2972569,
+          "lon": 28.7115167
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A",
+          "junctions": [
+            {
+              "node": "O5501866978",
+              "lat": 41.2972569,
+              "lon": 28.7115167
+            }
+          ]
+        },
+        {
+          "taxiway": "A11A",
+          "junctions": [
+            {
+              "node": "O4879852497",
+              "lat": 41.2976457,
+              "lon": 28.7092437
+            }
+          ]
+        }
+      ]
+    },
+    "A12A": {
+      "label": "A12A",
+      "segments": 8,
+      "nodeCount": 9,
+      "lengthMeters": 229,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5501867015",
+          "lat": 41.2981201,
+          "lon": 28.7067438
+        },
+        {
+          "node": "O4875388459",
+          "lat": 41.2985239,
+          "lon": 28.709226
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A12B",
+          "junctions": [
+            {
+              "node": "O4875388459",
+              "lat": 41.2985239,
+              "lon": 28.709226
+            }
+          ]
+        }
+      ]
+    },
+    "A12B": {
+      "label": "A12B",
+      "segments": 7,
+      "nodeCount": 8,
+      "lengthMeters": 211,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O4875388459",
+          "lat": 41.2985239,
+          "lon": 28.709226
+        },
+        {
+          "node": "O7922827345",
+          "lat": 41.2981704,
+          "lon": 28.7114983
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A",
+          "junctions": [
+            {
+              "node": "O7922827345",
+              "lat": 41.2981704,
+              "lon": 28.7114983
+            }
+          ]
+        },
+        {
+          "taxiway": "A12A",
+          "junctions": [
+            {
+              "node": "O4875388459",
+              "lat": 41.2985239,
+              "lon": 28.709226
+            }
+          ]
+        }
+      ]
+    },
+    "B": {
+      "label": "B",
+      "segments": 65,
+      "nodeCount": 66,
+      "lengthMeters": 5683,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O6027958739",
+          "lat": 41.2533155,
+          "lon": 28.7308184
+        },
+        {
+          "node": "O7918191468",
+          "lat": 41.2981743,
+          "lon": 28.7222519
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A3",
+          "junctions": [
+            {
+              "node": "O6023430533",
+              "lat": 41.2669902,
+              "lon": 28.7228585
+            }
+          ]
+        },
+        {
+          "taxiway": "A7",
+          "junctions": [
+            {
+              "node": "O7918203858",
+              "lat": 41.2851343,
+              "lon": 28.7225056
+            }
+          ]
+        },
+        {
+          "taxiway": "B1A",
+          "junctions": [
+            {
+              "node": "O6027958661",
+              "lat": 41.2619803,
+              "lon": 28.7228724
+            }
+          ]
+        },
+        {
+          "taxiway": "B3A",
+          "junctions": [
+            {
+              "node": "O6023430534",
+              "lat": 41.2651953,
+              "lon": 28.7228934
+            }
+          ]
+        },
+        {
+          "taxiway": "B4A",
+          "junctions": [
+            {
+              "node": "O6023430533",
+              "lat": 41.2669902,
+              "lon": 28.7228585
+            }
+          ]
+        },
+        {
+          "taxiway": "B6",
+          "junctions": [
+            {
+              "node": "O7918203848",
+              "lat": 41.2727198,
+              "lon": 28.722747
+            }
+          ]
+        },
+        {
+          "taxiway": "B7",
+          "junctions": [
+            {
+              "node": "O7918203400",
+              "lat": 41.2859109,
+              "lon": 28.7224905
+            }
+          ]
+        },
+        {
+          "taxiway": "B8A",
+          "junctions": [
+            {
+              "node": "O7918203858",
+              "lat": 41.2851343,
+              "lon": 28.7225056
+            }
+          ]
+        },
+        {
+          "taxiway": "B9",
+          "junctions": [
+            {
+              "node": "O5680519681",
+              "lat": 41.2947694,
+              "lon": 28.7223181
+            }
+          ]
+        },
+        {
+          "taxiway": "B9A",
+          "junctions": [
+            {
+              "node": "O5680519681",
+              "lat": 41.2947694,
+              "lon": 28.7223181
+            }
+          ]
+        },
+        {
+          "taxiway": "B10",
+          "junctions": [
+            {
+              "node": "O5585276463",
+              "lat": 41.2967152,
+              "lon": 28.7222803
+            }
+          ]
+        },
+        {
+          "taxiway": "B12A",
+          "junctions": [
+            {
+              "node": "O7918191468",
+              "lat": 41.2981743,
+              "lon": 28.7222519
+            }
+          ]
+        },
+        {
+          "taxiway": "D4",
+          "junctions": [
+            {
+              "node": "O6027958739",
+              "lat": 41.2533155,
+              "lon": 28.7308184
+            }
+          ]
+        },
+        {
+          "taxiway": "E1A",
+          "junctions": [
+            {
+              "node": "O6027958686",
+              "lat": 41.2532524,
+              "lon": 28.7251756
+            },
+            {
+              "node": "O6027958690",
+              "lat": 41.2532651,
+              "lon": 28.7263066
+            }
+          ]
+        },
+        {
+          "taxiway": "E1C",
+          "junctions": [
+            {
+              "node": "O6027958661",
+              "lat": 41.2619803,
+              "lon": 28.7228724
+            }
+          ]
+        },
+        {
+          "taxiway": "E1D",
+          "junctions": [
+            {
+              "node": "O6023430534",
+              "lat": 41.2651953,
+              "lon": 28.7228934
+            }
+          ]
+        }
+      ]
+    },
+    "B1A": {
+      "label": "B1A",
+      "segments": 5,
+      "nodeCount": 6,
+      "lengthMeters": 196,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O6027958661",
+          "lat": 41.2619803,
+          "lon": 28.7228724
+        },
+        {
+          "node": "O6022768308",
+          "lat": 41.2620059,
+          "lon": 28.7252166
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B",
+          "junctions": [
+            {
+              "node": "O6027958661",
+              "lat": 41.2619803,
+              "lon": 28.7228724
+            }
+          ]
+        },
+        {
+          "taxiway": "E1C",
+          "junctions": [
+            {
+              "node": "O6027958661",
+              "lat": 41.2619803,
+              "lon": 28.7228724
+            }
+          ]
+        }
+      ]
+    },
+    "B1B": {
+      "label": "B1B",
+      "segments": 3,
+      "nodeCount": 4,
+      "lengthMeters": 127,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5585276341",
+          "lat": 41.262011,
+          "lon": 28.7256793
+        },
+        {
+          "node": "O5585276278",
+          "lat": 41.2620275,
+          "lon": 28.7271939
+        }
+      ],
+      "neighbors": []
+    },
+    "B2": {
+      "label": "B2",
+      "segments": 2,
+      "nodeCount": 3,
+      "lengthMeters": 100,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5585276405",
+          "lat": 41.2628719,
+          "lon": 28.7246523
+        },
+        {
+          "node": "O5585276412",
+          "lat": 41.262866,
+          "lon": 28.7234528
+        }
+      ],
+      "neighbors": []
+    },
+    "B3A": {
+      "label": "B3A",
+      "segments": 5,
+      "nodeCount": 6,
+      "lengthMeters": 199,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5585276302",
+          "lat": 41.2657862,
+          "lon": 28.7251436
+        },
+        {
+          "node": "O6023430534",
+          "lat": 41.2651953,
+          "lon": 28.7228934
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B",
+          "junctions": [
+            {
+              "node": "O6023430534",
+              "lat": 41.2651953,
+              "lon": 28.7228934
+            }
+          ]
+        },
+        {
+          "taxiway": "B3B",
+          "junctions": [
+            {
+              "node": "O5585276302",
+              "lat": 41.2657862,
+              "lon": 28.7251436
+            }
+          ]
+        },
+        {
+          "taxiway": "E1D",
+          "junctions": [
+            {
+              "node": "O6023430534",
+              "lat": 41.2651953,
+              "lon": 28.7228934
+            }
+          ]
+        }
+      ]
+    },
+    "B3B": {
+      "label": "B3B",
+      "segments": 6,
+      "nodeCount": 7,
+      "lengthMeters": 210,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O6023430525",
+          "lat": 41.2658359,
+          "lon": 28.7276592
+        },
+        {
+          "node": "O5585276302",
+          "lat": 41.2657862,
+          "lon": 28.7251436
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B3A",
+          "junctions": [
+            {
+              "node": "O5585276302",
+              "lat": 41.2657862,
+              "lon": 28.7251436
+            }
+          ]
+        },
+        {
+          "taxiway": "C4A",
+          "junctions": [
+            {
+              "node": "O6023430525",
+              "lat": 41.2658359,
+              "lon": 28.7276592
+            }
+          ]
+        }
+      ]
+    },
+    "B4A": {
+      "label": "B4A",
+      "segments": 4,
+      "nodeCount": 5,
+      "lengthMeters": 189,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O6023430528",
+          "lat": 41.2670155,
+          "lon": 28.7251199
+        },
+        {
+          "node": "O6023430533",
+          "lat": 41.2669902,
+          "lon": 28.7228585
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A3",
+          "junctions": [
+            {
+              "node": "O6023430533",
+              "lat": 41.2669902,
+              "lon": 28.7228585
+            }
+          ]
+        },
+        {
+          "taxiway": "B",
+          "junctions": [
+            {
+              "node": "O6023430533",
+              "lat": 41.2669902,
+              "lon": 28.7228585
+            }
+          ]
+        },
+        {
+          "taxiway": "B4B",
+          "junctions": [
+            {
+              "node": "O6023430528",
+              "lat": 41.2670155,
+              "lon": 28.7251199
+            }
+          ]
+        }
+      ]
+    },
+    "B4B": {
+      "label": "B4B",
+      "segments": 5,
+      "nodeCount": 6,
+      "lengthMeters": 210,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O6023430526",
+          "lat": 41.2670437,
+          "lon": 28.7276356
+        },
+        {
+          "node": "O6023430528",
+          "lat": 41.2670155,
+          "lon": 28.7251199
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B4A",
+          "junctions": [
+            {
+              "node": "O6023430528",
+              "lat": 41.2670155,
+              "lon": 28.7251199
+            }
+          ]
+        },
+        {
+          "taxiway": "C5A",
+          "junctions": [
+            {
+              "node": "O6023430526",
+              "lat": 41.2670437,
+              "lon": 28.7276356
+            }
+          ]
+        }
+      ]
+    },
+    "B5A": {
+      "label": "B5A",
+      "segments": 4,
+      "nodeCount": 5,
+      "lengthMeters": 147,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7918203843",
+          "lat": 41.2728192,
+          "lon": 28.723245
+        },
+        {
+          "node": "O6023430529",
+          "lat": 41.2728354,
+          "lon": 28.7250077
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B5B",
+          "junctions": [
+            {
+              "node": "O6023430529",
+              "lat": 41.2728354,
+              "lon": 28.7250077
+            }
+          ]
+        }
+      ]
+    },
+    "B5B": {
+      "label": "B5B",
+      "segments": 4,
+      "nodeCount": 5,
+      "lengthMeters": 163,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5680519856",
+          "lat": 41.2728534,
+          "lon": 28.7269551
+        },
+        {
+          "node": "O6023430529",
+          "lat": 41.2728354,
+          "lon": 28.7250077
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B5A",
+          "junctions": [
+            {
+              "node": "O6023430529",
+              "lat": 41.2728354,
+              "lon": 28.7250077
+            }
+          ]
+        }
+      ]
+    },
+    "B6": {
+      "label": "B6",
+      "segments": 11,
+      "nodeCount": 12,
+      "lengthMeters": 552,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7918203848",
+          "lat": 41.2727198,
+          "lon": 28.722747
+        },
+        {
+          "node": "O5680519840",
+          "lat": 41.277345,
+          "lon": 28.7249207
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B",
+          "junctions": [
+            {
+              "node": "O7918203848",
+              "lat": 41.2727198,
+              "lon": 28.722747
+            }
+          ]
+        }
+      ]
+    },
+    "B7": {
+      "label": "B7",
+      "segments": 11,
+      "nodeCount": 12,
+      "lengthMeters": 535,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5680519743",
+          "lat": 41.2814941,
+          "lon": 28.7248406
+        },
+        {
+          "node": "O7918203400",
+          "lat": 41.2859109,
+          "lon": 28.7224905
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B",
+          "junctions": [
+            {
+              "node": "O7918203400",
+              "lat": 41.2859109,
+              "lon": 28.7224905
+            }
+          ]
+        },
+        {
+          "taxiway": "B8A",
+          "junctions": [
+            {
+              "node": "O6023430524",
+              "lat": 41.2851372,
+              "lon": 28.7227632
+            }
+          ]
+        }
+      ]
+    },
+    "B8A": {
+      "label": "B8A",
+      "segments": 5,
+      "nodeCount": 6,
+      "lengthMeters": 189,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7918203858",
+          "lat": 41.2851343,
+          "lon": 28.7225056
+        },
+        {
+          "node": "O6023430527",
+          "lat": 41.2851602,
+          "lon": 28.7247699
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A7",
+          "junctions": [
+            {
+              "node": "O7918203858",
+              "lat": 41.2851343,
+              "lon": 28.7225056
+            }
+          ]
+        },
+        {
+          "taxiway": "B",
+          "junctions": [
+            {
+              "node": "O7918203858",
+              "lat": 41.2851343,
+              "lon": 28.7225056
+            }
+          ]
+        },
+        {
+          "taxiway": "B7",
+          "junctions": [
+            {
+              "node": "O6023430524",
+              "lat": 41.2851372,
+              "lon": 28.7227632
+            }
+          ]
+        }
+      ]
+    },
+    "B8B": {
+      "label": "B8B",
+      "segments": 12,
+      "nodeCount": 13,
+      "lengthMeters": 582,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5680519807",
+          "lat": 41.2814399,
+          "lon": 28.7273549
+        },
+        {
+          "node": "O5680519742",
+          "lat": 41.2862248,
+          "lon": 28.7247493
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C9",
+          "junctions": [
+            {
+              "node": "O5680519807",
+              "lat": 41.2814399,
+              "lon": 28.7273549
+            }
+          ]
+        }
+      ]
+    },
+    "B9": {
+      "label": "B9",
+      "segments": 21,
+      "nodeCount": 22,
+      "lengthMeters": 855,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5680519681",
+          "lat": 41.2947694,
+          "lon": 28.7223181
+        },
+        {
+          "node": "O5680519719",
+          "lat": 41.2946538,
+          "lon": 28.7120887
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B",
+          "junctions": [
+            {
+              "node": "O5680519681",
+              "lat": 41.2947694,
+              "lon": 28.7223181
+            }
+          ]
+        },
+        {
+          "taxiway": "B9A",
+          "junctions": [
+            {
+              "node": "O5680519681",
+              "lat": 41.2947694,
+              "lon": 28.7223181
+            }
+          ]
+        }
+      ]
+    },
+    "B9A": {
+      "label": "B9A",
+      "segments": 4,
+      "nodeCount": 5,
+      "lengthMeters": 189,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O6023430531",
+          "lat": 41.294795,
+          "lon": 28.724584
+        },
+        {
+          "node": "O5680519681",
+          "lat": 41.2947694,
+          "lon": 28.7223181
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B",
+          "junctions": [
+            {
+              "node": "O5680519681",
+              "lat": 41.2947694,
+              "lon": 28.7223181
+            }
+          ]
+        },
+        {
+          "taxiway": "B9",
+          "junctions": [
+            {
+              "node": "O5680519681",
+              "lat": 41.2947694,
+              "lon": 28.7223181
+            }
+          ]
+        },
+        {
+          "taxiway": "B9B",
+          "junctions": [
+            {
+              "node": "O6023430531",
+              "lat": 41.294795,
+              "lon": 28.724584
+            }
+          ]
+        }
+      ]
+    },
+    "B9B": {
+      "label": "B9B",
+      "segments": 8,
+      "nodeCount": 9,
+      "lengthMeters": 210,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O6023430530",
+          "lat": 41.2948234,
+          "lon": 28.7270939
+        },
+        {
+          "node": "O6023430531",
+          "lat": 41.294795,
+          "lon": 28.724584
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B9A",
+          "junctions": [
+            {
+              "node": "O6023430531",
+              "lat": 41.294795,
+              "lon": 28.724584
+            }
+          ]
+        },
+        {
+          "taxiway": "C11",
+          "junctions": [
+            {
+              "node": "O6023430530",
+              "lat": 41.2948234,
+              "lon": 28.7270939
+            }
+          ]
+        }
+      ]
+    },
+    "B10": {
+      "label": "B10",
+      "segments": 8,
+      "nodeCount": 9,
+      "lengthMeters": 1044,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O6023430541",
+          "lat": 41.2965983,
+          "lon": 28.71153
+        },
+        {
+          "node": "O5585276462",
+          "lat": 41.2967341,
+          "lon": 28.7240202
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A",
+          "junctions": [
+            {
+              "node": "O6023430541",
+              "lat": 41.2965983,
+              "lon": 28.71153
+            }
+          ]
+        },
+        {
+          "taxiway": "A10B",
+          "junctions": [
+            {
+              "node": "O6023430541",
+              "lat": 41.2965983,
+              "lon": 28.71153
+            }
+          ]
+        },
+        {
+          "taxiway": "B",
+          "junctions": [
+            {
+              "node": "O5585276463",
+              "lat": 41.2967152,
+              "lon": 28.7222803
+            }
+          ]
+        }
+      ]
+    },
+    "B11": {
+      "label": "B11",
+      "segments": 2,
+      "nodeCount": 3,
+      "lengthMeters": 101,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5585276483",
+          "lat": 41.2977907,
+          "lon": 28.7227757
+        },
+        {
+          "node": "O5585276487",
+          "lat": 41.2978056,
+          "lon": 28.7239861
+        }
+      ],
+      "neighbors": []
+    },
+    "B12A": {
+      "label": "B12A",
+      "segments": 8,
+      "nodeCount": 9,
+      "lengthMeters": 223,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7918191468",
+          "lat": 41.2981743,
+          "lon": 28.7222519
+        },
+        {
+          "node": "O6022768313",
+          "lat": 41.29869,
+          "lon": 28.7245088
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B",
+          "junctions": [
+            {
+              "node": "O7918191468",
+              "lat": 41.2981743,
+              "lon": 28.7222519
+            }
+          ]
+        },
+        {
+          "taxiway": "B12B",
+          "junctions": [
+            {
+              "node": "O6022768313",
+              "lat": 41.29869,
+              "lon": 28.7245088
+            }
+          ]
+        }
+      ]
+    },
+    "B12B": {
+      "label": "B12B",
+      "segments": 5,
+      "nodeCount": 6,
+      "lengthMeters": 210,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O6022768313",
+          "lat": 41.29869,
+          "lon": 28.7245088
+        },
+        {
+          "node": "O6022768311",
+          "lat": 41.2987156,
+          "lon": 28.727018
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B12A",
+          "junctions": [
+            {
+              "node": "O6022768313",
+              "lat": 41.29869,
+              "lon": 28.7245088
+            }
+          ]
+        },
+        {
+          "taxiway": "C14",
+          "junctions": [
+            {
+              "node": "O6022768311",
+              "lat": 41.2987156,
+              "lon": 28.727018
+            }
+          ]
+        }
+      ]
+    },
+    "B13": {
+      "label": "B13",
+      "segments": 2,
+      "nodeCount": 3,
+      "lengthMeters": 33,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7932229963",
+          "lat": 41.2919072,
+          "lon": 28.7214889
+        },
+        {
+          "node": "O7932229962",
+          "lat": 41.2919211,
+          "lon": 28.72188
+        }
+      ],
+      "neighbors": []
+    },
+    "C": {
+      "label": "C",
+      "segments": 45,
+      "nodeCount": 46,
+      "lengthMeters": 3988,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5585276534",
+          "lat": 41.2624752,
+          "lon": 28.7299891
+        },
+        {
+          "node": "O5585276517",
+          "lat": 41.2983402,
+          "lon": 28.7292911
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C2B",
+          "junctions": [
+            {
+              "node": "O7918203696",
+              "lat": 41.2629335,
+              "lon": 28.7299802
+            }
+          ]
+        },
+        {
+          "taxiway": "C3B",
+          "junctions": [
+            {
+              "node": "O7918203722",
+              "lat": 41.2638109,
+              "lon": 28.7299631
+            }
+          ]
+        },
+        {
+          "taxiway": "C5A",
+          "junctions": [
+            {
+              "node": "O6023430510",
+              "lat": 41.267069,
+              "lon": 28.7298997
+            }
+          ]
+        },
+        {
+          "taxiway": "C6",
+          "junctions": [
+            {
+              "node": "O5680519762",
+              "lat": 41.272749,
+              "lon": 28.7297892
+            }
+          ]
+        },
+        {
+          "taxiway": "C8",
+          "junctions": [
+            {
+              "node": "O5680519800",
+              "lat": 41.2827713,
+              "lon": 28.7295942
+            }
+          ]
+        },
+        {
+          "taxiway": "C9",
+          "junctions": [
+            {
+              "node": "O5680519818",
+              "lat": 41.2860352,
+              "lon": 28.7295306
+            }
+          ]
+        },
+        {
+          "taxiway": "C10",
+          "junctions": [
+            {
+              "node": "O7918191406",
+              "lat": 41.2886897,
+              "lon": 28.729479
+            }
+          ]
+        },
+        {
+          "taxiway": "C12",
+          "junctions": [
+            {
+              "node": "O12337194248",
+              "lat": 41.2969854,
+              "lon": 28.7293175
+            }
+          ]
+        },
+        {
+          "taxiway": "N1",
+          "junctions": [
+            {
+              "node": "O7918203447",
+              "lat": 41.2698369,
+              "lon": 28.7298459
+            }
+          ]
+        },
+        {
+          "taxiway": "N5",
+          "junctions": [
+            {
+              "node": "O6023430514",
+              "lat": 41.273816,
+              "lon": 28.7297684
+            }
+          ]
+        },
+        {
+          "taxiway": "N6",
+          "junctions": [
+            {
+              "node": "O7476115048",
+              "lat": 41.2759631,
+              "lon": 28.7297267
+            }
+          ]
+        },
+        {
+          "taxiway": "VEFA",
+          "junctions": [
+            {
+              "node": "O12297292741",
+              "lat": 41.2790211,
+              "lon": 28.7296671
+            }
+          ]
+        }
+      ]
+    },
+    "C1A": {
+      "label": "C1A",
+      "segments": 1,
+      "nodeCount": 2,
+      "lengthMeters": 103,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5585276281",
+          "lat": 41.2620377,
+          "lon": 28.7281291
+        },
+        {
+          "node": "O5585276237",
+          "lat": 41.2620513,
+          "lon": 28.7293644
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C1B",
+          "junctions": [
+            {
+              "node": "O5585276237",
+              "lat": 41.2620513,
+              "lon": 28.7293644
+            }
+          ]
+        }
+      ]
+    },
+    "C1B": {
+      "label": "C1B",
+      "segments": 9,
+      "nodeCount": 10,
+      "lengthMeters": 424,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5585276237",
+          "lat": 41.2620513,
+          "lon": 28.7293644
+        },
+        {
+          "node": "O5585274318",
+          "lat": 41.2621067,
+          "lon": 28.7344374
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C1A",
+          "junctions": [
+            {
+              "node": "O5585276237",
+              "lat": 41.2620513,
+              "lon": 28.7293644
+            }
+          ]
+        },
+        {
+          "taxiway": "D",
+          "junctions": [
+            {
+              "node": "O7918203764",
+              "lat": 41.2620708,
+              "lon": 28.7311549
+            }
+          ]
+        },
+        {
+          "taxiway": "E",
+          "junctions": [
+            {
+              "node": "O7918203756",
+              "lat": 41.2620835,
+              "lon": 28.7323185
+            }
+          ]
+        },
+        {
+          "taxiway": "T1",
+          "junctions": [
+            {
+              "node": "O7918203742",
+              "lat": 41.2621048,
+              "lon": 28.7342638
+            }
+          ]
+        }
+      ]
+    },
+    "C2A": {
+      "label": "C2A",
+      "segments": 1,
+      "nodeCount": 2,
+      "lengthMeters": 90,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5585276525",
+          "lat": 41.2629153,
+          "lon": 28.7282554
+        },
+        {
+          "node": "O5585276531",
+          "lat": 41.2629267,
+          "lon": 28.729333
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C2B",
+          "junctions": [
+            {
+              "node": "O5585276531",
+              "lat": 41.2629267,
+              "lon": 28.729333
+            }
+          ]
+        }
+      ]
+    },
+    "C2B": {
+      "label": "C2B",
+      "segments": 6,
+      "nodeCount": 7,
+      "lengthMeters": 193,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5585276531",
+          "lat": 41.2629267,
+          "lon": 28.729333
+        },
+        {
+          "node": "O5585276255",
+          "lat": 41.2629511,
+          "lon": 28.7316469
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C",
+          "junctions": [
+            {
+              "node": "O7918203696",
+              "lat": 41.2629335,
+              "lon": 28.7299802
+            }
+          ]
+        },
+        {
+          "taxiway": "C2A",
+          "junctions": [
+            {
+              "node": "O5585276531",
+              "lat": 41.2629267,
+              "lon": 28.729333
+            }
+          ]
+        },
+        {
+          "taxiway": "D",
+          "junctions": [
+            {
+              "node": "O7918203734",
+              "lat": 41.2629457,
+              "lon": 28.7311382
+            }
+          ]
+        }
+      ]
+    },
+    "C3A": {
+      "label": "C3A",
+      "segments": 1,
+      "nodeCount": 2,
+      "lengthMeters": 91,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5585276521",
+          "lat": 41.263793,
+          "lon": 28.7282193
+        },
+        {
+          "node": "O5585276538",
+          "lat": 41.2638039,
+          "lon": 28.7293121
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C3B",
+          "junctions": [
+            {
+              "node": "O5585276538",
+              "lat": 41.2638039,
+              "lon": 28.7293121
+            }
+          ]
+        }
+      ]
+    },
+    "C3B": {
+      "label": "C3B",
+      "segments": 7,
+      "nodeCount": 8,
+      "lengthMeters": 204,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5585276538",
+          "lat": 41.2638039,
+          "lon": 28.7293121
+        },
+        {
+          "node": "O5585276547",
+          "lat": 41.2638292,
+          "lon": 28.7317475
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C",
+          "junctions": [
+            {
+              "node": "O7918203722",
+              "lat": 41.2638109,
+              "lon": 28.7299631
+            }
+          ]
+        },
+        {
+          "taxiway": "C3A",
+          "junctions": [
+            {
+              "node": "O5585276538",
+              "lat": 41.2638039,
+              "lon": 28.7293121
+            }
+          ]
+        },
+        {
+          "taxiway": "D",
+          "junctions": [
+            {
+              "node": "O7918203723",
+              "lat": 41.2638228,
+              "lon": 28.7311214
+            }
+          ]
+        }
+      ]
+    },
+    "C4A": {
+      "label": "C4A",
+      "segments": 2,
+      "nodeCount": 3,
+      "lengthMeters": 135,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5585276323",
+          "lat": 41.2658541,
+          "lon": 28.729274
+        },
+        {
+          "node": "O6023430525",
+          "lat": 41.2658359,
+          "lon": 28.7276592
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B3B",
+          "junctions": [
+            {
+              "node": "O6023430525",
+              "lat": 41.2658359,
+              "lon": 28.7276592
+            }
+          ]
+        }
+      ]
+    },
+    "C5A": {
+      "label": "C5A",
+      "segments": 4,
+      "nodeCount": 5,
+      "lengthMeters": 189,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O6023430510",
+          "lat": 41.267069,
+          "lon": 28.7298997
+        },
+        {
+          "node": "O6023430526",
+          "lat": 41.2670437,
+          "lon": 28.7276356
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B4B",
+          "junctions": [
+            {
+              "node": "O6023430526",
+              "lat": 41.2670437,
+              "lon": 28.7276356
+            }
+          ]
+        },
+        {
+          "taxiway": "C",
+          "junctions": [
+            {
+              "node": "O6023430510",
+              "lat": 41.267069,
+              "lon": 28.7298997
+            }
+          ]
+        }
+      ]
+    },
+    "C6": {
+      "label": "C6",
+      "segments": 10,
+      "nodeCount": 11,
+      "lengthMeters": 544,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5680519762",
+          "lat": 41.272749,
+          "lon": 28.7297892
+        },
+        {
+          "node": "O5680519768",
+          "lat": 41.277253,
+          "lon": 28.7274366
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C",
+          "junctions": [
+            {
+              "node": "O5680519762",
+              "lat": 41.272749,
+              "lon": 28.7297892
+            }
+          ]
+        },
+        {
+          "taxiway": "N5",
+          "junctions": [
+            {
+              "node": "O5680519834",
+              "lat": 41.27417,
+              "lon": 28.7290163
+            }
+          ]
+        }
+      ]
+    },
+    "C7": {
+      "label": "C7",
+      "segments": 6,
+      "nodeCount": 7,
+      "lengthMeters": 452,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5680519775",
+          "lat": 41.2800003,
+          "lon": 28.727383
+        },
+        {
+          "node": "O5680519779",
+          "lat": 41.276285,
+          "lon": 28.7294172
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C8",
+          "junctions": [
+            {
+              "node": "O7918191474",
+              "lat": 41.2790692,
+              "lon": 28.7275645
+            }
+          ]
+        },
+        {
+          "taxiway": "N6",
+          "junctions": [
+            {
+              "node": "O5680519779",
+              "lat": 41.276285,
+              "lon": 28.7294172
+            }
+          ]
+        }
+      ]
+    },
+    "C8": {
+      "label": "C8",
+      "segments": 10,
+      "nodeCount": 11,
+      "lengthMeters": 549,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7918191472",
+          "lat": 41.2781772,
+          "lon": 28.7274185
+        },
+        {
+          "node": "O5680519800",
+          "lat": 41.2827713,
+          "lon": 28.7295942
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C",
+          "junctions": [
+            {
+              "node": "O5680519800",
+              "lat": 41.2827713,
+              "lon": 28.7295942
+            }
+          ]
+        },
+        {
+          "taxiway": "C7",
+          "junctions": [
+            {
+              "node": "O7918191474",
+              "lat": 41.2790692,
+              "lon": 28.7275645
+            }
+          ]
+        }
+      ]
+    },
+    "C9": {
+      "label": "C9",
+      "segments": 9,
+      "nodeCount": 10,
+      "lengthMeters": 549,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5680519807",
+          "lat": 41.2814399,
+          "lon": 28.7273549
+        },
+        {
+          "node": "O5680519818",
+          "lat": 41.2860352,
+          "lon": 28.7295306
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B8B",
+          "junctions": [
+            {
+              "node": "O5680519807",
+              "lat": 41.2814399,
+              "lon": 28.7273549
+            }
+          ]
+        },
+        {
+          "taxiway": "C",
+          "junctions": [
+            {
+              "node": "O5680519818",
+              "lat": 41.2860352,
+              "lon": 28.7295306
+            }
+          ]
+        }
+      ]
+    },
+    "C10": {
+      "label": "C10",
+      "segments": 10,
+      "nodeCount": 11,
+      "lengthMeters": 541,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7918191403",
+          "lat": 41.2841634,
+          "lon": 28.7273018
+        },
+        {
+          "node": "O7918191406",
+          "lat": 41.2886897,
+          "lon": 28.729479
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C",
+          "junctions": [
+            {
+              "node": "O7918191406",
+              "lat": 41.2886897,
+              "lon": 28.729479
+            }
+          ]
+        }
+      ]
+    },
+    "C11": {
+      "label": "C11",
+      "segments": 4,
+      "nodeCount": 5,
+      "lengthMeters": 147,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5680519656",
+          "lat": 41.2948433,
+          "lon": 28.7288564
+        },
+        {
+          "node": "O6023430530",
+          "lat": 41.2948234,
+          "lon": 28.7270939
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B9B",
+          "junctions": [
+            {
+              "node": "O6023430530",
+              "lat": 41.2948234,
+              "lon": 28.7270939
+            }
+          ]
+        }
+      ]
+    },
+    "C12": {
+      "label": "C12",
+      "segments": 5,
+      "nodeCount": 6,
+      "lengthMeters": 187,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5680230984",
+          "lat": 41.2969904,
+          "lon": 28.7298252
+        },
+        {
+          "node": "O5680230991",
+          "lat": 41.2969683,
+          "lon": 28.727583
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C",
+          "junctions": [
+            {
+              "node": "O12337194248",
+              "lat": 41.2969854,
+              "lon": 28.7293175
+            }
+          ]
+        },
+        {
+          "taxiway": "C15",
+          "junctions": [
+            {
+              "node": "O5680230984",
+              "lat": 41.2969904,
+              "lon": 28.7298252
+            }
+          ]
+        }
+      ]
+    },
+    "C13": {
+      "label": "C13",
+      "segments": 2,
+      "nodeCount": 3,
+      "lengthMeters": 101,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5680519703",
+          "lat": 41.2978441,
+          "lon": 28.7275695
+        },
+        {
+          "node": "O5680519706",
+          "lat": 41.2978588,
+          "lon": 28.728784
+        }
+      ],
+      "neighbors": []
+    },
+    "C14": {
+      "label": "C14",
+      "segments": 3,
+      "nodeCount": 4,
+      "lengthMeters": 147,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5585276514",
+          "lat": 41.2987334,
+          "lon": 28.7287727
+        },
+        {
+          "node": "O6022768311",
+          "lat": 41.2987156,
+          "lon": 28.727018
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B12B",
+          "junctions": [
+            {
+              "node": "O6022768311",
+              "lat": 41.2987156,
+              "lon": 28.727018
+            }
+          ]
+        }
+      ]
+    },
+    "C15": {
+      "label": "C15",
+      "segments": 12,
+      "nodeCount": 13,
+      "lengthMeters": 258,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5680230984",
+          "lat": 41.2969904,
+          "lon": 28.7298252
+        },
+        {
+          "node": "O5585276508",
+          "lat": 41.2987446,
+          "lon": 28.7298687
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C12",
+          "junctions": [
+            {
+              "node": "O5680230984",
+              "lat": 41.2969904,
+              "lon": 28.7298252
+            }
+          ]
+        }
+      ]
+    },
+    "D": {
+      "label": "D",
+      "segments": 83,
+      "nodeCount": 84,
+      "lengthMeters": 3304,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7918203971",
+          "lat": 41.2499424,
+          "lon": 28.735259
+        },
+        {
+          "node": "O7476115046",
+          "lat": 41.2758488,
+          "lon": 28.7303685
+        },
+        {
+          "node": "O12297292746",
+          "lat": 41.2762823,
+          "lon": 28.7308828
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C1B",
+          "junctions": [
+            {
+              "node": "O7918203764",
+              "lat": 41.2620708,
+              "lon": 28.7311549
+            }
+          ]
+        },
+        {
+          "taxiway": "C2B",
+          "junctions": [
+            {
+              "node": "O7918203734",
+              "lat": 41.2629457,
+              "lon": 28.7311382
+            }
+          ]
+        },
+        {
+          "taxiway": "C3B",
+          "junctions": [
+            {
+              "node": "O7918203723",
+              "lat": 41.2638228,
+              "lon": 28.7311214
+            }
+          ]
+        },
+        {
+          "taxiway": "D3",
+          "junctions": [
+            {
+              "node": "O7918204067",
+              "lat": 41.2524419,
+              "lon": 28.7313393
+            }
+          ]
+        },
+        {
+          "taxiway": "D4",
+          "junctions": [
+            {
+              "node": "O7918204081",
+              "lat": 41.2533212,
+              "lon": 28.7313224
+            }
+          ]
+        },
+        {
+          "taxiway": "E2",
+          "junctions": [
+            {
+              "node": "O7918203971",
+              "lat": 41.2499424,
+              "lon": 28.735259
+            }
+          ]
+        },
+        {
+          "taxiway": "N1",
+          "junctions": [
+            {
+              "node": "O6023430521",
+              "lat": 41.2694356,
+              "lon": 28.7310139
+            }
+          ]
+        },
+        {
+          "taxiway": "N2",
+          "junctions": [
+            {
+              "node": "O6023430522",
+              "lat": 41.2703129,
+              "lon": 28.7309971
+            }
+          ]
+        },
+        {
+          "taxiway": "N5",
+          "junctions": [
+            {
+              "node": "O6023430523",
+              "lat": 41.2738284,
+              "lon": 28.7309298
+            }
+          ]
+        },
+        {
+          "taxiway": "N6",
+          "junctions": [
+            {
+              "node": "O12297292737",
+              "lat": 41.2760566,
+              "lon": 28.7308871
+            },
+            {
+              "node": "O12297292740",
+              "lat": 41.2758546,
+              "lon": 28.730891
+            },
+            {
+              "node": "O7476115046",
+              "lat": 41.2758488,
+              "lon": 28.7303685
+            },
+            {
+              "node": "O7918203541",
+              "lat": 41.2756977,
+              "lon": 28.730894
+            }
+          ]
+        },
+        {
+          "taxiway": "VEFA",
+          "junctions": [
+            {
+              "node": "O12297292746",
+              "lat": 41.2762823,
+              "lon": 28.7308828
+            },
+            {
+              "node": "O7476115046",
+              "lat": 41.2758488,
+              "lon": 28.7303685
+            }
+          ]
+        }
+      ]
+    },
+    "D3": {
+      "label": "D3",
+      "segments": 3,
+      "nodeCount": 4,
+      "lengthMeters": 96,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O6027958724",
+          "lat": 41.2524361,
+          "lon": 28.7308156
+        },
+        {
+          "node": "O7918204076",
+          "lat": 41.2524488,
+          "lon": 28.7319581
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "D",
+          "junctions": [
+            {
+              "node": "O7918204067",
+              "lat": 41.2524419,
+              "lon": 28.7313393
+            }
+          ]
+        },
+        {
+          "taxiway": "E1",
+          "junctions": [
+            {
+              "node": "O6027958724",
+              "lat": 41.2524361,
+              "lon": 28.7308156
+            }
+          ]
+        },
+        {
+          "taxiway": "E4",
+          "junctions": [
+            {
+              "node": "O7918204076",
+              "lat": 41.2524488,
+              "lon": 28.7319581
+            }
+          ]
+        }
+      ]
+    },
+    "D4": {
+      "label": "D4",
+      "segments": 3,
+      "nodeCount": 4,
+      "lengthMeters": 95,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7918204072",
+          "lat": 41.2533282,
+          "lon": 28.7319534
+        },
+        {
+          "node": "O6027958739",
+          "lat": 41.2533155,
+          "lon": 28.7308184
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B",
+          "junctions": [
+            {
+              "node": "O6027958739",
+              "lat": 41.2533155,
+              "lon": 28.7308184
+            }
+          ]
+        },
+        {
+          "taxiway": "D",
+          "junctions": [
+            {
+              "node": "O7918204081",
+              "lat": 41.2533212,
+              "lon": 28.7313224
+            }
+          ]
+        }
+      ]
+    },
+    "D5": {
+      "label": "D5",
+      "segments": 2,
+      "nodeCount": 3,
+      "lengthMeters": 53,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7918204051",
+          "lat": 41.2559873,
+          "lon": 28.7324341
+        },
+        {
+          "node": "O7918204050",
+          "lat": 41.2559808,
+          "lon": 28.7317945
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "E",
+          "junctions": [
+            {
+              "node": "O7918204051",
+              "lat": 41.2559873,
+              "lon": 28.7324341
+            }
+          ]
+        },
+        {
+          "taxiway": "E5",
+          "junctions": [
+            {
+              "node": "O7918204051",
+              "lat": 41.2559873,
+              "lon": 28.7324341
+            }
+          ]
+        }
+      ]
+    },
+    "D6": {
+      "label": "D6",
+      "segments": 2,
+      "nodeCount": 3,
+      "lengthMeters": 53,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5680230959",
+          "lat": 41.2581173,
+          "lon": 28.7317565
+        },
+        {
+          "node": "O6023429781",
+          "lat": 41.2581287,
+          "lon": 28.7323935
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "E",
+          "junctions": [
+            {
+              "node": "O6023429781",
+              "lat": 41.2581287,
+              "lon": 28.7323935
+            }
+          ]
+        },
+        {
+          "taxiway": "E6",
+          "junctions": [
+            {
+              "node": "O6023429781",
+              "lat": 41.2581287,
+              "lon": 28.7323935
+            }
+          ]
+        }
+      ]
+    },
+    "D7": {
+      "label": "D7",
+      "segments": 2,
+      "nodeCount": 3,
+      "lengthMeters": 53,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5680230942",
+          "lat": 41.2589904,
+          "lon": 28.7317469
+        },
+        {
+          "node": "O6023429782",
+          "lat": 41.2589989,
+          "lon": 28.732377
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "E",
+          "junctions": [
+            {
+              "node": "O6023429782",
+              "lat": 41.2589989,
+              "lon": 28.732377
+            }
+          ]
+        },
+        {
+          "taxiway": "E7",
+          "junctions": [
+            {
+              "node": "O6023429782",
+              "lat": 41.2589989,
+              "lon": 28.732377
+            }
+          ]
+        }
+      ]
+    },
+    "E": {
+      "label": "E",
+      "segments": 29,
+      "nodeCount": 30,
+      "lengthMeters": 1801,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5680230936",
+          "lat": 41.2528682,
+          "lon": 28.7324932
+        },
+        {
+          "node": "O5724371196",
+          "lat": 41.2690646,
+          "lon": 28.7321862
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C1B",
+          "junctions": [
+            {
+              "node": "O7918203756",
+              "lat": 41.2620835,
+              "lon": 28.7323185
+            }
+          ]
+        },
+        {
+          "taxiway": "D5",
+          "junctions": [
+            {
+              "node": "O7918204051",
+              "lat": 41.2559873,
+              "lon": 28.7324341
+            }
+          ]
+        },
+        {
+          "taxiway": "D6",
+          "junctions": [
+            {
+              "node": "O6023429781",
+              "lat": 41.2581287,
+              "lon": 28.7323935
+            }
+          ]
+        },
+        {
+          "taxiway": "D7",
+          "junctions": [
+            {
+              "node": "O6023429782",
+              "lat": 41.2589989,
+              "lon": 28.732377
+            }
+          ]
+        },
+        {
+          "taxiway": "E5",
+          "junctions": [
+            {
+              "node": "O7918204051",
+              "lat": 41.2559873,
+              "lon": 28.7324341
+            }
+          ]
+        },
+        {
+          "taxiway": "E6",
+          "junctions": [
+            {
+              "node": "O6023429781",
+              "lat": 41.2581287,
+              "lon": 28.7323935
+            }
+          ]
+        },
+        {
+          "taxiway": "E7",
+          "junctions": [
+            {
+              "node": "O6023429782",
+              "lat": 41.2589989,
+              "lon": 28.732377
+            }
+          ]
+        },
+        {
+          "taxiway": "T1",
+          "junctions": [
+            {
+              "node": "O7918203654",
+              "lat": 41.2660545,
+              "lon": 28.7322433
+            }
+          ]
+        }
+      ]
+    },
+    "E1": {
+      "label": "E1",
+      "segments": 24,
+      "nodeCount": 25,
+      "lengthMeters": 2424,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O6027958724",
+          "lat": 41.2524361,
+          "lon": 28.7308156
+        },
+        {
+          "node": "O7918203825",
+          "lat": 41.267467,
+          "lon": 28.7216846
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A1",
+          "junctions": [
+            {
+              "node": "O6023430504",
+              "lat": 41.2651161,
+              "lon": 28.7217308
+            }
+          ]
+        },
+        {
+          "taxiway": "A3",
+          "junctions": [
+            {
+              "node": "O6023430503",
+              "lat": 41.2669772,
+              "lon": 28.7216942
+            }
+          ]
+        },
+        {
+          "taxiway": "D3",
+          "junctions": [
+            {
+              "node": "O6027958724",
+              "lat": 41.2524361,
+              "lon": 28.7308156
+            }
+          ]
+        },
+        {
+          "taxiway": "E1A",
+          "junctions": [
+            {
+              "node": "O6027958681",
+              "lat": 41.2523739,
+              "lon": 28.725247
+            },
+            {
+              "node": "O6027958687",
+              "lat": 41.2523855,
+              "lon": 28.7262825
+            }
+          ]
+        },
+        {
+          "taxiway": "E1D",
+          "junctions": [
+            {
+              "node": "O6023430504",
+              "lat": 41.2651161,
+              "lon": 28.7217308
+            }
+          ]
+        }
+      ]
+    },
+    "E1A": {
+      "label": "E1A",
+      "segments": 17,
+      "nodeCount": 18,
+      "lengthMeters": 286,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O6027958681",
+          "lat": 41.2523739,
+          "lon": 28.725247
+        },
+        {
+          "node": "O6027958686",
+          "lat": 41.2532524,
+          "lon": 28.7251756
+        },
+        {
+          "node": "O6027958687",
+          "lat": 41.2523855,
+          "lon": 28.7262825
+        },
+        {
+          "node": "O6027958690",
+          "lat": 41.2532651,
+          "lon": 28.7263066
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B",
+          "junctions": [
+            {
+              "node": "O6027958686",
+              "lat": 41.2532524,
+              "lon": 28.7251756
+            },
+            {
+              "node": "O6027958690",
+              "lat": 41.2532651,
+              "lon": 28.7263066
+            }
+          ]
+        },
+        {
+          "taxiway": "E1",
+          "junctions": [
+            {
+              "node": "O6027958681",
+              "lat": 41.2523739,
+              "lon": 28.725247
+            },
+            {
+              "node": "O6027958687",
+              "lat": 41.2523855,
+              "lon": 28.7262825
+            }
+          ]
+        }
+      ]
+    },
+    "E1C": {
+      "label": "E1C",
+      "segments": 2,
+      "nodeCount": 3,
+      "lengthMeters": 50,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5585276419",
+          "lat": 41.2619738,
+          "lon": 28.7222759
+        },
+        {
+          "node": "O6027958661",
+          "lat": 41.2619803,
+          "lon": 28.7228724
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B",
+          "junctions": [
+            {
+              "node": "O6027958661",
+              "lat": 41.2619803,
+              "lon": 28.7228724
+            }
+          ]
+        },
+        {
+          "taxiway": "B1A",
+          "junctions": [
+            {
+              "node": "O6027958661",
+              "lat": 41.2619803,
+              "lon": 28.7228724
+            }
+          ]
+        }
+      ]
+    },
+    "E1D": {
+      "label": "E1D",
+      "segments": 4,
+      "nodeCount": 5,
+      "lengthMeters": 98,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O6023430534",
+          "lat": 41.2651953,
+          "lon": 28.7228934
+        },
+        {
+          "node": "O6023430504",
+          "lat": 41.2651161,
+          "lon": 28.7217308
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A1",
+          "junctions": [
+            {
+              "node": "O6023430504",
+              "lat": 41.2651161,
+              "lon": 28.7217308
+            }
+          ]
+        },
+        {
+          "taxiway": "B",
+          "junctions": [
+            {
+              "node": "O6023430534",
+              "lat": 41.2651953,
+              "lon": 28.7228934
+            }
+          ]
+        },
+        {
+          "taxiway": "B3A",
+          "junctions": [
+            {
+              "node": "O6023430534",
+              "lat": 41.2651953,
+              "lon": 28.7228934
+            }
+          ]
+        },
+        {
+          "taxiway": "E1",
+          "junctions": [
+            {
+              "node": "O6023430504",
+              "lat": 41.2651161,
+              "lon": 28.7217308
+            }
+          ]
+        }
+      ]
+    },
+    "E2": {
+      "label": "E2",
+      "segments": 25,
+      "nodeCount": 26,
+      "lengthMeters": 686,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7918203971",
+          "lat": 41.2499424,
+          "lon": 28.735259
+        },
+        {
+          "node": "O7918203992",
+          "lat": 41.2558494,
+          "lon": 28.7357108
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "D",
+          "junctions": [
+            {
+              "node": "O7918203971",
+              "lat": 41.2499424,
+              "lon": 28.735259
+            }
+          ]
+        },
+        {
+          "taxiway": "E4",
+          "junctions": [
+            {
+              "node": "O7918203994",
+              "lat": 41.252585,
+              "lon": 28.7357365
+            }
+          ]
+        }
+      ]
+    },
+    "E3": {
+      "label": "E3",
+      "segments": 23,
+      "nodeCount": 24,
+      "lengthMeters": 599,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O6027958701",
+          "lat": 41.2556359,
+          "lon": 28.7348907
+        },
+        {
+          "node": "O6027958702",
+          "lat": 41.2502503,
+          "lon": 28.7349996
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "E4",
+          "junctions": [
+            {
+              "node": "O6027958694",
+              "lat": 41.2524822,
+              "lon": 28.7349545
+            }
+          ]
+        }
+      ]
+    },
+    "E4": {
+      "label": "E4",
+      "segments": 9,
+      "nodeCount": 10,
+      "lengthMeters": 319,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7918204076",
+          "lat": 41.2524488,
+          "lon": 28.7319581
+        },
+        {
+          "node": "O7918203994",
+          "lat": 41.252585,
+          "lon": 28.7357365
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "D3",
+          "junctions": [
+            {
+              "node": "O7918204076",
+              "lat": 41.2524488,
+              "lon": 28.7319581
+            }
+          ]
+        },
+        {
+          "taxiway": "E2",
+          "junctions": [
+            {
+              "node": "O7918203994",
+              "lat": 41.252585,
+              "lon": 28.7357365
+            }
+          ]
+        },
+        {
+          "taxiway": "E3",
+          "junctions": [
+            {
+              "node": "O6027958694",
+              "lat": 41.2524822,
+              "lon": 28.7349545
+            }
+          ]
+        }
+      ]
+    },
+    "E5": {
+      "label": "E5",
+      "segments": 3,
+      "nodeCount": 4,
+      "lengthMeters": 142,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O6027958697",
+          "lat": 41.2560045,
+          "lon": 28.7341333
+        },
+        {
+          "node": "O7918204051",
+          "lat": 41.2559873,
+          "lon": 28.7324341
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "D5",
+          "junctions": [
+            {
+              "node": "O7918204051",
+              "lat": 41.2559873,
+              "lon": 28.7324341
+            }
+          ]
+        },
+        {
+          "taxiway": "E",
+          "junctions": [
+            {
+              "node": "O7918204051",
+              "lat": 41.2559873,
+              "lon": 28.7324341
+            }
+          ]
+        },
+        {
+          "taxiway": "T2",
+          "junctions": [
+            {
+              "node": "O6027958697",
+              "lat": 41.2560045,
+              "lon": 28.7341333
+            }
+          ]
+        }
+      ]
+    },
+    "E6": {
+      "label": "E6",
+      "segments": 2,
+      "nodeCount": 3,
+      "lengthMeters": 55,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O6023429781",
+          "lat": 41.2581287,
+          "lon": 28.7323935
+        },
+        {
+          "node": "O5680230953",
+          "lat": 41.2581328,
+          "lon": 28.7330556
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "D6",
+          "junctions": [
+            {
+              "node": "O6023429781",
+              "lat": 41.2581287,
+              "lon": 28.7323935
+            }
+          ]
+        },
+        {
+          "taxiway": "E",
+          "junctions": [
+            {
+              "node": "O6023429781",
+              "lat": 41.2581287,
+              "lon": 28.7323935
+            }
+          ]
+        }
+      ]
+    },
+    "E7": {
+      "label": "E7",
+      "segments": 5,
+      "nodeCount": 6,
+      "lengthMeters": 98,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O6023429782",
+          "lat": 41.2589989,
+          "lon": 28.732377
+        },
+        {
+          "node": "O7922834433",
+          "lat": 41.2590146,
+          "lon": 28.7335445
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "D7",
+          "junctions": [
+            {
+              "node": "O6023429782",
+              "lat": 41.2589989,
+              "lon": 28.732377
+            }
+          ]
+        },
+        {
+          "taxiway": "E",
+          "junctions": [
+            {
+              "node": "O6023429782",
+              "lat": 41.2589989,
+              "lon": 28.732377
+            }
+          ]
+        },
+        {
+          "taxiway": "T1",
+          "junctions": [
+            {
+              "node": "O7918203749",
+              "lat": 41.2590085,
+              "lon": 28.7330919
+            }
+          ]
+        }
+      ]
+    },
+    "F": {
+      "label": "F",
+      "segments": 28,
+      "nodeCount": 29,
+      "lengthMeters": 1858,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7027031612",
+          "lat": 41.2692855,
+          "lon": 28.7525302
+        },
+        {
+          "node": "O5680369988",
+          "lat": 41.2531746,
+          "lon": 28.7528359
+        },
+        {
+          "node": "O5680369686",
+          "lat": 41.2623019,
+          "lon": 28.7531862
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "NE",
+          "junctions": [
+            {
+              "node": "O7027031619",
+              "lat": 41.2687895,
+              "lon": 28.7525396
+            }
+          ]
+        }
+      ]
+    },
+    "G": {
+      "label": "G",
+      "segments": 64,
+      "nodeCount": 65,
+      "lengthMeters": 4356,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7027031628",
+          "lat": 41.2506875,
+          "lon": 28.7540442
+        },
+        {
+          "node": "O7400775833",
+          "lat": 41.2896538,
+          "lon": 28.753815
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G10",
+          "junctions": [
+            {
+              "node": "O9064890385",
+              "lat": 41.2676139,
+              "lon": 28.7537229
+            }
+          ]
+        },
+        {
+          "taxiway": "G11",
+          "junctions": [
+            {
+              "node": "O7920598779",
+              "lat": 41.2740708,
+              "lon": 28.7536003
+            }
+          ]
+        },
+        {
+          "taxiway": "G12",
+          "junctions": [
+            {
+              "node": "O7027031627",
+              "lat": 41.276104,
+              "lon": 28.7535617
+            }
+          ]
+        },
+        {
+          "taxiway": "G13",
+          "junctions": [
+            {
+              "node": "O7297569024",
+              "lat": 41.2811615,
+              "lon": 28.7534657
+            }
+          ]
+        },
+        {
+          "taxiway": "G14",
+          "junctions": [
+            {
+              "node": "O7297534169",
+              "lat": 41.2837539,
+              "lon": 28.7534165
+            }
+          ]
+        },
+        {
+          "taxiway": "G15",
+          "junctions": [
+            {
+              "node": "O9064878286",
+              "lat": 41.2876901,
+              "lon": 28.7533417
+            }
+          ]
+        },
+        {
+          "taxiway": "G16",
+          "junctions": [
+            {
+              "node": "O9064878294",
+              "lat": 41.2884847,
+              "lon": 28.7533266
+            }
+          ]
+        },
+        {
+          "taxiway": "G17",
+          "junctions": [
+            {
+              "node": "O7400775833",
+              "lat": 41.2896538,
+              "lon": 28.753815
+            }
+          ]
+        },
+        {
+          "taxiway": "N1",
+          "junctions": [
+            {
+              "node": "O7297568989",
+              "lat": 41.2696823,
+              "lon": 28.7536836
+            }
+          ]
+        },
+        {
+          "taxiway": "N5",
+          "junctions": [
+            {
+              "node": "O7920598779",
+              "lat": 41.2740708,
+              "lon": 28.7536003
+            }
+          ]
+        },
+        {
+          "taxiway": "N6",
+          "junctions": [
+            {
+              "node": "O7027031627",
+              "lat": 41.276104,
+              "lon": 28.7535617
+            }
+          ]
+        },
+        {
+          "taxiway": "NE",
+          "junctions": [
+            {
+              "node": "O7922834495",
+              "lat": 41.2688016,
+              "lon": 28.7537003
+            }
+          ]
+        }
+      ]
+    },
+    "G1": {
+      "label": "G1",
+      "segments": 5,
+      "nodeCount": 6,
+      "lengthMeters": 905,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O10212766133",
+          "lat": 41.2528347,
+          "lon": 28.7652656
+        },
+        {
+          "node": "O7922827356",
+          "lat": 41.2526883,
+          "lon": 28.7544364
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "H",
+          "junctions": [
+            {
+              "node": "O7027031622",
+              "lat": 41.2527738,
+              "lon": 28.7620564
+            }
+          ]
+        }
+      ]
+    },
+    "G2": {
+      "label": "G2",
+      "segments": 9,
+      "nodeCount": 10,
+      "lengthMeters": 699,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7922827374",
+          "lat": 41.2535682,
+          "lon": 28.7544772
+        },
+        {
+          "node": "O7400775844",
+          "lat": 41.2540397,
+          "lon": 28.7625696
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "H",
+          "junctions": [
+            {
+              "node": "O7400775844",
+              "lat": 41.2540397,
+              "lon": 28.7625696
+            }
+          ]
+        }
+      ]
+    },
+    "G6A": {
+      "label": "G6A",
+      "segments": 4,
+      "nodeCount": 5,
+      "lengthMeters": 198,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7273928556",
+          "lat": 41.2623381,
+          "lon": 28.7566823
+        },
+        {
+          "node": "O7922834306",
+          "lat": 41.2623136,
+          "lon": 28.7543136
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "H1",
+          "junctions": [
+            {
+              "node": "O7273928556",
+              "lat": 41.2623381,
+              "lon": 28.7566823
+            }
+          ]
+        }
+      ]
+    },
+    "G7A": {
+      "label": "G7A",
+      "segments": 7,
+      "nodeCount": 8,
+      "lengthMeters": 226,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7922834325",
+          "lat": 41.2631871,
+          "lon": 28.7543298
+        },
+        {
+          "node": "O7297534152",
+          "lat": 41.26368,
+          "lon": 28.7566564
+        }
+      ],
+      "neighbors": []
+    },
+    "G8A": {
+      "label": "G8A",
+      "segments": 7,
+      "nodeCount": 8,
+      "lengthMeters": 224,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7922834334",
+          "lat": 41.2640623,
+          "lon": 28.7542869
+        },
+        {
+          "node": "O7297534155",
+          "lat": 41.2645199,
+          "lon": 28.7566402
+        }
+      ],
+      "neighbors": []
+    },
+    "G9A": {
+      "label": "G9A",
+      "segments": 8,
+      "nodeCount": 9,
+      "lengthMeters": 425,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7297568997",
+          "lat": 41.269246,
+          "lon": 28.7565491
+        },
+        {
+          "node": "O7922834441",
+          "lat": 41.2661253,
+          "lon": 28.7542774
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "H2",
+          "junctions": [
+            {
+              "node": "O7297568997",
+              "lat": 41.269246,
+              "lon": 28.7565491
+            }
+          ]
+        }
+      ]
+    },
+    "G10": {
+      "label": "G10",
+      "segments": 9,
+      "nodeCount": 10,
+      "lengthMeters": 638,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7297534183",
+          "lat": 41.2728955,
+          "lon": 28.7564788
+        },
+        {
+          "node": "O9064890385",
+          "lat": 41.2676139,
+          "lon": 28.7537229
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G",
+          "junctions": [
+            {
+              "node": "O9064890385",
+              "lat": 41.2676139,
+              "lon": 28.7537229
+            }
+          ]
+        },
+        {
+          "taxiway": "H3",
+          "junctions": [
+            {
+              "node": "O7297534183",
+              "lat": 41.2728955,
+              "lon": 28.7564788
+            }
+          ]
+        },
+        {
+          "taxiway": "N1",
+          "junctions": [
+            {
+              "node": "O7297568986",
+              "lat": 41.2699753,
+              "lon": 28.7550971
+            }
+          ]
+        },
+        {
+          "taxiway": "NE",
+          "junctions": [
+            {
+              "node": "O7922834494",
+              "lat": 41.2689877,
+              "lon": 28.7543659
+            }
+          ]
+        }
+      ]
+    },
+    "G11": {
+      "label": "G11",
+      "segments": 4,
+      "nodeCount": 5,
+      "lengthMeters": 239,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7920598779",
+          "lat": 41.2740708,
+          "lon": 28.7536003
+        },
+        {
+          "node": "O7297534179",
+          "lat": 41.2741013,
+          "lon": 28.7564556
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G",
+          "junctions": [
+            {
+              "node": "O7920598779",
+              "lat": 41.2740708,
+              "lon": 28.7536003
+            }
+          ]
+        },
+        {
+          "taxiway": "H4",
+          "junctions": [
+            {
+              "node": "O7297534179",
+              "lat": 41.2741013,
+              "lon": 28.7564556
+            }
+          ]
+        },
+        {
+          "taxiway": "N5",
+          "junctions": [
+            {
+              "node": "O7920598779",
+              "lat": 41.2740708,
+              "lon": 28.7536003
+            }
+          ]
+        }
+      ]
+    },
+    "G12": {
+      "label": "G12",
+      "segments": 4,
+      "nodeCount": 5,
+      "lengthMeters": 239,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7297569034",
+          "lat": 41.2761355,
+          "lon": 28.7564163
+        },
+        {
+          "node": "O7027031627",
+          "lat": 41.276104,
+          "lon": 28.7535617
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G",
+          "junctions": [
+            {
+              "node": "O7027031627",
+              "lat": 41.276104,
+              "lon": 28.7535617
+            }
+          ]
+        },
+        {
+          "taxiway": "H5",
+          "junctions": [
+            {
+              "node": "O7297569034",
+              "lat": 41.2761355,
+              "lon": 28.7564163
+            }
+          ]
+        },
+        {
+          "taxiway": "N6",
+          "junctions": [
+            {
+              "node": "O7027031627",
+              "lat": 41.276104,
+              "lon": 28.7535617
+            }
+          ]
+        }
+      ]
+    },
+    "G13": {
+      "label": "G13",
+      "segments": 13,
+      "nodeCount": 14,
+      "lengthMeters": 503,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7297569024",
+          "lat": 41.2811615,
+          "lon": 28.7534657
+        },
+        {
+          "node": "O7297569018",
+          "lat": 41.2785469,
+          "lon": 28.7563698
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G",
+          "junctions": [
+            {
+              "node": "O7297569024",
+              "lat": 41.2811615,
+              "lon": 28.7534657
+            }
+          ]
+        },
+        {
+          "taxiway": "H6",
+          "junctions": [
+            {
+              "node": "O7297569018",
+              "lat": 41.2785469,
+              "lon": 28.7563698
+            }
+          ]
+        }
+      ]
+    },
+    "G14": {
+      "label": "G14",
+      "segments": 14,
+      "nodeCount": 15,
+      "lengthMeters": 521,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7297534169",
+          "lat": 41.2837539,
+          "lon": 28.7534165
+        },
+        {
+          "node": "O7297534163",
+          "lat": 41.2811915,
+          "lon": 28.7563189
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G",
+          "junctions": [
+            {
+              "node": "O7297534169",
+              "lat": 41.2837539,
+              "lon": 28.7534165
+            }
+          ]
+        },
+        {
+          "taxiway": "H7",
+          "junctions": [
+            {
+              "node": "O7297534163",
+              "lat": 41.2811915,
+              "lon": 28.7563189
+            }
+          ]
+        }
+      ]
+    },
+    "G15": {
+      "label": "G15",
+      "segments": 11,
+      "nodeCount": 12,
+      "lengthMeters": 278,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O9064878286",
+          "lat": 41.2876901,
+          "lon": 28.7533417
+        },
+        {
+          "node": "O9064878293",
+          "lat": 41.2876568,
+          "lon": 28.7561942
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G",
+          "junctions": [
+            {
+              "node": "O9064878286",
+              "lat": 41.2876901,
+              "lon": 28.7533417
+            }
+          ]
+        }
+      ]
+    },
+    "G16": {
+      "label": "G16",
+      "segments": 10,
+      "nodeCount": 11,
+      "lengthMeters": 283,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O9064878294",
+          "lat": 41.2884847,
+          "lon": 28.7533266
+        },
+        {
+          "node": "O9064878301",
+          "lat": 41.2884635,
+          "lon": 28.7561787
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G",
+          "junctions": [
+            {
+              "node": "O9064878294",
+              "lat": 41.2884847,
+              "lon": 28.7533266
+            }
+          ]
+        }
+      ]
+    },
+    "G17": {
+      "label": "G17",
+      "segments": 3,
+      "nodeCount": 4,
+      "lengthMeters": 196,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7400775834",
+          "lat": 41.289681,
+          "lon": 28.7561552
+        },
+        {
+          "node": "O7400775833",
+          "lat": 41.2896538,
+          "lon": 28.753815
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G",
+          "junctions": [
+            {
+              "node": "O7400775833",
+              "lat": 41.2896538,
+              "lon": 28.753815
+            }
+          ]
+        },
+        {
+          "taxiway": "H8",
+          "junctions": [
+            {
+              "node": "O7400775834",
+              "lat": 41.289681,
+              "lon": 28.7561552
+            }
+          ]
+        }
+      ]
+    },
+    "H": {
+      "label": "H",
+      "segments": 35,
+      "nodeCount": 36,
+      "lengthMeters": 4211,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7027031622",
+          "lat": 41.2527738,
+          "lon": 28.7620564
+        },
+        {
+          "node": "O7400775836",
+          "lat": 41.289344,
+          "lon": 28.7586638
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G1",
+          "junctions": [
+            {
+              "node": "O7027031622",
+              "lat": 41.2527738,
+              "lon": 28.7620564
+            }
+          ]
+        },
+        {
+          "taxiway": "G2",
+          "junctions": [
+            {
+              "node": "O7400775844",
+              "lat": 41.2540397,
+              "lon": 28.7625696
+            }
+          ]
+        },
+        {
+          "taxiway": "H2",
+          "junctions": [
+            {
+              "node": "O7297568990",
+              "lat": 41.2656106,
+              "lon": 28.7591155
+            }
+          ]
+        },
+        {
+          "taxiway": "H3",
+          "junctions": [
+            {
+              "node": "O7297534180",
+              "lat": 41.2686431,
+              "lon": 28.7587033
+            }
+          ]
+        },
+        {
+          "taxiway": "H4",
+          "junctions": [
+            {
+              "node": "O7297534160",
+              "lat": 41.2745729,
+              "lon": 28.7585898
+            },
+            {
+              "node": "O7297534178",
+              "lat": 41.2737364,
+              "lon": 28.7586058
+            }
+          ]
+        },
+        {
+          "taxiway": "H5",
+          "junctions": [
+            {
+              "node": "O7297569033",
+              "lat": 41.2757787,
+              "lon": 28.7585667
+            },
+            {
+              "node": "O9064878269",
+              "lat": 41.276535,
+              "lon": 28.7585522
+            }
+          ]
+        },
+        {
+          "taxiway": "H6",
+          "junctions": [
+            {
+              "node": "O7297534176",
+              "lat": 41.281136,
+              "lon": 28.7584642
+            }
+          ]
+        },
+        {
+          "taxiway": "H7",
+          "junctions": [
+            {
+              "node": "O7297534177",
+              "lat": 41.2838315,
+              "lon": 28.7584126
+            }
+          ]
+        },
+        {
+          "taxiway": "H8",
+          "junctions": [
+            {
+              "node": "O7400775836",
+              "lat": 41.289344,
+              "lon": 28.7586638
+            }
+          ]
+        }
+      ]
+    },
+    "H1": {
+      "label": "H1",
+      "segments": 4,
+      "nodeCount": 5,
+      "lengthMeters": 167,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O9064890372",
+          "lat": 41.2623588,
+          "lon": 28.7586764
+        },
+        {
+          "node": "O7273928556",
+          "lat": 41.2623381,
+          "lon": 28.7566823
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G6A",
+          "junctions": [
+            {
+              "node": "O7273928556",
+              "lat": 41.2623381,
+              "lon": 28.7566823
+            }
+          ]
+        }
+      ]
+    },
+    "H2": {
+      "label": "H2",
+      "segments": 11,
+      "nodeCount": 12,
+      "lengthMeters": 476,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7297568990",
+          "lat": 41.2656106,
+          "lon": 28.7591155
+        },
+        {
+          "node": "O7297568997",
+          "lat": 41.269246,
+          "lon": 28.7565491
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G9A",
+          "junctions": [
+            {
+              "node": "O7297568997",
+              "lat": 41.269246,
+              "lon": 28.7565491
+            }
+          ]
+        },
+        {
+          "taxiway": "H",
+          "junctions": [
+            {
+              "node": "O7297568990",
+              "lat": 41.2656106,
+              "lon": 28.7591155
+            }
+          ]
+        }
+      ]
+    },
+    "H3": {
+      "label": "H3",
+      "segments": 6,
+      "nodeCount": 7,
+      "lengthMeters": 514,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7297534180",
+          "lat": 41.2686431,
+          "lon": 28.7587033
+        },
+        {
+          "node": "O7297534183",
+          "lat": 41.2728955,
+          "lon": 28.7564788
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G10",
+          "junctions": [
+            {
+              "node": "O7297534183",
+              "lat": 41.2728955,
+              "lon": 28.7564788
+            }
+          ]
+        },
+        {
+          "taxiway": "H",
+          "junctions": [
+            {
+              "node": "O7297534180",
+              "lat": 41.2686431,
+              "lon": 28.7587033
+            }
+          ]
+        }
+      ]
+    },
+    "H4": {
+      "label": "H4",
+      "segments": 14,
+      "nodeCount": 15,
+      "lengthMeters": 274,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7297534160",
+          "lat": 41.2745729,
+          "lon": 28.7585898
+        },
+        {
+          "node": "O7297534178",
+          "lat": 41.2737364,
+          "lon": 28.7586058
+        },
+        {
+          "node": "O7297534179",
+          "lat": 41.2741013,
+          "lon": 28.7564556
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G11",
+          "junctions": [
+            {
+              "node": "O7297534179",
+              "lat": 41.2741013,
+              "lon": 28.7564556
+            }
+          ]
+        },
+        {
+          "taxiway": "H",
+          "junctions": [
+            {
+              "node": "O7297534160",
+              "lat": 41.2745729,
+              "lon": 28.7585898
+            },
+            {
+              "node": "O7297534178",
+              "lat": 41.2737364,
+              "lon": 28.7586058
+            }
+          ]
+        }
+      ]
+    },
+    "H5": {
+      "label": "H5",
+      "segments": 10,
+      "nodeCount": 11,
+      "lengthMeters": 265,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7297569033",
+          "lat": 41.2757787,
+          "lon": 28.7585667
+        },
+        {
+          "node": "O9064878269",
+          "lat": 41.276535,
+          "lon": 28.7585522
+        },
+        {
+          "node": "O7297569034",
+          "lat": 41.2761355,
+          "lon": 28.7564163
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G12",
+          "junctions": [
+            {
+              "node": "O7297569034",
+              "lat": 41.2761355,
+              "lon": 28.7564163
+            }
+          ]
+        },
+        {
+          "taxiway": "H",
+          "junctions": [
+            {
+              "node": "O7297569033",
+              "lat": 41.2757787,
+              "lon": 28.7585667
+            },
+            {
+              "node": "O9064878269",
+              "lat": 41.276535,
+              "lon": 28.7585522
+            }
+          ]
+        }
+      ]
+    },
+    "H6": {
+      "label": "H6",
+      "segments": 11,
+      "nodeCount": 12,
+      "lengthMeters": 434,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7297534176",
+          "lat": 41.281136,
+          "lon": 28.7584642
+        },
+        {
+          "node": "O7297569018",
+          "lat": 41.2785469,
+          "lon": 28.7563698
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G13",
+          "junctions": [
+            {
+              "node": "O7297569018",
+              "lat": 41.2785469,
+              "lon": 28.7563698
+            }
+          ]
+        },
+        {
+          "taxiway": "H",
+          "junctions": [
+            {
+              "node": "O7297534176",
+              "lat": 41.281136,
+              "lon": 28.7584642
+            }
+          ]
+        }
+      ]
+    },
+    "H7": {
+      "label": "H7",
+      "segments": 12,
+      "nodeCount": 13,
+      "lengthMeters": 441,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7297534163",
+          "lat": 41.2811915,
+          "lon": 28.7563189
+        },
+        {
+          "node": "O7297534177",
+          "lat": 41.2838315,
+          "lon": 28.7584126
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G14",
+          "junctions": [
+            {
+              "node": "O7297534163",
+              "lat": 41.2811915,
+              "lon": 28.7563189
+            }
+          ]
+        },
+        {
+          "taxiway": "H",
+          "junctions": [
+            {
+              "node": "O7297534177",
+              "lat": 41.2838315,
+              "lon": 28.7584126
+            }
+          ]
+        }
+      ]
+    },
+    "H8": {
+      "label": "H8",
+      "segments": 9,
+      "nodeCount": 10,
+      "lengthMeters": 231,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7400775836",
+          "lat": 41.289344,
+          "lon": 28.7586638
+        },
+        {
+          "node": "O7400775834",
+          "lat": 41.289681,
+          "lon": 28.7561552
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G17",
+          "junctions": [
+            {
+              "node": "O7400775834",
+              "lat": 41.289681,
+              "lon": 28.7561552
+            }
+          ]
+        },
+        {
+          "taxiway": "H",
+          "junctions": [
+            {
+              "node": "O7400775836",
+              "lat": 41.289344,
+              "lon": 28.7586638
+            }
+          ]
+        }
+      ]
+    },
+    "N1": {
+      "label": "N1",
+      "segments": 37,
+      "nodeCount": 38,
+      "lengthMeters": 2146,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7297568986",
+          "lat": 41.2699753,
+          "lon": 28.7550971
+        },
+        {
+          "node": "O7918203447",
+          "lat": 41.2698369,
+          "lon": 28.7298459
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C",
+          "junctions": [
+            {
+              "node": "O7918203447",
+              "lat": 41.2698369,
+              "lon": 28.7298459
+            }
+          ]
+        },
+        {
+          "taxiway": "D",
+          "junctions": [
+            {
+              "node": "O6023430521",
+              "lat": 41.2694356,
+              "lon": 28.7310139
+            }
+          ]
+        },
+        {
+          "taxiway": "G",
+          "junctions": [
+            {
+              "node": "O7297568989",
+              "lat": 41.2696823,
+              "lon": 28.7536836
+            }
+          ]
+        },
+        {
+          "taxiway": "G10",
+          "junctions": [
+            {
+              "node": "O7297568986",
+              "lat": 41.2699753,
+              "lon": 28.7550971
+            }
+          ]
+        },
+        {
+          "taxiway": "T2",
+          "junctions": [
+            {
+              "node": "O6023430508",
+              "lat": 41.2694601,
+              "lon": 28.7332634
+            }
+          ]
+        },
+        {
+          "taxiway": "T3",
+          "junctions": [
+            {
+              "node": "O6023430501",
+              "lat": 41.2695189,
+              "lon": 28.738674
+            }
+          ]
+        },
+        {
+          "taxiway": "T5",
+          "junctions": [
+            {
+              "node": "O6023430499",
+              "lat": 41.2695346,
+              "lon": 28.7401147
+            }
+          ]
+        },
+        {
+          "taxiway": "T7",
+          "junctions": [
+            {
+              "node": "O6023430498",
+              "lat": 41.2695833,
+              "lon": 28.7445865
+            }
+          ]
+        },
+        {
+          "taxiway": "T9",
+          "junctions": [
+            {
+              "node": "O6023430497",
+              "lat": 41.269599,
+              "lon": 28.7460312
+            }
+          ]
+        },
+        {
+          "taxiway": "T11",
+          "junctions": [
+            {
+              "node": "O6023430492",
+              "lat": 41.2696578,
+              "lon": 28.7514376
+            }
+          ]
+        }
+      ]
+    },
+    "N2": {
+      "label": "N2",
+      "segments": 25,
+      "nodeCount": 26,
+      "lengthMeters": 1905,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7918203442",
+          "lat": 41.270306,
+          "lon": 28.7303613
+        },
+        {
+          "node": "O5680366005",
+          "lat": 41.2705545,
+          "lon": 28.7531542
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "D",
+          "junctions": [
+            {
+              "node": "O6023430522",
+              "lat": 41.2703129,
+              "lon": 28.7309971
+            }
+          ]
+        },
+        {
+          "taxiway": "T2",
+          "junctions": [
+            {
+              "node": "O6023430509",
+              "lat": 41.2703375,
+              "lon": 28.7332454
+            }
+          ]
+        },
+        {
+          "taxiway": "T3",
+          "junctions": [
+            {
+              "node": "O6023430500",
+              "lat": 41.2703964,
+              "lon": 28.7386568
+            }
+          ]
+        },
+        {
+          "taxiway": "T5",
+          "junctions": [
+            {
+              "node": "O6023430496",
+              "lat": 41.2704122,
+              "lon": 28.7400977
+            }
+          ]
+        },
+        {
+          "taxiway": "T7",
+          "junctions": [
+            {
+              "node": "O6023430495",
+              "lat": 41.2704609,
+              "lon": 28.74457
+            }
+          ]
+        },
+        {
+          "taxiway": "T9",
+          "junctions": [
+            {
+              "node": "O6023430494",
+              "lat": 41.2704767,
+              "lon": 28.7460142
+            }
+          ]
+        },
+        {
+          "taxiway": "T11",
+          "junctions": [
+            {
+              "node": "O6023430491",
+              "lat": 41.2705356,
+              "lon": 28.75142
+            }
+          ]
+        }
+      ]
+    },
+    "N3": {
+      "label": "N3",
+      "segments": 39,
+      "nodeCount": 40,
+      "lengthMeters": 1809,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5680365988",
+          "lat": 41.271429,
+          "lon": 28.753138
+        },
+        {
+          "node": "O5680231242",
+          "lat": 41.2711959,
+          "lon": 28.7314937
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "T3",
+          "junctions": [
+            {
+              "node": "O7920605889",
+              "lat": 41.2712729,
+              "lon": 28.7386396
+            }
+          ]
+        },
+        {
+          "taxiway": "T9",
+          "junctions": [
+            {
+              "node": "O7918203520",
+              "lat": 41.2713521,
+              "lon": 28.7459972
+            }
+          ]
+        }
+      ]
+    },
+    "N4": {
+      "label": "N4",
+      "segments": 46,
+      "nodeCount": 47,
+      "lengthMeters": 1807,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5680231260",
+          "lat": 41.2729525,
+          "lon": 28.7314842
+        },
+        {
+          "node": "O5680365981",
+          "lat": 41.2731819,
+          "lon": 28.7530991
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "T3",
+          "junctions": [
+            {
+              "node": "O7920605890",
+              "lat": 41.2730281,
+              "lon": 28.7386051
+            }
+          ]
+        },
+        {
+          "taxiway": "T9",
+          "junctions": [
+            {
+              "node": "O7918203521",
+              "lat": 41.2731062,
+              "lon": 28.7459633
+            }
+          ]
+        }
+      ]
+    },
+    "N5": {
+      "label": "N5",
+      "segments": 86,
+      "nodeCount": 87,
+      "lengthMeters": 2068,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5680519834",
+          "lat": 41.27417,
+          "lon": 28.7290163
+        },
+        {
+          "node": "O7920598779",
+          "lat": 41.2740708,
+          "lon": 28.7536003
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C",
+          "junctions": [
+            {
+              "node": "O6023430514",
+              "lat": 41.273816,
+              "lon": 28.7297684
+            }
+          ]
+        },
+        {
+          "taxiway": "C6",
+          "junctions": [
+            {
+              "node": "O5680519834",
+              "lat": 41.27417,
+              "lon": 28.7290163
+            }
+          ]
+        },
+        {
+          "taxiway": "D",
+          "junctions": [
+            {
+              "node": "O6023430523",
+              "lat": 41.2738284,
+              "lon": 28.7309298
+            }
+          ]
+        },
+        {
+          "taxiway": "G",
+          "junctions": [
+            {
+              "node": "O7920598779",
+              "lat": 41.2740708,
+              "lon": 28.7536003
+            }
+          ]
+        },
+        {
+          "taxiway": "G11",
+          "junctions": [
+            {
+              "node": "O7920598779",
+              "lat": 41.2740708,
+              "lon": 28.7536003
+            }
+          ]
+        },
+        {
+          "taxiway": "T3",
+          "junctions": [
+            {
+              "node": "O7918203546",
+              "lat": 41.2739103,
+              "lon": 28.7385877
+            }
+          ]
+        },
+        {
+          "taxiway": "T9",
+          "junctions": [
+            {
+              "node": "O7920605794",
+              "lat": 41.2739889,
+              "lon": 28.7459462
+            }
+          ]
+        }
+      ]
+    },
+    "N6": {
+      "label": "N6",
+      "segments": 57,
+      "nodeCount": 58,
+      "lengthMeters": 2095,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7918203541",
+          "lat": 41.2756977,
+          "lon": 28.730894
+        },
+        {
+          "node": "O12297292737",
+          "lat": 41.2760566,
+          "lon": 28.7308871
+        },
+        {
+          "node": "O7027031627",
+          "lat": 41.276104,
+          "lon": 28.7535617
+        },
+        {
+          "node": "O5680519779",
+          "lat": 41.276285,
+          "lon": 28.7294172
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C",
+          "junctions": [
+            {
+              "node": "O7476115048",
+              "lat": 41.2759631,
+              "lon": 28.7297267
+            }
+          ]
+        },
+        {
+          "taxiway": "C7",
+          "junctions": [
+            {
+              "node": "O5680519779",
+              "lat": 41.276285,
+              "lon": 28.7294172
+            }
+          ]
+        },
+        {
+          "taxiway": "D",
+          "junctions": [
+            {
+              "node": "O12297292737",
+              "lat": 41.2760566,
+              "lon": 28.7308871
+            },
+            {
+              "node": "O12297292740",
+              "lat": 41.2758546,
+              "lon": 28.730891
+            },
+            {
+              "node": "O7476115046",
+              "lat": 41.2758488,
+              "lon": 28.7303685
+            },
+            {
+              "node": "O7918203541",
+              "lat": 41.2756977,
+              "lon": 28.730894
+            }
+          ]
+        },
+        {
+          "taxiway": "G",
+          "junctions": [
+            {
+              "node": "O7027031627",
+              "lat": 41.276104,
+              "lon": 28.7535617
+            }
+          ]
+        },
+        {
+          "taxiway": "G12",
+          "junctions": [
+            {
+              "node": "O7027031627",
+              "lat": 41.276104,
+              "lon": 28.7535617
+            }
+          ]
+        },
+        {
+          "taxiway": "T3",
+          "junctions": [
+            {
+              "node": "O7918203542",
+              "lat": 41.2759364,
+              "lon": 28.7383301
+            }
+          ]
+        },
+        {
+          "taxiway": "VEFA",
+          "junctions": [
+            {
+              "node": "O7476115046",
+              "lat": 41.2758488,
+              "lon": 28.7303685
+            }
+          ]
+        }
+      ]
+    },
+    "NE": {
+      "label": "NE",
+      "segments": 21,
+      "nodeCount": 22,
+      "lengthMeters": 781,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5680231438",
+          "lat": 41.268712,
+          "lon": 28.7451044
+        },
+        {
+          "node": "O7922834494",
+          "lat": 41.2689877,
+          "lon": 28.7543659
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "F",
+          "junctions": [
+            {
+              "node": "O7027031619",
+              "lat": 41.2687895,
+              "lon": 28.7525396
+            }
+          ]
+        },
+        {
+          "taxiway": "G",
+          "junctions": [
+            {
+              "node": "O7922834495",
+              "lat": 41.2688016,
+              "lon": 28.7537003
+            }
+          ]
+        },
+        {
+          "taxiway": "G10",
+          "junctions": [
+            {
+              "node": "O7922834494",
+              "lat": 41.2689877,
+              "lon": 28.7543659
+            }
+          ]
+        },
+        {
+          "taxiway": "T9",
+          "junctions": [
+            {
+              "node": "O6023430493",
+              "lat": 41.2687218,
+              "lon": 28.7460482
+            }
+          ]
+        },
+        {
+          "taxiway": "T11",
+          "junctions": [
+            {
+              "node": "O6023430490",
+              "lat": 41.2687782,
+              "lon": 28.7514554
+            }
+          ]
+        }
+      ]
+    },
+    "NW": {
+      "label": "NW",
+      "segments": 11,
+      "nodeCount": 12,
+      "lengthMeters": 532,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O6023430506",
+          "lat": 41.2685814,
+          "lon": 28.7332814
+        },
+        {
+          "node": "O5680231399",
+          "lat": 41.2686495,
+          "lon": 28.7396471
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "T2",
+          "junctions": [
+            {
+              "node": "O6023430506",
+              "lat": 41.2685814,
+              "lon": 28.7332814
+            }
+          ]
+        },
+        {
+          "taxiway": "T3",
+          "junctions": [
+            {
+              "node": "O6023430502",
+              "lat": 41.2686393,
+              "lon": 28.7386913
+            }
+          ]
+        }
+      ]
+    },
+    "T1": {
+      "label": "T1",
+      "segments": 24,
+      "nodeCount": 25,
+      "lengthMeters": 844,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7918203749",
+          "lat": 41.2590085,
+          "lon": 28.7330919
+        },
+        {
+          "node": "O7918203654",
+          "lat": 41.2660545,
+          "lon": 28.7322433
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C1B",
+          "junctions": [
+            {
+              "node": "O7918203742",
+              "lat": 41.2621048,
+              "lon": 28.7342638
+            }
+          ]
+        },
+        {
+          "taxiway": "E",
+          "junctions": [
+            {
+              "node": "O7918203654",
+              "lat": 41.2660545,
+              "lon": 28.7322433
+            }
+          ]
+        },
+        {
+          "taxiway": "E7",
+          "junctions": [
+            {
+              "node": "O7918203749",
+              "lat": 41.2590085,
+              "lon": 28.7330919
+            }
+          ]
+        },
+        {
+          "taxiway": "TA",
+          "junctions": [
+            {
+              "node": "O7922834410",
+              "lat": 41.2603598,
+              "lon": 28.7337928
+            },
+            {
+              "node": "O7922834418",
+              "lat": 41.2608332,
+              "lon": 28.7339867
+            }
+          ]
+        }
+      ]
+    },
+    "T2": {
+      "label": "T2",
+      "segments": 90,
+      "nodeCount": 91,
+      "lengthMeters": 2001,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5585274314",
+          "lat": 41.270824,
+          "lon": 28.7332355
+        },
+        {
+          "node": "O7918203983",
+          "lat": 41.256039,
+          "lon": 28.7375388
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "E5",
+          "junctions": [
+            {
+              "node": "O6027958697",
+              "lat": 41.2560045,
+              "lon": 28.7341333
+            }
+          ]
+        },
+        {
+          "taxiway": "N1",
+          "junctions": [
+            {
+              "node": "O6023430508",
+              "lat": 41.2694601,
+              "lon": 28.7332634
+            }
+          ]
+        },
+        {
+          "taxiway": "N2",
+          "junctions": [
+            {
+              "node": "O6023430509",
+              "lat": 41.2703375,
+              "lon": 28.7332454
+            }
+          ]
+        },
+        {
+          "taxiway": "NW",
+          "junctions": [
+            {
+              "node": "O6023430506",
+              "lat": 41.2685814,
+              "lon": 28.7332814
+            }
+          ]
+        }
+      ]
+    },
+    "T3": {
+      "label": "T3",
+      "segments": 34,
+      "nodeCount": 35,
+      "lengthMeters": 1146,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5680231475",
+          "lat": 41.2657092,
+          "lon": 28.7387489
+        },
+        {
+          "node": "O7918203542",
+          "lat": 41.2759364,
+          "lon": 28.7383301
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "N1",
+          "junctions": [
+            {
+              "node": "O6023430501",
+              "lat": 41.2695189,
+              "lon": 28.738674
+            }
+          ]
+        },
+        {
+          "taxiway": "N2",
+          "junctions": [
+            {
+              "node": "O6023430500",
+              "lat": 41.2703964,
+              "lon": 28.7386568
+            }
+          ]
+        },
+        {
+          "taxiway": "N3",
+          "junctions": [
+            {
+              "node": "O7920605889",
+              "lat": 41.2712729,
+              "lon": 28.7386396
+            }
+          ]
+        },
+        {
+          "taxiway": "N4",
+          "junctions": [
+            {
+              "node": "O7920605890",
+              "lat": 41.2730281,
+              "lon": 28.7386051
+            }
+          ]
+        },
+        {
+          "taxiway": "N5",
+          "junctions": [
+            {
+              "node": "O7918203546",
+              "lat": 41.2739103,
+              "lon": 28.7385877
+            }
+          ]
+        },
+        {
+          "taxiway": "N6",
+          "junctions": [
+            {
+              "node": "O7918203542",
+              "lat": 41.2759364,
+              "lon": 28.7383301
+            }
+          ]
+        },
+        {
+          "taxiway": "NW",
+          "junctions": [
+            {
+              "node": "O6023430502",
+              "lat": 41.2686393,
+              "lon": 28.7386913
+            }
+          ]
+        },
+        {
+          "taxiway": "T6",
+          "junctions": [
+            {
+              "node": "O5680231475",
+              "lat": 41.2657092,
+              "lon": 28.7387489
+            }
+          ]
+        }
+      ]
+    },
+    "T4": {
+      "label": "T4",
+      "segments": 1,
+      "nodeCount": 2,
+      "lengthMeters": 308,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5680369651",
+          "lat": 41.268497,
+          "lon": 28.7394162
+        },
+        {
+          "node": "O5680369655",
+          "lat": 41.2657295,
+          "lon": 28.7394702
+        }
+      ],
+      "neighbors": []
+    },
+    "T5": {
+      "label": "T5",
+      "segments": 17,
+      "nodeCount": 18,
+      "lengthMeters": 572,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7920605811",
+          "lat": 41.2708838,
+          "lon": 28.7400886
+        },
+        {
+          "node": "O5680231470",
+          "lat": 41.2657394,
+          "lon": 28.7401881
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "N1",
+          "junctions": [
+            {
+              "node": "O6023430499",
+              "lat": 41.2695346,
+              "lon": 28.7401147
+            }
+          ]
+        },
+        {
+          "taxiway": "N2",
+          "junctions": [
+            {
+              "node": "O6023430496",
+              "lat": 41.2704122,
+              "lon": 28.7400977
+            }
+          ]
+        },
+        {
+          "taxiway": "T6",
+          "junctions": [
+            {
+              "node": "O5680231470",
+              "lat": 41.2657394,
+              "lon": 28.7401881
+            }
+          ]
+        }
+      ]
+    },
+    "T6": {
+      "label": "T6",
+      "segments": 28,
+      "nodeCount": 29,
+      "lengthMeters": 441,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5680231470",
+          "lat": 41.2657394,
+          "lon": 28.7401881
+        },
+        {
+          "node": "O5680231475",
+          "lat": 41.2657092,
+          "lon": 28.7387489
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "T3",
+          "junctions": [
+            {
+              "node": "O5680231475",
+              "lat": 41.2657092,
+              "lon": 28.7387489
+            }
+          ]
+        },
+        {
+          "taxiway": "T5",
+          "junctions": [
+            {
+              "node": "O5680231470",
+              "lat": 41.2657394,
+              "lon": 28.7401881
+            }
+          ]
+        }
+      ]
+    },
+    "T7": {
+      "label": "T7",
+      "segments": 24,
+      "nodeCount": 25,
+      "lengthMeters": 729,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5680231431",
+          "lat": 41.2643692,
+          "lon": 28.7446967
+        },
+        {
+          "node": "O5680231429",
+          "lat": 41.27092,
+          "lon": 28.7445614
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "N1",
+          "junctions": [
+            {
+              "node": "O6023430498",
+              "lat": 41.2695833,
+              "lon": 28.7445865
+            }
+          ]
+        },
+        {
+          "taxiway": "N2",
+          "junctions": [
+            {
+              "node": "O6023430495",
+              "lat": 41.2704609,
+              "lon": 28.74457
+            }
+          ]
+        },
+        {
+          "taxiway": "T9",
+          "junctions": [
+            {
+              "node": "O5680231431",
+              "lat": 41.2643692,
+              "lon": 28.7446967
+            }
+          ]
+        }
+      ]
+    },
+    "T9": {
+      "label": "T9",
+      "segments": 52,
+      "nodeCount": 53,
+      "lengthMeters": 1400,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5680231431",
+          "lat": 41.2643692,
+          "lon": 28.7446967
+        },
+        {
+          "node": "O7920605793",
+          "lat": 41.2758243,
+          "lon": 28.7459106
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "N1",
+          "junctions": [
+            {
+              "node": "O6023430497",
+              "lat": 41.269599,
+              "lon": 28.7460312
+            }
+          ]
+        },
+        {
+          "taxiway": "N2",
+          "junctions": [
+            {
+              "node": "O6023430494",
+              "lat": 41.2704767,
+              "lon": 28.7460142
+            }
+          ]
+        },
+        {
+          "taxiway": "N3",
+          "junctions": [
+            {
+              "node": "O7918203520",
+              "lat": 41.2713521,
+              "lon": 28.7459972
+            }
+          ]
+        },
+        {
+          "taxiway": "N4",
+          "junctions": [
+            {
+              "node": "O7918203521",
+              "lat": 41.2731062,
+              "lon": 28.7459633
+            }
+          ]
+        },
+        {
+          "taxiway": "N5",
+          "junctions": [
+            {
+              "node": "O7920605794",
+              "lat": 41.2739889,
+              "lon": 28.7459462
+            }
+          ]
+        },
+        {
+          "taxiway": "NE",
+          "junctions": [
+            {
+              "node": "O6023430493",
+              "lat": 41.2687218,
+              "lon": 28.7460482
+            }
+          ]
+        },
+        {
+          "taxiway": "T7",
+          "junctions": [
+            {
+              "node": "O5680231431",
+              "lat": 41.2643692,
+              "lon": 28.7446967
+            }
+          ]
+        }
+      ]
+    },
+    "T11": {
+      "label": "T11",
+      "segments": 73,
+      "nodeCount": 74,
+      "lengthMeters": 1633,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O5680365994",
+          "lat": 41.2710202,
+          "lon": 28.7514102
+        },
+        {
+          "node": "O5680369989",
+          "lat": 41.2567389,
+          "lon": 28.7516043
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "N1",
+          "junctions": [
+            {
+              "node": "O6023430492",
+              "lat": 41.2696578,
+              "lon": 28.7514376
+            }
+          ]
+        },
+        {
+          "taxiway": "N2",
+          "junctions": [
+            {
+              "node": "O6023430491",
+              "lat": 41.2705356,
+              "lon": 28.75142
+            }
+          ]
+        },
+        {
+          "taxiway": "NE",
+          "junctions": [
+            {
+              "node": "O6023430490",
+              "lat": 41.2687782,
+              "lon": 28.7514554
+            }
+          ]
+        }
+      ]
+    },
+    "TA": {
+      "label": "TA",
+      "segments": 11,
+      "nodeCount": 12,
+      "lengthMeters": 86,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7922834410",
+          "lat": 41.2603598,
+          "lon": 28.7337928
+        },
+        {
+          "node": "O7922834418",
+          "lat": 41.2608332,
+          "lon": 28.7339867
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "T1",
+          "junctions": [
+            {
+              "node": "O7922834410",
+              "lat": 41.2603598,
+              "lon": 28.7337928
+            },
+            {
+              "node": "O7922834418",
+              "lat": 41.2608332,
+              "lon": 28.7339867
+            }
+          ]
+        }
+      ]
+    },
+    "VEFA": {
+      "label": "VEFA",
+      "segments": 10,
+      "nodeCount": 11,
+      "lengthMeters": 402,
+      "parts": 1,
+      "endpoints": [
+        {
+          "node": "O7476115046",
+          "lat": 41.2758488,
+          "lon": 28.7303685
+        },
+        {
+          "node": "O12297292741",
+          "lat": 41.2790211,
+          "lon": 28.7296671
+        }
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C",
+          "junctions": [
+            {
+              "node": "O12297292741",
+              "lat": 41.2790211,
+              "lon": 28.7296671
+            }
+          ]
+        },
+        {
+          "taxiway": "D",
+          "junctions": [
+            {
+              "node": "O12297292746",
+              "lat": 41.2762823,
+              "lon": 28.7308828
+            },
+            {
+              "node": "O7476115046",
+              "lat": 41.2758488,
+              "lon": 28.7303685
+            }
+          ]
+        },
+        {
+          "taxiway": "N6",
+          "junctions": [
+            {
+              "node": "O7476115046",
+              "lat": 41.2758488,
+              "lon": 28.7303685
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "chartOnlyWithoutMappedCenterline": [
+    "A13",
+    "C4B",
+    "C5B",
+    "C7B",
+    "D10",
+    "D11",
+    "D12",
+    "D8",
+    "D9",
+    "E10",
+    "E1B",
+    "E8",
+    "E9",
+    "F1",
+    "F2",
+    "F3",
+    "F4",
+    "F5",
+    "F6",
+    "F7",
+    "G1A",
+    "G1B",
+    "G1C",
+    "G1D",
+    "G1E",
+    "G2A",
+    "G2B",
+    "G2C",
+    "G2G",
+    "G2M",
+    "G3",
+    "G4",
+    "G5",
+    "G6",
+    "G7",
+    "G8",
+    "G9",
+    "T12",
+    "T8",
+    "TC",
+    "TD"
+  ]
+}
