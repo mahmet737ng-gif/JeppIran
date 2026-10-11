@@ -94,6 +94,42 @@ function shortest(graph,start,goal,requested,links){
   }
   return {path:reverse.reverse(),holds:rawHolds.map(i=>reverse.length-1-i),length:Math.round(final.w)};
 }
+function firstUnmappedTransition(graph,ways){
+  // Diagnose a missing named-taxiway junction on the OSM source only.
+  const nodeNames=new Map();
+  for(const e of graph.edges||[]){
+    const label=name(e.taxiway);
+    if(!label||e.closed||e.runway)continue;
+    for(const id of [e.from,e.to]){
+      if(!nodeNames.has(id))nodeNames.set(id,new Set());
+      nodeNames.get(id).add(label);
+    }
+  }
+  for(let i=1;i<ways.length;i++){
+    const from=ways[i-1],to=ways[i];
+    if(from===to)continue;
+    let found=false;
+    for(const group of nodeNames.values())if(group.has(from)&&group.has(to)){found=true;break}
+    if(!found)return {from,to};
+  }
+  return null;
+}
+function demoRoute(graph,parsed){
+  // Select a sample start ON the first requested OSM taxiway. This is a
+  // source-attributed QA preview, never an assumed aircraft position.
+  if(parsed.kind!=="sequence"||parsed.destination)return null;
+  const first=parsed.taxiways[0],candidates=new Set();
+  for(const e of graph.edges){
+    if(name(e.taxiway)===first&&!e.closed&&!e.runway){candidates.add(e.from);candidates.add(e.to);}
+  }
+  const links=adjacent(graph);
+  let best=null;
+  for(const start of candidates){
+    const route=shortest(graph,start,null,parsed,links);
+    if(route && (!best||route.length<best.length))best={...route,start};
+  }
+  return best;
+}
 function graphOk(d,icao){
   return d&&
     (d.verified===true||(d.verified===false&&d.simulatorTestOnly===true&&d.coordinateSystem==="WGS84"&&
@@ -167,13 +203,21 @@ function view(){
   panel.innerHTML='<div class="taxi-qa-title"><strong>TAXI <small>QA TEST</small></strong><span id="taxiQaAirport"></span><button id="taxiQaClose" type="button">×</button></div>'+
     '<label for="taxiQaInput">LTFM example: A4 A A7 B B8A · Hold: /B8A · 34L2A format</label>'+
     '<div class="taxi-qa-entry"><input id="taxiQaInput" autocomplete="off" spellcheck="false" placeholder="Taxi clearance or stand"><button id="taxiQaGo" type="button">GO</button></div>'+
-    '<div class="taxi-qa-buttons"><button id="taxiQaAdc" type="button">ADC</button><button id="taxiQaStart" type="button" aria-pressed="false">SET START</button><button id="taxiQaStands" type="button" aria-pressed="false">STANDS</button><button id="taxiQaTrace" type="button">TRACE QA</button><button id="taxiQaHold" type="button">HOLD HERE</button><button id="taxiQaUndo" type="button">UNDO</button><button id="taxiQaClear" type="button">CLEAR</button></div>'+
+    '<div class="taxi-qa-buttons"><button id="taxiQaAdc" type="button">ADC</button><button id="taxiQaStart" type="button" aria-pressed="false">SET START</button><button id="taxiQaDemo" type="button">DEMO ROUTE</button><button id="taxiQaStands" type="button" aria-pressed="false">STANDS</button><button id="taxiQaTrace" type="button">TRACE QA</button><button id="taxiQaHold" type="button">HOLD HERE</button><button id="taxiQaUndo" type="button">UNDO</button><button id="taxiQaClear" type="button">CLEAR</button></div>'+
     '<div id="taxiQaStatus" role="status"></div><div id="taxiQaStandMap" hidden aria-label="Geographic reference-only stand map"></div><small class="taxi-qa-warning">NOT FOR ACTUAL NAVIGATION. Ground clearance and chart validation remain mandatory.</small>';
   document.querySelector("#chartsView .viewer-pane")?.appendChild(panel);
   $("taxiQaClose").onclick=()=>toggle(false);
   $("taxiQaGo").onclick=go;
   $("taxiQaInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();go()}};
   $("taxiQaAdc").onclick=openAdc;
+  $("taxiQaDemo").onclick=()=>{
+    if(taxi.airport!=="LTFM"||!taxi.graph){
+      message("Demo route is available only for the loaded LTFM centerline network.",true);return;
+    }
+    $("taxiQaInput").value="A4 A A7 B /B8A";
+    taxi.testStart=null;
+    go({demo:true});
+  };
   $("taxiQaStart").onclick=()=>{
     taxi.startSelect=!taxi.startSelect;taxi.trace=false;
     $("taxiQaStart").classList.toggle("on",taxi.startSelect);
@@ -249,7 +293,7 @@ function syncAirport(){
   loadGraph(selectedAirport);
   loadStandReference(selectedAirport);
 }
-function go(){
+function go(options={}){
   syncAirport();
   const p=parse($("taxiQaInput").value);
   if(p.error){message(p.error,true);return}
@@ -266,11 +310,32 @@ function go(){
     }else message("Parsed "+p.kind+". No verified taxiway + stand connector network for "+selectedAirport+"; automatic routing is disabled.",true);
     return;
   }
-  const startPosition=taxi.testStart||lastPosition;
-  if(!startPosition){message("Connect simulator/device GPS or tap SET START on the chart, then GO.",true);return}
-  const start=nearest(taxi.graph,startPosition,p.kind==="sequence"?p.taxiways[0]:null);
-  if(!start){message("No mapped centerline near the starting position"+(p.kind==="sequence"?" on taxiway "+p.taxiways[0]:"")+". Choose SET START on the correct centerline.",true);return}
-  let planned=null,info="";
+  if(p.kind==="sequence"){
+    const missing=firstUnmappedTransition(taxi.graph,p.taxiways);
+    if(missing){
+      message("OSM MAP GAP: no mapped direct junction "+missing.from+" → "+missing.to+
+        ". This input cannot be joined without inventing a taxiway. For a ROUTING DEMO, press DEMO ROUTE (A4 A A7 B /B8A).",true);
+      return;
+    }
+  }
+  let startPosition=taxi.testStart||lastPosition;
+  let start=startPosition?nearest(taxi.graph,startPosition,p.kind==="sequence"?p.taxiways[0]:null):null;
+  let demo=false,planned=null,info="";
+  if(p.kind==="sequence"&&!p.destination&&(!start||options.demo===true)&&taxi.graph.simulatorTestOnly){
+    // The requested simulator-only QA experience should work without
+    // moving the aircraft. NEVER claim that this is an aircraft-origin route.
+    const sample=demoRoute(taxi.graph,p);
+    if(!sample){
+      message("No joined OSM route contains all entered taxiways in this exact order. Check route against current ADC.",true);
+      return;
+    }
+    demo=true;planned=sample;
+    start=sample.start;
+    startPosition=taxi.graph.nodes[start];
+  }else if(!start){
+    message("No centerline near aircraft on the first named taxiway. Use SET START to tap the correct ADC centerline, or DEMO ROUTE to preview a separate sample route.",true);
+    return;
+  }
   if(p.kind==="procedure"){
     const choices=(taxi.graph.procedures||[]).filter(x=>name(x.key)===p.key&&
       Array.isArray(x.nodes)&&x.nodes.length>1&&x.nodes.every(id=>taxi.graph.nodes[id]));
@@ -289,12 +354,18 @@ function go(){
     if(stand&&!taxi.graph.nodes[goal]){message("Stand "+stand+" is not mapped.",true);return}
     if(!goal&&p.kind==="stand"){message("Stand not mapped.",true);return}
     const links=adjacent(taxi.graph);
-    planned=shortest(taxi.graph,start,goal||null,p.kind==="sequence"?p:null,links);
+    if(!planned)planned=shortest(taxi.graph,start,goal||null,p.kind==="sequence"?p:null,links);
     info=p.kind==="stand"?"SHORTEST DISTANCE SUGGESTION · NOT ATC CLEARANCE":"TAXIWAY SEQUENCE";
   }
   if(!planned||planned.path.length<2){message("No connected path matching ALL named taxiways, in that order. Verify the clearance or data; nothing invented.",true);return}
-  taxi.route={...planned,graph:taxi.graph,airport:selectedAirport};
-  message("SIMULATION QA · "+info+" · "+planned.path.length+" nodes · "+(planned.length||0)+" m. OSM SOURCE · NOT APPROVED FOR ACTUAL NAVIGATION.",true);
+  taxi.route={...planned,graph:taxi.graph,airport:selectedAirport,previewOnly:demo};
+  if(demo){
+    message("DEMO PREVIEW · NOT THE AIRCRAFT POSITION · "+planned.path.length+
+      " nodes · "+(planned.length||0)+" m · OSM DATA NOT AIP VERIFIED. SET START to choose your own origin.",true);
+  }else{
+    message("SIMULATION QA · "+info+" · "+planned.path.length+" nodes · "+(planned.length||0)+
+      " m. OSM SOURCE · NOT APPROVED FOR ACTUAL NAVIGATION.",true);
+  }
   draw();
 }
 function currentManual(){
@@ -345,11 +416,11 @@ function paintPath(svg,pts,holds,width,isCalculatedTaxiRoute=false){
   }
   const stroke=Math.max(2,width*.0035);
   svg.appendChild(s("path",{d,fill:"none",stroke:"#1c0630","stroke-width":stroke+2.2,"stroke-linejoin":"round","stroke-linecap":"round"}));
-  const line=s("path",{d,fill:"none",stroke:isCalculatedTaxiRoute?"#25dcff":"#f200d9",
+  const line=s("path",{d,fill:"none",stroke:"#f200d9",
     "stroke-width":isCalculatedTaxiRoute?stroke*1.2:stroke,"stroke-linejoin":"round","stroke-linecap":"round"});
   if(isCalculatedTaxiRoute){
     line.setAttribute("class","taxi-route-line");
-    line.setAttribute("stroke-dasharray",Math.round(stroke*3.8)+" "+Math.round(stroke*2.2));
+    // User requirement: continuous smooth magenta path even after HOLD SHORT.
     // Directional chevrons: follow the digitized node-to-node centerline,
     // never cut curves/corners or infer unconnected shortcuts.
     for(let n=1;n<pts.length;n++){
@@ -360,7 +431,7 @@ function paintPath(svg,pts,holds,width,isCalculatedTaxiRoute=false){
         const x=a.x+ux*at,y=a.y+uy*at,size=Math.max(3.5,stroke*2.2);
         svg.appendChild(s("path",{d:"M "+(x-ux*size+perpX*size*.6)+" "+(y-uy*size+perpY*size*.6)+
           " L "+x+" "+y+" L "+(x-ux*size-perpX*size*.6)+" "+(y-uy*size-perpY*size*.6),
-          fill:"none",stroke:"#6af1ff","stroke-width":Math.max(1.4,stroke*.7),
+          fill:"none",stroke:"#ff84f4","stroke-width":Math.max(1.4,stroke*.7),
           "stroke-linecap":"round","stroke-linejoin":"round","class":"taxi-route-chevron"}));
       }
     }
@@ -450,6 +521,16 @@ function draw(){
       segment.push(p);
     }
     paintPath(svg,segment,holdPositions,w,true);
+    if(r.previewOnly){
+      const startNode=r.graph.nodes[r.path[0]],startGeo=startNode&&projectGeo(model,startNode.lat,startNode.lon);
+      if(startGeo){
+        svg.appendChild(s("circle",{cx:startGeo.x,cy:startGeo.y,r:6,
+          stroke:"#161724","stroke-width":1.5,fill:"#f200d9"}));
+        const t=s("text",{x:startGeo.x+10,y:startGeo.y-9,fill:"#ffbafb","font-size":12,
+          "font-weight":"bold",stroke:"#102137","stroke-width":3,"paint-order":"stroke"});
+        t.textContent="DEMO START";svg.appendChild(t);
+      }
+    }
   }
   if(taxi.testStart&&model){
     const p=projectGeo(model,taxi.testStart.lat,taxi.testStart.lon);
