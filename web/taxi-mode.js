@@ -1589,6 +1589,25 @@ function draw(){
     }
   }
   if(r&&r.airport===selectedAirport&&model&&r.genericRoute){
+    // OIAW schematic trial uses its OWN screenshot-traced 612x792 display
+    // vertices: it must never fake georeferenced surveyed ground geometry.
+    // Each source-labelled segment remains D A S H E D amber and QA ONLY.
+    const pixelPreview=r.graph?.qaPreviewOnly&&isAdc(selectedChart)&&
+      r.graph.previewChartPixelPoints&&qaChart?
+      r.graph.previewChartPixelPoints:null;
+    if(pixelPreview){
+      const coords=r.path.map(id=>pixelPreview[id]);
+      if(coords.length>=2&&coords.every(p=>p&&Number.isFinite(p.x)&&Number.isFinite(p.y))){
+        svg.appendChild(s("polyline",{
+          points:coords.map(p=>p.x+","+p.y).join(" "),fill:"none",
+          stroke:"rgba(255,182,92,.9)",
+          "stroke-width":Math.max(1.35,w*.0018),
+          "stroke-dasharray":"3.5 5",
+          "stroke-linecap":"round","stroke-linejoin":"round",
+          "class":"taxi-projected-qa-only"
+        }));
+      }
+    }else if(!r.graph?.qaPreviewOnly){
     // Use original multi-point centreline, NEVER a smoothing curve or
     // direct chord across unconnected taxiways/parallel runways.
     for(const strip of r.genericLinework||[]){
@@ -1603,6 +1622,7 @@ function draw(){
         "stroke-linecap":"round","stroke-linejoin":"round",
         "class":projected?"taxi-projected-qa-only":"taxi-engine-chart-centreline"
       }));
+    }
     }
   }else if(r&&r.airport===selectedAirport&&model){
     const spec=r.airport==="OIMM"&&r.runwayRender&&
