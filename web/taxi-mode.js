@@ -460,15 +460,25 @@ async function fetchGraph(icao){
     const d=await r.json();
     if(d.engineVersion===1&&icao!=="OIMM"&&icao!=="LTFM"){
       const factory=window.JEPPIRAN_TAXI_ENGINE;
-      if(!factory||d.enabled!==true||d.source?.reviewStatus!=="SIM_QA_REVIEWED"||
+      const qaPreview=(d.qaPreviewOnly===true&&d.enabled===false&&
+        d.source?.reviewStatus==="SIM_QA_PARTIAL"&&d.qa?.approvals==="NONE");
+      const reviewed=(d.enabled===true&&d.source?.reviewStatus==="SIM_QA_REVIEWED");
+      if(!factory||!(reviewed||qaPreview)||
          d.airport!==icao||String(d.cycle)!==String(manifest?.cycle))
-        throw Error("New-airport engine, QA signoff or matching cycle unavailable");
+        throw Error("New-airport engine, QA preview data or matching cycle unavailable");
       const engine=factory.create(d);
       if(taxi.airport!==icao)return null;
       taxi.graph=d;taxi.genericEngine=engine;
       fillGenericTaxiDestinations(engine);
-      $("taxiQaInput").placeholder="ST101 · RWY 13R · ST101 J BT13R H 13L";
-      message(icao+" UNIVERSAL TAXI ENGINE v"+factory.version+" · "+
+      $("taxiQaInput").placeholder=qaPreview?"ST4 A B (PROJECTION QA)":
+        "ST101 · RWY 13R · ST101 J BT13R H 13L";
+      if(qaPreview){
+        $("taxiQaStands").textContent="STANDS ("+Object.keys(d.stands).length+")";
+        message(icao+" PARTIAL QA GRAPH · "+d.edges.length+
+          " edges · "+Object.keys(d.stands).length+
+          " coarse stand locations · NO VERIFIED TAXI CENTRELINES. "+
+          "Routes are projected AMBER DASHED PREVIEWS only, not surveyed paths or ATC clearances.",true);
+      }else message(icao+" UNIVERSAL TAXI ENGINE v"+factory.version+" · "+
         d.edges.length+" source-linked edges, "+Object.keys(d.stands).length+
         " stands · SIMULATOR QA ONLY. Missing runway/stand links cannot be invented.");
       draw();return d;
@@ -499,7 +509,10 @@ async function fetchGraph(icao){
 // Share an in-flight graph load across TAXI open and GO. Avoid duplicate
 // no-store downloads and prevent a stale request from clobbering a new route.
 function loadGraph(icao){
-  if(taxi.graph?.airport===icao&&graphOk(taxi.graph,icao))return Promise.resolve(taxi.graph);
+  if(taxi.graph?.airport===icao&&
+      (graphOk(taxi.graph,icao)||(taxi.genericEngine&&
+      String(taxi.graph.cycle)===String(manifest?.cycle))))
+    return Promise.resolve(taxi.graph);
   if(taxi.graphRequest?.airport===icao)return taxi.graphRequest.promise;
   const promise=fetchGraph(icao);
   taxi.graphRequest={airport:icao,promise};
@@ -550,8 +563,10 @@ function genericGo(typed){
   if(!engine)return;
   // Deliberate "QA " prefix is the ONLY way to preview a
   // source-labelled projected access; it stays dashed amber.
-  const allowProjectedQA=/^QA\s+/i.test(typed);
-  const command=allowProjectedQA?typed.replace(/^QA\s+/i,""):typed;
+  const typedQA=/^QA\s+/i.test(typed);
+  const qaPreview=taxi.graph?.qaPreviewOnly===true;
+  const allowProjectedQA=typedQA||qaPreview;
+  const command=typedQA?typed.replace(/^QA\s+/i,""):typed;
   const result=engine.plan(command,{
     position:taxi.testStart||lastPosition,
     allowProjectedQA,maxSnapMeters:65
@@ -564,17 +579,18 @@ function genericGo(typed){
   const route=result.route;
   taxi.route={...route,airport:taxi.airport,graph:taxi.graph,
     genericRoute:true,genericLinework:engine.linework(route),
-    previewOnly:!!result.parsed?.startStand,
+    previewOnly:qaPreview||!!result.parsed?.startStand,
     holds:[],length:route.lengthMetres};
-  if(!taxi.route.previewOnly&&!route.explicitRunway&&
+  if(!taxi.route.previewOnly&&!qaPreview&&!route.explicitRunway&&
       !route.edges.some(e=>e.quality==="projected"))
     taxi.genericMonitor={command,route:route,monitor:{count:0,last:0}};
   draw();
-  message("SIM QA · "+taxi.airport+" · "+
+  message((qaPreview?"UNVERIFIED SCHEMATIC · ":"SIM QA · ")+taxi.airport+" · "+
     (route.taxiways.join(" → ")||"SOURCE-CONNECTED TAXIWAY")+
     " → "+route.destination+" · "+route.lengthMetres+
-    " m · "+(allowProjectedQA?"PROJECTED CHART QA PREVIEW (DASHED AMBER) · ":"")+
-    "NOT FOR ACTUAL NAVIGATION / ATC CLEARANCE.");
+    " m · "+(allowProjectedQA?"PROJECTED / DASHED AMBER · ":"")+
+    (qaPreview?"Stand positions and taxiway geometry are NOT surveyed. ":
+       "")+"NOT FOR ACTUAL NAVIGATION / ATC CLEARANCE.",qaPreview);
 }
 function view(){
   if($("taxiQaPanel"))return;
@@ -1420,7 +1436,14 @@ function draw(){
   const layer=$("chartTransformLayer"),canvas=$("pdfCanvas");if(!layer||!canvas)return;
   layer.querySelector(".taxi-qa-overlay")?.remove();
   if(!taxi.active)return;
-  const model=georefByPage.get(Number(selectedChart?.page)),w=model?.width||1000,h=model?.height||1000;
+  // An OIAW QA preview may use a SCREENSHOT-DERIVED chart transform
+  // solely for its dashed amber taxi layer. Never promote it into
+  // georefByPage (aircraft positioning, GPS and other charts must not use it).
+  const publishedModel=georefByPage.get(Number(selectedChart?.page));
+  const qaChart=taxi.graph?.qaPreviewOnly&&
+    taxi.graph?.previewChartTransform?.chartPage===Number(selectedChart?.page)&&
+    isAdc(selectedChart)?taxi.graph.previewChartTransform:null;
+  const model=publishedModel||qaChart,w=model?.width||1000,h=model?.height||1000;
   const svg=s("svg",{class:"taxi-qa-overlay",viewBox:"0 0 "+w+" "+h,preserveAspectRatio:"none"});
   svg.style.cssText="position:absolute;inset:0;width:100%;height:100%;z-index:12;pointer-events:none";
   if(taxi.airport==="OIMM"&&taxi.showNetwork&&taxi.graph&&model){
