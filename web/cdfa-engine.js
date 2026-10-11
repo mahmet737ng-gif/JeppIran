@@ -1,4 +1,4 @@
-/* JEPPIRAN CDFA Geometry Engine v1.1 - offline, framework independent.
+/* JEPPIRAN CDFA Geometry Engine v1.2 - offline, framework independent.
    Engineering/simulator QA only; not authorized for actual flight navigation.
    No use of AC 120-108 as a computation input or authority.
    Source of truth for published fixes, limits, and station location is the
@@ -75,6 +75,23 @@
     if (!Array.isArray(c.dmeReadingsNm) || !c.dmeReadingsNm.length) throw new Error('dmeReadingsNm cannot be empty');
     c.dmeReadingsNm.forEach((d, i) => nonNegative(d, 'dmeReadingsNm[' + i + ']'));
     if (new Set(c.dmeReadingsNm).size !== c.dmeReadingsNm.length) throw new Error('duplicate DME readings');
+    // COVERAGE POLICY: every chart must have modeled rows out to at least
+    // 10 NM from the threshold AND a DME reading >= D10. This is a display
+    // coverage requirement, not permission to extend a published procedure.
+    c.minimumThresholdCoverageNm = nonNegative(
+      c.minimumThresholdCoverageNm === undefined ? 10 : c.minimumThresholdCoverageNm,
+      'minimumThresholdCoverageNm');
+    if (c.minimumThresholdCoverageNm < 10 - EPS) throw new Error('MINIMUM_COVERAGE_MUST_BE_AT_LEAST_10_NM');
+    c.minimumDmeCoverageNm = nonNegative(
+      c.minimumDmeCoverageNm === undefined ? 10 : c.minimumDmeCoverageNm,
+      'minimumDmeCoverageNm');
+    if (c.minimumDmeCoverageNm < 10 - EPS) throw new Error('MINIMUM_DME_COVERAGE_MUST_BE_AT_LEAST_D10');
+    c.coverageStepDmeNm = nonNegative(
+      c.coverageStepDmeNm === undefined ? 1 : c.coverageStepDmeNm,
+      'coverageStepDmeNm');
+    if (c.coverageStepDmeNm < 0.1 - EPS || c.coverageStepDmeNm > 5 + EPS)
+      throw new Error('coverageStepDmeNm must be between 0.1 and 5');
+    c.autoExtendCoverage = c.autoExtendCoverage !== false;
     c.publishedConstraints = c.publishedConstraints || [];
     if (!Array.isArray(c.publishedConstraints)) throw new Error('publishedConstraints must be an array');
     c.publishedConstraints = c.publishedConstraints.map((f, i) => {
@@ -134,6 +151,60 @@
     return { distanceNm: Math.max(...candidates) };
   }
 
+  // Forward geometry to identify the DME that corresponds to a point 10 NM
+  // before the THRESHOLD, not simply DME 10. Same lateral/slant model as
+  // horizontalDistanceFromDme; never substitute airport distance for DME.
+  function dmeAtThresholdDistance(thresholdDistanceNm, c) {
+    const x = nonNegative(thresholdDistanceNm, 'thresholdDistanceNm');
+    const offsetSigned = c.station.placement === 'after_threshold' ? c.station.offsetNm
+      : c.station.placement === 'before_threshold' ? -c.station.offsetNm : 0;
+    const vertical = c.station.elevationFt == null ? 0
+      : (c.thresholdElevationFt + c.tchFt + c.gradientFtPerNm * x - c.station.elevationFt) / FEET_PER_NM;
+    return Math.sqrt((x + offsetSigned) ** 2 + c.station.lateralNm ** 2 + vertical ** 2);
+  }
+
+  function extendCoverage(readings, c) {
+    const actual = [...readings];
+    const maxDme = Math.max(...actual);
+    const requiredDmeAtThreshold = dmeAtThresholdDistance(c.minimumThresholdCoverageNm, c);
+    const requiredMaxDme = Math.max(c.minimumDmeCoverageNm, requiredDmeAtThreshold);
+    const measuredMaxThreshold = Math.max(-Infinity, ...actual.map(d => {
+      const r = horizontalDistanceFromDme(d, c);
+      return r.error ? -Infinity : r.distanceNm;
+    }));
+    const needsExtension = maxDme + EPS < c.minimumDmeCoverageNm ||
+      measuredMaxThreshold + EPS < c.minimumThresholdCoverageNm;
+    const added = [];
+    if (needsExtension && c.autoExtendCoverage) {
+      const step = c.coverageStepDmeNm;
+      // Generate readable DME steps up to the needed outer point; also add the
+      // exact threshold-target DME so the 10-NM distance is covered.
+      for (let n = Math.floor(maxDme / step + EPS) + 1, count = 0;
+        n * step < requiredMaxDme - EPS; n++, count++) {
+        if (count >= 500) throw new Error('COVERAGE_EXTENSION_EXCEEDS_500_ROWS');
+        added.push(Math.round(n * step * 1e6) / 1e6);
+      }
+      added.push(Math.ceil(requiredMaxDme * 1e6) / 1e6);
+      // Including the exact threshold-target DME protects 10-NM coverage even
+      // for non-integer station offsets. Near-duplicate input rows are merged.
+      added.push(Math.ceil(requiredDmeAtThreshold * 1e6) / 1e6);
+    }
+    const seen = new Set();
+    const allReadings = [...actual, ...added].filter(d => {
+      const k = Math.round(d * 1e5);
+      if (seen.has(k)) return false;
+      seen.add(k); return true;
+    }).sort((a, b) => a-b);
+    const originallyPresent = new Set(actual.map(d=>Math.round(d*1e5)));
+    return {
+      allReadings,
+      autoAddedReadings: allReadings.filter(d=>!originallyPresent.has(Math.round(d*1e5))),
+      requiredDmeAtThresholdNm: Math.round(requiredDmeAtThreshold*1e6)/1e6,
+      requestedMaxThresholdNm: measuredMaxThreshold,
+      requestedMaxDmeNm: maxDme,
+    };
+  }
+
   function computeRow(dmeNm, c) {
     const pos = horizontalDistanceFromDme(dmeNm, c);
     if (pos.error) return {
@@ -147,6 +218,7 @@
     if (c.angleSource === 'DEFAULT_ASSUMED_3_DEG') reasons.push('DEFAULT_3_DEG_ASSUMED_NOT_PUBLISHED');
     if (!c.validAngleDmeRange) reasons.push('ANGLE_SCOPE_NOT_VERIFIED');
     else if (!inAngleRange) reasons.push('OUTSIDE_PUBLISHED_ANGLE_SCOPE');
+    if (c.station.geometryVerified === false) reasons.push('STATION_GEOMETRY_NOT_SURVEY_VERIFIED');
     return {
       dmeNm, thresholdDistanceNm: Math.round(pos.distanceNm * 1000000) / 1000000,
       rawAltitudeFt: Math.round(raw * 1000000) / 1000000,
@@ -171,6 +243,7 @@
 
   function buildTable(input) {
     const c = normalizeConfig(input);
+    const coverageGrid = extendCoverage(c.dmeReadingsNm, c);
     const checks = c.publishedConstraints.map(f => checkConstraint(f, c));
     const issues = checks.filter(f => !f.ok).map(f => ({
       code: f.code, dmeNm: f.dmeNm, publishedAltitudeFt: f.altitudeFt,
@@ -182,7 +255,7 @@
     // exact mandatory crossing met while moving outward from threshold.
     const stopDme = c.publishedConstraints.filter(f => f.type === 'mandatory')
       .reduce((min, f) => Math.min(min, f.dmeNm), Infinity);
-    const rows = c.dmeReadingsNm.map(dme => {
+    const rows = coverageGrid.allReadings.map(dme => {
       const r = computeRow(dme, c);
       if (c.mdaFt !== undefined && c.mdaFt !== null && r.rawAltitudeFt !== null && r.rawAltitudeFt < c.mdaFt - EPS) {
         r.status = 'MODEL_ONLY';
@@ -194,6 +267,7 @@
       }
       const anchors = c.publishedConstraints.filter(f => Math.abs(f.dmeNm - dme) < EPS);
       r.published = anchors.map(f => ({ type: f.type, altitudeFt: f.altitudeFt, label: f.label || '' }));
+      r.coverageAutoExtended = coverageGrid.autoAddedReadings.some(x => Math.abs(x-dme) < 0.00001);
       if (anchors.length && checks.some(f => !f.ok && Math.abs(f.dmeNm - dme) < EPS)) {
         r.status = 'CONFLICT';
         r.reasons.push('PUBLISHED_ALTITUDE_CONFLICT');
@@ -202,9 +276,42 @@
     });
     const unresolvedRows = rows.filter(r => r.rawAltitudeFt === null).length;
     if (unresolvedRows) issues.push({ code: 'UNRESOLVED_DME_GEOMETRY', count: unresolvedRows });
+    const maxThresholdNm = Math.max(-Infinity, ...rows.filter(r => r.thresholdDistanceNm != null).map(r => r.thresholdDistanceNm));
+    const maxDmeNm = Math.max(...rows.map(r=>r.dmeNm));
+    const reachesThreshold = maxThresholdNm >= c.minimumThresholdCoverageNm - 0.0001;
+    const reachesDme = maxDmeNm >= c.minimumDmeCoverageNm - 0.0001;
+    if (!reachesThreshold || !reachesDme) issues.push({
+      code: 'MINIMUM_10NM_COVERAGE_NOT_MET',
+      requestedThresholdNm:c.minimumThresholdCoverageNm, actualThresholdNm:maxThresholdNm,
+      requestedDmeNm:c.minimumDmeCoverageNm, actualDmeNm:maxDmeNm,
+      message:'DME branch or station geometry must be reviewed; never fabricate a 10-NM verified path.'
+    });
+    // Chart angle's geometric coverage is reported separately from QA eligibility.
+    // A chart-verified angle segment can end at D9 even when transmitter location
+    // still requires a precise geodetic/survey check.
+    const scopedRows = c.validAngleDmeRange ? rows.filter(r =>
+      r.thresholdDistanceNm != null &&
+      r.dmeNm >= c.validAngleDmeRange.from - EPS &&
+      r.dmeNm <= c.validAngleDmeRange.to + EPS) : [];
+    const maxPublishedModeledThresholdNm = scopedRows.length
+      ? Math.max(...scopedRows.map(r=>r.thresholdDistanceNm)) : null;
+    const coverage = {
+      requiredThresholdDistanceNm: c.minimumThresholdCoverageNm,
+      requiredDmeReadoutNm: c.minimumDmeCoverageNm,
+      dmeAtRequiredThresholdNm: coverageGrid.requiredDmeAtThresholdNm,
+      maxModeledThresholdDistanceNm: maxThresholdNm,
+      maxModeledDmeNm: maxDmeNm,
+      meetsThresholdModelCoverage: reachesThreshold,
+      meetsDmeModelCoverage: reachesDme,
+      autoAddedDmeReadingsNm: coverageGrid.autoAddedReadings,
+      maxPublishedAngleScopedThresholdNm: maxPublishedModeledThresholdNm,
+      publishedAngleCovers10Nm: maxPublishedModeledThresholdNm !== null && maxPublishedModeledThresholdNm >= c.minimumThresholdCoverageNm - 0.0001,
+      modelExtensionIsPublishedProcedure: false,
+      note: 'Model coverage is NOT published CDFA authorization. Rows beyond chart angle/fix scope remain MODEL_ONLY.'
+    };
     const blocked = issues.length > 0;
     return {
-      version: '1.1.0', chartId: c.chartId || null, referenceDmeId: c.chartDmeId,
+      version: '1.2.0', chartId: c.chartId || null, referenceDmeId: c.chartDmeId,
       parameters: {
         thresholdElevationFt: c.thresholdElevationFt, tchFt: c.tchFt,
         crossingAltitudeFt: c.thresholdElevationFt + c.tchFt, mdaFt: c.mdaFt ?? null,
@@ -214,7 +321,7 @@
         usedSlantRangeCorrection: c.station.elevationFt != null,
         publishedAngleDmeRange: c.validAngleDmeRange || null,
       },
-      checks, issues, rows,
+      checks, issues, rows, coverage,
       status: blocked ? 'BLOCKED_BY_QA' : 'PRELIMINARY_GEOMETRY',
       // Rows with an unresolved station, angle scope or published altitude
       // mismatch are withheld. Full operational validation is separate.
@@ -223,5 +330,5 @@
     };
   }
 
-  return { buildTable, round20, gradientForAngle, horizontalDistanceFromDme };
+  return { buildTable, round20, gradientForAngle, horizontalDistanceFromDme, dmeAtThresholdDistance };
 });
