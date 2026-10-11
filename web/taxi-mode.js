@@ -220,7 +220,9 @@ function go(){
       $("taxiQaStands").classList.add("on");
       $("taxiQaStands").setAttribute("aria-pressed","true");
       draw();
-      message("Stand "+p.destination+": published AIP POSITION selected"+(georefByPage.get(Number(selectedChart?.page))?" and highlighted.":", but this chart has no validated georeferencing to display the point.")+" Taxiway/lead-in topology has not passed QA; no route generated.",true);
+      const lead=taxi.standReference.publishedLeadInTopology?.cases?.[p.destination];
+      const leadText=lead?" Published lead-in: "+lead.publishedApproach.join(" / ")+". "+lead.directionNote:"";
+      message("Stand "+p.destination+": published AIP POSITION selected"+(georefByPage.get(Number(selectedChart?.page))?" and highlighted.":", but this chart has no validated georeferencing to display the point.")+leadText+" Centerline connector geometry still unverified; no route generated.",true);
     }else message("Parsed "+p.kind+". No verified taxiway + stand connector network for "+selectedAirport+"; automatic routing is disabled.",true);
     return;
   }
