@@ -53,8 +53,17 @@ def grid(words,coord,region):
 
 def build(pdf_path):
     pdf=fitz.open(pdf_path)
-    if len(pdf)<1248:raise ValueError("Cannot locate cycle 2621 airport diagrams")
-    texts=[pdf[1246].get_text("words"),pdf[1247].get_text("words")]
+    sourcePages={}
+    for idx,page in enumerate(pdf):
+        t=page.get_text("text")
+        if "30-9B" in t and "100-109" in t and "D1" in t and "F1R" in t:
+            sourcePages["30-9B"]=idx
+        if "30-9C" in t and "K50" in t and "601" in t and "H50" in t:
+            sourcePages["30-9C"]=idx
+    if set(sourcePages)!={"30-9B","30-9C"}:
+        raise ValueError("Source LTFM PDF does not contain complete 30-9B and 30-9C: "+repr(sourcePages))
+    texts=[pdf[sourcePages["30-9B"]].get_text("words"),
+           pdf[sourcePages["30-9C"]].get_text("words")]
     a,b=texts
     # All regions below are bounded by named chart panels; two disjoint
     # 30-9C panels MUST NOT share the same coordinate transformation.
@@ -74,7 +83,7 @@ def build(pdf_path):
             ml,bl,_=cal[panel+"_lon"];ma,ba,_=cal[panel+"_lat"]
             pos={"lat":round(ma*y+ba,8),"lon":round(ml*x+bl,8)}
             entry={"id":s,**pos,"source":"Jeppesen cycle 2621 printed stand label",
-              "chartPage":page_no,"chart":panel,
+              "chartPage":page_no,"sourcePdfPage":sourcePages["30-9B" if page_no==1247 else "30-9C"]+1,"chart":panel,
               "pdfPoint":[round(x,2),round(y,2)],
               "positionType":"APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
               "positionSurveyed":False,"connectorVerified":False}
