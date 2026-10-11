@@ -522,10 +522,11 @@
       "Precise individual stand and lead-out centerlines from full parking diagram",
       "Taxiway A/B/C/D/E intersections and curves from source vectors",
       "Holding positions mapped and airport QA reviewed",
-      "Taxi route alignment and flight-simulator positional check"
+      "Taxi route alignment and flight-simulator positional check",
+      "Check the new inset screenshot-space points against the ORIGINAL PDF intrinsic dimensions and surveyed airport centerlines"
     ],
-    "warn": "Schematic pixel route inferred from a cropped Jeppesen ADC screenshot. The individual stand lead-outs, taxi centerlines and chart-space registration are not flight tested.",
-    "chartOverlayPrecision": "UNVERIFIED_SCREENSHOT_TRACING"
+    "warn": "V2621 OIAW inset-only dashed schematic: screenshot-registration, unverified stand 4 lead-out and taxi A/B centerline; no measured taxi geometry. Must not be used for navigation.",
+    "chartOverlayPrecision": "SCREENSHOT_REGISTERED_INSET_QA_ONLY"
   },
   "previewChartTransform": {
     "chartPage": 38,
@@ -552,64 +553,125 @@
   },
   "previewChartPixelPoints": {
     "S1": {
-      "x": 171.154,
-      "y": 175
+      "x": 151,
+      "y": 322
     },
     "S2": {
-      "x": 178.846,
-      "y": 180.385
+      "x": 161,
+      "y": 332
     },
     "S3": {
-      "x": 190,
-      "y": 184.615
+      "x": 173.6,
+      "y": 341
     },
     "S4": {
-      "x": 203.462,
-      "y": 185.769
+      "x": 181.8,
+      "y": 346
     },
     "S5": {
-      "x": 211.154,
-      "y": 189.231
+      "x": 197.5,
+      "y": 356
     },
     "S6": {
-      "x": 218.846,
-      "y": 193.846
+      "x": 212.5,
+      "y": 368
     },
     "BA": {
-      "x": 179.231,
-      "y": 164.615
+      "x": 157.3,
+      "y": 302.4
     },
     "AA": {
-      "x": 197.692,
-      "y": 174.615
+      "x": 186.7,
+      "y": 326.4
     },
     "CA": {
-      "x": 210,
-      "y": 180.769
+      "x": 204,
+      "y": 334
     },
     "DA": {
-      "x": 224.231,
-      "y": 188.846
+      "x": 225,
+      "y": 349
     },
     "BH": {
-      "x": 179.615,
-      "y": 157.308
+      "x": 161.9,
+      "y": 296.3
     },
     "CH": {
-      "x": 210.769,
-      "y": 175
+      "x": 209,
+      "y": 327
     },
     "DH": {
-      "x": 224.615,
-      "y": 178.846
-    },
-    "EH": {
-      "x": 298.846,
-      "y": 241.154
-    },
-    "EP": {
-      "x": 296.154,
-      "y": 247.692
+      "x": 226,
+      "y": 336
     }
+  },
+  "previewChartInsetBounds": {
+    "left": 130,
+    "top": 285,
+    "right": 238,
+    "bottom": 392,
+    "chartPage": 38,
+    "coordinateSpace": "pdf_points",
+    "source": "OIAW chart 10-9 page 38 inset only. Registered visually against browser screenshot at V2621; still NOT surveyed."
+  },
+  "previewChartEdgePaths": {
+    "S4>AA": [
+      {
+        "x": 181.8,
+        "y": 346
+      },
+      {
+        "x": 185.6,
+        "y": 339
+      },
+      {
+        "x": 187.8,
+        "y": 333.5
+      },
+      {
+        "x": 186.7,
+        "y": 326.4
+      }
+    ],
+    "AA>BA": [
+      {
+        "x": 186.7,
+        "y": 326.4
+      },
+      {
+        "x": 179,
+        "y": 319.2
+      },
+      {
+        "x": 170.3,
+        "y": 312.7
+      },
+      {
+        "x": 162.3,
+        "y": 306.2
+      },
+      {
+        "x": 157.3,
+        "y": 302.4
+      }
+    ],
+    "BA>BH": [
+      {
+        "x": 157.3,
+        "y": 302.4
+      },
+      {
+        "x": 154.6,
+        "y": 299.4
+      },
+      {
+        "x": 156.6,
+        "y": 297
+      },
+      {
+        "x": 161.9,
+        "y": 296.3
+      }
+    ]
   }
 }
