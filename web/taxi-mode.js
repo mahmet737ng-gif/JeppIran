@@ -226,10 +226,10 @@ async function loadStandReference(icao){
 // promote a group candidate to an executable taxi connector.
 async function loadStandGroups(icao){
   taxi.insGroups=null;taxi.standGroupAudit=null;renderStandGroupPanel();
-  if(icao!=="LTFM")return;
   try{
     const req=await fetch("./data/taxi-stands/"+encodeURIComponent(icao)+"-ins-groups.json",{cache:"no-store"});
-    if(!req.ok)throw Error("No published INS group inventory");
+    if(req.status===404)return;
+    if(!req.ok)throw Error("Could not load published INS group inventory");
     const groups=await req.json();
     if(taxi.airport!==icao)return;
     taxi.insGroups=groups;
@@ -251,7 +251,7 @@ function refreshStandGroupAudit(){
 function renderStandGroupPanel(){
   const panel=$("taxiQaStandGroups"),choices=$("taxiQaStandGroupList"),info=$("taxiQaStandGroupInfo");
   if(!panel||!choices||!info)return;
-  panel.hidden=!(taxi.active&&taxi.airport==="LTFM"&&taxi.standGroupOpen);
+  panel.hidden=!(taxi.active&&taxi.insGroups&&taxi.standGroupOpen);
   if(panel.hidden)return;
   const report=taxi.standGroupAudit;
   const previous=choices.value;
@@ -501,7 +501,7 @@ function view(){
   };
   $("taxiQaStandGroupList").addEventListener("change",renderStandGroupPanel);
   $("taxiQaStands").onclick=()=>{
-    if(taxi.airport==="LTFM"){
+    if(taxi.airport==="LTFM"||taxi.insGroups){
       taxi.standGroupOpen=!taxi.standGroupOpen;
       $("taxiQaStands").classList.toggle("on",taxi.standGroupOpen);
       $("taxiQaStands").setAttribute("aria-pressed",String(taxi.standGroupOpen));
