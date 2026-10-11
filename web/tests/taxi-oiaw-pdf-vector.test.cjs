@@ -24,6 +24,11 @@ for(let n=1;n<=6;n++)for(const taxiway of ["B","C","D"]){
   assert.equal(route.ok,true,route.error);
   assert.equal(route.qaOnly,true);
   assert.equal(route.runwayAccessApproved,false);
+  assert.equal(route.overview?.quality,"OVERVIEW_SCHEMATIC_ONLY",
+    "Main ADC has a separate explicitly schematic A-to-exit highlight");
+  assert.equal(route.overview?.noIndividualStandLocation,true);
+  assert.ok(route.overview.points.length>=3);
+  assert.ok(route.overview.points.every(p=>p[0]>=140&&p[0]<=205&&p[1]>=180&&p[1]<=240));
   assert.ok(route.points.length>30);
   assert.ok(route.points.every(p=>p[0]>115&&p[0]<230&&p[1]>330&&p[1]<427));
   assert.ok(route.maxStandJoinGapPdfPoints<1.85);
