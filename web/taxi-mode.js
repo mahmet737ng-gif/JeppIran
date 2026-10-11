@@ -768,8 +768,9 @@ function oimmGo(p,options){
   const from=g.stands[p.startStand],pos=taxi.testStart||lastPosition;
   let start=from?.node||(pos?nearest(g,pos):null),preview=!!from||options.demo===true;
   const last=ways[ways.length-1],entry=g.taxiways[last],
-    goal=stand?.node||(bt.length&&last===g.runwayBacktracks[bt[0]].toTaxiway?
-      entry?.nodes?.at(-1):entry?.exitNode);
+    // The LAST named taxiway must finish at its chart-mapped outer endpoint.
+    // Never let the pathfinder stop at its first runway-side intersection.
+    goal=stand?.node||entry?.nodes?.at(-1)||entry?.exitNode;
   const links=adjacent(working,{runwayWay:bt[0]}),request={...p,taxiways:ways,allowStandAccess:true,allowStandExit:!!stand};
   let planned=null;
   if(!start&&stand&&p.kind==="stand"){
@@ -804,7 +805,7 @@ function oimmGo(p,options){
   if(bt.length){
     const terminal=rendered.steps.at(-1);
     if(terminal?.way!==last||terminal?.type!=="taxiway"||
-       planned.path.at(-1)!==(entry?.nodes?.at(-1)||entry?.exitNode)){
+       planned.path.at(-1)!==goal){
       message("Exit taxiway "+last+" does not reach its complete mapped endpoint. Refusing a shortened path.",true);
       return;
     }
