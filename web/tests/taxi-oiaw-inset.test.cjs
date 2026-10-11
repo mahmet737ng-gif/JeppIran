@@ -17,7 +17,17 @@ assert.equal(view.dashed,true);
 assert.ok(view.points.length>4,"Polyline must follow chart-traced bends, not endpoint chord");
 assert.ok(view.points.every(p=>p.x>=view.bounds.left&&p.x<=view.bounds.right&&
   p.y>=view.bounds.top&&p.y<=view.bounds.bottom),"No line outside parking inset");
-assert.ok(view.points.every(p=>p.y>285),"Old bug drew line in main-chart whitespace");
+assert.equal(graph.qaGeometryRevision,"2621-oiaw-inset-registration-r3");
+assert.ok(view.bounds.top>=370&&view.bounds.bottom<=510,
+  "Inlaid parking image, not outer runway or main-chart whitespace");
+assert.ok(view.points.every(p=>p.y>=374&&p.y<=507),
+  "Full route must be confined to the actual parking inset PDF y-window");
+assert.deepEqual(view.points[0],{x:197,y:459});
+assert.deepEqual(view.points.at(-1),{x:160,y:383});
+const oldRevision=structuredClone(graph);
+oldRevision.qaGeometryRevision="2621-oiaw-inset-registration-r2";
+assert.notEqual(oldRevision.qaGeometryRevision,graph.qaGeometryRevision,
+  "Stale offline graph must not masquerade as the new inset revision");
 const reversed=inset.route(graph,plan.route.path.slice().reverse(),38);
 assert.equal(reversed.ok,true);
 assert.deepEqual(reversed.points,view.points.slice().reverse());
