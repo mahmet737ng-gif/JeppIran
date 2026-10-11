@@ -16,9 +16,9 @@ RANGE=re.compile(r"\b([A-Z]?)(\d{1,3})([LR]?)\s+thru\s+([A-Z]?)(\d{1,3})([LR]?)\
 def expand(text):
     t=text.replace("\n"," ").upper()
     output=[]
-    pattern=re.compile(r"\\b([A-Z]?)(\\d{1,3})([LR]?)\\s+THRU\\s+([A-Z]?)(\\d{1,3})([LR]?)\\b")
+    pattern=re.compile(r"\b([A-Z]?)(\d{1,3})([LR]?)\s+THRU\s+([A-Z]?)(\d{1,3})([LR]?)\b")
     def key(s):
-        m=re.fullmatch(r"([A-Z]?)(\\d{1,3})([LR]?)",s)
+        m=re.fullmatch(r"([A-Z]?)(\d{1,3})([LR]?)",s)
         if not m:return None
         return m.group(1),int(m.group(2)),{"L":0,"":1,"R":2}[m.group(3)]
     def include(m):
