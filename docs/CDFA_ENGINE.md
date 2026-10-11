@@ -1,4 +1,4 @@
-# JEPPIRAN CDFA geometry engine — V1.1
+# JEPPIRAN CDFA geometry engine — V1.2
 
 **Engineering/simulator QA only; not approved for real-world navigation.**
 
@@ -22,6 +22,25 @@ Example (fictional): threshold elevation 100 ft, TCH 50 ft, 3°, DME 0.5 NM afte
 | D2 | 1.5 NM | 627 | 620 |
 | D3 | 2.5 NM | 945 | 940 |
 
+## Mandatory minimum 10-NM coverage (V1.2)
+
+The engine automatically extends the **computed preview** to **both**:
+
+1. at least 10 NM before the runway threshold, calculated from the actual chart-identified DME transmitter position;
+2. at least a DME reading of 10.0 NM, where physically locatable.
+
+Default `minimumThresholdCoverageNm: 10` and `minimumDmeCoverageNm: 10` cannot be set below 10. `coverageStepDmeNm` defaults to 1 NM (range 0.1 to 5). When supplied `dmeReadingsNm` stops early, additional readings are generated up to the exact transmitter DME corresponding to THR+10 NM, not merely D10. If a physical DME-branch ambiguity prevents the target, `status=BLOCKED_BY_QA` with `MINIMUM_10NM_COVERAGE_NOT_MET`.
+
+**This does not extend a *published* approach procedure.** Any computed row outside `validAngleDmeRange`, beyond a mandatory fix, or below MDA remains `MODEL_ONLY`. `coverage.publishedAngleCovers10Nm` is reported separately from `coverage.meetsThresholdModelCoverage`. The former must never be inferred solely from the latter.
+
+### Example: Urmia OITR VOR RWY03 (2621 page 827)
+
+- UMH 113.5; RWY03 threshold elevation 4342 ft; TCH 50 ft; published angle 3.77° (400.38 ft/NM).
+- Source chart's D3.0 to threshold = 0.8 NM, hence **projected longitudinal offset 2.2 NM after threshold**. This is a chart-based approximation; lateral and slant geometry are NOT surveyed.
+- Published angle drawn over D9.0 to D3.0. `validAngleDmeRange:{from:3,to:9}`.
+- THR+10 NM projects to **D12.2**. The modeled profile can be extended to D13 (THR+10.8) but all rows outside D9 remain **engineering extrapolations**, not published CDFA altitudes.
+- `station.geometryVerified:false` ensures even rows inside the angle interval are `MODEL_ONLY` until survey QA.
+
 ## Integration
 
 `web/cdfa-engine.js` is UMD: `<script src="cdfa-engine.js"></script>` in web PWA or `require('./cdfa-engine.js')` in Node. No network, storage, UI, backend or simulator dependencies. It does **not** alter app layout, splash screens, charts, aircraft position, simulator bridges, weather or offline caches.
@@ -41,6 +60,9 @@ const qa = JeppIranCdfaEngine.buildTable({
   },
   dmeReadingsNm: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
   validAngleDmeRange: {from: 1, to: 10},  // only if verified on chart
+  minimumThresholdCoverageNm: 10,       // automatically extend preview to at least 10 NM before threshold
+  minimumDmeCoverageNm: 10,             // independently guarantee DME>=10 preview
+  coverageStepDmeNm: 1,
   publishedConstraints: [{ dmeNm: 5, altitudeFt: 1700, type: 'minimum' }],
 });
 console.log(qa.status, qa.issues, qa.rows);
@@ -58,6 +80,7 @@ console.log(qa.status, qa.issues, qa.rows);
 - Optional `mdaFt` suppresses candidate rows below MDA (raw altitude checked before rounding); it does not derive or publish a VDP.
 - `publishedConstraints` accepts `{dmeNm, altitudeFt, type: 'minimum'|'mandatory'|'maximum'}`. Every declared fix is QA-checked, including DME positions not in the requested output rows. Minimum means **at or above**; mandatory means **exactly** (configurable `mandatoryToleranceFt`, default zero); maximum means **at or below**. These constraints are retained at their published values, not rounded. When any conflict is found, `status=BLOCKED_BY_QA` and `candidateRows=[]`; manual recheck is needed. No automatic fake compensation or silent interpolation.
 - A mandatory crossing ends the simple modeled candidate segment, and subsequent higher DME rows are `MODEL_ONLY`, even when numeric geometry can be computed.
+- Optional `station.geometryVerified:false` marks the rows as `MODEL_ONLY` even if the displayed input angle is published; the chart alone cannot supply surveyed lateral geometry.
 - Output `PRELIMINARY_GEOMETRY` is **never** an operational approval; additional geodetic QA, actual FAF/MAP, minima, NOTAMs, vertical deviation rules and operator procedures are not covered by this engine.
 
 ### Run tests
