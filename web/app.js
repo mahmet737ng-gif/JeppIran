@@ -1901,6 +1901,10 @@ if(LOCAL_SIM_WEB){
 window.addEventListener("jeppiran-taxi-route-updated",()=>updateAircraftMarker());
 window.addEventListener("resize",()=>requestAnimationFrame(()=>{applyChartTransform();updateAircraftMarker()}));
 window.addEventListener("orientationchange",()=>setTimeout(()=>{window.dispatchEvent(new Event("resize"));refitSelectedChartForLayout()},180));
+window.addEventListener("jeppiran-cdfa-layout-changed",()=>{
+  // CDFA occupies its own fixed column, never overlapping the PDF or its gestures.
+  if(selectedChart)requestAnimationFrame(()=>refitSelectedChartForLayout());
+});
 if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")){
   // A running installed app otherwise keeps its old code after a new worker
   // takes control of subsequent requests.

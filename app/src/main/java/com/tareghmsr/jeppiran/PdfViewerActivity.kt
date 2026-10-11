@@ -260,6 +260,10 @@ private val locationPermissionLauncher =
     private lateinit var cdfaIcon:
         TextView
 
+    // CDFA_SIDE_TABLE_V1 — locked outside the ChartView; no PDF annotations.
+    private var cdfaSidebar: ScrollView? = null
+    private var cdfaSidebarVisible = false
+
     private lateinit var metarIcon:
         TextView
 
@@ -1620,10 +1624,11 @@ private val locationPermissionLauncher =
 
         cdfaIcon = graphicToolbarButton(
             ChartToolbarArtwork.Icon.CDFA,
-            "CDFA · simulator QA table"
+            "CDFA · chart-external QA table"
         ).apply {
             setOnClickListener {
-                CdfaQaDialog.show(this@PdfViewerActivity, currentChartGlobalPage(), currentIcao)
+                cdfaSidebarVisible = !cdfaSidebarVisible
+                updateCdfaSidebar()
             }
         }
         actionRow.addView(cdfaIcon, toolbarButtonParams(42.dp))
@@ -3170,6 +3175,9 @@ private val locationPermissionLauncher =
             newConfig
         )
 
+        // Preserve the owner-locked CDFA sidebar on rotation.
+        if (cdfaSidebarVisible) updateCdfaSidebar()
+
 
         if (
             ::chartTreePanel.isInitialized
@@ -3810,12 +3818,52 @@ private val locationPermissionLauncher =
     }
 
 
+    private fun cdfaSidebarWidth(): Int =
+        (if (resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) 184 else 146).dp
+
+    private fun updateCdfaSidebar() {
+        if (!::chartView.isInitialized || !::root.isInitialized) return
+        val eligible = CdfaQaDialog.available(this, currentChartGlobalPage(), currentIcao)
+        if (!eligible) cdfaSidebarVisible = false
+
+        cdfaSidebar?.let { root.removeView(it) }
+        cdfaSidebar = null
+
+        val params = chartView.layoutParams as? FrameLayout.LayoutParams
+        if (params != null) {
+            params.rightMargin = if (cdfaSidebarVisible) cdfaSidebarWidth() else 0
+            chartView.layoutParams = params
+        }
+
+        if (cdfaSidebarVisible) {
+            val table = CdfaQaDialog.createPanel(this, currentChartGlobalPage(), currentIcao)
+            if (table != null) {
+                cdfaSidebar = table
+                root.addView(
+                    table,
+                    FrameLayout.LayoutParams(
+                        cdfaSidebarWidth(),
+                        FrameLayout.LayoutParams.MATCH_PARENT,
+                        Gravity.END or Gravity.TOP
+                    ).apply { topMargin = 94.dp }
+                )
+            } else {
+                cdfaSidebarVisible = false
+                params?.rightMargin = 0
+                if (params != null) chartView.layoutParams = params
+            }
+        }
+        chartView.requestLayout()
+        chartView.invalidate()
+    }
+
     private fun refreshCdfaButton() {
         if (!::cdfaIcon.isInitialized) return
         val enabled = CdfaQaDialog.available(this, currentChartGlobalPage(), currentIcao)
         cdfaIcon.isEnabled = enabled
         cdfaIcon.alpha = if (enabled) 1f else 0.45f
-        cdfaIcon.contentDescription = if (enabled) "CDFA · simulator QA only" else "CDFA unavailable for this chart"
+        cdfaIcon.contentDescription = if (enabled) "CDFA · fixed side table · QA only" else "CDFA unavailable for this chart"
+        if (cdfaSidebarVisible) updateCdfaSidebar()
     }
 
     private fun currentChartGlobalPage():

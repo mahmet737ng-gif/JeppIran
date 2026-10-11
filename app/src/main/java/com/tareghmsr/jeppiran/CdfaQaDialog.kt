@@ -1,17 +1,23 @@
 package com.tareghmsr.jeppiran
 
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
+import android.view.Gravity
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
-import androidx.appcompat.app.AlertDialog
 import org.json.JSONObject
+import java.util.Locale
 
-/** Cycle 2621 CDFA engineering QA. Never used by PDF navigation or position logic. */
+/**
+ * CDFA_SIDE_TABLE_V1 — OWNER-LOCKED UI.
+ * Fixed right-hand space, never drawn into ChartView or onto a source PDF.
+ * Simulator engineering QA ONLY; numbers do not authorize navigation.
+ */
 object CdfaQaDialog {
     private var records: Map<Int, JSONObject>? = null
     private var exclusions: Set<Int>? = null
@@ -20,8 +26,9 @@ object CdfaQaDialog {
     private fun load(context: Context) {
         if (records != null && exclusions != null) return
         try {
-            val raw = context.assets.open("cdfa-v2621-v17-qa.json").bufferedReader().use { it.readText() }
-            val document = JSONObject(raw)
+            val document = JSONObject(
+                context.assets.open("cdfa-v2621-v17-qa.json").bufferedReader().use { it.readText() }
+            )
             require(document.optString("cycle") == "2621")
             val arr = document.getJSONArray("charts")
             val map = mutableMapOf<Int, JSONObject>()
@@ -29,11 +36,12 @@ object CdfaQaDialog {
                 val item = arr.getJSONObject(i)
                 map[item.getInt("sourcePage")] = item
             }
-            val exclusionRaw = context.assets.open("cdfa-exclusions-v2621.json").bufferedReader().use { it.readText() }
-            val exclusionDoc = JSONObject(exclusionRaw)
-            require(exclusionDoc.optString("cycle") == "2621")
+            val doc = JSONObject(
+                context.assets.open("cdfa-exclusions-v2621.json").bufferedReader().use { it.readText() }
+            )
+            require(doc.optString("cycle") == "2621")
             val excluded = mutableSetOf<Int>()
-            val pages = exclusionDoc.getJSONArray("chart_pages_1_based")
+            val pages = doc.getJSONArray("chart_pages_1_based")
             for (i in 0 until pages.length()) excluded.add(pages.getInt(i))
             records = map
             exclusions = excluded
@@ -43,97 +51,101 @@ object CdfaQaDialog {
         }
     }
 
-    private fun get(context: Context, page: Int, icao: String): JSONObject? {
+    private fun find(context: Context, page: Int, icao: String): JSONObject? {
         load(context)
-        if (page <= 0 || pendingReaudit.contains(page) || exclusions?.contains(page) == true) return null
-        val chart = records?.get(page) ?: return null
-        if (chart.optString("icao") != icao || chart.optString("status").startsWith("WITHHELD")) return null
-        if ((chart.optJSONArray("table")?.length() ?: 0) == 0) return null
-        return chart
+        if (page <= 0 || page in pendingReaudit || exclusions?.contains(page) == true) return null
+        val c = records?.get(page) ?: return null
+        if (c.optString("icao") != icao || c.optString("status").startsWith("WITHHELD")) return null
+        if ((c.optJSONArray("table")?.length() ?: 0) == 0) return null
+        return c
     }
 
-    fun available(context: Context, page: Int, icao: String): Boolean = get(context, page, icao) != null
+    fun available(context: Context, page: Int, icao: String): Boolean =
+        find(context, page, icao) != null
 
-    private fun dp(context: Context, x: Int): Int =
-        (x * context.resources.displayMetrics.density + 0.5f).toInt()
+    private data class CellRow(val dme: Double, val left: String, val right: String, val isVdp: Boolean = false)
 
-    private fun view(context: Context, message: String, size: Float, color: Int, bold: Boolean = false): TextView =
+    private fun calculatedRows(record: JSONObject): List<CellRow> {
+        val result = mutableListOf<CellRow>()
+        val arr = record.getJSONArray("table")
+        for (i in 0 until arr.length()) {
+            val row = arr.getJSONObject(i)
+            val dme = row.optDouble("dme", Double.NaN)
+            if (dme.isFinite()) {
+                result.add(CellRow(dme, String.format(Locale.US, "%.1f", dme), row.optString("altitudeFt")))
+            }
+        }
+        val vdp = record.optJSONObject("vdp")
+        if (vdp != null && vdp.optString("status") == "CALCULATED_MDA_INTERCEPT_QA_ONLY"
+            && !vdp.optBoolean("published")) {
+            val dme = vdp.optDouble("dmeNm", Double.NaN)
+            val label = vdp.optString("dmeDisplay").removePrefix("D")
+            if (dme.isFinite() && dme >= 0 && label.isNotBlank()) {
+                result.add(CellRow(dme, label, "VDP", true))
+            }
+        }
+        return result.sortedWith(compareByDescending<CellRow> { it.dme }.thenByDescending { it.isVdp })
+    }
+
+    private fun dp(c: Context, n: Int): Int = (n * c.resources.displayMetrics.density + .5f).toInt()
+
+    private fun label(context: Context, text: String, size: Float, fg: Int, bg: Int): TextView =
         TextView(context).apply {
-            text = message
+            this.text = text
             textSize = size
-            setTextColor(color)
-            if (bold) typeface = Typeface.DEFAULT_BOLD
-            setPadding(dp(context, 8), dp(context, 7), dp(context, 8), dp(context, 7))
+            gravity = Gravity.CENTER
+            setTextColor(fg)
+            typeface = Typeface.create("sans-serif", Typeface.BOLD)
+            setPadding(dp(context, 2), dp(context, 7), dp(context, 2), dp(context, 7))
+            background = GradientDrawable().apply {
+                setColor(bg)
+                setStroke(dp(context, 1), fg)
+            }
         }
 
-    fun show(context: Context, page: Int, icao: String) {
-        val chart = get(context, page, icao)
-        if (chart == null) {
-            AlertDialog.Builder(context).setTitle("CDFA")
-                .setMessage("No released simulator QA CDFA data for this procedure.")
-                .setPositiveButton("Close", null).show()
-            return
-        }
-        val white = Color.rgb(230, 241, 250)
-        val muted = Color.rgb(169, 193, 213)
-        val red = Color.rgb(255, 178, 188)
-        val bg = Color.rgb(18, 33, 48)
+    fun createPanel(context: Context, page: Int, icao: String): ScrollView? {
+        val record = find(context, page, icao) ?: return null
+        val dark = context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK ==
+            Configuration.UI_MODE_NIGHT_YES
+        val bg = if (dark) Color.BLACK else Color.WHITE
+        val fg = if (dark) Color.WHITE else Color.BLACK
         val body = LinearLayout(context).apply {
             orientation = LinearLayout.VERTICAL
-            setPadding(dp(context, 12), dp(context, 10), dp(context, 12), dp(context, 15))
+            setPadding(dp(context, 5), dp(context, 12), dp(context, 5), dp(context, 12))
             setBackgroundColor(bg)
         }
-        body.addView(view(context, "SIMULATOR / ENGINEERING QA ONLY — NOT FOR ACTUAL NAVIGATION", 13f, red, true))
-        body.addView(view(context, chart.optString("icao") + " · " + chart.optString("title")
-            + " · " + chart.optString("chartNumber"), 16f, white, true))
-        val angle = if (chart.isNull("publishedAngleDeg")) "3.00° ASSUMED" else
-            chart.optString("publishedAngleDeg") + "° published"
-        val source = if (chart.optBoolean("usedAirportElevationFallback")) "airport elevation fallback" else "runway threshold input"
-        body.addView(view(context, "PDF page " + page + "  •  DME " + chart.optString("referenceDmeId")
-            + "  •  Angle " + angle + "\nTCH " + chart.optInt("tchFt") + " ft  •  " + source
-            + "\nComputed MSL altitudes are not published Jeppesen clearances.", 12f, muted))
-        val vdp = chart.optJSONObject("vdp")
-        if (vdp != null && vdp.optString("status") == "CALCULATED_MDA_INTERCEPT_QA_ONLY" &&
-            vdp.optString("dmeDisplay").isNotBlank()) {
-            val mda = if (chart.isNull("mdaFt")) "unverified" else chart.optString("mdaFt") + " ft MSL"
-            val pill = view(context, "VDP CALCULATED: " + vdp.optString("dmeDisplay")
-                + "  •  MDA " + mda + "  •  NOT PUBLISHED", 14f, red, true)
-            pill.background = GradientDrawable().apply {
-                setColor(Color.rgb(84, 43, 53))
-                cornerRadius = dp(context, 8).toFloat()
-            }
-            body.addView(pill)
+        body.addView(label(context, "CDFA DATA", 19f, fg, bg),
+            LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+
+        fun addTwoColumns(left: String, right: String, fontSize: Float) {
+            val line = LinearLayout(context).apply { orientation = LinearLayout.HORIZONTAL }
+            line.addView(label(context, left, fontSize, fg, bg),
+                LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f))
+            line.addView(label(context, right, fontSize, fg, bg),
+                LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1.15f))
+            body.addView(line, LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
         }
-        body.addView(view(context, "REFERENCE DME       COMPUTED MSL       PUBLISHED FIX", 11f, muted, true))
-        val rows = chart.getJSONArray("table")
-        for (i in 0 until rows.length()) {
-            val row = rows.getJSONObject(i)
-            val fixes = mutableListOf<String>()
-            val published = row.optJSONArray("published")
-            if (published != null) {
-                for (j in 0 until published.length()) {
-                    val item = published.getJSONObject(j)
-                    fixes.add(item.optString("type").uppercase() + " " + item.optInt("altitudeFt") + "ft")
-                }
-            }
-            val marker = row.optString("vdpMarker")
-            val content = "D" + row.optString("dme").padEnd(6) + "  " +
-                row.optString("altitudeFt").padEnd(7) + " ft   " +
-                (if (fixes.isEmpty()) "—" else fixes.joinToString("; ")) +
-                (if (marker.isNotEmpty()) " · VDP near " + marker else "")
-            val line = view(context, content, 12f, if (marker.isNotEmpty()) red else white)
-            line.setBackgroundColor(if (i % 2 == 0) Color.rgb(35, 58, 77) else bg)
-            body.addView(line)
+        addTwoColumns("DME", "ALT (ft)", 14.5f)
+        for (row in calculatedRows(record)) {
+            // A computed VDP displays as "2.6 | VDP", never as a numeric altitude.
+            addTwoColumns(row.left, row.right, 17.5f)
         }
-        body.addView(view(context,
-            "All entries are geometric MODEL ONLY until verified. Values beyond published angle segments " +
-                "are extrapolations; mandatory altitudes and DME fixes must retain their original chart values.",
-            12f, muted))
-        val scroll = ScrollView(context).apply {
-            addView(body, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.WRAP_CONTENT))
+        val notice = TextView(context).apply {
+            text = "SIMULATOR QA ONLY\nNOT FOR ACTUAL NAVIGATION"
+            textSize = 10f
+            typeface = Typeface.DEFAULT_BOLD
+            gravity = Gravity.CENTER
+            setTextColor(fg)
+            setPadding(dp(context, 2), dp(context, 10), dp(context, 2), dp(context, 4))
         }
-        AlertDialog.Builder(context).setTitle("CDFA · V2621 QA")
-            .setView(scroll).setPositiveButton("Close", null).show()
+        body.addView(notice)
+        return ScrollView(context).apply {
+            setBackgroundColor(bg)
+            isFillViewport = false
+            isVerticalScrollBarEnabled = true
+            addView(body, ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT))
+        }
     }
 }
