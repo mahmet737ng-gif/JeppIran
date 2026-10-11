@@ -1254,3 +1254,23 @@ body.viewer-fullscreen .aircraft-follow-btn{
  #chartsView #taxiQaPanel .taxi-route-preview svg {max-height:95px}
 }
 @media(max-height:550px){#chartsView #taxiQaPanel {max-height:calc(100dvh - 60px);top:40px}}
+
+/* TAXI R4: WGS84 local context preview with visible version signal. */
+#chartsView #taxiQaPanel .taxi-route-preview svg {
+  max-height:158px;
+  background:radial-gradient(ellipse at 55% 45%,#18304a,#071521 78%);
+}
+#chartsView #taxiQaPanel .taxi-route-preview {
+  background:#081b2c;
+}
+#chartsView #taxiQaPanel .taxi-qa-build {
+  color:#8ae6f3;
+  border:1px solid #2b7990;
+  border-radius:4px;
+  font:800 9px/1.2 system-ui,sans-serif;
+  padding:3px 4px;
+  letter-spacing:.03em;
+}
+@media(max-width:680px) {
+  #chartsView #taxiQaPanel .taxi-route-preview svg {max-height:142px}
+}

@@ -356,7 +356,7 @@ function view(){
   const panel=document.createElement("section");
   panel.id="taxiQaPanel";panel.className="taxi-qa-panel";panel.hidden=true;
   panel.innerHTML='<div class="taxi-qa-title"><strong>TAXI <small>QA TEST</small></strong>'+
-    '<span id="taxiQaAirport"></span><button id="taxiQaToolsBtn" type="button" aria-expanded="false" aria-controls="taxiQaButtons">TOOLS ▾</button>'+
+    '<span id="taxiQaAirport"></span><span class="taxi-qa-build">R4</span><button id="taxiQaToolsBtn" type="button" aria-expanded="false" aria-controls="taxiQaButtons">TOOLS ▾</button>'+
     '<button id="taxiQaClose" type="button" aria-label="Close taxi panel">×</button></div>'+
     '<label for="taxiQaInput">Stand STD3 T5 N2 · Hold /N2 · Procedure 34L2A</label>'+
     '<div class="taxi-qa-entry"><input id="taxiQaInput" autocomplete="off" spellcheck="false" placeholder="Stand / taxiways / procedure"><button id="taxiQaGo" type="button">GO</button></div>'+
@@ -835,27 +835,72 @@ function renderRoutePreview(){
   panel?.classList.add("has-preview");
   const nodes=r.path.map(id=>r.graph.nodes[id]).filter(Boolean);
   if(nodes.length<2){container.hidden=true;return}
+  // QA context map: preserve true WGS84 local geometry (north-up), but show
+  // adjacent taxiway centerlines so a straight N/S path has usable context.
+  // This is NOT a calibration of the PDF airport diagram.
   const lat0=nodes.reduce((a,p)=>a+p.lat,0)/nodes.length;
-  const cos=Math.cos(lat0*Math.PI/180),W=370,H=105,pad=16;
-  const xs=nodes.map(p=>p.lon*cos),ys=nodes.map(p=>p.lat);
+  const lon0=nodes.reduce((a,p)=>a+p.lon,0)/nodes.length;
+  const cos=Math.cos(lat0*Math.PI/180),W=370,H=160,pad=19;
+  const asMeters=p=>({x:(p.lon-lon0)*111195*cos,y:(p.lat-lat0)*111195});
+  const local=nodes.map(asMeters);
+  const xs=local.map(p=>p.x),ys=local.map(p=>p.y);
   const xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(...ys),ymax=Math.max(...ys);
-  const xSpan=Math.max(1e-7,xmax-xmin),ySpan=Math.max(1e-7,ymax-ymin);
+  const midX=(xmin+xmax)/2,midY=(ymin+ymax)/2;
+  const xSpan=Math.max(500,(xmax-xmin)*1.38),
+    ySpan=Math.max(360,(ymax-ymin)*1.35);
   const scale=Math.min((W-2*pad)/xSpan,(H-2*pad)/ySpan);
-  const offsetX=(W-xSpan*scale)/2,offsetY=(H-ySpan*scale)/2;
-  const pts=nodes.map((p,i)=>({x:offsetX+(xs[i]-xmin)*scale,y:offsetY+(ymax-p.lat)*scale}));
+  const toScreen=p=>{
+    const m=asMeters(p);
+    return {x:W/2+(m.x-midX)*scale,y:H/2-(m.y-midY)*scale};
+  };
+  const pts=nodes.map(toScreen);
   const root=s("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
-    "aria-label":"Geographically scaled OSM taxiway segment, not the airport ADC"});
+    "aria-label":"Local OSM network context with a highlighted taxiway path; NOT georeferenced to airport chart"});
+  // Only render nearby segments; preserve any disconnected/unnamed gaps as
+  // actual gaps. Never snap named lines or stand coordinates to one another.
+  const background=s("g",{"aria-hidden":"true"});
+  let backgroundSegments=0;
+  for(const e of r.graph.edges||[]){
+    if(e.closed||e.runway||!r.graph.nodes[e.from]||!r.graph.nodes[e.to])continue;
+    const a=toScreen(r.graph.nodes[e.from]),b=toScreen(r.graph.nodes[e.to]);
+    if(Math.max(a.x,b.x)<-3||Math.min(a.x,b.x)>W+3||
+       Math.max(a.y,b.y)<-3||Math.min(a.y,b.y)>H+3)continue;
+    const named=e.taxiway&&name(e.taxiway)!=="UNNAMED";
+    background.appendChild(s("line",{
+      x1:a.x.toFixed(2),y1:a.y.toFixed(2),x2:b.x.toFixed(2),y2:b.y.toFixed(2),
+      stroke:named?"#668fa8":"#334e62",
+      "stroke-width":named?"1.15":".65",
+      "stroke-linecap":"round",opacity:named?".80":".47"
+    }));
+    backgroundSegments++;
+    if(backgroundSegments>=850)break;
+  }
+  root.appendChild(background);
   const chain=pts.map(p=>p.x.toFixed(2)+","+p.y.toFixed(2)).join(" ");
-  root.appendChild(s("polyline",{points:chain,fill:"none",stroke:"#4b1348",
-    "stroke-width":"7","stroke-linecap":"round","stroke-linejoin":"round"}));
+  root.appendChild(s("polyline",{points:chain,fill:"none",stroke:"#310d38",
+    "stroke-width":"8","stroke-linecap":"round","stroke-linejoin":"round"}));
   root.appendChild(s("polyline",{points:chain,fill:"none",stroke:"#fc30d3",
-    "stroke-width":"3.1","stroke-linecap":"round","stroke-linejoin":"round"}));
-  root.appendChild(s("circle",{cx:pts[0].x,cy:pts[0].y,r:5,fill:"#26edff",stroke:"#0a1826","stroke-width":2}));
+    "stroke-width":"3.6","stroke-linecap":"round","stroke-linejoin":"round"}));
+  root.appendChild(s("circle",{cx:pts[0].x,cy:pts[0].y,r:5.4,fill:"#25e8f5",stroke:"#071a2d","stroke-width":1.5}));
   const end=pts[pts.length-1];
-  root.appendChild(s("circle",{cx:end.x,cy:end.y,r:5,fill:"#eaffff",stroke:"#0a1826","stroke-width":2}));
+  root.appendChild(s("circle",{cx:end.x,cy:end.y,r:5.4,fill:"#fef0ff",stroke:"#071a2d","stroke-width":1.5}));
+  const note=(label,p,dx,dy,color)=>{
+    const t=s("text",{x:Math.max(6,Math.min(W-105,p.x+dx)),y:Math.max(15,Math.min(H-8,p.y+dy)),
+      fill:color,"font-size":"11","font-weight":"800",
+      stroke:"#09192a","stroke-width":"3","paint-order":"stroke"});
+    t.textContent=label;root.appendChild(t);
+  };
+  const firstName=r.taxiways?.[0]||"START";
+  const lastName=r.taxiways?.at(-1)||"END";
+  note(firstName+" · QA START",pts[0],9,14,"#79efff");
+  note(lastName+" · END",end,9,-9,"#fff7fd");
+  note("N ↑",{x:W-24,y:14},0,0,"#b7d8e9");
+  note("OSM CONTEXT · NOT ADC",{x:9,y:H-8},0,0,"#a8bbc9");
   const caption=document.createElement("strong");
-  caption.textContent=(r.startStand?(r.airport==="OIMM"?"ST":"UNMAPPED STAND ")+r.startStand+" → ":"")+
-    (r.taxiways?.join(" → ")||"MAPPED QA SECTION")+" · "+(r.length||0)+" m";
+  const waypointText=r.taxiways?.join(" → ")||"MAPPED QA SECTION";
+  caption.textContent=r.startStand&&r.standLinkVerified===false?
+    "STAND "+r.startStand+" UNMAPPED · mapped "+waypointText+" · "+(r.length||0)+" m":
+    (r.startStand?"ST"+r.startStand+" → ":"")+waypointText+" · "+(r.length||0)+" m";
   const warning=document.createElement("small");
   const model=georefByPage.get(Number(selectedChart?.page));
   warning.textContent=r.airport==="OIMM"?
