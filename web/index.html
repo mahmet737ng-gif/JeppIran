@@ -102,7 +102,7 @@
               <button id="zoomInBtn" class="icon-btn compact-btn raster-btn raster-only" title="Zoom in" aria-label="Zoom in"><span class="toolbar-art art-zoom-in" aria-hidden="true"></span></button>
             </div>
             <button id="chartMetarBtn" class="icon-btn metar-toolbar-btn raster-btn" title="Show or hide airport METAR"><span class="toolbar-art art-metar" aria-hidden="true"></span><span class="toolbar-label">METAR</span></button>
-            <button id="chartCdfaBtn" class="icon-btn raster-btn" disabled title="CDFA chart data is not available yet" aria-label="CDFA chart data is not available yet"><span class="toolbar-art art-cdfa" aria-hidden="true"></span><span class="toolbar-label">CDFA</span></button>
+            <button id="chartCdfaBtn" class="icon-btn raster-btn" disabled type="button" title="CDFA QA data unavailable for this chart" aria-label="CDFA engineering QA table"><span class="toolbar-art art-cdfa" aria-hidden="true"></span><span class="toolbar-label">CDFA</span></button>
             <button id="chartTaxiBtn" class="icon-btn raster-btn" type="button" title="TAXI · Open airport diagram" aria-label="TAXI · Open airport diagram"><span class="toolbar-art art-taxi" aria-hidden="true"></span><span class="toolbar-label">TAXI</span></button>
             <button id="positionStatusBtn" class="icon-btn position-status-btn raster-btn" data-state="off" type="button" aria-label="POS OFF" aria-haspopup="dialog" aria-controls="positionSourceDialog">
               <span class="toolbar-art art-position" aria-hidden="true"></span><span class="position-status-label">POS OFF</span>
@@ -348,6 +348,7 @@
   })();
   </script>
   <script src="./app.js?v=2621-cdfa-titlefix-r1" defer></script>
+  <script src="./cdfa-chart-panel.js?v=2621-qa-display-r1" defer></script>
   <script src="./airport-adc-banners.js?v=2621-adc-template2-r1" defer></script>
   <script src="./taxi-stand-engine.js?v=2621-stand-groups-generic-r10" defer></script>\n  <script src="./taxi-unnamed-connectors.js?v=2621-ltfm-n2c-r12" defer></script>
   <script src="./taxi-engine.js?v=2621-implicit-backtrack-v1" defer></script>
