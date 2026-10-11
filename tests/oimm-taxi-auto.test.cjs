@@ -29,6 +29,12 @@ for(const id of Object.keys(graph.stands)){
     tested++;
   }
 }
+for(const id of Object.keys(graph.stands)){
+  const p=auto.route(graph,{startStand:id,destination:"RAMP"});
+  assert(p.route,"ST"+id+" must have a connected APRON path");
+  assert.equal(p.target.kind,"apron");
+  assert(graph.edges.some(e=>e.taxiway==="APRON"&&[e.from,e.to].includes(p.route.path.at(-1))));
+}
 for(const id of ["101","109","113","137"]){
   const result=auto.route(graph,{position:graph.nodes[graph.stands[id].node],destination:"ST130"});
   verify(result,graph.stands["130"].node,"live position "+id+" → ST130");
