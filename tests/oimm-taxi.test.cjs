@@ -53,3 +53,36 @@ assert(t.routeDeviationMeters({lat:ctx.lastPosition.lat+.01,lon:ctx.lastPosition
 t.taxi.airport='LTFM';t.taxi.graph={stands:{}};t.taxi.standReference=null;
 assert.equal(t.parse('STD3 T5 N2').startStand,'D3');assert.equal(t.parse('34L2A').kind,'procedure');
 console.log(JSON.stringify({standToHoldRoutesPassed:checks,parserAndLivePositionChecks:'passed',runwayAndMilitaryExclusions:'passed'}));
+
+
+// Regression: opening TAXI and pressing GO while the 1.3 MB OIMM network is
+// still downloading must share one request, then draw the entered route once
+// the graph is ready. Network failure must clear any stale magenta route.
+(async()=>{
+ let release; const gate=new Promise(resolve=>{release=resolve;});
+ let downloads=0;
+ ctx.fetch=async()=>{downloads++;await gate;return {ok:true,json:async()=>graph};};
+ t.taxi.graph=null;t.taxi.route=null;t.taxi.airport='OIMM';t.taxi.active=true;
+ el('taxiQaInput').value='ST113 A BT31L D';
+ t.go();t.go();
+ assert.equal(downloads,1,'rapid GO must not initiate duplicate OIMM fetches');
+ release();
+ await new Promise(resolve=>setImmediate(resolve));
+ assert(t.taxi.route?.path.length>2,'pending GO should produce the BT31L route after load');
+ assert.equal(t.taxi.route.taxiways.join(' '),'A BT31L D');
+ const served=downloads;
+ el('taxiQaInput').value='ST109 J BT13R H';t.go();
+ assert.equal(downloads,served,'a loaded OIMM network must be reused');
+ assert(t.taxi.route?.path.length>2);
+
+ // Reset just the graph to exercise the offline fetch failure. Do not keep
+ // an old runway segment visible after the request fails.
+ t.taxi.graph=null;
+ ctx.fetch=async()=>{downloads++;throw Error('offline test');};
+ el('taxiQaInput').value='ST109 J BT13R H';
+ t.go();
+ await new Promise(resolve=>setImmediate(resolve));
+ assert.equal(t.taxi.route,null,'failed graph load must clear the old route');
+ assert.match(el('taxiQaStatus').textContent,/could not be loaded/i);
+ console.log(JSON.stringify({singleFlightDownloads:1,pendingRouteRestored:true,offlineClearsStaleRoute:true}));
+})().catch(err=>{console.error(err);process.exitCode=1;});
