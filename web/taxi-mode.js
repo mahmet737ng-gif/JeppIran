@@ -671,7 +671,7 @@ function updateAirportControls(){
   if($("taxiQaAutoRow"))$("taxiQaAutoRow").hidden=!oimm;
   if(oimm&&taxi.graph)fillOimmQuickDestinations(taxi.graph);
   document.querySelector('label[for="taxiQaInput"]').textContent=oimm?
-    "Mashhad: ST109 J BT13R H · ST113 A BT31L D · 114 (stand)":
+    "Mashhad: ST109 Q BT31L D · ST109 J BT13R H · ST113 A BT31L D":
     "LTFM example: A4 A A7 B B8A · Hold: /B8A · 34L2A format";
 }
 // AUTO requires an actual start (simulator/device/SET START) or an explicit
@@ -733,11 +733,24 @@ function oimmGo(p,options){
   if(p.kind==="procedure"){message("No named taxi procedure is published in the supplied OIMM layout charts.",true);return}
   const bt=ways.filter(way=>g.runwayBacktracks?.[way]);
   const backtrack=bt.length===1?g.runwayBacktracks[bt[0]]:null;
-  if(bt.length>1||backtrack&&!(ways.length>=3&&ways[ways.indexOf(bt[0])-1]===backtrack.fromTaxiway&&
-      ways[ways.indexOf(bt[0])+1]===backtrack.toTaxiway)){
-    message(bt.length===1?bt[0]+" requires an explicit "+backtrack.fromTaxiway+" → "+bt[0]+" → "+
-      backtrack.toTaxiway+" sequence and runway clearance.":
-      "Only one explicit runway backtrack is supported per route.",true);return;
+  // Every chart-identified civilian runway access is a potential BT entrance.
+  // Do not hardcode J/A or a fixed exit taxiway. Require an explicit named
+  // approach and named exit around the runway token; geometry decides success.
+  const ix=bt.length===1?ways.indexOf(bt[0]):-1;
+  if(bt.length>1||(bt.length===1&&!(ix>0&&ix<ways.length-1&&
+      g.taxiways[ways[ix-1]]&&g.taxiways[ways[ix+1]]))){
+    message(bt.length===1?bt[0]+" requires an explicit approach taxiway → "+bt[0]+
+      " → exit taxiway sequence, actual mapped runway access and ATC clearance.":
+      "Only one explicit runway-use segment is supported per test route.",true);return;
+  }
+  const qa=bt.length?window.JEPPIRAN_TAXI_RUNWAY?.build(g,bt[0]):null;
+  if(bt.length&&!qa?.graph){
+    message("Runway access module unavailable. Cannot invent a crossing; reload to try again.",true);return;
+  }
+  const working=qa?.graph||g;
+  if(bt.length&&!qa.access.some(x=>x.taxiway===ways[ix-1])){
+    message(ways[ix-1]+" has no mapped/within-tolerance holding-point connection to "+
+      bt[0]+" in V2621. No runway crossing drawn.",true);return;
   }
   for(const way of ways){
     if(!g.taxiways[way]&&!g.runwayBacktracks?.[way]){message("Taxiway not found on OIMM charts: "+way,true);return}
@@ -749,7 +762,7 @@ function oimmGo(p,options){
   const last=ways[ways.length-1],entry=g.taxiways[last],
     goal=stand?.node||(bt.length&&last===g.runwayBacktracks[bt[0]].toTaxiway?
       entry?.nodes?.[1]:entry?.exitNode);
-  const links=adjacent(g,{runwayWay:bt[0]}),request={...p,taxiways:ways,allowStandAccess:true,allowStandExit:!!stand};
+  const links=adjacent(working,{runwayWay:bt[0]}),request={...p,taxiways:ways,allowStandAccess:true,allowStandExit:!!stand};
   let planned=null;
   if(!start&&stand&&p.kind==="stand"){
     draw();message("Stand "+p.destination+" highlighted on the chart. Published INS: "+stand.publishedINS.published+". Use ST"+p.destination+" A to test a departure guideline.");return;
@@ -759,7 +772,7 @@ function oimmGo(p,options){
     const candidates=new Set(g.edges.filter(e=>e.taxiway===ways[0]&&!e.military).flatMap(e=>[e.from,e.to]));
     const goals=goal?[goal]:(entry?.nodes||[]);
     for(const n of candidates)for(const target of goals){
-      const result=shortest(g,n,target,request,links);
+      const result=shortest(working,n,target,request,links);
       if(result&&(!planned||result.length>planned.length)){planned=result;start=n;}
     }
     preview=true;
@@ -767,21 +780,22 @@ function oimmGo(p,options){
   if(!start){message("Select a stand start (ST101 A), connect simulator position, or use SET START.",true);draw();return}
   if(!planned){
     const goals=goal?[goal]:(entry?.nodes||[null]);
-    for(const target of goals){const result=shortest(g,start,target,request,links);if(result&&(!planned||result.length<planned.length))planned=result;}
+    for(const target of goals){const result=shortest(working,start,target,request,links);if(result&&(!planned||result.length<planned.length))planned=result;}
   }
   if(!planned||planned.path.length<2){
     message("No connected chart path for this input. Runways and the construction area have no automatic crossing links.",true);draw();return;
   }
-  planned.holds=[...new Set([...planned.holds,...planned.path.flatMap((n,i)=>g.holdNodes[n]?[i]:[])])];
+  planned.holds=[...new Set([...planned.holds,...planned.path.flatMap((n,i)=>working.holdNodes[n]?[i]:[])])];
   if(p.stops?.includes(0)&&planned.holds.length===0)planned.holds.push(planned.path.length-1);
-  taxi.route={...planned,graph:g,airport:"OIMM",previewOnly:preview,
+  taxi.route={...planned,graph:working,airport:"OIMM",previewOnly:preview,
     taxiways:ways,startStand:p.startStand||null};
   if(from)taxi.selectedStand=p.startStand;
   message((preview?"CHART PREVIEW":"SIMULATOR TEST")+" · "+(from?"ST"+p.startStand+" → ":"")+
     (ways.join(" → ")||"ST"+p.destination)+" · "+planned.length+" m"+
     (goal&&g.holdNodes[goal]?" · HOLD SHORT RWY "+g.holdNodes[goal].runway:"")+
-    (bt.length?" · EXPLICIT RWY "+bt[0].slice(2)+" BACKTRACK TO "+backtrack.toTaxiway+
-      " · ATC clearance required.":"")+
+    (bt.length?" · EXPLICIT RWY "+bt[0].slice(2)+
+      " via "+ways[ix-1]+" → "+ways[ix+1]+
+      " · Projected runway-entry QA connector, NOT surveyed. ATC clearance required.":"")+
     (from?.pushbackRequired?" · South stand: push-back required per 10-1P1.":""));
   draw();
 }
