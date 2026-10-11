@@ -175,3 +175,88 @@ test('disagreeing chart angle properties require correction', () => {
   const c=base(); c.angleDeg=3; c.publishedAngleDeg=3.3;
   assert.throws(()=>buildTable(c), /ANGLE_SOURCE_CONFLICT/);
 });
+
+test('v1.2: automatic table extends to both 10 NM from runway threshold and DME 10', () => {
+  const c=base(); c.dmeReadingsNm=[1,2,3,10]; c.validAngleDmeRange={from:1,to:10};
+  const r=buildTable(c);
+  assert.equal(r.version,'1.2.0');
+  assert.equal(r.coverage.requiredThresholdDistanceNm,10);
+  assert.equal(r.coverage.requiredDmeReadoutNm,10);
+  assert.equal(r.coverage.dmeAtRequiredThresholdNm,10.5);
+  assert.ok(r.coverage.autoAddedDmeReadingsNm.includes(10.5));
+  assert.equal(r.coverage.meetsThresholdModelCoverage,true);
+  assert.equal(r.coverage.meetsDmeModelCoverage,true);
+  assert.equal(r.rows.find(x=>x.dmeNm===10.5).thresholdDistanceNm,10);
+  assert.equal(r.rows.find(x=>x.dmeNm===10.5).status,'MODEL_ONLY');
+});
+
+test('v1.2: published 3.77 degrees and offset 2.2 NM: threshold 10 NM occurs at DME 12.2', () => {
+  const c={...base(),chartDmeId:'UMH',station:{id:'UMH',placement:'after_threshold',offsetNm:2.2,lateralNm:0,geometryVerified:false},
+    thresholdElevationFt:4342,tchFt:50,publishedAngleDeg:3.77};
+  delete c.angleDeg;
+  c.dmeReadingsNm=[3,4,7,9];c.validAngleDmeRange={from:3,to:9};c.mdaFt=4800;
+  c.publishedConstraints=[
+    {dmeNm:4,altitudeFt:5100,type:'minimum'},
+    {dmeNm:7,altitudeFt:6300,type:'minimum'},
+    {dmeNm:9,altitudeFt:7100,type:'minimum'},
+    {dmeNm:11,altitudeFt:7700,type:'minimum'},
+    {dmeNm:12,altitudeFt:8000,type:'minimum'}
+  ];
+  const r=buildTable(c);
+  assert.equal(r.status,'PRELIMINARY_GEOMETRY');
+  assert.equal(r.coverage.dmeAtRequiredThresholdNm,12.2);
+  assert.ok(r.coverage.meetsThresholdModelCoverage);
+  assert.equal(r.coverage.publishedAngleCovers10Nm,false);
+  assert.ok(r.coverage.autoAddedDmeReadingsNm.includes(12.2));
+  const edge=r.rows.find(x=>Math.abs(x.dmeNm-12.2)<0.00001);
+  assert.equal(edge.thresholdDistanceNm,10);
+  assert.equal(edge.roundedAltitudeFt,8400);
+  assert.ok(edge.reasons.includes('OUTSIDE_PUBLISHED_ANGLE_SCOPE'));
+  assert.ok(edge.reasons.includes('STATION_GEOMETRY_NOT_SURVEY_VERIFIED'));
+  assert.equal(r.checks.every(x=>x.ok),true);
+  assert.equal(r.rows.find(x=>x.dmeNm===3).status,'MODEL_ONLY');
+});
+
+test('v1.2: minimum coverage cannot be disabled by requesting 5 NM', () => {
+  const c=base();c.minimumThresholdCoverageNm=5;
+  assert.throws(()=>buildTable(c),/MINIMUM_COVERAGE_MUST_BE_AT_LEAST_10_NM/);
+  const c2=base();c2.minimumDmeCoverageNm=5;
+  assert.throws(()=>buildTable(c2),/MINIMUM_DME_COVERAGE_MUST_BE_AT_LEAST_D10/);
+});
+
+test('v1.2: disabled extension exposes a blocking shortfall instead of pretending coverage',()=>{
+  const c=base();c.dmeReadingsNm=[1,2];c.autoExtendCoverage=false;
+  const r=buildTable(c);
+  assert.equal(r.status,'BLOCKED_BY_QA');
+  assert.equal(r.coverage.meetsThresholdModelCoverage,false);
+  assert.ok(r.issues.some(x=>x.code==='MINIMUM_10NM_COVERAGE_NOT_MET'));
+  assert.deepEqual(r.candidateRows,[]);
+});
+
+test('v1.2: mandatory stop does not truncate diagnostic 10 NM coverage, but suppresses candidates',()=>{
+  const c=base(); c.dmeReadingsNm=[1,2];
+  c.publishedConstraints=[{dmeNm:2,altitudeFt:627,type:'mandatory'}];
+  const r=buildTable(c);
+  assert.equal(r.coverage.meetsThresholdModelCoverage,true);
+  assert.ok(r.rows.find(x=>x.dmeNm>=10.5).reasons.includes('BEYOND_MANDATORY_STOP'));
+  assert.equal(r.candidateRows.length,2);
+});
+
+test('v1.2: slant and lateral transmitter offsets are included in 10 NM coverage projection',()=>{
+  const c=base();c.dmeReadingsNm=[1,2,3];
+  c.station={...c.station,lateralNm:0.5,elevationFt:90};
+  const r=buildTable(c);
+  assert.equal(r.coverage.meetsThresholdModelCoverage,true);
+  const edge=r.rows.find(x=>Math.abs(x.dmeNm-r.coverage.dmeAtRequiredThresholdNm)<0.0001);
+  assert.ok(edge && Math.abs(edge.thresholdDistanceNm-10)<.001);
+  assert.ok(r.coverage.dmeAtRequiredThresholdNm>10.5);
+});
+
+test('v1.2: station before threshold covers both minimums (DME 10 and 10 NM from threshold)',()=>{
+  const c=base();c.station={id:'DEMO',placement:'before_threshold',offsetNm:0.5,lateralNm:0,branch:'before_station'};
+  c.dmeReadingsNm=[1,2,3];
+  const r=buildTable(c);
+  assert.equal(r.coverage.meetsDmeModelCoverage,true);
+  assert.equal(r.coverage.meetsThresholdModelCoverage,true);
+  assert.ok(r.coverage.maxModeledThresholdDistanceNm>=10.5);
+});
