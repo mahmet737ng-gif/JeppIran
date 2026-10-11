@@ -65,18 +65,26 @@ jobs:
           assert all(x['positionType']=='APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER' for x in p['stands'])
           print('STAND QA PASS:',c['stats'])
           PY
-      - name: Commit extracted candidate inventory only
+      - name: Commit only generated data against latest main
         run: |
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add web/data/taxi-stand-positions/LTFM.json web/data/taxi-stand-candidates/LTFM.json web/data/taxi-stand-pushback/LTFM.json
-          git diff --cached --quiet && exit 0
-          git commit -m 'data(taxi): index all individually printed LTFM stand labels and nearest edge candidates [skip ci]'
-          for retry in 1 2 3 4; do
+          mkdir -p /tmp/jeppiran-taxi-stand-generated
+          cp web/data/taxi-stand-positions/LTFM.json /tmp/jeppiran-taxi-stand-generated/positions.json
+          cp web/data/taxi-stand-candidates/LTFM.json /tmp/jeppiran-taxi-stand-generated/candidates.json
+          cp web/data/taxi-stand-pushback/LTFM.json /tmp/jeppiran-taxi-stand-generated/pushback.json
+          for attempt in 1 2 3 4 5 6 7 8; do
             git fetch origin main
-            git rebase origin/main
+            git reset --hard origin/main
+            mkdir -p web/data/taxi-stand-pushback
+            cp /tmp/jeppiran-taxi-stand-generated/positions.json web/data/taxi-stand-positions/LTFM.json
+            cp /tmp/jeppiran-taxi-stand-generated/candidates.json web/data/taxi-stand-candidates/LTFM.json
+            cp /tmp/jeppiran-taxi-stand-generated/pushback.json web/data/taxi-stand-pushback/LTFM.json
+            git add web/data/taxi-stand-positions/LTFM.json web/data/taxi-stand-candidates/LTFM.json web/data/taxi-stand-pushback/LTFM.json
+            git diff --cached --quiet && exit 0
+            git commit -m 'data(taxi): publish printed stand label and Jeppesen pushback QA inventory [skip ci]'
             if git push origin HEAD:main; then exit 0; fi
-            sleep 5
+            sleep 4
           done
           exit 1
