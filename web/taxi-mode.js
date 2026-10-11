@@ -492,9 +492,11 @@ function fillOimmQuickDestinations(graph){
   if(!row||!select)return;
   row.hidden=false;
   const runwayOptions=["13R","31L","13L","31R"].map(id=>{
-    const ok=!!window.JEPPIRAN_TAXI_AUTO?.goal(graph,id).node;
+    const destination=window.JEPPIRAN_TAXI_AUTO?.goal(graph,id);
+    const ok=!!destination?.node;
     return '<option value="'+id+'"'+(ok?'':' disabled')+'>RWY '+id+
-      (ok?' · HOLD SHORT':' · NOT MAPPED')+'</option>';
+      (destination?.kind==="runway-access-qa"?' · H ACCESS QA':
+       ok?' · HOLD SHORT':' · NOT MAPPED')+'</option>';
   }).join("");
   select.innerHTML='<option value="">Choose a destination (live position or SET START)</option>'+
     '<option value="RAMP">MAIN RAMP · NEAREST CONNECTED ENTRY</option>'+
