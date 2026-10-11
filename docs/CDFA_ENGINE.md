@@ -1,4 +1,4 @@
-# JEPPIRAN CDFA geometry engine — V1.0
+# JEPPIRAN CDFA geometry engine — V1.1
 
 **Engineering/simulator QA only; not approved for real-world navigation.**
 
@@ -7,7 +7,8 @@ This standalone JavaScript library implements the **user-defined JEPPIRAN baseli
 ## User's baseline
 
 - `thresholdCrossingAltitudeFt = thresholdElevationFt + tchFt`
-- `gradientFtPerNm = 318` when `angleDeg = 3.00` exactly (otherwise the trigonometric gradient).
+- **Angle priority:** `publishedAngleDeg` transcribed from the chart wins. `angleDeg` remains a backwards-compatible alias. If neither exists, use `3.00° ASSUMED`. If both disagree, throw `ANGLE_SOURCE_CONFLICT`; invalid explicit angles are rejected instead of defaulted.
+- `gradientFtPerNm = 318` exactly when the selected angle is 3.00°; otherwise use the trigonometric gradient in ft/NM (e.g. 3.30° ≈ 350.5 ft/NM).
 - `heightFtMSL = thresholdCrossingAltitudeFt + gradientFtPerNm * distanceFromThresholdNm`
 - The DME value is a **distance to its own transmitter**, **not automatically distance to threshold**.
 - For an on-axis DME located **0.5 NM AFTER** the threshold and inbound outside the threshold, `distanceFromThresholdNm = DME − 0.5`.
@@ -52,6 +53,7 @@ console.log(qa.status, qa.issues, qa.rows);
 - `station.offsetNm` is the along-track distance from runway threshold in NM. `station.lateralNm` is the perpendicular separation from final course in NM. Both must be chart-verified. Set `station.lateralNm: 0` explicitly only if verified. The engine uses Pythagorean projection when lateral offset is nonzero.
 - Optional `station.elevationFt` performs a slant-range correction to a geometric DME reading, accounting for modeled flight altitude. If absent, results use **horizontal range approximation** and require slant-distance QA.
 - `chartDmeId` MUST match `station.id` or the engine throws rather than mixing VOR/LOC references.
+- Missing chart angles carry `parameters.angleSource = DEFAULT_ASSUMED_3_DEG` and mark rows `MODEL_ONLY` with `DEFAULT_3_DEG_ASSUMED_NOT_PUBLISHED`; default angle outputs are for QA only and are **never silently promoted into candidateRows**. Explicit 3.00° published angles are marked `PUBLISHED_CHART_INPUT` and treated differently.
 - `validAngleDmeRange` must describe the DME interval to which the published approach descent angle actually applies. Outside it, numbers may appear as diagnostics (`MODEL_ONLY`) but are excluded from `candidateRows`; no implicit extension of an angle past its chart-defined segment. If omitted, **all** rows are `MODEL_ONLY`.
 - Optional `mdaFt` suppresses candidate rows below MDA (raw altitude checked before rounding); it does not derive or publish a VDP.
 - `publishedConstraints` accepts `{dmeNm, altitudeFt, type: 'minimum'|'mandatory'|'maximum'}`. Every declared fix is QA-checked, including DME positions not in the requested output rows. Minimum means **at or above**; mandatory means **exactly** (configurable `mandatoryToleranceFt`, default zero); maximum means **at or below**. These constraints are retained at their published values, not rounded. When any conflict is found, `status=BLOCKED_BY_QA` and `candidateRows=[]`; manual recheck is needed. No automatic fake compensation or silent interpolation.
@@ -67,3 +69,10 @@ node --test tests/cdfa-engine.test.cjs
 ### Live test page
 
 Open `cdfa-engine-demo.html` in any modern browser alongside `cdfa-engine.js` (or on the web app at `/cdfa-engine-demo.html` once files are added). The demo is entirely independent and uses **fictional** data.
+
+### Angle example (chart with 3.30°)
+
+```js
+const hamdan = { ...config, publishedAngleDeg: 3.30 }; // use chart angle
+const noPublishedAngle = { ...config }; // omit both angleDeg and publishedAngleDeg: defaults to 3.00° assumed
+```
