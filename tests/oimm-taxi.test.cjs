@@ -11,7 +11,7 @@ const mockNode=()=>({textContent:'',setAttribute(){},appendChild(){}});
 const ctx={window:{addEventListener(){}},document:{getElementById:el,querySelector:()=>({textContent:''}),createElement:mockNode,createElementNS:mockNode},
  selectedAirport:'OIMM',selectedChart:{page:601,category:'Airport',chart_number:'10-9'},manifest:{cycle:'2621'},
  lastPosition:null,georefByPage:new Map(),charts:[],console};ctx.window.JEPPIRAN_TAXI_AUTO=auto;ctx.window.JEPPIRAN_TAXI_RUNWAY=runway;ctx.window.JEPPIRAN_TAXI_RENDER=runwayRender;ctx.window.JEPPIRAN_OIMM_RUNWAY_GOALS=runwayGoals;vm.createContext(ctx);
-let code=fs.readFileSync('web/taxi-mode.js','utf8');code=code.replace('})();','window.test={taxi,parse,shortest,adjacent,graphOk,go,routeDeviationMeters};})();');vm.runInContext(code,ctx);
+let code=fs.readFileSync('web/taxi-mode.js','utf8');code=code.replace('})();','window.test={taxi,parse,shortest,adjacent,graphOk,go,routeDeviationMeters,renderRoutePreview};})();');vm.runInContext(code,ctx);
 const t=ctx.window.test;t.taxi.airport='OIMM';t.taxi.graph=graph;t.taxi.active=true;t.taxi.standReference={stands:graph.stands};
 assert.equal(t.graphOk(graph,'OIMM'),true);assert.equal(t.graphOk({...graph,cycle:'2620'},'OIMM'),false);
 assert.equal(Object.keys(graph.stands).length,34);assert.equal(Object.keys(graph.taxiways).length,18);
@@ -157,6 +157,45 @@ for(const entry of ['ST115 J BT13R H 13L','ST115 J BT13R H RWY 13L']){
   assert(axis.projections.some(x=>x.to===graph.taxiways.H.nodes[0]&&x.type==='projected-access'),
     'the diagonal shoulder transition to H must NOT be a solid runway axis');
   assert.equal(axis.steps.at(-1).way,'H','taxiway H must continue to its far endpoint');
+}
+// The OIMM miniature preview is intentionally suppressed: routes belong
+// on the full ADC, while GO status/guidance remains visible in TAXI.
+t.renderRoutePreview();
+assert.equal(el('taxiQaRoutePreview').hidden,true,'miniature must never open for OIMM');
+assert(!el('taxiQaPanel').classList.contains('has-preview'));
+
+// Graph-based runway entry J must be the ACTUAL requested taxiway station,
+// never the sample near G that made the screenshot look like a premature turn.
+for(const [input,from,to,btWay] of [
+  ['ST109 J BT13R H 13L','J','H','BT13R'],
+  ['ST117 A BT13R H 13L','A','H','BT13R'],
+  ['ST109 Q BT31L D','Q','D','BT31L']
+]){
+ el('taxiQaInput').value=input;t.go();
+ const r=t.taxi.route;assert(r,input+' route should exist');
+ const d=runwayRender.displayRuns(r.graph,r);
+ assert(d&&d.axis,input+' ADC axis not available');
+ const runway=d.runs.filter(part=>part.type==='runway-axis');
+ assert.equal(runway.length,1,input+' must contain one runway sequence');
+ assert.equal(runway[0].coordinates.length,2,input+' runway must be one straight line');
+ assert.equal(runway[0].chartJunctions?.from,from);
+ assert.equal(runway[0].chartJunctions?.to,to);
+ const earth=111195,cos=Math.cos(d.axis.start.lat*Math.PI/180);
+ const expectedStart=d.axis.project(graph.nodes[graph.taxiways[from].exitNode]);
+ const targetId=graph.taxiways[to].nodes?.[0]||graph.taxiways[to].exitNode;
+ const expectedEnd=d.axis.project(graph.nodes[targetId]);
+ const [start,end]=runway[0].coordinates;
+ for(const [actual,expected] of [[start,expectedStart],[end,expectedEnd]]){
+   assert(Math.hypot((actual.lon-expected.lon)*earth*cos,
+     (actual.lat-expected.lat)*earth)<.2,
+     input+' actual plotted entry/exit must align to selected junction');
+ }
+ const firstProjection=d.runs.find(x=>x.type==='projected-access'&&
+   x.nodes[0]===graph.taxiways[from].exitNode);
+ assert(firstProjection&&firstProjection.coordinates.length===2);
+ assert(Math.hypot((firstProjection.coordinates.at(-1).lon-start.lon)*earth*cos,
+   (firstProjection.coordinates.at(-1).lat-start.lat)*earth)<.2);
+ assert.equal(r.path.at(-1),graph.taxiways[to].nodes?.at(-1)||graph.taxiways[to].exitNode);
 }
 for(const designation of ['13R','31L','13L','31R','RWY13L','RUNWAY31R'])
   assert.equal(t.parse(designation).kind,'auto',designation);
