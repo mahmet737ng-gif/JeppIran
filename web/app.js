@@ -1317,6 +1317,7 @@ $("#selectSimulatorPositionBtn").addEventListener("click",()=>{
 
 function openTaxiDiagram(){
   if(!selectedAirport)return;
+  const airport=selectedAirport;
   const airportCharts=charts.filter(c=>c.airport===selectedAirport&&c.category==="Airport");
   const diagram=airportCharts.find(c=>/\b(?:AIRPORT|AERODROME)\s+(?:DIAGRAM|LAYOUT)\b|\bADC\b/i.test(c.name||""))
     ||airportCharts.find(c=>/^10-0?9$/i.test((c.chart_number||"").trim()));
@@ -1325,6 +1326,10 @@ function openTaxiDiagram(){
     return;
   }
   if(Number(selectedChart?.page)!==Number(diagram.page))selectChart(diagram);
+  if(window.JEPPIRAN_TAXI?.open)window.JEPPIRAN_TAXI.open();
+  else document.querySelector('script[src*="taxi-mode.js"]')?.addEventListener("load",()=>{
+    if(selectedAirport===airport)window.JEPPIRAN_TAXI?.open?.();
+  },{once:true});
 }
 $("#chartTaxiBtn").addEventListener("click",openTaxiDiagram);
 
