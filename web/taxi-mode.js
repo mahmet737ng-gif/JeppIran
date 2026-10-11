@@ -676,11 +676,11 @@ function surveyGo(typed){
     return;
   }
   taxi.route={airport:taxi.airport,surveyPDFRoute:true,points:traced.points,
+    overview:traced.overview||null,
     chartWidth:traced.chartWidth,chartHeight:traced.chartHeight,
     previewOnly:true,routeLabels:audit.tokens,sourceSha:traced.sourceSha};
+  // No forced auto-focus: scroll position stays under the user's control.
   draw();
-  if(typeof requestAnimationFrame==="function")
-    requestAnimationFrame(()=>focusPdfVectorOnADC(traced.points,traced.chartHeight));
   message("OIAW ORIGINAL PDF VECTOR QA · "+audit.tokens.join(" → ")+
     " · "+traced.points.length+" source-chart vertices · "+
     "NO real distance/ground GPS derived. RWY access and hold-short "+
@@ -1743,6 +1743,21 @@ function draw(){
       "stroke-linecap":"round","stroke-linejoin":"round",
       "class":"taxi-pdf-vector-qa-only"
     }));
+    // The main ADC has a *small schematic* of the apron, not individual
+    // stand centrelines. Highlight the documented A->named-exit corridor
+    // there while retaining true source Bezier stand leads in the inset.
+    // Never stretch the inset geometry onto the main ADC.
+    if(r.overview?.quality==="OVERVIEW_SCHEMATIC_ONLY"&&
+       r.overview.noIndividualStandLocation===true){
+      svg.appendChild(s("polyline",{
+        points:r.overview.points.map(p=>p[0].toFixed(2)+","+p[1].toFixed(2)).join(" "),
+        fill:"none",stroke:"rgba(255,174,62,.95)",
+        "stroke-width":Math.max(1.6,w*.003),
+        "stroke-dasharray":"3 3","stroke-linecap":"round",
+        "stroke-linejoin":"round","pointer-events":"none",
+        "class":"taxi-overview-schematic-qa-only"
+      }));
+    }
   }
   // Display selected OSM taxiway on the georeferenced ADC without inventing
   // any connection to another name or a parking stand.
