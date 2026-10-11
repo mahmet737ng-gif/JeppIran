@@ -22,7 +22,7 @@ tr.bad td{color:#ffa8a8}tr.model td{color:#d6c08c}
 </style></head>
 <body>
 <h1>JEPPIRAN • CDFA Engine Lab</h1>
-<p>انجین محاسبهٔ فاصله–ارتفاع بر اساس مرجع DME که از هدر چارت مشخص شده است. نمونهٔ اولیه کاملاً <b>فرضی</b> است و به فرودگاه واقعی تعلق ندارد.</p>
+<p>انجین محاسبهٔ فاصله–ارتفاع بر اساس مرجع DME که از هدر چارت مشخص شده است. نمونهٔ اولیه کاملاً <b>فرضی</b> است؛ برای مشاهدهٔ نمونهٔ آزمایشی ارومیه، دکمهٔ «بارگذاری ارومیه» را انتخاب کنید.</p>
 <div class="banner"><b>QA / SIMULATOR ONLY — NOT FOR ACTUAL NAVIGATION.</b> برای استفاده روی چارت واقعی، محل فرستنده، فاصله جانبی، ارتفاع آستانه، TCH، محدودیت‌ها و محدوده زاویه باید از چارت معتبر تأیید شوند.</div>
 <div class="card"><div class="grid">
 <label>ICAO/Chart ID<input id="chart" value="TRAINING-ONLY"></label>
@@ -37,12 +37,16 @@ tr.bad td{color:#ffa8a8}tr.model td{color:#d6c08c}
 <label>فاصله جانبی دستگاه از محور (NM)<input type="number" id="lateral" value="0" step="0.01"></label>
 <label>سمت هواپیما نسبت به دستگاه<select id="branch"><option value="before_station">قبل از رسیدن به دستگاه</option><option value="between_station_and_threshold">بین دستگاه و آستانه</option></select></label>
 <label>ارتفاع دستگاه (برای اصلاح Slant DME، اختیاری)<input type="number" id="stationElev" placeholder="نامشخص"></label>
-<label>آخرین DME<input type="number" id="max" value="10" min="1" max="60" step="1"></label>
+<label>اولین DME ورودی<input type="number" id="start" value="1" min="0" max="60" step="1"></label>
+<label>آخرین DME ورودی (انجین خودکار تا حداقل ۱۰ مایل ادامه می‌دهد)<input type="number" id="max" value="10" min="1" max="60" step="1"></label>
+<label>حداقل پوشش از آستانه (NM، حداقل ۱۰)<input type="number" id="minThreshold" value="10" min="10" max="60" step="0.5"></label>
+<label>گام تکمیل خودکار DME (NM)<input type="number" id="step" value="1" min="0.1" max="5" step="0.1"></label>
+<label>موقعیت دستگاه با هندسه معتبر تأیید شده؟<select id="geoVerified"><option value="false">خیر: مدل آزمایشی</option><option value="true">بله: QA هندسی تأیید شده</option></select></label>
 <label>آغاز بخش زاویهٔ معتبر DME<input type="number" id="rangeStart" value="1" step="0.1"></label>
 <label>پایان بخش زاویهٔ معتبر DME<input type="number" id="rangeEnd" value="10" step="0.1"></label>
 </div><p>محدودیت‌های منتشرشده (فقط مقادیر مستند چارت، بدون گردکردن). نوع: minimum / mandatory / maximum</p>
-<textarea id="fixes">[]</textarea><div style="margin-top:16px"><button class="btn" id="calc">محاسبه</button><button class="btn secondary" id="export">خروجی JSON</button></div></div>
-<div class="card"><div id="resultHead" class="muted"></div><div id="issues"></div><div class="tablewrap"><table><thead><tr><th>DME NM</th><th>To THR NM</th><th>Raw ft MSL</th><th>Rounded ft MSL</th><th>Published ft</th><th>QA status</th></tr></thead><tbody id="output"></tbody></table></div></div>
+<textarea id="fixes">[]</textarea><div style="margin-top:16px"><button class="btn" id="calc">محاسبه</button><button class="btn secondary" id="loadOitr">بارگذاری ارومیه (QA)</button><button class="btn secondary" id="export">خروجی JSON</button></div></div>
+<div class="card"><div id="resultHead" class="muted"></div><div id="issues"></div><div class="tablewrap"><table><thead><tr><th>DME NM</th><th>To THR NM</th><th>Raw ft MSL</th><th>Rounded ft MSL</th><th>Published ft</th><th>QA status</th><th>Scope / model warnings</th></tr></thead><tbody id="output"></tbody></table></div></div>
 <script src="./cdfa-engine.js"></script>
 <script>
 (function(){
@@ -53,25 +57,39 @@ function calculate(){
     let fixes=JSON.parse(el('fixes').value);
     const cfg={ chartId:el('chart').value, chartDmeId:el('ref').value,
       thresholdElevationFt:Number(el('elev').value), tchFt:Number(el('tch').value),
-      station:{id:el('station').value,placement:el('placement').value,offsetNm:Number(el('offset').value),lateralNm:Number(el('lateral').value),branch:el('branch').value},
-      dmeReadingsNm:Array.from({length:Number(el('max').value)},(_,i)=>i+1),
-      validAngleDmeRange:{from:Number(el('rangeStart').value),to:Number(el('rangeEnd').value)},publishedConstraints:fixes};
+      station:{id:el('station').value,placement:el('placement').value,offsetNm:Number(el('offset').value),lateralNm:Number(el('lateral').value),branch:el('branch').value,geometryVerified:el('geoVerified').value==='true'},
+      dmeReadingsNm:Array.from({length:Number(el('max').value)-Number(el('start').value)+1},(_,i)=>i+Number(el('start').value)),
+      validAngleDmeRange:{from:Number(el('rangeStart').value),to:Number(el('rangeEnd').value)},publishedConstraints:fixes,minimumThresholdCoverageNm:Number(el('minThreshold').value),coverageStepDmeNm:Number(el('step').value)};
     if(el('angle').value.trim()) cfg.publishedAngleDeg=Number(el('angle').value);
     if(el('stationElev').value.trim()) cfg.station.elevationFt=Number(el('stationElev').value);
     if(el('mda').value.trim()) cfg.mdaFt=Number(el('mda').value);
     last=JeppIranCdfaEngine.buildTable(cfg);
-    el('resultHead').textContent='STATUS: '+last.status+'   |   THR CROSSING: '+last.parameters.crossingAltitudeFt+' ft   |   GRADIENT: '+last.parameters.gradientFtPerNm.toFixed(3)+' ft/NM';
+    el('resultHead').textContent='ENGINE '+last.version+'  |  STATUS: '+last.status+'  |  THR: '+last.parameters.crossingAltitudeFt+' ft  |  GRADIENT: '+last.parameters.gradientFtPerNm.toFixed(3)+' ft/NM  |  MAX TO THR: '+last.coverage.maxModeledThresholdDistanceNm.toFixed(2)+' NM  |  DME AT THR+10: '+last.coverage.dmeAtRequiredThresholdNm.toFixed(2)+'  |  PUBLISHED 10-NM COVERAGE: '+(last.coverage.publishedAngleCovers10Nm?'YES':'NO');
     el('resultHead').className=last.status==='BLOCKED_BY_QA'?'err':'ok';
-    el('issues').textContent=last.issues.length?last.issues.map(x=>x.code+' at D'+x.dmeNm).join('; '):'No published-fix conflict found; still requires independent chart and operational QA. '+(last.parameters.angleSource==='DEFAULT_ASSUMED_3_DEG'?'WARNING: 3° ASSUMED (not published).':'');
+    el('issues').textContent=(last.issues.length?last.issues.map(x=>x.code+(x.dmeNm===undefined?'':' at D'+x.dmeNm)).join('; '):'No declared altitude-constraint conflict. ')+
+      ' | AUTO ADDED DME: '+(last.coverage.autoAddedDmeReadingsNm.join(', ')||'none')+
+      ' | WARNING: beyond the chart-published angle, rows are MODEL_ONLY — not authorized for actual flight.';
+
     el('output').replaceChildren(...last.rows.map(r=>{
       const tr=document.createElement('tr');tr.className=r.status==='CONFLICT'||r.status==='UNRESOLVED'?'bad':r.status==='MODEL_ONLY'?'model':'';
-      const vals=[r.dmeNm,r.thresholdDistanceNm??'–',r.rawAltitudeFt??'–',r.roundedAltitudeFt??'–',r.published.map(x=>x.type+': '+x.altitudeFt).join('; ')||'–',r.status];
+      const vals=[r.dmeNm,r.thresholdDistanceNm??'–',r.rawAltitudeFt??'–',r.roundedAltitudeFt??'–',r.published.map(x=>x.type+': '+x.altitudeFt).join('; ')||'–',r.status+(r.coverageAutoExtended?' [AUTO]':''),r.reasons.join(', ')||'–'];
       for(const value of vals){const td=document.createElement('td');td.textContent=value;tr.append(td)}
       return tr;
     }));
   }catch(err){last=null;el('resultHead').textContent='ERROR: '+err.message;el('resultHead').className='err';el('issues').textContent='';el('output').replaceChildren()}
 }
 el('calc').addEventListener('click',calculate);
+el('loadOitr').addEventListener('click',()=>{
+  const v={chart:'OITR VOR RWY03 13-1',ref:'UMH',station:'UMH',elev:'4342',tch:'50',mda:'4800',angle:'3.77',placement:'after_threshold',offset:'2.2',lateral:'0',geoVerified:'false',start:'3',max:'9',minThreshold:'10',step:'0.5',rangeStart:'3',rangeEnd:'9'};
+  for(const [key,val] of Object.entries(v)) el(key).value=val;
+  el('fixes').value=JSON.stringify([
+   {dmeNm:4,altitudeFt:5100,type:'minimum'},
+   {dmeNm:7,altitudeFt:6300,type:'minimum'},
+   {dmeNm:9,altitudeFt:7100,type:'minimum'},
+   {dmeNm:11,altitudeFt:7700,type:'minimum'},
+   {dmeNm:12,altitudeFt:8000,type:'minimum'}],null,2);
+  calculate();
+});
 el('export').addEventListener('click',()=>{
   if(!last) return;
   const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([JSON.stringify(last,null,2)],{type:'application/json'}));
