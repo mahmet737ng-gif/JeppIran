@@ -107,7 +107,16 @@ function build(source){
     if(path.some(q=>!Array.isArray(q)||q.length!==2||q.some(v=>!Number.isFinite(v))||
         q[0]<bounds.left||q[0]>bounds.right||q[1]<bounds.top||q[1]>bounds.bottom))
       return {ok:false,error:"Out-of-page source-PDF vector"};
-    return {ok:true,points:path,chartWidth:source.chart.width,chartHeight:source.chart.height,
+    const overviewRaw=source.overviewPreview?.entranceByTaxiway?.[label];
+    const overview=source.overviewPreview?.status==="DIAGRAM_ONLY_NOT_STAND_SURVEY"&&
+      source.overviewPreview?.chartPage===source.chart.globalPage&&
+      Array.isArray(overviewRaw)&&overviewRaw.length>=2&&
+      overviewRaw.every(p=>Array.isArray(p)&&p.length===2&&
+        p.every(Number.isFinite)&&p[0]>=0&&p[0]<=source.chart.width&&
+        p[1]>=0&&p[1]<=source.chart.height)?
+      {points:overviewRaw.map(p=>p.slice()),quality:"OVERVIEW_SCHEMATIC_ONLY",
+       noIndividualStandLocation:true}:null;
+    return {ok:true,points:path,overview,chartWidth:source.chart.width,chartHeight:source.chart.height,
       qaOnly:true,runwayAccessApproved:false,sourceSha:source.source.sha256,
       maxStandJoinGapPdfPoints:entry.distance,
       notice:"SOURCE-PDF VECTOR-TRACED CHART QA ONLY. B/C/D and stands are not verified runway hold nodes. Coordinates are NOT WGS84 or metres."};
