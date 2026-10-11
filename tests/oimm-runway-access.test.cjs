@@ -8,13 +8,17 @@ for(const bt of Object.keys(graph.runwayBacktracks)){
  const x=qa.build(graph,bt);
  assert(x.graph&&x.access.length,'no chart-identified runway access for '+bt);
  assert.equal(x.graph.edges.length>=graph.edges.length,true);
- reported[bt]=x.access.map(a=>a.taxiway+' ('+a.distanceMeters+'m)');
+ reported[bt]=x.access.map(a=>a.taxiway+' ('+a.distanceMeters+'m, '+a.confidence+')');
+ assert(x.access.some(x=>x.taxiway==='Q'),'chart-labelled Q should be within the runway axis envelope');
+ assert(x.access.some(x=>x.taxiway==='B'),'B hold should be a clearly unverified long-reach candidate');
+ assert(x.access.some(x=>x.taxiway==='F'),'F hold should be a clearly unverified long-reach candidate');
  const accessEdges=x.graph.edges.filter(e=>e.runwayAccessCandidate&&e.geometry==="projected-hold-to-runway-AXIS-QA-not-surveyed");
  for(const e of accessEdges){
   assert(holders.has(e.from),'only a published hold point can connect to runway');
   assert(e.runway&&e.requiresExplicitClearance&&e.geometry.includes('QA-not-surveyed'));
   assert(graph.taxiways[e.fromTaxiway]&&!graph.taxiways[e.fromTaxiway].militaryOnly);
-  assert(e.distanceMeters<=115,'out of tolerance runway connection');
+  assert(e.distanceMeters<=180,'out of tolerance runway connection');
+  assert(['CHART-HOLD-QA','LONG-REACH-QA-UNVERIFIED'].includes(e.confidence));
  }
  assert.equal(new Set(x.access.map(a=>a.holdNode)).size,x.access.length);
  assert.equal(qa.build(graph,bt).graph,x.graph,'re-use cached generated route graph');
