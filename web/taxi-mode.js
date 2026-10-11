@@ -1311,7 +1311,7 @@ function draw(){
   // Printed parking-label positions and their nearby graph projections
   // remain distinctly DASHED; these are QA markers, NEVER a taxi route.
   const sp=taxi.standPreview;
-  if(sp&&taxi.airport==="LTFM"&&selectedAirport==="LTFM"&&model){
+  if(sp&&taxi.airport==="LTFM"&&selectedAirport==="LTFM"&&model&&isAdc(selectedChart)){
     const center=projectGeo(model,sp.position.lat,sp.position.lon);
     if(center){
       const stroke=Math.max(1.2,w*.0015);
@@ -1339,7 +1339,7 @@ function draw(){
   // corroborated by published Jeppesen pushback taxiway NAMES. They are not
   // stand exit / pushback paths: the stand-to-graph gap remains DISCONNECTED.
   const egress=taxi.standEgress;
-  if(egress&&taxi.airport==="LTFM"&&selectedAirport==="LTFM"&&model){
+  if(egress&&taxi.airport==="LTFM"&&selectedAirport==="LTFM"&&model&&isAdc(selectedChart)){
     for(const group of egress.publishedNamedTaxiwaySegments||[]){
       for(const segment of group.segments||[]){
         const coordinates=segment.geometry;
@@ -1471,6 +1471,7 @@ function previewStandCandidate(id,entry){
   // constituent stand. Never draw an individual stand marker from it.
   taxi.standPreview=entry.hasIndividualStandPosition===true?{id,...entry}:null;
   taxi.standEgress=entry.hasIndividualStandPosition===true?(entry.egress||null):null;
+  if(!isAdc(selectedChart))openAdc();
   draw();return true;
 }
 window.JEPPIRAN_TAXI={open:openTaxi,parse,openAdc,draw,routeDeviationMeters,previewStandCandidate};
