@@ -74,9 +74,21 @@ function shortest(graph,start,goal,requested,links){
   // Opt-in, bounded, REAL unnamed centerlines between named OSM taxiways.
   // These are simulator previews only, never invented straight connectors.
   const unmapped=window.JEPPIRAN_TAXI_UNNAMED;
+  const namedNodes=new Map();
+  if(ways.length>1)for(const e of graph.edges){
+    const label=name(e.taxiway);
+    if(!ways.includes(label)||e.closed||e.runway||e.military)continue;
+    if(!namedNodes.has(label))namedNodes.set(label,new Set());
+    namedNodes.get(label).add(e.from);namedNodes.get(label).add(e.to);
+  }
+  const isDirect=(from,to)=>{
+    const left=namedNodes.get(from),right=namedNodes.get(to);
+    return !!(left&&right&&[...left].some(id=>right.has(id)));
+  };
   const bridges=(graph.simulatorTestOnly&&unmapped?.enabled(graph))?
-    ways.slice(0,-1).map((from,i)=>unmapped.scan(graph,from,ways[i+1],
-      {maxMeters:graph.qaUnnamedConnectorMaxMeters,maxEdges:graph.qaUnnamedConnectorMaxEdges})):[];
+    ways.slice(0,-1).map((from,i)=>isDirect(from,ways[i+1])?
+      new Map():unmapped.scan(graph,from,ways[i+1],
+        {maxMeters:graph.qaUnnamedConnectorMaxMeters,maxEdges:graph.qaUnnamedConnectorMaxEdges})):[];
   const key=(n,i,u)=>n+"~"+i+"~"+u,first=key(start,0,0),
     seen=new Map([[first,0]]),previous=new Map(),heap=[];
   const push=(item)=>{
