@@ -1,0 +1,69 @@
+name: Generate LTFM Stand Candidate Network
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - scripts/extract_ltfm_stand_anchors.py
+      - scripts/import_taxi_stands.cjs
+      - .github/workflows/generate-ltfm-stand-candidates.yml
+permissions:
+  contents: write
+concurrency:
+  group: ltfm-parking-candidates-2621
+  cancel-in-progress: false
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Fetch cycle 2621 airport chart
+        run: |
+          git lfs pull --include=web/data/charts/LTFM.pdf
+          python - <<'PY'
+          from pathlib import Path
+          p=Path("web/data/charts/LTFM.pdf")
+          assert p.exists() and p.stat().st_size>1000000 and p.read_bytes()[:5]==b'%PDF-'
+          print('PDF verified',p.stat().st_size)
+          PY
+      - name: Extract all individually named labels on Jeppesen airport parking charts
+        run: |
+          python -m pip install -q 'pymupdf==1.26.4'
+          python scripts/extract_ltfm_stand_anchors.py web/data/charts/LTFM.pdf web/data/taxi-stand-positions/LTFM.json
+      - name: Compute proximity links for EVERY extracted individual stand label
+        run: |
+          node scripts/import_taxi_stands.cjs web/data/taxi-networks/LTFM.json web/data/taxi-stand-positions/LTFM.json web/data/taxi-stand-candidates/LTFM.json
+      - name: QA no invented verified stand links
+        run: |
+          node scripts/test_import_taxi_stands.cjs
+          python - <<'PY'
+          import json
+          p=json.load(open('web/data/taxi-stand-positions/LTFM.json'))
+          c=json.load(open('web/data/taxi-stand-candidates/LTFM.json'))
+          assert p['airport']=='LTFM' and p['cycle']=='2621'
+          assert p['stats']['chartLabels']>=260
+          assert 'D3' in c['stands'] and '601' in c['stands'] and 'K57' in c['stands']
+          assert c['stats']['valid']>=260
+          assert not c['routingApproved']
+          assert all(not item['routingApproved'] and not item['connectorVerified'] for x in c['stands'].values() for item in x['candidates'])
+          assert all(x['positionType']=='APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER' for x in p['stands'])
+          print('STAND QA PASS:',c['stats'])
+          PY
+      - name: Commit extracted candidate inventory only
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add web/data/taxi-stand-positions/LTFM.json web/data/taxi-stand-candidates/LTFM.json
+          git diff --cached --quiet && exit 0
+          git commit -m 'data(taxi): index all individually printed LTFM stand labels and nearest edge candidates [skip ci]'
+          for retry in 1 2 3 4; do
+            git fetch origin main
+            git rebase origin/main
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 5
+          done
+          exit 1
