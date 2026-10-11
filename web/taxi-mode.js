@@ -1,7 +1,7 @@
 /* JEPPIRAN TAXI preview · verified graphs only · NOT FOR ACTUAL NAVIGATION */
 (function(){
 "use strict";
-const ns="http://www.w3.org/2000/svg", taxi={active:false,trace:false,startSelect:false,testStart:null,airport:"",graph:null,standReference:null,selectedStand:"",showStands:false,showNetwork:false,route:null,manual:new Map(),prompted:"",networkAudit:null,networkOpen:false,highlightTaxiway:""};
+const ns="http://www.w3.org/2000/svg", taxi={active:false,trace:false,startSelect:false,testStart:null,airport:"",graph:null,standReference:null,selectedStand:"",showStands:false,showNetwork:false,route:null,manual:new Map(),prompted:"",networkAudit:null,networkOpen:false,highlightTaxiway:"",insGroups:null,standGroupAudit:null,standGroupOpen:false};
 const $=id=>document.getElementById(id);
 const name=s=>String(s||"").trim().toUpperCase().replace(/\s+/g," ");
 function parse(raw){
@@ -221,6 +221,61 @@ async function loadStandReference(icao){
     if(taxi.airport===icao)message("Stand reference unavailable: "+error.message,true);
   }
 }
+// Reusable cross-airport INS groups → OSM proximity audit (NOT auto-routing).
+// A separate exact stand coordinate + chart-validated lead-out is required to
+// promote a group candidate to an executable taxi connector.
+async function loadStandGroups(icao){
+  taxi.insGroups=null;taxi.standGroupAudit=null;renderStandGroupPanel();
+  if(icao!=="LTFM")return;
+  try{
+    const req=await fetch("./data/taxi-stands/"+encodeURIComponent(icao)+"-ins-groups.json",{cache:"no-store"});
+    if(!req.ok)throw Error("No published INS group inventory");
+    const groups=await req.json();
+    if(taxi.airport!==icao)return;
+    taxi.insGroups=groups;
+    refreshStandGroupAudit();
+  }catch(e){
+    if(taxi.airport===icao)message("INS group inventory unavailable: "+e.message,true);
+  }
+}
+function refreshStandGroupAudit(){
+  taxi.standGroupAudit=null;
+  const engine=window.JEPPIRAN_STAND_TOPOLOGY;
+  if(taxi.graph&&taxi.insGroups&&engine?.validate(taxi.insGroups,taxi.graph)){
+    try{taxi.standGroupAudit=engine.audit(taxi.insGroups,taxi.graph)}catch(e){
+      console.warn("INS stand candidate audit skipped",e);
+    }
+  }
+  renderStandGroupPanel();
+}
+function renderStandGroupPanel(){
+  const panel=$("taxiQaStandGroups"),choices=$("taxiQaStandGroupList"),info=$("taxiQaStandGroupInfo");
+  if(!panel||!choices||!info)return;
+  panel.hidden=!(taxi.active&&taxi.airport==="LTFM"&&taxi.standGroupOpen);
+  if(panel.hidden)return;
+  const report=taxi.standGroupAudit;
+  const previous=choices.value;
+  choices.replaceChildren();
+  if(!report){
+    info.textContent="Loading grouped INS coordinates and the ground network…";
+    return;
+  }
+  const opts=report.groups||[];
+  for(let i=0;i<opts.length;i++){
+    const opt=document.createElement("option");opt.value=String(i);
+    opt.textContent=opts[i].group+" · "+opts[i].candidates.length+" proximity candidates";
+    choices.appendChild(opt);
+  }
+  let selected=Number(previous);
+  if(!Number.isInteger(selected)||selected<0||selected>=opts.length)selected=0;
+  choices.value=String(selected);
+  const record=opts[selected];
+  info.textContent="INS printed group: "+record.group+" (page "+record.page+"). "+
+    "Coordinates rounded to 0.1 minute; NOT a stand survey.\n"+
+    "Nearest OSM taxiway names by geometric proximity (NOT physical connections): "+
+    (record.candidates.map(c=>c.taxiway+" ~"+Math.round(c.distanceMeters)+"m").join(" · ")||"no nearby named line")+
+    "\n0 validated stand/lead-out links. Pushback and runway restrictions need chart-based QA.";
+}
 async function loadNetworkAudit(icao){
   taxi.networkAudit=null;taxi.highlightTaxiway="";
   if(icao!=="LTFM"){renderNetworkAudit();return}
@@ -327,6 +382,7 @@ async function loadGraph(icao){
     if(!graphOk(d,icao))throw Error("Invalid, unverified, or wrong-cycle network");
     if(taxi.airport!==icao)return;
     taxi.graph=d;
+    refreshStandGroupAudit();
     if(taxi.networkOpen)renderNetworkAudit();
     if(icao==="OIMM"){
       taxi.standReference={stands:d.stands,airport:icao,source:d.source};
@@ -373,6 +429,11 @@ function view(){
     '<div id="taxiQaDetails" role="status"></div>'+
     '<div class="taxi-audit-row"><button id="taxiQaD3" type="button">STAND D3 PUSHBACK</button><button id="taxiQaParking" type="button">PARKING 30-9B</button></div>'+
     '<small>OSM segments are NOT official clearance or verified stand connectors.</small></section>'+
+    '<section id="taxiQaStandGroups" class="taxi-ins-groups" hidden>'+
+    '<strong>LTFM INS STAND GROUPS · CANDIDATE AUDIT ONLY</strong>'+
+    '<select id="taxiQaStandGroupList" size="5" aria-label="Published stand coordinate groups"></select>'+
+    '<div id="taxiQaStandGroupInfo" role="status"></div>'+
+    '<small>Do not taxi using nearest-line estimates. Official geometry and pushback clearance required.</small></section>'+
     '<div id="taxiQaStandMap" hidden aria-label="Geographic reference-only stand map"></div>'+
     '<small class="taxi-qa-warning">SIMULATOR QA ONLY · NOT FOR ACTUAL NAVIGATION</small>';
   document.querySelector("#chartsView .viewer-pane")?.appendChild(panel);
@@ -438,7 +499,19 @@ function view(){
       "SIM QA: tap your starting point ON the ADC taxiway centerline, then press GO. This overrides live GPS for this TEST only.":
       "Start placement cancelled.");
   };
+  $("taxiQaStandGroupList").addEventListener("change",renderStandGroupPanel);
   $("taxiQaStands").onclick=()=>{
+    if(taxi.airport==="LTFM"){
+      taxi.standGroupOpen=!taxi.standGroupOpen;
+      $("taxiQaStands").classList.toggle("on",taxi.standGroupOpen);
+      $("taxiQaStands").setAttribute("aria-pressed",String(taxi.standGroupOpen));
+      if(taxi.standGroupOpen)$("taxiQaPanel").classList.add("tools-expanded");
+      renderStandGroupPanel();
+      message(taxi.standGroupAudit?
+        taxi.standGroupAudit.groupCount+" printed LTFM stand coordinate groups available for QA; all links remain unverified.":
+        "Loading INS stand coordinate groups; none may be used as a verified connector.",true);
+      return;
+    }
     taxi.showStands=!taxi.showStands;
     $("taxiQaStands").classList.toggle("on",taxi.showStands);
     $("taxiQaStands").setAttribute("aria-pressed",String(taxi.showStands));
@@ -474,10 +547,10 @@ function toggle(on){
   if(on){
     $("taxiQaAirport").textContent=selectedAirport;
     updateAirportControls();
-    if(taxi.airport!==selectedAirport){taxi.airport=selectedAirport;taxi.route=null;taxi.testStart=null;loadGraph(selectedAirport);loadStandReference(selectedAirport);loadNetworkAudit(selectedAirport);}
+    if(taxi.airport!==selectedAirport){taxi.airport=selectedAirport;taxi.route=null;taxi.testStart=null;loadGraph(selectedAirport);loadStandReference(selectedAirport);loadNetworkAudit(selectedAirport);loadStandGroups(selectedAirport);}
     $("taxiQaInput").focus();
   }
-  renderNetworkAudit();draw();
+  renderNetworkAudit();renderStandGroupPanel();draw();
 }
 function openTaxi(){
   if(!selectedAirport)return;
@@ -508,6 +581,7 @@ function syncAirport(){
   loadGraph(selectedAirport);
   loadStandReference(selectedAirport);
   loadNetworkAudit(selectedAirport);
+  loadStandGroups(selectedAirport);
   renderNetworkAudit();
 }
 function updateAirportControls(){
