@@ -10,9 +10,9 @@
   "vdPPolicy": "Calculated intercept of geometric line with MDA, one decimal DME; not a published VDP. No VDP where MDA or geometry is unavailable.",
   "sourceChartsReviewed": 164,
   "counts": {
-    "WITHHELD_MISSING_GEOMETRY": 107,
+    "WITHHELD_MISSING_GEOMETRY": 106,
     "QA_INTERPRETED_10NM_MODEL": 3,
-    "QA_FITTED_10NM_MODEL": 54
+    "QA_FITTED_10NM_MODEL": 55
   },
   "charts": [
     {
@@ -27,24 +27,298 @@
       "publishedAngleDeg": 3.01,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 1600,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 650,
       "sourceExtracted": {
-        "rwyElevationFt": null,
-        "airportElevationFt": 8.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 8,
+        "airportElevationFt": 8,
+        "tchFt": 50,
+        "rwyElevSource": "Jeppesen 2621 ADC OIAA chart 10-9 PDF page 9 RWY14R ELEV 8FT",
+        "rwyElevCrossCheck": "Jeppesen approach 13-1 PDF page 12 Apt Elev 8FT"
       },
       "isOriginalPageInspected": true,
-      "geometryConfidence": "UNDETERMINED",
-      "status": "WITHHELD_MISSING_GEOMETRY",
-      "blockers": [
-        "RWY_THRESHOLD_ELEVATION_NOT_FOUND_ON_THIS_APPROACH_CHART"
+      "geometryConfidence": "CHART_PROFILE_AND_D5_FITTED_OFFSET_NOT_SURVEY_VERIFIED",
+      "status": "QA_FITTED_10NM_MODEL",
+      "blockers": [],
+      "table": [
+        {
+          "dme": 1,
+          "thresholdNm": 0.8263,
+          "rawFt": 322,
+          "altitudeFt": 320,
+          "status": "MODEL_ONLY",
+          "reasons": [
+            "STATION_GEOMETRY_NOT_SURVEY_VERIFIED",
+            "BELOW_MDA_DO_NOT_USE"
+          ],
+          "published": [],
+          "vdpMarker": null
+        },
+        {
+          "dme": 2,
+          "thresholdNm": 1.8263,
+          "rawFt": 641.5,
+          "altitudeFt": 640,
+          "status": "MODEL_ONLY",
+          "reasons": [
+            "STATION_GEOMETRY_NOT_SURVEY_VERIFIED",
+            "BELOW_MDA_DO_NOT_USE"
+          ],
+          "published": [],
+          "vdpMarker": "D2.0"
+        },
+        {
+          "dme": 3,
+          "thresholdNm": 2.8263,
+          "rawFt": 961,
+          "altitudeFt": 960,
+          "status": "MODEL_ONLY",
+          "reasons": [
+            "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+          ],
+          "published": [],
+          "vdpMarker": null
+        },
+        {
+          "dme": 4,
+          "thresholdNm": 3.8263,
+          "rawFt": 1280.5,
+          "altitudeFt": 1280,
+          "status": "MODEL_ONLY",
+          "reasons": [
+            "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+          ],
+          "published": [],
+          "vdpMarker": null
+        },
+        {
+          "dme": 5,
+          "thresholdNm": 4.8263,
+          "rawFt": 1600,
+          "altitudeFt": 1600,
+          "status": "MODEL_ONLY",
+          "reasons": [
+            "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+          ],
+          "published": [
+            {
+              "type": "minimum",
+              "altitudeFt": 1600,
+              "label": "FAF D5.0: 1600 ft (Jeppesen 13-1)"
+            }
+          ],
+          "vdpMarker": null
+        },
+        {
+          "dme": 6,
+          "thresholdNm": 5.8263,
+          "rawFt": 1919.5,
+          "altitudeFt": 1920,
+          "status": "MODEL_ONLY",
+          "reasons": [
+            "OUTSIDE_PUBLISHED_ANGLE_SCOPE",
+            "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+          ],
+          "published": [],
+          "vdpMarker": null
+        },
+        {
+          "dme": 7,
+          "thresholdNm": 6.8263,
+          "rawFt": 2239,
+          "altitudeFt": 2240,
+          "status": "MODEL_ONLY",
+          "reasons": [
+            "OUTSIDE_PUBLISHED_ANGLE_SCOPE",
+            "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+          ],
+          "published": [],
+          "vdpMarker": null
+        },
+        {
+          "dme": 8,
+          "thresholdNm": 7.8263,
+          "rawFt": 2558.5,
+          "altitudeFt": 2560,
+          "status": "MODEL_ONLY",
+          "reasons": [
+            "OUTSIDE_PUBLISHED_ANGLE_SCOPE",
+            "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+          ],
+          "published": [],
+          "vdpMarker": null
+        },
+        {
+          "dme": 9,
+          "thresholdNm": 8.8263,
+          "rawFt": 2878,
+          "altitudeFt": 2880,
+          "status": "MODEL_ONLY",
+          "reasons": [
+            "OUTSIDE_PUBLISHED_ANGLE_SCOPE",
+            "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+          ],
+          "published": [],
+          "vdpMarker": null
+        },
+        {
+          "dme": 10,
+          "thresholdNm": 9.8263,
+          "rawFt": 3197.5,
+          "altitudeFt": 3200,
+          "status": "MODEL_ONLY",
+          "reasons": [
+            "OUTSIDE_PUBLISHED_ANGLE_SCOPE",
+            "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+          ],
+          "published": [
+            {
+              "type": "minimum",
+              "altitudeFt": 2000,
+              "label": "IF D10.0: 2000 ft (Jeppesen 13-1, outside final VDA)"
+            }
+          ],
+          "vdpMarker": null
+        },
+        {
+          "dme": 11,
+          "thresholdNm": 10.8263,
+          "rawFt": 3516.99,
+          "altitudeFt": 3520,
+          "status": "MODEL_ONLY",
+          "reasons": [
+            "OUTSIDE_PUBLISHED_ANGLE_SCOPE",
+            "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+          ],
+          "published": [],
+          "vdpMarker": null
+        }
       ],
-      "table": [],
-      "vdp": null
+      "vdp": {
+        "status": "CALCULATED_MDA_INTERCEPT_QA_ONLY",
+        "dmeNm": 2.026596,
+        "dmeDisplay": "D2.0",
+        "thresholdDistanceNm": 1.8529,
+        "withinPublishedAngleScope": true,
+        "stationGeometryVerified": false,
+        "published": false,
+        "note": "Computed MDA intercept is NOT a published VDP and is NOT a descent clearance."
+      },
+      "modelInput": {
+        "chartId": "OIAA-12-13-1",
+        "chartDmeId": "ABD",
+        "thresholdElevationFt": 8,
+        "tchFt": 50,
+        "publishedAngleDeg": 3.01,
+        "station": {
+          "id": "ABD",
+          "placement": "after_threshold",
+          "offsetNm": 0.17369568609808717,
+          "lateralNm": 0,
+          "geometryVerified": false
+        },
+        "dmeReadingsNm": [
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11
+        ],
+        "validAngleDmeRange": {
+          "from": 0.8,
+          "to": 5
+        },
+        "mdaFt": 650,
+        "publishedConstraints": [
+          {
+            "dmeNm": 5,
+            "altitudeFt": 1600,
+            "type": "minimum",
+            "label": "FAF D5.0: 1600 ft (Jeppesen 13-1)"
+          },
+          {
+            "dmeNm": 10,
+            "altitudeFt": 2000,
+            "type": "minimum",
+            "label": "IF D10.0: 2000 ft (Jeppesen 13-1, outside final VDA)"
+          }
+        ],
+        "cycle": "2621",
+        "sourcePdfPage": 12,
+        "minimumThresholdCoverageNm": 10,
+        "minimumDmeCoverageNm": 10,
+        "coverageStepDmeNm": 1,
+        "autoExtendCoverage": true
+      },
+      "engineStatus": "PRELIMINARY_GEOMETRY",
+      "angleDeg": 3.01,
+      "gradientFtPerNm": 319.4991239069511,
+      "thresholdElevationFt": 8,
+      "tchFt": 50,
+      "referenceDmeId": "ABD",
+      "stationPlacement": "after_threshold",
+      "stationOffsetNm": 0.17369568609808717,
+      "coverage": {
+        "requiredThresholdDistanceNm": 10,
+        "requiredDmeReadoutNm": 10,
+        "dmeAtRequiredThresholdNm": 10.173696,
+        "maxModeledThresholdDistanceNm": 10.826304,
+        "maxModeledDmeNm": 11,
+        "meetsThresholdModelCoverage": true,
+        "meetsDmeModelCoverage": true,
+        "autoAddedDmeReadingsNm": [],
+        "gridStepDmeNm": 1,
+        "gridStartDmeNm": 1,
+        "gridEndDmeNm": 11,
+        "maxPublishedAngleScopedThresholdNm": 4.826304,
+        "publishedAngleCovers10Nm": false,
+        "modelExtensionIsPublishedProcedure": false,
+        "note": "Model coverage is NOT published CDFA authorization. Rows beyond chart angle/fix scope remain MODEL_ONLY."
+      },
+      "publishedChecks": [
+        {
+          "dmeNm": 5,
+          "altitudeFt": 1600,
+          "type": "minimum",
+          "label": "FAF D5.0: 1600 ft (Jeppesen 13-1)",
+          "rawAltitudeFt": 1600,
+          "roundedAltitudeFt": 1600,
+          "ok": true,
+          "code": "PASS"
+        },
+        {
+          "dmeNm": 10,
+          "altitudeFt": 2000,
+          "type": "minimum",
+          "label": "IF D10.0: 2000 ft (Jeppesen 13-1, outside final VDA)",
+          "rawAltitudeFt": 3197.49562,
+          "roundedAltitudeFt": 3200,
+          "ok": true,
+          "code": "PASS"
+        }
+      ],
+      "auditEvidence": {
+        "approachChart": 12,
+        "airportDiagram": 9,
+        "mapDmeNm": 0.8,
+        "mapToThresholdNm": 0.6,
+        "profileRoundedThresholdDmeNm": 0.2,
+        "fittedThresholdDmeNm": 0.173696,
+        "profileDifferenceNm": -0.026304,
+        "offsetNature": "FITTED FROM D5 1600FT AND 3.01deg slope with ADC RWY14R 8FT, not a station survey",
+        "angleScope": "Published 3.01deg final profile from D5 inward. D6-D11 geometric extension only, NOT a published route.",
+        "crossCheck": "D5 calculated exactly 1600FT, D10 calculated above published 2000FT minimum",
+        "flightValidation": "NOT APPROVED"
+      }
     },
     {
       "key": "OIAA-13-13-2",
@@ -58,15 +332,15 @@
       "publishedAngleDeg": 3.14,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 3.0,
+        "dmeNm": 3,
         "altitudeFt": 1000,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 650,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 8.0,
-        "tchFt": 50.0
+        "airportElevationFt": 8,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -89,15 +363,15 @@
       "publishedAngleDeg": 3.07,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 1200,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 750,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 8.0,
-        "tchFt": 60.0
+        "airportElevationFt": 8,
+        "tchFt": 60
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -120,15 +394,15 @@
       "publishedAngleDeg": 3.07,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 1200,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 750,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 8.0,
-        "tchFt": 60.0
+        "airportElevationFt": 8,
+        "tchFt": 60
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -151,15 +425,15 @@
       "publishedAngleDeg": 3.01,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 1600,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 650,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 8.0,
-        "tchFt": 50.0
+        "airportElevationFt": 8,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -180,18 +454,18 @@
       "family": "VOR",
       "dmeStationCandidate": "MAH",
       "dmeHeaderRead": "VOR MAH 115.8",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 3.0,
+        "dmeNm": 3,
         "altitudeFt": 800,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 470,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 18.0,
-        "tchFt": 50.0
+        "airportElevationFt": 18,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -211,18 +485,18 @@
       "family": "VOR",
       "dmeStationCandidate": "MAH",
       "dmeHeaderRead": "VOR MAH 115.8",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 3.0,
+        "dmeNm": 3,
         "altitudeFt": 800,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 350,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 18.0,
-        "tchFt": 50.0
+        "airportElevationFt": 18,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -242,18 +516,18 @@
       "family": "VOR",
       "dmeStationCandidate": "AWZ",
       "dmeHeaderRead": "VOR AWZ 114.0",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 4.0,
+        "dmeNm": 4,
         "altitudeFt": 1100,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 550,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 65.0,
-        "tchFt": 50.0
+        "airportElevationFt": 65,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -273,18 +547,18 @@
       "family": "VOR",
       "dmeStationCandidate": "AWZ",
       "dmeHeaderRead": "VOR AWZ 114.0 Climb APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 4.0,
+        "dmeNm": 4,
         "altitudeFt": 1100,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 550,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 65.0,
-        "tchFt": 50.0
+        "airportElevationFt": 65,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "CHART_PROFILE_INTERPRETATION_NOT_SURVEY_VERIFIED",
@@ -587,18 +861,18 @@
       "family": "VOR",
       "dmeStationCandidate": "AWZ",
       "dmeHeaderRead": "VOR AWZ 114.0",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 3.0,
+        "dmeNm": 3,
         "altitudeFt": 800,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 480,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 65.0,
-        "tchFt": 63.0
+        "airportElevationFt": 65,
+        "tchFt": 63
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -618,18 +892,18 @@
       "family": "VOR",
       "dmeStationCandidate": "AWZ",
       "dmeHeaderRead": "VOR AWZ 114.0 APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 3.0,
+        "dmeNm": 3,
         "altitudeFt": 800,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 480,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 65.0,
-        "tchFt": 63.0
+        "airportElevationFt": 65,
+        "tchFt": 63
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -652,15 +926,15 @@
       "publishedAngleDeg": 3.08,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 7.0,
+        "dmeNm": 7,
         "altitudeFt": 2300,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 790,
       "sourceExtracted": {
-        "rwyElevationFt": 11.0,
-        "airportElevationFt": 18.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 11,
+        "airportElevationFt": 18,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -683,15 +957,15 @@
       "publishedAngleDeg": 3.08,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 7.0,
+        "dmeNm": 7,
         "altitudeFt": 2300,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 790,
       "sourceExtracted": {
-        "rwyElevationFt": 11.0,
-        "airportElevationFt": 18.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 11,
+        "airportElevationFt": 18,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -711,18 +985,18 @@
       "family": "NDB",
       "dmeStationCandidate": "ABM",
       "dmeHeaderRead": "NDB ABM 285 APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 1200,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 790,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 18.0,
-        "tchFt": 50.0
+        "airportElevationFt": 18,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -743,18 +1017,18 @@
       "family": "NDB",
       "dmeStationCandidate": "ABM",
       "dmeHeaderRead": "NDB ABM 285 APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 1200,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 790,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 18.0,
-        "tchFt": 50.0
+        "airportElevationFt": 18,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -778,15 +1052,15 @@
       "publishedAngleDeg": 3.1,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 1500,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 630,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 72.0,
-        "tchFt": 50.0
+        "airportElevationFt": 72,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -807,17 +1081,17 @@
       "family": "VOR",
       "dmeStationCandidate": "BUZ",
       "dmeHeaderRead": "VOR BUZ 117.45 APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 1000,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 630,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 72.0,
+        "airportElevationFt": 72,
         "tchFt": null
       },
       "isOriginalPageInspected": true,
@@ -839,18 +1113,18 @@
       "family": "VOR",
       "dmeStationCandidate": "KIS",
       "dmeHeaderRead": "VOR KIS 117.4 APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 1900,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 540,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 99.0,
-        "tchFt": 50.0
+        "airportElevationFt": 99,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -870,18 +1144,18 @@
       "family": "VOR",
       "dmeStationCandidate": "KIS",
       "dmeHeaderRead": "VOR KIS 117.4 APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 1900,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 540,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 99.0,
-        "tchFt": 50.0
+        "airportElevationFt": 99,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -901,18 +1175,18 @@
       "family": "VOR",
       "dmeStationCandidate": "KIS",
       "dmeHeaderRead": "VOR KIS 117.4 APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 1900,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 540,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 99.0,
-        "tchFt": 47.0
+        "airportElevationFt": 99,
+        "tchFt": 47
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -932,18 +1206,18 @@
       "family": "VOR",
       "dmeStationCandidate": "KIS",
       "dmeHeaderRead": "VOR KIS 117.4 APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 1900,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 540,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 99.0,
-        "tchFt": 47.0
+        "airportElevationFt": 99,
+        "tchFt": 47
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -966,15 +1240,15 @@
       "publishedAngleDeg": 3.09,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 6.0,
+        "dmeNm": 6,
         "altitudeFt": 1200,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 630,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 99.0,
-        "tchFt": 50.0
+        "airportElevationFt": 99,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -997,15 +1271,15 @@
       "publishedAngleDeg": 3.09,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 6.0,
+        "dmeNm": 6,
         "altitudeFt": 1200,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 630,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 99.0,
-        "tchFt": 50.0
+        "airportElevationFt": 99,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -1028,15 +1302,15 @@
       "publishedAngleDeg": 3.09,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 6.0,
+        "dmeNm": 6,
         "altitudeFt": 1200,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 630,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 99.0,
-        "tchFt": 50.0
+        "airportElevationFt": 99,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -1059,15 +1333,15 @@
       "publishedAngleDeg": 3.09,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 6.0,
+        "dmeNm": 6,
         "altitudeFt": 1200,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 630,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 99.0,
-        "tchFt": 50.0
+        "airportElevationFt": 99,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -1090,15 +1364,15 @@
       "publishedAngleDeg": 3.44,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 7.0,
+        "dmeNm": 7,
         "altitudeFt": 1900,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 510,
       "sourceExtracted": {
-        "rwyElevationFt": 66.0,
-        "airportElevationFt": 75.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 66,
+        "airportElevationFt": 75,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -1269,8 +1543,8 @@
       "modelInput": {
         "chartId": "OIBL-120-13-1",
         "chartDmeId": "LEN",
-        "thresholdElevationFt": 66.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 66,
+        "tchFt": 50,
         "station": {
           "id": "LEN",
           "placement": "after_threshold",
@@ -1286,8 +1560,8 @@
         "mdaFt": 510,
         "publishedConstraints": [
           {
-            "dmeNm": 7.0,
-            "altitudeFt": 1900.0,
+            "dmeNm": 7,
+            "altitudeFt": 1900,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -1361,15 +1635,15 @@
       "publishedAngleDeg": 3.2,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 3.0,
+        "dmeNm": 3,
         "altitudeFt": 1400,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 450,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 75.0,
-        "tchFt": 50.0
+        "airportElevationFt": 75,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -1389,18 +1663,18 @@
       "family": "VOR",
       "dmeStationCandidate": "PRG",
       "dmeHeaderRead": "VOR PRG 112.1",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 7.0,
+        "dmeNm": 7,
         "altitudeFt": 2200,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 600,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 22.0,
-        "tchFt": 56.0
+        "airportElevationFt": 22,
+        "tchFt": 56
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -1420,18 +1694,18 @@
       "family": "VOR",
       "dmeStationCandidate": "PRG",
       "dmeHeaderRead": "VOR PRG 112.1",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 7.0,
+        "dmeNm": 7,
         "altitudeFt": 2200,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 600,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 22.0,
-        "tchFt": 56.0
+        "airportElevationFt": 22,
+        "tchFt": 56
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -1451,18 +1725,18 @@
       "family": "VOR",
       "dmeStationCandidate": "KHG",
       "dmeHeaderRead": "VOR KHG 113.4 Climb APCH: R-050 to",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 1200,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 500,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 29.0,
-        "tchFt": 50.0
+        "airportElevationFt": 29,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -1482,18 +1756,18 @@
       "family": "VOR",
       "dmeStationCandidate": "KHG",
       "dmeHeaderRead": "VOR KHG 113.4 Climb APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 1200,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 500,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 29.0,
-        "tchFt": 50.0
+        "airportElevationFt": 29,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -1516,15 +1790,15 @@
       "publishedAngleDeg": null,
       "angleSource": "DEFAULT_3_DEG_ASSUMED",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 1200,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 500,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 29.0,
-        "tchFt": 50.0
+        "airportElevationFt": 29,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -1547,15 +1821,15 @@
       "publishedAngleDeg": 3.06,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 1600,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 650,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 26.0,
-        "tchFt": 50.0
+        "airportElevationFt": 26,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -1575,18 +1849,18 @@
       "family": "VOR",
       "dmeStationCandidate": "SIR",
       "dmeHeaderRead": "VOR SIR 113.75",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 6.0,
+        "dmeNm": 6,
         "altitudeFt": 1500,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 650,
       "sourceExtracted": {
-        "rwyElevationFt": 1.0,
-        "airportElevationFt": 26.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 1,
+        "airportElevationFt": 26,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -1758,8 +2032,8 @@
       "modelInput": {
         "chartId": "OIBS-171-13-2",
         "chartDmeId": "SIR",
-        "thresholdElevationFt": 1.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 1,
+        "tchFt": 50,
         "station": {
           "id": "SIR",
           "placement": "after_threshold",
@@ -1775,13 +2049,13 @@
         "mdaFt": 650,
         "publishedConstraints": [
           {
-            "dmeNm": 6.0,
-            "altitudeFt": 1500.0,
+            "dmeNm": 6,
+            "altitudeFt": 1500,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
         ],
-        "publishedAngleDeg": 3.0,
+        "publishedAngleDeg": 3,
         "cycle": "2621",
         "sourcePdfPage": 171,
         "minimumThresholdCoverageNm": 10,
@@ -1850,15 +2124,15 @@
       "publishedAngleDeg": 3.02,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 1500,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 670,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 45.0,
-        "tchFt": 50.0
+        "airportElevationFt": 45,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -1881,15 +2155,15 @@
       "publishedAngleDeg": 3.61,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 6.0,
+        "dmeNm": 6,
         "altitudeFt": 6500,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 5000,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 4307.0,
-        "tchFt": 46.0
+        "airportElevationFt": 4307,
+        "tchFt": 46
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -1912,15 +2186,15 @@
       "publishedAngleDeg": 3.61,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 7.0,
+        "dmeNm": 7,
         "altitudeFt": 6500,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 5000,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 4307.0,
-        "tchFt": 46.0
+        "airportElevationFt": 4307,
+        "tchFt": 46
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -1944,15 +2218,15 @@
       "publishedAngleDeg": 3.35,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 7.0,
+        "dmeNm": 7,
         "altitudeFt": 5800,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 5530,
       "sourceExtracted": {
-        "rwyElevationFt": 3783.0,
-        "airportElevationFt": 3793.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 3783,
+        "airportElevationFt": 3793,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -2127,8 +2401,8 @@
       "modelInput": {
         "chartId": "OICK-224-13-1",
         "chartDmeId": "KRD",
-        "thresholdElevationFt": 3783.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 3783,
+        "tchFt": 50,
         "station": {
           "id": "KRD",
           "placement": "after_threshold",
@@ -2144,8 +2418,8 @@
         "mdaFt": 5530,
         "publishedConstraints": [
           {
-            "dmeNm": 7.0,
-            "altitudeFt": 5800.0,
+            "dmeNm": 7,
+            "altitudeFt": 5800,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -2219,15 +2493,15 @@
       "publishedAngleDeg": 4.41,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 8.0,
+        "dmeNm": 8,
         "altitudeFt": 7800,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 5580,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 4528.0,
-        "tchFt": 54.0
+        "airportElevationFt": 4528,
+        "tchFt": 54
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -2247,18 +2521,18 @@
       "family": "NDB",
       "dmeStationCandidate": "HSA",
       "dmeHeaderRead": "NDB HSA 230",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 7.0,
+        "dmeNm": 7,
         "altitudeFt": 7100,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 5610,
       "sourceExtracted": {
-        "rwyElevationFt": 5227.0,
-        "airportElevationFt": 5256.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 5227,
+        "airportElevationFt": 5256,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -2278,18 +2552,18 @@
       "family": "VOR",
       "dmeStationCandidate": "ISN",
       "dmeHeaderRead": "VOR ISN 113.2",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 3.0,
+        "dmeNm": 3,
         "altitudeFt": 6200,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 5430,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 5058.0,
-        "tchFt": 50.0
+        "airportElevationFt": 5058,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -2309,18 +2583,18 @@
       "family": "VOR",
       "dmeStationCandidate": "ISN",
       "dmeHeaderRead": "VOR ISN 113.2",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 3.0,
+        "dmeNm": 3,
         "altitudeFt": 6200,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 5430,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 5058.0,
-        "tchFt": 50.0
+        "airportElevationFt": 5058,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -2340,18 +2614,18 @@
       "family": "VOR",
       "dmeStationCandidate": "ISN",
       "dmeHeaderRead": "VOR ISN 113.2",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 3.0,
+        "dmeNm": 3,
         "altitudeFt": 6200,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 5430,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 5058.0,
-        "tchFt": 50.0
+        "airportElevationFt": 5058,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -2371,18 +2645,18 @@
       "family": "VOR",
       "dmeStationCandidate": "ISN",
       "dmeHeaderRead": "VOR ISN 113.2",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 4.0,
+        "dmeNm": 4,
         "altitudeFt": 6200,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 5430,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 5058.0,
-        "tchFt": 50.0
+        "airportElevationFt": 5058,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -2405,15 +2679,15 @@
       "publishedAngleDeg": 3.19,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 5800,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 5410,
       "sourceExtracted": {
-        "rwyElevationFt": 5037.0,
-        "airportElevationFt": 5058.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 5037,
+        "airportElevationFt": 5058,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -2584,8 +2858,8 @@
       "modelInput": {
         "chartId": "OIFM-276-13-7",
         "chartDmeId": "ISN",
-        "thresholdElevationFt": 5037.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 5037,
+        "tchFt": 50,
         "station": {
           "id": "ISN",
           "placement": "after_threshold",
@@ -2601,8 +2875,8 @@
         "mdaFt": 5410,
         "publishedConstraints": [
           {
-            "dmeNm": 5.0,
-            "altitudeFt": 5800.0,
+            "dmeNm": 5,
+            "altitudeFt": 5800,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -2676,15 +2950,15 @@
       "publishedAngleDeg": 3.12,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 5800,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 5410,
       "sourceExtracted": {
-        "rwyElevationFt": 5043.0,
-        "airportElevationFt": 5058.0,
-        "tchFt": 55.0
+        "rwyElevationFt": 5043,
+        "airportElevationFt": 5058,
+        "tchFt": 55
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -2855,8 +3129,8 @@
       "modelInput": {
         "chartId": "OIFM-277-13-8",
         "chartDmeId": "ISN",
-        "thresholdElevationFt": 5043.0,
-        "tchFt": 55.0,
+        "thresholdElevationFt": 5043,
+        "tchFt": 55,
         "station": {
           "id": "ISN",
           "placement": "after_threshold",
@@ -2872,8 +3146,8 @@
         "mdaFt": 5410,
         "publishedConstraints": [
           {
-            "dmeNm": 5.0,
-            "altitudeFt": 5800.0,
+            "dmeNm": 5,
+            "altitudeFt": 5800,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -2944,18 +3218,18 @@
       "family": "NDB",
       "dmeStationCandidate": "IFN",
       "dmeHeaderRead": "NDB IFN 337 APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 3.0,
+        "dmeNm": 3,
         "altitudeFt": 6200,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 5490,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 5058.0,
-        "tchFt": 50.0
+        "airportElevationFt": 5058,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -2976,18 +3250,18 @@
       "family": "NDB",
       "dmeStationCandidate": "IFN",
       "dmeHeaderRead": "NDB IFN 337 APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 3.0,
+        "dmeNm": 3,
         "altitudeFt": 6200,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 5490,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 5058.0,
-        "tchFt": 50.0
+        "airportElevationFt": 5058,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -3011,15 +3285,15 @@
       "publishedAngleDeg": 3.46,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 7.0,
+        "dmeNm": 7,
         "altitudeFt": 8600,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 7930,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 6723.0,
-        "tchFt": 50.0
+        "airportElevationFt": 6723,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -3039,10 +3313,10 @@
       "family": "VOR",
       "dmeStationCandidate": "RST",
       "dmeHeaderRead": "VOR RST 112.6 Climb APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 1200,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
@@ -3050,7 +3324,7 @@
       "sourceExtracted": {
         "rwyElevationFt": null,
         "airportElevationFt": null,
-        "tchFt": 50.0
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -3070,10 +3344,10 @@
       "family": "VOR",
       "dmeStationCandidate": "RST",
       "dmeHeaderRead": "VOR RST 112.6 Climb APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 1200,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
@@ -3081,7 +3355,7 @@
       "sourceExtracted": {
         "rwyElevationFt": null,
         "airportElevationFt": null,
-        "tchFt": 58.0
+        "tchFt": 58
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -3104,15 +3378,15 @@
       "publishedAngleDeg": 3.3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 6.0,
+        "dmeNm": 6,
         "altitudeFt": 7700,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 6150,
       "sourceExtracted": {
-        "rwyElevationFt": 5703.0,
-        "airportElevationFt": 5771.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 5703,
+        "airportElevationFt": 5771,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "CHART_PROFILE_INTERPRETATION_NOT_SURVEY_VERIFIED",
@@ -3376,15 +3650,15 @@
       "publishedAngleDeg": 3.34,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 6.0,
+        "dmeNm": 6,
         "altitudeFt": 7400,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 6500,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 5771.0,
-        "tchFt": 50.0
+        "airportElevationFt": 5771,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -3404,18 +3678,18 @@
       "family": "NDB",
       "dmeStationCandidate": "HAM",
       "dmeHeaderRead": "NDB HAM 317 APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 6.0,
+        "dmeNm": 6,
         "altitudeFt": 7500,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 6160,
       "sourceExtracted": {
-        "rwyElevationFt": 5703.0,
-        "airportElevationFt": 5771.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 5703,
+        "airportElevationFt": 5771,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -3438,15 +3712,15 @@
       "publishedAngleDeg": 3.02,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 6.0,
+        "dmeNm": 6,
         "altitudeFt": 7200,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 5870,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 5453.0,
-        "tchFt": 50.0
+        "airportElevationFt": 5453,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -3469,15 +3743,15 @@
       "publishedAngleDeg": 3.23,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 8.0,
+        "dmeNm": 8,
         "altitudeFt": 5100,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 3880,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 3305.0,
-        "tchFt": 50.0
+        "airportElevationFt": 3305,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -3500,15 +3774,15 @@
       "publishedAngleDeg": 3.23,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 8.0,
+        "dmeNm": 8,
         "altitudeFt": 5100,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 3880,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 3305.0,
-        "tchFt": 50.0
+        "airportElevationFt": 3305,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -3528,18 +3802,18 @@
       "family": "VOR",
       "dmeStationCandidate": "IKA",
       "dmeHeaderRead": "VOR IKA 114.3 Climb APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 5100,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 3680,
       "sourceExtracted": {
-        "rwyElevationFt": 3256.0,
-        "airportElevationFt": 3305.0,
-        "tchFt": 57.0
+        "rwyElevationFt": 3256,
+        "airportElevationFt": 3305,
+        "tchFt": 57
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -3696,8 +3970,8 @@
       "modelInput": {
         "chartId": "OIIE-393-23-3",
         "chartDmeId": "IKA",
-        "thresholdElevationFt": 3256.0,
-        "tchFt": 57.0,
+        "thresholdElevationFt": 3256,
+        "tchFt": 57,
         "station": {
           "id": "IKA",
           "placement": "before_threshold",
@@ -3714,13 +3988,13 @@
         "mdaFt": 3680,
         "publishedConstraints": [
           {
-            "dmeNm": 5.0,
-            "altitudeFt": 5100.0,
+            "dmeNm": 5,
+            "altitudeFt": 5100,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
         ],
-        "publishedAngleDeg": 3.0,
+        "publishedAngleDeg": 3,
         "cycle": "2621",
         "sourcePdfPage": 393,
         "minimumThresholdCoverageNm": 10,
@@ -3785,17 +4059,17 @@
       "family": "VOR",
       "dmeStationCandidate": "TRN",
       "dmeHeaderRead": "VOR TRN 115.3 Climbing APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 8.0,
+        "dmeNm": 8,
         "altitudeFt": 6700,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 4520,
       "sourceExtracted": {
-        "rwyElevationFt": 3934.0,
-        "airportElevationFt": 3962.0,
+        "rwyElevationFt": 3934,
+        "airportElevationFt": 3962,
         "tchFt": null
       },
       "isOriginalPageInspected": true,
@@ -3819,15 +4093,15 @@
       "publishedAngleDeg": 3.49,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 10.0,
+        "dmeNm": 10,
         "altitudeFt": 6600,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 4450,
       "sourceExtracted": {
-        "rwyElevationFt": 3797.0,
-        "airportElevationFt": 3962.0,
-        "tchFt": 59.0
+        "rwyElevationFt": 3797,
+        "airportElevationFt": 3962,
+        "tchFt": 59
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -3999,8 +4273,8 @@
       "modelInput": {
         "chartId": "OIII-439-13-2",
         "chartDmeId": "TRN",
-        "thresholdElevationFt": 3797.0,
-        "tchFt": 59.0,
+        "thresholdElevationFt": 3797,
+        "tchFt": 59,
         "station": {
           "id": "TRN",
           "placement": "after_threshold",
@@ -4016,8 +4290,8 @@
         "mdaFt": 4450,
         "publishedConstraints": [
           {
-            "dmeNm": 10.0,
-            "altitudeFt": 6600.0,
+            "dmeNm": 10,
+            "altitudeFt": 6600,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -4088,18 +4362,18 @@
       "family": "VOR",
       "dmeStationCandidate": "BND",
       "dmeHeaderRead": "VOR BND 117.2 Climb APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 1500,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 620,
       "sourceExtracted": {
-        "rwyElevationFt": 14.0,
-        "airportElevationFt": 22.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 14,
+        "airportElevationFt": 22,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -4271,8 +4545,8 @@
       "modelInput": {
         "chartId": "OIKB-464-13-1",
         "chartDmeId": "BND",
-        "thresholdElevationFt": 14.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 14,
+        "tchFt": 50,
         "station": {
           "id": "BND",
           "placement": "after_threshold",
@@ -4288,13 +4562,13 @@
         "mdaFt": 620,
         "publishedConstraints": [
           {
-            "dmeNm": 5.0,
-            "altitudeFt": 1500.0,
+            "dmeNm": 5,
+            "altitudeFt": 1500,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
         ],
-        "publishedAngleDeg": 3.0,
+        "publishedAngleDeg": 3,
         "cycle": "2621",
         "sourcePdfPage": 464,
         "minimumThresholdCoverageNm": 10,
@@ -4360,18 +4634,18 @@
       "family": "VOR",
       "dmeStationCandidate": "BND",
       "dmeHeaderRead": "VOR BND 117.2 APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 6.0,
+        "dmeNm": 6,
         "altitudeFt": 1200,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 620,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 22.0,
-        "tchFt": 52.0
+        "airportElevationFt": 22,
+        "tchFt": 52
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -4394,15 +4668,15 @@
       "publishedAngleDeg": 3.52,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 3.0,
+        "dmeNm": 3,
         "altitudeFt": 5500,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 4550,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 4170.0,
-        "tchFt": 50.0
+        "airportElevationFt": 4170,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -4422,18 +4696,18 @@
       "family": "NDB",
       "dmeStationCandidate": "PIM",
       "dmeHeaderRead": "NDB PIM 306 Climb APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 6.0,
+        "dmeNm": 6,
         "altitudeFt": 5300,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 4600,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 4170.0,
-        "tchFt": 50.0
+        "airportElevationFt": 4170,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -4457,15 +4731,15 @@
       "publishedAngleDeg": 3.51,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 3.0,
+        "dmeNm": 3,
         "altitudeFt": 5500,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 4550,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 4170.0,
-        "tchFt": 50.0
+        "airportElevationFt": 4170,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -4486,18 +4760,18 @@
       "family": "VOR",
       "dmeStationCandidate": "KER",
       "dmeHeaderRead": "VOR KER 112.0 At APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 7.0,
+        "dmeNm": 7,
         "altitudeFt": 7900,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 6200,
       "sourceExtracted": {
-        "rwyElevationFt": 5723.0,
-        "airportElevationFt": 5732.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 5723,
+        "airportElevationFt": 5732,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -4668,8 +4942,8 @@
       "modelInput": {
         "chartId": "OIKK-505-13-1",
         "chartDmeId": "KER",
-        "thresholdElevationFt": 5723.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 5723,
+        "tchFt": 50,
         "station": {
           "id": "KER",
           "placement": "after_threshold",
@@ -4685,13 +4959,13 @@
         "mdaFt": 6200,
         "publishedConstraints": [
           {
-            "dmeNm": 7.0,
-            "altitudeFt": 7900.0,
+            "dmeNm": 7,
+            "altitudeFt": 7900,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
         ],
-        "publishedAngleDeg": 3.0,
+        "publishedAngleDeg": 3,
         "cycle": "2621",
         "sourcePdfPage": 505,
         "minimumThresholdCoverageNm": 10,
@@ -4757,18 +5031,18 @@
       "family": "VOR",
       "dmeStationCandidate": "KER",
       "dmeHeaderRead": "VOR KER 112.0 APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 7.0,
+        "dmeNm": 7,
         "altitudeFt": 7900,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 6200,
       "sourceExtracted": {
-        "rwyElevationFt": 5723.0,
-        "airportElevationFt": 5732.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 5723,
+        "airportElevationFt": 5732,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -4939,8 +5213,8 @@
       "modelInput": {
         "chartId": "OIKK-506-13-2",
         "chartDmeId": "KER",
-        "thresholdElevationFt": 5723.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 5723,
+        "tchFt": 50,
         "station": {
           "id": "KER",
           "placement": "after_threshold",
@@ -4956,13 +5230,13 @@
         "mdaFt": 6200,
         "publishedConstraints": [
           {
-            "dmeNm": 7.0,
-            "altitudeFt": 7900.0,
+            "dmeNm": 7,
+            "altitudeFt": 7900,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
         ],
-        "publishedAngleDeg": 3.0,
+        "publishedAngleDeg": 3,
         "cycle": "2621",
         "sourcePdfPage": 506,
         "minimumThresholdCoverageNm": 10,
@@ -5031,15 +5305,15 @@
       "publishedAngleDeg": 3.03,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 7.0,
+        "dmeNm": 7,
         "altitudeFt": 7500,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 6200,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 5732.0,
-        "tchFt": 50.0
+        "airportElevationFt": 5732,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -5062,15 +5336,15 @@
       "publishedAngleDeg": 2.86,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 10.0,
+        "dmeNm": 10,
         "altitudeFt": 8300,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 6200,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 5732.0,
-        "tchFt": 50.0
+        "airportElevationFt": 5732,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -5090,18 +5364,18 @@
       "family": "VOR",
       "dmeStationCandidate": "BAM",
       "dmeHeaderRead": "VOR BAM 114.9",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 4.0,
+        "dmeNm": 4,
         "altitudeFt": 4300,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 3450,
       "sourceExtracted": {
-        "rwyElevationFt": 3131.0,
-        "airportElevationFt": 3231.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 3131,
+        "airportElevationFt": 3231,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -5272,8 +5546,8 @@
       "modelInput": {
         "chartId": "OIKM-516-13-1",
         "chartDmeId": "BAM",
-        "thresholdElevationFt": 3131.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 3131,
+        "tchFt": 50,
         "station": {
           "id": "BAM",
           "placement": "after_threshold",
@@ -5289,13 +5563,13 @@
         "mdaFt": 3450,
         "publishedConstraints": [
           {
-            "dmeNm": 4.0,
-            "altitudeFt": 4300.0,
+            "dmeNm": 4,
+            "altitudeFt": 4300,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
         ],
-        "publishedAngleDeg": 3.0,
+        "publishedAngleDeg": 3,
         "cycle": "2621",
         "sourcePdfPage": 516,
         "minimumThresholdCoverageNm": 10,
@@ -5361,18 +5635,18 @@
       "family": "NDB",
       "dmeStationCandidate": "KHM",
       "dmeHeaderRead": "NDB KHM 335 APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 7.0,
+        "dmeNm": 7,
         "altitudeFt": 1400,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 450,
       "sourceExtracted": {
-        "rwyElevationFt": 14.0,
-        "airportElevationFt": 45.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 14,
+        "airportElevationFt": 45,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -5395,15 +5669,15 @@
       "publishedAngleDeg": 3.41,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 4.0,
+        "dmeNm": 4,
         "altitudeFt": 1200,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 450,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 45.0,
-        "tchFt": 50.0
+        "airportElevationFt": 45,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -5427,15 +5701,15 @@
       "publishedAngleDeg": 3.48,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 6800,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 5700,
       "sourceExtracted": {
-        "rwyElevationFt": 5252.0,
-        "airportElevationFt": 5290.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 5252,
+        "airportElevationFt": 5290,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -5458,15 +5732,15 @@
       "publishedAngleDeg": 3.04,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 6700,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 5900,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 5290.0,
-        "tchFt": 50.0
+        "airportElevationFt": 5290,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -5490,15 +5764,15 @@
       "publishedAngleDeg": 3.1,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 7400,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 6600,
       "sourceExtracted": {
-        "rwyElevationFt": 5808.0,
-        "airportElevationFt": 5847.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 5808,
+        "airportElevationFt": 5847,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -5670,8 +5944,8 @@
       "modelInput": {
         "chartId": "OIKY-550-13-1",
         "chartDmeId": "SRJ",
-        "thresholdElevationFt": 5808.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 5808,
+        "tchFt": 50,
         "station": {
           "id": "SRJ",
           "placement": "after_threshold",
@@ -5687,8 +5961,8 @@
         "mdaFt": 6600,
         "publishedConstraints": [
           {
-            "dmeNm": 5.0,
-            "altitudeFt": 7400.0,
+            "dmeNm": 5,
+            "altitudeFt": 7400,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -5762,15 +6036,15 @@
       "publishedAngleDeg": 3.25,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 6500,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 5650,
       "sourceExtracted": {
-        "rwyElevationFt": 4920.0,
-        "airportElevationFt": 4979.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 4920,
+        "airportElevationFt": 4979,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -5942,8 +6216,8 @@
       "modelInput": {
         "chartId": "OIMB-563-13-1",
         "chartDmeId": "BRN",
-        "thresholdElevationFt": 4920.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 4920,
+        "tchFt": 50,
         "station": {
           "id": "BRN",
           "placement": "after_threshold",
@@ -5959,8 +6233,8 @@
         "mdaFt": 5650,
         "publishedConstraints": [
           {
-            "dmeNm": 5.0,
-            "altitudeFt": 6500.0,
+            "dmeNm": 5,
+            "altitudeFt": 6500,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -6041,8 +6315,8 @@
       "mdaFt": 5720,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 4979.0,
-        "tchFt": 50.0
+        "airportElevationFt": 4979,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -6065,15 +6339,15 @@
       "publishedAngleDeg": 3.39,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 8.0,
+        "dmeNm": 8,
         "altitudeFt": 7100,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 4780,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 4215.0,
-        "tchFt": 50.0
+        "airportElevationFt": 4215,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -6096,15 +6370,15 @@
       "publishedAngleDeg": 3.21,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 6.0,
+        "dmeNm": 6,
         "altitudeFt": 4800,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 3970,
       "sourceExtracted": {
-        "rwyElevationFt": 3228.0,
-        "airportElevationFt": 3266.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 3228,
+        "airportElevationFt": 3266,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -6276,8 +6550,8 @@
       "modelInput": {
         "chartId": "OIMM-608-13-1",
         "chartDmeId": "MSD",
-        "thresholdElevationFt": 3228.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 3228,
+        "tchFt": 50,
         "station": {
           "id": "MSD",
           "placement": "after_threshold",
@@ -6293,8 +6567,8 @@
         "mdaFt": 3970,
         "publishedConstraints": [
           {
-            "dmeNm": 6.0,
-            "altitudeFt": 4800.0,
+            "dmeNm": 6,
+            "altitudeFt": 4800,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -6368,15 +6642,15 @@
       "publishedAngleDeg": 3.21,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 6.0,
+        "dmeNm": 6,
         "altitudeFt": 4800,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 3970,
       "sourceExtracted": {
-        "rwyElevationFt": 3228.0,
-        "airportElevationFt": 3266.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 3228,
+        "airportElevationFt": 3266,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -6548,8 +6822,8 @@
       "modelInput": {
         "chartId": "OIMM-609-13-2",
         "chartDmeId": "MSD",
-        "thresholdElevationFt": 3228.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 3228,
+        "tchFt": 50,
         "station": {
           "id": "MSD",
           "placement": "after_threshold",
@@ -6565,8 +6839,8 @@
         "mdaFt": 3970,
         "publishedConstraints": [
           {
-            "dmeNm": 6.0,
-            "altitudeFt": 4800.0,
+            "dmeNm": 6,
+            "altitudeFt": 4800,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -6640,15 +6914,15 @@
       "publishedAngleDeg": 3.32,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 4900,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 3810,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 3266.0,
-        "tchFt": 61.0
+        "airportElevationFt": 3266,
+        "tchFt": 61
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -6671,15 +6945,15 @@
       "publishedAngleDeg": 3.32,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 4900,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 3810,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 3266.0,
-        "tchFt": 61.0
+        "airportElevationFt": 3266,
+        "tchFt": 61
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -6699,18 +6973,18 @@
       "family": "VOR",
       "dmeStationCandidate": "SBZ",
       "dmeHeaderRead": "VOR SBZ 117.0",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 4.0,
+        "dmeNm": 4,
         "altitudeFt": 4400,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 3320,
       "sourceExtracted": {
-        "rwyElevationFt": 2975.0,
-        "airportElevationFt": 3010.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 2975,
+        "airportElevationFt": 3010,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -6867,8 +7141,8 @@
       "modelInput": {
         "chartId": "OIMS-634-13-1",
         "chartDmeId": "SBZ",
-        "thresholdElevationFt": 2975.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 2975,
+        "tchFt": 50,
         "station": {
           "id": "SBZ",
           "placement": "before_threshold",
@@ -6885,13 +7159,13 @@
         "mdaFt": 3320,
         "publishedConstraints": [
           {
-            "dmeNm": 4.0,
-            "altitudeFt": 4400.0,
+            "dmeNm": 4,
+            "altitudeFt": 4400,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
         ],
-        "publishedAngleDeg": 3.0,
+        "publishedAngleDeg": 3,
         "cycle": "2621",
         "sourcePdfPage": 634,
         "minimumThresholdCoverageNm": 10,
@@ -6959,15 +7233,15 @@
       "publishedAngleDeg": 3.09,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 8.0,
+        "dmeNm": 8,
         "altitudeFt": 5000,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 3520,
       "sourceExtracted": {
-        "rwyElevationFt": 2998.0,
-        "airportElevationFt": 3010.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 2998,
+        "airportElevationFt": 3010,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -7138,8 +7412,8 @@
       "modelInput": {
         "chartId": "OIMS-635-13-2",
         "chartDmeId": "SBZ",
-        "thresholdElevationFt": 2998.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 2998,
+        "tchFt": 50,
         "station": {
           "id": "SBZ",
           "placement": "after_threshold",
@@ -7155,8 +7429,8 @@
         "mdaFt": 3520,
         "publishedConstraints": [
           {
-            "dmeNm": 8.0,
-            "altitudeFt": 5000.0,
+            "dmeNm": 8,
+            "altitudeFt": 5000,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -7230,15 +7504,15 @@
       "publishedAngleDeg": 3.12,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 3600,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 2690,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 2251.0,
-        "tchFt": 50.0
+        "airportElevationFt": 2251,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -7261,15 +7535,15 @@
       "publishedAngleDeg": 3.12,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 3600,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 2690,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 2251.0,
-        "tchFt": 50.0
+        "airportElevationFt": 2251,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -7292,7 +7566,7 @@
       "publishedAngleDeg": 3.03,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 7.0,
+        "dmeNm": 7,
         "altitudeFt": 2300,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
@@ -7300,7 +7574,7 @@
       "sourceExtracted": {
         "rwyElevationFt": null,
         "airportElevationFt": null,
-        "tchFt": 50.0
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -7323,7 +7597,7 @@
       "publishedAngleDeg": 3.03,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 7.0,
+        "dmeNm": 7,
         "altitudeFt": 2300,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
@@ -7331,7 +7605,7 @@
       "sourceExtracted": {
         "rwyElevationFt": null,
         "airportElevationFt": null,
-        "tchFt": 50.0
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -7354,7 +7628,7 @@
       "publishedAngleDeg": 3.03,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 1600,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
@@ -7362,7 +7636,7 @@
       "sourceExtracted": {
         "rwyElevationFt": null,
         "airportElevationFt": null,
-        "tchFt": 50.0
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -7385,7 +7659,7 @@
       "publishedAngleDeg": 3.32,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 1500,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
@@ -7418,7 +7692,7 @@
       "publishedAngleDeg": 3.32,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 1500,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
@@ -7451,7 +7725,7 @@
       "publishedAngleDeg": 3.16,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 1600,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
@@ -7459,7 +7733,7 @@
       "sourceExtracted": {
         "rwyElevationFt": null,
         "airportElevationFt": null,
-        "tchFt": 50.0
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -7483,15 +7757,15 @@
       "publishedAngleDeg": 3.1,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 6.0,
+        "dmeNm": 6,
         "altitudeFt": 1900,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 470,
       "sourceExtracted": {
-        "rwyElevationFt": 5.0,
-        "airportElevationFt": 37.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 5,
+        "airportElevationFt": 37,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -7514,15 +7788,15 @@
       "publishedAngleDeg": 3.31,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 7.0,
+        "dmeNm": 7,
         "altitudeFt": 4400,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 3390,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 2643.0,
-        "tchFt": 50.0
+        "airportElevationFt": 2643,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -7545,15 +7819,15 @@
       "publishedAngleDeg": 3.34,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 10.0,
+        "dmeNm": 10,
         "altitudeFt": 6500,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 3500,
       "sourceExtracted": {
-        "rwyElevationFt": 2624.0,
-        "airportElevationFt": 2643.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 2624,
+        "airportElevationFt": 2643,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -7711,8 +7985,8 @@
       "modelInput": {
         "chartId": "OISL-706-13-2",
         "chartDmeId": "LAR",
-        "thresholdElevationFt": 2624.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 2624,
+        "tchFt": 50,
         "station": {
           "id": "LAR",
           "placement": "before_threshold",
@@ -7729,8 +8003,8 @@
         "mdaFt": 3500,
         "publishedConstraints": [
           {
-            "dmeNm": 10.0,
-            "altitudeFt": 6500.0,
+            "dmeNm": 10,
+            "altitudeFt": 6500,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -7803,15 +8077,15 @@
       "publishedAngleDeg": 3.34,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 10.0,
+        "dmeNm": 10,
         "altitudeFt": 6500,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 3500,
       "sourceExtracted": {
-        "rwyElevationFt": 2624.0,
-        "airportElevationFt": 2643.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 2624,
+        "airportElevationFt": 2643,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -7969,8 +8243,8 @@
       "modelInput": {
         "chartId": "OISL-707-13-3",
         "chartDmeId": "LAR",
-        "thresholdElevationFt": 2624.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 2624,
+        "tchFt": 50,
         "station": {
           "id": "LAR",
           "placement": "before_threshold",
@@ -7987,8 +8261,8 @@
         "mdaFt": 3500,
         "publishedConstraints": [
           {
-            "dmeNm": 10.0,
-            "altitudeFt": 6500.0,
+            "dmeNm": 10,
+            "altitudeFt": 6500,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -8058,18 +8332,18 @@
       "family": "NDB",
       "dmeStationCandidate": "LAR",
       "dmeHeaderRead": "NDB LAR 224",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 8.0,
+        "dmeNm": 8,
         "altitudeFt": 4500,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 3690,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 2643.0,
-        "tchFt": 50.0
+        "airportElevationFt": 2643,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -8093,15 +8367,15 @@
       "publishedAngleDeg": 3.51,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 2850,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 2010,
       "sourceExtracted": {
-        "rwyElevationFt": 1329.0,
-        "airportElevationFt": 1336.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 1329,
+        "airportElevationFt": 1336,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -8272,8 +8546,8 @@
       "modelInput": {
         "chartId": "OISR-715-13-1",
         "chartDmeId": "LAM",
-        "thresholdElevationFt": 1329.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 1329,
+        "tchFt": 50,
         "station": {
           "id": "LAM",
           "placement": "after_threshold",
@@ -8289,8 +8563,8 @@
         "mdaFt": 2010,
         "publishedConstraints": [
           {
-            "dmeNm": 5.0,
-            "altitudeFt": 2850.0,
+            "dmeNm": 5,
+            "altitudeFt": 2850,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -8364,14 +8638,14 @@
       "publishedAngleDeg": null,
       "angleSource": "DEFAULT_3_DEG_ASSUMED",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 2800,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 2010,
       "sourceExtracted": {
-        "rwyElevationFt": 1329.0,
-        "airportElevationFt": 1336.0,
+        "rwyElevationFt": 1329,
+        "airportElevationFt": 1336,
         "tchFt": null
       },
       "isOriginalPageInspected": true,
@@ -8396,15 +8670,15 @@
       "publishedAngleDeg": 3.18,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 8.0,
+        "dmeNm": 8,
         "altitudeFt": 7200,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 5400,
       "sourceExtracted": {
-        "rwyElevationFt": 4860.0,
-        "airportElevationFt": 4917.0,
-        "tchFt": 60.0
+        "rwyElevationFt": 4860,
+        "airportElevationFt": 4917,
+        "tchFt": 60
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -8575,8 +8849,8 @@
       "modelInput": {
         "chartId": "OISS-757-13-1",
         "chartDmeId": "SYZ",
-        "thresholdElevationFt": 4860.0,
-        "tchFt": 60.0,
+        "thresholdElevationFt": 4860,
+        "tchFt": 60,
         "station": {
           "id": "SYZ",
           "placement": "after_threshold",
@@ -8592,8 +8866,8 @@
         "mdaFt": 5400,
         "publishedConstraints": [
           {
-            "dmeNm": 8.0,
-            "altitudeFt": 7200.0,
+            "dmeNm": 8,
+            "altitudeFt": 7200,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -8667,15 +8941,15 @@
       "publishedAngleDeg": 3.19,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 8.0,
+        "dmeNm": 8,
         "altitudeFt": 7200,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 5400,
       "sourceExtracted": {
-        "rwyElevationFt": 4864.0,
-        "airportElevationFt": 4917.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 4864,
+        "airportElevationFt": 4917,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -8846,8 +9120,8 @@
       "modelInput": {
         "chartId": "OISS-758-13-2",
         "chartDmeId": "SYZ",
-        "thresholdElevationFt": 4864.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 4864,
+        "tchFt": 50,
         "station": {
           "id": "SYZ",
           "placement": "after_threshold",
@@ -8863,8 +9137,8 @@
         "mdaFt": 5400,
         "publishedConstraints": [
           {
-            "dmeNm": 8.0,
-            "altitudeFt": 7200.0,
+            "dmeNm": 8,
+            "altitudeFt": 7200,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -8938,15 +9212,15 @@
       "publishedAngleDeg": 3.28,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 9.0,
+        "dmeNm": 9,
         "altitudeFt": 8500,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 7550,
       "sourceExtracted": {
-        "rwyElevationFt": 5837.0,
-        "airportElevationFt": 5939.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 5837,
+        "airportElevationFt": 5939,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -9121,8 +9395,8 @@
       "modelInput": {
         "chartId": "OISY-766-13-1",
         "chartDmeId": "YSJ",
-        "thresholdElevationFt": 5837.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 5837,
+        "tchFt": 50,
         "station": {
           "id": "YSJ",
           "placement": "after_threshold",
@@ -9138,8 +9412,8 @@
         "mdaFt": 7550,
         "publishedConstraints": [
           {
-            "dmeNm": 9.0,
-            "altitudeFt": 8500.0,
+            "dmeNm": 9,
+            "altitudeFt": 8500,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -9213,15 +9487,15 @@
       "publishedAngleDeg": 3.46,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 8.0,
+        "dmeNm": 8,
         "altitudeFt": 6700,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 4900,
       "sourceExtracted": {
-        "rwyElevationFt": 3825.0,
-        "airportElevationFt": 3964.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 3825,
+        "airportElevationFt": 3964,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -9394,8 +9668,8 @@
       "modelInput": {
         "chartId": "OITK-774-13-1",
         "chartDmeId": "KHY",
-        "thresholdElevationFt": 3825.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 3825,
+        "tchFt": 50,
         "station": {
           "id": "KHY",
           "placement": "after_threshold",
@@ -9411,8 +9685,8 @@
         "mdaFt": 4900,
         "publishedConstraints": [
           {
-            "dmeNm": 8.0,
-            "altitudeFt": 6700.0,
+            "dmeNm": 8,
+            "altitudeFt": 6700,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -9486,15 +9760,15 @@
       "publishedAngleDeg": 3.5,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 9.0,
+        "dmeNm": 9,
         "altitudeFt": 6900,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 5400,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 3964.0,
-        "tchFt": 50.0
+        "airportElevationFt": 3964,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -9517,15 +9791,15 @@
       "publishedAngleDeg": 3.71,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 8.0,
+        "dmeNm": 8,
         "altitudeFt": 6900,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 4780,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 4319.0,
-        "tchFt": 50.0
+        "airportElevationFt": 4319,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -9548,15 +9822,15 @@
       "publishedAngleDeg": 3.71,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 8.0,
+        "dmeNm": 8,
         "altitudeFt": 6900,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 4780,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 4319.0,
-        "tchFt": 50.0
+        "airportElevationFt": 4319,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -9579,15 +9853,15 @@
       "publishedAngleDeg": 3.23,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 5500,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 4850,
       "sourceExtracted": {
-        "rwyElevationFt": 4296.0,
-        "airportElevationFt": 4319.0,
-        "tchFt": 56.0
+        "rwyElevationFt": 4296,
+        "airportElevationFt": 4319,
+        "tchFt": 56
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -9759,8 +10033,8 @@
       "modelInput": {
         "chartId": "OITL-800-13-3",
         "chartDmeId": "ARB",
-        "thresholdElevationFt": 4296.0,
-        "tchFt": 56.0,
+        "thresholdElevationFt": 4296,
+        "tchFt": 56,
         "station": {
           "id": "ARB",
           "placement": "after_threshold",
@@ -9776,8 +10050,8 @@
         "mdaFt": 4850,
         "publishedConstraints": [
           {
-            "dmeNm": 5.0,
-            "altitudeFt": 5500.0,
+            "dmeNm": 5,
+            "altitudeFt": 5500,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -9851,15 +10125,15 @@
       "publishedAngleDeg": 3.08,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 7.0,
+        "dmeNm": 7,
         "altitudeFt": 6100,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 4850,
       "sourceExtracted": {
-        "rwyElevationFt": 4296.0,
-        "airportElevationFt": 4319.0,
-        "tchFt": 56.0
+        "rwyElevationFt": 4296,
+        "airportElevationFt": 4319,
+        "tchFt": 56
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -10031,8 +10305,8 @@
       "modelInput": {
         "chartId": "OITL-801-13-4",
         "chartDmeId": "ARB",
-        "thresholdElevationFt": 4296.0,
-        "tchFt": 56.0,
+        "thresholdElevationFt": 4296,
+        "tchFt": 56,
         "station": {
           "id": "ARB",
           "placement": "after_threshold",
@@ -10048,8 +10322,8 @@
         "mdaFt": 4850,
         "publishedConstraints": [
           {
-            "dmeNm": 7.0,
-            "altitudeFt": 6100.0,
+            "dmeNm": 7,
+            "altitudeFt": 6100,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -10123,15 +10397,15 @@
       "publishedAngleDeg": 3.08,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 3.0,
+        "dmeNm": 3,
         "altitudeFt": 5300,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 4800,
       "sourceExtracted": {
-        "rwyElevationFt": 4303.0,
-        "airportElevationFt": 4319.0,
-        "tchFt": 62.0
+        "rwyElevationFt": 4303,
+        "airportElevationFt": 4319,
+        "tchFt": 62
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -10302,8 +10576,8 @@
       "modelInput": {
         "chartId": "OITL-802-13-5",
         "chartDmeId": "ARB",
-        "thresholdElevationFt": 4303.0,
-        "tchFt": 62.0,
+        "thresholdElevationFt": 4303,
+        "tchFt": 62,
         "station": {
           "id": "ARB",
           "placement": "after_threshold",
@@ -10319,8 +10593,8 @@
         "mdaFt": 4800,
         "publishedConstraints": [
           {
-            "dmeNm": 3.0,
-            "altitudeFt": 5300.0,
+            "dmeNm": 3,
+            "altitudeFt": 5300,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -10391,18 +10665,18 @@
       "family": "NDB",
       "dmeStationCandidate": "ARB",
       "dmeHeaderRead": "NDB ARB 355 APCH: turn",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 5300,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 4800,
       "sourceExtracted": {
-        "rwyElevationFt": 4296.0,
-        "airportElevationFt": 4319.0,
-        "tchFt": 56.0
+        "rwyElevationFt": 4296,
+        "airportElevationFt": 4319,
+        "tchFt": 56
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -10425,15 +10699,15 @@
       "publishedAngleDeg": 3.07,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 3.0,
+        "dmeNm": 3,
         "altitudeFt": 5300,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 4800,
       "sourceExtracted": {
-        "rwyElevationFt": 4303.0,
-        "airportElevationFt": 4319.0,
-        "tchFt": 62.0
+        "rwyElevationFt": 4303,
+        "airportElevationFt": 4319,
+        "tchFt": 62
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -10456,15 +10730,15 @@
       "publishedAngleDeg": 3.77,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 9.0,
+        "dmeNm": 9,
         "altitudeFt": 7100,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 4800,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 4342.0,
-        "tchFt": 50.0
+        "airportElevationFt": 4342,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "CHART_PROFILE_INTERPRETATION_NOT_SURVEY_VERIFIED",
@@ -10822,18 +11096,18 @@
       "family": "VOR",
       "dmeStationCandidate": "UMH",
       "dmeHeaderRead": "VOR UMH 113.5 APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 6000,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 4690,
       "sourceExtracted": {
-        "rwyElevationFt": 4272.0,
-        "airportElevationFt": 4342.0,
-        "tchFt": 53.0
+        "rwyElevationFt": 4272,
+        "airportElevationFt": 4342,
+        "tchFt": 53
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -10990,8 +11264,8 @@
       "modelInput": {
         "chartId": "OITR-828-13-2",
         "chartDmeId": "UMH",
-        "thresholdElevationFt": 4272.0,
-        "tchFt": 53.0,
+        "thresholdElevationFt": 4272,
+        "tchFt": 53,
         "station": {
           "id": "UMH",
           "placement": "before_threshold",
@@ -11008,13 +11282,13 @@
         "mdaFt": 4690,
         "publishedConstraints": [
           {
-            "dmeNm": 5.0,
-            "altitudeFt": 6000.0,
+            "dmeNm": 5,
+            "altitudeFt": 6000,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
         ],
-        "publishedAngleDeg": 3.0,
+        "publishedAngleDeg": 3,
         "cycle": "2621",
         "sourcePdfPage": 828,
         "minimumThresholdCoverageNm": 10,
@@ -11082,15 +11356,15 @@
       "publishedAngleDeg": 3.23,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 4800,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 3570,
       "sourceExtracted": {
-        "rwyElevationFt": 3103.0,
-        "airportElevationFt": 3169.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 3103,
+        "airportElevationFt": 3169,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -11261,8 +11535,8 @@
       "modelInput": {
         "chartId": "OITU-855-13-1",
         "chartDmeId": "MAK",
-        "thresholdElevationFt": 3103.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 3103,
+        "tchFt": 50,
         "station": {
           "id": "MAK",
           "placement": "after_threshold",
@@ -11278,8 +11552,8 @@
         "mdaFt": 3570,
         "publishedConstraints": [
           {
-            "dmeNm": 5.0,
-            "altitudeFt": 4800.0,
+            "dmeNm": 5,
+            "altitudeFt": 4800,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -11353,15 +11627,15 @@
       "publishedAngleDeg": 3.31,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 6.0,
+        "dmeNm": 6,
         "altitudeFt": 7300,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 5800,
       "sourceExtracted": {
-        "rwyElevationFt": 5308.0,
-        "airportElevationFt": 5380.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 5308,
+        "airportElevationFt": 5380,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -11532,8 +11806,8 @@
       "modelInput": {
         "chartId": "OITZ-860-13-1",
         "chartDmeId": "ZAJ",
-        "thresholdElevationFt": 5308.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 5308,
+        "tchFt": 50,
         "station": {
           "id": "ZAJ",
           "placement": "after_threshold",
@@ -11549,8 +11823,8 @@
         "mdaFt": 5800,
         "publishedConstraints": [
           {
-            "dmeNm": 6.0,
-            "altitudeFt": 7300.0,
+            "dmeNm": 6,
+            "altitudeFt": 7300,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -11624,15 +11898,15 @@
       "publishedAngleDeg": 3.31,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 6.0,
+        "dmeNm": 6,
         "altitudeFt": 7300,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 5800,
       "sourceExtracted": {
-        "rwyElevationFt": 5308.0,
-        "airportElevationFt": 5380.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 5308,
+        "airportElevationFt": 5380,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -11803,8 +12077,8 @@
       "modelInput": {
         "chartId": "OITZ-861-13-2",
         "chartDmeId": "ZAJ",
-        "thresholdElevationFt": 5308.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 5308,
+        "tchFt": 50,
         "station": {
           "id": "ZAJ",
           "placement": "after_threshold",
@@ -11820,8 +12094,8 @@
         "mdaFt": 5800,
         "publishedConstraints": [
           {
-            "dmeNm": 6.0,
-            "altitudeFt": 7300.0,
+            "dmeNm": 6,
+            "altitudeFt": 7300,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -11895,15 +12169,15 @@
       "publishedAngleDeg": 3.66,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 7.0,
+        "dmeNm": 7,
         "altitudeFt": 7600,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 6100,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 5380.0,
-        "tchFt": 50.0
+        "airportElevationFt": 5380,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -11923,18 +12197,18 @@
       "family": "VOR",
       "dmeStationCandidate": "YZD",
       "dmeHeaderRead": "VOR YZD 117.7 Climb APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 5100,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 4420,
       "sourceExtracted": {
-        "rwyElevationFt": 3984.0,
-        "airportElevationFt": 4054.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 3984,
+        "airportElevationFt": 4054,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -12105,8 +12379,8 @@
       "modelInput": {
         "chartId": "OIYY-884-13-1",
         "chartDmeId": "YZD",
-        "thresholdElevationFt": 3984.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 3984,
+        "tchFt": 50,
         "station": {
           "id": "YZD",
           "placement": "after_threshold",
@@ -12122,13 +12396,13 @@
         "mdaFt": 4420,
         "publishedConstraints": [
           {
-            "dmeNm": 5.0,
-            "altitudeFt": 5100.0,
+            "dmeNm": 5,
+            "altitudeFt": 5100,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
         ],
-        "publishedAngleDeg": 3.0,
+        "publishedAngleDeg": 3,
         "cycle": "2621",
         "sourcePdfPage": 884,
         "minimumThresholdCoverageNm": 10,
@@ -12194,18 +12468,18 @@
       "family": "VOR",
       "dmeStationCandidate": "YZD",
       "dmeHeaderRead": "VOR YZD 117.7 Climb APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 5100,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 4420,
       "sourceExtracted": {
-        "rwyElevationFt": 3984.0,
-        "airportElevationFt": 4054.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 3984,
+        "airportElevationFt": 4054,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -12376,8 +12650,8 @@
       "modelInput": {
         "chartId": "OIYY-885-13-2",
         "chartDmeId": "YZD",
-        "thresholdElevationFt": 3984.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 3984,
+        "tchFt": 50,
         "station": {
           "id": "YZD",
           "placement": "after_threshold",
@@ -12393,13 +12667,13 @@
         "mdaFt": 4420,
         "publishedConstraints": [
           {
-            "dmeNm": 5.0,
-            "altitudeFt": 5100.0,
+            "dmeNm": 5,
+            "altitudeFt": 5100,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
         ],
-        "publishedAngleDeg": 3.0,
+        "publishedAngleDeg": 3,
         "cycle": "2621",
         "sourcePdfPage": 885,
         "minimumThresholdCoverageNm": 10,
@@ -12465,18 +12739,18 @@
       "family": "VOR",
       "dmeStationCandidate": "YZD",
       "dmeHeaderRead": "VOR YZD 117.7 APCH: Climb",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 5500,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 4520,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 4054.0,
-        "tchFt": 52.0
+        "airportElevationFt": 4054,
+        "tchFt": 52
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -12496,18 +12770,18 @@
       "family": "VOR",
       "dmeStationCandidate": "YZD",
       "dmeHeaderRead": "VOR YZD 117.7 Climb APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 5500,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 4520,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 4054.0,
-        "tchFt": 52.0
+        "airportElevationFt": 4054,
+        "tchFt": 52
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -12527,18 +12801,18 @@
       "family": "VOR",
       "dmeStationCandidate": "ZAL",
       "dmeHeaderRead": "VOR ZAL 113.1",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 6.0,
+        "dmeNm": 6,
         "altitudeFt": 2900,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 2000,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 1577.0,
-        "tchFt": 50.0
+        "airportElevationFt": 1577,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -12558,18 +12832,18 @@
       "family": "VOR",
       "dmeStationCandidate": "ZAL",
       "dmeHeaderRead": "VOR ZAL 113.1",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 6.0,
+        "dmeNm": 6,
         "altitudeFt": 2900,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 2310,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 1577.0,
-        "tchFt": 50.0
+        "airportElevationFt": 1577,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -12592,15 +12866,15 @@
       "publishedAngleDeg": 3.23,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 8.0,
+        "dmeNm": 8,
         "altitudeFt": 1900,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 380,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 24.0,
-        "tchFt": 50.0
+        "airportElevationFt": 24,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -12623,15 +12897,15 @@
       "publishedAngleDeg": 3.23,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 8.0,
+        "dmeNm": 8,
         "altitudeFt": 1900,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 380,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 24.0,
-        "tchFt": 50.0
+        "airportElevationFt": 24,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -12651,18 +12925,18 @@
       "family": "VOR",
       "dmeStationCandidate": "CBH",
       "dmeHeaderRead": "VOR CBH 115.6",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 8.0,
+        "dmeNm": 8,
         "altitudeFt": 1900,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 380,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 24.0,
-        "tchFt": 50.0
+        "airportElevationFt": 24,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -12685,14 +12959,14 @@
       "publishedAngleDeg": 3.49,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 8.0,
+        "dmeNm": 8,
         "altitudeFt": 6900,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 5370,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 4520.0,
+        "airportElevationFt": 4520,
         "tchFt": null
       },
       "isOriginalPageInspected": true,
@@ -12717,14 +12991,14 @@
       "publishedAngleDeg": 3.49,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 8.0,
+        "dmeNm": 8,
         "altitudeFt": 6900,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 5370,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 4520.0,
+        "airportElevationFt": 4520,
         "tchFt": null
       },
       "isOriginalPageInspected": true,
@@ -12749,15 +13023,15 @@
       "publishedAngleDeg": 3.43,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 3600,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 2620,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 1983.0,
-        "tchFt": 50.0
+        "airportElevationFt": 1983,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -12780,15 +13054,15 @@
       "publishedAngleDeg": 3.83,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 5.0,
+        "dmeNm": 5,
         "altitudeFt": 3800,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 2430,
       "sourceExtracted": {
-        "rwyElevationFt": 1926.0,
-        "airportElevationFt": 1983.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 1926,
+        "airportElevationFt": 1983,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -12959,8 +13233,8 @@
       "modelInput": {
         "chartId": "OIZI-954-13-2",
         "chartDmeId": "ISR",
-        "thresholdElevationFt": 1926.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 1926,
+        "tchFt": 50,
         "station": {
           "id": "ISR",
           "placement": "after_threshold",
@@ -12976,8 +13250,8 @@
         "mdaFt": 2430,
         "publishedConstraints": [
           {
-            "dmeNm": 5.0,
-            "altitudeFt": 3800.0,
+            "dmeNm": 5,
+            "altitudeFt": 3800,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -13051,15 +13325,15 @@
       "publishedAngleDeg": 3.13,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 6.0,
+        "dmeNm": 6,
         "altitudeFt": 3800,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 2550,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 1983.0,
-        "tchFt": 50.0
+        "airportElevationFt": 1983,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -13083,15 +13357,15 @@
       "publishedAngleDeg": 3.3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 6.0,
+        "dmeNm": 6,
         "altitudeFt": 3900,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 2550,
       "sourceExtracted": {
-        "rwyElevationFt": 1926.0,
-        "airportElevationFt": 1983.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 1926,
+        "airportElevationFt": 1983,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -13111,7 +13385,7 @@
       "family": "VOR",
       "dmeStationCandidate": "ALI",
       "dmeHeaderRead": "VOR ALI 114.7 APCH: Climb intercept",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
         "dmeNm": 6.9,
@@ -13120,9 +13394,9 @@
       },
       "mdaFt": 680,
       "sourceExtracted": {
-        "rwyElevationFt": 116.0,
-        "airportElevationFt": 107.0,
-        "tchFt": 54.0
+        "rwyElevationFt": 116,
+        "airportElevationFt": 107,
+        "tchFt": 54
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -13287,8 +13561,8 @@
       "modelInput": {
         "chartId": "ORNI-978-13-1",
         "chartDmeId": "ALI",
-        "thresholdElevationFt": 116.0,
-        "tchFt": 54.0,
+        "thresholdElevationFt": 116,
+        "tchFt": 54,
         "station": {
           "id": "ALI",
           "placement": "after_threshold",
@@ -13305,12 +13579,12 @@
         "publishedConstraints": [
           {
             "dmeNm": 6.9,
-            "altitudeFt": 2000.0,
+            "altitudeFt": 2000,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
         ],
-        "publishedAngleDeg": 3.0,
+        "publishedAngleDeg": 3,
         "cycle": "2621",
         "sourcePdfPage": 978,
         "minimumThresholdCoverageNm": 10,
@@ -13377,7 +13651,7 @@
       "family": "VOR",
       "dmeStationCandidate": "ALI",
       "dmeHeaderRead": "VOR ALI 114.7 APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
         "dmeNm": 6.4,
@@ -13386,9 +13660,9 @@
       },
       "mdaFt": 530,
       "sourceExtracted": {
-        "rwyElevationFt": 92.0,
-        "airportElevationFt": 107.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 92,
+        "airportElevationFt": 107,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -13553,8 +13827,8 @@
       "modelInput": {
         "chartId": "ORNI-979-13-2",
         "chartDmeId": "ALI",
-        "thresholdElevationFt": 92.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 92,
+        "tchFt": 50,
         "station": {
           "id": "ALI",
           "placement": "after_threshold",
@@ -13571,12 +13845,12 @@
         "publishedConstraints": [
           {
             "dmeNm": 6.4,
-            "altitudeFt": 2000.0,
+            "altitudeFt": 2000,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
         ],
-        "publishedAngleDeg": 3.0,
+        "publishedAngleDeg": 3,
         "cycle": "2621",
         "sourcePdfPage": 979,
         "minimumThresholdCoverageNm": 10,
@@ -13652,9 +13926,9 @@
       },
       "mdaFt": 610,
       "sourceExtracted": {
-        "rwyElevationFt": 113.0,
-        "airportElevationFt": 114.0,
-        "tchFt": 46.0
+        "rwyElevationFt": 113,
+        "airportElevationFt": 114,
+        "tchFt": 46
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -13684,8 +13958,8 @@
       "mdaFt": 590,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 114.0,
-        "tchFt": 50.0
+        "airportElevationFt": 114,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -13716,8 +13990,8 @@
       "mdaFt": 390,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 11.0,
-        "tchFt": 49.0
+        "airportElevationFt": 11,
+        "tchFt": 49
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -13748,8 +14022,8 @@
       "mdaFt": 490,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 11.0,
-        "tchFt": 55.0
+        "airportElevationFt": 11,
+        "tchFt": 55
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -13770,7 +14044,7 @@
       "family": "VOR",
       "dmeStationCandidate": "SUL",
       "dmeHeaderRead": "VOR SUL 117.0",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
         "dmeNm": null,
@@ -13779,9 +14053,9 @@
       },
       "mdaFt": 2800,
       "sourceExtracted": {
-        "rwyElevationFt": 2492.0,
-        "airportElevationFt": 2492.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 2492,
+        "airportElevationFt": 2492,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -13801,7 +14075,7 @@
       "family": "VOR",
       "dmeStationCandidate": "SUL",
       "dmeHeaderRead": "VOR SUL 117.0 Climb APCH: join VOR",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
         "dmeNm": null,
@@ -13810,9 +14084,9 @@
       },
       "mdaFt": 2740,
       "sourceExtracted": {
-        "rwyElevationFt": 2440.0,
-        "airportElevationFt": 2492.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 2440,
+        "airportElevationFt": 2492,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -13832,18 +14106,18 @@
       "family": "VOR",
       "dmeStationCandidate": "MCT",
       "dmeHeaderRead": "VOR MCT 114.5 Climb",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 6.0,
+        "dmeNm": 6,
         "altitudeFt": 2200,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 460,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 49.0,
-        "tchFt": 50.0
+        "airportElevationFt": 49,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -13863,7 +14137,7 @@
       "family": "VOR",
       "dmeStationCandidate": "MCT",
       "dmeHeaderRead": "VOR MCT 114.5",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
         "dmeNm": 9.2,
@@ -13872,9 +14146,9 @@
       },
       "mdaFt": 500,
       "sourceExtracted": {
-        "rwyElevationFt": 24.0,
-        "airportElevationFt": 49.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 24,
+        "airportElevationFt": 49,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -14039,8 +14313,8 @@
       "modelInput": {
         "chartId": "OOMS-1068-13-2",
         "chartDmeId": "MCT",
-        "thresholdElevationFt": 24.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 24,
+        "tchFt": 50,
         "station": {
           "id": "MCT",
           "placement": "after_threshold",
@@ -14057,12 +14331,12 @@
         "publishedConstraints": [
           {
             "dmeNm": 9.2,
-            "altitudeFt": 2200.0,
+            "altitudeFt": 2200,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
         ],
-        "publishedAngleDeg": 3.0,
+        "publishedAngleDeg": 3,
         "cycle": "2621",
         "sourcePdfPage": 1068,
         "minimumThresholdCoverageNm": 10,
@@ -14129,7 +14403,7 @@
       "family": "VOR",
       "dmeStationCandidate": "MCT",
       "dmeHeaderRead": "VOR MCT 114.5",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
         "dmeNm": 9.2,
@@ -14138,9 +14412,9 @@
       },
       "mdaFt": 500,
       "sourceExtracted": {
-        "rwyElevationFt": 24.0,
-        "airportElevationFt": 49.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 24,
+        "airportElevationFt": 49,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -14305,8 +14579,8 @@
       "modelInput": {
         "chartId": "OOMS-1069-13-3",
         "chartDmeId": "MCT",
-        "thresholdElevationFt": 24.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 24,
+        "tchFt": 50,
         "station": {
           "id": "MCT",
           "placement": "after_threshold",
@@ -14323,12 +14597,12 @@
         "publishedConstraints": [
           {
             "dmeNm": 9.2,
-            "altitudeFt": 2200.0,
+            "altitudeFt": 2200,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
         ],
-        "publishedAngleDeg": 3.0,
+        "publishedAngleDeg": 3,
         "cycle": "2621",
         "sourcePdfPage": 1069,
         "minimumThresholdCoverageNm": 10,
@@ -14398,15 +14672,15 @@
       "publishedAngleDeg": 3.31,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 10.0,
+        "dmeNm": 10,
         "altitudeFt": 5900,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 3860,
       "sourceExtracted": {
-        "rwyElevationFt": 3104.0,
-        "airportElevationFt": 3158.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 3104,
+        "airportElevationFt": 3158,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -14578,8 +14852,8 @@
       "modelInput": {
         "chartId": "LTAC-1151-13-1",
         "chartDmeId": "ESB",
-        "thresholdElevationFt": 3104.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 3104,
+        "tchFt": 50,
         "station": {
           "id": "ESB",
           "placement": "after_threshold",
@@ -14595,8 +14869,8 @@
         "mdaFt": 3860,
         "publishedConstraints": [
           {
-            "dmeNm": 10.0,
-            "altitudeFt": 5900.0,
+            "dmeNm": 10,
+            "altitudeFt": 5900,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -14670,15 +14944,15 @@
       "publishedAngleDeg": 3.4,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 10.0,
+        "dmeNm": 10,
         "altitudeFt": 5900,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 3860,
       "sourceExtracted": {
-        "rwyElevationFt": 3099.0,
-        "airportElevationFt": 3158.0,
-        "tchFt": 51.0
+        "rwyElevationFt": 3099,
+        "airportElevationFt": 3158,
+        "tchFt": 51
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -14850,8 +15124,8 @@
       "modelInput": {
         "chartId": "LTAC-1152-13-2",
         "chartDmeId": "ESB",
-        "thresholdElevationFt": 3099.0,
-        "tchFt": 51.0,
+        "thresholdElevationFt": 3099,
+        "tchFt": 51,
         "station": {
           "id": "ESB",
           "placement": "after_threshold",
@@ -14867,8 +15141,8 @@
         "mdaFt": 3860,
         "publishedConstraints": [
           {
-            "dmeNm": 10.0,
-            "altitudeFt": 5900.0,
+            "dmeNm": 10,
+            "altitudeFt": 5900,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -14942,15 +15216,15 @@
       "publishedAngleDeg": 3.49,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 6.0,
+        "dmeNm": 6,
         "altitudeFt": 4440,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 3880,
       "sourceExtracted": {
-        "rwyElevationFt": 3088.0,
-        "airportElevationFt": 3158.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 3088,
+        "airportElevationFt": 3158,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -14980,8 +15254,8 @@
       "mdaFt": 3930,
       "sourceExtracted": {
         "rwyElevationFt": null,
-        "airportElevationFt": 3158.0,
-        "tchFt": 59.0
+        "airportElevationFt": 3158,
+        "tchFt": 59
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -15011,9 +15285,9 @@
       },
       "mdaFt": 3710,
       "sourceExtracted": {
-        "rwyElevationFt": 3126.0,
-        "airportElevationFt": 3158.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 3126,
+        "airportElevationFt": 3158,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -15036,15 +15310,15 @@
       "publishedAngleDeg": 3.3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 10.0,
+        "dmeNm": 10,
         "altitudeFt": 6800,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 3710,
       "sourceExtracted": {
-        "rwyElevationFt": 3126.0,
-        "airportElevationFt": 3158.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 3126,
+        "airportElevationFt": 3158,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -15202,8 +15476,8 @@
       "modelInput": {
         "chartId": "LTAC-1156-13-6",
         "chartDmeId": "ESB",
-        "thresholdElevationFt": 3126.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 3126,
+        "tchFt": 50,
         "station": {
           "id": "ESB",
           "placement": "before_threshold",
@@ -15220,8 +15494,8 @@
         "mdaFt": 3710,
         "publishedConstraints": [
           {
-            "dmeNm": 10.0,
-            "altitudeFt": 6800.0,
+            "dmeNm": 10,
+            "altitudeFt": 6800,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -15300,9 +15574,9 @@
       },
       "mdaFt": 3710,
       "sourceExtracted": {
-        "rwyElevationFt": 3124.0,
-        "airportElevationFt": 3158.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 3124,
+        "airportElevationFt": 3158,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -15453,8 +15727,8 @@
       "modelInput": {
         "chartId": "LTAC-1157-13-7",
         "chartDmeId": "BUK",
-        "thresholdElevationFt": 3124.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 3124,
+        "tchFt": 50,
         "station": {
           "id": "BUK",
           "placement": "before_threshold",
@@ -15472,7 +15746,7 @@
         "publishedConstraints": [
           {
             "dmeNm": 2.5,
-            "altitudeFt": 5000.0,
+            "altitudeFt": 5000,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -15546,15 +15820,15 @@
       "publishedAngleDeg": 3.3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
-        "dmeNm": 10.0,
+        "dmeNm": 10,
         "altitudeFt": 6800,
         "kind": "HEADER_PUBLISHED_MIN_OR_FIX"
       },
       "mdaFt": 3710,
       "sourceExtracted": {
-        "rwyElevationFt": 3124.0,
-        "airportElevationFt": 3158.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 3124,
+        "airportElevationFt": 3158,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -15712,8 +15986,8 @@
       "modelInput": {
         "chartId": "LTAC-1158-13-8",
         "chartDmeId": "ESB",
-        "thresholdElevationFt": 3124.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 3124,
+        "tchFt": 50,
         "station": {
           "id": "ESB",
           "placement": "before_threshold",
@@ -15730,8 +16004,8 @@
         "mdaFt": 3710,
         "publishedConstraints": [
           {
-            "dmeNm": 10.0,
-            "altitudeFt": 6800.0,
+            "dmeNm": 10,
+            "altitudeFt": 6800,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -15801,7 +16075,7 @@
       "family": "NDB",
       "dmeStationCandidate": "ESB",
       "dmeHeaderRead": "NDB ANK 356 Proceed APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
         "dmeNm": 6.3,
@@ -15810,9 +16084,9 @@
       },
       "mdaFt": 3860,
       "sourceExtracted": {
-        "rwyElevationFt": 3104.0,
-        "airportElevationFt": 3158.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 3104,
+        "airportElevationFt": 3158,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -15841,9 +16115,9 @@
       },
       "mdaFt": 3860,
       "sourceExtracted": {
-        "rwyElevationFt": 3099.0,
-        "airportElevationFt": 3158.0,
-        "tchFt": 51.0
+        "rwyElevationFt": 3099,
+        "airportElevationFt": 3158,
+        "tchFt": 51
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "UNDETERMINED",
@@ -15863,7 +16137,7 @@
       "family": "VOR",
       "dmeStationCandidate": "ZVR",
       "dmeHeaderRead": "VOR ZVR 112.3 Climb",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
         "dmeNm": 5.4,
@@ -15872,9 +16146,9 @@
       },
       "mdaFt": 3210,
       "sourceExtracted": {
-        "rwyElevationFt": 2800.0,
-        "airportElevationFt": 2838.0,
-        "tchFt": 52.0
+        "rwyElevationFt": 2800,
+        "airportElevationFt": 2838,
+        "tchFt": 52
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -16025,8 +16299,8 @@
       "modelInput": {
         "chartId": "UDYZ-1353-13-1",
         "chartDmeId": "ZVR",
-        "thresholdElevationFt": 2800.0,
-        "tchFt": 52.0,
+        "thresholdElevationFt": 2800,
+        "tchFt": 52,
         "station": {
           "id": "ZVR",
           "placement": "before_threshold",
@@ -16044,12 +16318,12 @@
         "publishedConstraints": [
           {
             "dmeNm": 5.4,
-            "altitudeFt": 5100.0,
+            "altitudeFt": 5100,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
         ],
-        "publishedAngleDeg": 3.0,
+        "publishedAngleDeg": 3,
         "cycle": "2621",
         "sourcePdfPage": 1353,
         "minimumThresholdCoverageNm": 10,
@@ -16124,9 +16398,9 @@
       },
       "mdaFt": 2580,
       "sourceExtracted": {
-        "rwyElevationFt": 1578.0,
-        "airportElevationFt": 1578.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 1578,
+        "airportElevationFt": 1578,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -16293,8 +16567,8 @@
       "modelInput": {
         "chartId": "UGTB-1379-13-1",
         "chartDmeId": "TBS",
-        "thresholdElevationFt": 1578.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 1578,
+        "tchFt": 50,
         "station": {
           "id": "TBS",
           "placement": "after_threshold",
@@ -16311,7 +16585,7 @@
         "publishedConstraints": [
           {
             "dmeNm": 10.4,
-            "altitudeFt": 5300.0,
+            "altitudeFt": 5300,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -16392,9 +16666,9 @@
       },
       "mdaFt": 1910,
       "sourceExtracted": {
-        "rwyElevationFt": 1513.0,
-        "airportElevationFt": 1578.0,
-        "tchFt": 54.0
+        "rwyElevationFt": 1513,
+        "airportElevationFt": 1578,
+        "tchFt": 54
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -16559,8 +16833,8 @@
       "modelInput": {
         "chartId": "UGTB-1380-13-2",
         "chartDmeId": "TBS",
-        "thresholdElevationFt": 1513.0,
-        "tchFt": 54.0,
+        "thresholdElevationFt": 1513,
+        "tchFt": 54,
         "station": {
           "id": "TBS",
           "placement": "after_threshold",
@@ -16577,7 +16851,7 @@
         "publishedConstraints": [
           {
             "dmeNm": 8.6,
-            "altitudeFt": 4000.0,
+            "altitudeFt": 4000,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -16658,9 +16932,9 @@
       },
       "mdaFt": 530,
       "sourceExtracted": {
-        "rwyElevationFt": 89.0,
-        "airportElevationFt": 102.0,
-        "tchFt": 55.0
+        "rwyElevationFt": 89,
+        "airportElevationFt": 102,
+        "tchFt": 55
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -16811,8 +17085,8 @@
       "modelInput": {
         "chartId": "OPKC-1593-13-1",
         "chartDmeId": "KC",
-        "thresholdElevationFt": 89.0,
-        "tchFt": 55.0,
+        "thresholdElevationFt": 89,
+        "tchFt": 55,
         "station": {
           "id": "KC",
           "placement": "before_threshold",
@@ -16830,7 +17104,7 @@
         "publishedConstraints": [
           {
             "dmeNm": 5.4,
-            "altitudeFt": 2000.0,
+            "altitudeFt": 2000,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -16910,9 +17184,9 @@
       },
       "mdaFt": 530,
       "sourceExtracted": {
-        "rwyElevationFt": 89.0,
-        "airportElevationFt": 102.0,
-        "tchFt": 55.0
+        "rwyElevationFt": 89,
+        "airportElevationFt": 102,
+        "tchFt": 55
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -17063,8 +17337,8 @@
       "modelInput": {
         "chartId": "OPKC-1594-13-2",
         "chartDmeId": "KC",
-        "thresholdElevationFt": 89.0,
-        "tchFt": 55.0,
+        "thresholdElevationFt": 89,
+        "tchFt": 55,
         "station": {
           "id": "KC",
           "placement": "before_threshold",
@@ -17082,7 +17356,7 @@
         "publishedConstraints": [
           {
             "dmeNm": 5.4,
-            "altitudeFt": 2000.0,
+            "altitudeFt": 2000,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
@@ -17153,7 +17427,7 @@
       "family": "VOR",
       "dmeStationCandidate": "KC",
       "dmeHeaderRead": "VOR KC 112.1 APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
         "dmeNm": 5.6,
@@ -17162,9 +17436,9 @@
       },
       "mdaFt": 530,
       "sourceExtracted": {
-        "rwyElevationFt": 102.0,
-        "airportElevationFt": 102.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 102,
+        "airportElevationFt": 102,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -17315,8 +17589,8 @@
       "modelInput": {
         "chartId": "OPKC-1595-13-3",
         "chartDmeId": "KC",
-        "thresholdElevationFt": 102.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 102,
+        "tchFt": 50,
         "station": {
           "id": "KC",
           "placement": "before_threshold",
@@ -17334,12 +17608,12 @@
         "publishedConstraints": [
           {
             "dmeNm": 5.6,
-            "altitudeFt": 2000.0,
+            "altitudeFt": 2000,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
         ],
-        "publishedAngleDeg": 3.0,
+        "publishedAngleDeg": 3,
         "cycle": "2621",
         "sourcePdfPage": 1595,
         "minimumThresholdCoverageNm": 10,
@@ -17405,7 +17679,7 @@
       "family": "VOR",
       "dmeStationCandidate": "KC",
       "dmeHeaderRead": "VOR KC 112.1",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
         "dmeNm": 5.6,
@@ -17414,9 +17688,9 @@
       },
       "mdaFt": 530,
       "sourceExtracted": {
-        "rwyElevationFt": 102.0,
-        "airportElevationFt": 102.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 102,
+        "airportElevationFt": 102,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -17567,8 +17841,8 @@
       "modelInput": {
         "chartId": "OPKC-1596-13-4",
         "chartDmeId": "KC",
-        "thresholdElevationFt": 102.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 102,
+        "tchFt": 50,
         "station": {
           "id": "KC",
           "placement": "before_threshold",
@@ -17586,12 +17860,12 @@
         "publishedConstraints": [
           {
             "dmeNm": 5.6,
-            "altitudeFt": 2000.0,
+            "altitudeFt": 2000,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
         ],
-        "publishedAngleDeg": 3.0,
+        "publishedAngleDeg": 3,
         "cycle": "2621",
         "sourcePdfPage": 1596,
         "minimumThresholdCoverageNm": 10,
@@ -17657,7 +17931,7 @@
       "family": "VOR",
       "dmeStationCandidate": "BTR",
       "dmeHeaderRead": "VOR BTR 114.6 APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
         "dmeNm": 8.5,
@@ -17666,9 +17940,9 @@
       },
       "mdaFt": 2170,
       "sourceExtracted": {
-        "rwyElevationFt": 1736.0,
-        "airportElevationFt": 1761.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 1736,
+        "airportElevationFt": 1761,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -17833,8 +18107,8 @@
       "modelInput": {
         "chartId": "OPIS-1639-23-1",
         "chartDmeId": "BTR",
-        "thresholdElevationFt": 1736.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 1736,
+        "tchFt": 50,
         "station": {
           "id": "BTR",
           "placement": "after_threshold",
@@ -17851,12 +18125,12 @@
         "publishedConstraints": [
           {
             "dmeNm": 8.5,
-            "altitudeFt": 3700.0,
+            "altitudeFt": 3700,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
         ],
-        "publishedAngleDeg": 3.0,
+        "publishedAngleDeg": 3,
         "cycle": "2621",
         "sourcePdfPage": 1639,
         "minimumThresholdCoverageNm": 10,
@@ -17923,7 +18197,7 @@
       "family": "VOR",
       "dmeStationCandidate": "BTR",
       "dmeHeaderRead": "VOR BTR 114.6 APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
         "dmeNm": 8.5,
@@ -17932,9 +18206,9 @@
       },
       "mdaFt": 2170,
       "sourceExtracted": {
-        "rwyElevationFt": 1733.0,
-        "airportElevationFt": 1761.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 1733,
+        "airportElevationFt": 1761,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -18099,8 +18373,8 @@
       "modelInput": {
         "chartId": "OPIS-1640-23-2",
         "chartDmeId": "BTR",
-        "thresholdElevationFt": 1733.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 1733,
+        "tchFt": 50,
         "station": {
           "id": "BTR",
           "placement": "after_threshold",
@@ -18117,12 +18391,12 @@
         "publishedConstraints": [
           {
             "dmeNm": 8.5,
-            "altitudeFt": 3700.0,
+            "altitudeFt": 3700,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
         ],
-        "publishedAngleDeg": 3.0,
+        "publishedAngleDeg": 3,
         "cycle": "2621",
         "sourcePdfPage": 1640,
         "minimumThresholdCoverageNm": 10,
@@ -18189,7 +18463,7 @@
       "family": "VOR",
       "dmeStationCandidate": "BTR",
       "dmeHeaderRead": "VOR BTR 114.6 APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
         "dmeNm": 5.4,
@@ -18198,9 +18472,9 @@
       },
       "mdaFt": 2180,
       "sourceExtracted": {
-        "rwyElevationFt": 1747.0,
-        "airportElevationFt": 1761.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 1747,
+        "airportElevationFt": 1761,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -18351,8 +18625,8 @@
       "modelInput": {
         "chartId": "OPIS-1641-23-3",
         "chartDmeId": "BTR",
-        "thresholdElevationFt": 1747.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 1747,
+        "tchFt": 50,
         "station": {
           "id": "BTR",
           "placement": "before_threshold",
@@ -18370,12 +18644,12 @@
         "publishedConstraints": [
           {
             "dmeNm": 5.4,
-            "altitudeFt": 3700.0,
+            "altitudeFt": 3700,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
         ],
-        "publishedAngleDeg": 3.0,
+        "publishedAngleDeg": 3,
         "cycle": "2621",
         "sourcePdfPage": 1641,
         "minimumThresholdCoverageNm": 10,
@@ -18441,7 +18715,7 @@
       "family": "VOR",
       "dmeStationCandidate": "BTR",
       "dmeHeaderRead": "VOR BTR 114.6 APCH:",
-      "publishedAngleDeg": 3.0,
+      "publishedAngleDeg": 3,
       "angleSource": "PUBLISHED_CHART_READ",
       "publishedFix": {
         "dmeNm": 5.4,
@@ -18450,9 +18724,9 @@
       },
       "mdaFt": 2180,
       "sourceExtracted": {
-        "rwyElevationFt": 1750.0,
-        "airportElevationFt": 1761.0,
-        "tchFt": 50.0
+        "rwyElevationFt": 1750,
+        "airportElevationFt": 1761,
+        "tchFt": 50
       },
       "isOriginalPageInspected": true,
       "geometryConfidence": "ANCHOR_FIT_OFFSET_NOT_GEODETICALLY_VERIFIED",
@@ -18603,8 +18877,8 @@
       "modelInput": {
         "chartId": "OPIS-1642-23-4",
         "chartDmeId": "BTR",
-        "thresholdElevationFt": 1750.0,
-        "tchFt": 50.0,
+        "thresholdElevationFt": 1750,
+        "tchFt": 50,
         "station": {
           "id": "BTR",
           "placement": "before_threshold",
@@ -18622,12 +18896,12 @@
         "publishedConstraints": [
           {
             "dmeNm": 5.4,
-            "altitudeFt": 3700.0,
+            "altitudeFt": 3700,
             "type": "minimum",
             "label": "Published header fix; used to infer offset, NOT independent QA"
           }
         ],
-        "publishedAngleDeg": 3.0,
+        "publishedAngleDeg": 3,
         "cycle": "2621",
         "sourcePdfPage": 1642,
         "minimumThresholdCoverageNm": 10,
