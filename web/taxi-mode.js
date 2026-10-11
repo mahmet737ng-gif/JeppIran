@@ -1,7 +1,7 @@
 /* JEPPIRAN TAXI preview · verified graphs only · NOT FOR ACTUAL NAVIGATION */
 (function(){
 "use strict";
-const ns="http://www.w3.org/2000/svg", taxi={auto:null,graphRequest:null,active:false,trace:false,startSelect:false,testStart:null,airport:"",graph:null,standReference:null,selectedStand:"",showStands:false,showNetwork:false,route:null,manual:new Map(),prompted:"",networkAudit:null,networkOpen:false,highlightTaxiway:"",insGroups:null,standGroupAudit:null,standGroupOpen:false};
+const ns="http://www.w3.org/2000/svg", taxi={auto:null,graphRequest:null,active:false,trace:false,startSelect:false,testStart:null,airport:"",graph:null,standReference:null,selectedStand:"",showStands:false,showNetwork:false,route:null,manual:new Map(),prompted:"",goTicket:0,networkAudit:null,networkOpen:false,highlightTaxiway:"",insGroups:null,standGroupAudit:null,standGroupOpen:false};
 const $=id=>document.getElementById(id);
 const name=s=>String(s||"").trim().toUpperCase().replace(/\s+/g," ");
 function parse(raw){
@@ -733,7 +733,7 @@ function view(){
 function toggle(on){
   view();taxi.active=on;
   $("taxiQaPanel").hidden=!on;
-  if(!on){taxi.trace=false;taxi.startSelect=false;$("taxiQaTrace").classList.remove("on");$("taxiQaStart").classList.remove("on")}
+  if(!on){taxi.goTicket++;taxi.trace=false;taxi.startSelect=false;$("taxiQaTrace").classList.remove("on");$("taxiQaStart").classList.remove("on")}
   if(on){
     $("taxiQaAirport").textContent=selectedAirport;
     updateAirportControls();
@@ -764,7 +764,7 @@ function nearest(graph,pos,firstTaxiway=null){
 }
 function syncAirport(){
   if(!taxi.active||taxi.airport===selectedAirport)return;
-  taxi.airport=selectedAirport;taxi.graph=null;taxi.genericEngine=null;taxi.genericMonitor=null;
+  taxi.goTicket++;taxi.airport=selectedAirport;taxi.graph=null;taxi.genericEngine=null;taxi.genericMonitor=null;
   taxi.route=null;taxi.auto=null;taxi.standPreview=null;taxi.standEgress=null;taxi.standLead=null;taxi.standQaRoute=null;taxi.testStart=null;taxi.prompted="";
   taxi.networkAudit=null;taxi.highlightTaxiway="";
   $("taxiQaAirport").textContent=selectedAirport;
@@ -784,6 +784,7 @@ function updateAirportControls(){
   if(taxi.genericEngine)fillGenericTaxiDestinations(taxi.genericEngine);
   document.querySelector('label[for="taxiQaInput"]').textContent=oimm?
     "Mashhad: ST109 Q BT31L D · ST109 B BT31L D · ST113 RAMP · ST109":
+    selectedAirport==="OIAW"?"OIAW QA: ST4 A B · projected dashed route inside parking inset":
     "LTFM example: A4 A A7 B B8A · Hold: /B8A · 34L2A format";
 }
 // AUTO requires an actual start (simulator/device/SET START) or an explicit
@@ -958,6 +959,7 @@ function oimmGo(p,options){
 }
 function go(options={}){
   syncAirport();
+  const goTicket=++taxi.goTicket;
   // Published LTFM procedures use exact pre-extracted chart vectors, NOT an
   // OSM guessed link between a stand and the first taxiway.
   const publisher=window.JEPPIRAN_PUBLISHED_TAXI;
@@ -970,6 +972,32 @@ function go(options={}){
   publisher?.clear();
   if(taxi.genericEngine){
     genericGo(typed);
+    return;
+  }
+  // GO pressed while an airport-independent network is still loading:
+  // wait for the same in-flight request, then execute the ORIGINAL user input
+  // exactly once. Otherwise the initial click silently falls back to the
+  // old LTFM parser and fetchGraph overwrites its warning with "graph loaded".
+  // This does not grant access to unreviewed geometry: the generic engine
+  // retains its own QA / mapped-edge rules.
+  if(taxi.airport!=="OIMM"&&taxi.airport!=="LTFM"){
+    const airport=taxi.airport,input=typed;
+    if(!input.trim()){message("Enter a stand or a taxi route.",true);return}
+    taxi.route=null;taxi.auto=null;taxi.genericMonitor=null;draw();
+    message("Loading "+airport+" taxi network for "+input+" …");
+    loadGraph(airport).then(loaded=>{
+      if(goTicket!==taxi.goTicket||!taxi.active||taxi.airport!==airport||
+         selectedAirport!==airport||$("taxiQaInput")?.value!==input)return;
+      if(!loaded||!taxi.genericEngine){
+        message(airport+" ground network unavailable; no route was fabricated.",true);
+        return;
+      }
+      genericGo(input);
+    }).catch(error=>{
+      if(goTicket===taxi.goTicket&&taxi.active&&taxi.airport===airport)
+        message(airport+" network load failed: "+String(error?.message||error)+
+          ". No route was drawn.",true);
+    });
     return;
   }
   // Enter STAND + one official pushback taxiway (STD3 T5; ST100 N6).
