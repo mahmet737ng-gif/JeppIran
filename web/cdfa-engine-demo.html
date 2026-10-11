@@ -31,7 +31,7 @@ tr.bad td{color:#ffa8a8}tr.model td{color:#d6c08c}
 <label>ارتفاع آستانه (ft MSL)<input type="number" id="elev" value="100" step="1"></label>
 <label>حداقل ارتفاع نزول MDA (ft، اختیاری)<input type="number" id="mda" placeholder="نامشخص"></label>
 <label>Threshold Crossing Height (ft)<input type="number" id="tch" value="50" step="1"></label>
-<label>زاویه نزول (deg)<input type="number" id="angle" value="3" step="0.01"></label>
+<label>زاویه منتشرشده روی چارت (درجه؛ اگر ندارد خالی بگذارید)<input type="number" id="angle" placeholder="پیش‌فرض 3.00°" step="0.01"></label>
 <label>محل دستگاه نسبت به آستانه<select id="placement"><option value="after_threshold">بعد از آستانه</option><option value="before_threshold">قبل از آستانه</option><option value="at_threshold">روی آستانه</option></select></label>
 <label>فاصله طولی دستگاه (NM)<input type="number" id="offset" value="0.5" step="0.01"></label>
 <label>فاصله جانبی دستگاه از محور (NM)<input type="number" id="lateral" value="0" step="0.01"></label>
@@ -52,16 +52,17 @@ function calculate(){
   try{
     let fixes=JSON.parse(el('fixes').value);
     const cfg={ chartId:el('chart').value, chartDmeId:el('ref').value,
-      thresholdElevationFt:Number(el('elev').value), tchFt:Number(el('tch').value),angleDeg:Number(el('angle').value),
+      thresholdElevationFt:Number(el('elev').value), tchFt:Number(el('tch').value),
       station:{id:el('station').value,placement:el('placement').value,offsetNm:Number(el('offset').value),lateralNm:Number(el('lateral').value),branch:el('branch').value},
       dmeReadingsNm:Array.from({length:Number(el('max').value)},(_,i)=>i+1),
       validAngleDmeRange:{from:Number(el('rangeStart').value),to:Number(el('rangeEnd').value)},publishedConstraints:fixes};
+    if(el('angle').value.trim()) cfg.publishedAngleDeg=Number(el('angle').value);
     if(el('stationElev').value.trim()) cfg.station.elevationFt=Number(el('stationElev').value);
     if(el('mda').value.trim()) cfg.mdaFt=Number(el('mda').value);
     last=JeppIranCdfaEngine.buildTable(cfg);
     el('resultHead').textContent='STATUS: '+last.status+'   |   THR CROSSING: '+last.parameters.crossingAltitudeFt+' ft   |   GRADIENT: '+last.parameters.gradientFtPerNm.toFixed(3)+' ft/NM';
     el('resultHead').className=last.status==='BLOCKED_BY_QA'?'err':'ok';
-    el('issues').textContent=last.issues.length?last.issues.map(x=>x.code+' at D'+x.dmeNm).join('; '):'No published-fix conflict found; still requires independent chart and operational QA.';
+    el('issues').textContent=last.issues.length?last.issues.map(x=>x.code+' at D'+x.dmeNm).join('; '):'No published-fix conflict found; still requires independent chart and operational QA. '+(last.parameters.angleSource==='DEFAULT_ASSUMED_3_DEG'?'WARNING: 3° ASSUMED (not published).':'');
     el('output').replaceChildren(...last.rows.map(r=>{
       const tr=document.createElement('tr');tr.className=r.status==='CONFLICT'||r.status==='UNRESOLVED'?'bad':r.status==='MODEL_ONLY'?'model':'';
       const vals=[r.dmeNm,r.thresholdDistanceNm??'–',r.rawAltitudeFt??'–',r.roundedAltitudeFt??'–',r.published.map(x=>x.type+': '+x.altitudeFt).join('; ')||'–',r.status];
