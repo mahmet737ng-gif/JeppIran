@@ -84,7 +84,12 @@ object CdfaQaDialog {
                 result.add(CellRow(dme, label, "VDP", true))
             }
         }
-        return result.sortedWith(compareByDescending<CellRow> { it.dme }.thenByDescending { it.isVdp })
+        val descending = result.sortedWith(
+            compareByDescending<CellRow> { it.dme }.thenByDescending { it.isVdp }
+        )
+        // Owner-locked: the VDP is always the final row, with no altitude entries below it.
+        val vdpIndex = descending.indexOfFirst { it.isVdp }
+        return if (vdpIndex >= 0) descending.take(vdpIndex + 1) else descending
     }
 
     private fun dp(c: Context, n: Int): Int = (n * c.resources.displayMetrics.density + .5f).toInt()

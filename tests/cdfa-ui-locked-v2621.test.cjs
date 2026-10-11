@@ -24,3 +24,34 @@ test('locked CDFA table renders next to PDF rather than over it',()=>{
  assert.match(viewer,/CdfaQaDialog\.createPanel\(this, currentChartGlobalPage\(\), currentIcao, invertChart\)/);
  assert.doesNotMatch(css,/#chartsView \.jp-cdfa-side\{background:#000;color:#fff/);
 });
+
+
+test('calculated VDP is the LAST row, with no DME altitudes below it',()=>{
+ const vm=require('node:vm');
+ const js=read('web/cdfa-chart-panel.js');
+ const from=js.indexOf(' function vdpInfo(record){');
+ const to=js.indexOf(' function render(){');
+ assert.ok(from>=0&&to>from,'pure CDFA row functions must exist');
+ const run=vm.runInNewContext('(function(){'+js.slice(from,to)+' return rowsFor;})()', {});
+ const example={
+   table:[{dme:2,altitudeFt:1600},{dme:10,altitudeFt:3400},
+          {dme:1,altitudeFt:1400},{dme:3,altitudeFt:1840},
+          {dme:0,altitudeFt:1180},{dme:4,altitudeFt:2060}],
+   vdp:{status:'CALCULATED_MDA_INTERCEPT_QA_ONLY',dmeNm:2.603,
+        dmeDisplay:'D2.6',published:false}
+ };
+ const result=Array.from(run(example),r=>[r.left,r.right]);
+ assert.deepEqual(result,[
+   ['10.0','3400'],['4.0','2060'],['3.0','1840'],['2.6','VDP']
+ ]);
+ assert.equal(result.at(-1)[1],'VDP');
+ const exact={...example,vdp:{...example.vdp,dmeNm:2,dmeDisplay:'D2.0'}};
+ assert.deepEqual(Array.from(run(exact),r=>r.left),['10.0','4.0','3.0','2.0']);
+ assert.equal(Array.from(run(exact)).at(-1).right,'VDP');
+ const absent={...example,vdp:null};
+ assert.deepEqual(Array.from(run(absent),r=>r.left),
+   ['10.0','4.0','3.0','2.0','1.0','0.0']);
+ const native=read('app/src/main/java/com/tareghmsr/jeppiran/CdfaQaDialog.kt');
+ assert.match(native,/indexOfFirst\s*\{\s*it\.isVdp\s*\}/);
+ assert.match(native,/descending\.take\(vdpIndex \+ 1\)/);
+});

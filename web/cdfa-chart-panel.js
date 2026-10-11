@@ -50,7 +50,10 @@
    const vdp=vdpInfo(record);
    if(vdp)rows.push({dme:vdp.dme,left:vdp.text,right:'VDP',vdp:true});
    rows.sort((a,b)=>b.dme-a.dme||(a.vdp?-1:1));
-   return rows;
+   // Owner-locked rule: the calculated VDP is the FINAL table row.
+   // No lower-DME altitude row (or any other row) may follow it.
+   const vdpPosition=rows.findIndex(row=>row.vdp);
+   return vdpPosition<0?rows:rows.slice(0,vdpPosition+1);
  }
  function render(){
    panel.replaceChildren();
