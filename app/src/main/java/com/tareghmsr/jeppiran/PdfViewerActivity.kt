@@ -257,6 +257,9 @@ private val locationPermissionLauncher =
         }
     }
 
+    private lateinit var cdfaIcon:
+        TextView
+
     private lateinit var metarIcon:
         TextView
 
@@ -1615,14 +1618,16 @@ private val locationPermissionLauncher =
             )
         )
 
-        // This visual release prepares CDFA artwork; chart-specific data follows.
-        actionRow.addView(
-            graphicToolbarButton(
-                ChartToolbarArtwork.Icon.CDFA,
-                "CDFA chart data is not available yet"
-            ).apply { isEnabled = false; alpha = 0.45f },
-            toolbarButtonParams(42.dp)
-        )
+        cdfaIcon = graphicToolbarButton(
+            ChartToolbarArtwork.Icon.CDFA,
+            "CDFA · simulator QA table"
+        ).apply {
+            setOnClickListener {
+                CdfaQaDialog.show(this@PdfViewerActivity, currentChartGlobalPage(), currentIcao)
+            }
+        }
+        actionRow.addView(cdfaIcon, toolbarButtonParams(42.dp))
+        refreshCdfaButton()
 
         actionRow.addView(
             graphicToolbarButton(ChartToolbarArtwork.Icon.TAXI, "TAXI · Open Taxi Mode").apply {
@@ -3024,6 +3029,8 @@ private val locationPermissionLauncher =
         chartTitle =
             chart.name
 
+        refreshCdfaButton()
+
 
         category =
             chart.category
@@ -3802,6 +3809,14 @@ private val locationPermissionLauncher =
         ).show()
     }
 
+
+    private fun refreshCdfaButton() {
+        if (!::cdfaIcon.isInitialized) return
+        val enabled = CdfaQaDialog.available(this, currentChartGlobalPage(), currentIcao)
+        cdfaIcon.isEnabled = enabled
+        cdfaIcon.alpha = if (enabled) 1f else 0.45f
+        cdfaIcon.contentDescription = if (enabled) "CDFA · simulator QA only" else "CDFA unavailable for this chart"
+    }
 
     private fun currentChartGlobalPage():
         Int {
