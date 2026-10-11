@@ -56,7 +56,8 @@ function parse(raw){
   const parts=s.replace(/[,→>]+/g," ").split(" ").filter(Boolean),stops=[],taxiways=[];
   // Explicit ST prefix distinguishes PARKING STAND D3 from TAXIWAY D3.
   // E.g. STD3 T5 N2 = Stand D3, then taxiways T5 and N2.
-  const leadingStand=parts.length>1?parts[0].match(/^ST([A-Z][0-9]{1,3}[A-Z]?)$/):null;
+  const leadingStand=parts.length>1?parts[0].match(
+    taxi.airport==="LTFM"?/^ST([A-Z]?\d{1,3}[LR]?)$/:/^ST([A-Z]\d{1,3}[A-Z]?)$/):null;
   const startStand=leadingStand?leadingStand[1]:null;
   if(startStand)parts.shift();
   let destination=null;
@@ -822,6 +823,24 @@ function go(options={}){
     return;
   }
   publisher?.clear();
+  // Any source-listed Istanbul parking stand (not just its OSM-mapped 601)
+  // can now be entered by ID, including ST100, STD3, STK50, ST601.
+  // Display official stand/taxiway names and QA reference positions.
+  const standOnly=taxi.airport==="LTFM"?
+    name(typed).match(/^(?:ST|STAND\s*)([A-Z]?\d{1,3}[LR]?)$/):null;
+  if(standOnly&&window.JEPPIRAN_LTFM_STANDS){
+    const airport=taxi.airport,id=standOnly[1];
+    taxi.route=null;taxi.auto=null;draw();
+    window.JEPPIRAN_LTFM_STANDS.viewStand(id).then(x=>{
+      if(taxi.airport!==airport)return;
+      if(!x){message("No chart-listed stand ST"+id+" in LTFM cycle 2621.",true);return}
+      message("ST"+id+" · published pushback taxiways: "+
+        (x.publishedPushbackTaxiways.join(" / ")||"not specified on 30-9J charts")+
+        " · "+(x.hasIndividualStandPosition?"individual printed label marker":"rounded INS GROUP only, not precise stand location")+
+        " · all projected connections require actual parking/pushback geometry verification.",true);
+    }).catch(e=>message("Stand registry unavailable: "+e.message,true));
+    return;
+  }
   if(taxi.airport==="OIMM"&&!taxi.graph){
     // An unavailable graph must never leave a previously drawn taxi route.
     taxi.route=null;draw();
