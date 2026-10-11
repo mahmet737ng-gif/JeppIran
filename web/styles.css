@@ -1024,12 +1024,12 @@ body:has(#homeView.active),body:has(#chartsView.active){background:#030c19}
 
 /* JEPPIRAN Web · aircraft marker concept #4: Dual Layer Ops. Visual only. */
 .aircraft-marker{
-  width:20px;height:20px;z-index:25;
+  width:14px;height:14px;z-index:25;
   --aircraft-heading:0deg;
   --marker-inverse-scale:1;
 }
 .aircraft-dual-arrow{
-  display:block;position:absolute;inset:0;width:20px;height:20px;
+  display:block;position:absolute;inset:0;width:14px;height:14px;
   overflow:visible;
   filter:drop-shadow(0 1px 1px rgba(0,0,0,.90)) drop-shadow(0 0 1.5px rgba(23,201,255,.48));
 }
@@ -1044,14 +1044,14 @@ body:has(#homeView.active),body:has(#chartsView.active){background:#030c19}
   stroke:#ffdafa;stroke-width:1.35;stroke-linecap:round;opacity:.8
 }
 .aircraft-marker .aircraft-pulse{
-  width:26px;height:26px;margin:-13px 0 0 -13px;
+  width:19px;height:19px;margin:-9.5px 0 0 -9.5px;
   background:rgba(244,33,162,.13);
   box-shadow:0 0 0 1px rgba(252,45,181,.50),0 0 7px rgba(240,47,162,.26);
   animation:aircraftPulse 1.55s ease-out infinite;
 }
 .aircraft-marker::before{
   content:"";position:absolute;left:50%;top:50%;
-  width:18px;height:18px;border-radius:50%;
+  width:13px;height:13px;border-radius:50%;
   transform:translate(-50%,-50%);
   border:1px solid rgba(79,223,255,.44);
   box-shadow:0 0 5px rgba(51,197,255,.3);

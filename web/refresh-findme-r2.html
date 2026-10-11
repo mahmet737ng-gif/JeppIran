@@ -1,0 +1,11 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta name="theme-color" content="#061a2c">
+<title>JEPPIRAN · Refresh Web App</title>
+<style>html,body{margin:0;min-height:100%;background:#071827;color:#daf4ff;font-family:system-ui,-apple-system,Segoe UI,sans-serif}main{max-width:490px;margin:18vh auto 0;padding:22px;text-align:center}h1{font-size:25px;letter-spacing:1.2px}h1 span{color:#ff38a5}p{line-height:1.6;color:#a8cada;font-size:14px}.status{padding:15px;border-radius:12px;border:1px solid #1f7297;background:#0e2c41;white-space:pre-wrap}a{display:inline-block;margin-top:22px;color:#69e4ff}</style></head>
+<body><main><h1>JEPP<span>IRAN</span></h1><p>Refreshing the Web/PWA shell. Saved offline airport PDF charts are preserved.</p><div class="status" id="status" role="status">Checking for an old app shell…</div><a href="./?findme_r2=20261011#charts">Open JEPPIRAN</a></main>
+<script>(async()=>{const out=document.getElementById("status"),scope=new URL("./",location.href).href;try{
+if("serviceWorker" in navigator){const regs=await navigator.serviceWorker.getRegistrations();for(const reg of regs){if(reg.scope===scope)await reg.unregister();}}
+if("caches" in window){const keys=await caches.keys();await Promise.all(keys.filter(k=>k.startsWith("jeppiran-pwa-")).map(k=>caches.delete(k)));}
+out.textContent="App shell refreshed. Opening JEPPIRAN…";location.replace(new URL("./?findme_r2=20261011#charts",location.href).href);
+}catch(e){out.textContent="Automatic refresh was blocked: "+(e?.message||e)+". Please use the link below to reopen the app."}})();</script></body></html>

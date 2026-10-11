@@ -1083,11 +1083,11 @@ function clampChartPan(){
   chartPanY=Math.max(-maxY,Math.min(80,chartPanY));
 }
 // The SVG was too large and its original inverse-scale kept it screen-fixed.
-// Scale below inversely to zoom^(1.65): the on-screen marker gets
-// continuously smaller up to 400%, with an 8px absolute visibility floor.
+// Precision marker. On-screen arrow shrinks monotonically with zoom;
+// retain a small 5.5px minimum at maximum zoom, not an oversize obstruction.
 function aircraftMarkerScaleForZoom(zoom){
   const z=Math.max(1,Number(zoom)||1);
-  return Math.max(8/(20*z),Math.pow(z,-1.65));
+  return Math.max(5.5/(14*z),Math.pow(z,-1.65));
 }
 function paintChartTransform(){
   const layer=$("#chartTransformLayer");
@@ -1884,7 +1884,7 @@ if(LOCAL_SIM_WEB){
 window.addEventListener("jeppiran-taxi-route-updated",()=>updateAircraftMarker());
 window.addEventListener("resize",()=>requestAnimationFrame(()=>{applyChartTransform();updateAircraftMarker()}));
 window.addEventListener("orientationchange",()=>setTimeout(()=>{window.dispatchEvent(new Event("resize"));refitSelectedChartForLayout()},180));
-if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")) navigator.serviceWorker.register("./service-worker.js").catch(()=>{});
+if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")) navigator.serviceWorker.register("./service-worker.js",{updateViaCache:"none"}).then(reg=>reg.update().catch(()=>{})).catch(()=>{});
 loadData();
 const start=(location.hash||"#home").slice(1); const initial=["home","charts","wx","simulator"].includes(start)?start:"home"; renderRoute(initial); if(!location.hash)history.replaceState({route:initial},"","#"+initial);
 
