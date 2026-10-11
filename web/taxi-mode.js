@@ -1320,9 +1320,8 @@ function draw(){
         if(!candidate.projectedPoint)continue;
         const to=projectGeo(model,candidate.projectedPoint.lat,candidate.projectedPoint.lon);
         if(!to)continue;
-        group.appendChild(s("line",{x1:center.x,y1:center.y,x2:to.x,y2:to.y,
-          stroke:candidate.chartNamedTaxiwayMatch?"#e07dff":"#46dffc",
-          "stroke-width":stroke,"stroke-dasharray":"4 5",opacity:".74"}));
+        // Deliberately do not draw a straight stand->nearest-taxiway
+        // line: that would visually invent a pushback/lead-out path.
         group.appendChild(s("circle",{cx:to.x,cy:to.y,r:stroke*2,fill:"none",
           stroke:candidate.chartNamedTaxiwayMatch?"#e07dff":"#46dffc",
           "stroke-width":stroke}));
@@ -1468,8 +1467,10 @@ function chartHint(){
 }
 function previewStandCandidate(id,entry){
   if(taxi.airport!=="LTFM"||!entry||!entry.position)return false;
-  taxi.standPreview={id,...entry};
-  taxi.standEgress=entry.egress||null;
+  // A 0.1-minute INS group is NOT the geographic position of its
+  // constituent stand. Never draw an individual stand marker from it.
+  taxi.standPreview=entry.hasIndividualStandPosition===true?{id,...entry}:null;
+  taxi.standEgress=entry.hasIndividualStandPosition===true?(entry.egress||null):null;
   draw();return true;
 }
 window.JEPPIRAN_TAXI={open:openTaxi,parse,openAdc,draw,routeDeviationMeters,previewStandCandidate};
