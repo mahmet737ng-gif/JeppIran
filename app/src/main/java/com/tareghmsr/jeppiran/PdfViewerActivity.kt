@@ -2359,6 +2359,10 @@ private val locationPermissionLauncher =
 
     private fun prepareNativeTaxiPreview(rawRoute: String) {
         if (currentIcao != "OIMM") return
+        if (repository.getDataVersion() != "V2621") {
+            taxiRouteBanner?.text = "OIMM AUTO · New chart cycle requires a matching reviewed ground graph."
+            return
+        }
         val raw = rawRoute.uppercase(Locale.US).replace(Regex("\\s+"), " ").trim()
         val withStand = Regex("^(ST\\d{3})\\s+((?:RWY\\s*)?\\d{2}[LRC]?)$")
             .matchEntire(raw)
@@ -2398,9 +2402,27 @@ private val locationPermissionLauncher =
     private fun updateNativeTaxiRoute(force: Boolean = false) {
         val router = nativeTaxiRouter ?: return
         val goal = nativeTaxiDestination ?: return
+        if (repository.getDataVersion() != "V2621") {
+            nativeTaxiPlan = null
+            taxiRouteBanner?.text = "OIMM AUTO · Chart cycle changed; route cancelled until graph review."
+            return
+        }
         if (!::chartView.isInitialized) return
         val position = nativeTaxiPosition()
         val start = nativeTaxiStartStand
+        if (start == null && position != null && !force) {
+            // Simulator airspeed and poor GPS are not reliable taxi origins.
+            val sound = if (AircraftPositionStore.usesSimulator(this)) {
+                (SimulatorLocationStore.getPosition()?.groundSpeedMps ?: 0.0) <= 23.0
+            } else {
+                val fix = lastGpsLocation
+                fix != null && fix.accuracy <= 35f && fix.speed <= 23f
+            }
+            if (!sound) {
+                nativeTaxiOffRouteFixes = 0
+                return
+            }
+        }
         if (start == null && position == null) {
             if (nativeTaxiPlan == null)
                 taxiRouteBanner?.text = "OIMM AUTO · Waiting for a current ground position (SIM or GPS)."
@@ -8398,6 +8420,9 @@ private val locationPermissionLauncher =
             val plan = nativeTaxiPlan ?: return
             if (currentIcao != "OIMM" || plan.nodes.size < 2) return
             val page = currentChartGlobalPage()
+            // The same geographic area appears in approach plates; never
+            // draw a surface taxi suggestion across unrelated charts.
+            if (page != 601 && page != 603) return
             if (taxiOverlayImage !== image || taxiOverlayPlan !== plan || taxiOverlayPage != page) {
                 taxiOverlayImage = image
                 taxiOverlayPlan = plan
