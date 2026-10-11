@@ -50,9 +50,14 @@ function install(){
  const finder=document.createElement("input");finder.type="search";finder.placeholder="Find stand D3, 601, K50…";
  finder.style.cssText="display:block;width:100%;box-sizing:border-box;margin:7px 0;padding:7px;color:inherit;background:rgba(12,25,38,.8);border:1px solid #58687c;border-radius:6px";
  const list=document.createElement("select");list.size=5;list.style.cssText="display:block;width:100%;min-height:95px;color:inherit;background:#132536;border:1px solid #58687c;border-radius:6px";
+ const pathSelect=document.createElement("select");
+ pathSelect.id="taxiStandSourceRouteChoice";
+ pathSelect.style.cssText="display:block;width:100%;min-height:32px;margin-top:7px;color:#f3d9ed;background:#21152c;border:1px solid #954f80;border-radius:6px";
+ pathSelect.setAttribute("aria-label","Choose source-mapped stand exit route to published taxiway");
  const details=text("div","Select a stand to inspect candidate taxiways.",wrapper);
  details.style.cssText="white-space:pre-line;font-size:11px;line-height:1.5;padding-top:7px";
  wrapper.insertBefore(finder,details);wrapper.insertBefore(list,details);
+ wrapper.insertBefore(pathSelect,details);
  panel.appendChild(wrapper);container=wrapper;
  getData().then(data=>{
   if(!wrapper.isConnected)return;
@@ -83,6 +88,19 @@ function install(){
    const leadPaths=(entry.lead?.sourceParkingLeadVariants||[])
      .filter(x=>x.geometryContinuous);
    const fullPaths=entry.egressPaths?.physicalMappedSourcePaths||[];
+   pathSelect.replaceChildren();
+   const please=document.createElement("option");please.value="";
+   please.textContent="Choose mapped stand exit to published taxiway";pathSelect.appendChild(please);
+   fullPaths.forEach((route,index)=>{
+     const opt=document.createElement("option");opt.value=String(index);
+     opt.textContent="ST"+id+" → "+route.publishedTargetTaxiway+" · "+route.totalSourceGeometryLengthMetres+" m (OSM QA)";
+     pathSelect.appendChild(opt);
+   });
+   pathSelect.onchange=()=>{
+     const ix=Number(pathSelect.value);
+     if(!pathSelect.value||!Number.isInteger(ix)||!fullPaths[ix])return;
+     root.JEPPIRAN_TAXI?.previewStandSourceRoute?.(id,entry,fullPaths[ix]);
+   };
    const available=fullPaths.map((x,i)=>
      ({idx:i,name:x.publishedTargetTaxiway,osmWay:x.parkingWay,
        distance:x.totalSourceGeometryLengthMetres}));
@@ -113,6 +131,9 @@ async function viewStand(id){
   const data=await getData(),entry=data.stands[id];
   if(!entry)return null;
   install();
+  // install() fills the controls on a settled promise microtask; allow it to
+  // complete before assigning select.value so direct STxxx search works.
+  await Promise.resolve();
   if(container){
     const search=container.querySelector('input[type="search"]');
     const list=container.querySelector("select");
@@ -125,7 +146,26 @@ async function viewStand(id){
   }
   return entry;
 }
-root.JEPPIRAN_LTFM_STANDS={getData,viewStand};
+async function previewNamedSourceRoute(id,target){
+  const data=await getData(),name=String(id||"").replace(/^(ST|STAND\s*)/i,"").toUpperCase(),
+    goal=String(target||"").trim().toUpperCase(),entry=data.stands[name];
+  if(!entry)return {error:"Stand "+name+" is not listed in the chart-indexed airport data."};
+  await viewStand(name);
+  const options=(entry.egressPaths?.physicalMappedSourcePaths||[])
+    .filter(x=>x.publishedTargetTaxiway===goal);
+  if(!options.length)return {error:"No source-continuous OSM stand exit to TWY "+goal+
+    " from ST"+name+"; no shortcut or simulated straight connector is permitted."};
+  if(options.length!==1)return {error:"Multiple source stand exits to "+goal+
+    " from ST"+name+" ("+options.length+"). Choose a specific geometry in STAND ROUTES; none selected automatically."};
+  root.JEPPIRAN_TAXI?.previewStandSourceRoute?.(name,entry,options[0]);
+  const sourceOptions=container?.querySelector("#taxiStandSourceRouteChoice");
+  if(sourceOptions){
+    const index=(entry.egressPaths?.physicalMappedSourcePaths||[]).indexOf(options[0]);
+    sourceOptions.value=String(index);
+  }
+  return {route:options[0],name};
+}
+root.JEPPIRAN_LTFM_STANDS={getData,viewStand,previewNamedSourceRoute};
 function refresh(){
  const icao=typeof selectedAirport==="string"?selectedAirport:"";
  if(icao==="LTFM"){install();if(container)container.hidden=false}
