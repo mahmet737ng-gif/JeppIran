@@ -734,6 +734,7 @@ function buildGeorefIndex(root){
 }
 function hideAircraftMarker(){
   const m=$("#aircraftMarker"); if(m)m.classList.remove("visible");
+  updateAircraftFollowControl();
 }
 function renderedGeoHeading(model,lat,heading,canvas){
   if(!Number.isFinite(heading))return 0;
