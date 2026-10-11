@@ -1274,3 +1274,9 @@ body.viewer-fullscreen .aircraft-follow-btn{
 @media(max-width:680px) {
   #chartsView #taxiQaPanel .taxi-route-preview svg {max-height:142px}
 }
+
+/* Thin Taxi Path V2621: preserve printed markings through the QA overlay. */
+.taxi-route-line{filter:none;animation:jeppiranTaxiFlow 7s linear infinite}
+.taxi-route-chevron{filter:none;opacity:.64}
+.taxi-audit-highlight{filter:none}
+@media(prefers-reduced-motion:reduce){.taxi-route-line{animation:none!important}}
