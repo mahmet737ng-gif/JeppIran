@@ -662,7 +662,7 @@ function nearest(graph,pos,firstTaxiway=null){
 }
 function syncAirport(){
   if(!taxi.active||taxi.airport===selectedAirport)return;
-  taxi.airport=selectedAirport;taxi.graph=null;taxi.route=null;taxi.auto=null;taxi.standPreview=null;taxi.standEgress=null;taxi.testStart=null;taxi.prompted="";
+  taxi.airport=selectedAirport;taxi.graph=null;taxi.route=null;taxi.auto=null;taxi.standPreview=null;taxi.standEgress=null;taxi.standLead=null;taxi.testStart=null;taxi.prompted="";
   taxi.networkAudit=null;taxi.highlightTaxiway="";
   $("taxiQaAirport").textContent=selectedAirport;
   updateAirportControls();
@@ -837,7 +837,7 @@ function go(options={}){
   const publisher=window.JEPPIRAN_PUBLISHED_TAXI;
   const typed=$("taxiQaInput")?.value||"";
   if(publisher?.recognize(typed,taxi.airport)){
-    taxi.route=null;taxi.auto=null;taxi.standPreview=null;taxi.standEgress=null;draw();
+    taxi.route=null;taxi.auto=null;taxi.standPreview=null;taxi.standEgress=null;taxi.standLead=null;draw();
     publisher.go(typed,taxi.airport);
     return;
   }
@@ -876,7 +876,7 @@ function go(options={}){
     });
     return;
   }
-  taxi.standPreview=null;taxi.standEgress=null;
+  taxi.standPreview=null;taxi.standEgress=null;taxi.standLead=null;
   const p=parse($("taxiQaInput").value);
   if(p.error){message(p.error,true);return}
   taxi.trace=false;$("taxiQaTrace").classList.remove("on");
@@ -1335,6 +1335,28 @@ function draw(){
       svg.appendChild(group);
     }
   }
+  // Native OSM parking-position ways are REAL mapped parking centerline
+  // curves. Only draw source vertices and a taxi graph join with IDENTICAL OSM
+  // node ID; no proximity snap or stand-label interpolation is allowed.
+  const lead=taxi.standLead;
+  if(lead&&taxi.airport==="LTFM"&&selectedAirport==="LTFM"&&model&&isAdc(selectedChart)){
+    const stroke=Math.max(1.8,w*.0034);
+    const all=(lead.sourceParkingLeadVariants||[]).filter(v=>v.geometryContinuous);
+    for(const variant of all){
+      const points=(variant.geometry||[]).map(pos=>projectGeo(model,pos[1],pos[0])).filter(Boolean);
+      if(points.length!==(variant.geometry||[]).length||points.length<2)continue;
+      const originalPath=points.map((p,i)=>(i?"L ":"M ")+p.x+" "+p.y).join(" ");
+      svg.appendChild(s("path",{d:originalPath,fill:"none",stroke:"rgba(255,36,185,.93)",
+        "stroke-width":all.length===1?stroke:stroke*.6,
+        "stroke-linejoin":"round","stroke-linecap":"round",
+        "class":"taxi-exact-osm-parking-centerline"}));
+      const nose=points[0],junction=points.at(-1);
+      svg.appendChild(s("circle",{cx:nose.x,cy:nose.y,r:stroke*2.4,
+        fill:"rgba(255,255,255,.85)",stroke:"#f024b9","stroke-width":stroke*.7}));
+      svg.appendChild(s("circle",{cx:junction.x,cy:junction.y,r:stroke*2.2,
+        fill:"#54eeae",stroke:"#153449","stroke-width":stroke*.85}));
+    }
+  }
   // These magenta lines are exact ORIGINAL WGS84 OSM taxiway edge segments
   // corroborated by published Jeppesen pushback taxiway NAMES. They are not
   // stand exit / pushback paths: the stand-to-graph gap remains DISCONNECTED.
@@ -1469,8 +1491,15 @@ function previewStandCandidate(id,entry){
   if(taxi.airport!=="LTFM"||!entry||!entry.position)return false;
   // A 0.1-minute INS group is NOT the geographic position of its
   // constituent stand. Never draw an individual stand marker from it.
-  taxi.standPreview=entry.hasIndividualStandPosition===true?{id,...entry}:null;
+  const real=(entry.lead?.sourceParkingLeadVariants||[]).filter(v=>v.geometryContinuous);
+  // An actual OSM parking-position way supplies an individual stand endpoint
+  // even when the only Jeppesen INS reference is a shared rounded group.
+  const sourceNose=real.length===1?real[0].standEndpoint:null;
+  const pinned=sourceNose?{lat:sourceNose[1],lon:sourceNose[0]}:
+    entry.hasIndividualStandPosition===true?entry.position:null;
+  taxi.standPreview=pinned?{id,...entry,position:pinned}:null;
   taxi.standEgress=entry.hasIndividualStandPosition===true?(entry.egress||null):null;
+  taxi.standLead=entry.lead||null;
   if(!isAdc(selectedChart))openAdc();
   draw();return true;
 }
