@@ -19,7 +19,7 @@
   "qaOnly": true,
   "notForActualNavigation": true,
   "runwayAccessApproved": false,
-  "routePattern": "ST{1..6} A B",
+  "routePattern": "ST{1..6} A {B|C|D}",
   "vector": {
     "primitives": {
       "64": [
@@ -59,6 +59,27 @@
           [
             144.075,
             356.798
+          ]
+        ]
+      ],
+      "66": [
+        [
+          "c",
+          [
+            173.662,
+            377.092
+          ],
+          [
+            177.908,
+            379.635
+          ],
+          [
+            182.438,
+            381.652
+          ],
+          [
+            187.148,
+            383.092
           ]
         ]
       ],
@@ -515,6 +536,40 @@
           ]
         ]
       ],
+      "94": [
+        [
+          "l",
+          [
+            201,
+            384.96
+          ],
+          [
+            208.92,
+            386.28
+          ]
+        ]
+      ],
+      "95": [
+        [
+          "c",
+          [
+            187.32,
+            383.4
+          ],
+          [
+            191.79,
+            384.067
+          ],
+          [
+            196.275,
+            384.69
+          ],
+          [
+            200.76,
+            385.275
+          ]
+        ]
+      ],
       "200": [
         [
           "l",
@@ -585,7 +640,33 @@
       "Stand 4 joins graphic trunk after 1.61pt raster/chart-artwork snapping; not surveyed",
       "Short chart A title hides a segment of the same printed centerline",
       "No taxi distances in metres are calculated from inset PDF points",
-      "Taxiway B trace ends before any surveyed holding point or runway access"
-    ]
+      "Taxiway B trace ends before any surveyed holding point or runway access",
+      "C and D are originally drawn taxiways but no surveyed runway-entry or hold-short line has been recorded."
+    ],
+    "taxiwayBranches": {
+      "B": {
+        "pathIds": [
+          "92"
+        ],
+        "joinStrategy": "SPINE_START_TO_UPPER_B_ENDPOINT",
+        "holdVerified": false
+      },
+      "C": {
+        "pathIds": [
+          "66",
+          "95",
+          "94"
+        ],
+        "joinStrategy": "SOURCE_CURVE_INTERSECTS_A",
+        "holdVerified": false
+      },
+      "D": {
+        "pathIds": [
+          "69"
+        ],
+        "joinStrategy": "SOURCE_CURVE_INTERSECTS_A",
+        "holdVerified": false
+      }
+    }
   }
 }
