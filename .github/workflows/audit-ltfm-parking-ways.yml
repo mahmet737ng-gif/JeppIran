@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - scripts/fetch_ltfm_osm_parking_leads.py
+      - scripts/build_ltfm_stand_lead_geometries.cjs
       - .github/workflows/audit-ltfm-parking-ways.yml
 permissions:
   contents: write
@@ -21,6 +22,9 @@ jobs:
       - name: Retrieve parking-position ways AND nodes from public OSM
         run: |
           python scripts/fetch_ltfm_osm_parking_leads.py web/data/taxi-networks/LTFM.json web/data/taxi-stand-registry/LTFM.json web/data/taxi-parking-ways/LTFM.json
+      - name: Create physically connected stand source lines from exact OSM node IDs
+        run: |
+          node scripts/build_ltfm_stand_lead_geometries.cjs
       - name: Reject interpolated or falsely approved parking paths
         run: |
           python - <<'PY'
@@ -33,7 +37,18 @@ jobs:
                   assert not w['routingApproved'] and not w['pushbackGeometryJeppesenVerified']
                   assert bool(w['sharedTaxiGraphNodes'])==w['exactGraphNodeJoin']
                   assert len(w['geometry'])==len(w['osmNodes'])
-          print('Verified source OSM parking ways:',p['stats'])
+          q=json.load(open('web/data/taxi-stand-leads/LTFM.json'))
+          assert q['stats']['exactJoinedStandIdentifiers']>=350
+          assert q['stats']['allRegisteredStandIdentifiers']==379
+          assert q['stats']['standsWithSingleConnectedSourceVariant']>=215
+          assert q['stats']['JeppesenApprovedPushbackRoutes']==0
+          for stand in q['stands'].values():
+              assert not stand['routingApproved']
+              for v in stand['sourceParkingLeadVariants']:
+                  assert not v['routingApproved']
+                  if v.get('geometryContinuous'):
+                      assert v['sourceNodeIds'][-1]==v['exactTaxiGraphJoinNode']
+          print('Verified source OSM parking ways:',p['stats'],'centerlines:',q['stats'])
           PY
       - name: Publish only official OSM original parking way coordinates
         run: |
@@ -41,12 +56,14 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           cp web/data/taxi-parking-ways/LTFM.json /tmp/ltfm-parking-ways.json
+          cp web/data/taxi-stand-leads/LTFM.json /tmp/ltfm-stand-leads.json
           for attempt in 1 2 3 4 5 6; do
             git fetch origin main
             git reset --hard origin/main
-            mkdir -p web/data/taxi-parking-ways
+            mkdir -p web/data/taxi-parking-ways web/data/taxi-stand-leads
             cp /tmp/ltfm-parking-ways.json web/data/taxi-parking-ways/LTFM.json
-            git add web/data/taxi-parking-ways/LTFM.json
+            cp /tmp/ltfm-stand-leads.json web/data/taxi-stand-leads/LTFM.json
+            git add web/data/taxi-parking-ways/LTFM.json web/data/taxi-stand-leads/LTFM.json
             git diff --cached --quiet && exit 0
             git commit -m 'data(taxi): audit real OSM parking-position ways and exact topology joins [skip ci]'
             if git push origin HEAD:main; then exit 0; fi
