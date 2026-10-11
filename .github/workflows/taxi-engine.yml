@@ -1,0 +1,69 @@
+name: Universal Taxi Engine QA
+on:
+  pull_request:
+    paths:
+      - 'web/taxi-engine.js'
+      - 'web/taxi-mode.js'
+      - 'web/index.html'
+      - 'web/service-worker.js'
+      - 'web/data/taxi-networks/**'
+      - 'scripts/taxi-engine/**'
+      - 'tests/taxi-engine.test.cjs'
+      - 'tests/taxi-engine-web.test.cjs'
+      - 'tests/fixtures/taxi-engine/**'
+      - '.github/workflows/taxi-engine.yml'
+  push:
+    branches: [main]
+    paths:
+      - 'web/taxi-engine.js'
+      - 'web/taxi-mode.js'
+      - 'web/data/taxi-networks/**'
+      - 'scripts/taxi-engine/**'
+      - 'tests/taxi-engine.test.cjs'
+      - 'tests/taxi-engine-web.test.cjs'
+      - '.github/workflows/taxi-engine.yml'
+permissions:
+  contents: read
+jobs:
+  universal-taxi:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Source syntax
+        run: |
+          node --check web/taxi-engine.js
+          node --check web/taxi-mode.js
+          node --check scripts/taxi-engine/new-airport.cjs
+          node --check scripts/taxi-engine/validate.cjs
+          node --check tests/taxi-engine.test.cjs
+          node --check tests/taxi-engine-web.test.cjs
+      - name: Airport-neutral graph, runway gating and source provenance QA
+        run: |
+          node tests/taxi-engine.test.cjs
+          node tests/taxi-engine-web.test.cjs
+      - name: Preserve existing OIMM route regression
+        run: |
+          node tests/oimm-taxi.test.cjs
+          node tests/oimm-taxi-auto.test.cjs
+          node tests/oimm-runway-render.test.cjs
+          node tests/oimm-runway-access.test.cjs
+      - name: Fail closed on any new airport graph not source-reviewable
+        run: |
+          node - <<'NODE'
+          const fs=require('fs'),path=require('path');
+          const E=require('./web/taxi-engine.js');
+          for(const name of fs.readdirSync('web/data/taxi-networks')){
+            if(!name.endsWith('.json'))continue;
+            const g=JSON.parse(fs.readFileSync(path.join('web/data/taxi-networks',name)));
+            if(g.engineVersion!==1)continue;
+            const result=E.validate(g);
+            if(g.enabled===true&&(!result.ok||g.source?.reviewStatus!=='SIM_QA_REVIEWED')){
+              throw Error(name+': enabled network without valid source/topology: '+result.errors.join('; '));
+            }
+            console.log(name, g.enabled?'ACTIVE REVIEWED':'INACTIVE / REQUIRES REVIEW');
+          }
+          NODE

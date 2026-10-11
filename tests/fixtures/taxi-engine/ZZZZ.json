@@ -1,0 +1,325 @@
+{
+  "engineVersion": 1,
+  "airport": "ZZZZ",
+  "cycle": "2621",
+  "simulatorTestOnly": true,
+  "verified": false,
+  "coordinateSystem": "WGS84",
+  "source": {
+    "provider": "JEPPIRAN test fixture",
+    "document": "SYNTHETIC — NOT A REAL AIRPORT",
+    "page": "TEST-1"
+  },
+  "nodes": {
+    "S101": {
+      "lat": 36,
+      "lon": 59
+    },
+    "R0": {
+      "lat": 36,
+      "lon": 59.0001
+    },
+    "J0": {
+      "lat": 36,
+      "lon": 59.0002
+    },
+    "J1": {
+      "lat": 36,
+      "lon": 59.0003
+    },
+    "RW0": {
+      "lat": 36,
+      "lon": 59.0004
+    },
+    "RW1": {
+      "lat": 36,
+      "lon": 59.0005
+    },
+    "RW2": {
+      "lat": 36,
+      "lon": 59.0006
+    },
+    "H0": {
+      "lat": 36,
+      "lon": 59.0007
+    },
+    "H1": {
+      "lat": 36,
+      "lon": 59.0008
+    },
+    "ST109": {
+      "lat": 36.0001,
+      "lon": 59.0008
+    },
+    "B0": {
+      "lat": 36.0009,
+      "lon": 59.0003
+    },
+    "B1": {
+      "lat": 36.0009,
+      "lon": 59.0007
+    }
+  },
+  "edges": [
+    {
+      "from": "S101",
+      "to": "R0",
+      "label": "STAND",
+      "kind": "stand",
+      "quality": "mapped",
+      "source": {
+        "provider": "Synthetic",
+        "document": "TEST-1",
+        "feature": "S101-R0"
+      }
+    },
+    {
+      "from": "R0",
+      "to": "J0",
+      "label": "APRON",
+      "kind": "apron",
+      "quality": "mapped",
+      "source": {
+        "provider": "Synthetic",
+        "document": "TEST-1",
+        "feature": "R0-J0"
+      }
+    },
+    {
+      "from": "J0",
+      "to": "J1",
+      "label": "J",
+      "kind": "taxiway",
+      "quality": "mapped",
+      "source": {
+        "provider": "Synthetic",
+        "document": "TEST-1",
+        "feature": "J0-J1"
+      }
+    },
+    {
+      "from": "J1",
+      "to": "RW0",
+      "label": "BT13R",
+      "kind": "runway",
+      "quality": "projected",
+      "source": {
+        "provider": "Synthetic",
+        "document": "TEST-1",
+        "feature": "J1-RW0"
+      },
+      "physicalRunway": "13R/31L"
+    },
+    {
+      "from": "RW0",
+      "to": "RW1",
+      "label": "BT13R",
+      "kind": "runway",
+      "quality": "mapped",
+      "source": {
+        "provider": "Synthetic",
+        "document": "TEST-1",
+        "feature": "RW0-RW1"
+      },
+      "physicalRunway": "13R/31L",
+      "geometry": [
+        {
+          "lat": 36,
+          "lon": 59.0004
+        },
+        {
+          "lat": 36.00002,
+          "lon": 59.00045
+        },
+        {
+          "lat": 36,
+          "lon": 59.0005
+        }
+      ]
+    },
+    {
+      "from": "RW1",
+      "to": "RW2",
+      "label": "BT13R",
+      "kind": "runway",
+      "quality": "mapped",
+      "source": {
+        "provider": "Synthetic",
+        "document": "TEST-1",
+        "feature": "RW1-RW2"
+      },
+      "physicalRunway": "13R/31L",
+      "bidirectional": false
+    },
+    {
+      "from": "RW2",
+      "to": "H0",
+      "label": "BT13R",
+      "kind": "runway",
+      "quality": "projected",
+      "source": {
+        "provider": "Synthetic",
+        "document": "TEST-1",
+        "feature": "RW2-H0"
+      },
+      "physicalRunway": "13R/31L"
+    },
+    {
+      "from": "H0",
+      "to": "H1",
+      "label": "H",
+      "kind": "taxiway",
+      "quality": "mapped",
+      "source": {
+        "provider": "Synthetic",
+        "document": "TEST-1",
+        "feature": "H0-H1"
+      }
+    },
+    {
+      "from": "H1",
+      "to": "ST109",
+      "label": "STAND",
+      "kind": "stand",
+      "quality": "mapped",
+      "source": {
+        "provider": "Synthetic",
+        "document": "TEST-1",
+        "feature": "H1-ST109"
+      }
+    },
+    {
+      "from": "J1",
+      "to": "B0",
+      "label": "B",
+      "kind": "taxiway",
+      "quality": "mapped",
+      "source": {
+        "provider": "Synthetic",
+        "document": "TEST-1",
+        "feature": "J1-B0"
+      }
+    },
+    {
+      "from": "B0",
+      "to": "B1",
+      "label": "B",
+      "kind": "taxiway",
+      "quality": "mapped",
+      "source": {
+        "provider": "Synthetic",
+        "document": "TEST-1",
+        "feature": "B0-B1"
+      }
+    },
+    {
+      "from": "B1",
+      "to": "H0",
+      "label": "B",
+      "kind": "taxiway",
+      "quality": "mapped",
+      "source": {
+        "provider": "Synthetic",
+        "document": "TEST-1",
+        "feature": "B1-H0"
+      }
+    }
+  ],
+  "stands": {
+    "101": {
+      "node": "S101"
+    },
+    "109": {
+      "node": "ST109"
+    }
+  },
+  "taxiways": {
+    "J": {
+      "terminalNode": "J1"
+    },
+    "H": {
+      "terminalNode": "H1"
+    },
+    "B": {
+      "terminalNode": "H0"
+    }
+  },
+  "runways": {
+    "13R": {
+      "physicalId": "13R/31L",
+      "goalNode": "J1",
+      "goalKind": "hold",
+      "axis": [
+        {
+          "lat": 36,
+          "lon": 59.0004
+        },
+        {
+          "lat": 36,
+          "lon": 59.0006
+        }
+      ],
+      "axisSource": {
+        "provider": "Synthetic",
+        "document": "TEST-1"
+      }
+    },
+    "31L": {
+      "physicalId": "13R/31L",
+      "goalNode": "J1",
+      "goalKind": "hold",
+      "axis": [
+        {
+          "lat": 36,
+          "lon": 59.0006
+        },
+        {
+          "lat": 36,
+          "lon": 59.0004
+        }
+      ],
+      "axisSource": {
+        "provider": "Synthetic",
+        "document": "TEST-1"
+      }
+    },
+    "13L": {
+      "physicalId": "13L/31R",
+      "goalNode": "H1",
+      "goalKind": "access-qa",
+      "axis": [
+        {
+          "lat": 36.001,
+          "lon": 59.0004
+        },
+        {
+          "lat": 36.001,
+          "lon": 59.0006
+        }
+      ],
+      "axisSource": {
+        "provider": "Synthetic",
+        "document": "TEST-1"
+      }
+    },
+    "31R": {
+      "physicalId": "13L/31R",
+      "goalNode": null,
+      "goalKind": null,
+      "axis": [
+        {
+          "lat": 36.001,
+          "lon": 59.0006
+        },
+        {
+          "lat": 36.001,
+          "lon": 59.0004
+        }
+      ],
+      "axisSource": {
+        "provider": "Synthetic",
+        "document": "TEST-1"
+      }
+    }
+  }
+}
