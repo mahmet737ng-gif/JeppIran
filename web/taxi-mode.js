@@ -359,7 +359,7 @@ function view(){
   const panel=document.createElement("section");
   panel.id="taxiQaPanel";panel.className="taxi-qa-panel";panel.hidden=true;
   panel.innerHTML='<div class="taxi-qa-title"><strong>TAXI <small>QA TEST</small></strong>'+
-    '<span id="taxiQaAirport"></span><span class="taxi-qa-build">R6</span><button id="taxiQaToolsBtn" type="button" aria-expanded="false" aria-controls="taxiQaButtons">TOOLS ▾</button>'+
+    '<span id="taxiQaAirport"></span><span class="taxi-qa-build">R7</span><button id="taxiQaToolsBtn" type="button" aria-expanded="false" aria-controls="taxiQaButtons">TOOLS ▾</button>'+
     '<button id="taxiQaClose" type="button" aria-label="Close taxi panel">×</button></div>'+
     '<label for="taxiQaInput">Stand STD3 T5 N2 · Hold /N2 · Procedure 34L2A</label>'+
     '<div class="taxi-qa-entry"><input id="taxiQaInput" autocomplete="off" spellcheck="false" placeholder="Stand / taxiways / procedure"><button id="taxiQaGo" type="button">GO</button></div>'+
@@ -871,7 +871,9 @@ function renderRoutePreview(){
   };
   const pts=nodes.map(toScreen);
   const root=s("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
-    "aria-label":"Local OSM network context with a highlighted taxiway path; NOT georeferenced to airport chart"});
+    "aria-label":r.airport==="OIMM"?
+      "Local chart-derived taxiway network with highlighted route; not the printed ADC":
+      "Local OSM network context with a highlighted taxiway path; NOT georeferenced to airport chart"});
   // Only render nearby segments; preserve any disconnected/unnamed gaps as
   // actual gaps. Never snap named lines or stand coordinates to one another.
   const background=s("g",{"aria-hidden":"true"});
@@ -911,7 +913,8 @@ function renderRoutePreview(){
   note(firstName+" · QA START",pts[0],9,14,"#79efff");
   note(lastName+" · END",end,9,-9,"#fff7fd");
   note("N ↑",{x:W-24,y:14},0,0,"#b7d8e9");
-  note("OSM CONTEXT · NOT ADC",{x:9,y:H-8},0,0,"#a8bbc9");
+  note(r.airport==="OIMM"?"CHART-DERIVED · NOT ADC":"OSM CONTEXT · NOT ADC",
+    {x:9,y:H-8},0,0,"#a8bbc9");
   const caption=document.createElement("strong");
   const waypointText=r.taxiways?.join(" → ")||"MAPPED QA SECTION";
   caption.textContent=r.startStand&&r.standLinkVerified===false?
