@@ -1220,7 +1220,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "13-3",
-    "name": "CHART PAGE 107",
+    "name": "VOR A (Circling Approach)",
     "pdf_page": 11
   },
   {
@@ -1229,7 +1229,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "13-4",
-    "name": "CHART PAGE 108",
+    "name": "VOR B (Circling Approach)",
     "pdf_page": 12
   },
   {
@@ -1238,7 +1238,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "13-5",
-    "name": "CHART PAGE 109",
+    "name": "VOR C (Circling Approach)",
     "pdf_page": 13
   },
   {
@@ -2489,7 +2489,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "13-8",
-    "name": "CHART PAGE 182",
+    "name": "VOR DME 1, 2 & 3 Rwy 25R",
     "pdf_page": 33
   },
   {
@@ -2507,7 +2507,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "13-10",
-    "name": "CHART PAGE 184",
+    "name": "CIRCLING VOR (CAT A & B)",
     "pdf_page": 35
   },
   {
@@ -2984,7 +2984,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "16-1",
-    "name": "CHART PAGE 216",
+    "name": "NDB Z Rwy 09 (CAT A & B)",
     "pdf_page": 28
   },
   {
@@ -2993,7 +2993,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "16-2",
-    "name": "CHART PAGE 217",
+    "name": "NDB Y Rwy 09 (CAT C & D)",
     "pdf_page": 29
   },
   {
@@ -3002,7 +3002,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "16-3",
-    "name": "CHART PAGE 218",
+    "name": "NDB Z Rwy 27 (CAT A & B)",
     "pdf_page": 30
   },
   {
@@ -3011,7 +3011,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "16-4",
-    "name": "CHART PAGE 219",
+    "name": "NDB Y Rwy 27 (CAT C & D)",
     "pdf_page": 31
   },
   {
@@ -3110,7 +3110,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "16-1",
-    "name": "CHART PAGE 230",
+    "name": "NDB DME Rwy 10",
     "pdf_page": 11
   },
   {
@@ -3956,7 +3956,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "13-3",
-    "name": "CHART PAGE 314",
+    "name": "VOR A (Circling Approach)",
     "pdf_page": 47
   },
   {
@@ -5522,7 +5522,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "16-3",
-    "name": "CHART PAGE 403",
+    "name": "NDB A (Circling Approach)",
     "pdf_page": 43
   },
   {
@@ -5612,7 +5612,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "13-1",
-    "name": "CHART PAGE 413",
+    "name": "CIRCLING VOR DME (CAT C)",
     "pdf_page": 10
   },
   {
@@ -5621,7 +5621,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "13-2",
-    "name": "CHART PAGE 414",
+    "name": "CIRCLING VOR DME (CAT A & B)",
     "pdf_page": 11
   },
   {
@@ -5630,7 +5630,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "16-1",
-    "name": "CHART PAGE 415",
+    "name": "CIRCLING NDB (CAT C)",
     "pdf_page": 12
   },
   {
@@ -5639,7 +5639,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "16-2",
-    "name": "CHART PAGE 416",
+    "name": "CIRCLING NDB (CAT A & B)",
     "pdf_page": 13
   },
   {
@@ -6242,7 +6242,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "11-1",
-    "name": "CHART PAGE 448",
+    "name": "ILS or LOC Rwy 16",
     "pdf_page": 9
   },
   {
@@ -6827,7 +6827,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "13-3",
-    "name": "CHART PAGE 491",
+    "name": "VOR A (Circling Approach)",
     "pdf_page": 42
   },
   {
@@ -7241,7 +7241,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "16-3",
-    "name": "CHART PAGE 521",
+    "name": "NDB A (Circling Approach)",
     "pdf_page": 28
   },
   {
@@ -7943,7 +7943,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "11-1",
-    "name": "CHART PAGE 578",
+    "name": "ILS or LOC Rwy 31",
     "pdf_page": 18
   },
   {
@@ -7997,7 +7997,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "13-6",
-    "name": "CHART PAGE 584",
+    "name": "VOR A (CAT A & B, Circling Approach)",
     "pdf_page": 24
   },
   {
@@ -8006,7 +8006,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "13-7",
-    "name": "CHART PAGE 585",
+    "name": "VOR B (Circling Approach)",
     "pdf_page": 25
   },
   {
@@ -8519,7 +8519,7 @@
     "country": "Iran",
     "category": "Approach",
     "chart_number": "16-1",
-    "name": "CHART PAGE 632",
+    "name": "NDB A (Circling Approach)",
     "pdf_page": 32
   },
   {
@@ -9518,7 +9518,7 @@
     "country": "Oman",
     "category": "Approach",
     "chart_number": "11-5",
-    "name": "CHART PAGE 683",
+    "name": "ILS or LOC Y Rwy 26L (CAT C & D)",
     "pdf_page": 23
   },
   {
@@ -9527,7 +9527,7 @@
     "country": "Oman",
     "category": "Approach",
     "chart_number": "11-6",
-    "name": "CHART PAGE 684",
+    "name": "ILS or LOC X Rwy 26L (CAT A & B)",
     "pdf_page": 24
   },
   {
@@ -9545,7 +9545,7 @@
     "country": "Oman",
     "category": "Approach",
     "chart_number": "11-7A",
-    "name": "CHART PAGE 686",
+    "name": "CAT II ILS Rwy 26R",
     "pdf_page": 26
   },
   {
