@@ -18,6 +18,10 @@ if(data.airport&&data.airport!==network.airport)throw Error('Airport mismatch');
 const positions=Array.isArray(data.stands)?data.stands:Object.entries(data.stands||{}).map(([id,v])=>({...v,id}));
 const ids=new Set(),results={},errors=[];
 const METERS=111132,DEG=Math.PI/180;
+// Printed labels (not nosewheel points) are sometimes hundreds of metres from
+// the actual named pushback taxiway. Candidate radius is deliberately generous;
+// it does NOT imply a legal, continuous or verified physical connection.
+const CANDIDATE_RADIUS_METERS=350,MAX_PER_STAND=8;
 function pointProjection(p,a,b){
  const scale=111320*Math.cos(p.lat*DEG);
  const ax=(a.lon-p.lon)*scale,ay=(a.lat-p.lat)*METERS;
@@ -37,7 +41,7 @@ for(const raw of positions){
  const p={lat:raw.lat,lon:raw.lon}, candidates=[];
  for(const e of edges){
   const q=pointProjection(p,network.nodes[e.from],network.nodes[e.to]);
-  if(q.distanceMeters>60)continue;
+  if(q.distanceMeters>CANDIDATE_RADIUS_METERS)continue;
   candidates.push({taxiway:e.taxiway||null,edgeFrom:e.from,edgeTo:e.to,
    projectedPoint:{lat:+q.lat.toFixed(8),lon:+q.lon.toFixed(8)},
    distanceMeters:+q.distanceMeters.toFixed(2),connectorVerified:false,routingApproved:false});
@@ -48,7 +52,7 @@ for(const raw of positions){
   const key=c.taxiway||c.edgeFrom+':'+c.edgeTo;
   if(seen.has(key))continue;
   seen.add(key);selected.push(c);
-  if(selected.length>=5)break;
+  if(selected.length>=MAX_PER_STAND)break;
  }
  results[id]={position:p,source:raw.source||null,chartPage:raw.chartPage||null,
   candidates:selected,status:selected.length?'NEEDS_CHART_VALIDATION':'NO_NEARBY_EDGE'};
@@ -57,7 +61,7 @@ const count=Object.values(results).filter(s=>s.candidates.length).length;
 const out={schemaVersion:2,airport:network.airport,cycle:network.cycle,
  kind:'stand-connector-candidates',simulationOnly:true,routingApproved:false,
  warning:'Candidates are NOT taxi routes. Approve only connections validated against parking/docking charts.',
- maxDistanceMeters:60,stands:results,errors,
+ maxDistanceMeters:CANDIDATE_RADIUS_METERS,stands:results,errors,
  stats:{input:positions.length,valid:Object.keys(results).length,withCandidates:count,withoutCandidates:Object.keys(results).length-count,rejected:errors.length}};
 fs.writeFileSync(outputFile,JSON.stringify(out,null,2)+'\n');
 console.log(JSON.stringify(out.stats,null,2));
