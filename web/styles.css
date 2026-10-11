@@ -272,7 +272,7 @@ body.viewer-fullscreen .fullscreen-exit{display:block}
 .pdf-stage{
   position:relative;
   overflow-x:hidden!important;
-  overflow-y:auto!important;
+  overflow-y:auto;
   overscroll-behavior:contain;
   touch-action:none;
   scrollbar-gutter:stable;
