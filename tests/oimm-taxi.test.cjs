@@ -1,6 +1,7 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
 const graph=JSON.parse(fs.readFileSync('web/data/taxi-networks/OIMM.json','utf8'));
 const runway=require('../web/taxi-runway-access.js');
+const runwayGoals=require('../web/taxi-runway-goals.js');
 const runwayRender=require('../web/taxi-runway-render.js');
 const elements=new Map();
 const auto=require('../web/taxi-auto-router.js');
@@ -9,7 +10,7 @@ function el(id){if(['pdfCanvas','chartTransformLayer','taxiQaStandMap'].includes
 const mockNode=()=>({textContent:'',setAttribute(){},appendChild(){}});
 const ctx={window:{addEventListener(){}},document:{getElementById:el,querySelector:()=>({textContent:''}),createElement:mockNode,createElementNS:mockNode},
  selectedAirport:'OIMM',selectedChart:{page:601,category:'Airport',chart_number:'10-9'},manifest:{cycle:'2621'},
- lastPosition:null,georefByPage:new Map(),charts:[],console};ctx.window.JEPPIRAN_TAXI_AUTO=auto;ctx.window.JEPPIRAN_TAXI_RUNWAY=runway;ctx.window.JEPPIRAN_TAXI_RENDER=runwayRender;vm.createContext(ctx);
+ lastPosition:null,georefByPage:new Map(),charts:[],console};ctx.window.JEPPIRAN_TAXI_AUTO=auto;ctx.window.JEPPIRAN_TAXI_RUNWAY=runway;ctx.window.JEPPIRAN_TAXI_RENDER=runwayRender;ctx.window.JEPPIRAN_OIMM_RUNWAY_GOALS=runwayGoals;vm.createContext(ctx);
 let code=fs.readFileSync('web/taxi-mode.js','utf8');code=code.replace('})();','window.test={taxi,parse,shortest,adjacent,graphOk,go,routeDeviationMeters};})();');vm.runInContext(code,ctx);
 const t=ctx.window.test;t.taxi.airport='OIMM';t.taxi.graph=graph;t.taxi.active=true;t.taxi.standReference={stands:graph.stands};
 assert.equal(t.graphOk(graph,'OIMM'),true);assert.equal(t.graphOk({...graph,cycle:'2620'},'OIMM'),false);
@@ -117,6 +118,32 @@ assert(t.taxi.route?.previewOnly);
 assert.equal(t.taxi.route.path[0],graph.stands['113'].node);
 assert.equal(t.parse('RUNWAY 31L').kind,'auto');
 assert.equal(t.parse('ST113 RWY 13R').kind,'auto');
+// Destination-runway tokens AFTER a complete explicit clearance are goals,
+// not taxiway names. The chart-mapped far end of H is the only 13L QA target.
+for(const entry of ['ST115 J BT13R H 13L','ST115 J BT13R H RWY 13L']){
+  const parsed=t.parse(entry);
+  assert.equal(parsed.kind,'sequence',entry);
+  assert.equal(parsed.startStand,'115');
+  assert.equal(parsed.runwayDestination,'13L');
+  assert.equal(parsed.taxiways.join(' '),'J BT13R H');
+  el('taxiQaInput').value=entry;t.go();
+  assert(t.taxi.route?.path?.length>5,entry+' missing physical route');
+  assert.equal(t.taxi.route.runwayDestination,'13L');
+  assert.equal(t.taxi.route.path.at(-1),graph.taxiways.H.nodes.at(-1));
+  const axis=t.taxi.route.runwayRender;
+  assert(axis.runway.length>2,entry+' must follow multiple runway-centreline edges');
+  assert(axis.projections.some(x=>x.to===graph.taxiways.H.nodes[0]&&x.type==='projected-access'),
+    'the diagonal shoulder transition to H must NOT be a solid runway axis');
+  assert.equal(axis.steps.at(-1).way,'H','taxiway H must continue to its far endpoint');
+}
+for(const designation of ['13R','31L','13L','31R','RWY13L','RUNWAY31R'])
+  assert.equal(t.parse(designation).kind,'auto',designation);
+el('taxiQaInput').value='ST115 J BT13R H 31R';t.go();
+assert.equal(t.taxi.route,null,'unmapped 31R threshold must never be fabricated');
+assert.match(el('taxiQaStatus').textContent,/31R/);
+el('taxiQaInput').value='ST115 J BT13R H 13R';t.go();
+assert.equal(t.taxi.route,null,'13R cannot be reached by a chart-invalid H shortcut');
+
 // Preserve LTFM explicit alphanumeric stand parsing.
 t.taxi.airport='LTFM';t.taxi.graph={stands:{}};t.taxi.standReference=null;
 assert.equal(t.parse('STD3 T5 N2').startStand,'D3');assert.equal(t.parse('34L2A').kind,'procedure');
