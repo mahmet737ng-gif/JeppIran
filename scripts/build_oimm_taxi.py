@@ -79,6 +79,7 @@ def build(pdf):
                'Published INS coordinates have 0.1 minute resolution and remain a separate field.',
                'L, M, N, P are military-only per 10-1P; shown but excluded from civilian automatic routing.',
                'Explicit BT13R J-to-H runway backtrack is a chart-derived simulator-only segment. It requires an explicit runway token and ATC clearance; no implicit runway crossing or construction-area shortcut.',
+               'Explicit BT31L A-to-D runway backtrack is a chart-derived simulator-only segment. It requires an explicit runway token and ATC clearance.',
                'South apron stands require push-back before start-up per 10-1P1; extracted guidelines are geometric test paths, not a push-back clearance.',
                'Other aprons have no numbered stands in these supplied charts.']}
     def node(p,page):
@@ -150,6 +151,23 @@ def build(pdf):
     graph['runwayBacktracks']={'BT13R':{'fromTaxiway':'J','toTaxiway':'H','runway':'13R/31L',
         'direction':'north-west toward RWY 13R threshold','sourcePage':601,
         'requiresExplicitClearance':True,'simulatorTestOnly':True}}
+    # The A hold is on the apron side of RWY 13R/31L; the D connector
+    # reaches the opposite (31L) end. The same reviewed pavement-axis offset
+    # as J-to-H is followed in the reciprocal, south-east direction.
+    a=graph['taxiways']['A']['exitNode'];d=adc_nodes['D'][0]
+    ageo=graph['nodes'][a]
+    p_a=np.linalg.lstsq(matrices[601][:2,:],np.array([ageo['lon'],ageo['lat']])-matrices[601][2],rcond=None)[0]
+    p_d=np.array(ADC_AXES['D'][0])
+    points=sample([('l',p_a,p_a+centre_offset),
+                   ('l',p_a+centre_offset,p_d+centre_offset),
+                   ('l',p_d+centre_offset,p_d)])
+    bt=[a]+[node(p,601) for p in points[1:-1]]+[d]
+    for left,right in zip(bt,bt[1:]):
+        edge(left,right,'BT31L',601,bidirectional=False,runway=True,runwayUse='13R/31L',
+             geometry='reviewed-ADC-runway-axis',requiresExplicitClearance=True)
+    graph['runwayBacktracks']['BT31L']={'fromTaxiway':'A','toTaxiway':'D','runway':'13R/31L',
+        'direction':'south-east toward RWY 31L threshold','sourcePage':601,
+        'requiresExplicitClearance':True,'simulatorTestOnly':True}
     ins={str(i):{'lat':36+lat/60,'lon':59+lon/60,'published':f'N36 {lat:.1f} E059 {lon:.1f}','resolutionMinutes':.1} for group,lat,lon in INS_GROUPS for i in group}
     labels={w[4]:list(w[:4]) for w in doc[602].get_text('words') if w[4].isdigit() and 100<int(w[4])<140 and w[3]<456}
     for stand,pathid in {**ODD_PATHS,**EVEN_PATHS}.items():

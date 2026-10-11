@@ -62,6 +62,10 @@ The route stops at H; entering RWY 13L or proceeding to its threshold is not
 included. On the chart, this runway segment was visually checked against the
 printed pavement and remains a graphic-derived simulator test, not a surveyed
 centreline or a flight-tested route.
+`ST113 A BT31L D` previews stand 113 to A, the explicit south-east backtrack
+on RWY 13R/31L toward its 31L end, then D. The runway edge is one-way and
+requires the exact A → BT31L → D token sequence. It does not imply a crossing
+to RWY 13L/31R or an ATC clearance.
 STANDS shows all 34 positions; NETWORK shows the full extracted ground graph;
 PARKING opens 10-9B, preserving the route. ADC returns to 10-9.
 

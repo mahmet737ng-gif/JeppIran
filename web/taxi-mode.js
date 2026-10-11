@@ -331,8 +331,8 @@ async function loadGraph(icao){
     if(icao==="OIMM"){
       taxi.standReference={stands:d.stands,airport:icao,source:d.source};
       $("taxiQaStands").textContent="STANDS (34)";
-      $("taxiQaInput").placeholder="ST109 J BT13R H · ST101 A · 114";
-      message("OIMM · 34 stands · 18 taxiways · Jeppesen 10-9 / 10-9B. Try ST109 J BT13R H for an explicit runway backtrack, or ST101 A. PARKING opens the detail chart.");
+      $("taxiQaInput").placeholder="ST109 J BT13R H · ST113 A BT31L D";
+      message("OIMM · 34 stands · 18 taxiways · Jeppesen 10-9 / 10-9B. Explicit backtracks: ST109 J BT13R H or ST113 A BT31L D. PARKING opens the detail chart.");
       draw();return;
     }
     message(d.simulatorTestOnly?
@@ -359,7 +359,7 @@ function view(){
   const panel=document.createElement("section");
   panel.id="taxiQaPanel";panel.className="taxi-qa-panel";panel.hidden=true;
   panel.innerHTML='<div class="taxi-qa-title"><strong>TAXI <small>QA TEST</small></strong>'+
-    '<span id="taxiQaAirport"></span><span class="taxi-qa-build">R5</span><button id="taxiQaToolsBtn" type="button" aria-expanded="false" aria-controls="taxiQaButtons">TOOLS ▾</button>'+
+    '<span id="taxiQaAirport"></span><span class="taxi-qa-build">R6</span><button id="taxiQaToolsBtn" type="button" aria-expanded="false" aria-controls="taxiQaButtons">TOOLS ▾</button>'+
     '<button id="taxiQaClose" type="button" aria-label="Close taxi panel">×</button></div>'+
     '<label for="taxiQaInput">Stand STD3 T5 N2 · Hold /N2 · Procedure 34L2A</label>'+
     '<div class="taxi-qa-entry"><input id="taxiQaInput" autocomplete="off" spellcheck="false" placeholder="Stand / taxiways / procedure"><button id="taxiQaGo" type="button">GO</button></div>'+
@@ -515,16 +515,19 @@ function updateAirportControls(){
   $("taxiQaOimmParking").hidden=!oimm;$("taxiQaOimmNetwork").hidden=!oimm;
   $("taxiQaNetworkBtn").hidden=oimm;
   document.querySelector('label[for="taxiQaInput"]').textContent=oimm?
-    "Mashhad: ST109 J BT13R H (explicit backtrack) · ST101 A · 114 (stand)":
+    "Mashhad: ST109 J BT13R H · ST113 A BT31L D · 114 (stand)":
     "LTFM example: A4 A A7 B B8A · Hold: /B8A · 34L2A format";
 }
 function oimmGo(p,options){
   const g=taxi.graph,ways=p.taxiways||[],stand=g.stands[p.destination];
   if(p.kind==="procedure"){message("No named taxi procedure is published in the supplied OIMM layout charts.",true);return}
   const bt=ways.filter(way=>g.runwayBacktracks?.[way]);
-  if(bt.length>1||bt.length&&!(ways.length>=3&&ways[ways.indexOf(bt[0])-1]===g.runwayBacktracks[bt[0]].fromTaxiway&&
-      ways[ways.indexOf(bt[0])+1]===g.runwayBacktracks[bt[0]].toTaxiway)){
-    message("BT13R requires an explicit J → BT13R → H sequence and runway clearance.",true);return;
+  const backtrack=bt.length===1?g.runwayBacktracks[bt[0]]:null;
+  if(bt.length>1||backtrack&&!(ways.length>=3&&ways[ways.indexOf(bt[0])-1]===backtrack.fromTaxiway&&
+      ways[ways.indexOf(bt[0])+1]===backtrack.toTaxiway)){
+    message(bt.length===1?bt[0]+" requires an explicit "+backtrack.fromTaxiway+" → "+bt[0]+" → "+
+      backtrack.toTaxiway+" sequence and runway clearance.":
+      "Only one explicit runway backtrack is supported per route.",true);return;
   }
   for(const way of ways){
     if(!g.taxiways[way]&&!g.runwayBacktracks?.[way]){message("Taxiway not found on OIMM charts: "+way,true);return}
@@ -567,7 +570,8 @@ function oimmGo(p,options){
   message((preview?"CHART PREVIEW":"SIMULATOR TEST")+" · "+(from?"ST"+p.startStand+" → ":"")+
     (ways.join(" → ")||"ST"+p.destination)+" · "+planned.length+" m"+
     (goal&&g.holdNodes[goal]?" · HOLD SHORT RWY "+g.holdNodes[goal].runway:"")+
-    (bt.length?" · EXPLICIT RWY 13R BACKTRACK TO H · ATC clearance required.":"")+
+    (bt.length?" · EXPLICIT RWY "+bt[0].slice(2)+" BACKTRACK TO "+backtrack.toTaxiway+
+      " · ATC clearance required.":"")+
     (from?.pushbackRequired?" · South stand: push-back required per 10-1P1.":""));
   draw();
 }
