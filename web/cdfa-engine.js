@@ -1,4 +1,4 @@
-/* JEPPIRAN CDFA Geometry Engine v1.0 - offline, framework independent.
+/* JEPPIRAN CDFA Geometry Engine v1.1 - offline, framework independent.
    Engineering/simulator QA only; not authorized for actual flight navigation.
    No use of AC 120-108 as a computation input or authority.
    Source of truth for published fixes, limits, and station location is the
@@ -39,7 +39,18 @@
     const c = { ...input };
     c.thresholdElevationFt = number(c.thresholdElevationFt, 'thresholdElevationFt');
     c.tchFt = nonNegative(c.tchFt, 'tchFt');
-    c.angleDeg = number(c.angleDeg, 'angleDeg');
+    // Prefer the descent angle explicitly transcribed from the APPROACH chart.
+    // `angleDeg` remains a backwards-compatible alias for `publishedAngleDeg`.
+    // A missing/blank angle is never interpreted as zero: the user's fallback is 3°.
+    const hasValue = value => value !== undefined && value !== null && value !== '';
+    const hasPublished = hasValue(c.publishedAngleDeg);
+    const hasLegacy = hasValue(c.angleDeg);
+    if (hasPublished && hasLegacy && Math.abs(number(c.publishedAngleDeg, 'publishedAngleDeg') - number(c.angleDeg, 'angleDeg')) > EPS) {
+      throw new Error('ANGLE_SOURCE_CONFLICT: publishedAngleDeg and angleDeg disagree');
+    }
+    c.angleSource = hasPublished || hasLegacy ? 'PUBLISHED_CHART_INPUT' : 'DEFAULT_ASSUMED_3_DEG';
+    c.angleDeg = hasPublished ? number(c.publishedAngleDeg, 'publishedAngleDeg')
+      : hasLegacy ? number(c.angleDeg, 'angleDeg') : 3;
     c.gradientFtPerNm = gradientForAngle(c.angleDeg);
     if (!c.chartDmeId || typeof c.chartDmeId !== 'string') throw new Error('chartDmeId from chart header is required');
     if (!c.station || typeof c.station !== 'object' || !c.station.id) throw new Error('station with id is required');
@@ -133,6 +144,7 @@
     const inAngleRange = c.validAngleDmeRange &&
       dmeNm >= c.validAngleDmeRange.from - EPS && dmeNm <= c.validAngleDmeRange.to + EPS;
     const reasons = [];
+    if (c.angleSource === 'DEFAULT_ASSUMED_3_DEG') reasons.push('DEFAULT_3_DEG_ASSUMED_NOT_PUBLISHED');
     if (!c.validAngleDmeRange) reasons.push('ANGLE_SCOPE_NOT_VERIFIED');
     else if (!inAngleRange) reasons.push('OUTSIDE_PUBLISHED_ANGLE_SCOPE');
     return {
@@ -192,11 +204,11 @@
     if (unresolvedRows) issues.push({ code: 'UNRESOLVED_DME_GEOMETRY', count: unresolvedRows });
     const blocked = issues.length > 0;
     return {
-      version: '1.0.0', chartId: c.chartId || null, referenceDmeId: c.chartDmeId,
+      version: '1.1.0', chartId: c.chartId || null, referenceDmeId: c.chartDmeId,
       parameters: {
         thresholdElevationFt: c.thresholdElevationFt, tchFt: c.tchFt,
         crossingAltitudeFt: c.thresholdElevationFt + c.tchFt, mdaFt: c.mdaFt ?? null,
-        angleDeg: c.angleDeg, gradientFtPerNm: c.gradientFtPerNm,
+        angleDeg: c.angleDeg, angleSource: c.angleSource, gradientFtPerNm: c.gradientFtPerNm,
         dmePlacement: c.station.placement, dmeOffsetNm: c.station.offsetNm,
         lateralOffsetNm: c.station.lateralNm,
         usedSlantRangeCorrection: c.station.elevationFt != null,
