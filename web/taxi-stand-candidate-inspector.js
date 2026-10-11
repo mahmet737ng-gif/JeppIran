@@ -75,6 +75,24 @@ function install(){
   updateList();
  }).catch(e=>{caption.textContent=String(e.message||e);details.textContent="No generated connections loaded."});
 }
+async function viewStand(id){
+  id=String(id||"").replace(/^(?:STAND\s*|ST)/i,"").trim().toUpperCase();
+  const data=await getData(),entry=data.stands[id];
+  if(!entry)return null;
+  install();
+  if(container){
+    const search=container.querySelector('input[type="search"]');
+    const list=container.querySelector("select");
+    if(search) {
+      search.value=id;search.dispatchEvent(new Event("input",{bubbles:true}));
+    }
+    if(list){
+      list.value=id;list.dispatchEvent(new Event("change",{bubbles:true}));
+    }
+  }
+  return entry;
+}
+root.JEPPIRAN_LTFM_STANDS={getData,viewStand};
 function refresh(){
  const icao=typeof selectedAirport==="string"?selectedAirport:"";
  if(icao==="LTFM"){install();if(container)container.hidden=false}
