@@ -5,6 +5,8 @@ on:
     paths:
       - scripts/extract_ltfm_stand_anchors.py
       - scripts/import_taxi_stands.cjs
+      - scripts/extract_ltfm_pushback_targets.py
+      - scripts/enrich_ltfm_stand_candidates.py
       - .github/workflows/generate-ltfm-stand-candidates.yml
 permissions:
   contents: write
@@ -33,9 +35,15 @@ jobs:
         run: |
           python -m pip install -q 'pymupdf==1.26.4'
           python scripts/extract_ltfm_stand_anchors.py web/data/charts/LTFM.pdf web/data/taxi-stand-positions/LTFM.json
+      - name: Extract published stand-specific pushback restrictions and taxiway names
+        run: |
+          python scripts/extract_ltfm_pushback_targets.py web/data/charts/LTFM.pdf web/data/taxi-stand-pushback/LTFM.json
       - name: Compute proximity links for EVERY extracted individual stand label
         run: |
           node scripts/import_taxi_stands.cjs web/data/taxi-networks/LTFM.json web/data/taxi-stand-positions/LTFM.json web/data/taxi-stand-candidates/LTFM.json
+      - name: Cross-check proximity against charted pushback taxiway names
+        run: |
+          python scripts/enrich_ltfm_stand_candidates.py web/data/taxi-stand-candidates/LTFM.json web/data/taxi-stand-pushback/LTFM.json web/data/taxi-stand-candidates/LTFM.json
       - name: QA no invented verified stand links
         run: |
           node scripts/test_import_taxi_stands.cjs
@@ -46,7 +54,12 @@ jobs:
           assert p['airport']=='LTFM' and p['cycle']=='2621'
           assert p['stats']['chartLabels']>=260
           assert 'D3' in c['stands'] and '601' in c['stands'] and 'K57' in c['stands']
-          assert c['stats']['valid']>=260
+          assert c['stats']['valid']==p['stats']['chartLabels']
+          assert c['stats']['withCandidates']>=260
+          push=json.load(open('web/data/taxi-stand-pushback/LTFM.json'))
+          assert push['stats']['tableRows']>=60
+          assert push['stats']['standNamesCovered']>=240
+          assert 'T5' in c['stands']['D3']['publishedPushbackTaxiways']
           assert not c['routingApproved']
           assert all(not item['routingApproved'] and not item['connectorVerified'] for x in c['stands'].values() for item in x['candidates'])
           assert all(x['positionType']=='APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER' for x in p['stands'])
@@ -57,7 +70,7 @@ jobs:
           set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add web/data/taxi-stand-positions/LTFM.json web/data/taxi-stand-candidates/LTFM.json
+          git add web/data/taxi-stand-positions/LTFM.json web/data/taxi-stand-candidates/LTFM.json web/data/taxi-stand-pushback/LTFM.json
           git diff --cached --quiet && exit 0
           git commit -m 'data(taxi): index all individually printed LTFM stand labels and nearest edge candidates [skip ci]'
           for retry in 1 2 3 4; do
