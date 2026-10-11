@@ -10,7 +10,7 @@
     "source": "Jeppesen terminal chart V2621 10-9, dated 14 JUL 2023",
     "airportDiagramScale": "not calibrated for taxi centerlines"
   },
-  "stage": "VISUAL_TOPOLOGY_INVENTORY",
+  "stage": "PARTIAL_SOURCE_PDF_VECTOR_QA",
   "routeGeometryApproved": false,
   "simulatorOnly": true,
   "review": {
@@ -20,13 +20,14 @@
       "taxiway labels A B C D E",
       "parking inset ST1–ST6",
       "curved parking leads",
-      "main-runway black strip and isolated parking position"
+      "main-runway black strip and isolated parking position",
+      "Source-PDF black Bézier centreline/parking curves for ST1–ST6 via taxi A to taxi B; PDF fingerprint checked"
     ],
     "unresolved": [
-      "Original PDF vector centerline data could not be accessed during this pass",
       "Individual stand WGS84 coordinates are not given (only rounded position groups)",
       "Hold-short, runway entry and crossing gates require surveyed or chart-validated points",
-      "Inset-to-full-ADC calibration awaits vector map / full PDF geometry"
+      "Inset-to-full-ADC calibration awaits vector map / full PDF geometry",
+      "Full vectorization beyond taxi B, including C/D/E and all runway-hold points, remains incomplete"
     ],
     "supersedes": "Do not use OIAW.json projected stand/taxiway edges as chart-confirmed routing; they are previous hand-created approximation"
   },
@@ -71,7 +72,7 @@
       "publishedPositionGroup": "N31 20.7 E048 44.8",
       "exactCoordinatesKnown": false,
       "diagram": "PARKING_INSET",
-      "leadStatus": "visible_curve_not_vectorized"
+      "leadStatus": "PDF_BEZIER_TRACED_TO_A_TO_B_IN_CHART_COORDINATES_QA_ONLY"
     },
     {
       "id": "2",
@@ -79,7 +80,7 @@
       "publishedPositionGroup": "N31 20.6 E048 44.8",
       "exactCoordinatesKnown": false,
       "diagram": "PARKING_INSET",
-      "leadStatus": "visible_curve_not_vectorized"
+      "leadStatus": "PDF_BEZIER_TRACED_TO_A_TO_B_IN_CHART_COORDINATES_QA_ONLY"
     },
     {
       "id": "3",
@@ -87,7 +88,7 @@
       "publishedPositionGroup": "N31 20.6 E048 44.8",
       "exactCoordinatesKnown": false,
       "diagram": "PARKING_INSET",
-      "leadStatus": "visible_curve_not_vectorized"
+      "leadStatus": "PDF_BEZIER_TRACED_TO_A_TO_B_IN_CHART_COORDINATES_QA_ONLY"
     },
     {
       "id": "4",
@@ -95,7 +96,7 @@
       "publishedPositionGroup": "N31 20.6 E048 44.9",
       "exactCoordinatesKnown": false,
       "diagram": "PARKING_INSET",
-      "leadStatus": "visible_curve_not_vectorized"
+      "leadStatus": "PDF_BEZIER_TRACED_TO_A_TO_B_IN_CHART_COORDINATES_QA_ONLY"
     },
     {
       "id": "5",
@@ -103,7 +104,7 @@
       "publishedPositionGroup": "N31 20.6 E048 44.9",
       "exactCoordinatesKnown": false,
       "diagram": "PARKING_INSET",
-      "leadStatus": "visible_curve_not_vectorized"
+      "leadStatus": "PDF_BEZIER_TRACED_TO_A_TO_B_IN_CHART_COORDINATES_QA_ONLY"
     },
     {
       "id": "6",
@@ -111,7 +112,7 @@
       "publishedPositionGroup": "N31 20.5 E048 45.0",
       "exactCoordinatesKnown": false,
       "diagram": "PARKING_INSET",
-      "leadStatus": "visible_curve_not_vectorized"
+      "leadStatus": "PDF_BEZIER_TRACED_TO_A_TO_B_IN_CHART_COORDINATES_QA_ONLY"
     }
   ],
   "connections": [
@@ -242,7 +243,18 @@
     "coordinateSpace": "NOT_CALIBRATED",
     "approval": "BLOCKED",
     "editablePaths": [],
-    "expectedSource": "Trace high-resolution source PDF vector centerlines and parking lead-curves; then transform to chart PDF points; verify at 100% and zoom 200%"
+    "expectedSource": "Trace high-resolution source PDF vector centerlines and parking lead-curves; then transform to chart PDF points; verify at 100% and zoom 200%",
+    "partialPdfVectorTrace": "data/taxi-chart-traces/OIAW-2621.json",
+    "partialCommands": [
+      "ST1 A B",
+      "ST2 A B",
+      "ST3 A B",
+      "ST4 A B",
+      "ST5 A B",
+      "ST6 A B"
+    ],
+    "pdfSourceSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+    "routeApprovalNote": "Source PDF path geometry has been traced in page coordinates for A/B only. This is not equivalent to certified WGS84 taxi centerlines or runway clearance."
   },
   "restrictions": {
     "disallowStraightLineToNearestTaxiway": true,
