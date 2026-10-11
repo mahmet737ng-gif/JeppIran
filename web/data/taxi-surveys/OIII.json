@@ -1,0 +1,1887 @@
+{
+  "schemaVersion": 2,
+  "airport": "OIII",
+  "cycle": "2621",
+  "source": {
+    "document": "Iran2621.pdf, Jeppesen OIII 10-9 / 10-9A / 10-9B / 10-9C",
+    "sha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+    "coordinateSpace": "PDF_POINTS_TOP_LEFT",
+    "pages": [
+      430,
+      431,
+      432,
+      433
+    ],
+    "pdfSize": [
+      612,
+      792
+    ]
+  },
+  "readiness": {
+    "namesExtracted": true,
+    "runwayStripsVectorized": true,
+    "standLabelLocationsExtracted": true,
+    "allTaxiwayCenterlinesTraced": false,
+    "allStandLeadCurvesTraced": false,
+    "runwayGateHoldLinesTraced": false,
+    "networkConnectivityValidated": false,
+    "publishedForNavigation": false,
+    "aircraftPositionGeoreferencing": false
+  },
+  "runwayPolygons": [
+    {
+      "physicalId": "11L_29R",
+      "ends": [
+        "11L",
+        "29R"
+      ],
+      "publishedLengthM": 3876,
+      "sourcePage": 430,
+      "sourcePdfDrawingId": 1410,
+      "polygonPdfPoints": [
+        [
+          273.48,
+          537.72
+        ],
+        [
+          271.44,
+          537
+        ],
+        [
+          401.76,
+          171.36
+        ],
+        [
+          406.08,
+          172.92
+        ],
+        [
+          275.76,
+          538.68
+        ]
+      ],
+      "axisPdfPoints": [
+        [
+          273.6,
+          537.8
+        ],
+        [
+          403.9,
+          172.1
+        ]
+      ],
+      "confirmation": "BLACK_FILLED_RUNWAY_STRIP"
+    },
+    {
+      "physicalId": "11R_29L",
+      "ends": [
+        "11R",
+        "29L"
+      ],
+      "publishedLengthM": 4035,
+      "sourcePage": 430,
+      "sourcePdfDrawingId": 1411,
+      "polygonPdfPoints": [
+        [
+          291.48,
+          553.44
+        ],
+        [
+          288.48,
+          552.48
+        ],
+        [
+          424.56,
+          171.84
+        ],
+        [
+          430.32,
+          173.88
+        ],
+        [
+          294.24,
+          554.4
+        ]
+      ],
+      "axisPdfPoints": [
+        [
+          291.4,
+          553.3
+        ],
+        [
+          427.4,
+          172.9
+        ]
+      ],
+      "confirmation": "BLACK_FILLED_RUNWAY_STRIP"
+    }
+  ],
+  "taxiways": [
+    {
+      "id": "A",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 386.44,
+          "y": 178.93
+        },
+        {
+          "page": 432,
+          "x": 335.67,
+          "y": 521.37
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "A1",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 400,
+          "y": 155.97
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "A2",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 382.96,
+          "y": 216.57
+        },
+        {
+          "page": 432,
+          "x": 519.27,
+          "y": 82.27
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "A3",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 361.6,
+          "y": 276.69
+        },
+        {
+          "page": 432,
+          "x": 409.35,
+          "y": 366.91
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "A4",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 335.08,
+          "y": 351.21
+        },
+        {
+          "page": 432,
+          "x": 324.39,
+          "y": 602.96
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "A5",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 320.56,
+          "y": 388.29
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "A6",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 304.48,
+          "y": 436.05
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "A7",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 286.24,
+          "y": 486.93
+        },
+        {
+          "page": 432,
+          "x": 300.75,
+          "y": 100.04
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "A8",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 279.4,
+          "y": 505.05
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "A9",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 268.96,
+          "y": 534.81
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "B1",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 421.24,
+          "y": 159.69
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "B2",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 394.72,
+          "y": 229.89
+        },
+        {
+          "page": 432,
+          "x": 521.43,
+          "y": 165.07
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "B3",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 377.44,
+          "y": 278.49
+        },
+        {
+          "page": 432,
+          "x": 479.19,
+          "y": 370.03
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "B4",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 352.6,
+          "y": 337.89
+        },
+        {
+          "page": 432,
+          "x": 389.43,
+          "y": 614.24
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "B5",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 335.8,
+          "y": 397.29
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "B6",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 319.48,
+          "y": 444.09
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "B8",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 294.28,
+          "y": 511.05
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "B9",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 282.64,
+          "y": 543.81
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "C",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 431.8,
+          "y": 198.81
+        },
+        {
+          "page": 430,
+          "x": 370.12,
+          "y": 385.29
+        },
+        {
+          "page": 430,
+          "x": 352.36,
+          "y": 434.13
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "C1",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 431.32,
+          "y": 183.03
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "C2",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 412.72,
+          "y": 234.99
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "C3",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 395.92,
+          "y": 282.27
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "C4E",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 377.68,
+          "y": 336.88
+        },
+        {
+          "page": 432,
+          "x": 472.35,
+          "y": 611.62
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "C4W",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 367.12,
+          "y": 370.33
+        },
+        {
+          "page": 432,
+          "x": 452.43,
+          "y": 672.76
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "C5",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 354.4,
+          "y": 400.83
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "C6",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 337.36,
+          "y": 447.63
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "C8",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 312.76,
+          "y": 518.07
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "C9",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 301.72,
+          "y": 549.63
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "E1",
+      "sourceLabelPositions": [
+        {
+          "page": 432,
+          "x": 454.71,
+          "y": 83.23
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "E2",
+      "sourceLabelPositions": [
+        {
+          "page": 432,
+          "x": 398.31,
+          "y": 184.27
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "E3",
+      "sourceLabelPositions": [
+        {
+          "page": 432,
+          "x": 380.79,
+          "y": 293.11
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "E4",
+      "sourceLabelPositions": [
+        {
+          "page": 432,
+          "x": 294.27,
+          "y": 479.59
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "E5",
+      "sourceLabelPositions": [
+        {
+          "page": 432,
+          "x": 233.31,
+          "y": 529.99
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "E6",
+      "sourceLabelPositions": [
+        {
+          "page": 432,
+          "x": 240.75,
+          "y": 613.39
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "E7",
+      "sourceLabelPositions": [
+        {
+          "page": 432,
+          "x": 242.79,
+          "y": 659.35
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "E8",
+      "sourceLabelPositions": [
+        {
+          "page": 432,
+          "x": 211.83,
+          "y": 764.23
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "E9",
+      "sourceLabelPositions": [
+        {
+          "page": 432,
+          "x": 228.63,
+          "y": 775.87
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "F",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 422.32,
+          "y": 142.47
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "K",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 326.56,
+          "y": 545.36
+        },
+        {
+          "page": 430,
+          "x": 310.72,
+          "y": 631.76
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "U",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 422.8,
+          "y": 207.07
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "V",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 416.56,
+          "y": 223.71
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "W",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 312.52,
+          "y": 563.16
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    },
+    {
+      "id": "Y",
+      "sourceLabelPositions": [
+        {
+          "page": 430,
+          "x": 275.2,
+          "y": 477.63
+        },
+        {
+          "page": 432,
+          "x": 265.35,
+          "y": 82.68
+        }
+      ],
+      "geometry": {
+        "start": null,
+        "end": null,
+        "sourceCurveIds": [],
+        "status": "NOT_YET_TRACED_OR_ENDPOINT_VERIFIED"
+      }
+    }
+  ],
+  "stands": [
+    {
+      "id": "100",
+      "apron": 1,
+      "source": {
+        "page": 432,
+        "x": 400.71,
+        "y": 276.37,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "101",
+      "apron": 1,
+      "source": {
+        "page": 432,
+        "x": 351.39,
+        "y": 250.58,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "102",
+      "apron": 1,
+      "source": {
+        "page": 432,
+        "x": 406.23,
+        "y": 260.89,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "103",
+      "apron": 1,
+      "source": {
+        "page": 432,
+        "x": 357.99,
+        "y": 234.85,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "104",
+      "apron": 1,
+      "source": {
+        "page": 432,
+        "x": 412.23,
+        "y": 243.5,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "105",
+      "apron": 1,
+      "source": {
+        "page": 432,
+        "x": 362.91,
+        "y": 217.33,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "106",
+      "apron": 1,
+      "source": {
+        "page": 432,
+        "x": 417.99,
+        "y": 227.17,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "107",
+      "apron": 1,
+      "source": {
+        "page": 432,
+        "x": 370.35,
+        "y": 198.86,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "108",
+      "apron": 1,
+      "source": {
+        "page": 432,
+        "x": 424.11,
+        "y": 210.13,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "109",
+      "apron": 1,
+      "source": {
+        "page": 432,
+        "x": 375.87,
+        "y": 182.65,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "110",
+      "apron": 1,
+      "source": {
+        "page": 432,
+        "x": 430.83,
+        "y": 193.69,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "111",
+      "apron": 1,
+      "source": {
+        "page": 432,
+        "x": 381.27,
+        "y": 166.94,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "112",
+      "apron": 1,
+      "source": {
+        "page": 432,
+        "x": 437.67,
+        "y": 177.13,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "113",
+      "apron": 1,
+      "source": {
+        "page": 432,
+        "x": 387.39,
+        "y": 150.61,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "114",
+      "apron": 1,
+      "source": {
+        "page": 432,
+        "x": 442.95,
+        "y": 159.5,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "115",
+      "apron": 1,
+      "source": {
+        "page": 432,
+        "x": 393.87,
+        "y": 134.65,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "116",
+      "apron": 1,
+      "source": {
+        "page": 432,
+        "x": 447.75,
+        "y": 142.21,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "117",
+      "apron": 1,
+      "source": {
+        "page": 432,
+        "x": 400.47,
+        "y": 118.34,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "118",
+      "apron": 1,
+      "source": {
+        "page": 432,
+        "x": 454.47,
+        "y": 124.93,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "119",
+      "apron": 1,
+      "source": {
+        "page": 432,
+        "x": 406.23,
+        "y": 102.13,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "120",
+      "apron": 1,
+      "source": {
+        "page": 432,
+        "x": 461.07,
+        "y": 108.97,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "121",
+      "apron": 1,
+      "source": {
+        "page": 432,
+        "x": 412.83,
+        "y": 86.9,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "123",
+      "apron": 1,
+      "source": {
+        "page": 432,
+        "x": 438.03,
+        "y": 65.05,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "125",
+      "apron": 1,
+      "source": {
+        "page": 432,
+        "x": 451.11,
+        "y": 61.21,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "200",
+      "apron": 2,
+      "source": {
+        "page": 432,
+        "x": 345.39,
+        "y": 381.49,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "201",
+      "apron": 2,
+      "source": {
+        "page": 432,
+        "x": 325.71,
+        "y": 393.02,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "202",
+      "apron": 2,
+      "source": {
+        "page": 432,
+        "x": 308.67,
+        "y": 405.37,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "203",
+      "apron": 2,
+      "source": {
+        "page": 432,
+        "x": 293.67,
+        "y": 419.05,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "204",
+      "apron": 2,
+      "source": {
+        "page": 432,
+        "x": 279.27,
+        "y": 429.26,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "205",
+      "apron": 2,
+      "source": {
+        "page": 432,
+        "x": 277.35,
+        "y": 448.09,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "206",
+      "apron": 2,
+      "source": {
+        "page": 432,
+        "x": 270.27,
+        "y": 433.21,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "207",
+      "apron": 2,
+      "source": {
+        "page": 432,
+        "x": 241.23,
+        "y": 448.46,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "208",
+      "apron": 2,
+      "source": {
+        "page": 432,
+        "x": 228.15,
+        "y": 458.89,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "301",
+      "apron": 3,
+      "source": {
+        "page": 432,
+        "x": 253.59,
+        "y": 580.94,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "302",
+      "apron": 3,
+      "source": {
+        "page": 432,
+        "x": 277.71,
+        "y": 589.33,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "303",
+      "apron": 3,
+      "source": {
+        "page": 432,
+        "x": 260.55,
+        "y": 560.17,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "304",
+      "apron": 3,
+      "source": {
+        "page": 432,
+        "x": 282.15,
+        "y": 571.22,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "305",
+      "apron": 3,
+      "source": {
+        "page": 432,
+        "x": 267.15,
+        "y": 536.05,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "306",
+      "apron": 3,
+      "source": {
+        "page": 432,
+        "x": 290.55,
+        "y": 547.33,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "308",
+      "apron": 3,
+      "source": {
+        "page": 432,
+        "x": 297.03,
+        "y": 528.97,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "310",
+      "apron": 3,
+      "source": {
+        "page": 432,
+        "x": 303.87,
+        "y": 506.89,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "400",
+      "apron": 4,
+      "source": {
+        "page": 432,
+        "x": 232.83,
+        "y": 749.41,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "401",
+      "apron": 4,
+      "source": {
+        "page": 432,
+        "x": 238.11,
+        "y": 738.02,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "402",
+      "apron": 4,
+      "source": {
+        "page": 432,
+        "x": 242.79,
+        "y": 724.93,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "403",
+      "apron": 4,
+      "source": {
+        "page": 432,
+        "x": 247.71,
+        "y": 711.85,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "404",
+      "apron": 4,
+      "source": {
+        "page": 432,
+        "x": 252.27,
+        "y": 698.54,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "405",
+      "apron": 4,
+      "source": {
+        "page": 432,
+        "x": 260.07,
+        "y": 677.77,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "406",
+      "apron": 4,
+      "source": {
+        "page": 432,
+        "x": 264.51,
+        "y": 664.33,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "407",
+      "apron": 4,
+      "source": {
+        "page": 432,
+        "x": 269.55,
+        "y": 651.02,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "408",
+      "apron": 4,
+      "source": {
+        "page": 432,
+        "x": 273.51,
+        "y": 638.41,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "409",
+      "apron": 4,
+      "source": {
+        "page": 432,
+        "x": 231.99,
+        "y": 629.17,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "410",
+      "apron": 4,
+      "source": {
+        "page": 432,
+        "x": 227.07,
+        "y": 644.41,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    },
+    {
+      "id": "507",
+      "apron": 5,
+      "source": {
+        "page": 432,
+        "x": 139.47,
+        "y": 108.38,
+        "kind": "EXACT_PRINTED_STAND_NUMBER_CENTER"
+      },
+      "roundedINS": {
+        "page": 433,
+        "individualPrecisionAvailable": false
+      },
+      "leadTaxiway": null,
+      "leadCenterlinePdf": [],
+      "connectionVerified": false
+    }
+  ],
+  "apronGroups": [
+    {
+      "apron": 1,
+      "sourcePage": 432,
+      "standIds": [
+        "100",
+        "101",
+        "102",
+        "103",
+        "104",
+        "105",
+        "106",
+        "107",
+        "108",
+        "109",
+        "110",
+        "111",
+        "112",
+        "113",
+        "114",
+        "115",
+        "116",
+        "117",
+        "118",
+        "119",
+        "120",
+        "121",
+        "123",
+        "125"
+      ],
+      "centerlineVerified": false
+    },
+    {
+      "apron": 2,
+      "sourcePage": 432,
+      "standIds": [
+        "200",
+        "201",
+        "202",
+        "203",
+        "204",
+        "205",
+        "206",
+        "207",
+        "208"
+      ],
+      "centerlineVerified": false
+    },
+    {
+      "apron": 3,
+      "sourcePage": 432,
+      "standIds": [
+        "301",
+        "302",
+        "303",
+        "304",
+        "305",
+        "306",
+        "308",
+        "310"
+      ],
+      "centerlineVerified": false
+    },
+    {
+      "apron": 4,
+      "sourcePage": 432,
+      "standIds": [
+        "400",
+        "401",
+        "402",
+        "403",
+        "404",
+        "405",
+        "406",
+        "407",
+        "408",
+        "409",
+        "410"
+      ],
+      "centerlineVerified": false
+    },
+    {
+      "apron": 5,
+      "sourcePage": 432,
+      "standIds": [
+        "507"
+      ],
+      "centerlineVerified": false
+    }
+  ],
+  "runwayHoldLines": [],
+  "confirmedGraphEdges": [],
+  "approval": "SOURCE_VISUAL_INVENTORY_ONLY",
+  "warning": "53 precise chart stand LABEL locations extracted (not WGS84 parking nose coordinates); taxiway names extracted from native PDF text. No stand-to-taxiway route or runway crossing may be invented before physical centerline and intersection tracing.",
+  "qaCharts": {
+    "mainADC": {
+      "page": 430
+    },
+    "parking": {
+      "page": 432
+    },
+    "standCoordinates": {
+      "page": 433
+    }
+  }
+}
