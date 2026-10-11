@@ -769,8 +769,9 @@ function oimmGo(p,options){
   const from=g.stands[p.startStand],pos=taxi.testStart||lastPosition;
   let start=from?.node||(pos?nearest(g,pos):null),preview=!!from||options.demo===true;
   const last=ways[ways.length-1],entry=g.taxiways[last],
-    goal=stand?.node||(bt.length&&last===g.runwayBacktracks[bt[0]].toTaxiway?
-      entry?.nodes?.[1]:entry?.exitNode);
+    // The LAST named taxiway must finish at its chart-mapped outer endpoint.
+    // Never let the pathfinder stop at its first runway-side intersection.
+    goal=stand?.node||entry?.nodes?.at(-1)||entry?.exitNode;
   const links=adjacent(working,{runwayWay:bt[0]}),request={...p,taxiways:ways,allowStandAccess:true,allowStandExit:!!stand};
   let planned=null;
   if(!start&&stand&&p.kind==="stand"){
@@ -794,10 +795,26 @@ function oimmGo(p,options){
   if(!planned||planned.path.length<2){
     message("No connected chart path for this input. Runways and the construction area have no automatic crossing links.",true);draw();return;
   }
+  // A sequence names PHYSICAL connected segments. Reject any implicit
+  // centreline-to-terminal shortcut, and preserve every runway-axis node.
+  const rendered=window.JEPPIRAN_TAXI_RENDER?.parts(working,{...planned,taxiways:ways});
+  if(bt.length&&(!rendered||!rendered.runway.length||rendered.invalid.length)){
+    message("No complete mapped runway-centreline path for "+bt[0]+
+      "; no line is drawn across an unverified taxiway/runway gap.",true);
+    return;
+  }
+  if(bt.length){
+    const terminal=rendered.steps.at(-1);
+    if(terminal?.way!==last||terminal?.type!=="taxiway"||
+       planned.path.at(-1)!==goal){
+      message("Exit taxiway "+last+" does not reach its complete mapped endpoint. Refusing a shortened path.",true);
+      return;
+    }
+  }
   planned.holds=[...new Set([...planned.holds,...planned.path.flatMap((n,i)=>working.holdNodes[n]?[i]:[])])];
   if(p.stops?.includes(0)&&planned.holds.length===0)planned.holds.push(planned.path.length-1);
   taxi.route={...planned,graph:working,airport:"OIMM",previewOnly:preview,
-    taxiways:ways,startStand:p.startStand||null};
+    taxiways:ways,startStand:p.startStand||null,runwayRender:rendered};
   if(from)taxi.selectedStand=p.startStand;
   message((preview?"CHART PREVIEW":"SIMULATOR TEST")+" · "+(from?"ST"+p.startStand+" → ":"")+
     (ways.join(" → ")||"ST"+p.destination)+" · "+planned.length+" m"+
@@ -807,6 +824,8 @@ function oimmGo(p,options){
       " · "+(selectedAccess?.confidence==="LONG-REACH-QA-UNVERIFIED"?
         "LONG-REACH UNVERIFIED "+selectedAccess.distanceMeters+"m; geometry may omit paved connector. ":
         "Chart-hold projection (not surveyed). ")+
+      (rendered?.projections?.length?
+        " UNVERIFIED HOLD-TO-AXIS SECTIONS SHOWN AS DASHED AMBER, NOT AS TAXI CENTRELINE. ":"")+
       "Runway access requires ATC clearance.":"")+
     (from?.pushbackRequired?" · South stand: push-back required per 10-1P1.":""));
   draw();
@@ -1023,13 +1042,13 @@ function s(tag,attrs){
   for(const [k,v] of Object.entries(attrs))t.setAttribute(k,v);
   return t;
 }
-function paintPath(svg,pts,holds,width,isCalculatedTaxiRoute=false){
+function paintPath(svg,pts,holds,width,isCalculatedTaxiRoute=false,exactPolyline=false){
   if(pts.length<2)return;
   // Minimal corner rounding; never use broad splines that cut taxiway corners.
   let d="M "+pts[0].x+" "+pts[0].y;
   for(let i=1;i<pts.length;i++){
     const p=pts[i];
-    if(i<pts.length-1){
+    if(!exactPolyline&&i<pts.length-1){
       const prev=pts[i-1],next=pts[i+1],a=Math.hypot(p.x-prev.x,p.y-prev.y),b=Math.hypot(next.x-p.x,next.y-p.y);
       if(a>0&&b>0){
         const r=Math.min(2,a*.08,b*.08);
@@ -1181,10 +1200,26 @@ function renderRoutePreview(){
   }
   root.appendChild(background);
   const chain=pts.map(p=>p.x.toFixed(2)+","+p.y.toFixed(2)).join(" ");
-  root.appendChild(s("polyline",{points:chain,fill:"none",stroke:"rgba(24,10,38,.33)",
-    "stroke-width":"3.4","stroke-linecap":"round","stroke-linejoin":"round"}));
-  root.appendChild(s("polyline",{points:chain,fill:"none",stroke:"rgba(244,43,184,.64)",
-    "stroke-width":"1.9","stroke-linecap":"round","stroke-linejoin":"round"}));
+  const sections=r.airport==="OIMM"&&r.runwayRender?.runs;
+  if(sections){
+    for(const segment of sections){
+      if(segment.type==="unverified")continue;
+      const strip=pts.slice(segment.startIndex,segment.endIndex+1)
+        .map(p=>p.x.toFixed(2)+","+p.y.toFixed(2)).join(" ");
+      const approximate=segment.type==="projected-access";
+      root.appendChild(s("polyline",{points:strip,fill:"none",
+        stroke:approximate?"rgba(255,182,92,.8)":"rgba(244,43,184,.64)",
+        "stroke-width":approximate?"2.2":"1.9",
+        "stroke-dasharray":approximate?"4 5":undefined,
+        "stroke-linecap":"round","stroke-linejoin":"round",
+        "class":approximate?"taxi-preview-unverified-projection":"taxi-preview-centerline"}));
+    }
+  }else{
+    root.appendChild(s("polyline",{points:chain,fill:"none",stroke:"rgba(24,10,38,.33)",
+      "stroke-width":"3.4","stroke-linecap":"round","stroke-linejoin":"round"}));
+    root.appendChild(s("polyline",{points:chain,fill:"none",stroke:"rgba(244,43,184,.64)",
+      "stroke-width":"1.9","stroke-linecap":"round","stroke-linejoin":"round"}));
+  }
   // Clearly mark ONLY the traversed real OSM edges that have no taxiway name.
   if(r.mappedUnnamedTransitions?.length){
     for(let i=1;i<r.path.length;i++){
@@ -1327,14 +1362,39 @@ function draw(){
     }
   }
   if(r&&r.airport===selectedAirport&&model){
-    let segment=[],holdPositions=[];
-    for(let i=0;i<r.path.length;i++){
-      const pt=r.graph.nodes[r.path[i]],p=pt?projectGeo(model,pt.lat,pt.lon):null;
-      if(!p){paintPath(svg,segment,holdPositions,w,true);segment=[];holdPositions=[];continue;}
-      if(r.holds.includes(i))holdPositions.push(segment.length);
-      segment.push(p);
+    const spec=r.airport==="OIMM"&&r.runwayRender;
+    if(spec){
+      // An actual runway backtrack follows ONLY the ordered runway-axis
+      // centreline edges. A projected hold-to-axis leg (107m at Q in the
+      // current source, for example) is NOT a surveyed taxi connector: show
+      // its uncertainty explicitly instead of a solid direct shortcut.
+      for(const span of spec.runs){
+        const nodes=span.nodes.map(id=>r.graph.nodes[id])
+          .map(p=>p?projectGeo(model,p.lat,p.lon):null);
+        if(nodes.some(p=>!p))continue;
+        if(span.type==="projected-access"){
+          svg.appendChild(s("polyline",{points:nodes.map(p=>p.x+","+p.y).join(" "),
+            fill:"none",stroke:"rgba(255,185,92,.83)",
+            "stroke-width":Math.max(1.2,w*.00145),
+            "stroke-dasharray":"3.5 5","stroke-linecap":"round",
+            "stroke-linejoin":"round","class":"taxi-unverified-runway-access"}));
+        }else if(span.type!=="unverified"){
+          const holdPositions=(r.holds||[]).filter(i=>
+            i>=span.startIndex&&i<=span.endIndex).map(i=>i-span.startIndex);
+          // NO smoothing; every polyline vertex matches its mapped graph node.
+          paintPath(svg,nodes,holdPositions,w,true,true);
+        }
+      }
+    }else{
+      let segment=[],holdPositions=[];
+      for(let i=0;i<r.path.length;i++){
+        const pt=r.graph.nodes[r.path[i]],p=pt?projectGeo(model,pt.lat,pt.lon):null;
+        if(!p){paintPath(svg,segment,holdPositions,w,true);segment=[];holdPositions=[];continue;}
+        if(r.holds.includes(i))holdPositions.push(segment.length);
+        segment.push(p);
+      }
+      paintPath(svg,segment,holdPositions,w,true);
     }
-    paintPath(svg,segment,holdPositions,w,true);
   }
   // No DEMO START / QA START decorations on the airport chart. The selected
   // internal test origin remains available for route calculation only.

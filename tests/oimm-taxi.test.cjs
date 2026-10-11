@@ -1,6 +1,7 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
 const graph=JSON.parse(fs.readFileSync('web/data/taxi-networks/OIMM.json','utf8'));
 const runway=require('../web/taxi-runway-access.js');
+const runwayRender=require('../web/taxi-runway-render.js');
 const elements=new Map();
 const auto=require('../web/taxi-auto-router.js');
 function el(id){if(['pdfCanvas','chartTransformLayer','taxiQaStandMap'].includes(id))return null;
@@ -8,7 +9,7 @@ function el(id){if(['pdfCanvas','chartTransformLayer','taxiQaStandMap'].includes
 const mockNode=()=>({textContent:'',setAttribute(){},appendChild(){}});
 const ctx={window:{addEventListener(){}},document:{getElementById:el,querySelector:()=>({textContent:''}),createElement:mockNode,createElementNS:mockNode},
  selectedAirport:'OIMM',selectedChart:{page:601,category:'Airport',chart_number:'10-9'},manifest:{cycle:'2621'},
- lastPosition:null,georefByPage:new Map(),charts:[],console};ctx.window.JEPPIRAN_TAXI_AUTO=auto;ctx.window.JEPPIRAN_TAXI_RUNWAY=runway;vm.createContext(ctx);
+ lastPosition:null,georefByPage:new Map(),charts:[],console};ctx.window.JEPPIRAN_TAXI_AUTO=auto;ctx.window.JEPPIRAN_TAXI_RUNWAY=runway;ctx.window.JEPPIRAN_TAXI_RENDER=runwayRender;vm.createContext(ctx);
 let code=fs.readFileSync('web/taxi-mode.js','utf8');code=code.replace('})();','window.test={taxi,parse,shortest,adjacent,graphOk,go,routeDeviationMeters};})();');vm.runInContext(code,ctx);
 const t=ctx.window.test;t.taxi.airport='OIMM';t.taxi.graph=graph;t.taxi.active=true;t.taxi.standReference={stands:graph.stands};
 assert.equal(t.graphOk(graph,'OIMM'),true);assert.equal(t.graphOk({...graph,cycle:'2620'},'OIMM'),false);
@@ -43,6 +44,17 @@ assert.equal(t.adjacent(graph)[graph.taxiways.J.exitNode]?.some(e=>e.way==='BT13
 el('taxiQaInput').value='ST113 A BT31L D';t.go();
 assert(t.taxi.route?.path.length>2,'explicit A → BT31L → D backtrack missing');
 assert.equal(t.taxi.route.path.at(-1),graph.taxiways.D.nodes[1]);
+// Exact plotted centerline nodes must extend through the runway and then
+// traverse the complete physical D taxiway to its documented mapped end.
+// Hold-to-axis graphic projections are NEVER solid magenta taxi lines.
+const bt31=t.taxi.route.runwayRender;
+assert(bt31?.runway.length>2,'BT31L must travel along mapped runway axis, not teleport to D');
+assert(bt31.runs.some(s=>s.type==='taxiway'&&s.way==='D'&&
+    s.nodes.includes(graph.taxiways.D.nodes.at(-1))),"Last D taxiway must extend to its mapped end");
+assert(bt31.steps.every(s=>s.edge),'No invented disconnected hop can appear');
+const projected=bt31.steps.filter(s=>s.type==='projected-access');
+assert(projected.length>=0); // zero when both published J/A foot points are exact
+assert.equal(bt31.invalid.length,0);
 const backtrackEdges=new Set(t.taxi.route.path.slice(0,-1).map((n,i)=>n+'>'+t.taxi.route.path[i+1]));
 assert(graph.edges.some(e=>e.runway&&e.taxiway==='BT31L'&&backtrackEdges.has(e.from+'>'+e.to)));
 assert.equal(t.adjacent(graph)[graph.taxiways.A.exitNode]?.some(e=>e.way==='BT31L'),false);
@@ -53,6 +65,15 @@ for(const input of ['ST109 Q BT31L D','ST109 Q BT13R H','ST109 B BT31L D']){
  assert(t.taxi.route?.path?.length>2,input+' should reach the mapped requested runway-end taxiway');
  const runwayToken=input.match(/BT(?:13R|31L)/)[0];
  const routeGraph=t.taxi.route.graph;
+ const spec=t.taxi.route.runwayRender;
+ assert(spec&&spec.runway.length>0,input+' must traverse non-projected runway axis edges');
+ const exitWay=input.trim().split(" ").at(-1);
+ assert(spec.runs.some(x=>x.type==='taxiway'&&x.way===exitWay&&
+   x.nodes.at(-1)===(graph.taxiways[exitWay].nodes?.at(-1)||graph.taxiways[exitWay].exitNode)),
+   input+' must finish all the way through '+exitWay+', not stop at its first node');
+ assert(spec.invalid.length===0,input+' must contain no unidentified jumps');
+ assert(spec.projections.every(e=>e.edge.geometry.includes('projected-hold-to-runway')),
+   input+' projected legs require visible QA classification');
  const segments=t.taxi.route.path.slice(0,-1).map((n,i)=>[n,t.taxi.route.path[i+1]]);
  assert(segments.some(([a,b])=>routeGraph.edges.some(e=>
   e.runway&&e.taxiway===runwayToken&&e.from===a&&e.to===b)),

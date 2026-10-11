@@ -194,3 +194,31 @@ runway entry centerlines or validated taxi clearances*. RWY 13L/31R geometry
 and some non-main ramp connectors are still absent. Android's native auto
 stand/hold route uses the original shared graph and is unchanged by this
 web-specific runway-access QA overlay. No real-world aircraft navigation.
+
+## R19 visual centreline correction · 2026-10-11
+
+The explicit Q/BT31L/D, A/BT31L/D and J/BT13R/H chart overlays now
+separate physical runway-axis edges from graphic QA-only projections.
+
+- A *solid magenta* line is rendered only on consecutive source-graph taxiway
+  or runway-axis edges. All original sampled nodes are preserved. OIMM route
+  painting disables spline/corner rounding, so the renderer does not cut
+  corners across runway pavement.
+- Any projected connector between a printed holding line and the inferred
+  runway axis (Q is ~107 m in this release's QA source) is drawn **dashed
+  amber**, NOT as a verified magenta runway/taxiway centreline. If graph edges
+  are absent or unclassified, the renderer leaves a gap instead of drawing a
+  straight-line shortcut. The same distinction appears in the mini-preview.
+- When the final requested taxiway has explicitly mapped terminal endpoint(s)
+  the path search now targets the **terminal end**, not the first traversed
+  edge; an explicit runway route is rejected if it fails to reach the mapped
+  last-taxiway endpoint.
+- Runway crossing still requires an explicit BT token and ATC clearance;
+  no runway axis, transition or stand connector has been fabricated.
+
+**Data limitation:** The supplied graph includes chart-derived, *not surveyed*
+runway-axis offsets and holding-point projections. A dashed projection must
+still be verified using the detailed Jeppesen/AIP runway exit diagram before
+it can become a solid, accurate connector. R19 fixes misleading drawing and
+terminal-route truncation; it does **not** certify centimetre- or metre-accurate
+ground-centreline geometry and does not approve real aircraft navigation.
