@@ -73,8 +73,10 @@ for(const input of ['ST109 Q BT31L D','ST109 Q BT13R H','ST109 B BT31L D']){
    x.nodes.at(-1)===(graph.taxiways[exitWay].nodes?.at(-1)||graph.taxiways[exitWay].exitNode)),
    input+' must finish all the way through '+exitWay+', not stop at its first node');
  assert(spec.invalid.length===0,input+' must contain no unidentified jumps');
- assert(spec.projections.every(e=>e.edge.geometry.includes('projected-hold-to-runway')),
-   input+' projected legs require visible QA classification');
+ assert(spec.projections.every(e=>e.type==='projected-access'&&
+   (e.edge.geometry.includes('projected-hold-to-runway')||
+    e.edge.geometry==='reviewed-ADC-runway-axis')),
+   input+' graphically inferred shoulder legs must be dashed QA, never solid runway axis');
  const segments=t.taxi.route.path.slice(0,-1).map((n,i)=>[n,t.taxi.route.path[i+1]]);
  assert(segments.some(([a,b])=>routeGraph.edges.some(e=>
   e.runway&&e.taxiway===runwayToken&&e.from===a&&e.to===b)),
