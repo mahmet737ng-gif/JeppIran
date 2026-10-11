@@ -585,12 +585,14 @@ function genericGo(typed){
       !route.edges.some(e=>e.quality==="projected"))
     taxi.genericMonitor={command,route:route,monitor:{count:0,last:0}};
   draw();
+  const inset=qaPreview?window.JEPPIRAN_TAXI_INSET?.route(taxi.graph,route.path,Number(selectedChart?.page)):null;
   message((qaPreview?"UNVERIFIED SCHEMATIC · ":"SIM QA · ")+taxi.airport+" · "+
     (route.taxiways.join(" → ")||"SOURCE-CONNECTED TAXIWAY")+
-    " → "+route.destination+" · "+route.lengthMetres+
-    " m · "+(allowProjectedQA?"PROJECTED / DASHED AMBER · ":"")+
-    (qaPreview?"Stand positions and taxiway geometry are NOT surveyed. ":
-       "")+"NOT FOR ACTUAL NAVIGATION / ATC CLEARANCE.",qaPreview);
+    " → "+route.destination+" · "+(qaPreview?"LENGTH UNVERIFIED":route.lengthMetres+" m")+
+    " · "+(allowProjectedQA?"PROJECTED / DASHED AMBER · ":"")+
+    (qaPreview?(inset?.ok?"PARKING INSET ONLY · ":"INSET GEOMETRY NOT REGISTERED — NO LINE DRAWN · ")+
+      "Stand lead-outs and taxi centerlines are NOT surveyed. ":"")+
+    "NOT FOR ACTUAL NAVIGATION / ATC CLEARANCE.",qaPreview);
 }
 function view(){
   if($("taxiQaPanel"))return;
@@ -1443,7 +1445,7 @@ function draw(){
   const qaChart=taxi.graph?.qaPreviewOnly&&
     taxi.graph?.previewChartTransform?.chartPage===Number(selectedChart?.page)&&
     isAdc(selectedChart)?taxi.graph.previewChartTransform:null;
-  const model=publishedModel||qaChart,w=model?.width||1000,h=model?.height||1000;
+  const model=qaChart||publishedModel,w=model?.width||1000,h=model?.height||1000;
   const svg=s("svg",{class:"taxi-qa-overlay",viewBox:"0 0 "+w+" "+h,preserveAspectRatio:"none"});
   svg.style.cssText="position:absolute;inset:0;width:100%;height:100%;z-index:12;pointer-events:none";
   if(taxi.airport==="OIMM"&&taxi.showNetwork&&taxi.graph&&model){
@@ -1596,14 +1598,25 @@ function draw(){
       r.graph.previewChartPixelPoints&&qaChart?
       r.graph.previewChartPixelPoints:null;
     if(pixelPreview){
-      const coords=r.path.map(id=>pixelPreview[id]);
-      if(coords.length>=2&&coords.every(p=>p&&Number.isFinite(p.x)&&Number.isFinite(p.y))){
+      // A route must be completely registered inside the parking inset.
+      // Never join the stand to a distant label with a straight chord.
+      const preview=window.JEPPIRAN_TAXI_INSET?.route(r.graph,r.path,Number(selectedChart?.page));
+      if(preview?.ok){
+        const clipId="jeppiran-taxi-inset-clip";
+        const defs=s("defs"),clip=s("clipPath",{id:clipId});
+        clip.appendChild(s("rect",{
+          x:preview.bounds.left,y:preview.bounds.top,
+          width:preview.bounds.right-preview.bounds.left,
+          height:preview.bounds.bottom-preview.bounds.top
+        }));
+        defs.appendChild(clip);svg.appendChild(defs);
         svg.appendChild(s("polyline",{
-          points:coords.map(p=>p.x+","+p.y).join(" "),fill:"none",
+          points:preview.points.map(p=>p.x+","+p.y).join(" "),fill:"none",
           stroke:"rgba(255,182,92,.9)",
           "stroke-width":Math.max(1.35,w*.0018),
           "stroke-dasharray":"3.5 5",
           "stroke-linecap":"round","stroke-linejoin":"round",
+          "clip-path":"url(#"+clipId+")",
           "class":"taxi-projected-qa-only"
         }));
       }
