@@ -9,6 +9,7 @@ on:
       - 'web/data/taxi-networks/**'
       - 'scripts/taxi-engine/**'
       - 'tests/taxi-engine.test.cjs'
+      - 'tests/taxi-engine-web.test.cjs'
       - 'tests/fixtures/taxi-engine/**'
       - '.github/workflows/taxi-engine.yml'
   push:
@@ -19,6 +20,7 @@ on:
       - 'web/data/taxi-networks/**'
       - 'scripts/taxi-engine/**'
       - 'tests/taxi-engine.test.cjs'
+      - 'tests/taxi-engine-web.test.cjs'
       - '.github/workflows/taxi-engine.yml'
 permissions:
   contents: read
@@ -38,8 +40,11 @@ jobs:
           node --check scripts/taxi-engine/new-airport.cjs
           node --check scripts/taxi-engine/validate.cjs
           node --check tests/taxi-engine.test.cjs
+          node --check tests/taxi-engine-web.test.cjs
       - name: Airport-neutral graph, runway gating and source provenance QA
-        run: node tests/taxi-engine.test.cjs
+        run: |
+          node tests/taxi-engine.test.cjs
+          node tests/taxi-engine-web.test.cjs
       - name: Preserve existing OIMM route regression
         run: |
           node tests/oimm-taxi.test.cjs
