@@ -1,0 +1,58 @@
+/* JEPPIRAN / Approved ILS homepage backgrounds — 2026-10-11
+ * Original PNGs are frozen, byte-identical to the approved artwork.
+ * Only the Home view is styled; no charts, navigation, GPS or bridges change.
+ */
+#homeView.flight-home.active {
+  background-color:#031020;
+  background-image:url("./home-art/ils-dark-portrait.png") !important;
+  background-repeat:no-repeat;
+  background-size:cover;
+  background-position:center top;
+}
+#homeView .flight-home-horizon {
+  background:transparent !important;
+}
+#homeView .airway-graphic {
+  display:none !important;
+}
+:root.light #homeView.flight-home.active {
+  background-color:#edf6fc;
+  background-image:url("./home-art/ils-light-portrait.png") !important;
+}
+@media (orientation:landscape) {
+  #homeView.flight-home.active {
+    background-image:url("./home-art/ils-dark-landscape.png") !important;
+  }
+  :root.light #homeView.flight-home.active {
+    background-image:url("./home-art/ils-light-landscape.png") !important;
+  }
+}
+/* Light-theme controls only: all original geometry, icons and labels remain. */
+:root.light #homeView .flight-hero-title h1 {
+  color:#123756;
+  text-shadow:0 1px 0 rgba(255,255,255,.9), 0 3px 15px rgba(40,100,150,.16);
+}
+:root.light #homeView .flight-hero-title h1 span {color:#089cce;}
+:root.light #homeView .flight-hero-title p {color:#2a6587;}
+:root.light #homeView .home-arrow {color:#157db4;filter:none;}
+:root.light #homeView .home-capsules span {
+  color:#154566;
+  background:rgba(249,253,255,.87);
+  border-color:rgba(45,133,187,.35);
+}
+:root.light #homeView .home-card {
+  color:#153550;
+  background:linear-gradient(155deg,rgba(255,255,255,.91),rgba(231,245,254,.87));
+  border-color:#9cc9e6;
+  box-shadow:0 8px 22px rgba(31,97,142,.16), inset 0 1px 0 rgba(255,255,255,.75);
+}
+:root.light #homeView .home-card b {color:#13344f;}
+:root.light #homeView .home-card small {color:#4c6e86;}
+:root.light #homeView .home-card .card-icon {color:#169bd8;}
+:root.light #homeView .home-card:hover,
+:root.light #homeView .home-card:focus-visible {
+  border-color:#128fc5;
+  box-shadow:0 0 17px rgba(18,143,197,.24);
+}
+:root.light #homeView .home-footer {color:#375d7b;}
+:root.light #homeView .home-sim-link {color:#087ba9;}
