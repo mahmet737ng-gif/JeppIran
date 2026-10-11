@@ -508,7 +508,7 @@ function view(){
   const panel=document.createElement("section");
   panel.id="taxiQaPanel";panel.className="taxi-qa-panel";panel.hidden=true;
   panel.innerHTML='<div class="taxi-qa-title"><strong>TAXI <small>QA TEST</small></strong>'+
-    '<span id="taxiQaAirport"></span><span class="taxi-qa-build">R26</span><button id="taxiQaToolsBtn" type="button" aria-expanded="false" aria-controls="taxiQaButtons">TOOLS ▾</button>'+
+    '<span id="taxiQaAirport"></span><span class="taxi-qa-build">R27</span><button id="taxiQaToolsBtn" type="button" aria-expanded="false" aria-controls="taxiQaButtons">TOOLS ▾</button>'+
     '<button id="taxiQaClose" type="button" aria-label="Close taxi panel">×</button></div>'+
     '<label for="taxiQaInput">Stand STD3 T5 N2 · Hold /N2 · Procedure 34L2A</label>'+
     '<div class="taxi-qa-entry"><input id="taxiQaInput" autocomplete="off" spellcheck="false" placeholder="Stand / taxiways / procedure"><button id="taxiQaGo" type="button">GO</button></div>'+
@@ -851,7 +851,8 @@ function oimmGo(p,options){
     (runwayTarget?" → RWY "+runwayTarget.runway:"")+" · "+planned.length+" m"+
     (runwayTarget?" · "+runwayTarget.warning:"")+
     (goal&&g.holdNodes[goal]?" · HOLD SHORT RWY "+g.holdNodes[goal].runway:"")+
-    (bt.length?" · STRAIGHT ADC RUNWAY MIDLINE (GRAPHIC QA, NOT SURVEYED) · EXPLICIT RWY "+bt[0].slice(2)+
+    (bt.length?" · ADC BLACK RUNWAY "+(midline?.runwayPair||bt[0].slice(2))+
+      " CENTRE AXIS (GRAPHIC QA, NOT SURVEYED) · EXPLICIT RWY "+bt[0].slice(2)+
       " via "+ways[ix-1]+" → "+ways[ix+1]+
       " · "+(selectedAccess?.confidence==="LONG-REACH-QA-UNVERIFIED"?
         "LONG-REACH UNVERIFIED "+selectedAccess.distanceMeters+"m; geometry may omit paved connector. ":
@@ -1489,10 +1490,11 @@ function draw(){
     const spec=r.airport==="OIMM"&&r.runwayRender&&
       window.JEPPIRAN_TAXI_RENDER?.displayRuns?.(r.graph,r);
     if(spec){
-      // On the 10-9 ADC chart, the solid runway path uses the midpoint of
-      // BOTH printed runway borders (H/M near the north end; H→D axis).
-      // Never reuse the oblique J/A parking-detail interpolation as a solid
-      // runway centreline. Projected runway entries/exits remain amber.
+      // On the 10-9 ADC, BOTH thick black stripes are SEPARATE runways:
+      // left 13R/31L (H->D), right 13L/31R (M->P). The WHITE area
+      // between them is NOT a runway. Draw BT13R/BT31L only on H-D,
+      // not on the imaginary midpoint H/M from the previous releases.
+      // Cross-chart J/A approaches remain visibly amber/unverified.
       for(const span of spec.runs){
         const nodes=span.coordinates.map(p=>p?projectGeo(model,p.lat,p.lon):null);
         if(nodes.some(p=>!p))continue;

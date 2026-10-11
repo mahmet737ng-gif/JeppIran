@@ -51,14 +51,37 @@ const typed=overlay.parts(shoulderGraph,{path:["HOLD","RW0","RW1","D0","D1"],
 assert.equal(typed.runway.length,1,"only the middle runway axis is solid");
 assert.equal(typed.projections.length,2,"BT entry/exit shoulder legs must be amber dashed");
 assert.equal(typed.runs.at(-1).way,"H");
-// Regression on the ORIGINAL 1.3MB OIMM chart graph, not only fixtures.
-// The old 10-9B-to-ADC interpolation bent the magenta line onto the runway
-// border. Both runway names must now share a straight H/M/D midpoint axis.
+// Regression on the original 1.3MB OIMM ADC chart graph.
+// CRITICAL: The two black strips are TWO runways, NOT the borders of one.
+// Left H-D = 13R/31L (~3920m), right M-P = 13L/31R (~3810m).
+// The white H/M inter-runway corridor must NEVER get a magenta BT line.
 const fs=require("node:fs");
 const oimm=JSON.parse(fs.readFileSync("web/data/taxi-networks/OIMM.json","utf8"));
-const axis=overlay.adcMidline(oimm);
-assert(axis,"ADC boundary midpoint was not derived");
-assert(axis.spanMetres>3600&&axis.spanMetres<4200);
+const axis=overlay.adcMidline(oimm,"13R");
+const reciprocal=overlay.adcMidline(oimm,"31L");
+const right=overlay.adcMidline(oimm,"13L");
+const otherReciprocal=overlay.adcMidline(oimm,"31R");
+assert(axis&&right&&reciprocal&&otherReciprocal,"both independent ADC black strips must be mapped");
+assert.deepEqual(axis.anchorNames,["H","D"]);
+assert.deepEqual(right.anchorNames,["M","P"]);
+assert.equal(axis.runwayPair,"13R/31L");
+assert.equal(right.runwayPair,"13L/31R");
+assert.deepEqual(reciprocal.start,axis.start);
+assert.deepEqual(otherReciprocal.end,right.end);
+assert(axis.spanMetres>3800&&axis.spanMetres<4100,"left black band length");
+assert(right.spanMetres>3700&&right.spanMetres<4000,"right black band length");
+const metres=(a,b)=>{
+  const lat=(a.lat+b.lat)*Math.PI/360;
+  return Math.hypot((a.lat-b.lat)*111195,(a.lon-b.lon)*111195*Math.cos(lat));
+};
+assert(metres(axis.start,right.start)>170&&metres(axis.end,right.end)>140,
+ "two black bands must stay geographically distinct");
+const whiteMid={lat:(axis.start.lat+right.start.lat)/2,
+ lon:(axis.start.lon+right.start.lon)/2};
+assert(metres(axis.start,whiteMid)>75,
+ "left black strip must NOT equal midpoint in white space");
+for(const [way,pair] of [["13R","13R/31L"],["31L","13R/31L"],["13L","13L/31R"],["31R","13L/31R"]])
+ assert.equal(overlay.adcMidline(oimm,way).runwayPair,pair);
 for(const way of ["BT13R","BT31L"]){
   const es=oimm.edges.filter(e=>e.runway&&e.taxiway===way);
   assert(es.length>100,way+" must have source runway vertices");
@@ -68,14 +91,19 @@ for(const way of ["BT13R","BT31L"]){
   const rendered=overlay.displayRuns(oimm,{...route,runwayRender:full});
   assert(rendered?.axis&&rendered.runway.length,way+" midpoint renderer failed");
   assert.equal(rendered.invalid.length,0,way+" must not produce a warped axis");
+  assert.equal(rendered.runwayPair,"13R/31L",
+    way+" must use left BLACK runway H-D, never the white between runways");
   for(const section of rendered.runway){
     for(const p of section.coordinates){
       const snapped=axis.project(p);
       assert(Math.abs(p.lat-snapped.lat)<1e-9&&Math.abs(p.lon-snapped.lon)<1e-9,
-        way+" must lie exactly on a common straight ADC midline");
+        way+" must lie exactly ON the left 13R/31L black runway H-D");
+      const alongWhite={lat:p.lat+(right.start.lat-axis.start.lat)/2,
+        lon:p.lon+(right.start.lon-axis.start.lon)/2};
+      assert(metres(p,alongWhite)>75,way+" cannot use the inter-runway midpoint");
     }
   }
   assert(rendered.runs.some(r=>r.type==="projected-access"),
     way+" must visually disclose the chart-only shoulder connection");
 }
-console.log("OIMM EXACT AXIS / COMPLETE D / PROJECTED ACCESS DISPLAY QA: PASS");
+console.log("OIMM TWO DISTINCT BLACK RUNWAYS / 13R-31L H-D / 13L-31R M-P AXIS QA: PASS");

@@ -78,33 +78,44 @@ function parts(graph,route){
     incomplete:invalid.length>0||projections.length>0,
     renderedRunwayNodeCount:new Set(runway.flatMap(s=>[s.from,s.to])).size};
 }
-// Construct the SCHEMATIC centreline from opposite ADC pavement-edge
-// anchors, not from the parking-detail J/A positions. In the current V2621
-// PDF, H is on one runway border, M is opposite H on the other border;
-// H->D follows the runway long axis. The original taxi BT vectors inherited
-// a cross-chart offset that visibly drifted onto the black runway border.
-// This midline is graphic QA and NOT survey-grade georeferencing.
-function adcMidline(graph){
+// The two thick BLACK diagonals on OIMM ADC 10-9 are TWO DISTINCT parallel
+// runways. The WHITE corridor between them is NOT a runway.
+// 13R/31L: left (south-west) black strip through H → D, chart shows 3920 m.
+// 13L/31R: right (north-east) black strip through M → P, chart shows 3810 m.
+// The PDF-coordinate centre of each black strip was digitized as the named
+// ADC taxiway junction anchor, NOT as a surveyed runway threshold. Never
+// average H with M: that creates an imaginary runway in the white corridor.
+function adcMidline(graph,runway="13R"){
   if(graph?.airport!=="OIMM"||graph.cycle!=="2621")return null;
-  const get=(name,index=0)=>{
-    const n=graph.taxiways?.[name]?.nodes?.[index],p=n&&graph.nodes?.[n];
+  const id=upper(runway).replace(/^BT/,"").replace(/^RWY\s*/,"");
+  const left=id==="13R"||id==="31L";
+  const right=id==="13L"||id==="31R";
+  if(!left&&!right)return null;
+  const names=left?["H","D"]:["M","P"];
+  const get=name=>{
+    const nodeId=graph.taxiways?.[name]?.nodes?.[0];
+    const p=nodeId&&graph.nodes?.[nodeId];
     return p?.sourcePage===601&&Array.isArray(p.pdfPoint)?p:null;
   };
-  const h=get("H"),m=get("M"),d=get("D");
-  if(!h||!m||!d)return null;
-  const mid={lat:(h.lat+m.lat)/2,lon:(h.lon+m.lon)/2};
-  const end={lat:d.lat+(m.lat-h.lat)/2,lon:d.lon+(m.lon-h.lon)/2};
-  const earth=111195,c=Math.cos(mid.lat*Math.PI/180);
-  const dx=(end.lon-mid.lon)*earth*c,dy=(end.lat-mid.lat)*earth;
-  const sq=dx*dx+dy*dy,width=Math.hypot((m.lon-h.lon)*earth*c,(m.lat-h.lat)*earth);
-  if(!(sq>2500**2&&sq<5000**2&&width>70&&width<450))return null;
+  const a=get(names[0]),b=get(names[1]);
+  if(!a||!b)return null;
+  const start={lat:a.lat,lon:a.lon},end={lat:b.lat,lon:b.lon};
+  const earth=111195,c=Math.cos(start.lat*Math.PI/180);
+  const dx=(end.lon-start.lon)*earth*c,dy=(end.lat-start.lat)*earth;
+  const sq=dx*dx+dy*dy;
+  if(!(sq>3500**2&&sq<4400**2))return null;
   const project=p=>{
-    const px=(p.lon-mid.lon)*earth*c,py=(p.lat-mid.lat)*earth;
+    const px=(p.lon-start.lon)*earth*c,py=(p.lat-start.lat)*earth;
     const rawT=(px*dx+py*dy)/sq,t=Math.max(0,Math.min(1,rawT));
-    return {lat:mid.lat+(end.lat-mid.lat)*t,lon:mid.lon+(end.lon-mid.lon)*t,t,rawT};
+    return {lat:start.lat+(end.lat-start.lat)*t,
+      lon:start.lon+(end.lon-start.lon)*t,t,rawT};
   };
-  return {start:mid,end,spanMetres:Math.sqrt(sq),
-    graphicWidthMetres:width,project,provenance:"V2621 ADC H/M/D BOUNDARY MIDPOINT QA NOT SURVEYED"};
+  return {start,end,spanMetres:Math.sqrt(sq),project,
+    runwayPair:left?"13R/31L":"13L/31R",
+    anchorNames:names,
+    anchorPage:601,anchorPdfPoints:[a.pdfPoint,b.pdfPoint],
+    provenance:"V2621 ADC 10-9 INDEPENDENT BLACK RUNWAY AXIS "+
+      (left?"H→D 13R/31L":"M→P 13L/31R")+" · SIMULATOR QA ONLY"};
 }
 // This geometry exists ONLY for visualizing the approved simulation test
 // on the ADC. It never rewrites the underlying OIMM graph or grants runway
@@ -113,7 +124,14 @@ function adcMidline(graph){
 function displayRuns(graph,route){
   const spec=route?.runwayRender||parts(graph,route);
   if(!spec)return null;
-  const axis=adcMidline(graph);
+  // Follow only the black strip named by the explicit runway token.
+  // If no unique runway identifier is provided, do not draw one.
+  const namedBacktracks=(route.taxiways||[]).filter(x=>/^BT(?:13R|31L|13L|31R)$/.test(upper(x)));
+  const detected=spec.runs.filter(x=>x.type==="runway-axis").map(x=>upper(x.way))
+    .filter(x=>/^BT(?:13R|31L|13L|31R)$/.test(x));
+  const used=[...new Set([...namedBacktracks,...detected])];
+  const runwayToken=used.length===1?used[0]:null;
+  const axis=runwayToken?adcMidline(graph,runwayToken):null;
   const runs=spec.runs.map(run=>{
     let type=run.type;
     const source=run.nodes.map(id=>graph.nodes?.[id]);
@@ -190,7 +208,8 @@ function displayRuns(graph,route){
   }
   return {runs,axis,invalid:runs.filter(x=>x.type==="unverified"),
     runway:runs.filter(x=>x.type==="runway-axis"),
-    source:axis?.provenance||"NO ADC MIDLINE"};
+    source:axis?.provenance||"NO IDENTIFIED RUNWAY AXIS",
+    runwayPair:axis?.runwayPair||null};
 }
 const api={classify,parts,adcMidline,displayRuns};
 root.JEPPIRAN_TAXI_RENDER=api;
