@@ -1,17 +1,27 @@
 /* JEPPIRAN TAXI preview · verified graphs only · NOT FOR ACTUAL NAVIGATION */
 (function(){
 "use strict";
-const ns="http://www.w3.org/2000/svg", taxi={active:false,trace:false,airport:"",graph:null,route:null,manual:new Map(),prompted:""};
+const ns="http://www.w3.org/2000/svg", taxi={active:false,trace:false,airport:"",graph:null,standReference:null,selectedStand:"",showStands:false,route:null,manual:new Map(),prompted:""};
 const $=id=>document.getElementById(id);
 const name=s=>String(s||"").trim().toUpperCase().replace(/\s+/g," ");
 function parse(raw){
   const s=name(raw);
   if(!s)return {error:"Enter a stand, taxiway sequence or published procedure"};
-  if(/^(ST|P)\d{1,4}[A-Z]?$/.test(s))return {kind:"stand",destination:s};
-  if(/^\d{2}[LRC]?\s+[A-Z0-9-]+$/.test(s))return {kind:"procedure",key:s};
-  const parts=s.replace(/[,→>]+/g," ").split(" ").filter(Boolean), stops=[],taxiways=[];
+  // Procedure designator is RUNWAY + PROCEDURE, no whitespace: 34L2A not 34L 2A.
+  if(/^\d{2}[LRC]?\s+\d+[A-Z][A-Z0-9-]*$/.test(s))
+    return {error:"No space between runway and taxi procedure. Use "+s.replace(/\s+/g,"")};
+  if(/^\d{2}[LRC]?\d+[A-Z][A-Z0-9-]*$/.test(s))return {kind:"procedure",key:s};
+  const registered=Object.prototype.hasOwnProperty.call(taxi.standReference?.stands||{},s)||
+    Object.prototype.hasOwnProperty.call(taxi.graph?.stands||{},s);
+  if(registered||/^(ST|P)\d{1,4}[A-Z]?$/.test(s)||/^[A-HQS]\d{1,3}[LR]?$/.test(s))
+    return {kind:"stand",destination:s};
+  const parts=s.replace(/[,→>]+/g," ").split(" ").filter(Boolean),stops=[],taxiways=[];
   let destination=null;
-  if(parts.length>1&&/^(ST|P)\d{1,4}[A-Z]?$/.test(parts[parts.length-1]))destination=parts.pop();
+  if(parts.length>1&&(/^(ST|P)\d{1,4}[A-Z]?$/.test(parts[parts.length-1])||
+      Object.prototype.hasOwnProperty.call(taxi.standReference?.stands||{},parts[parts.length-1])||
+      Object.prototype.hasOwnProperty.call(taxi.graph?.stands||{},parts[parts.length-1])||
+      /^[A-HQS]\d{1,3}[LR]?$/.test(parts[parts.length-1])))
+    destination=parts.pop();
   for(const part of parts){
     if(!/^\/?[A-Z][A-Z0-9-]{0,11}$/.test(part))return {error:"Unknown token: "+part};
     if(part.startsWith("/"))stops.push(taxiways.length);
@@ -73,6 +83,31 @@ function graphOk(d,icao){
     Array.isArray(d.edges)&&d.edges.length>0&&Object.values(d.nodes).every(n=>
       Number.isFinite(n.lat)&&Number.isFinite(n.lon)&&Math.abs(n.lat)<=90&&Math.abs(n.lon)<=180);
 }
+async function loadStandReference(icao){
+  taxi.standReference=null;taxi.selectedStand="";
+  const button=$("taxiQaStands");
+  if(button){button.textContent="STANDS";button.classList.remove("on");}
+  taxi.showStands=false;
+  if(icao!=="OMDB")return;
+  try{
+    const response=await fetch("./data/taxi-stands/OMDB.json",{cache:"no-store"});
+    if(!response.ok)throw Error("Stand reference unavailable");
+    const d=await response.json(),entries=Object.entries(d.stands||{});
+    if(d.airport!=="OMDB"||d.kind!=="stand-position-reference"||d.coordinateSystem!=="WGS84"||
+       d.verifiedForTaxiRouting!==false||String(d.forCycle)!==String(manifest?.cycle)||
+       !entries.length||entries.some(([id,p])=>!/^C\\d{2}[LR]?$/.test(id)||
+          !Number.isFinite(p.lat)||!Number.isFinite(p.lon)||
+          p.lat<25.2||p.lat>25.35||p.lon<55.2||p.lon>55.5))
+      throw Error("Invalid or mismatched stand reference");
+    if(taxi.airport!==icao)return;
+    taxi.standReference=d;
+    if(button)button.textContent="STANDS ("+entries.length+")";
+    message("OMDB Apron C: "+entries.length+" published stand positions loaded for overlay QA. TAXIWAY CONNECTIVITY NOT VERIFIED; routing remains unavailable.",true);
+    draw();
+  }catch(error){
+    if(taxi.airport===icao)message("Stand reference unavailable: "+error.message,true);
+  }
+}
 function message(s,warning=false){
   const t=$("taxiQaStatus");if(t){t.textContent=s;t.classList.toggle("warning",warning);}
 }
@@ -107,15 +142,23 @@ function view(){
   const panel=document.createElement("section");
   panel.id="taxiQaPanel";panel.className="taxi-qa-panel";panel.hidden=true;
   panel.innerHTML='<div class="taxi-qa-title"><strong>TAXI <small>QA TEST</small></strong><span id="taxiQaAirport"></span><button id="taxiQaClose" type="button">×</button></div>'+
-    '<label for="taxiQaInput">ST204 · C11 Z K /Y T ST204 · 34L 1A</label>'+
+    '<label for="taxiQaInput">Stand C51L · K Z /Y · 34L2A (format example, not a DXB route)</label>'+
     '<div class="taxi-qa-entry"><input id="taxiQaInput" autocomplete="off" spellcheck="false" placeholder="Taxi clearance or stand"><button id="taxiQaGo" type="button">GO</button></div>'+
-    '<div class="taxi-qa-buttons"><button id="taxiQaAdc" type="button">ADC</button><button id="taxiQaTrace" type="button">TRACE QA</button><button id="taxiQaHold" type="button">HOLD HERE</button><button id="taxiQaUndo" type="button">UNDO</button><button id="taxiQaClear" type="button">CLEAR</button></div>'+
+    '<div class="taxi-qa-buttons"><button id="taxiQaAdc" type="button">ADC</button><button id="taxiQaStands" type="button" aria-pressed="false">STANDS</button><button id="taxiQaTrace" type="button">TRACE QA</button><button id="taxiQaHold" type="button">HOLD HERE</button><button id="taxiQaUndo" type="button">UNDO</button><button id="taxiQaClear" type="button">CLEAR</button></div>'+
     '<div id="taxiQaStatus" role="status"></div><small class="taxi-qa-warning">NOT FOR ACTUAL NAVIGATION. Ground clearance and chart validation remain mandatory.</small>';
   document.querySelector("#chartsView .viewer-pane")?.appendChild(panel);
   $("taxiQaClose").onclick=()=>toggle(false);
   $("taxiQaGo").onclick=go;
   $("taxiQaInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();go()}};
   $("taxiQaAdc").onclick=openAdc;
+  $("taxiQaStands").onclick=()=>{
+    taxi.showStands=!taxi.showStands;
+    $("taxiQaStands").classList.toggle("on",taxi.showStands);
+    $("taxiQaStands").setAttribute("aria-pressed",String(taxi.showStands));
+    draw();
+    if(!taxi.standReference)message("No AIP stand-position reference loaded for this airport.",true);
+    else message("AIP Apron C stand POSITIONS only. No lead-in, pushback or taxiway topology is validated.",true);
+  };
   $("taxiQaTrace").onclick=()=>{taxi.trace=!taxi.trace;taxi.route=null;
     $("taxiQaTrace").classList.toggle("on",taxi.trace);
     message(taxi.trace?"Manual QA mode: TAP ALONG the printed taxiway centerline; mark STOP with HOLD HERE.":"Manual trace paused.");
@@ -140,7 +183,7 @@ function toggle(on){
   if(!on){taxi.trace=false;$("taxiQaTrace").classList.remove("on")}
   if(on){
     $("taxiQaAirport").textContent=selectedAirport;
-    if(taxi.airport!==selectedAirport){taxi.airport=selectedAirport;taxi.route=null;loadGraph(selectedAirport);}
+    if(taxi.airport!==selectedAirport){taxi.airport=selectedAirport;taxi.route=null;loadGraph(selectedAirport);loadStandReference(selectedAirport);}
     $("taxiQaInput").focus();
   }
   draw();
@@ -164,6 +207,7 @@ function syncAirport(){
   taxi.airport=selectedAirport;taxi.graph=null;taxi.route=null;taxi.prompted="";
   $("taxiQaAirport").textContent=selectedAirport;
   loadGraph(selectedAirport);
+  loadStandReference(selectedAirport);
 }
 function go(){
   syncAirport();
@@ -171,7 +215,13 @@ function go(){
   if(p.error){message(p.error,true);return}
   taxi.trace=false;$("taxiQaTrace").classList.remove("on");
   if(!taxi.graph){
-    message("Parsed "+p.kind+". Route cannot be generated until verified taxiway and stand topology is published for "+selectedAirport+".",true);
+    if(p.kind==="stand"&&taxi.standReference?.stands[p.destination]){
+      taxi.selectedStand=p.destination;taxi.showStands=true;
+      $("taxiQaStands").classList.add("on");
+      $("taxiQaStands").setAttribute("aria-pressed","true");
+      draw();
+      message("Stand "+p.destination+": published AIP POSITION highlighted. Taxiway/lead-in topology has not passed QA, so no route is calculated.",true);
+    }else message("Parsed "+p.kind+". No verified taxiway + stand connector network for "+selectedAirport+"; automatic routing is disabled.",true);
     return;
   }
   if(!lastPosition){message("No live aircraft fix. Connect GPS or simulator first.",true);return}
@@ -263,6 +313,22 @@ function draw(){
   const model=georefByPage.get(Number(selectedChart?.page)),w=model?.width||1000,h=model?.height||1000;
   const svg=s("svg",{class:"taxi-qa-overlay",viewBox:"0 0 "+w+" "+h,preserveAspectRatio:"none"});
   svg.style.cssText="position:absolute;inset:0;width:100%;height:100%;z-index:12;pointer-events:none";
+  if(taxi.showStands&&taxi.standReference&&model){
+    const pins=s("g",{"class":"taxi-stand-reference-pins"});
+    for(const [id,coord] of Object.entries(taxi.standReference.stands)){
+      const p=projectGeo(model,coord.lat,coord.lon);
+      if(!p)continue;
+      const selected=taxi.selectedStand===id;
+      pins.appendChild(s("circle",{cx:p.x,cy:p.y,r:selected?6:2.4,
+        fill:selected?"#fff099":"#38d4fb",stroke:"#062238","stroke-width":selected?1.7:0.8}));
+      if(selected){
+        const label=s("text",{x:p.x+8,y:p.y-8,fill:"#f9faff","font-size":"14",
+          "font-weight":"900",stroke:"#052333","stroke-width":"3","paint-order":"stroke"});
+        label.textContent=id;pins.appendChild(label);
+      }
+    }
+    svg.appendChild(pins);
+  }
   const r=taxi.route;
   if(r&&r.airport===selectedAirport&&model){
     let segment=[],holdPositions=[];
