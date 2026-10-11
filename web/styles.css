@@ -271,8 +271,11 @@ body.viewer-fullscreen .fullscreen-exit{display:block}
 .zoom-value{min-width:62px;padding-left:9px;padding-right:9px}
 .pdf-stage{
   position:relative;
-  overflow:hidden!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  overscroll-behavior:contain;
   touch-action:none;
+  scrollbar-gutter:stable;
   user-select:none;
   -webkit-user-select:none;
   cursor:grab
@@ -1290,3 +1293,7 @@ body.viewer-fullscreen .aircraft-follow-btn{
 #taxiQaStandGroupInfo{margin-top:7px;padding:9px;white-space:pre-wrap;line-height:1.45;
  border:1px solid #396887;border-radius:6px;color:#c5e5ef;font-size:11px;overflow-wrap:anywhere}
 .taxi-ins-groups small{display:block;margin-top:7px;font-size:10px;line-height:1.3;color:#ffdaaf}
+
+/* Taxi QA SVG must never capture chart gestures or wheel/scroll events. */
+#chartTransformLayer > .taxi-qa-overlay,
+#chartTransformLayer > .taxi-qa-overlay *{pointer-events:none!important}
