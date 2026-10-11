@@ -67,9 +67,10 @@ for(const input of ['ST109 Q BT31L D','ST109 Q BT13R H','ST109 B BT31L D']){
  const routeGraph=t.taxi.route.graph;
  const spec=t.taxi.route.runwayRender;
  assert(spec&&spec.runway.length>0,input+' must traverse non-projected runway axis edges');
- assert(spec.runs.some(x=>x.type==='taxiway'&&x.way==='D'&&
-   x.nodes.at(-1)===graph.taxiways.D.nodes.at(-1)),
-   input+' must finish all the way through D, not stop at its first node');
+ const exitWay=input.trim().split(/\\s+/).at(-1);
+ assert(spec.runs.some(x=>x.type==='taxiway'&&x.way===exitWay&&
+   x.nodes.at(-1)===(graph.taxiways[exitWay].nodes?.at(-1)||graph.taxiways[exitWay].exitNode)),
+   input+' must finish all the way through '+exitWay+', not stop at its first node');
  assert(spec.invalid.length===0,input+' must contain no unidentified jumps');
  assert(spec.projections.every(e=>e.edge.geometry.includes('projected-hold-to-runway')),
    input+' projected legs require visible QA classification');
