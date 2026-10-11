@@ -754,10 +754,10 @@ function paintPath(svg,pts,holds,width,isCalculatedTaxiRoute=false){
     }
     d+=" L "+p.x+" "+p.y;
   }
-  const stroke=Math.max(2,width*.0035);
-  svg.appendChild(s("path",{d,fill:"none",stroke:"#1c0630","stroke-width":stroke+2.2,"stroke-linejoin":"round","stroke-linecap":"round"}));
-  const line=s("path",{d,fill:"none",stroke:"#f200d9",
-    "stroke-width":isCalculatedTaxiRoute?stroke*1.2:stroke,"stroke-linejoin":"round","stroke-linecap":"round"});
+  const stroke=Math.max(1.05,width*.00155);
+  svg.appendChild(s("path",{d,fill:"none",stroke:"rgba(11,8,33,.24)","stroke-width":stroke+.65,"stroke-linejoin":"round","stroke-linecap":"round"}));
+  const line=s("path",{d,fill:"none",stroke:isCalculatedTaxiRoute?"rgba(244,36,188,.57)":"rgba(244,36,188,.64)",
+    "stroke-width":stroke,"stroke-linejoin":"round","stroke-linecap":"round"});
   if(isCalculatedTaxiRoute){
     line.setAttribute("class","taxi-route-line");
     // User requirement: continuous smooth magenta path even after HOLD SHORT.
@@ -771,7 +771,7 @@ function paintPath(svg,pts,holds,width,isCalculatedTaxiRoute=false){
         const x=a.x+ux*at,y=a.y+uy*at,size=Math.max(3.5,stroke*2.2);
         svg.appendChild(s("path",{d:"M "+(x-ux*size+perpX*size*.6)+" "+(y-uy*size+perpY*size*.6)+
           " L "+x+" "+y+" L "+(x-ux*size-perpX*size*.6)+" "+(y-uy*size-perpY*size*.6),
-          fill:"none",stroke:"#ff84f4","stroke-width":Math.max(1.4,stroke*.7),
+          fill:"none",stroke:"rgba(251,166,229,.62)","stroke-width":Math.max(.85,stroke*.6),
           "stroke-linecap":"round","stroke-linejoin":"round","class":"taxi-route-chevron"}));
       }
     }
@@ -895,10 +895,10 @@ function renderRoutePreview(){
   }
   root.appendChild(background);
   const chain=pts.map(p=>p.x.toFixed(2)+","+p.y.toFixed(2)).join(" ");
-  root.appendChild(s("polyline",{points:chain,fill:"none",stroke:"#310d38",
-    "stroke-width":"8","stroke-linecap":"round","stroke-linejoin":"round"}));
-  root.appendChild(s("polyline",{points:chain,fill:"none",stroke:"#fc30d3",
-    "stroke-width":"3.6","stroke-linecap":"round","stroke-linejoin":"round"}));
+  root.appendChild(s("polyline",{points:chain,fill:"none",stroke:"rgba(24,10,38,.33)",
+    "stroke-width":"3.4","stroke-linecap":"round","stroke-linejoin":"round"}));
+  root.appendChild(s("polyline",{points:chain,fill:"none",stroke:"rgba(244,43,184,.64)",
+    "stroke-width":"1.9","stroke-linecap":"round","stroke-linejoin":"round"}));
   root.appendChild(s("circle",{cx:pts[0].x,cy:pts[0].y,r:5.4,fill:"#25e8f5",stroke:"#071a2d","stroke-width":1.5}));
   const end=pts[pts.length-1];
   root.appendChild(s("circle",{cx:end.x,cy:end.y,r:5.4,fill:"#fef0ff",stroke:"#071a2d","stroke-width":1.5}));
@@ -982,7 +982,7 @@ function draw(){
       svg.appendChild(s("line",{x1:pa.x,y1:pa.y,x2:pb.x,y2:pb.y,
         stroke:"#25082c","stroke-width":stroke+2.5,"stroke-linecap":"round"}));
       svg.appendChild(s("line",{x1:pa.x,y1:pa.y,x2:pb.x,y2:pb.y,
-        stroke:"#ff19d6","stroke-width":stroke,"stroke-linecap":"round",
+        stroke:"rgba(245,45,193,.55)","stroke-width":Math.max(.95,stroke*.52),"stroke-linecap":"round",
         "class":"taxi-audit-highlight"}));
       hits++;
     }
