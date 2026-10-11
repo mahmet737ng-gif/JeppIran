@@ -10,6 +10,9 @@ assert.equal(engine.parse("ST101 J BT13R H 13L").destination.id,"13L");
 assert.deepEqual(engine.parse("ST101 J BT13R H RWY 13L").via,["J","BT13R","H"]);
 assert.deepEqual(engine.parse("ST101 J BT13R H 13L").via,["J","BT13R","H"]);
 assert.equal(engine.parse("ST101").destination.id,"101");
+assert.equal(engine.parse("STAND 101").destination.id,"101");
+assert.equal(engine.parse("P101").destination.id,"101");
+assert.equal(engine.parse("STAND 101 J BT13R H 13L").startStand,"101");
 assert.equal(engine.parse("31R").destination.kind,"runway");
 assert.equal(engine.plan("ST101 J BT13R H 31R").error?.includes("no reviewed"),true);
 
