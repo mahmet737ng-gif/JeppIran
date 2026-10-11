@@ -1,0 +1,23 @@
+"use strict";
+const assert=require("node:assert/strict"),fs=require("node:fs");
+const {audit}=require("../scripts/taxi-engine/audit-airport.cjs");
+const fixture=JSON.parse(fs.readFileSync("tests/fixtures/taxi-engine/ZZZZ.json","utf8"));
+const draft=JSON.parse(JSON.stringify(fixture));
+draft.nodes={};draft.edges=[];draft.stands={};draft.taxiways={};draft.runways={};
+draft.enabled=false;draft.source.reviewStatus="NOT REVIEWED";
+const incomplete=audit(draft);
+assert(!incomplete.ready);
+assert(incomplete.issues.some(x=>/No mapped nodes/.test(x)));
+assert(incomplete.warning.some(x=>/disabled/.test(x)));
+const healthy=audit(fixture);
+assert.equal(healthy.issues.length,0,healthy.issues.join("\n"));
+assert.equal(healthy.ready,fixture.enabled===true&&fixture.source.reviewStatus==="SIM_QA_REVIEWED");
+assert.equal(healthy.stats.runways,4);
+assert(healthy.stats.projectedEdges>=1);
+assert(healthy.warning.some(x=>/31R/.test(x)));
+assert(healthy.tests.every(x=>!x.runwayUsed),
+ "A new-airport automated route must never silently cross a runway");
+const invalid=JSON.parse(JSON.stringify(fixture));
+invalid.edges[0].to="NOT_A_NODE";
+assert(audit(invalid,{strict:true}).issues.length>0);
+console.log("AIRPORT-NEUTRAL ONBOARDING AUDIT: draft gate, source QA, no implicit runway, safe gaps PASS");
