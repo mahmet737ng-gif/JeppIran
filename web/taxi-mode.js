@@ -1,7 +1,7 @@
 /* JEPPIRAN TAXI preview · verified graphs only · NOT FOR ACTUAL NAVIGATION */
 (function(){
 "use strict";
-const ns="http://www.w3.org/2000/svg", taxi={active:false,trace:false,airport:"",graph:null,standReference:null,selectedStand:"",showStands:false,route:null,manual:new Map(),prompted:""};
+const ns="http://www.w3.org/2000/svg", taxi={active:false,trace:false,startSelect:false,testStart:null,airport:"",graph:null,standReference:null,selectedStand:"",showStands:false,route:null,manual:new Map(),prompted:""};
 const $=id=>document.getElementById(id);
 const name=s=>String(s||"").trim().toUpperCase().replace(/\s+/g," ");
 function parse(raw){
@@ -42,23 +42,40 @@ function adjacent(graph){
   }
   return links;
 }
-function shortest(graph,start,goal,requested){
-  const edges=adjacent(graph),ways=requested?.taxiways||[],slash=requested?.stops||[];
-  // Dijkstra state: graph node, requested taxiway index, whether segment used.
+function shortest(graph,start,goal,requested,links){
+  const edges=links||adjacent(graph),ways=requested?.taxiways||[],slash=requested?.stops||[];
   const key=(n,i,u)=>n+"~"+i+"~"+u,first=key(start,0,0),
-    seen=new Map([[first,0]]),previous=new Map(),open=[{n:start,i:0,u:0,w:0,k:first}];
+    seen=new Map([[first,0]]),previous=new Map(),heap=[];
+  const push=(item)=>{
+    heap.push(item);let i=heap.length-1;
+    while(i>0){const p=(i-1)>>1;if(heap[p].w<=heap[i].w)break;
+      [heap[i],heap[p]]=[heap[p],heap[i]];i=p;}
+  };
+  const pop=()=>{
+    const result=heap[0],last=heap.pop();
+    if(heap.length){
+      heap[0]=last;let i=0;
+      while(true){
+        let j=i,l=2*i+1,r=l+1;
+        if(l<heap.length&&heap[l].w<heap[j].w)j=l;
+        if(r<heap.length&&heap[r].w<heap[j].w)j=r;
+        if(j===i)break;
+        [heap[i],heap[j]]=[heap[j],heap[i]];i=j;
+      }
+    }
+    return result;
+  };
+  push({n:start,i:0,u:0,w:0,k:first});
   let final=null,limit=0;
-  while(open.length&&limit++<50000){
-    open.sort((a,b)=>a.w-b.w);
-    const p=open.shift();if(p.w!==seen.get(p.k))continue;
+  while(heap.length&&limit++<150000){
+    const p=pop();if(p.w!==seen.get(p.k))continue;
     if((!goal||p.n===goal)&&(!ways.length||(p.i===ways.length-1&&p.u===1))){
       final=p;break;
     }
     function add(n,i,u,extra,hold,move){
       const k=key(n,i,u),w=p.w+extra;
       if(w>=(seen.get(k)??Infinity))return;
-      seen.set(k,w);previous.set(k,{prev:p.k,n:p.n,hold,move});
-      open.push({n,i,u,w,k});
+      seen.set(k,w);previous.set(k,{prev:p.k,n:p.n,hold,move});push({n,i,u,w,k});
     }
     if(ways.length&&p.u&&p.i+1<ways.length)
       add(p.n,p.i+1,0,0,slash.includes(p.i+1),false);
@@ -75,10 +92,13 @@ function shortest(graph,start,goal,requested){
     if(p.move)reverse.push(p.n);
     k=p.prev;
   }
-  return {path:reverse.reverse(),holds:rawHolds.map(i=>reverse.length-1-i),length:final.w};
+  return {path:reverse.reverse(),holds:rawHolds.map(i=>reverse.length-1-i),length:Math.round(final.w)};
 }
 function graphOk(d,icao){
-  return d&&d.verified===true&&d.airport===icao&&String(d.cycle)===String(manifest?.cycle)&&
+  return d&&
+    (d.verified===true||(d.verified===false&&d.simulatorTestOnly===true&&d.coordinateSystem==="WGS84"&&
+      d.source?.provider==="OpenStreetMap contributors"&&d.source?.license==="ODbL 1.0"))&&
+    d.airport===icao&&String(d.cycle)===String(manifest?.cycle)&&
     d.nodes&&typeof d.nodes==="object"&&Object.keys(d.nodes).length>1&&
     Array.isArray(d.edges)&&d.edges.length>0&&Object.values(d.nodes).every(n=>
       Number.isFinite(n.lat)&&Number.isFinite(n.lon)&&Math.abs(n.lat)<=90&&Math.abs(n.lon)<=180);
@@ -120,7 +140,10 @@ async function loadGraph(icao){
     const d=await r.json();
     if(!graphOk(d,icao))throw Error("Invalid, unverified, or wrong-cycle network");
     if(taxi.airport!==icao)return;
-    taxi.graph=d;message("Verified network loaded. Ready for taxi route input.");
+    taxi.graph=d;
+    message(d.simulatorTestOnly?
+      "LTFM SIM QA · "+d.edges.length+" mapped OSM taxi centerlines · © OpenStreetMap contributors (ODbL). NOT AIP-VERIFIED. Connect simulator or choose SET START.":
+      "Verified airport ground graph loaded.");
   }catch(e){
     if(taxi.airport!==icao)return;
     message("No verified ground network yet for "+icao+". Automatic routing disabled; use TRACE QA to test drawing on this chart.",true);
