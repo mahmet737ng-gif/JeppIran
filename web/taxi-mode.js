@@ -14,6 +14,10 @@ function parse(raw){
     const stand=t=>{const k=t.replace(/^(ST|P)/,"");
       return taxi.graph.stands[k]?k:(/^D\d+$/.test(k)&&taxi.graph.stands[k.slice(1)]?k.slice(1):null)};
     if(tokens.length===1&&stand(tokens[0]))return {kind:"stand",destination:stand(tokens[0])};
+    if(tokens.length===1&&["RAMP","APRON"].includes(tokens[0]))
+      return {kind:"auto",destination:"MAIN APRON"};
+    if(tokens.length===2&&tokens.join(" ")==="MAIN APRON")
+      return {kind:"auto",destination:"MAIN APRON"};
     const runwayToken=t=>/^(?:RWY)?(?:13R|13L|31R|31L)$/.test(t)||
       /^RUNWAY(?:13R|13L|31R|31L)$/.test(t);
     if(tokens.length===1&&runwayToken(tokens[0]))
@@ -22,6 +26,8 @@ function parse(raw){
       return {kind:"auto",destination:tokens[1]};
     if(tokens.length===2&&stand(tokens[0])&&runwayToken(tokens[1]))
       return {kind:"auto",startStand:stand(tokens[0]),destination:tokens[1]};
+    if(tokens.length===2&&stand(tokens[0])&&["RAMP","APRON"].includes(tokens[1]))
+      return {kind:"auto",startStand:stand(tokens[0]),destination:"MAIN APRON"};
     if(tokens.length===3&&stand(tokens[0])&&["RWY","RUNWAY"].includes(tokens[1])&&runwayToken(tokens[2]))
       return {kind:"auto",startStand:stand(tokens[0]),destination:tokens[2]};
     if(tokens.length===3&&tokens[0]==="RUNWAY"&&runwayToken(tokens[1])&&stand(tokens[2]))
@@ -481,6 +487,7 @@ function fillOimmQuickDestinations(graph){
       (ok?' · HOLD SHORT':' · NOT MAPPED')+'</option>';
   }).join("");
   select.innerHTML='<option value="">Choose a destination (live position or SET START)</option>'+
+    '<option value="RAMP">MAIN RAMP · NEAREST CONNECTED ENTRY</option>'+
     runwayOptions+Object.keys(graph.stands).sort((a,b)=>Number(a)-Number(b))
       .map(id=>'<option value="ST'+id+'">STAND '+id+'</option>').join("");
 }
@@ -671,7 +678,7 @@ function updateAirportControls(){
   if($("taxiQaAutoRow"))$("taxiQaAutoRow").hidden=!oimm;
   if(oimm&&taxi.graph)fillOimmQuickDestinations(taxi.graph);
   document.querySelector('label[for="taxiQaInput"]').textContent=oimm?
-    "Mashhad: ST109 Q BT31L D · ST109 J BT13R H · ST113 A BT31L D":
+    "Mashhad: ST109 Q BT31L D · ST109 B BT31L D · ST113 RAMP · ST109":
     "LTFM example: A4 A A7 B B8A · Hold: /B8A · 34L2A format";
 }
 // AUTO requires an actual start (simulator/device/SET START) or an explicit
