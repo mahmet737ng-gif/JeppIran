@@ -787,6 +787,16 @@ function oimmGo(p,options){
 }
 function go(options={}){
   syncAirport();
+  // Published LTFM procedures use exact pre-extracted chart vectors, NOT an
+  // OSM guessed link between a stand and the first taxiway.
+  const publisher=window.JEPPIRAN_PUBLISHED_TAXI;
+  const typed=$("taxiQaInput")?.value||"";
+  if(publisher?.recognize(typed,taxi.airport)){
+    taxi.route=null;taxi.auto=null;draw();
+    publisher.go(typed,taxi.airport);
+    return;
+  }
+  publisher?.clear();
   if(taxi.airport==="OIMM"&&!taxi.graph){
     // An unavailable graph must never leave a previously drawn taxi route.
     taxi.route=null;draw();
