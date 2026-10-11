@@ -1,7 +1,7 @@
 /* JEPPIRAN TAXI preview · verified graphs only · NOT FOR ACTUAL NAVIGATION */
 (function(){
 "use strict";
-const ns="http://www.w3.org/2000/svg", taxi={active:false,trace:false,startSelect:false,testStart:null,airport:"",graph:null,standReference:null,selectedStand:"",showStands:false,route:null,manual:new Map(),prompted:""};
+const ns="http://www.w3.org/2000/svg", taxi={active:false,trace:false,startSelect:false,testStart:null,airport:"",graph:null,standReference:null,selectedStand:"",showStands:false,route:null,manual:new Map(),prompted:"",networkAudit:null,networkOpen:false,highlightTaxiway:""};
 const $=id=>document.getElementById(id);
 const name=s=>String(s||"").trim().toUpperCase().replace(/\s+/g," ");
 function parse(raw){
@@ -169,6 +169,67 @@ async function loadStandReference(icao){
     if(taxi.airport===icao)message("Stand reference unavailable: "+error.message,true);
   }
 }
+async function loadNetworkAudit(icao){
+  taxi.networkAudit=null;taxi.highlightTaxiway="";
+  if(icao!=="LTFM"){renderNetworkAudit();return}
+  try{
+    const resp=await fetch("./data/taxi-audits/LTFM.json",{cache:"no-store"});
+    if(!resp.ok)throw Error("Network inventory not available");
+    const d=await resp.json();
+    if(d.airport!=="LTFM"||String(d.cycle)!==String(manifest?.cycle)||
+      d.routeApproved!==false||!d.taxiways||
+      Object.keys(d.taxiways).length!==131)throw Error("Incomplete or mismatched network QA inventory");
+    if(taxi.airport!==icao)return;
+    taxi.networkAudit=d;
+    renderNetworkAudit();
+  }catch(error){
+    if(taxi.airport===icao){
+      renderNetworkAudit();
+      message("LTFM taxiway inventory not loaded: "+error.message,true);
+    }
+  }
+}
+function renderNetworkAudit(){
+  const panel=$("taxiQaNetwork"),list=$("taxiQaNames"),search=$("taxiQaFilter"),
+    info=$("taxiQaDetails");
+  if(!panel||!list||!info)return;
+  panel.hidden=!(taxi.active&&taxi.networkOpen&&taxi.airport==="LTFM");
+  if(panel.hidden)return;
+  const d=taxi.networkAudit;
+  list.replaceChildren();
+  if(!d){info.textContent="Loading network inventory…";return}
+  const query=name(search?.value||"");
+  for(const label of Object.keys(d.taxiways)){
+    if(query&&!label.includes(query))continue;
+    const entry=d.taxiways[label];
+    const opt=document.createElement("option");
+    opt.value=label;
+    opt.textContent=label+" · "+entry.edges+" segments"+(entry.neighbors.length?" · "+entry.neighbors.length+" junction labels":" · NO NAMED JUNCTION");
+    if(label===taxi.highlightTaxiway)opt.selected=true;
+    list.appendChild(opt);
+  }
+  if(!taxi.highlightTaxiway||!d.taxiways[taxi.highlightTaxiway]){
+    info.textContent=d.stats.namedTaxiways+" OSM-named taxiways · "+d.stats.nodes+
+      " nodes · "+d.stats.edges+" edges · "+d.stats.unnamedEdges+
+      " unnamed edges. Select a taxiway to highlight its mapped centerline. All connections are QA ONLY.";
+    return;
+  }
+  const item=d.taxiways[taxi.highlightTaxiway];
+  const neighbors=item.neighbors.map(x=>x.taxiway).join(", ")||"None at shared OSM nodes";
+  info.textContent="TWY "+taxi.highlightTaxiway+" · "+item.lengthMeters+" m · "+
+    item.edges+" mapped segments · "+item.parts+" connected named parts."+
+    "\nDirect named-node junctions: "+neighbors+
+    "\nOSM MAP ONLY — official chart/NOTAM approval PENDING. No stand connector inferred.";
+}
+function publishedStandMessage(stand){
+  const x=taxi.networkAudit?.standLeads?.[stand];
+  if(!x)return "";
+  return "PUBLISHED PUSHBACK ("+x.sourceChart+", stand "+stand+") · "+
+    "STANDARD: "+x.standard.description+
+    " ALTERNATE 1: "+x.alternate1.description+
+    " ALTERNATE 2: "+x.alternate2.description+
+    " HS4 CAUTION. Lead-in geometry NOT mapped. Select applicable ATC pushback instruction.";
+}
 function message(s,warning=false){
   const t=$("taxiQaStatus");if(t){t.textContent=s;t.classList.toggle("warning",warning);}
 }
@@ -182,6 +243,7 @@ async function loadGraph(icao){
     if(!graphOk(d,icao))throw Error("Invalid, unverified, or wrong-cycle network");
     if(taxi.airport!==icao)return;
     taxi.graph=d;
+    if(taxi.networkOpen)renderNetworkAudit();
     message(d.simulatorTestOnly?
       "LTFM SIM QA · "+d.edges.length+" mapped OSM taxi centerlines · © OpenStreetMap contributors (ODbL). NOT AIP-VERIFIED. Connect simulator or choose SET START.":
       "Verified airport ground graph loaded.");
@@ -208,13 +270,41 @@ function view(){
   panel.innerHTML='<div class="taxi-qa-title"><strong>TAXI <small>QA TEST</small></strong><span id="taxiQaAirport"></span><button id="taxiQaClose" type="button">×</button></div>'+
     '<label for="taxiQaInput">LTFM example: A4 A A7 B B8A · Hold: /B8A · 34L2A format</label>'+
     '<div class="taxi-qa-entry"><input id="taxiQaInput" autocomplete="off" spellcheck="false" placeholder="Taxi clearance or stand"><button id="taxiQaGo" type="button">GO</button></div>'+
-    '<div class="taxi-qa-buttons"><button id="taxiQaAdc" type="button">ADC</button><button id="taxiQaStart" type="button" aria-pressed="false">SET START</button><button id="taxiQaDemo" type="button">DEMO ROUTE</button><button id="taxiQaStands" type="button" aria-pressed="false">STANDS</button><button id="taxiQaTrace" type="button">TRACE QA</button><button id="taxiQaHold" type="button">HOLD HERE</button><button id="taxiQaUndo" type="button">UNDO</button><button id="taxiQaClear" type="button">CLEAR</button></div>'+
-    '<div id="taxiQaStatus" role="status"></div><div id="taxiQaStandMap" hidden aria-label="Geographic reference-only stand map"></div><small class="taxi-qa-warning">NOT FOR ACTUAL NAVIGATION. Ground clearance and chart validation remain mandatory.</small>';
+    '<div class="taxi-qa-buttons"><button id="taxiQaAdc" type="button">ADC</button><button id="taxiQaNetworkBtn" type="button" aria-pressed="false">NETWORK</button><button id="taxiQaStart" type="button" aria-pressed="false">SET START</button><button id="taxiQaDemo" type="button">DEMO ROUTE</button><button id="taxiQaStands" type="button" aria-pressed="false">STANDS</button><button id="taxiQaTrace" type="button">TRACE QA</button><button id="taxiQaHold" type="button">HOLD HERE</button><button id="taxiQaUndo" type="button">UNDO</button><button id="taxiQaClear" type="button">CLEAR</button></div>'+
+    '<div id="taxiQaStatus" role="status"></div>'+
+    '<section id="taxiQaNetwork" class="taxi-audit-panel" hidden><strong>ISTANBUL · TAXIWAY INVENTORY / SIM QA ONLY</strong>'+
+    '<input id="taxiQaFilter" type="search" autocomplete="off" spellcheck="false" placeholder="Find A, T5, N2…">'+
+    '<select id="taxiQaNames" size="8" aria-label="Select mapped taxiway"></select>'+
+    '<div id="taxiQaDetails" role="status"></div>'+
+    '<div class="taxi-audit-row"><button id="taxiQaD3" type="button">STAND D3 PUSHBACK</button><button id="taxiQaParking" type="button">PARKING 30-9B</button></div>'+
+    '<small>OSM segments are NOT official clearance or verified stand connectors.</small></section>'+
+    '<div id="taxiQaStandMap" hidden aria-label="Geographic reference-only stand map"></div><small class="taxi-qa-warning">NOT FOR ACTUAL NAVIGATION. Ground clearance and chart validation remain mandatory.</small>';
   document.querySelector("#chartsView .viewer-pane")?.appendChild(panel);
   $("taxiQaClose").onclick=()=>toggle(false);
   $("taxiQaGo").onclick=go;
   $("taxiQaInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();go()}};
   $("taxiQaAdc").onclick=openAdc;
+  $("taxiQaNetworkBtn").onclick=()=>{
+    taxi.networkOpen=!taxi.networkOpen;
+    $("taxiQaNetworkBtn").classList.toggle("on",taxi.networkOpen);
+    $("taxiQaNetworkBtn").setAttribute("aria-pressed",String(taxi.networkOpen));
+    renderNetworkAudit();
+  };
+  $("taxiQaFilter").addEventListener("input",renderNetworkAudit);
+  $("taxiQaNames").addEventListener("change",()=>{
+    taxi.highlightTaxiway=$("taxiQaNames").value;
+    renderNetworkAudit();
+    draw();
+  });
+  $("taxiQaD3").onclick=()=>{
+    message(publishedStandMessage("D3")||"Published stand D3 procedure inventory unavailable.",true);
+    $("taxiQaInput").value="STD3 T5 N2";
+  };
+  $("taxiQaParking").onclick=()=>{
+    const c=charts.find(x=>x.airport==="LTFM"&&x.chart_number==="30-9B");
+    if(c)selectChart(c);
+    else message("Parking chart 30-9B not in cycle",true);
+  };
   $("taxiQaDemo").onclick=()=>{
     if(taxi.airport!=="LTFM"||!taxi.graph){
       message("Demo route is available only for the loaded LTFM centerline network.",true);return;
@@ -273,10 +363,10 @@ function toggle(on){
   if(!on){taxi.trace=false;taxi.startSelect=false;$("taxiQaTrace").classList.remove("on");$("taxiQaStart").classList.remove("on")}
   if(on){
     $("taxiQaAirport").textContent=selectedAirport;
-    if(taxi.airport!==selectedAirport){taxi.airport=selectedAirport;taxi.route=null;taxi.testStart=null;loadGraph(selectedAirport);loadStandReference(selectedAirport);}
+    if(taxi.airport!==selectedAirport){taxi.airport=selectedAirport;taxi.route=null;taxi.testStart=null;loadGraph(selectedAirport);loadStandReference(selectedAirport);loadNetworkAudit(selectedAirport);}
     $("taxiQaInput").focus();
   }
-  draw();
+  renderNetworkAudit();draw();
 }
 function openTaxi(){
   if(!selectedAirport)return;
@@ -301,9 +391,12 @@ function nearest(graph,pos,firstTaxiway=null){
 function syncAirport(){
   if(!taxi.active||taxi.airport===selectedAirport)return;
   taxi.airport=selectedAirport;taxi.graph=null;taxi.route=null;taxi.testStart=null;taxi.prompted="";
+  taxi.networkAudit=null;taxi.highlightTaxiway="";
   $("taxiQaAirport").textContent=selectedAirport;
   loadGraph(selectedAirport);
   loadStandReference(selectedAirport);
+  loadNetworkAudit(selectedAirport);
+  renderNetworkAudit();
 }
 function go(options={}){
   syncAirport();
@@ -336,10 +429,10 @@ function go(options={}){
   }
   if(p.startStand&&!options.demo&&!taxi.testStart){
     const prefix=p.taxiways.length?" The mapped section "+p.taxiways.join(" → ")+" can be previewed separately.":"";
-    message("STAND "+p.startStand+" recognized (not TWY "+p.startStand+"). Stand lead-out / pushback to "+
-      p.taxiways[0]+" is NOT mapped."+prefix+
-      " Press DEMO ROUTE for the mapped section only, or SET START after pushback on "+
-      p.taxiways[0]+". No invented stand link.",true);
+    message("STAND "+p.startStand+" recognized (not TWY "+p.startStand+"). "+
+      (publishedStandMessage(p.startStand)||"Published stand pushback information not digitized.")+
+      " Stand lead-out geometry to "+p.taxiways[0]+" is NOT mapped."+prefix+
+      " Press DEMO ROUTE for mapped taxiways only or SET START post-pushback. No invented stand link.",true);
     return;
   }
   // When a stand name is given, a simulator fix MUST NOT be misrepresented
@@ -541,6 +634,30 @@ function draw(){
     svg.appendChild(pins);
   }
   const r=taxi.route;
+  // Display selected OSM taxiway on the georeferenced ADC without inventing
+  // any connection to another name or a parking stand.
+  if(taxi.highlightTaxiway&&taxi.graph&&taxi.airport===selectedAirport&&model){
+    const stroke=Math.max(2,w*.0042);
+    let hits=0;
+    for(const e of taxi.graph.edges){
+      if(e.closed||e.runway||name(e.taxiway)!==taxi.highlightTaxiway)continue;
+      const a=taxi.graph.nodes[e.from],b=taxi.graph.nodes[e.to];
+      if(!a||!b)continue;
+      const pa=projectGeo(model,a.lat,a.lon),pb=projectGeo(model,b.lat,b.lon);
+      if(!pa||!pb)continue;
+      svg.appendChild(s("line",{x1:pa.x,y1:pa.y,x2:pb.x,y2:pb.y,
+        stroke:"#25082c","stroke-width":stroke+2.5,"stroke-linecap":"round"}));
+      svg.appendChild(s("line",{x1:pa.x,y1:pa.y,x2:pb.x,y2:pb.y,
+        stroke:"#ff19d6","stroke-width":stroke,"stroke-linecap":"round",
+        "class":"taxi-audit-highlight"}));
+      hits++;
+    }
+    if(hits===0&&taxi.networkOpen){
+      // Standalone status tells the user when chart alignment cannot be shown.
+      const info=$("taxiQaDetails");
+      if(info)info.dataset.mapShown="false";
+    }
+  }
   if(r&&r.airport===selectedAirport&&model){
     let segment=[],holdPositions=[];
     for(let i=0;i<r.path.length;i++){
