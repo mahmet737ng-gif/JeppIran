@@ -165,15 +165,24 @@ function view(){
   const panel=document.createElement("section");
   panel.id="taxiQaPanel";panel.className="taxi-qa-panel";panel.hidden=true;
   panel.innerHTML='<div class="taxi-qa-title"><strong>TAXI <small>QA TEST</small></strong><span id="taxiQaAirport"></span><button id="taxiQaClose" type="button">×</button></div>'+
-    '<label for="taxiQaInput">Stand C51L · K Z /Y · 34L2A (format example, not a DXB route)</label>'+
+    '<label for="taxiQaInput">LTFM example: A4 A A7 B B8A · Hold: /B8A · 34L2A format</label>'+
     '<div class="taxi-qa-entry"><input id="taxiQaInput" autocomplete="off" spellcheck="false" placeholder="Taxi clearance or stand"><button id="taxiQaGo" type="button">GO</button></div>'+
-    '<div class="taxi-qa-buttons"><button id="taxiQaAdc" type="button">ADC</button><button id="taxiQaStands" type="button" aria-pressed="false">STANDS</button><button id="taxiQaTrace" type="button">TRACE QA</button><button id="taxiQaHold" type="button">HOLD HERE</button><button id="taxiQaUndo" type="button">UNDO</button><button id="taxiQaClear" type="button">CLEAR</button></div>'+
+    '<div class="taxi-qa-buttons"><button id="taxiQaAdc" type="button">ADC</button><button id="taxiQaStart" type="button" aria-pressed="false">SET START</button><button id="taxiQaStands" type="button" aria-pressed="false">STANDS</button><button id="taxiQaTrace" type="button">TRACE QA</button><button id="taxiQaHold" type="button">HOLD HERE</button><button id="taxiQaUndo" type="button">UNDO</button><button id="taxiQaClear" type="button">CLEAR</button></div>'+
     '<div id="taxiQaStatus" role="status"></div><div id="taxiQaStandMap" hidden aria-label="Geographic reference-only stand map"></div><small class="taxi-qa-warning">NOT FOR ACTUAL NAVIGATION. Ground clearance and chart validation remain mandatory.</small>';
   document.querySelector("#chartsView .viewer-pane")?.appendChild(panel);
   $("taxiQaClose").onclick=()=>toggle(false);
   $("taxiQaGo").onclick=go;
   $("taxiQaInput").onkeydown=e=>{if(e.key==="Enter"){e.preventDefault();go()}};
   $("taxiQaAdc").onclick=openAdc;
+  $("taxiQaStart").onclick=()=>{
+    taxi.startSelect=!taxi.startSelect;taxi.trace=false;
+    $("taxiQaStart").classList.toggle("on",taxi.startSelect);
+    $("taxiQaStart").setAttribute("aria-pressed",String(taxi.startSelect));
+    $("taxiQaTrace").classList.remove("on");
+    message(taxi.startSelect?
+      "SIM QA: tap your starting point ON the ADC taxiway centerline, then press GO. This overrides live GPS for this TEST only.":
+      "Start placement cancelled.");
+  };
   $("taxiQaStands").onclick=()=>{
     taxi.showStands=!taxi.showStands;
     $("taxiQaStands").classList.toggle("on",taxi.showStands);
@@ -182,7 +191,8 @@ function view(){
     if(!taxi.standReference)message("No AIP stand-position reference loaded for this airport.",true);
     else message("AIP stand POSITIONS only. No lead-in, pushback or taxiway topology is validated.",true);
   };
-  $("taxiQaTrace").onclick=()=>{taxi.trace=!taxi.trace;taxi.route=null;
+  $("taxiQaTrace").onclick=()=>{taxi.trace=!taxi.trace;taxi.startSelect=false;taxi.route=null;
+    $("taxiQaStart").classList.remove("on");$("taxiQaStart").setAttribute("aria-pressed","false");
     $("taxiQaTrace").classList.toggle("on",taxi.trace);
     message(taxi.trace?"Manual QA mode: TAP ALONG the printed taxiway centerline; mark STOP with HOLD HERE.":"Manual trace paused.");
     draw();};
@@ -195,7 +205,8 @@ function view(){
     const p=currentManual();p.points.pop();p.holds=p.holds.filter(i=>i<p.points.length);draw();
   };
   $("taxiQaClear").onclick=()=>{
-    taxi.route=null;taxi.manual.delete(Number(selectedChart?.page));taxi.trace=false;
+    taxi.route=null;taxi.manual.delete(Number(selectedChart?.page));taxi.trace=false;taxi.testStart=null;taxi.startSelect=false;
+    $("taxiQaStart").classList.remove("on");$("taxiQaStart").setAttribute("aria-pressed","false");
     $("taxiQaTrace").classList.remove("on");draw();message("Cleared.");
   };
   $("pdfStage")?.addEventListener("pointerup",mark);
@@ -203,10 +214,10 @@ function view(){
 function toggle(on){
   view();taxi.active=on;
   $("taxiQaPanel").hidden=!on;
-  if(!on){taxi.trace=false;$("taxiQaTrace").classList.remove("on")}
+  if(!on){taxi.trace=false;taxi.startSelect=false;$("taxiQaTrace").classList.remove("on");$("taxiQaStart").classList.remove("on")}
   if(on){
     $("taxiQaAirport").textContent=selectedAirport;
-    if(taxi.airport!==selectedAirport){taxi.airport=selectedAirport;taxi.route=null;loadGraph(selectedAirport);loadStandReference(selectedAirport);}
+    if(taxi.airport!==selectedAirport){taxi.airport=selectedAirport;taxi.route=null;taxi.testStart=null;loadGraph(selectedAirport);loadStandReference(selectedAirport);}
     $("taxiQaInput").focus();
   }
   draw();
@@ -218,16 +229,22 @@ function openTaxi(){
   if(!isAdc(selectedChart))selectChart(c);
   toggle(true);
 }
-function nearest(graph,pos){
+function nearest(graph,pos,firstTaxiway=null){
   let node=null,d=Infinity;
+  // A cleared sequence must start at the requested first taxiway, never
+  // jump silently from an unrelated nearest centerline.
+  const candidates=firstTaxiway?
+    new Set(graph.edges.filter(e=>name(e.taxiway)===firstTaxiway).flatMap(e=>[e.from,e.to])):
+    null;
   for(const [id,p] of Object.entries(graph.nodes)){
+    if(candidates&&!candidates.has(id))continue;
     const x=dist(pos,p);if(x<d){d=x;node=id}
   }
-  return d<=250?node:null;
+  return d<=(firstTaxiway?85:120)?node:null;
 }
 function syncAirport(){
   if(!taxi.active||taxi.airport===selectedAirport)return;
-  taxi.airport=selectedAirport;taxi.graph=null;taxi.route=null;taxi.prompted="";
+  taxi.airport=selectedAirport;taxi.graph=null;taxi.route=null;taxi.testStart=null;taxi.prompted="";
   $("taxiQaAirport").textContent=selectedAirport;
   loadGraph(selectedAirport);
   loadStandReference(selectedAirport);
@@ -249,18 +266,19 @@ function go(){
     }else message("Parsed "+p.kind+". No verified taxiway + stand connector network for "+selectedAirport+"; automatic routing is disabled.",true);
     return;
   }
-  if(!lastPosition){message("No live aircraft fix. Connect GPS or simulator first.",true);return}
-  const start=nearest(taxi.graph,lastPosition);
-  if(!start){message("Aircraft >250 m from verified taxi graph.",true);return}
+  const startPosition=taxi.testStart||lastPosition;
+  if(!startPosition){message("Connect simulator/device GPS or tap SET START on the chart, then GO.",true);return}
+  const start=nearest(taxi.graph,startPosition,p.kind==="sequence"?p.taxiways[0]:null);
+  if(!start){message("No mapped centerline near the starting position"+(p.kind==="sequence"?" on taxiway "+p.taxiways[0]:"")+". Choose SET START on the correct centerline.",true);return}
   let planned=null,info="";
   if(p.kind==="procedure"){
     const choices=(taxi.graph.procedures||[]).filter(x=>name(x.key)===p.key&&
       Array.isArray(x.nodes)&&x.nodes.length>1&&x.nodes.every(id=>taxi.graph.nodes[id]));
     if(!choices.length){message("Published procedure not digitized: "+p.key,true);return}
-    choices.sort((a,b)=>dist(lastPosition,taxi.graph.nodes[a.nodes[0]])-dist(lastPosition,taxi.graph.nodes[b.nodes[0]]));
-    if(dist(lastPosition,taxi.graph.nodes[choices[0].nodes[0]])>700 ||
-      (choices[1]&&dist(lastPosition,taxi.graph.nodes[choices[1].nodes[0]])-
-        dist(lastPosition,taxi.graph.nodes[choices[0].nodes[0]])<35)){
+    choices.sort((a,b)=>dist(startPosition,taxi.graph.nodes[a.nodes[0]])-dist(startPosition,taxi.graph.nodes[b.nodes[0]]));
+    if(dist(startPosition,taxi.graph.nodes[choices[0].nodes[0]])>700 ||
+      (choices[1]&&dist(startPosition,taxi.graph.nodes[choices[1].nodes[0]])-
+        dist(startPosition,taxi.graph.nodes[choices[0].nodes[0]])<35)){
       message("Procedure start location is ambiguous. Do not guess arrival/departure.",true);return;
     }
     planned={path:choices[0].nodes,holds:choices[0].holdIndices||[]};
@@ -270,18 +288,13 @@ function go(){
       goal=typeof stands[stand]==="string"?stands[stand]:stands[stand]?.node;
     if(stand&&!taxi.graph.nodes[goal]){message("Stand "+stand+" is not mapped.",true);return}
     if(!goal&&p.kind==="stand"){message("Stand not mapped.",true);return}
-    if(goal)planned=shortest(taxi.graph,start,goal,p.kind==="sequence"?p:null);
-    else {
-      for(const id of Object.keys(taxi.graph.nodes)){
-        const candidate=shortest(taxi.graph,start,id,p);
-        if(candidate&&(!planned||candidate.length<planned.length))planned=candidate;
-      }
-    }
+    const links=adjacent(taxi.graph);
+    planned=shortest(taxi.graph,start,goal||null,p.kind==="sequence"?p:null,links);
     info=p.kind==="stand"?"SHORTEST DISTANCE SUGGESTION · NOT ATC CLEARANCE":"TAXIWAY SEQUENCE";
   }
-  if(!planned||planned.path.length<2){message("No connected permitted route exists. Chart/clearance required.",true);return}
+  if(!planned||planned.path.length<2){message("No connected path matching ALL named taxiways, in that order. Verify the clearance or data; nothing invented.",true);return}
   taxi.route={...planned,graph:taxi.graph,airport:selectedAirport};
-  message(info+" · "+planned.path.length+" nodes.");
+  message("SIMULATION QA · "+info+" · "+planned.path.length+" nodes · "+(planned.length||0)+" m. OSM SOURCE · NOT APPROVED FOR ACTUAL NAVIGATION.",true);
   draw();
 }
 function currentManual(){
@@ -290,10 +303,21 @@ function currentManual(){
   return taxi.manual.get(page);
 }
 function mark(e){
-  if(!taxi.active||!taxi.trace||!isAdc(selectedChart)||e.button!==0)return;
+  if(!taxi.active||!(taxi.trace||taxi.startSelect)||!isAdc(selectedChart)||e.button!==0)return;
   const canvas=$("pdfCanvas");if(!canvas)return;
   const r=canvas.getBoundingClientRect(),x=(e.clientX-r.left)/r.width,y=(e.clientY-r.top)/r.height;
   if(!(x>=0&&x<=1&&y>=0&&y<=1))return;
+  if(taxi.startSelect){
+    const m=georefByPage.get(Number(selectedChart?.page));
+    if(!m){message("This chart is not georeferenced. Open main ADC first.",true);return}
+    const px=x*m.width-m.meanX,py=y*m.height-m.meanY,det=m.xLon*m.yLat-m.xLat*m.yLon;
+    if(!Number.isFinite(det)||Math.abs(det)<1e-8){message("Invalid geographic transform.",true);return}
+    taxi.testStart={lon:m.meanLon+(px*m.yLat-py*m.xLat)/det,
+      lat:m.meanLat+(py*m.xLon-px*m.yLon)/det};
+    taxi.startSelect=false;$("taxiQaStart").classList.remove("on");$("taxiQaStart").setAttribute("aria-pressed","false");
+    message("TEST START saved from ADC · press GO. Simulator GPS remains connected and unchanged.");
+    draw();return;
+  }
   currentManual().points.push({x,y});draw();
   message("MANUAL TRACE QA: "+currentManual().points.length+" points. Never use as automatically calculated taxi guidance.");
 }
@@ -406,6 +430,15 @@ function draw(){
       segment.push(p);
     }
     paintPath(svg,segment,holdPositions,w);
+  }
+  if(taxi.testStart&&model){
+    const p=projectGeo(model,taxi.testStart.lat,taxi.testStart.lon);
+    if(p){
+      svg.appendChild(s("circle",{cx:p.x,cy:p.y,r:7,fill:"#06effc",stroke:"#042431","stroke-width":2}));
+      const t=s("text",{x:p.x+11,y:p.y-9,fill:"#06effc","font-size":13,
+        "font-weight":"900",stroke:"#041824","stroke-width":3,"paint-order":"stroke"});
+      t.textContent="QA START";svg.appendChild(t);
+    }
   }
   const manual=taxi.manual.get(Number(selectedChart?.page));
   if(manual)paintPath(svg,manual.points.map(p=>({x:p.x*w,y:p.y*h})),manual.holds,w);
