@@ -22,5 +22,22 @@ for(const bt of Object.keys(graph.runwayBacktracks)){
 assert.equal(qa.build(graph,'BT13L').graph,null,'unmapped runway must not become an eligible crossing');
 const auto=require('../web/taxi-auto-router.js');
 assert.equal(auto.route(graph,{startStand:'109',destination:'31R'}).route,undefined);
+const missed={};
+for(const bt of ['BT13R','BT31L']){
+ const x=qa.build(graph,bt);
+ const onRunway=x.graph.edges.filter(e=>e.runway&&e.taxiway===bt&&x.graph.nodes[e.from]&&x.graph.nodes[e.to]);
+ missed[bt]={};
+ for(const [hold,v] of Object.entries(graph.holdNodes||{})){
+  const name=v.taxiway;
+  if(!['B','F','C1','C2','G','Q','J','A','H'].includes(name))continue;
+  const point=graph.nodes[hold];if(!point)continue;
+  const nearest=Math.min(...onRunway.map(e=>{
+   const p=qa.nearestOnEdge(point,x.graph.nodes[e.from],x.graph.nodes[e.to]);
+   return p?p.distance:Infinity;
+  }));
+  missed[bt][name]=Math.round(nearest);
+ }
+}
+console.log('OIMM_RUNWAY_SOURCE_GAPS_METERS',JSON.stringify(missed));
 console.log('OIMM_RUNWAY_BRIDGES_QA',JSON.stringify(qa.reviewedAxisBridge(graph).map(x=>({from:x.from,to:x.to,way:x.taxiway,metres:x.bridgedLengthMeters}))));
 console.log('OIMM_RUNWAY_ACCESS_QA',JSON.stringify(reported));
