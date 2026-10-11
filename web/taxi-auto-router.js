@@ -63,6 +63,8 @@ function goal(graph,token){
       {error:"No chart-connected civilian apron nodes were recorded"};
   }
   if(/^\d{2}[LRC]?$/.test(wanted)){
+    const runways=root.JEPPIRAN_OIMM_RUNWAY_GOALS;
+    if(runways?.recognize(wanted))return runways.goal(graph,wanted);
     const way=graph.runwayBacktracks?.["BT"+wanted]?.fromTaxiway;
     const hold=way&&graph.taxiways?.[way]?.exitNode;
     if(hold&&graph.nodes?.[hold]&&graph.holdNodes?.[hold]){
