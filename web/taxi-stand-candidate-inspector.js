@@ -4,13 +4,23 @@
 (function(root){"use strict";
 let task=null,container=null,lastAirport="";
 function getData(){
-  if(!task)task=fetch("./data/taxi-stand-candidates/LTFM.json",{cache:"no-store"})
-    .then(r=>{if(!r.ok)throw Error("LTFM stand inventory is not cached");return r.json()})
-    .then(data=>{
-      if(data.airport!=="LTFM"||String(data.cycle)!=="2621"||
-        !data.stands||Object.keys(data.stands).length<260)throw Error("LTFM stand cycle/index mismatch");
-      return data
-    }).catch(error=>{task=null;throw error});
+  if(!task)task=Promise.all([
+    fetch("./data/taxi-stand-registry/LTFM.json",{cache:"no-store"}),
+    fetch("./data/taxi-stand-candidates/LTFM.json",{cache:"no-store"})
+  ]).then(async([registryResponse,candidateResponse])=>{
+    if(!registryResponse.ok||!candidateResponse.ok)
+      throw Error("Published stand registry/nearby index unavailable offline");
+    const [registry,candidates]=await Promise.all([registryResponse.json(),candidateResponse.json()]);
+    if(registry.airport!=="LTFM"||candidates.airport!=="LTFM"||
+       String(registry.cycle)!=="2621"||String(candidates.cycle)!=="2621"||
+       Object.keys(registry.stands||{}).length<370||
+       Object.keys(candidates.stands||{}).length<260)
+      throw Error("Wrong airport/cycle in merged stand inventory");
+    const merged={airport:"LTFM",cycle:"2621",stats:registry.stats,stands:{}};
+    for(const [id,record] of Object.entries(registry.stands))
+      merged.stands[id]={...record,candidates:candidates.stands[id]?.candidates||[]};
+    return merged;
+  }).catch(error=>{task=null;throw error});
   return task;
 }
 function text(tag,str,parent){
@@ -21,7 +31,7 @@ function install(){
  if(!panel||document.getElementById("taxiStandCandidateInspector"))return;
  const wrapper=document.createElement("section");wrapper.id="taxiStandCandidateInspector";
  wrapper.style.cssText="padding:9px 11px;margin:7px 0;border:1px solid rgba(164,205,226,.25);border-radius:10px;background:rgba(17,32,45,.75);color:#e7efff";
- text("strong","ISTANBUL · STAND NEIGHBORS (UNVERIFIED QA)",wrapper);
+ text("strong","ISTANBUL · ALL STANDS / TAXIWAY RELATIONS (QA)",wrapper);
  const caption=text("div","Loading cycle 2621 Jeppesen label anchors...",wrapper);caption.style.fontSize="11px";
  const finder=document.createElement("input");finder.type="search";finder.placeholder="Find stand D3, 601, K50…";
  finder.style.cssText="display:block;width:100%;box-sizing:border-box;margin:7px 0;padding:7px;color:inherit;background:rgba(12,25,38,.8);border:1px solid #58687c;border-radius:6px";
@@ -34,9 +44,11 @@ function install(){
   if(!wrapper.isConnected)return;
   const ids=Object.keys(data.stands).sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
   const stats=data.stats||{};
-  caption.textContent=ids.length+" printed stand labels · "+
-    (stats.standsWithPublishedPushback||0)+" with published pushback instructions · "+
-    (stats.standsWithMatchedPublishedTaxiwayCandidate||0)+" aligned name/proximity matches. NOT cleared routes.";
+  caption.textContent=ids.length+" chart-mentioned stands: "+
+    (stats.individuallyPrinted||0)+" individual label anchors / "+
+    (stats.roundedGroupOnly||0)+" rounded INS groups · "+
+    (stats.publishedPushbackStands||0)+" with published pushback taxiways · "+
+    (stats.publishedNameAndNearestEdgeAgreements||0)+" chart-name/proximity matches. NONE certified as routable.";
   function updateList(){
     const filter=finder.value.trim().toUpperCase();
     list.replaceChildren();
@@ -52,15 +64,35 @@ function install(){
    const related=(entry.publishedPushbackTaxiways||[]).join(", ")||"none extracted";
    const notes=(entry.candidates||[]).map(v=>" • "+(v.taxiway||"UNNAMED")+
      " · "+v.distanceMeters+" m"+(v.chartNamedTaxiwayMatch?" · matches published pushback name":" · proximity only")).join("\n");
-   details.textContent="ST "+id+" · "+(entry.source||"Jeppesen chart")+
+   details.textContent="ST "+id+" · "+
+    (entry.hasIndividualStandPosition?"printed parking label":"shared INS coordinate group (NOT a stand position)")+
     "\nPUBLISHED PUSHBACK TWYs: "+related+
-    "\nCHARTS: "+(entry.pushbackSourceCharts||[]).join(", ")+
-    "\nNEARBY GRAPH EDGES ("+entry.candidates.length+"):\n"+(notes||"No candidate")+
+    "\nCHARTS: "+(entry.sourcePushbackCharts||[]).join(", ")+
+    "\nNON-GEOMETRIC INS GROUP: "+(entry.officialInsGroups||[]).map(x=>x.group).join(" | ")+
+    "\nNEARBY GRAPH EDGES ("+entry.candidates.length+"):\n"+(notes||"No individual near-edge geometry")+
     "\nCyan/purple dashed connectors = NOT A TAXI ROUTE. No stand-to-taxi movement authorized.";
   };
   updateList();
  }).catch(e=>{caption.textContent=String(e.message||e);details.textContent="No generated connections loaded."});
 }
+async function viewStand(id){
+  id=String(id||"").replace(/^(?:STAND\s*|ST)/i,"").trim().toUpperCase();
+  const data=await getData(),entry=data.stands[id];
+  if(!entry)return null;
+  install();
+  if(container){
+    const search=container.querySelector('input[type="search"]');
+    const list=container.querySelector("select");
+    if(search) {
+      search.value=id;search.dispatchEvent(new Event("input",{bubbles:true}));
+    }
+    if(list){
+      list.value=id;list.dispatchEvent(new Event("change",{bubbles:true}));
+    }
+  }
+  return entry;
+}
+root.JEPPIRAN_LTFM_STANDS={getData,viewStand};
 function refresh(){
  const icao=typeof selectedAirport==="string"?selectedAirport:"";
  if(icao==="LTFM"){install();if(container)container.hidden=false}

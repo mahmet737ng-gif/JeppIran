@@ -74,7 +74,7 @@ def build(pdf_path,stand_positions=None):
             standtext=page.get_textbox(fitz.Rect(84,top+1,140,bottom-1)).strip()
             # The table's header STAND overlaps its first actual stand row
             # on every J page. Filter the header LINE, not every cell containing it.
-            standtext="\\n".join(line for line in standtext.splitlines()
+            standtext="\n".join(line for line in standtext.splitlines()
                 if line.strip().upper() not in ("STAND","APRON","TERMINAL","CHANGES","NONE."))
             if not standtext.strip():continue
             ids=expand(standtext)

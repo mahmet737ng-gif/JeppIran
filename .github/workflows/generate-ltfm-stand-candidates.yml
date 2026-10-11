@@ -7,6 +7,7 @@ on:
       - scripts/import_taxi_stands.cjs
       - scripts/extract_ltfm_pushback_targets.py
       - scripts/enrich_ltfm_stand_candidates.py
+      - scripts/build_ltfm_stand_registry.cjs
       - .github/workflows/generate-ltfm-stand-candidates.yml
 permissions:
   contents: write
@@ -44,6 +45,9 @@ jobs:
       - name: Cross-check proximity against charted pushback taxiway names
         run: |
           python scripts/enrich_ltfm_stand_candidates.py web/data/taxi-stand-candidates/LTFM.json web/data/taxi-stand-pushback/LTFM.json web/data/taxi-stand-candidates/LTFM.json
+      - name: Build complete stand-name registry from all three official chart sources
+        run: |
+          node scripts/build_ltfm_stand_registry.cjs
       - name: QA no invented verified stand links
         run: |
           node scripts/test_import_taxi_stands.cjs
@@ -67,7 +71,13 @@ jobs:
           assert not c['routingApproved']
           assert all(not item['routingApproved'] and not item['connectorVerified'] for x in c['stands'].values() for item in x['candidates'])
           assert all(x['positionType']=='APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER' for x in p['stands'])
-          print('STAND QA PASS:',c['stats'])
+          x=json.load(open('web/data/taxi-stand-registry/LTFM.json'))
+          assert x['stats']['standNames']>=379 and x['stats']['roundedGroupOnly']>=100
+          assert x['stats']['verifiedStandConnectors']==0
+          assert all(v['position'] and not v['routingApproved'] for v in x['stands'].values())
+          assert x['stands']['100']['locationType']=='ROUNDED_INS_STAND_GROUP_ONLY'
+          assert x['stands']['D3']['locationType']=='PRINTED_LABEL_ANCHOR'
+          print('STAND QA PASS:',c['stats'],'registry:',x['stats'])
           PY
       - name: Commit only generated data against latest main
         run: |
@@ -78,14 +88,16 @@ jobs:
           cp web/data/taxi-stand-positions/LTFM.json /tmp/jeppiran-taxi-stand-generated/positions.json
           cp web/data/taxi-stand-candidates/LTFM.json /tmp/jeppiran-taxi-stand-generated/candidates.json
           cp web/data/taxi-stand-pushback/LTFM.json /tmp/jeppiran-taxi-stand-generated/pushback.json
+          cp web/data/taxi-stand-registry/LTFM.json /tmp/jeppiran-taxi-stand-generated/registry.json
           for attempt in 1 2 3 4 5 6 7 8; do
             git fetch origin main
             git reset --hard origin/main
-            mkdir -p web/data/taxi-stand-pushback
+            mkdir -p web/data/taxi-stand-pushback web/data/taxi-stand-registry
             cp /tmp/jeppiran-taxi-stand-generated/positions.json web/data/taxi-stand-positions/LTFM.json
             cp /tmp/jeppiran-taxi-stand-generated/candidates.json web/data/taxi-stand-candidates/LTFM.json
             cp /tmp/jeppiran-taxi-stand-generated/pushback.json web/data/taxi-stand-pushback/LTFM.json
-            git add web/data/taxi-stand-positions/LTFM.json web/data/taxi-stand-candidates/LTFM.json web/data/taxi-stand-pushback/LTFM.json
+            cp /tmp/jeppiran-taxi-stand-generated/registry.json web/data/taxi-stand-registry/LTFM.json
+            git add web/data/taxi-stand-positions/LTFM.json web/data/taxi-stand-candidates/LTFM.json web/data/taxi-stand-pushback/LTFM.json web/data/taxi-stand-registry/LTFM.json
             git diff --cached --quiet && exit 0
             git commit -m 'data(taxi): publish printed stand label and Jeppesen pushback QA inventory [skip ci]'
             if git push origin HEAD:main; then exit 0; fi
