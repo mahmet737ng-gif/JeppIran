@@ -1,0 +1,29 @@
+{
+  "airport": "LTFM",
+  "cycle": "2621",
+  "simulationOnly": true,
+  "routingApproved": false,
+  "kind": "stand-nearby-taxiway-candidates",
+  "stands": {
+    "601": {
+      "position": {
+        "lat": 41.2521389,
+        "lon": 28.7626944
+      },
+      "candidates": [
+        {
+          "taxiway": "UNNAMED",
+          "edgeFrom": "O10212766127",
+          "edgeTo": "O10212766126",
+          "distanceMeters": 15,
+          "point": {
+            "lat": 41.2520097,
+            "lon": 28.7627455
+          },
+          "connectorVerified": false
+        }
+      ],
+      "status": "UNVERIFIED_CANDIDATES"
+    }
+  }
+}
