@@ -1,0 +1,47 @@
+{
+  "cycle": "2621",
+  "airport": "OIBQ",
+  "source_pdf_page": 155,
+  "procedure": "VOR DME 2 RWY 31",
+  "chart_number": "13-5",
+  "review_status": "USER_ACCEPTED_FOR_QA_TEST_ONLY",
+  "user_acceptance_date": "2026-10-11",
+  "distance_reference": "KHG VOR/DME 113.4",
+  "descent_angle_deg": 3,
+  "angle_source": "ASSUMED_NOT_PUBLISHED",
+  "published_constraints": [
+    {
+      "dme": 12,
+      "altitude_ft": 1500,
+      "type": "MANDATORY"
+    },
+    {
+      "dme": 5,
+      "altitude_ft": 1200,
+      "type": "PUBLISHED_ALTITUDE"
+    },
+    {
+      "dme": 2,
+      "altitude_ft": 500,
+      "type": "MDA_NOT_CROSSING_ALTITUDE"
+    }
+  ],
+  "qa_geometry_only": [
+    {
+      "dme": 5,
+      "altitude_ft": 1200
+    },
+    {
+      "dme": 4,
+      "altitude_ft": 882
+    },
+    {
+      "dme": 3,
+      "altitude_ft": 563
+    }
+  ],
+  "unresolved": "D6-D11 not derivable as continuous 3-degree descent when simultaneously honoring D12 mandatory. Do not fill with invented heights.",
+  "vdp_status": "NOT_DETERMINED",
+  "navigation_approved": false,
+  "release_policy": "QA signoff from project owner does not certify obstacle clearance, procedure validity, or operational chart values. Do not insert as operationally approved CDFA."
+}
