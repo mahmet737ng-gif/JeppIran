@@ -324,3 +324,36 @@ runway-centreline and taxiway intersection anchors.
 the visual runway section has exactly two aligned endpoints for each of the
 three explicit J/A/Q backtracks. This does not amount to visual flight
 verification of a real runway centreline. The app is SIM QA ONLY.
+
+## R27 · correct two-runway interpretation of 10-9 ADC (2026-10-11)
+
+The prior R25/R26 model **mistakenly treated both thick BLACK runway
+strips as the two borders of one runway** and drew the magenta backtrack
+in the WHITE median. That interpretation is WRONG and superseded.
+
+- ADC 10-9 **left/south-west BLACK strip**: distinct **RWY 13R/31L**,
+  length marked 3,920 m in the source chart. Graphic longitudinal
+  endpoints anchored to its own chart coordinates at **H → D**.
+- ADC 10-9 **right/north-east BLACK strip**: distinct **RWY 13L/31R**,
+  length marked 3,810 m in the source chart. Graphic longitudinal
+  endpoints anchored to **M → P**.
+- The space between these two black strips is the **inter-runway gap**,
+  not a runway surface. Never average H with M or D with P for a
+  fictitious third/middle runway.
+- All explicit `BT13R` / `BT31L` on this OIMM network project to the
+  **left H-D black strip axis**. Their selected J/Q/A-to-H/D backtrack
+  remains straight to the named physical intersection station. Only
+  the uncertain source-chart hold-to-runway jump is shown in dashed
+  amber, never as a confirmed magenta taxi clearance.
+- Both left and right graphic axes are independently addressable in the
+  shared renderer for future route/approach work; no unreviewed
+  `BT13L` or `BT31R` access edges were added.
+- Source graph, PDF, georeferences, simulator bridge, Android, LTFM and
+  all user-approved backgrounds remain unchanged. This changes the
+  **Web/PWA visualization of the OIMM black runway strokes only**.
+- Regression checks assert H/D and M/P are separate, physically
+  displaced graphic axes, and that BT13R and BT31L are collinear with
+  H-D, not with the white midpoint.
+
+All coordinates remain **chart-derived simulator QA**, not geodetic
+survey coordinates or approval for actual aircraft taxi navigation.
