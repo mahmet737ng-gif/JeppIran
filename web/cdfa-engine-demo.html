@@ -28,7 +28,8 @@ tr.bad td{color:#ffa8a8}tr.model td{color:#d6c08c}
 <label>ICAO/Chart ID<input id="chart" value="TRAINING-ONLY"></label>
 <label>مرجع DME هدر چارت<input id="ref" value="DEMO"></label>
 <label>شناسه دستگاه منتخب<input id="station" value="DEMO"></label>
-<label>ارتفاع آستانه (ft MSL)<input type="number" id="elev" value="100" step="1"></label>
+<label>ارتفاع آستانه باند (ft؛ اگر موجود نیست خالی)<input type="number" id="elev" value="100" step="1"></label>
+<label>ارتفاع فرودگاه (ft؛ فقط جایگزینِ نبودِ ارتفاع آستانه)<input type="number" id="airportElev" placeholder="Airport Elevation" step="1"></label>
 <label>حداقل ارتفاع نزول MDA (ft، اختیاری)<input type="number" id="mda" placeholder="نامشخص"></label>
 <label>Threshold Crossing Height (ft)<input type="number" id="tch" value="50" step="1"></label>
 <label>زاویه منتشرشده روی چارت (درجه؛ اگر ندارد خالی بگذارید)<input type="number" id="angle" placeholder="پیش‌فرض 3.00°" step="0.01"></label>
@@ -56,20 +57,24 @@ function calculate(){
   try{
     let fixes=JSON.parse(el('fixes').value);
     const cfg={ chartId:el('chart').value, chartDmeId:el('ref').value,
-      thresholdElevationFt:Number(el('elev').value), tchFt:Number(el('tch').value),
+      tchFt:Number(el('tch').value),
       station:{id:el('station').value,placement:el('placement').value,offsetNm:Number(el('offset').value),lateralNm:Number(el('lateral').value),branch:el('branch').value,geometryVerified:el('geoVerified').value==='true'},
       dmeReadingsNm:Array.from({length:Number(el('max').value)-Number(el('start').value)+1},(_,i)=>i+Number(el('start').value)),
       validAngleDmeRange:{from:Number(el('rangeStart').value),to:Number(el('rangeEnd').value)},publishedConstraints:fixes,minimumThresholdCoverageNm:Number(el('minThreshold').value),coverageStepDmeNm:Number(el('step').value)};
+    if(el('elev').value.trim()) cfg.thresholdElevationFt=Number(el('elev').value);
+    if(el('airportElev').value.trim()) cfg.airportElevationFt=Number(el('airportElev').value);
     if(el('angle').value.trim()) cfg.publishedAngleDeg=Number(el('angle').value);
     if(el('stationElev').value.trim()) cfg.station.elevationFt=Number(el('stationElev').value);
     if(el('mda').value.trim()) cfg.mdaFt=Number(el('mda').value);
     last=JeppIranCdfaEngine.buildTable(cfg);
     el('resultHead').textContent='ENGINE '+last.version+'  |  STATUS: '+last.status+'  |  THR: '+last.parameters.crossingAltitudeFt+' ft  |  GRADIENT: '+last.parameters.gradientFtPerNm.toFixed(3)+' ft/NM  |  MAX TO THR: '+last.coverage.maxModeledThresholdDistanceNm.toFixed(2)+' NM  |  DME AT THR+10: '+last.coverage.dmeAtRequiredThresholdNm.toFixed(2)+'  |  PUBLISHED 10-NM COVERAGE: '+(last.coverage.publishedAngleCovers10Nm?'YES':'NO');
+    el('resultHead').textContent += '  |  ELEVATION SOURCE: '+last.parameters.elevationSource;
     el('resultHead').textContent += '  |  VDP (computed): '+(last.vdp.dmeDisplay||'N/A');
     el('resultHead').className=last.status==='BLOCKED_BY_QA'?'err':'ok';
     el('issues').textContent=(last.issues.length?last.issues.map(x=>x.code+(x.dmeNm===undefined?'':' at D'+x.dmeNm)).join('; '):'No declared altitude-constraint conflict. ')+
       ' | AUTO ADDED DME: '+(last.coverage.autoAddedDmeReadingsNm.join(', ')||'none')+
-      ' | WARNING: beyond the chart-published angle, rows are MODEL_ONLY — not authorized for actual flight.';
+      ' | ELEVATION: '+(last.parameters.usedAirportElevationFallback?'AIRPORT ELEVATION SUBSTITUTE — QA ONLY; RWY THRESHOLD UNVERIFIED':'RUNWAY THRESHOLD')+
+      ' | WARNING: beyond chart-published angle, rows are MODEL_ONLY — not authorized for actual flight.';
 
     el('output').replaceChildren(...last.rows.map(r=>{
       const tr=document.createElement('tr');tr.className=r.status==='CONFLICT'||r.status==='UNRESOLVED'?'bad':r.status==='MODEL_ONLY'?'model':'';
