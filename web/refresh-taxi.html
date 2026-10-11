@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"><meta name="theme-color" content="#071827">
-<title>JEPPIRAN · Refresh TAXI R10</title>
+<title>JEPPIRAN · Refresh TAXI R12</title>
 <style>
 body{margin:0;background:#071827;color:#dff6ff;font:15px/1.5 system-ui,-apple-system,sans-serif}
 main{max-width:460px;padding:22px;margin:15vh auto 0;text-align:center}
@@ -9,10 +9,10 @@ h1{letter-spacing:.07em}b{color:#ff39ce}
 .status{background:#123149;border:1px solid #3289ad;border-radius:10px;padding:14px}
 a{color:#8ae8ff;display:block;margin:18px 0}
 </style></head>
-<body><main><h1>JEPP<b>IRAN</b></h1><h2>TAXI · R10</h2>
+<body><main><h1>JEPP<b>IRAN</b></h1><h2>TAXI · R12</h2>
 <p>Replacing the old web app shell. Saved offline PDF charts will not be deleted.</p>
 <div class="status" id="status" role="status">Refreshing…</div>
-<a href="./?taxi-r10-20261011#charts">Open latest JEPPIRAN</a></main>
+<a href="./?taxi-r12-20261011#charts">Open latest JEPPIRAN</a></main>
 <script>
 (async()=>{
   const out=document.getElementById("status"),scope=new URL("./",location.href).href;
@@ -26,7 +26,7 @@ a{color:#8ae8ff;display:block;margin:18px 0}
       await Promise.all(keys.filter(k=>k.startsWith("jeppiran-pwa-")).map(k=>caches.delete(k)));
     }
     out.textContent="Shell refreshed. Opening the updated TAXI app…";
-    location.replace(new URL("./?taxi-r10-20261011#charts",location.href).href);
+    location.replace(new URL("./?taxi-r12-20261011#charts",location.href).href);
   }catch(error){
     out.textContent="Auto-refresh blocked: "+String(error?.message||error)+". Use the link below.";
   }
