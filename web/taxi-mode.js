@@ -1262,16 +1262,6 @@ function draw(){
       segment.push(p);
     }
     paintPath(svg,segment,holdPositions,w,true);
-    if(r.previewOnly){
-      const startNode=r.graph.nodes[r.path[0]],startGeo=startNode&&projectGeo(model,startNode.lat,startNode.lon);
-      if(startGeo){
-        svg.appendChild(s("circle",{cx:startGeo.x,cy:startGeo.y,r:6,
-          stroke:"#161724","stroke-width":1.5,fill:"#f200d9"}));
-        const t=s("text",{x:startGeo.x+10,y:startGeo.y-9,fill:"#ffbafb","font-size":12,
-          "font-weight":"bold",stroke:"#102137","stroke-width":3,"paint-order":"stroke"});
-        t.textContent="DEMO START";svg.appendChild(t);
-      }
-    }
   }
   if(taxi.testStart&&model){
     const p=projectGeo(model,taxi.testStart.lat,taxi.testStart.lon);
