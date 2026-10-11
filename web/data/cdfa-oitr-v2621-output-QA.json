@@ -1,0 +1,411 @@
+{
+  "version": "1.2.0",
+  "chartId": "OITR/OMH-VOR-RWY03-13-1-CYCLE2621",
+  "referenceDmeId": "UMH",
+  "parameters": {
+    "thresholdElevationFt": 4342,
+    "tchFt": 50,
+    "crossingAltitudeFt": 4392,
+    "mdaFt": 4800,
+    "angleDeg": 3.77,
+    "angleSource": "PUBLISHED_CHART_INPUT",
+    "gradientFtPerNm": 400.37977417718196,
+    "dmePlacement": "after_threshold",
+    "dmeOffsetNm": 2.2,
+    "lateralOffsetNm": 0,
+    "usedSlantRangeCorrection": false,
+    "publishedAngleDmeRange": {
+      "from": 3,
+      "to": 9
+    }
+  },
+  "checks": [
+    {
+      "dmeNm": 4,
+      "altitudeFt": 5100,
+      "type": "minimum",
+      "label": "D4.0; descent-profile 5100 ft",
+      "rawAltitudeFt": 5112.683594,
+      "roundedAltitudeFt": 5120,
+      "ok": true,
+      "code": "PASS"
+    },
+    {
+      "dmeNm": 7,
+      "altitudeFt": 6300,
+      "type": "minimum",
+      "label": "D7.0; descent-profile 6300 ft",
+      "rawAltitudeFt": 6313.822916,
+      "roundedAltitudeFt": 6320,
+      "ok": true,
+      "code": "PASS"
+    },
+    {
+      "dmeNm": 9,
+      "altitudeFt": 7100,
+      "type": "minimum",
+      "label": "D9.0; final approach altitude 7100 ft",
+      "rawAltitudeFt": 7114.582464,
+      "roundedAltitudeFt": 7120,
+      "ok": true,
+      "code": "PASS"
+    },
+    {
+      "dmeNm": 11,
+      "altitudeFt": 7700,
+      "type": "minimum",
+      "label": "D11.0; 7700 ft pre-FAF segment",
+      "rawAltitudeFt": 7915.342013,
+      "roundedAltitudeFt": 7920,
+      "ok": true,
+      "code": "PASS"
+    },
+    {
+      "dmeNm": 12,
+      "altitudeFt": 8000,
+      "type": "minimum",
+      "label": "D12.0; 8000 ft pre-FAF segment",
+      "rawAltitudeFt": 8315.721787,
+      "roundedAltitudeFt": 8320,
+      "ok": true,
+      "code": "PASS"
+    }
+  ],
+  "issues": [],
+  "rows": [
+    {
+      "dmeNm": 3,
+      "thresholdDistanceNm": 0.8,
+      "rawAltitudeFt": 4712.303819,
+      "roundedAltitudeFt": 4720,
+      "status": "MODEL_ONLY",
+      "reasons": [
+        "STATION_GEOMETRY_NOT_SURVEY_VERIFIED",
+        "BELOW_MDA_DO_NOT_USE"
+      ],
+      "published": [],
+      "coverageAutoExtended": false
+    },
+    {
+      "dmeNm": 3.2,
+      "thresholdDistanceNm": 1,
+      "rawAltitudeFt": 4792.379774,
+      "roundedAltitudeFt": 4800,
+      "status": "MODEL_ONLY",
+      "reasons": [
+        "STATION_GEOMETRY_NOT_SURVEY_VERIFIED",
+        "BELOW_MDA_DO_NOT_USE"
+      ],
+      "published": [],
+      "coverageAutoExtended": false
+    },
+    {
+      "dmeNm": 3.5,
+      "thresholdDistanceNm": 1.3,
+      "rawAltitudeFt": 4912.493706,
+      "roundedAltitudeFt": 4920,
+      "status": "MODEL_ONLY",
+      "reasons": [
+        "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+      ],
+      "published": [],
+      "coverageAutoExtended": false
+    },
+    {
+      "dmeNm": 4,
+      "thresholdDistanceNm": 1.8,
+      "rawAltitudeFt": 5112.683594,
+      "roundedAltitudeFt": 5120,
+      "status": "MODEL_ONLY",
+      "reasons": [
+        "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+      ],
+      "published": [
+        {
+          "type": "minimum",
+          "altitudeFt": 5100,
+          "label": "D4.0; descent-profile 5100 ft"
+        }
+      ],
+      "coverageAutoExtended": false
+    },
+    {
+      "dmeNm": 4.5,
+      "thresholdDistanceNm": 2.3,
+      "rawAltitudeFt": 5312.873481,
+      "roundedAltitudeFt": 5320,
+      "status": "MODEL_ONLY",
+      "reasons": [
+        "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+      ],
+      "published": [],
+      "coverageAutoExtended": false
+    },
+    {
+      "dmeNm": 5,
+      "thresholdDistanceNm": 2.8,
+      "rawAltitudeFt": 5513.063368,
+      "roundedAltitudeFt": 5520,
+      "status": "MODEL_ONLY",
+      "reasons": [
+        "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+      ],
+      "published": [],
+      "coverageAutoExtended": false
+    },
+    {
+      "dmeNm": 5.5,
+      "thresholdDistanceNm": 3.3,
+      "rawAltitudeFt": 5713.253255,
+      "roundedAltitudeFt": 5720,
+      "status": "MODEL_ONLY",
+      "reasons": [
+        "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+      ],
+      "published": [],
+      "coverageAutoExtended": false
+    },
+    {
+      "dmeNm": 6,
+      "thresholdDistanceNm": 3.8,
+      "rawAltitudeFt": 5913.443142,
+      "roundedAltitudeFt": 5920,
+      "status": "MODEL_ONLY",
+      "reasons": [
+        "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+      ],
+      "published": [],
+      "coverageAutoExtended": false
+    },
+    {
+      "dmeNm": 6.5,
+      "thresholdDistanceNm": 4.3,
+      "rawAltitudeFt": 6113.633029,
+      "roundedAltitudeFt": 6120,
+      "status": "MODEL_ONLY",
+      "reasons": [
+        "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+      ],
+      "published": [],
+      "coverageAutoExtended": false
+    },
+    {
+      "dmeNm": 7,
+      "thresholdDistanceNm": 4.8,
+      "rawAltitudeFt": 6313.822916,
+      "roundedAltitudeFt": 6320,
+      "status": "MODEL_ONLY",
+      "reasons": [
+        "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+      ],
+      "published": [
+        {
+          "type": "minimum",
+          "altitudeFt": 6300,
+          "label": "D7.0; descent-profile 6300 ft"
+        }
+      ],
+      "coverageAutoExtended": false
+    },
+    {
+      "dmeNm": 7.5,
+      "thresholdDistanceNm": 5.3,
+      "rawAltitudeFt": 6514.012803,
+      "roundedAltitudeFt": 6520,
+      "status": "MODEL_ONLY",
+      "reasons": [
+        "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+      ],
+      "published": [],
+      "coverageAutoExtended": false
+    },
+    {
+      "dmeNm": 8,
+      "thresholdDistanceNm": 5.8,
+      "rawAltitudeFt": 6714.20269,
+      "roundedAltitudeFt": 6720,
+      "status": "MODEL_ONLY",
+      "reasons": [
+        "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+      ],
+      "published": [],
+      "coverageAutoExtended": false
+    },
+    {
+      "dmeNm": 8.5,
+      "thresholdDistanceNm": 6.3,
+      "rawAltitudeFt": 6914.392577,
+      "roundedAltitudeFt": 6920,
+      "status": "MODEL_ONLY",
+      "reasons": [
+        "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+      ],
+      "published": [],
+      "coverageAutoExtended": false
+    },
+    {
+      "dmeNm": 9,
+      "thresholdDistanceNm": 6.8,
+      "rawAltitudeFt": 7114.582464,
+      "roundedAltitudeFt": 7120,
+      "status": "MODEL_ONLY",
+      "reasons": [
+        "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+      ],
+      "published": [
+        {
+          "type": "minimum",
+          "altitudeFt": 7100,
+          "label": "D9.0; final approach altitude 7100 ft"
+        }
+      ],
+      "coverageAutoExtended": false
+    },
+    {
+      "dmeNm": 9.5,
+      "thresholdDistanceNm": 7.3,
+      "rawAltitudeFt": 7314.772351,
+      "roundedAltitudeFt": 7320,
+      "status": "MODEL_ONLY",
+      "reasons": [
+        "OUTSIDE_PUBLISHED_ANGLE_SCOPE",
+        "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+      ],
+      "published": [],
+      "coverageAutoExtended": false
+    },
+    {
+      "dmeNm": 10,
+      "thresholdDistanceNm": 7.8,
+      "rawAltitudeFt": 7514.962239,
+      "roundedAltitudeFt": 7520,
+      "status": "MODEL_ONLY",
+      "reasons": [
+        "OUTSIDE_PUBLISHED_ANGLE_SCOPE",
+        "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+      ],
+      "published": [],
+      "coverageAutoExtended": false
+    },
+    {
+      "dmeNm": 10.5,
+      "thresholdDistanceNm": 8.3,
+      "rawAltitudeFt": 7715.152126,
+      "roundedAltitudeFt": 7720,
+      "status": "MODEL_ONLY",
+      "reasons": [
+        "OUTSIDE_PUBLISHED_ANGLE_SCOPE",
+        "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+      ],
+      "published": [],
+      "coverageAutoExtended": false
+    },
+    {
+      "dmeNm": 11,
+      "thresholdDistanceNm": 8.8,
+      "rawAltitudeFt": 7915.342013,
+      "roundedAltitudeFt": 7920,
+      "status": "MODEL_ONLY",
+      "reasons": [
+        "OUTSIDE_PUBLISHED_ANGLE_SCOPE",
+        "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+      ],
+      "published": [
+        {
+          "type": "minimum",
+          "altitudeFt": 7700,
+          "label": "D11.0; 7700 ft pre-FAF segment"
+        }
+      ],
+      "coverageAutoExtended": false
+    },
+    {
+      "dmeNm": 11.5,
+      "thresholdDistanceNm": 9.3,
+      "rawAltitudeFt": 8115.5319,
+      "roundedAltitudeFt": 8120,
+      "status": "MODEL_ONLY",
+      "reasons": [
+        "OUTSIDE_PUBLISHED_ANGLE_SCOPE",
+        "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+      ],
+      "published": [],
+      "coverageAutoExtended": false
+    },
+    {
+      "dmeNm": 12,
+      "thresholdDistanceNm": 9.8,
+      "rawAltitudeFt": 8315.721787,
+      "roundedAltitudeFt": 8320,
+      "status": "MODEL_ONLY",
+      "reasons": [
+        "OUTSIDE_PUBLISHED_ANGLE_SCOPE",
+        "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+      ],
+      "published": [
+        {
+          "type": "minimum",
+          "altitudeFt": 8000,
+          "label": "D12.0; 8000 ft pre-FAF segment"
+        }
+      ],
+      "coverageAutoExtended": false
+    },
+    {
+      "dmeNm": 12.2,
+      "thresholdDistanceNm": 10,
+      "rawAltitudeFt": 8395.797742,
+      "roundedAltitudeFt": 8400,
+      "status": "MODEL_ONLY",
+      "reasons": [
+        "OUTSIDE_PUBLISHED_ANGLE_SCOPE",
+        "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+      ],
+      "published": [],
+      "coverageAutoExtended": false
+    },
+    {
+      "dmeNm": 12.5,
+      "thresholdDistanceNm": 10.3,
+      "rawAltitudeFt": 8515.911674,
+      "roundedAltitudeFt": 8520,
+      "status": "MODEL_ONLY",
+      "reasons": [
+        "OUTSIDE_PUBLISHED_ANGLE_SCOPE",
+        "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+      ],
+      "published": [],
+      "coverageAutoExtended": false
+    },
+    {
+      "dmeNm": 13,
+      "thresholdDistanceNm": 10.8,
+      "rawAltitudeFt": 8716.101561,
+      "roundedAltitudeFt": 8720,
+      "status": "MODEL_ONLY",
+      "reasons": [
+        "OUTSIDE_PUBLISHED_ANGLE_SCOPE",
+        "STATION_GEOMETRY_NOT_SURVEY_VERIFIED"
+      ],
+      "published": [],
+      "coverageAutoExtended": false
+    }
+  ],
+  "coverage": {
+    "requiredThresholdDistanceNm": 10,
+    "requiredDmeReadoutNm": 10,
+    "dmeAtRequiredThresholdNm": 12.2,
+    "maxModeledThresholdDistanceNm": 10.8,
+    "maxModeledDmeNm": 13,
+    "meetsThresholdModelCoverage": true,
+    "meetsDmeModelCoverage": true,
+    "autoAddedDmeReadingsNm": [],
+    "maxPublishedAngleScopedThresholdNm": 6.8,
+    "publishedAngleCovers10Nm": false,
+    "modelExtensionIsPublishedProcedure": false,
+    "note": "Model coverage is NOT published CDFA authorization. Rows beyond chart angle/fix scope remain MODEL_ONLY."
+  },
+  "status": "PRELIMINARY_GEOMETRY",
+  "candidateRows": [],
+  "disclaimer": "SIMULATOR/ENGINEERING QA ONLY. Not for actual navigation; not obstacle-clearance approved."
+}
