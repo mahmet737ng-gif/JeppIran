@@ -1,0 +1,4036 @@
+{
+  "airport": "LTFM",
+  "cycle": "2621",
+  "schemaVersion": 1,
+  "kind": "taxiway-topology-audit",
+  "coordinateSystem": "WGS84",
+  "routeApproved": false,
+  "allTaxiwaysChartVerified": false,
+  "source": {
+    "provider": "OpenStreetMap contributors",
+    "license": "ODbL 1.0",
+    "retrievedAt": "2026-10-11T00:09:46.290055+00:00",
+    "verification": "Network geometry and names are not approved against Jeppesen 30-9 and AIP PRKG/GMC. Do not infer apron stand connectors from proximity."
+  },
+  "referenceCharts": [
+    {
+      "chart": "30-9",
+      "type": "ADC",
+      "page": 1244
+    },
+    {
+      "chart": "30-9B",
+      "type": "PARKING/DOCKING",
+      "page": 1247
+    },
+    {
+      "chart": "30-9C",
+      "type": "PARKING/DOCKING",
+      "page": 1248
+    },
+    {
+      "chart": "30-9D",
+      "type": "INS COORDINATES",
+      "page": 1249
+    },
+    {
+      "chart": "30-9E",
+      "type": "INS COORDINATES",
+      "page": 1250
+    },
+    {
+      "chart": "30-9J4",
+      "type": "PUSHBACK",
+      "page": 1277
+    }
+  ],
+  "taxiways": {
+    "A": {
+      "edges": 37,
+      "nodeCount": 38,
+      "parts": 1,
+      "lengthMeters": 3642,
+      "endpoints": [
+        "O7922827345",
+        "O5501867325"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A3",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A3B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A4",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A5B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A6B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A7",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A7B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A8B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A9B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A10B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A11B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A12B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "B10",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2654215,
+        28.7114983,
+        41.2981704,
+        28.712158
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "A1": {
+      "edges": 17,
+      "nodeCount": 18,
+      "parts": 1,
+      "lengthMeters": 795,
+      "endpoints": [
+        "O6023430504",
+        "O10965928834"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A1B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "E1",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "E1D",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2650033,
+        28.7122157,
+        41.2651161,
+        28.7217308
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "A1A": {
+      "edges": 5,
+      "nodeCount": 6,
+      "parts": 1,
+      "lengthMeters": 210,
+      "endpoints": [
+        "O5336182412",
+        "O7932229964"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A1B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A1C",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.264946,
+        28.7073872,
+        41.2649758,
+        28.7098994
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "A1B": {
+      "edges": 4,
+      "nodeCount": 5,
+      "parts": 1,
+      "lengthMeters": 194,
+      "endpoints": [
+        "O10965928834",
+        "O5336182412"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A1",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A1A",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2649758,
+        28.7098994,
+        41.2650033,
+        28.7122157
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "A1C": {
+      "edges": 18,
+      "nodeCount": 19,
+      "parts": 1,
+      "lengthMeters": 529,
+      "endpoints": [
+        "O7932229964",
+        "O6573505905"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A1A",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2649267,
+        28.7050796,
+        41.2681882,
+        28.7073872
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "A2A": {
+      "edges": 4,
+      "nodeCount": 5,
+      "parts": 1,
+      "lengthMeters": 166,
+      "endpoints": [
+        "O5336182414",
+        "O5501867174"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A2B",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2658287,
+        28.7078997,
+        41.2658499,
+        28.7098819
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "A2B": {
+      "edges": 3,
+      "nodeCount": 4,
+      "parts": 1,
+      "lengthMeters": 147,
+      "endpoints": [
+        "O5501867186",
+        "O5336182414"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A2A",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2658499,
+        28.7098819,
+        41.2658686,
+        28.7116401
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "A3": {
+      "edges": 24,
+      "nodeCount": 25,
+      "parts": 1,
+      "lengthMeters": 897,
+      "endpoints": [
+        "O6023430533",
+        "O6023430539"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A3B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A4A",
+          "commonNodes": 2
+        },
+        {
+          "taxiway": "B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "B4A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "E1",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2668702,
+        28.7121288,
+        41.2669902,
+        28.7228585
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "A3A": {
+      "edges": 4,
+      "nodeCount": 5,
+      "parts": 1,
+      "lengthMeters": 165,
+      "endpoints": [
+        "O5336182416",
+        "O5501867170"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A3B",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2668227,
+        28.7078874,
+        41.2668448,
+        28.7098619
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "A3B": {
+      "edges": 4,
+      "nodeCount": 5,
+      "parts": 1,
+      "lengthMeters": 189,
+      "endpoints": [
+        "O6023430539",
+        "O5336182416"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A3",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A3A",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2668448,
+        28.7098619,
+        41.2668702,
+        28.7121288
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "A4": {
+      "edges": 42,
+      "nodeCount": 43,
+      "parts": 1,
+      "lengthMeters": 996,
+      "endpoints": [
+        "O5680519887",
+        "O5680519880"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A4A",
+          "commonNodes": 2
+        }
+      ],
+      "bounds": [
+        41.2677238,
+        28.710374,
+        41.2678758,
+        28.72229
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "A4A": {
+      "edges": 17,
+      "nodeCount": 18,
+      "parts": 1,
+      "lengthMeters": 280,
+      "endpoints": [
+        "O7297534110",
+        "O7297534109",
+        "O7918203635",
+        "O7918203639"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A3",
+          "commonNodes": 2
+        },
+        {
+          "taxiway": "A4",
+          "commonNodes": 2
+        }
+      ],
+      "bounds": [
+        41.2669217,
+        28.7167223,
+        41.2678179,
+        28.7177895
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "A5A": {
+      "edges": 5,
+      "nodeCount": 6,
+      "parts": 1,
+      "lengthMeters": 488,
+      "endpoints": [
+        "O5501867143",
+        "O5501867150"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A5B",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2747497,
+        28.7071198,
+        41.278734,
+        28.7093986
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "A5B": {
+      "edges": 10,
+      "nodeCount": 11,
+      "parts": 1,
+      "lengthMeters": 254,
+      "endpoints": [
+        "O5501867131",
+        "O5501867143"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A5A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A6B",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2743759,
+        28.7093986,
+        41.2747923,
+        28.7119692
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "A6A": {
+      "edges": 7,
+      "nodeCount": 8,
+      "parts": 1,
+      "lengthMeters": 529,
+      "endpoints": [
+        "O5501866257",
+        "O4875388458"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A6B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A7A",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2779628,
+        28.7070516,
+        41.2822509,
+        28.7096388
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "A6B": {
+      "edges": 6,
+      "nodeCount": 7,
+      "parts": 1,
+      "lengthMeters": 436,
+      "endpoints": [
+        "O4875388458",
+        "O12337194342"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A5B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A6A",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2744977,
+        28.7096388,
+        41.2779628,
+        28.7119752
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "A7": {
+      "edges": 14,
+      "nodeCount": 15,
+      "parts": 1,
+      "lengthMeters": 898,
+      "endpoints": [
+        "O6023430540",
+        "O7918203858"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A7B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "B8A",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2850114,
+        28.7117634,
+        41.2851343,
+        28.7225056
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "A7A": {
+      "edges": 12,
+      "nodeCount": 13,
+      "parts": 1,
+      "lengthMeters": 598,
+      "endpoints": [
+        "O5336182424",
+        "O5501866267"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A6A",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2810494,
+        28.7070749,
+        41.286044,
+        28.7094766
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "A7B": {
+      "edges": 4,
+      "nodeCount": 5,
+      "parts": 1,
+      "lengthMeters": 189,
+      "endpoints": [
+        "O5501866278",
+        "O6023430540"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A7",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.284964,
+        28.7094982,
+        41.2850114,
+        28.7117634
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "A8A": {
+      "edges": 10,
+      "nodeCount": 11,
+      "parts": 1,
+      "lengthMeters": 574,
+      "endpoints": [
+        "O5501866292",
+        "O5501866282"
+      ],
+      "neighbors": [],
+      "bounds": [
+        41.2839618,
+        28.7070184,
+        41.2887331,
+        28.7094226
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "A8B": {
+      "edges": 6,
+      "nodeCount": 7,
+      "parts": 1,
+      "lengthMeters": 424,
+      "endpoints": [
+        "O4879852491",
+        "O5501866245"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.288219,
+        28.7094207,
+        41.2916229,
+        28.7116302
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "A9A": {
+      "edges": 9,
+      "nodeCount": 10,
+      "parts": 1,
+      "lengthMeters": 581,
+      "endpoints": [
+        "O5501866283",
+        "O5501866315"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A9B",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2879172,
+        28.7069417,
+        41.2927615,
+        28.7093417
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "A9B": {
+      "edges": 10,
+      "nodeCount": 11,
+      "parts": 1,
+      "lengthMeters": 240,
+      "endpoints": [
+        "O5501866308",
+        "O5501866315"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A9A",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2922875,
+        28.7093417,
+        41.2927615,
+        28.7116094
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "A10A": {
+      "edges": 8,
+      "nodeCount": 9,
+      "parts": 1,
+      "lengthMeters": 230,
+      "endpoints": [
+        "O4879852495",
+        "O5501866932"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A10B",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2961639,
+        28.7067817,
+        41.2965736,
+        28.7092652
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "A10B": {
+      "edges": 4,
+      "nodeCount": 5,
+      "parts": 1,
+      "lengthMeters": 189,
+      "endpoints": [
+        "O6023430541",
+        "O4879852495"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A10A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "B10",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2965736,
+        28.7092652,
+        41.2965983,
+        28.71153
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "A11A": {
+      "edges": 9,
+      "nodeCount": 10,
+      "parts": 1,
+      "lengthMeters": 233,
+      "endpoints": [
+        "O5501866951",
+        "O4879852497"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A11B",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2972114,
+        28.7067614,
+        41.2976457,
+        28.7092437
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "A11B": {
+      "edges": 7,
+      "nodeCount": 8,
+      "parts": 1,
+      "lengthMeters": 215,
+      "endpoints": [
+        "O4879852497",
+        "O5501866978"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A11A",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2972569,
+        28.7092437,
+        41.2976653,
+        28.7115167
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "A12A": {
+      "edges": 8,
+      "nodeCount": 9,
+      "parts": 1,
+      "lengthMeters": 229,
+      "endpoints": [
+        "O5501867015",
+        "O4875388459"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A12B",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2981201,
+        28.7067438,
+        41.2985239,
+        28.709226
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "A12B": {
+      "edges": 7,
+      "nodeCount": 8,
+      "parts": 1,
+      "lengthMeters": 211,
+      "endpoints": [
+        "O4875388459",
+        "O7922827345"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A12A",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2981704,
+        28.709226,
+        41.2985394,
+        28.7114983
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "B": {
+      "edges": 65,
+      "nodeCount": 66,
+      "parts": 1,
+      "lengthMeters": 5683,
+      "endpoints": [
+        "O6027958739",
+        "O7918191468"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A3",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A7",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "B1A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "B3A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "B4A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "B6",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "B7",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "B8A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "B9",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "B9A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "B10",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "B12A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "D4",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "E1A",
+          "commonNodes": 2
+        },
+        {
+          "taxiway": "E1C",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "E1D",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2532356,
+        28.7220192,
+        41.2981743,
+        28.7308184
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "B1A": {
+      "edges": 5,
+      "nodeCount": 6,
+      "parts": 1,
+      "lengthMeters": 196,
+      "endpoints": [
+        "O6027958661",
+        "O6022768308"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "E1C",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2619803,
+        28.7228724,
+        41.2620059,
+        28.7252166
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "B1B": {
+      "edges": 3,
+      "nodeCount": 4,
+      "parts": 1,
+      "lengthMeters": 127,
+      "endpoints": [
+        "O5585276341",
+        "O5585276278"
+      ],
+      "neighbors": [],
+      "bounds": [
+        41.262011,
+        28.7256793,
+        41.2620275,
+        28.7271939
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "B2": {
+      "edges": 2,
+      "nodeCount": 3,
+      "parts": 1,
+      "lengthMeters": 100,
+      "endpoints": [
+        "O5585276405",
+        "O5585276412"
+      ],
+      "neighbors": [],
+      "bounds": [
+        41.262866,
+        28.7234528,
+        41.262878,
+        28.7246523
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "B3A": {
+      "edges": 5,
+      "nodeCount": 6,
+      "parts": 1,
+      "lengthMeters": 199,
+      "endpoints": [
+        "O5585276302",
+        "O6023430534"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "B3B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "E1D",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2651953,
+        28.7228934,
+        41.2657862,
+        28.7251436
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "B3B": {
+      "edges": 6,
+      "nodeCount": 7,
+      "parts": 1,
+      "lengthMeters": 210,
+      "endpoints": [
+        "O6023430525",
+        "O5585276302"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B3A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "C4A",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2657862,
+        28.7251436,
+        41.2658359,
+        28.7276592
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "B4A": {
+      "edges": 4,
+      "nodeCount": 5,
+      "parts": 1,
+      "lengthMeters": 189,
+      "endpoints": [
+        "O6023430528",
+        "O6023430533"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A3",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "B4B",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2669902,
+        28.7228585,
+        41.2670155,
+        28.7251199
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "B4B": {
+      "edges": 5,
+      "nodeCount": 6,
+      "parts": 1,
+      "lengthMeters": 210,
+      "endpoints": [
+        "O6023430526",
+        "O6023430528"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B4A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "C5A",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2670155,
+        28.7251199,
+        41.2670437,
+        28.7276356
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "B5A": {
+      "edges": 4,
+      "nodeCount": 5,
+      "parts": 1,
+      "lengthMeters": 147,
+      "endpoints": [
+        "O7918203843",
+        "O6023430529"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B5B",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2728192,
+        28.723245,
+        41.2728354,
+        28.7250077
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "B5B": {
+      "edges": 4,
+      "nodeCount": 5,
+      "parts": 1,
+      "lengthMeters": 163,
+      "endpoints": [
+        "O5680519856",
+        "O6023430529"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B5A",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2728354,
+        28.7250077,
+        41.2728534,
+        28.7269551
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "B6": {
+      "edges": 11,
+      "nodeCount": 12,
+      "parts": 1,
+      "lengthMeters": 552,
+      "endpoints": [
+        "O7918203848",
+        "O5680519840"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2727198,
+        28.722747,
+        41.277345,
+        28.7249207
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "B7": {
+      "edges": 11,
+      "nodeCount": 12,
+      "parts": 1,
+      "lengthMeters": 535,
+      "endpoints": [
+        "O5680519743",
+        "O7918203400"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "B8A",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2814941,
+        28.7224905,
+        41.2859109,
+        28.7248406
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "B8A": {
+      "edges": 5,
+      "nodeCount": 6,
+      "parts": 1,
+      "lengthMeters": 189,
+      "endpoints": [
+        "O7918203858",
+        "O6023430527"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A7",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "B7",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2851343,
+        28.7225056,
+        41.2851602,
+        28.7247699
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "B8B": {
+      "edges": 12,
+      "nodeCount": 13,
+      "parts": 1,
+      "lengthMeters": 582,
+      "endpoints": [
+        "O5680519807",
+        "O5680519742"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C9",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2814399,
+        28.7247493,
+        41.2862248,
+        28.7273549
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "B9": {
+      "edges": 21,
+      "nodeCount": 22,
+      "parts": 1,
+      "lengthMeters": 855,
+      "endpoints": [
+        "O5680519681",
+        "O5680519719"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "B9A",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2946538,
+        28.7120887,
+        41.2947694,
+        28.7223181
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "B9A": {
+      "edges": 4,
+      "nodeCount": 5,
+      "parts": 1,
+      "lengthMeters": 189,
+      "endpoints": [
+        "O6023430531",
+        "O5680519681"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "B9",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "B9B",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2947694,
+        28.7223181,
+        41.294795,
+        28.724584
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "B9B": {
+      "edges": 8,
+      "nodeCount": 9,
+      "parts": 1,
+      "lengthMeters": 210,
+      "endpoints": [
+        "O6023430530",
+        "O6023430531"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B9A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "C11",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.294795,
+        28.724584,
+        41.2948234,
+        28.7270939
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "B10": {
+      "edges": 8,
+      "nodeCount": 9,
+      "parts": 1,
+      "lengthMeters": 1044,
+      "endpoints": [
+        "O6023430541",
+        "O5585276462"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A10B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "B",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2965983,
+        28.71153,
+        41.2967341,
+        28.7240202
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "B11": {
+      "edges": 2,
+      "nodeCount": 3,
+      "parts": 1,
+      "lengthMeters": 101,
+      "endpoints": [
+        "O5585276483",
+        "O5585276487"
+      ],
+      "neighbors": [],
+      "bounds": [
+        41.2977907,
+        28.7227757,
+        41.2978056,
+        28.7239861
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "B12A": {
+      "edges": 8,
+      "nodeCount": 9,
+      "parts": 1,
+      "lengthMeters": 223,
+      "endpoints": [
+        "O7918191468",
+        "O6022768313"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "B12B",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2981743,
+        28.7222519,
+        41.29869,
+        28.7245088
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "B12B": {
+      "edges": 5,
+      "nodeCount": 6,
+      "parts": 1,
+      "lengthMeters": 210,
+      "endpoints": [
+        "O6022768313",
+        "O6022768311"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B12A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "C14",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.29869,
+        28.7245088,
+        41.2987156,
+        28.727018
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "B13": {
+      "edges": 2,
+      "nodeCount": 3,
+      "parts": 1,
+      "lengthMeters": 33,
+      "endpoints": [
+        "O7932229963",
+        "O7932229962"
+      ],
+      "neighbors": [],
+      "bounds": [
+        41.2919072,
+        28.7214889,
+        41.2919211,
+        28.72188
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "C": {
+      "edges": 45,
+      "nodeCount": 46,
+      "parts": 1,
+      "lengthMeters": 3988,
+      "endpoints": [
+        "O5585276534",
+        "O5585276517"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C2B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "C3B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "C5A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "C6",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "C8",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "C9",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "C10",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "C12",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "N1",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "N5",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "N6",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "VEFA",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2624752,
+        28.7292911,
+        41.2983402,
+        28.7299891
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "C1A": {
+      "edges": 1,
+      "nodeCount": 2,
+      "parts": 1,
+      "lengthMeters": 103,
+      "endpoints": [
+        "O5585276281",
+        "O5585276237"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C1B",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2620377,
+        28.7281291,
+        41.2620513,
+        28.7293644
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "C1B": {
+      "edges": 9,
+      "nodeCount": 10,
+      "parts": 1,
+      "lengthMeters": 424,
+      "endpoints": [
+        "O5585276237",
+        "O5585274318"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C1A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "D",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "E",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "T1",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2620513,
+        28.7293644,
+        41.2621067,
+        28.7344374
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "C2A": {
+      "edges": 1,
+      "nodeCount": 2,
+      "parts": 1,
+      "lengthMeters": 90,
+      "endpoints": [
+        "O5585276525",
+        "O5585276531"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C2B",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2629153,
+        28.7282554,
+        41.2629267,
+        28.729333
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "C2B": {
+      "edges": 6,
+      "nodeCount": 7,
+      "parts": 1,
+      "lengthMeters": 193,
+      "endpoints": [
+        "O5585276531",
+        "O5585276255"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "C2A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "D",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2629267,
+        28.729333,
+        41.2629511,
+        28.7316469
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "C3A": {
+      "edges": 1,
+      "nodeCount": 2,
+      "parts": 1,
+      "lengthMeters": 91,
+      "endpoints": [
+        "O5585276521",
+        "O5585276538"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C3B",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.263793,
+        28.7282193,
+        41.2638039,
+        28.7293121
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "C3B": {
+      "edges": 7,
+      "nodeCount": 8,
+      "parts": 1,
+      "lengthMeters": 204,
+      "endpoints": [
+        "O5585276538",
+        "O5585276547"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "C3A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "D",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2638039,
+        28.7293121,
+        41.2638292,
+        28.7317475
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "C4A": {
+      "edges": 2,
+      "nodeCount": 3,
+      "parts": 1,
+      "lengthMeters": 135,
+      "endpoints": [
+        "O5585276323",
+        "O6023430525"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B3B",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2658359,
+        28.7276592,
+        41.2658541,
+        28.729274
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "C5A": {
+      "edges": 4,
+      "nodeCount": 5,
+      "parts": 1,
+      "lengthMeters": 189,
+      "endpoints": [
+        "O6023430510",
+        "O6023430526"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B4B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "C",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2670437,
+        28.7276356,
+        41.267069,
+        28.7298997
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "C6": {
+      "edges": 10,
+      "nodeCount": 11,
+      "parts": 1,
+      "lengthMeters": 544,
+      "endpoints": [
+        "O5680519762",
+        "O5680519768"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "N5",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.272749,
+        28.7274366,
+        41.277253,
+        28.7297892
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "C7": {
+      "edges": 6,
+      "nodeCount": 7,
+      "parts": 1,
+      "lengthMeters": 452,
+      "endpoints": [
+        "O5680519775",
+        "O5680519779"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C8",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "N6",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.276285,
+        28.727383,
+        41.2800003,
+        28.7294172
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "C8": {
+      "edges": 10,
+      "nodeCount": 11,
+      "parts": 1,
+      "lengthMeters": 549,
+      "endpoints": [
+        "O7918191472",
+        "O5680519800"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "C7",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2781772,
+        28.7274185,
+        41.2827713,
+        28.7295942
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "C9": {
+      "edges": 9,
+      "nodeCount": 10,
+      "parts": 1,
+      "lengthMeters": 549,
+      "endpoints": [
+        "O5680519807",
+        "O5680519818"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B8B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "C",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2814399,
+        28.7273549,
+        41.2860352,
+        28.7295306
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "C10": {
+      "edges": 10,
+      "nodeCount": 11,
+      "parts": 1,
+      "lengthMeters": 541,
+      "endpoints": [
+        "O7918191403",
+        "O7918191406"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2841634,
+        28.7273018,
+        41.2886897,
+        28.729479
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "C11": {
+      "edges": 4,
+      "nodeCount": 5,
+      "parts": 1,
+      "lengthMeters": 147,
+      "endpoints": [
+        "O5680519656",
+        "O6023430530"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B9B",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2948234,
+        28.7270939,
+        41.2948433,
+        28.7288564
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "C12": {
+      "edges": 5,
+      "nodeCount": 6,
+      "parts": 1,
+      "lengthMeters": 187,
+      "endpoints": [
+        "O5680230984",
+        "O5680230991"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "C15",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2969683,
+        28.727583,
+        41.2969904,
+        28.7298252
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "C13": {
+      "edges": 2,
+      "nodeCount": 3,
+      "parts": 1,
+      "lengthMeters": 101,
+      "endpoints": [
+        "O5680519703",
+        "O5680519706"
+      ],
+      "neighbors": [],
+      "bounds": [
+        41.2978441,
+        28.7275695,
+        41.2978588,
+        28.728784
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "C14": {
+      "edges": 3,
+      "nodeCount": 4,
+      "parts": 1,
+      "lengthMeters": 147,
+      "endpoints": [
+        "O5585276514",
+        "O6022768311"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B12B",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2987156,
+        28.727018,
+        41.2987334,
+        28.7287727
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "C15": {
+      "edges": 12,
+      "nodeCount": 13,
+      "parts": 1,
+      "lengthMeters": 258,
+      "endpoints": [
+        "O5680230984",
+        "O5585276508"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C12",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2969904,
+        28.7298252,
+        41.2987446,
+        28.7304765
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "D": {
+      "edges": 83,
+      "nodeCount": 84,
+      "parts": 1,
+      "lengthMeters": 3304,
+      "endpoints": [
+        "O7918203971",
+        "O7476115046",
+        "O12297292746"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C1B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "C2B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "C3B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "D3",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "D4",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "E2",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "N1",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "N2",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "N5",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "N6",
+          "commonNodes": 4
+        },
+        {
+          "taxiway": "VEFA",
+          "commonNodes": 2
+        }
+      ],
+      "bounds": [
+        41.2499046,
+        28.7303685,
+        41.2762823,
+        28.735259
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "D3": {
+      "edges": 3,
+      "nodeCount": 4,
+      "parts": 1,
+      "lengthMeters": 96,
+      "endpoints": [
+        "O6027958724",
+        "O7918204076"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "D",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "E1",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "E4",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2524361,
+        28.7308156,
+        41.2524488,
+        28.7319581
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "D4": {
+      "edges": 3,
+      "nodeCount": 4,
+      "parts": 1,
+      "lengthMeters": 95,
+      "endpoints": [
+        "O7918204072",
+        "O6027958739"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "D",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2533155,
+        28.7308184,
+        41.2533282,
+        28.7319534
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "D5": {
+      "edges": 2,
+      "nodeCount": 3,
+      "parts": 1,
+      "lengthMeters": 53,
+      "endpoints": [
+        "O7918204051",
+        "O7918204050"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "E",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "E5",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2559808,
+        28.7317945,
+        41.2559873,
+        28.7324341
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "D6": {
+      "edges": 2,
+      "nodeCount": 3,
+      "parts": 1,
+      "lengthMeters": 53,
+      "endpoints": [
+        "O5680230959",
+        "O6023429781"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "E",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "E6",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2581173,
+        28.7317565,
+        41.2581287,
+        28.7323935
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "D7": {
+      "edges": 2,
+      "nodeCount": 3,
+      "parts": 1,
+      "lengthMeters": 53,
+      "endpoints": [
+        "O5680230942",
+        "O6023429782"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "E",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "E7",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2589904,
+        28.7317469,
+        41.2589989,
+        28.732377
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "E": {
+      "edges": 29,
+      "nodeCount": 30,
+      "parts": 1,
+      "lengthMeters": 1801,
+      "endpoints": [
+        "O5680230936",
+        "O5724371196"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C1B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "D5",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "D6",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "D7",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "E5",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "E6",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "E7",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "T1",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2528682,
+        28.7321862,
+        41.2690646,
+        28.7324932
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "E1": {
+      "edges": 24,
+      "nodeCount": 25,
+      "parts": 1,
+      "lengthMeters": 2424,
+      "endpoints": [
+        "O6027958724",
+        "O7918203825"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A1",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "A3",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "D3",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "E1A",
+          "commonNodes": 2
+        },
+        {
+          "taxiway": "E1D",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2523527,
+        28.720859,
+        41.267467,
+        28.7308156
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "E1A": {
+      "edges": 17,
+      "nodeCount": 18,
+      "parts": 1,
+      "lengthMeters": 286,
+      "endpoints": [
+        "O6027958681",
+        "O6027958686",
+        "O6027958687",
+        "O6027958690"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B",
+          "commonNodes": 2
+        },
+        {
+          "taxiway": "E1",
+          "commonNodes": 2
+        }
+      ],
+      "bounds": [
+        41.2523739,
+        28.7251756,
+        41.2532651,
+        28.7263066
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "E1C": {
+      "edges": 2,
+      "nodeCount": 3,
+      "parts": 1,
+      "lengthMeters": 50,
+      "endpoints": [
+        "O5585276419",
+        "O6027958661"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "B1A",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2619738,
+        28.7222759,
+        41.2619803,
+        28.7228724
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "E1D": {
+      "edges": 4,
+      "nodeCount": 5,
+      "parts": 1,
+      "lengthMeters": 98,
+      "endpoints": [
+        "O6023430534",
+        "O6023430504"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "A1",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "B3A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "E1",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2651161,
+        28.7217308,
+        41.2651953,
+        28.7228934
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "E2": {
+      "edges": 25,
+      "nodeCount": 26,
+      "parts": 1,
+      "lengthMeters": 686,
+      "endpoints": [
+        "O7918203971",
+        "O7918203992"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "D",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "E4",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2499424,
+        28.735259,
+        41.2558494,
+        28.7357685
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "E3": {
+      "edges": 23,
+      "nodeCount": 24,
+      "parts": 1,
+      "lengthMeters": 599,
+      "endpoints": [
+        "O6027958701",
+        "O6027958702"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "E4",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2502503,
+        28.7348907,
+        41.2556359,
+        28.7349996
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "E4": {
+      "edges": 9,
+      "nodeCount": 10,
+      "parts": 1,
+      "lengthMeters": 319,
+      "endpoints": [
+        "O7918204076",
+        "O7918203994"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "D3",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "E2",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "E3",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2524488,
+        28.7319581,
+        41.252585,
+        28.7357365
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "E5": {
+      "edges": 3,
+      "nodeCount": 4,
+      "parts": 1,
+      "lengthMeters": 142,
+      "endpoints": [
+        "O6027958697",
+        "O7918204051"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "D5",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "E",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "T2",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2559873,
+        28.7324341,
+        41.2560045,
+        28.7341333
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "E6": {
+      "edges": 2,
+      "nodeCount": 3,
+      "parts": 1,
+      "lengthMeters": 55,
+      "endpoints": [
+        "O6023429781",
+        "O5680230953"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "D6",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "E",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2581287,
+        28.7323935,
+        41.2581328,
+        28.7330556
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "E7": {
+      "edges": 5,
+      "nodeCount": 6,
+      "parts": 1,
+      "lengthMeters": 98,
+      "endpoints": [
+        "O6023429782",
+        "O7922834433"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "D7",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "E",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "T1",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2589989,
+        28.732377,
+        41.2590146,
+        28.7335445
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "F": {
+      "edges": 28,
+      "nodeCount": 29,
+      "parts": 1,
+      "lengthMeters": 1858,
+      "endpoints": [
+        "O7027031612",
+        "O5680369988",
+        "O5680369686"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "NE",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2531746,
+        28.7525302,
+        41.2692855,
+        28.7531862
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "G": {
+      "edges": 64,
+      "nodeCount": 65,
+      "parts": 1,
+      "lengthMeters": 4356,
+      "endpoints": [
+        "O7027031628",
+        "O7400775833"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G10",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "G11",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "G12",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "G13",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "G14",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "G15",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "G16",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "G17",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "N1",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "N5",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "N6",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "NE",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2506875,
+        28.7533113,
+        41.2896538,
+        28.7540442
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "G1": {
+      "edges": 5,
+      "nodeCount": 6,
+      "parts": 1,
+      "lengthMeters": 905,
+      "endpoints": [
+        "O10212766133",
+        "O7922827356"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "H",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2526883,
+        28.7544364,
+        41.2528347,
+        28.7652656
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "G2": {
+      "edges": 9,
+      "nodeCount": 10,
+      "parts": 1,
+      "lengthMeters": 699,
+      "endpoints": [
+        "O7922827374",
+        "O7400775844"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "H",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2535682,
+        28.7544772,
+        41.2540397,
+        28.7625696
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "G6A": {
+      "edges": 4,
+      "nodeCount": 5,
+      "parts": 1,
+      "lengthMeters": 198,
+      "endpoints": [
+        "O7273928556",
+        "O7922834306"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "H1",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2623136,
+        28.7543136,
+        41.2623381,
+        28.7566823
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "G7A": {
+      "edges": 7,
+      "nodeCount": 8,
+      "parts": 1,
+      "lengthMeters": 226,
+      "endpoints": [
+        "O7922834325",
+        "O7297534152"
+      ],
+      "neighbors": [],
+      "bounds": [
+        41.2631871,
+        28.7543298,
+        41.26368,
+        28.7566564
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "G8A": {
+      "edges": 7,
+      "nodeCount": 8,
+      "parts": 1,
+      "lengthMeters": 224,
+      "endpoints": [
+        "O7922834334",
+        "O7297534155"
+      ],
+      "neighbors": [],
+      "bounds": [
+        41.2640623,
+        28.7542869,
+        41.2645199,
+        28.7566402
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "G9A": {
+      "edges": 8,
+      "nodeCount": 9,
+      "parts": 1,
+      "lengthMeters": 425,
+      "endpoints": [
+        "O7297568997",
+        "O7922834441"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "H2",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2661253,
+        28.7542774,
+        41.269246,
+        28.7565491
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "G10": {
+      "edges": 9,
+      "nodeCount": 10,
+      "parts": 1,
+      "lengthMeters": 638,
+      "endpoints": [
+        "O7297534183",
+        "O9064890385"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "H3",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "N1",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "NE",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2676139,
+        28.7537229,
+        41.2728955,
+        28.7564788
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "G11": {
+      "edges": 4,
+      "nodeCount": 5,
+      "parts": 1,
+      "lengthMeters": 239,
+      "endpoints": [
+        "O7920598779",
+        "O7297534179"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "H4",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "N5",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2740708,
+        28.7536003,
+        41.2741013,
+        28.7564556
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "G12": {
+      "edges": 4,
+      "nodeCount": 5,
+      "parts": 1,
+      "lengthMeters": 239,
+      "endpoints": [
+        "O7297569034",
+        "O7027031627"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "H5",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "N6",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.276104,
+        28.7535617,
+        41.2761355,
+        28.7564163
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "G13": {
+      "edges": 13,
+      "nodeCount": 14,
+      "parts": 1,
+      "lengthMeters": 503,
+      "endpoints": [
+        "O7297569024",
+        "O7297569018"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "H6",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2785469,
+        28.7534657,
+        41.2816664,
+        28.7563698
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "G14": {
+      "edges": 14,
+      "nodeCount": 15,
+      "parts": 1,
+      "lengthMeters": 521,
+      "endpoints": [
+        "O7297534169",
+        "O7297534163"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "H7",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2811915,
+        28.7534165,
+        41.2843654,
+        28.7563189
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "G15": {
+      "edges": 11,
+      "nodeCount": 12,
+      "parts": 1,
+      "lengthMeters": 278,
+      "endpoints": [
+        "O9064878286",
+        "O9064878293"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2876568,
+        28.7533417,
+        41.2880386,
+        28.7561942
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "G16": {
+      "edges": 10,
+      "nodeCount": 11,
+      "parts": 1,
+      "lengthMeters": 283,
+      "endpoints": [
+        "O9064878294",
+        "O9064878301"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2884635,
+        28.7533266,
+        41.2888625,
+        28.7561787
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "G17": {
+      "edges": 3,
+      "nodeCount": 4,
+      "parts": 1,
+      "lengthMeters": 196,
+      "endpoints": [
+        "O7400775834",
+        "O7400775833"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "H8",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2896538,
+        28.753815,
+        41.289681,
+        28.7561552
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "H": {
+      "edges": 35,
+      "nodeCount": 36,
+      "parts": 1,
+      "lengthMeters": 4211,
+      "endpoints": [
+        "O7027031622",
+        "O7400775836"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G1",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "G2",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "H2",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "H3",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "H4",
+          "commonNodes": 2
+        },
+        {
+          "taxiway": "H5",
+          "commonNodes": 2
+        },
+        {
+          "taxiway": "H6",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "H7",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "H8",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2527738,
+        28.7583862,
+        41.289344,
+        28.7625968
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "H1": {
+      "edges": 4,
+      "nodeCount": 5,
+      "parts": 1,
+      "lengthMeters": 167,
+      "endpoints": [
+        "O9064890372",
+        "O7273928556"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G6A",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2623381,
+        28.7566823,
+        41.2623588,
+        28.7586764
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "H2": {
+      "edges": 11,
+      "nodeCount": 12,
+      "parts": 1,
+      "lengthMeters": 476,
+      "endpoints": [
+        "O7297568990",
+        "O7297568997"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G9A",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "H",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2656106,
+        28.7565491,
+        41.269246,
+        28.7591155
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "H3": {
+      "edges": 6,
+      "nodeCount": 7,
+      "parts": 1,
+      "lengthMeters": 514,
+      "endpoints": [
+        "O7297534180",
+        "O7297534183"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G10",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "H",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2686431,
+        28.7564788,
+        41.2728955,
+        28.7587033
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "H4": {
+      "edges": 14,
+      "nodeCount": 15,
+      "parts": 1,
+      "lengthMeters": 274,
+      "endpoints": [
+        "O7297534160",
+        "O7297534178",
+        "O7297534179"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G11",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "H",
+          "commonNodes": 2
+        }
+      ],
+      "bounds": [
+        41.2737364,
+        28.7564556,
+        41.2745729,
+        28.7586058
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "H5": {
+      "edges": 10,
+      "nodeCount": 11,
+      "parts": 1,
+      "lengthMeters": 265,
+      "endpoints": [
+        "O7297569033",
+        "O9064878269",
+        "O7297569034"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G12",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "H",
+          "commonNodes": 2
+        }
+      ],
+      "bounds": [
+        41.2757787,
+        28.7564163,
+        41.276535,
+        28.7585667
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "H6": {
+      "edges": 11,
+      "nodeCount": 12,
+      "parts": 1,
+      "lengthMeters": 434,
+      "endpoints": [
+        "O7297534176",
+        "O7297569018"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G13",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "H",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2785469,
+        28.7563698,
+        41.2815276,
+        28.7584642
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "H7": {
+      "edges": 12,
+      "nodeCount": 13,
+      "parts": 1,
+      "lengthMeters": 441,
+      "endpoints": [
+        "O7297534163",
+        "O7297534177"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G14",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "H",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2811915,
+        28.7563189,
+        41.2842272,
+        28.7584126
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "H8": {
+      "edges": 9,
+      "nodeCount": 10,
+      "parts": 1,
+      "lengthMeters": 231,
+      "endpoints": [
+        "O7400775836",
+        "O7400775834"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "G17",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "H",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.289344,
+        28.7561552,
+        41.2897037,
+        28.7586638
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "N1": {
+      "edges": 37,
+      "nodeCount": 38,
+      "parts": 1,
+      "lengthMeters": 2146,
+      "endpoints": [
+        "O7297568986",
+        "O7918203447"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "D",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "G",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "G10",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "T2",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "T3",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "T5",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "T7",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "T9",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "T11",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2694287,
+        28.7298459,
+        41.2699753,
+        28.7550971
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "N2": {
+      "edges": 25,
+      "nodeCount": 26,
+      "parts": 1,
+      "lengthMeters": 1905,
+      "endpoints": [
+        "O7918203442",
+        "O5680366005"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "D",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "T2",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "T3",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "T5",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "T7",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "T9",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "T11",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.270306,
+        28.7303613,
+        41.2705545,
+        28.7531542
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "N3": {
+      "edges": 39,
+      "nodeCount": 40,
+      "parts": 1,
+      "lengthMeters": 1809,
+      "endpoints": [
+        "O5680365988",
+        "O5680231242"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "T3",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "T9",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2711959,
+        28.7314937,
+        41.271429,
+        28.753138
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "N4": {
+      "edges": 46,
+      "nodeCount": 47,
+      "parts": 1,
+      "lengthMeters": 1807,
+      "endpoints": [
+        "O5680231260",
+        "O5680365981"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "T3",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "T9",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2729525,
+        28.7314842,
+        41.2731819,
+        28.7530991
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "N5": {
+      "edges": 86,
+      "nodeCount": 87,
+      "parts": 1,
+      "lengthMeters": 2068,
+      "endpoints": [
+        "O5680519834",
+        "O7920598779"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "C6",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "D",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "G",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "G11",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "T3",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "T9",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.273816,
+        28.7290163,
+        41.27417,
+        28.7536003
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "N6": {
+      "edges": 57,
+      "nodeCount": 58,
+      "parts": 1,
+      "lengthMeters": 2095,
+      "endpoints": [
+        "O7918203541",
+        "O12297292737",
+        "O7027031627",
+        "O5680519779"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "C7",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "D",
+          "commonNodes": 4
+        },
+        {
+          "taxiway": "G",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "G12",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "T3",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "VEFA",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2756977,
+        28.7294172,
+        41.276285,
+        28.7535617
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "NE": {
+      "edges": 21,
+      "nodeCount": 22,
+      "parts": 1,
+      "lengthMeters": 781,
+      "endpoints": [
+        "O5680231438",
+        "O7922834494"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "F",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "G",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "G10",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "T9",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "T11",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.268712,
+        28.7451044,
+        41.2689877,
+        28.7543659
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "NW": {
+      "edges": 11,
+      "nodeCount": 12,
+      "parts": 1,
+      "lengthMeters": 532,
+      "endpoints": [
+        "O6023430506",
+        "O5680231399"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "T2",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "T3",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2685814,
+        28.7332814,
+        41.2686495,
+        28.7396471
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "T1": {
+      "edges": 24,
+      "nodeCount": 25,
+      "parts": 1,
+      "lengthMeters": 844,
+      "endpoints": [
+        "O7918203749",
+        "O7918203654"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C1B",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "E",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "E7",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "TA",
+          "commonNodes": 2
+        }
+      ],
+      "bounds": [
+        41.2590085,
+        28.7322433,
+        41.2660545,
+        28.7342846
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "T2": {
+      "edges": 90,
+      "nodeCount": 91,
+      "parts": 1,
+      "lengthMeters": 2001,
+      "endpoints": [
+        "O5585274314",
+        "O7918203983"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "E5",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "N1",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "N2",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "NW",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2560045,
+        28.7332355,
+        41.270824,
+        28.7375388
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "T3": {
+      "edges": 34,
+      "nodeCount": 35,
+      "parts": 1,
+      "lengthMeters": 1146,
+      "endpoints": [
+        "O5680231475",
+        "O7918203542"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "N1",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "N2",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "N3",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "N4",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "N5",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "N6",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "NW",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "T6",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2657092,
+        28.7383301,
+        41.2759364,
+        28.7387489
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "T4": {
+      "edges": 1,
+      "nodeCount": 2,
+      "parts": 1,
+      "lengthMeters": 308,
+      "endpoints": [
+        "O5680369651",
+        "O5680369655"
+      ],
+      "neighbors": [],
+      "bounds": [
+        41.2657295,
+        28.7394162,
+        41.268497,
+        28.7394702
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "T5": {
+      "edges": 17,
+      "nodeCount": 18,
+      "parts": 1,
+      "lengthMeters": 572,
+      "endpoints": [
+        "O7920605811",
+        "O5680231470"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "N1",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "N2",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "T6",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2657394,
+        28.7400886,
+        41.2708838,
+        28.7401881
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "T6": {
+      "edges": 28,
+      "nodeCount": 29,
+      "parts": 1,
+      "lengthMeters": 441,
+      "endpoints": [
+        "O5680231470",
+        "O5680231475"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "T3",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "T5",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2639874,
+        28.7387489,
+        41.2657394,
+        28.7402145
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "T7": {
+      "edges": 24,
+      "nodeCount": 25,
+      "parts": 1,
+      "lengthMeters": 729,
+      "endpoints": [
+        "O5680231431",
+        "O5680231429"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "N1",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "N2",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "T9",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2643692,
+        28.7445614,
+        41.27092,
+        28.7446967
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "T9": {
+      "edges": 52,
+      "nodeCount": 53,
+      "parts": 1,
+      "lengthMeters": 1400,
+      "endpoints": [
+        "O5680231431",
+        "O7920605793"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "N1",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "N2",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "N3",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "N4",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "N5",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "NE",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "T7",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2640467,
+        28.7446967,
+        41.2758243,
+        28.7461105
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "T11": {
+      "edges": 73,
+      "nodeCount": 74,
+      "parts": 1,
+      "lengthMeters": 1633,
+      "endpoints": [
+        "O5680365994",
+        "O5680369989"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "N1",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "N2",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "NE",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2567389,
+        28.7497682,
+        41.2710202,
+        28.7516043
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "TA": {
+      "edges": 11,
+      "nodeCount": 12,
+      "parts": 1,
+      "lengthMeters": 86,
+      "endpoints": [
+        "O7922834410",
+        "O7922834418"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "T1",
+          "commonNodes": 2
+        }
+      ],
+      "bounds": [
+        41.2603598,
+        28.7337928,
+        41.2608332,
+        28.7342411
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    },
+    "VEFA": {
+      "edges": 10,
+      "nodeCount": 11,
+      "parts": 1,
+      "lengthMeters": 402,
+      "endpoints": [
+        "O7476115046",
+        "O12297292741"
+      ],
+      "neighbors": [
+        {
+          "taxiway": "C",
+          "commonNodes": 1
+        },
+        {
+          "taxiway": "D",
+          "commonNodes": 2
+        },
+        {
+          "taxiway": "N6",
+          "commonNodes": 1
+        }
+      ],
+      "bounds": [
+        41.2758488,
+        28.7296671,
+        41.2790211,
+        28.7308828
+      ],
+      "reviewStatus": "OSM_GRAPH_ONLY"
+    }
+  },
+  "standLeads": {
+    "D3": {
+      "stand": "D3",
+      "sourceChart": "30-9J4",
+      "cycle": "2621",
+      "chartLabel": "D3 (terminal contact apron)",
+      "insApprox": {
+        "lat": 41.263333333333335,
+        "lon": 28.741666666666667,
+        "precision": "0.1 arc-minute rounded groups; NOT a survey position"
+      },
+      "routeGeometryVerified": false,
+      "standPositionVerified": false,
+      "leadOutStatus": "PUBLISHED_PROCEDURE_ONLY",
+      "statedTaxiway": "T5",
+      "standard": {
+        "face": "EAST",
+        "until": "ABEAM STAND C3",
+        "taxiVia": [
+          "T5"
+        ],
+        "description": "Push back facing east until abeam stand C3, then taxi via TWY T5."
+      },
+      "alternate1": {
+        "face": "SOUTH",
+        "to": "T3",
+        "taxiVia": [
+          "T5"
+        ],
+        "description": "Push back onto TWY T3 facing south, taxi via TWY T5."
+      },
+      "alternate2": {
+        "face": "SOUTH",
+        "to": "T5",
+        "until": "ABEAM STAND D7",
+        "taxiVia": [
+          "T3"
+        ],
+        "description": "Push back onto TWY T5 facing south until abeam D7, taxi via TWY T3."
+      },
+      "caution": "HS4. Stand C1, C2, D1, D3, D5 share the published pushback group. Never join a stand to OSM by nearest point."
+    }
+  },
+  "nameCollisionWarnings": [
+    {
+      "name": "D3",
+      "standMeaning": "Terminal contact stand D3",
+      "taxiwayMeaning": "Separate taxiway D3 in west sector; do not use as stand connector"
+    }
+  ],
+  "chartVsOsmReview": [
+    {
+      "area": "Terminal Contact Apron, D3 southbound lead-out",
+      "status": "NEEDS_CHART_CONFLATION",
+      "note": "Published pushback names TWY T5; available OSM label T5 terminates north of the D3 approximate stand area. Adjacent OSM T6 is not a validated substitute. Do not change labels or build an automatic connector by snapping."
+    }
+  ],
+  "notes": [
+    "All named OSM taxiways are enumerated, including disconnected named subsegments.",
+    "Topological junction means exact OSM shared node, NOT any crossing of two plotted lines.",
+    "Missing stand lead-out and pushback centerline geometry remain unverified; only published procedural descriptions may be shown.",
+    "Individual chart names and operational restrictions are to be checked against current AIP and NOTAM before use."
+  ],
+  "stats": {
+    "nodes": 4008,
+    "edges": 4603,
+    "namedTaxiways": 131,
+    "unnamedEdges": 2705,
+    "endpointsWithNoNamedJunction": 9,
+    "missingStandConnectors": "not surveyed",
+    "approved": "none",
+    "pushbackStandCases": 1
+  }
+}
