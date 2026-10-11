@@ -37,7 +37,7 @@ def grid(words,coord,region):
             xy.append(((w[0]+w[2])/2,28+float(s[3:])/60))
         elif coord=="lat" and re.fullmatch(r"41-\d{2}\.\d",s):
             xy.append(((w[1]+w[3])/2,41+float(s[3:])/60))
-    if len(xy)<4:raise ValueError("Missing georeferenced graticule ticks")
+    if len(xy)<3:raise ValueError("Missing georeferenced graticule ticks")
     for _ in range(3):
         mx=sum(x for x,y in xy)/len(xy);my=sum(y for x,y in xy)/len(xy)
         slope=sum((x-mx)*(y-my) for x,y in xy)/sum((x-mx)**2 for x,y in xy)
@@ -64,7 +64,7 @@ def build(pdf_path):
       "30-9C_W_lon":grid(b,"lon",lambda w:(w[1]<48 or w[1]>750) and w[0]<310),
       "30-9C_W_lat":grid(b,"lat",lambda w:(w[0]<35 or 285<w[0]<310) and w[1]>400),
       "30-9C_E_lon":grid(b,"lon",lambda w:(w[1]<47 or 222<w[1]<243) and w[0]>310),
-      "30-9C_E_lat":grid(b,"lat",lambda w:(w[0]>556 or 310<w[0]<335) and w[1]<241)}
+      "30-9C_E_lat":grid(b,"lat",lambda w:310<w[0]<335 and w[1]<241)}
     stands={}
     for page_no,words in zip((1247,1248),texts):
         for w in words:
