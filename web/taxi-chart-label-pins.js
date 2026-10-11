@@ -58,5 +58,6 @@ document.addEventListener("input",event=>{
   if(event.target?.id==="taxiQaFilter"){selected="";remove()}
 },true);
 root.addEventListener("jeppiran-taxi-route-updated",paint);
+root.addEventListener("jeppiran-chart-rendered",paint);
 root.JEPPIRAN_CHART_LABEL_PINS={paint,source,clear(){selected="";remove()}};
 })(typeof window!=="undefined"?window:globalThis);
