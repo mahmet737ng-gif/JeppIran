@@ -1,4 +1,4 @@
-/* JEPPIRAN CDFA Geometry Engine v1.5 - offline, framework independent.
+/* JEPPIRAN CDFA Geometry Engine v1.6 - offline, framework independent.
    Engineering/simulator QA only; not authorized for actual flight navigation.
    No use of AC 120-108 as a computation input or authority.
    Source of truth for published fixes, limits, and station location is the
@@ -75,7 +75,9 @@
     } else {
       throw new Error('THRESHOLD_OR_AIRPORT_ELEVATION_REQUIRED');
     }
-    c.tchFt = nonNegative(c.tchFt, 'tchFt');
+    const hasPublishedTch = c.tchFt !== undefined && c.tchFt !== null && c.tchFt !== '';
+    c.tchSource = hasPublishedTch ? 'PUBLISHED_CHART_VALUE' : 'DEFAULT_ASSUMED_50_FT_QA';
+    c.tchFt = nonNegative(hasPublishedTch ? c.tchFt : 50, 'tchFt');
     // Prefer the descent angle explicitly transcribed from the APPROACH chart.
     // `angleDeg` remains a backwards-compatible alias for `publishedAngleDeg`.
     // A missing/blank angle is never interpreted as zero: the user's fallback is 3°.
@@ -151,6 +153,9 @@
     if (Math.abs(c.coverageStepDmeNm - 1) > EPS)
       throw new Error('INTEGER_DME_GRID_REQUIRED: coverageStepDmeNm must be exactly 1');
     c.autoExtendCoverage = c.autoExtendCoverage !== false;
+    c.mandatoryStopMode = c.mandatoryStopMode || 'none';
+    if (!['none','calculated_altitude_intercept'].includes(c.mandatoryStopMode))
+      throw new Error('INVALID_MANDATORY_STOP_MODE');
     c.publishedConstraints = c.publishedConstraints || [];
     if (!Array.isArray(c.publishedConstraints)) throw new Error('publishedConstraints must be an array');
     c.publishedConstraints = c.publishedConstraints.map((f, i) => {
@@ -160,6 +165,8 @@
       if (!validKinds.has(f.type)) throw new Error('constraint.type must be minimum, mandatory, or maximum');
       return { ...f };
     });
+    if (c.mandatoryStopMode !== 'none' && !c.publishedConstraints.some(f=>f.type==='mandatory'))
+      throw new Error('MANDATORY_FIX_REQUIRED_FOR_ALTITUDE_INTERCEPT_STOP');
     if (c.validAngleDmeRange != null) {
       const r = c.validAngleDmeRange;
       nonNegative(r.from, 'validAngleDmeRange.from');
@@ -222,6 +229,28 @@
     return Math.sqrt((x + offsetSigned) ** 2 + c.station.lateralNm ** 2 + vertical ** 2);
   }
 
+  // The computed intersection with a mandatory altitude is a diagnostic
+  // geometry point. It MUST NOT displace the chart-published mandatory FIX.
+  // In particular a calculated D5.3 is not a substitution for a D10 mandatory.
+  function mandatoryAltitudeIntercept(c) {
+    if (c.mandatoryStopMode !== 'calculated_altitude_intercept') return null;
+    const mandatory = c.publishedConstraints.filter(f=>f.type==='mandatory');
+    if (!mandatory.length) return null;
+    const h0 = c.thresholdElevationFt + c.tchFt;
+    const intersections = mandatory.map(f=>{
+      const x=(f.altitudeFt-h0)/c.gradientFtPerNm;
+      if(x < -EPS) return null;
+      const distance = dmeAtThresholdDistance(Math.max(0,x),c);
+      return {publishedFixDmeNm:f.dmeNm,publishedAltitudeFt:f.altitudeFt,
+        calculatedIntersectionDmeNm:Math.round(distance*1e6)/1e6,
+        calculatedIntersectionDmeDisplay:'D'+distance.toFixed(1),
+        thresholdDistanceNm:Math.round(x*1e6)/1e6,
+        publishedFixIsDifferent:Math.abs(distance-f.dmeNm)>0.05,
+        note:'CALCULATED ALTITUDE INTERSECTION; NOT the mandatory DME fix and NOT a crossing clearance.'};
+    }).filter(Boolean).sort((a,b)=>a.calculatedIntersectionDmeNm-b.calculatedIntersectionDmeNm);
+    return intersections.length ? intersections[0] : null;
+  }
+
   function extendCoverage(readings, c) {
     // One-nautical-mile table rows ONLY. Decimal DME values are retained for
     // published fixes and the separate computed VDP annotation, not table rows.
@@ -232,9 +261,12 @@
     // the far side of an after-threshold transmitter.
     const lower = c.station.placement === 'before_threshold' ? 1
       : Math.max(1, Math.ceil(startPointDme - EPS));
-    const upper = c.autoExtendCoverage
-      ? Math.ceil(requiredMaxDme - EPS)
+    const mandatoryIntersection = mandatoryAltitudeIntercept(c);
+    const upper = mandatoryIntersection
+      ? Math.floor(mandatoryIntersection.calculatedIntersectionDmeNm + EPS)
+      : c.autoExtendCoverage ? Math.ceil(requiredMaxDme - EPS)
       : Math.floor(Math.max(...readings) + EPS);
+    if (upper < lower) throw new Error('MANDATORY_INTERSECTION_BEFORE_FIRST_VALID_DME');
     if (upper - lower > 500) throw new Error('COVERAGE_EXTENSION_EXCEEDS_500_ROWS');
     const allReadings = [];
     for(let i=lower;i<=upper;i++) allReadings.push(i);
@@ -252,6 +284,7 @@
       gridStartDmeNm: lower,
       gridEndDmeNm: upper,
       gridStepDmeNm: 1,
+      mandatoryIntersection,
     };
   }
 
@@ -297,6 +330,7 @@
     const reasons = [];
     if (c.usedAirportElevationFallback) reasons.push('AIRPORT_ELEVATION_USED_INSTEAD_OF_RUNWAY_THRESHOLD_QA');
     if (c.angleSource === 'DEFAULT_ASSUMED_3_DEG') reasons.push('DEFAULT_3_DEG_ASSUMED_NOT_PUBLISHED');
+    if (c.tchSource === 'DEFAULT_ASSUMED_50_FT_QA') reasons.push('DEFAULT_50_FT_TCH_ASSUMED_NOT_PUBLISHED');
     if (!c.validAngleDmeRange) reasons.push('ANGLE_SCOPE_NOT_VERIFIED');
     else if (!inAngleRange) reasons.push('OUTSIDE_PUBLISHED_ANGLE_SCOPE');
     if (c.station.geometryVerified === false) reasons.push('STATION_GEOMETRY_NOT_SURVEY_VERIFIED');
@@ -375,7 +409,7 @@
     const maxDmeNm = Math.max(...rows.map(r=>r.dmeNm));
     const reachesThreshold = maxThresholdNm >= c.minimumThresholdCoverageNm - 0.0001;
     const reachesDme = maxDmeNm >= c.minimumDmeCoverageNm - 0.0001;
-    if (!reachesThreshold || !reachesDme) issues.push({
+    if ((!reachesThreshold || !reachesDme) && !coverageGrid.mandatoryIntersection) issues.push({
       code: 'MINIMUM_10NM_COVERAGE_NOT_MET',
       requestedThresholdNm:c.minimumThresholdCoverageNm, actualThresholdNm:maxThresholdNm,
       requestedDmeNm:c.minimumDmeCoverageNm, actualDmeNm:maxDmeNm,
@@ -402,6 +436,8 @@
       gridStepDmeNm: 1,
       gridStartDmeNm: coverageGrid.gridStartDmeNm,
       gridEndDmeNm: coverageGrid.gridEndDmeNm,
+      mandatoryAltitudeStop: coverageGrid.mandatoryIntersection,
+      mandatoryStopOverridesTenNmDisplayRequirement: !!coverageGrid.mandatoryIntersection,
       maxPublishedAngleScopedThresholdNm: maxPublishedModeledThresholdNm,
       publishedAngleCovers10Nm: maxPublishedModeledThresholdNm !== null && maxPublishedModeledThresholdNm >= c.minimumThresholdCoverageNm - 0.0001,
       modelExtensionIsPublishedProcedure: false,
@@ -409,7 +445,7 @@
     };
     const blocked = issues.length > 0;
     return {
-      version: '1.5.0', chartId: c.chartId || null, referenceDmeId: c.chartDmeId,
+      version: '1.6.0', chartId: c.chartId || null, referenceDmeId: c.chartDmeId,
       procedureReference: c.procedureReference || null,
       distanceMeasurementReference: c.distanceAidEvidence ? { ...c.distanceAidEvidence } : null,
       separateReferenceWarning: c.procedureReference?.type === 'NDB'
@@ -422,6 +458,7 @@
         usedAirportElevationFallback: c.usedAirportElevationFallback,
         tchFt: c.tchFt,
         crossingAltitudeFt: c.thresholdElevationFt + c.tchFt, mdaFt: c.mdaFt ?? null,
+        tchSource: c.tchSource,
         angleDeg: c.angleDeg, angleSource: c.angleSource, gradientFtPerNm: c.gradientFtPerNm,
         dmePlacement: c.station.placement, dmeOffsetNm: c.station.offsetNm,
         lateralOffsetNm: c.station.lateralNm,
