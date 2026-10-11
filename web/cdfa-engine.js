@@ -1,4 +1,4 @@
-/* JEPPIRAN CDFA Geometry Engine v1.3 - offline, framework independent.
+/* JEPPIRAN CDFA Geometry Engine v1.4 - offline, framework independent.
    Engineering/simulator QA only; not authorized for actual flight navigation.
    No use of AC 120-108 as a computation input or authority.
    Source of truth for published fixes, limits, and station location is the
@@ -37,7 +37,24 @@
   function normalizeConfig(input) {
     if (!input || typeof input !== 'object') throw new TypeError('config is required');
     const c = { ...input };
-    c.thresholdElevationFt = number(c.thresholdElevationFt, 'thresholdElevationFt');
+    // Chart evidence priority: runway threshold first; only if ABSENT use airport elevation.
+    // Airport elevation is not interchangeable with threshold elevation and is QA-only.
+    // Zero is a valid published elevation (do not use truthiness checks).
+    const hasElevation = v => v !== undefined && v !== null && v !== '';
+    const hasThreshold = hasElevation(c.thresholdElevationFt);
+    const hasAirport = hasElevation(c.airportElevationFt);
+    if (hasAirport) c.airportElevationFt = number(c.airportElevationFt, 'airportElevationFt');
+    if (hasThreshold) {
+      c.thresholdElevationFt = number(c.thresholdElevationFt, 'thresholdElevationFt');
+      c.elevationSource = 'RUNWAY_THRESHOLD';
+      c.usedAirportElevationFallback = false;
+    } else if (hasAirport) {
+      c.thresholdElevationFt = c.airportElevationFt;
+      c.elevationSource = 'AIRPORT_ELEVATION_FALLBACK_QA';
+      c.usedAirportElevationFallback = true;
+    } else {
+      throw new Error('THRESHOLD_OR_AIRPORT_ELEVATION_REQUIRED');
+    }
     c.tchFt = nonNegative(c.tchFt, 'tchFt');
     // Prefer the descent angle explicitly transcribed from the APPROACH chart.
     // `angleDeg` remains a backwards-compatible alias for `publishedAngleDeg`.
@@ -236,6 +253,7 @@
     const inAngleRange = c.validAngleDmeRange &&
       dmeNm >= c.validAngleDmeRange.from - EPS && dmeNm <= c.validAngleDmeRange.to + EPS;
     const reasons = [];
+    if (c.usedAirportElevationFallback) reasons.push('AIRPORT_ELEVATION_USED_INSTEAD_OF_RUNWAY_THRESHOLD_QA');
     if (c.angleSource === 'DEFAULT_ASSUMED_3_DEG') reasons.push('DEFAULT_3_DEG_ASSUMED_NOT_PUBLISHED');
     if (!c.validAngleDmeRange) reasons.push('ANGLE_SCOPE_NOT_VERIFIED');
     else if (!inAngleRange) reasons.push('OUTSIDE_PUBLISHED_ANGLE_SCOPE');
@@ -349,9 +367,13 @@
     };
     const blocked = issues.length > 0;
     return {
-      version: '1.3.0', chartId: c.chartId || null, referenceDmeId: c.chartDmeId,
+      version: '1.4.0', chartId: c.chartId || null, referenceDmeId: c.chartDmeId,
       parameters: {
-        thresholdElevationFt: c.thresholdElevationFt, tchFt: c.tchFt,
+        thresholdElevationFt: c.thresholdElevationFt,
+        airportElevationFt: c.airportElevationFt ?? null,
+        elevationSource: c.elevationSource,
+        usedAirportElevationFallback: c.usedAirportElevationFallback,
+        tchFt: c.tchFt,
         crossingAltitudeFt: c.thresholdElevationFt + c.tchFt, mdaFt: c.mdaFt ?? null,
         angleDeg: c.angleDeg, angleSource: c.angleSource, gradientFtPerNm: c.gradientFtPerNm,
         dmePlacement: c.station.placement, dmeOffsetNm: c.station.offsetNm,
@@ -360,7 +382,9 @@
         publishedAngleDmeRange: c.validAngleDmeRange || null,
       },
       checks, issues, rows, coverage, vdp,
-      status: blocked ? 'BLOCKED_BY_QA' : 'PRELIMINARY_GEOMETRY',
+      status: blocked ? 'BLOCKED_BY_QA' : c.usedAirportElevationFallback ? 'PRELIMINARY_AIRPORT_ELEV_FALLBACK' : 'PRELIMINARY_GEOMETRY',
+      warnings: c.usedAirportElevationFallback
+        ? ['AIRPORT_ELEVATION_FALLBACK_QA: runway threshold elevation absent; computed geometry is not threshold-verified.'] : [],
       // Rows with an unresolved station, angle scope or published altitude
       // mismatch are withheld. Full operational validation is separate.
       candidateRows: blocked ? [] : rows.filter(r => r.status === 'CANDIDATE_QA'),
