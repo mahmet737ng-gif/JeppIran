@@ -1280,3 +1280,13 @@ body.viewer-fullscreen .aircraft-follow-btn{
 .taxi-route-chevron{filter:none;opacity:.64}
 .taxi-audit-highlight{filter:none}
 @media(prefers-reduced-motion:reduce){.taxi-route-line{animation:none!important}}
+
+/* JEPPIRAN grouped INS stand QA: shared schema works for all airports. */
+.taxi-ins-groups{padding:10px;margin:8px 0;border:1px solid #367495;border-radius:9px;background:#0b273c;color:#e7f8ff}
+.taxi-ins-groups[hidden]{display:none!important}
+.taxi-ins-groups strong{display:block;font-size:11px;letter-spacing:.035em;color:#98e7ff;margin-bottom:7px}
+.taxi-ins-groups select{width:100%;max-height:130px;box-sizing:border-box;
+ padding:7px;background:#061b2b;color:#f7faff;border:1px solid #568baa;border-radius:6px;font-size:11px}
+#taxiQaStandGroupInfo{margin-top:7px;padding:9px;white-space:pre-wrap;line-height:1.45;
+ border:1px solid #396887;border-radius:6px;color:#c5e5ef;font-size:11px;overflow-wrap:anywhere}
+.taxi-ins-groups small{display:block;margin-top:7px;font-size:10px;line-height:1.3;color:#ffdaaf}
