@@ -445,7 +445,7 @@ async function fetchGraph(icao){
     const d=await r.json();
     if(d.engineVersion===1&&icao!=="OIMM"&&icao!=="LTFM"){
       const factory=window.JEPPIRAN_TAXI_ENGINE;
-      if(!factory||d.enabled!==true||d.source?.reviewStatus==="NOT REVIEWED"||
+      if(!factory||d.enabled!==true||d.source?.reviewStatus!=="SIM_QA_REVIEWED"||
          d.airport!==icao||String(d.cycle)!==String(manifest?.cycle))
         throw Error("New-airport engine, QA signoff or matching cycle unavailable");
       const engine=factory.create(d);
@@ -533,9 +533,13 @@ function fillGenericTaxiDestinations(engine){
 function genericGo(typed){
   const engine=taxi.genericEngine;
   if(!engine)return;
-  const result=engine.plan(typed,{
+  // Deliberate "QA " prefix is the ONLY way to preview a
+  // source-labelled projected access; it stays dashed amber.
+  const allowProjectedQA=/^QA\s+/i.test(typed);
+  const command=allowProjectedQA?typed.replace(/^QA\s+/i,""):typed;
+  const result=engine.plan(command,{
     position:taxi.testStart||lastPosition,
-    allowProjectedQA:false,maxSnapMeters:65
+    allowProjectedQA,maxSnapMeters:65
   });
   taxi.route=null;taxi.auto=null;taxi.genericMonitor=null;
   if(!result.route){
@@ -547,13 +551,15 @@ function genericGo(typed){
     genericRoute:true,genericLinework:engine.linework(route),
     previewOnly:!!result.parsed?.startStand,
     holds:[],length:route.lengthMetres};
-  if(!taxi.route.previewOnly)
-    taxi.genericMonitor={command:typed,route:route,monitor:{count:0,last:0}};
+  if(!taxi.route.previewOnly&&!route.explicitRunway&&
+      !route.edges.some(e=>e.quality==="projected"))
+    taxi.genericMonitor={command,route:route,monitor:{count:0,last:0}};
   draw();
   message("SIM QA · "+taxi.airport+" · "+
     (route.taxiways.join(" → ")||"SOURCE-CONNECTED TAXIWAY")+
     " → "+route.destination+" · "+route.lengthMetres+
-    " m · NOT FOR ACTUAL NAVIGATION / ATC CLEARANCE.");
+    " m · "+(allowProjectedQA?"PROJECTED CHART QA PREVIEW (DASHED AMBER) · ":"")+
+    "NOT FOR ACTUAL NAVIGATION / ATC CLEARANCE.");
 }
 function view(){
   if($("taxiQaPanel"))return;
