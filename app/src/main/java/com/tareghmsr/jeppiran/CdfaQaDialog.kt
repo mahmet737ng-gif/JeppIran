@@ -48,7 +48,7 @@ object CdfaQaDialog {
         if (page <= 0 || pendingReaudit.contains(page) || exclusions?.contains(page) == true) return null
         val chart = records?.get(page) ?: return null
         if (chart.optString("icao") != icao || chart.optString("status").startsWith("WITHHELD")) return null
-        if (chart.optJSONArray("table")?.length() ?: 0 == 0) return null
+        if ((chart.optJSONArray("table")?.length() ?: 0) == 0) return null
         return chart
     }
 
@@ -93,8 +93,8 @@ object CdfaQaDialog {
             + "  •  Angle " + angle + "\nTCH " + chart.optInt("tchFt") + " ft  •  " + source
             + "\nComputed MSL altitudes are not published Jeppesen clearances.", 12f, muted))
         val vdp = chart.optJSONObject("vdp")
-        if (vdp?.optString("status") == "CALCULATED_MDA_INTERCEPT_QA_ONLY" &&
-            !vdp.optString("dmeDisplay").isNullOrBlank()) {
+        if (vdp != null && vdp.optString("status") == "CALCULATED_MDA_INTERCEPT_QA_ONLY" &&
+            vdp.optString("dmeDisplay").isNotBlank()) {
             val mda = if (chart.isNull("mdaFt")) "unverified" else chart.optString("mdaFt") + " ft MSL"
             val pill = view(context, "VDP CALCULATED: " + vdp.optString("dmeDisplay")
                 + "  •  MDA " + mda + "  •  NOT PUBLISHED", 14f, red, true)
