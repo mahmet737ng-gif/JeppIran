@@ -287,6 +287,8 @@ let airportTreeExpanded=false;
 let chartZoom=1, chartPanX=0, chartPanY=0;
 // Dual Layer Ops marker: chart follow is a viewer-only feature; no simulator transport changes.
 let aircraftFollowEnabled=false, taxiOffRouteCount=0, taxiOffRouteActive=false;
+// Camera transitions never modify the live position source or simulator bridge.
+let findMeAnimation=null, followTrackingFrame=0, followTrackingTime=0;
 let chartMetarTimer=null, chartMetarAirport="", chartMetarValue="";
 const CHART_METAR_POLL_INTERVAL=5*60*1000;
 // Keep this session's displayed reports when switching charts or airports.
@@ -734,7 +736,8 @@ function buildGeorefIndex(root){
 }
 function hideAircraftMarker(){
   const m=$("#aircraftMarker"); if(m)m.classList.remove("visible");
-  updateAircraftFollowControl();
+  if(aircraftFollowEnabled)cancelAircraftFollow();
+  else updateAircraftFollowControl();
 }
 function renderedGeoHeading(model,lat,heading,canvas){
   if(!Number.isFinite(heading))return 0;
@@ -797,22 +800,120 @@ function refreshPositionStatus(){
 
 // Center aircraft at 150% and follow it as live simulator/GPS positions change.
 // Transform origin is 50% 0, while the PDF canvas sits centered horizontally in the stage.
+// Find Me uses the current real chart projection. Never guess a position on
+// charts without usable georeferencing or when the aircraft is outside the chart.
+const FIND_ME_ZOOM=1.5;
+function currentFindMeTarget(){
+  const stage=$("#pdfStage"),layer=$("#chartTransformLayer"),canvas=$("#pdfCanvas");
+  const model=selectedChart&&georefByPage.get(Number(selectedChart.page));
+  if(!stage||!layer||!canvas||!model||!lastPosition||!canvas.clientWidth||!canvas.clientHeight
+     ||!stage.clientWidth||!stage.clientHeight)return null;
+  const p=projectGeo(model,Number(lastPosition.lat),Number(lastPosition.lon));
+  if(!p)return null;
+  const x=p.x/model.width*canvas.clientWidth;
+  const y=p.y/model.height*canvas.clientHeight;
+  return {
+    panX:FIND_ME_ZOOM*(layer.offsetWidth/2-x),
+    panY:stage.clientHeight/2-FIND_ME_ZOOM*y
+  };
+}
 function updateAircraftFollowControl(){
   const btn=$("#aircraftFollowBtn");
   if(!btn)return;
-  const ready=!!(lastPosition&&selectedChart&&georefByPage.get(Number(selectedChart.page))&&$("#pdfCanvas"));
+  const ready=!!currentFindMeTarget();
   btn.disabled=!ready;
   btn.classList.toggle("following",aircraftFollowEnabled&&ready);
   btn.setAttribute("aria-pressed",String(aircraftFollowEnabled&&ready));
-  btn.setAttribute("aria-label",aircraftFollowEnabled&&ready?"Stop following the aircraft":"Center on aircraft at 150% and follow");
-  btn.title=ready?(aircraftFollowEnabled?"Stop following aircraft":"Center aircraft and follow at 150%"):"A live position and georeferenced chart are required";
+  btn.setAttribute("aria-label",aircraftFollowEnabled&&ready?
+    "Find Me: following aircraft. Tap to stop":"Find Me: smoothly center aircraft at 150% and follow");
+  btn.title=ready?
+    (aircraftFollowEnabled?"Following aircraft · Tap to stop":"Find Me · Smooth centering at 150%"):
+    "A live position inside this georeferenced chart is required";
+  // The visible button name must stay Find Me in both states.
   const label=btn.querySelector(".aircraft-follow-label");
-  if(label)label.textContent=aircraftFollowEnabled&&ready?"FOLLOW ON":"CTR 150%";
+  if(label)label.textContent="Find Me";
+}
+function cancelFollowFrames(){
+  if(findMeAnimation){
+    cancelAnimationFrame(findMeAnimation.raf);
+    findMeAnimation=null;
+  }
+  if(followTrackingFrame){
+    cancelAnimationFrame(followTrackingFrame);
+    followTrackingFrame=0;
+  }
+  followTrackingTime=0;
 }
 function cancelAircraftFollow(){
+  cancelFollowFrames();
   if(!aircraftFollowEnabled)return;
   aircraftFollowEnabled=false;
   updateAircraftFollowControl();
+}
+function beginFindMeTransition(){
+  if(!aircraftFollowEnabled)return;
+  cancelFollowFrames();
+  const target=currentFindMeTarget();
+  if(!target){cancelAircraftFollow();return}
+  const reduceMotion=window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+  if(reduceMotion){
+    chartZoom=FIND_ME_ZOOM;chartPanX=target.panX;chartPanY=target.panY;
+    paintChartTransform();
+    return;
+  }
+  const startZoom=chartZoom,startX=chartPanX,startY=chartPanY;
+  const travel=Math.hypot(target.panX-startX,target.panY-startY);
+  const duration=Math.max(680,Math.min(1380,
+    720+travel*.17+Math.abs(FIND_ME_ZOOM-startZoom)*200));
+  const anim={start:performance.now(),duration,raf:0};
+  findMeAnimation=anim;
+  const tick=(now)=>{
+    if(findMeAnimation!==anim||!aircraftFollowEnabled)return;
+    const destination=currentFindMeTarget();
+    if(!destination){cancelAircraftFollow();return}
+    const t=Math.max(0,Math.min(1,(now-anim.start)/duration));
+    // Smoothstep: zero initial/final velocity. Pan and zoom share one timeline.
+    const eased=t*t*(3-2*t);
+    chartZoom=startZoom+(FIND_ME_ZOOM-startZoom)*eased;
+    chartPanX=startX+(destination.panX-startX)*eased;
+    chartPanY=startY+(destination.panY-startY)*eased;
+    paintChartTransform();
+    if(t<1){
+      anim.raf=requestAnimationFrame(tick);
+    }else{
+      findMeAnimation=null;
+      // Any new live GPS/simulator fix is picked up by smooth FOLLOW tracking.
+      updateAircraftMarker();
+    }
+  };
+  anim.raf=requestAnimationFrame(tick);
+}
+function trackAircraftFrame(now){
+  followTrackingFrame=0;
+  if(!aircraftFollowEnabled||findMeAnimation)return;
+  const target=currentFindMeTarget();
+  if(!target){cancelAircraftFollow();return}
+  const dt=followTrackingTime?Math.min(80,Math.max(1,now-followTrackingTime)):16;
+  followTrackingTime=now;
+  // Fast-damped camera movement keeps the arrow essentially centered while
+  // avoiding one-frame jumps whenever the simulator reports a new position.
+  const blend=window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches?
+    1:(1-Math.exp(-dt/80));
+  const dx=target.panX-chartPanX,dy=target.panY-chartPanY;
+  chartZoom=FIND_ME_ZOOM;
+  chartPanX=Math.abs(dx)<.18?target.panX:chartPanX+dx*blend;
+  chartPanY=Math.abs(dy)<.18?target.panY:chartPanY+dy*blend;
+  paintChartTransform();
+  if(Math.abs(target.panX-chartPanX)>.18||Math.abs(target.panY-chartPanY)>.18){
+    followTrackingFrame=requestAnimationFrame(trackAircraftFrame);
+  }else followTrackingTime=0;
+}
+function followAircraftAt(model,p,canvas){
+  if(!aircraftFollowEnabled||findMeAnimation)return;
+  if(!followTrackingFrame){
+    followTrackingTime=0;
+    followTrackingFrame=requestAnimationFrame(trackAircraftFrame);
+  }
 }
 function ensureAircraftFollowControl(){
   const stage=$("#pdfStage");
@@ -823,34 +924,22 @@ function ensureAircraftFollowControl(){
     btn.id="aircraftFollowBtn";
     btn.type="button";
     btn.className="aircraft-follow-btn";
-    btn.innerHTML='<svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><circle cx="12" cy="12" r="7.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 1.8v5 M12 17.2v5 M1.8 12h5 M17.2 12h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="2.2" fill="currentColor"/></svg><span class="aircraft-follow-label">CTR 150%</span>';
-    btn.addEventListener("pointerdown",e=>e.stopPropagation());
-    btn.addEventListener("pointermove",e=>e.stopPropagation());
-    btn.addEventListener("pointerup",e=>e.stopPropagation());
+    btn.innerHTML='<svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><circle cx="12" cy="12" r="7.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 1.8v5 M12 17.2v5 M1.8 12h5 M17.2 12h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="2.2" fill="currentColor"/></svg><span class="aircraft-follow-label">Find Me</span>';
+    for(const type of ["pointerdown","pointermove","pointerup","pointercancel"])
+      btn.addEventListener(type,e=>e.stopPropagation());
     btn.addEventListener("click",e=>{
       e.preventDefault();e.stopPropagation();
       if(btn.disabled)return;
-      aircraftFollowEnabled=!aircraftFollowEnabled;
-      if(aircraftFollowEnabled)chartZoom=1.5;
-      updateAircraftFollowControl();
-      if(aircraftFollowEnabled)updateAircraftMarker();
+      if(aircraftFollowEnabled)cancelAircraftFollow();
+      else{
+        aircraftFollowEnabled=true;
+        updateAircraftFollowControl();
+        beginFindMeTransition();
+      }
     });
     stage.appendChild(btn);
   }
   updateAircraftFollowControl();
-}
-function followAircraftAt(model,p,canvas){
-  const stage=$("#pdfStage"),layer=$("#chartTransformLayer");
-  if(!stage||!layer||!canvas.clientWidth||!canvas.clientHeight)return;
-  const x=p.x/model.width*canvas.clientWidth;
-  const y=p.y/model.height*canvas.clientHeight;
-  chartZoom=1.5;
-  chartPanX=chartZoom*(layer.offsetWidth/2-x);
-  chartPanY=stage.clientHeight/2-chartZoom*y;
-  // Do not clamp in FOLLOW: even an aircraft near the chart boundary must remain centered.
-  layer.style.transform="translate3d("+chartPanX+"px,"+chartPanY+"px,0) scale("+chartZoom+")";
-  layer.style.setProperty("--marker-inverse-scale",(1/chartZoom).toFixed(5));
-  const zoom=$("#zoomValue");if(zoom)zoom.textContent="150%";
 }
 function updateTaxiDeviationClass(marker,pos){
   const deviation=window.JEPPIRAN_TAXI?.routeDeviationMeters?.(pos);
@@ -993,13 +1082,24 @@ function clampChartPan(){
   chartPanX=Math.max(-maxX,Math.min(maxX,chartPanX));
   chartPanY=Math.max(-maxY,Math.min(80,chartPanY));
 }
-function applyChartTransform(){
+// The SVG was too large and its original inverse-scale kept it screen-fixed.
+// Scale below inversely to zoom^(1.75): on-screen size decreases as users zoom.
+// At extreme zoom, keep a minimum visible 9px marker for situational awareness.
+function aircraftMarkerScaleForZoom(zoom){
+  const z=Math.max(1,Number(zoom)||1);
+  return Math.max(9/(20*z),Math.pow(z,-1.75));
+}
+function paintChartTransform(){
   const layer=$("#chartTransformLayer");
   if(!layer)return;
-  if(!aircraftFollowEnabled)clampChartPan();
   layer.style.transform="translate3d("+chartPanX+"px,"+chartPanY+"px,0) scale("+chartZoom+")";
-  layer.style.setProperty("--marker-inverse-scale",(1/chartZoom).toFixed(5));
-  const label=$("#zoomValue"); if(label)label.textContent=Math.round(chartZoom*100)+"%";
+  layer.style.setProperty("--marker-inverse-scale",aircraftMarkerScaleForZoom(chartZoom).toFixed(6));
+  const label=$("#zoomValue");if(label)label.textContent=Math.round(chartZoom*100)+"%";
+}
+function applyChartTransform(){
+  if(!$("#chartTransformLayer"))return;
+  if(!aircraftFollowEnabled)clampChartPan();
+  paintChartTransform();
   updateAircraftMarker();
 }
 function setChartZoom(next,{resetPan=false}={}){
