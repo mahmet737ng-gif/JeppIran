@@ -1060,7 +1060,7 @@ async function renderSelectedPdf(c){
   canvas.style.width=Math.floor(viewport.width/dpr)+"px"; canvas.style.height=Math.floor(viewport.height/dpr)+"px";
   const layer=$("#chartTransformLayer");
   layer.style.width=canvas.style.width; layer.style.height=canvas.style.height;
-  chartZoom=1;chartPanX=0;chartPanY=0;
+  chartZoom=1;chartPanX=0;chartPanY=0;stage.scrollTop=0;
   await page.render({canvasContext:canvas.getContext("2d",{alpha:false}),viewport}).promise;
   stage.querySelector(".pdf-loading")?.remove();
   applyChartTransform();
@@ -1084,9 +1084,9 @@ function clampChartPan(){
   if(!stage||!layer)return;
   const w=layer.offsetWidth*chartZoom,h=layer.offsetHeight*chartZoom;
   if(chartZoom<=1.001){
-    chartPanX=0;
-    const minY=Math.min(0,stage.clientHeight-h);
-    chartPanY=Math.max(minY,Math.min(0,chartPanY));
+    // At 100% the viewport uses REAL vertical scrolling. Keeping a
+    // transform panY alongside scrollTop caused the apparent locked PDF.
+    chartPanX=0;chartPanY=0;
     return;
   }
   const maxX=Math.max(0,(w-stage.clientWidth)/2+80);
@@ -1102,8 +1102,9 @@ function aircraftMarkerScaleForZoom(zoom){
   return Math.max(5.5/(14*z),Math.pow(z,-1.65));
 }
 function paintChartTransform(){
-  const layer=$("#chartTransformLayer");
+  const layer=$("#chartTransformLayer"),stage=$("#pdfStage");
   if(!layer)return;
+  if(stage)stage.style.overflowY=chartZoom<=1.001?"auto":"hidden";
   layer.style.transform="translate3d("+chartPanX+"px,"+chartPanY+"px,0) scale("+chartZoom+")";
   layer.style.setProperty("--marker-inverse-scale",aircraftMarkerScaleForZoom(chartZoom).toFixed(6));
   const label=$("#zoomValue");if(label)label.textContent=Math.round(chartZoom*100)+"%";
@@ -1116,9 +1117,15 @@ function applyChartTransform(){
 }
 function setChartZoom(next,{resetPan=false}={}){
   cancelAircraftFollow();
+  const stage=$("#pdfStage"),old=chartZoom;
+  const savedScroll=stage?.scrollTop||0;
   chartZoom=Math.max(1,Math.min(4,Number(next)||1));
+  if(old<=1.001&&chartZoom>1.001){chartPanY=-savedScroll;if(stage)stage.scrollTop=0;}
   if(resetPan||chartZoom<=1.001){chartPanX=0;chartPanY=0}
   applyChartTransform();
+  if(stage&&old>1.001&&chartZoom<=1.001&&!resetPan)
+    stage.scrollTop=Math.max(0,-savedScroll);
+  if(stage&&resetPan)stage.scrollTop=0;
 }
 function resetChartView(){setChartZoom(1,{resetPan:true})}
 function zoomAround(next,cx,cy){
@@ -1128,13 +1135,17 @@ function zoomAround(next,cx,cy){
   const old=chartZoom;
   const z=Math.max(1,Math.min(4,next));
   if(Math.abs(z-old)<0.001)return;
+  const savedScroll=old<=1.001?stage.scrollTop:0;
+  if(old<=1.001&&z>1.001){chartPanY=-savedScroll;stage.scrollTop=0;}
   const r=stage.getBoundingClientRect();
   const px=cx-r.left-r.width/2,py=cy-r.top;
   const ratio=z/old;
   chartPanX=px-(px-chartPanX)*ratio;
   chartPanY=py-(py-chartPanY)*ratio;
   chartZoom=z;
+  if(chartZoom<=1.001){chartPanX=0;chartPanY=0}
   applyChartTransform();
+  if(old>1.001&&chartZoom<=1.001)stage.scrollTop=Math.max(0,-chartPanY);
 }
 $("#zoomOutBtn").addEventListener("click",()=>setChartZoom(chartZoom/1.25));
 $("#zoomInBtn").addEventListener("click",()=>setChartZoom(chartZoom*1.25));
@@ -1148,15 +1159,20 @@ function setupChartGestures(){
   stage.dataset.gestures="1";
   stage.addEventListener("wheel",e=>{
     if(!$("#pdfCanvas"))return;
-    e.preventDefault();
     if(e.ctrlKey||e.metaKey){
+      e.preventDefault();
       const factor=e.deltaY<0?1.12:1/1.12;
       zoomAround(chartZoom*factor,e.clientX,e.clientY);
-    }else{
+    }else if(chartZoom>1.001){
+      e.preventDefault();
       cancelAircraftFollow();
       chartPanY-=e.deltaY;
-      if(chartZoom>1.001)chartPanX-=e.deltaX;
+      chartPanX-=e.deltaX;
       applyChartTransform();
+    }else{
+      // Browser/native scrolling keeps PDF, taxi overlay and stand inset
+      // together. Never intercept the wheel at 100% zoom.
+      cancelAircraftFollow();
     }
   },{passive:false});
   stage.addEventListener("pointerdown",e=>{
@@ -1165,7 +1181,7 @@ function setupChartGestures(){
     try{stage.setPointerCapture(e.pointerId)}catch(_){}
     chartPointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
     if(chartPointers.size===1){
-      panStart={x:e.clientX,y:e.clientY,panX:chartPanX,panY:chartPanY};
+      panStart={x:e.clientX,y:e.clientY,panX:chartPanX,panY:chartPanY,scrollTop:stage.scrollTop};
       swipeStart={x:e.clientX,y:e.clientY,time:Date.now()};
     }else if(chartPointers.size===2){
       const pts=[...chartPointers.values()];
@@ -1193,9 +1209,9 @@ function setupChartGestures(){
         chartPanY=panStart.panY+dy;
         applyChartTransform();
       }else if(canVerticalPan&&Math.abs(dy)>Math.abs(dx)*0.65){
-        chartPanX=0;
-        chartPanY=panStart.panY+dy;
-        applyChartTransform();
+        // Mouse/touch grab at normal zoom uses the same scroll offset
+        // as wheels and scrollbars; transform pan remains zero.
+        stageEl.scrollTop=panStart.scrollTop-dy;
       }
     }
   });
