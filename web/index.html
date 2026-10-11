@@ -17,6 +17,7 @@
   <link rel="stylesheet" href="./styles.css?v=2621-stand-groups-generic-r10">
   <link rel="stylesheet" href="./home-ils-background.css?v=2621-ils-bg-fixed-r1">
   <link rel="stylesheet" href="./airport-adc-banners.css?v=2621-adc-template2-r1">
+  <link rel="stylesheet" href="./cdfa-locked.css?v=2621-cdfa-locked-r1">
 <style id="universal-sim-ui">#useXpBtn,#useFsxBtn{display:none!important}#simulatorView .sim-card:has(#bridgeUrl){display:none!important}</style>
 </head>
 <body>
@@ -115,12 +116,15 @@
           <span id="chartMetarText"></span>
           <button id="chartMetarClose" type="button" aria-label="Hide METAR">✕</button>
         </div>
-        <div id="pdfStage" class="pdf-stage"><div id="pdfLoading" class="pdf-loading hidden">Loading chart…</div>
+        <div id="jpCdfaWorkspace" class="jp-cdfa-workspace" data-locked-ui="CDFA_SIDE_TABLE_V1">
+          <div id="pdfStage" class="pdf-stage"><div id="pdfLoading" class="pdf-loading hidden">Loading chart…</div>
           <div class="empty-state">
             <img src="./app-icon.png" alt="">
             <b>Select an airport and chart</b>
             <span>The selected airport PDF will appear here.</span>
           </div>
+          </div>
+          <aside id="jpCdfaSide" class="jp-cdfa-side" hidden aria-label="CDFA data outside the chart"></aside>
         </div>
       </section>
     </main>
@@ -348,7 +352,7 @@
   })();
   </script>
   <script src="./app.js?v=2621-cdfa-titlefix-r1" defer></script>
-  <script src="./cdfa-chart-panel.js?v=2621-qa-display-r1" defer></script>
+  <script src="./cdfa-chart-panel.js?v=2621-cdfa-locked-r1" defer></script>
   <script src="./airport-adc-banners.js?v=2621-adc-template2-r1" defer></script>
   <script src="./taxi-stand-engine.js?v=2621-stand-groups-generic-r10" defer></script>\n  <script src="./taxi-unnamed-connectors.js?v=2621-ltfm-n2c-r12" defer></script>
   <script src="./taxi-engine.js?v=2621-implicit-backtrack-v1" defer></script>

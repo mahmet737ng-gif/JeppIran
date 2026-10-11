@@ -36,6 +36,9 @@ jobs:
       - name: Validate LTFM TAXI connector topology (simulator QA)
         run: node scripts/test_ltfm_unnamed_connectors.cjs
 
+      - name: Enforce owner-locked CDFA layout
+        run: node --test tests/cdfa-ui-locked-v2621.test.cjs
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
