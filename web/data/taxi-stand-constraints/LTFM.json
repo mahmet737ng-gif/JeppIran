@@ -1,0 +1,72 @@
+{
+  "airport": "LTFM",
+  "kind": "authoritative-aip-stand-leadway-relationships",
+  "source": {
+    "authority": "DHMİ AIP Türkiye",
+    "document": "AD 2 LTFM - 6",
+    "date": "2026-02-19",
+    "url": "https://www.dhmi.gov.tr/AIPDocuments/LT_AD_2_LTFM_en.pdf",
+    "section": "AD 2.8 Remarks (Aprons, Taxiways and Check Locations)"
+  },
+  "cycleContext": "Jeppesen 2621; AIP reference may not reflect every subsequent NOTAM or later amendment",
+  "geometryType": "OFFICIAL_TOPOLOGY_TEXT_NOT_GEOREFERENCED_PUSHBACK_CURVE",
+  "coordinateAccuracyMeters": null,
+  "routingApproved": false,
+  "simulationOnly": true,
+  "facts": [
+    {
+      "type": "namedTaxiwayStandLeadEndpoint",
+      "taxiway": "T3",
+      "from": "N2",
+      "toStand": "B2",
+      "publishedDescription": "Portion of TWY T3 BTN TWY N2 and parking position B2 is 9 m-concrete CL corridor"
+    },
+    {
+      "type": "namedTaxiwayStandLeadEndpoint",
+      "taxiway": "T5",
+      "from": "N2",
+      "toStand": "D5",
+      "publishedDescription": "Portion of TWY T5 BTN TWY N2 and parking position D5 is 9 m-concrete CL corridor"
+    },
+    {
+      "type": "namedTaxiwayStandLeadEndpoint",
+      "taxiway": "T7",
+      "from": "N2",
+      "toStand": "D4",
+      "publishedDescription": "Portion of TWY T7 BTN TWY N2 and parking position D4 is 9 m-concrete CL corridor"
+    },
+    {
+      "type": "namedTaxiwayStandLeadEndpoint",
+      "taxiway": "T9",
+      "from": "N2",
+      "toStand": "F4",
+      "publishedDescription": "Portion of TWY T9 BTN TWY N2 and parking position F4 is 9 m-concrete CL corridor"
+    },
+    {
+      "type": "taxiwayIntersectionOnStandLeadLine",
+      "intersection": [
+        "T3",
+        "T5"
+      ],
+      "stand": "C2",
+      "publishedDescription": "Intersection point of TWY T3 and TWY T5 is C2 stand lead line"
+    },
+    {
+      "type": "taxiwayIntersectionOnStandLeadLine",
+      "intersection": [
+        "T7",
+        "T9"
+      ],
+      "stand": "E3",
+      "publishedDescription": "Intersection point of TWY T7 and TWY T9 is E3 stand lead line"
+    },
+    {
+      "type": "namedTaxiwayStandLeadEndpoint",
+      "taxiway": "G",
+      "from": "G12",
+      "toStand": "319",
+      "publishedDescription": "Portion of TWY G BTN TWY G12 and parking position 319 is 25 m and code F"
+    }
+  ],
+  "warning": "These AIP facts corroborate topological stand-lead associations only; they do not publish actual individual pushback arc polylines for every stand. Do not draw interpolated stand/leader line as real taxi path."
+}
