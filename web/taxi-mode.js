@@ -475,7 +475,7 @@ async function fetchGraph(icao){
       // geographic edges. Fingerprint the CURRENT terminal chart source.
       let pdfVectors=null,vectorWarning="";
       try{
-        const vr=await fetch("./data/taxi-chart-traces/OIAW-2621.json?v=2621-vector-pdf-r1",{cache:"no-store"});
+        const vr=await fetch("./data/taxi-chart-traces/OIAW-2621.json?v=2621-vector-pdf-r2",{cache:"no-store"});
         if(!vr.ok)throw Error("PDF vector HTTP "+vr.status);
         const record=await vr.json();
         if(record.airport!==icao||String(record.cycle)!==String(manifest?.cycle)||
@@ -483,9 +483,9 @@ async function fetchGraph(icao){
           throw Error("PDF source hash/cycle does not match current V2621 charts");
         pdfVectors=window.JEPPIRAN_TAXI_PDF_VECTOR?.build(record);
         if(!pdfVectors)throw Error("PDF vector renderer script not loaded");
-        for(const n of compiled.stands){
-          const preview=pdfVectors.route([n,"A","B"],38);
-          if(!preview.ok)throw Error(n+" source curve mismatch: "+preview.error);
+        for(const n of compiled.stands)for(const t of ["B","C","D"]){
+          const preview=pdfVectors.route([n,"A",t],38);
+          if(!preview.ok)throw Error(n+" A "+t+" source curve mismatch: "+preview.error);
         }
       }catch(err){pdfVectors=null;vectorWarning=String(err?.message||err)}
       if(taxi.airport!==icao)return null;
@@ -496,9 +496,9 @@ async function fetchGraph(icao){
       $("taxiQaStands").textContent="STANDS ("+compiled.stands.length+")";
       message("OIAW ADC SURVEY · "+compiled.stands.length+
         " stand branches · "+compiled.taxiways.length+" named taxiways · "+
-        (pdfVectors?"PDF ORIGINAL VECTOR CURVES LOADED (A/B ONLY) · ":
+        (pdfVectors?"PDF ORIGINAL VECTOR CURVES LOADED (A/B/C/D) · ":
           "SOURCE VECTOR GEOMETRY UNAVAILABLE: "+vectorWarning+" · ")+
-        "RUNWAY GATES, C/D/E and GPS ROUTING are not yet traced/approved. "+
+        "RUNWAY HOLD GATES, E and GPS ROUTING are not yet traced/approved. "+
         "Simulator chart QA only.",true);
       draw();return inventory;
     }
