@@ -1,0 +1,546 @@
+{
+  "airport": "LTFM",
+  "cycle": "2621",
+  "kind": "published-taxiroute-sequences",
+  "source": "Jeppesen terminal-chart cycle 21-2026; taxi route charts 30-9F*,30-9G*",
+  "sourcePdf": "2621.pdf",
+  "warning": "Chart text sequences recorded. These are NOT certified stand-to-runway geometry. Some published procedures have runway crossings and ATC-clearance conditions. Do not draw nonexistent links.",
+  "procedures": [
+    {
+      "key": "16R1A",
+      "operation": "ARRIVAL",
+      "taxiways": [
+        "A",
+        "A3",
+        "E1",
+        "D3",
+        "E"
+      ],
+      "holdShortOf": "TWY:NW",
+      "sourcePdfPage": 1251,
+      "sourceChart": "30-9F1",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "16R1B",
+      "operation": "ARRIVAL",
+      "taxiways": [
+        "A",
+        "A3",
+        "E1",
+        "E1C",
+        "B1A"
+      ],
+      "holdShortOf": "RWY:35L",
+      "sourcePdfPage": 1251,
+      "sourceChart": "30-9F1",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false,
+      "caution": "RWY_CROSSING_REQUIRES_ATC_AND_SECOND_STAGE"
+    },
+    {
+      "key": "17L2A",
+      "operation": "ARRIVAL",
+      "taxiways": [
+        "C",
+        "N5",
+        "T3"
+      ],
+      "holdShortOf": "TWY:N2",
+      "sourcePdfPage": 1252,
+      "sourceChart": "30-9F2",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "17L2B",
+      "operation": "ARRIVAL",
+      "taxiways": [
+        "C",
+        "N5"
+      ],
+      "holdShortOf": "TWY:T9",
+      "sourcePdfPage": 1252,
+      "sourceChart": "30-9F2",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "17L2C",
+      "operation": "ARRIVAL",
+      "taxiways": [
+        "C",
+        "N1"
+      ],
+      "holdShortOf": "TWY:T7",
+      "sourcePdfPage": 1253,
+      "sourceChart": "30-9F3",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "17L2D",
+      "operation": "ARRIVAL",
+      "taxiways": [
+        "C",
+        "N1",
+        "D",
+        "B"
+      ],
+      "holdShortOf": "TWY:A3",
+      "sourcePdfPage": 1253,
+      "sourceChart": "30-9F3",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "17L2E",
+      "operation": "ARRIVAL",
+      "taxiways": [
+        "C",
+        "N5",
+        "T9",
+        "N3",
+        "F"
+      ],
+      "holdShortOf": "ATC_CLEARANCE_LIMIT",
+      "sourcePdfPage": 1254,
+      "sourceChart": "30-9F4",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "183F",
+      "operation": "ARRIVAL",
+      "taxiways": [
+        "G",
+        "N2",
+        "D",
+        "B"
+      ],
+      "holdShortOf": "TWY:A3",
+      "sourcePdfPage": 1255,
+      "sourceChart": "30-9F5",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "183G",
+      "operation": "ARRIVAL",
+      "taxiways": [
+        "G",
+        "N4"
+      ],
+      "holdShortOf": "ATC_CLEARANCE_LIMIT",
+      "sourcePdfPage": 1255,
+      "sourceChart": "30-9F5",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "183H",
+      "operation": "ARRIVAL",
+      "taxiways": [
+        "F"
+      ],
+      "holdShortOf": "ATC_CLEARANCE_LIMIT",
+      "sourcePdfPage": 1256,
+      "sourceChart": "30-9F6",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "363A",
+      "operation": "ARRIVAL",
+      "taxiways": [
+        "G",
+        "N4"
+      ],
+      "holdShortOf": "TWY:T3",
+      "sourcePdfPage": 1257,
+      "sourceChart": "30-9F7",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "363B",
+      "operation": "ARRIVAL",
+      "taxiways": [
+        "G",
+        "N4",
+        "T9"
+      ],
+      "holdShortOf": "TWY:N2",
+      "sourcePdfPage": 1257,
+      "sourceChart": "30-9F7",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "363C",
+      "operation": "ARRIVAL",
+      "taxiways": [
+        "G",
+        "N2",
+        "F"
+      ],
+      "holdShortOf": "ATC_CLEARANCE_LIMIT",
+      "sourcePdfPage": 1258,
+      "sourceChart": "30-9F8",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "363D",
+      "operation": "ARRIVAL",
+      "taxiways": [
+        "G",
+        "N4",
+        "D",
+        "B"
+      ],
+      "holdShortOf": "TWY:A3",
+      "sourcePdfPage": 1258,
+      "sourceChart": "30-9F8",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "363E",
+      "operation": "ARRIVAL",
+      "taxiways": [
+        "G",
+        "N2"
+      ],
+      "holdShortOf": "TWY:T5",
+      "sourcePdfPage": 1259,
+      "sourceChart": "30-9F9",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "094A",
+      "operation": "DEPARTURE",
+      "taxiways": [
+        "E1",
+        "D3",
+        "E",
+        "N1",
+        "F",
+        "G1",
+        "G2B"
+      ],
+      "holdShortOf": "RWY:09",
+      "sourcePdfPage": 1260,
+      "sourceChart": "30-9G",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "16R1F",
+      "operation": "DEPARTURE",
+      "taxiways": [
+        "G",
+        "N2",
+        "D",
+        "B",
+        "A7",
+        "A",
+        "A10B"
+      ],
+      "holdShortOf": "RWY:16L",
+      "sourcePdfPage": 1261,
+      "sourceChart": "30-9G1",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "16R1G",
+      "operation": "DEPARTURE",
+      "taxiways": [
+        "G",
+        "N2",
+        "D",
+        "B",
+        "E1D",
+        "A1",
+        "A",
+        "A10B"
+      ],
+      "holdShortOf": "RWY:16L",
+      "sourcePdfPage": 1261,
+      "sourceChart": "30-9G1",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "17L2G",
+      "operation": "DEPARTURE",
+      "taxiways": [
+        "G",
+        "N2",
+        "D",
+        "C",
+        "C11"
+      ],
+      "holdShortOf": "RWY:17L",
+      "sourcePdfPage": 1262,
+      "sourceChart": "30-9G2",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "17L2H",
+      "operation": "DEPARTURE",
+      "taxiways": [
+        "E",
+        "NW",
+        "D",
+        "C",
+        "C11"
+      ],
+      "holdShortOf": "RWY:17L",
+      "sourcePdfPage": 1262,
+      "sourceChart": "30-9G2",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "17R2F",
+      "operation": "DEPARTURE",
+      "taxiways": [
+        "G",
+        "N2",
+        "D",
+        "B",
+        "B9A"
+      ],
+      "holdShortOf": "RWY:17R",
+      "sourcePdfPage": 1263,
+      "sourceChart": "30-9G3",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "17R2G",
+      "operation": "DEPARTURE",
+      "taxiways": [
+        "G",
+        "N2",
+        "D",
+        "C",
+        "C11"
+      ],
+      "holdShortOf": "RWY:17L",
+      "sourcePdfPage": 1263,
+      "sourceChart": "30-9G3",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "183F",
+      "operation": "DEPARTURE",
+      "taxiways": [
+        "E1",
+        "D3",
+        "E",
+        "N1",
+        "T2",
+        "N3",
+        "G",
+        "G17"
+      ],
+      "holdShortOf": "RWY:18",
+      "sourcePdfPage": 1264,
+      "sourceChart": "30-9G4",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "183G",
+      "operation": "DEPARTURE",
+      "taxiways": [
+        "G",
+        "G17"
+      ],
+      "holdShortOf": "RWY:18",
+      "sourcePdfPage": 1264,
+      "sourceChart": "30-9G4",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "34L1A",
+      "operation": "DEPARTURE",
+      "taxiways": [
+        "G",
+        "N2",
+        "D",
+        "B",
+        "E1D",
+        "A1",
+        "A1B"
+      ],
+      "holdShortOf": "RWY:34R",
+      "sourcePdfPage": 1265,
+      "sourceChart": "30-9G5",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "34L1B",
+      "operation": "DEPARTURE",
+      "taxiways": [
+        "G",
+        "N2",
+        "D",
+        "B",
+        "E1A",
+        "E1",
+        "A1",
+        "A1B"
+      ],
+      "holdShortOf": "RWY:34R",
+      "sourcePdfPage": 1265,
+      "sourceChart": "30-9G5",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "35L2A",
+      "operation": "DEPARTURE",
+      "taxiways": [
+        "G",
+        "N2",
+        "D",
+        "B",
+        "B4A"
+      ],
+      "holdShortOf": "RWY:35L",
+      "sourcePdfPage": 1266,
+      "sourceChart": "30-9G6",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "35L2B",
+      "operation": "DEPARTURE",
+      "taxiways": [
+        "G",
+        "N2",
+        "C",
+        "C5A"
+      ],
+      "holdShortOf": "RWY:35R",
+      "sourcePdfPage": 1266,
+      "sourceChart": "30-9G6",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "35L2D",
+      "operation": "DEPARTURE",
+      "taxiways": [
+        "E",
+        "D11",
+        "C4B",
+        "C4A"
+      ],
+      "holdShortOf": "RWY:35R",
+      "sourcePdfPage": 1267,
+      "sourceChart": "30-9G7",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "35R2B",
+      "operation": "DEPARTURE",
+      "taxiways": [
+        "G",
+        "N2",
+        "C",
+        "C5A"
+      ],
+      "holdShortOf": "RWY:35R",
+      "sourcePdfPage": 1268,
+      "sourceChart": "30-9G8",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "35R2C",
+      "operation": "DEPARTURE",
+      "taxiways": [
+        "E",
+        "D8",
+        "C1B",
+        "C1A"
+      ],
+      "holdShortOf": "RWY:35R",
+      "sourcePdfPage": 1268,
+      "sourceChart": "30-9G8",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "35R2D",
+      "operation": "DEPARTURE",
+      "taxiways": [
+        "E",
+        "D11",
+        "C4B",
+        "C4A"
+      ],
+      "holdShortOf": "RWY:35R",
+      "sourcePdfPage": 1269,
+      "sourceChart": "30-9G9",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "363A",
+      "operation": "DEPARTURE",
+      "taxiways": [
+        "E1",
+        "D3",
+        "E",
+        "N1",
+        "G",
+        "G7A"
+      ],
+      "holdShortOf": "RWY:36",
+      "sourcePdfPage": 1270,
+      "sourceChart": "30-9G10",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "363B",
+      "operation": "DEPARTURE",
+      "taxiways": [
+        "G",
+        "G6A"
+      ],
+      "holdShortOf": "RWY:36",
+      "sourcePdfPage": 1270,
+      "sourceChart": "30-9G10",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    },
+    {
+      "key": "363C",
+      "operation": "DEPARTURE",
+      "taxiways": [
+        "F6",
+        "G6",
+        "G6A"
+      ],
+      "holdShortOf": "RWY:36",
+      "sourcePdfPage": 1271,
+      "sourceChart": "30-9G11",
+      "chartSequenceVerified": true,
+      "nodeGeometryVerified": false
+    }
+  ]
+}
