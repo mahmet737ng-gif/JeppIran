@@ -8,6 +8,7 @@ on:
       - scripts/extract_ltfm_pushback_targets.py
       - scripts/enrich_ltfm_stand_candidates.py
       - scripts/build_ltfm_stand_registry.cjs
+      - scripts/build_ltfm_mapped_egress_geometry.cjs
       - .github/workflows/generate-ltfm-stand-candidates.yml
 permissions:
   contents: write
@@ -48,6 +49,9 @@ jobs:
       - name: Build complete stand-name registry from all three official chart sources
         run: |
           node scripts/build_ltfm_stand_registry.cjs
+      - name: Extract actual original mapped taxiway centerline geometry at stand exit areas
+        run: |
+          node scripts/build_ltfm_mapped_egress_geometry.cjs
       - name: QA no invented verified stand links
         run: |
           node scripts/test_import_taxi_stands.cjs
@@ -77,7 +81,14 @@ jobs:
           assert all(v['position'] and not v['routingApproved'] for v in x['stands'].values())
           assert x['stands']['100']['locationType']=='ROUNDED_INS_STAND_GROUP_ONLY'
           assert x['stands']['D3']['locationType']=='PRINTED_LABEL_ANCHOR'
-          print('STAND QA PASS:',c['stats'],'registry:',x['stats'])
+          q=json.load(open('web/data/taxi-egress-geometry/LTFM.json'))
+          assert q['stats']['allNamedStands']==379
+          assert q['stats']['groupOnlyStands']==116
+          assert q['stats']['standsWithMappedPublishedTaxiwayGeometry']>=195
+          assert q['stats']['physicallyVerifiedStandLeadOuts']==0
+          assert not q['routingApproved']
+          assert all(not s['standConnectorVerified'] and s['noArtificialStandConnector'] for s in q['stands'].values())
+          print('STAND QA PASS:',c['stats'],'registry:',x['stats'],'source geometry:',q['stats'])
           PY
       - name: Commit only generated data against latest main
         run: |
@@ -89,15 +100,17 @@ jobs:
           cp web/data/taxi-stand-candidates/LTFM.json /tmp/jeppiran-taxi-stand-generated/candidates.json
           cp web/data/taxi-stand-pushback/LTFM.json /tmp/jeppiran-taxi-stand-generated/pushback.json
           cp web/data/taxi-stand-registry/LTFM.json /tmp/jeppiran-taxi-stand-generated/registry.json
+          cp web/data/taxi-egress-geometry/LTFM.json /tmp/jeppiran-taxi-stand-generated/egress.json
           for attempt in 1 2 3 4 5 6 7 8; do
             git fetch origin main
             git reset --hard origin/main
-            mkdir -p web/data/taxi-stand-pushback web/data/taxi-stand-registry
+            mkdir -p web/data/taxi-stand-pushback web/data/taxi-stand-registry web/data/taxi-egress-geometry
             cp /tmp/jeppiran-taxi-stand-generated/positions.json web/data/taxi-stand-positions/LTFM.json
             cp /tmp/jeppiran-taxi-stand-generated/candidates.json web/data/taxi-stand-candidates/LTFM.json
             cp /tmp/jeppiran-taxi-stand-generated/pushback.json web/data/taxi-stand-pushback/LTFM.json
             cp /tmp/jeppiran-taxi-stand-generated/registry.json web/data/taxi-stand-registry/LTFM.json
-            git add web/data/taxi-stand-positions/LTFM.json web/data/taxi-stand-candidates/LTFM.json web/data/taxi-stand-pushback/LTFM.json web/data/taxi-stand-registry/LTFM.json
+            cp /tmp/jeppiran-taxi-stand-generated/egress.json web/data/taxi-egress-geometry/LTFM.json
+            git add web/data/taxi-stand-positions/LTFM.json web/data/taxi-stand-candidates/LTFM.json web/data/taxi-stand-pushback/LTFM.json web/data/taxi-stand-registry/LTFM.json web/data/taxi-egress-geometry/LTFM.json
             git diff --cached --quiet && exit 0
             git commit -m 'data(taxi): publish printed stand label and Jeppesen pushback QA inventory [skip ci]'
             if git push origin HEAD:main; then exit 0; fi
