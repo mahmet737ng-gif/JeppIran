@@ -1,0 +1,33 @@
+{
+  "chartId": "OITR/OMH-VOR-RWY03-13-1-CYCLE2621",
+  "cycle": "2621",
+  "sourcePdfPage": 827,
+  "chartDmeId": "UMH",
+  "thresholdElevationFt": 4342,
+  "tchFt": 50,
+  "publishedAngleDeg": 3.77,
+  "mdaFt": 4800,
+  "station": {
+    "id": "UMH",
+    "frequencyMHz": 113.5,
+    "placement": "after_threshold",
+    "offsetNm": 2.2,
+    "lateralNm": 0,
+    "geometryVerified": false,
+    "offsetSource": "Approach profile D3.0 to RWY03 threshold 0.8 NM, projected 3.0 - 0.8 = 2.2; chart depiction only, station lateral offset not surveyed",
+    "slantRangeElevationNotVerified": true
+  },
+  "dmeReadingsNm": [3, 3.2, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.2, 12.5, 13],
+  "validAngleDmeRange": {"from": 3, "to": 9},
+  "minimumThresholdCoverageNm": 10,
+  "minimumDmeCoverageNm": 10,
+  "coverageStepDmeNm": 0.5,
+  "publishedConstraints": [
+    {"dmeNm": 4, "altitudeFt": 5100, "type": "minimum", "label": "D4.0; descent-profile 5100 ft"},
+    {"dmeNm": 7, "altitudeFt": 6300, "type": "minimum", "label": "D7.0; descent-profile 6300 ft"},
+    {"dmeNm": 9, "altitudeFt": 7100, "type": "minimum", "label": "D9.0; final approach altitude 7100 ft"},
+    {"dmeNm": 11, "altitudeFt": 7700, "type": "minimum", "label": "D11.0; 7700 ft pre-FAF segment"},
+    {"dmeNm": 12, "altitudeFt": 8000, "type": "minimum", "label": "D12.0; 8000 ft pre-FAF segment"}
+  ],
+  "sourceReviewNote": "Published 3.77-degree angle drawn on chart's final segment D9-D3. Outside segment only engineering extrapolation; minima before FAF NOT an authorization to descend at this angle. No independent geodetic or obstacles survey."
+}
