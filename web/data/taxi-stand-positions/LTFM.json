@@ -1,0 +1,14 @@
+{
+  "airport": "LTFM",
+  "cycle": "2621",
+  "warning": "Only currently mapped position records. Not a complete stand inventory.",
+  "stands": [
+    {
+      "id": "601",
+      "lat": 41.2521389,
+      "lon": 28.7626944,
+      "source": "LTFM taxi-network existing stand record",
+      "connectorVerified": false
+    }
+  ]
+}
