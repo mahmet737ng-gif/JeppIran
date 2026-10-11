@@ -1,0 +1,55 @@
+name: Audit Actual LTFM Parking Position Ways
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - scripts/fetch_ltfm_osm_parking_leads.py
+      - .github/workflows/audit-ltfm-parking-ways.yml
+permissions:
+  contents: write
+concurrency:
+  group: ltfm-osm-parking-ways
+  cancel-in-progress: false
+jobs:
+  audit:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+      - name: Retrieve parking-position ways AND nodes from public OSM
+        run: |
+          python scripts/fetch_ltfm_osm_parking_leads.py web/data/taxi-networks/LTFM.json web/data/taxi-stand-registry/LTFM.json web/data/taxi-parking-ways/LTFM.json
+      - name: Reject interpolated or falsely approved parking paths
+        run: |
+          python - <<'PY'
+          import json
+          p=json.load(open('web/data/taxi-parking-ways/LTFM.json'))
+          assert p['airport']=='LTFM' and p['cycle']=='2621'
+          assert not p['routingApproved'] and not p['verifiedForNavigation']
+          for name,ways in p['matchedStandWayGeometries'].items():
+              for w in ways:
+                  assert not w['routingApproved'] and not w['pushbackGeometryJeppesenVerified']
+                  assert bool(w['sharedTaxiGraphNodes'])==w['exactGraphNodeJoin']
+                  assert len(w['geometry'])==len(w['osmNodes'])
+          print('Verified source OSM parking ways:',p['stats'])
+          PY
+      - name: Publish only official OSM original parking way coordinates
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          cp web/data/taxi-parking-ways/LTFM.json /tmp/ltfm-parking-ways.json
+          for attempt in 1 2 3 4 5 6; do
+            git fetch origin main
+            git reset --hard origin/main
+            mkdir -p web/data/taxi-parking-ways
+            cp /tmp/ltfm-parking-ways.json web/data/taxi-parking-ways/LTFM.json
+            git add web/data/taxi-parking-ways/LTFM.json
+            git diff --cached --quiet && exit 0
+            git commit -m 'data(taxi): audit real OSM parking-position ways and exact topology joins [skip ci]'
+            if git push origin HEAD:main; then exit 0; fi
+            sleep 5
+          done
+          exit 1
