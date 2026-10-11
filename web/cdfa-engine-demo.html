@@ -40,7 +40,7 @@ tr.bad td{color:#ffa8a8}tr.model td{color:#d6c08c}
 <label>اولین DME ورودی<input type="number" id="start" value="1" min="0" max="60" step="1"></label>
 <label>آخرین DME ورودی (انجین خودکار تا حداقل ۱۰ مایل ادامه می‌دهد)<input type="number" id="max" value="10" min="1" max="60" step="1"></label>
 <label>حداقل پوشش از آستانه (NM، حداقل ۱۰)<input type="number" id="minThreshold" value="10" min="10" max="60" step="0.5"></label>
-<label>گام تکمیل خودکار DME (NM)<input type="number" id="step" value="1" min="0.1" max="5" step="0.1"></label>
+<label>گام ثابت جدول DME (فقط ۱ مایل)<input type="number" id="step" value="1" min="1" max="1" step="1"></label>
 <label>موقعیت دستگاه با هندسه معتبر تأیید شده؟<select id="geoVerified"><option value="false">خیر: مدل آزمایشی</option><option value="true">بله: QA هندسی تأیید شده</option></select></label>
 <label>آغاز بخش زاویهٔ معتبر DME<input type="number" id="rangeStart" value="1" step="0.1"></label>
 <label>پایان بخش زاویهٔ معتبر DME<input type="number" id="rangeEnd" value="10" step="0.1"></label>
@@ -65,6 +65,7 @@ function calculate(){
     if(el('mda').value.trim()) cfg.mdaFt=Number(el('mda').value);
     last=JeppIranCdfaEngine.buildTable(cfg);
     el('resultHead').textContent='ENGINE '+last.version+'  |  STATUS: '+last.status+'  |  THR: '+last.parameters.crossingAltitudeFt+' ft  |  GRADIENT: '+last.parameters.gradientFtPerNm.toFixed(3)+' ft/NM  |  MAX TO THR: '+last.coverage.maxModeledThresholdDistanceNm.toFixed(2)+' NM  |  DME AT THR+10: '+last.coverage.dmeAtRequiredThresholdNm.toFixed(2)+'  |  PUBLISHED 10-NM COVERAGE: '+(last.coverage.publishedAngleCovers10Nm?'YES':'NO');
+    el('resultHead').textContent += '  |  VDP (computed): '+(last.vdp.dmeDisplay||'N/A');
     el('resultHead').className=last.status==='BLOCKED_BY_QA'?'err':'ok';
     el('issues').textContent=(last.issues.length?last.issues.map(x=>x.code+(x.dmeNm===undefined?'':' at D'+x.dmeNm)).join('; '):'No declared altitude-constraint conflict. ')+
       ' | AUTO ADDED DME: '+(last.coverage.autoAddedDmeReadingsNm.join(', ')||'none')+
@@ -72,7 +73,7 @@ function calculate(){
 
     el('output').replaceChildren(...last.rows.map(r=>{
       const tr=document.createElement('tr');tr.className=r.status==='CONFLICT'||r.status==='UNRESOLVED'?'bad':r.status==='MODEL_ONLY'?'model':'';
-      const vals=[r.dmeNm,r.thresholdDistanceNm??'–',r.rawAltitudeFt??'–',r.roundedAltitudeFt??'–',r.published.map(x=>x.type+': '+x.altitudeFt).join('; ')||'–',r.status+(r.coverageAutoExtended?' [AUTO]':''),r.reasons.join(', ')||'–'];
+      const vals=['D'+r.dmeNm+(r.vdpMarker?' [VDP '+r.vdpMarker+']':''),r.thresholdDistanceNm??'–',r.rawAltitudeFt??'–',r.roundedAltitudeFt??'–',r.published.map(x=>x.type+': '+x.altitudeFt).join('; ')||'–',r.status+(r.coverageAutoExtended?' [AUTO]':''),r.reasons.join(', ')||'–'];
       for(const value of vals){const td=document.createElement('td');td.textContent=value;tr.append(td)}
       return tr;
     }));
@@ -80,7 +81,7 @@ function calculate(){
 }
 el('calc').addEventListener('click',calculate);
 el('loadOitr').addEventListener('click',()=>{
-  const v={chart:'OITR VOR RWY03 13-1',ref:'UMH',station:'UMH',elev:'4342',tch:'50',mda:'4800',angle:'3.77',placement:'after_threshold',offset:'2.2',lateral:'0',geoVerified:'false',start:'3',max:'9',minThreshold:'10',step:'0.5',rangeStart:'3',rangeEnd:'9'};
+  const v={chart:'OITR VOR RWY03 13-1',ref:'UMH',station:'UMH',elev:'4342',tch:'50',mda:'4800',angle:'3.77',placement:'after_threshold',offset:'2.2',lateral:'0',geoVerified:'false',start:'3',max:'9',minThreshold:'10',step:'1',rangeStart:'3',rangeEnd:'9'};
   for(const [key,val] of Object.entries(v)) el(key).value=val;
   el('fixes').value=JSON.stringify([
    {dmeNm:4,altitudeFt:5100,type:'minimum'},
