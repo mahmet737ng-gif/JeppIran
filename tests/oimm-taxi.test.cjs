@@ -1,12 +1,13 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict');
 const graph=JSON.parse(fs.readFileSync('web/data/taxi-networks/OIMM.json','utf8'));
 const elements=new Map();
+const auto=require('../web/taxi-auto-router.js');
 function el(id){if(['pdfCanvas','chartTransformLayer','taxiQaStandMap'].includes(id))return null;
  if(!elements.has(id))elements.set(id,{value:'',textContent:'',hidden:false,dataset:{},classList:{add(){},remove(){},toggle(){},contains(){return false}},setAttribute(){},addEventListener(){},replaceChildren(){}});return elements.get(id);}
 const mockNode=()=>({textContent:'',setAttribute(){},appendChild(){}});
 const ctx={window:{addEventListener(){}},document:{getElementById:el,querySelector:()=>({textContent:''}),createElement:mockNode,createElementNS:mockNode},
  selectedAirport:'OIMM',selectedChart:{page:601,category:'Airport',chart_number:'10-9'},manifest:{cycle:'2621'},
- lastPosition:null,georefByPage:new Map(),charts:[],console};vm.createContext(ctx);
+ lastPosition:null,georefByPage:new Map(),charts:[],console};ctx.window.JEPPIRAN_TAXI_AUTO=auto;vm.createContext(ctx);
 let code=fs.readFileSync('web/taxi-mode.js','utf8');code=code.replace('})();','window.test={taxi,parse,shortest,adjacent,graphOk,go,routeDeviationMeters};})();');vm.runInContext(code,ctx);
 const t=ctx.window.test;t.taxi.airport='OIMM';t.taxi.graph=graph;t.taxi.active=true;t.taxi.standReference={stands:graph.stands};
 assert.equal(t.graphOk(graph,'OIMM'),true);assert.equal(t.graphOk({...graph,cycle:'2620'},'OIMM'),false);
@@ -49,6 +50,28 @@ el('taxiQaInput').value='ST109 BT13R H';t.go();assert.equal(t.taxi.route,null,'e
 ctx.lastPosition=graph.nodes[graph.stands['101'].node];el('taxiQaInput').value='A';t.go();assert(t.taxi.route&&!t.taxi.route.previewOnly);
 assert(t.routeDeviationMeters(ctx.lastPosition)<1);
 assert(t.routeDeviationMeters({lat:ctx.lastPosition.lat+.01,lon:ctx.lastPosition.lon})>500);
+// Destination-only OIMM must route from actual position, NOT inferred stand.
+el('taxiQaInput').value='ST109';t.go();
+assert(t.taxi.route?.path.length>1,'live arrival stand destination missing');
+assert.equal(t.taxi.route.path.at(-1),graph.stands['109'].node);
+assert.equal(t.taxi.route.previewOnly,false);
+assert.equal(t.taxi.auto?.target.name,'ST109');
+el('taxiQaInput').value='13R';t.go();
+assert.equal(t.taxi.auto?.target.kind,'runway-hold');
+assert.equal(t.taxi.route.path.at(-1),graph.taxiways.J.exitNode);
+assert(!t.taxi.route.path.some((n,i)=> i>0 &&
+  graph.edges.some(e=>e.runway&&e.from===t.taxi.route.path[i-1]&&e.to===n)));
+el('taxiQaInput').value='RWY 31L';t.go();
+assert.equal(t.taxi.route.path.at(-1),graph.taxiways.A.exitNode);
+el('taxiQaInput').value='13L';t.go();
+assert.equal(t.taxi.route,null,'unmapped runway must not guess an exit');
+// Preview from a known stand when no simulator location is available.
+ctx.lastPosition=null;
+el('taxiQaInput').value='ST113 13R';t.go();
+assert(t.taxi.route?.previewOnly);
+assert.equal(t.taxi.route.path[0],graph.stands['113'].node);
+assert.equal(t.parse('RUNWAY 31L').kind,'auto');
+assert.equal(t.parse('ST113 RWY 13R').kind,'auto');
 // Preserve LTFM explicit alphanumeric stand parsing.
 t.taxi.airport='LTFM';t.taxi.graph={stands:{}};t.taxi.standReference=null;
 assert.equal(t.parse('STD3 T5 N2').startStand,'D3');assert.equal(t.parse('34L2A').kind,'procedure');
