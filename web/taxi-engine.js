@@ -110,6 +110,17 @@ function runwayToken(raw){
   const x=upper(raw).replace(/^RUNWAY\s*/,"").replace(/^RWY\s*/,"");
   return /^[0-3][0-9][LRC]?$/.test(x)?x:null;
 }
+// A runway identifier between taxiways is runway USE, not a taxiway name.
+// The final runway token is handled separately as the destination.
+// Source graph must list the runway (or a reviewed backtrack record).
+function intermediateRunway(token,network){
+  const id=runwayToken(token);
+  if(!id)return {label:upper(token),runway:false};
+  const known=Boolean(network?.runways?.[id]||network?.runwayBacktracks?.["BT"+id]);
+  return known?{label:"BT"+id,runway:true,runwayId:id}:
+    {error:"RWY "+id+" is not mapped for "+(network?.airport||"this airport")+
+      "; no runway segment can be inferred"};
+}
 function normalizeStand(s){
   return upper(s).replace(/^STAND\s*/,"").replace(/^ST/,"").replace(/^P(?=[A-Z0-9])/,"");
 }
@@ -142,7 +153,11 @@ function parse(raw,net){
     const runway=runwayToken(final);
     if(runway&&tokens.length>=1){destination={kind:"runway",id:runway};tokens.pop()}
   }
-  via=tokens.map(upper);
+  for(const token of tokens){
+    const segment=intermediateRunway(token,net);
+    if(segment.error)return {error:segment.error};
+    via.push(segment.label);
+  }
   if(via.some(t=>!VALID_ID.test(t)))return {error:"Unknown taxiway label syntax"};
   if(!via.length&&!destination)return {error:"Specify a destination or a named taxiway"};
   if(via.some(t=>/^BT/.test(t)&&!Object.values(net.edges).some(e=>
@@ -361,7 +376,7 @@ function fromLegacy(old,settings={}){
       {...originalSource,document:"Original chart/OSM source graph"},
     nodes:old.nodes,edges,stands,taxiways,runways};
 }
-const api={version:"1.0.0",validate,create,parse,fromLegacy,distance};
+const api={version:"1.1.0",validate,create,parse,fromLegacy,distance,intermediateRunway};
 root.JEPPIRAN_TAXI_ENGINE=api;
 if(typeof module!=="undefined"&&module.exports)module.exports=api;
 })(typeof window!=="undefined"?window:globalThis);
