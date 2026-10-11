@@ -577,6 +577,24 @@ function fillGenericTaxiDestinations(engine){
     runways+stands;
   row.hidden=false;
 }
+// Centre the screenshot-registered OIAW parking inset after an explicit
+// GO press. This scrolls only the PDF viewport at 100% zoom; it does NOT
+// modify chart transforms, chart georeferences, zoom or the simulator camera.
+function focusQaParkingInset(bounds){
+  if(taxi.airport!=="OIAW"||!taxi.active||
+     Number(selectedChart?.page)!==38||
+     (typeof chartZoom==="number"&&chartZoom>1.001))return;
+  const stage=$("pdfStage"),canvas=$("pdfCanvas");
+  const chartHeight=Number(taxi.graph?.previewChartTransform?.height);
+  if(!stage||!canvas||!bounds||!(chartHeight>0)||!(canvas.clientHeight>0)||
+     !(stage.scrollHeight>stage.clientHeight+20)||
+     typeof stage.scrollTo!=="function")return;
+  const centerY=(bounds.top+bounds.bottom)/(2*chartHeight)*canvas.clientHeight;
+  const target=Math.max(0,Math.min(stage.scrollHeight-stage.clientHeight,
+    Math.round(centerY-stage.clientHeight*.43)));
+  if(Math.abs(stage.scrollTop-target)>Math.min(80,stage.clientHeight*.13))
+    stage.scrollTo({top:target,behavior:"smooth"});
+}
 function genericGo(typed){
   const engine=taxi.genericEngine;
   if(!engine)return;
@@ -607,6 +625,8 @@ function genericGo(typed){
   const inset=qaPreview?window.JEPPIRAN_TAXI_INSET?.route(taxi.graph,route.path,Number(selectedChart?.page)):null;
   const insetError=!window.JEPPIRAN_TAXI_INSET?.route?
     "INSET RENDERER UNAVAILABLE":inset?.error||"UNREGISTERED CHART";
+  if(qaPreview&&inset?.ok&&typeof requestAnimationFrame==="function")
+    requestAnimationFrame(()=>focusQaParkingInset(inset.bounds));
   message((qaPreview?"UNVERIFIED SCHEMATIC · ":"SIM QA · ")+taxi.airport+" · "+
     (route.taxiways.join(" → ")||"SOURCE-CONNECTED TAXIWAY")+
     " → "+route.destination+" · "+(qaPreview?"LENGTH UNVERIFIED":route.lengthMetres+" m")+
