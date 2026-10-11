@@ -1101,3 +1101,22 @@ body:has(#homeView.active),body:has(#chartsView.active){background:#030c19}
   .aircraft-marker .aircraft-pulse{animation:none!important}
   .taxi-route-line{animation:none!important}
 }
+
+/* Directional QA Taxi Path: moving cyan dashes are distinct from magenta manual traces. */
+.taxi-route-line{
+  filter:drop-shadow(0 0 2.8px rgba(44,223,255,.62));
+  animation:jeppiranTaxiFlow 5s linear infinite;
+}
+.taxi-route-chevron{
+  filter:drop-shadow(0 0 1.4px rgba(37,227,255,.65));
+}
+@keyframes jeppiranTaxiFlow{
+  from{stroke-dashoffset:0}
+  to{stroke-dashoffset:-110}
+}
+body.viewer-fullscreen .aircraft-follow-btn{
+  top:max(72px,calc(env(safe-area-inset-top) + 68px));
+}
+@media(prefers-reduced-motion:reduce){
+  .taxi-route-line{animation:none!important}
+}
