@@ -1,0 +1,759 @@
+{
+  "schemaVersion": 1,
+  "airport": "OIII",
+  "cycle": "2621",
+  "sourcePage": 432,
+  "sourcePdfSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+  "coordinateSpace": "PDF_POINTS_TOP_LEFT",
+  "algorithm": "Nearest sampled black Bezier curve to the CENTER OF PRINTED STAND NUMBER, first two candidates. This is not connectivity and the nearest curve may not belong to that stand.",
+  "candidateRecords": [
+    {
+      "stand": "100",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 221,
+          "distanceToPrintedLabelPt": 8.76
+        },
+        {
+          "sourceDrawingId": 222,
+          "distanceToPrintedLabelPt": 8.8
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "101",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 277,
+          "distanceToPrintedLabelPt": 17.66
+        },
+        {
+          "sourceDrawingId": 278,
+          "distanceToPrintedLabelPt": 17.72
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "102",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 258,
+          "distanceToPrintedLabelPt": 8.01
+        },
+        {
+          "sourceDrawingId": 257,
+          "distanceToPrintedLabelPt": 8.06
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "103",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 80,
+          "distanceToPrintedLabelPt": 16.86
+        },
+        {
+          "sourceDrawingId": 220,
+          "distanceToPrintedLabelPt": 16.9
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "104",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 260,
+          "distanceToPrintedLabelPt": 8.04
+        },
+        {
+          "sourceDrawingId": 259,
+          "distanceToPrintedLabelPt": 8.07
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "105",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 279,
+          "distanceToPrintedLabelPt": 17.72
+        },
+        {
+          "sourceDrawingId": 280,
+          "distanceToPrintedLabelPt": 17.81
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "106",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 261,
+          "distanceToPrintedLabelPt": 8.12
+        },
+        {
+          "sourceDrawingId": 262,
+          "distanceToPrintedLabelPt": 8.4
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "107",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 284,
+          "distanceToPrintedLabelPt": 17.57
+        },
+        {
+          "sourceDrawingId": 283,
+          "distanceToPrintedLabelPt": 17.61
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "108",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 263,
+          "distanceToPrintedLabelPt": 7.9
+        },
+        {
+          "sourceDrawingId": 264,
+          "distanceToPrintedLabelPt": 7.97
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "109",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 287,
+          "distanceToPrintedLabelPt": 17.66
+        },
+        {
+          "sourceDrawingId": 286,
+          "distanceToPrintedLabelPt": 17.69
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "110",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 265,
+          "distanceToPrintedLabelPt": 6.9
+        },
+        {
+          "sourceDrawingId": 266,
+          "distanceToPrintedLabelPt": 6.97
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "111",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 290,
+          "distanceToPrintedLabelPt": 17.69
+        },
+        {
+          "sourceDrawingId": 289,
+          "distanceToPrintedLabelPt": 17.75
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "112",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 268,
+          "distanceToPrintedLabelPt": 6.09
+        },
+        {
+          "sourceDrawingId": 267,
+          "distanceToPrintedLabelPt": 6.12
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "113",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 292,
+          "distanceToPrintedLabelPt": 18.06
+        },
+        {
+          "sourceDrawingId": 293,
+          "distanceToPrintedLabelPt": 18.15
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "114",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 270,
+          "distanceToPrintedLabelPt": 7.23
+        },
+        {
+          "sourceDrawingId": 269,
+          "distanceToPrintedLabelPt": 7.33
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "115",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 296,
+          "distanceToPrintedLabelPt": 17.23
+        },
+        {
+          "sourceDrawingId": 295,
+          "distanceToPrintedLabelPt": 17.4
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "116",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 272,
+          "distanceToPrintedLabelPt": 8.62
+        },
+        {
+          "sourceDrawingId": 271,
+          "distanceToPrintedLabelPt": 8.66
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "117",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 299,
+          "distanceToPrintedLabelPt": 16.81
+        },
+        {
+          "sourceDrawingId": 298,
+          "distanceToPrintedLabelPt": 16.88
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "118",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 274,
+          "distanceToPrintedLabelPt": 7.99
+        },
+        {
+          "sourceDrawingId": 273,
+          "distanceToPrintedLabelPt": 8.06
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "119",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 302,
+          "distanceToPrintedLabelPt": 16.92
+        },
+        {
+          "sourceDrawingId": 301,
+          "distanceToPrintedLabelPt": 16.98
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "120",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 275,
+          "distanceToPrintedLabelPt": 7.17
+        },
+        {
+          "sourceDrawingId": 276,
+          "distanceToPrintedLabelPt": 7.19
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "121",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 304,
+          "distanceToPrintedLabelPt": 15.64
+        },
+        {
+          "sourceDrawingId": 305,
+          "distanceToPrintedLabelPt": 15.64
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "123",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 392,
+          "distanceToPrintedLabelPt": 19.08
+        },
+        {
+          "sourceDrawingId": 312,
+          "distanceToPrintedLabelPt": 20.04
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "125",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 543,
+          "distanceToPrintedLabelPt": 20.82
+        },
+        {
+          "sourceDrawingId": 312,
+          "distanceToPrintedLabelPt": 21.85
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "200",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 394,
+          "distanceToPrintedLabelPt": 34.77
+        },
+        {
+          "sourceDrawingId": 393,
+          "distanceToPrintedLabelPt": 43.67
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "201",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 369,
+          "distanceToPrintedLabelPt": 41.6
+        },
+        {
+          "sourceDrawingId": 363,
+          "distanceToPrintedLabelPt": 50.37
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "202",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 363,
+          "distanceToPrintedLabelPt": 42.72
+        },
+        {
+          "sourceDrawingId": 370,
+          "distanceToPrintedLabelPt": 43.03
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "203",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 376,
+          "distanceToPrintedLabelPt": 40.24
+        },
+        {
+          "sourceDrawingId": 364,
+          "distanceToPrintedLabelPt": 40.81
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "204",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 376,
+          "distanceToPrintedLabelPt": 41.4
+        },
+        {
+          "sourceDrawingId": 371,
+          "distanceToPrintedLabelPt": 42.03
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "205",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 366,
+          "distanceToPrintedLabelPt": 26.84
+        },
+        {
+          "sourceDrawingId": 371,
+          "distanceToPrintedLabelPt": 27.5
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "206",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 366,
+          "distanceToPrintedLabelPt": 41.39
+        },
+        {
+          "sourceDrawingId": 371,
+          "distanceToPrintedLabelPt": 43.35
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "207",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 366,
+          "distanceToPrintedLabelPt": 40.89
+        },
+        {
+          "sourceDrawingId": 367,
+          "distanceToPrintedLabelPt": 41.65
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "208",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 216,
+          "distanceToPrintedLabelPt": 40.4
+        },
+        {
+          "sourceDrawingId": 85,
+          "distanceToPrintedLabelPt": 44.29
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "301",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 87,
+          "distanceToPrintedLabelPt": 22.45
+        },
+        {
+          "sourceDrawingId": 379,
+          "distanceToPrintedLabelPt": 22.64
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "302",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 98,
+          "distanceToPrintedLabelPt": 16.56
+        },
+        {
+          "sourceDrawingId": 94,
+          "distanceToPrintedLabelPt": 17.35
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "303",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 378,
+          "distanceToPrintedLabelPt": 24.45
+        },
+        {
+          "sourceDrawingId": 88,
+          "distanceToPrintedLabelPt": 25
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "304",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 95,
+          "distanceToPrintedLabelPt": 20.23
+        },
+        {
+          "sourceDrawingId": 99,
+          "distanceToPrintedLabelPt": 22.05
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "305",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 89,
+          "distanceToPrintedLabelPt": 24.64
+        },
+        {
+          "sourceDrawingId": 377,
+          "distanceToPrintedLabelPt": 25.28
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "306",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 100,
+          "distanceToPrintedLabelPt": 20.33
+        },
+        {
+          "sourceDrawingId": 96,
+          "distanceToPrintedLabelPt": 21.04
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "308",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 101,
+          "distanceToPrintedLabelPt": 19.22
+        },
+        {
+          "sourceDrawingId": 97,
+          "distanceToPrintedLabelPt": 21.28
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "310",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 225,
+          "distanceToPrintedLabelPt": 17.68
+        },
+        {
+          "sourceDrawingId": 224,
+          "distanceToPrintedLabelPt": 18.47
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "400",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 245,
+          "distanceToPrintedLabelPt": 12.75
+        },
+        {
+          "sourceDrawingId": 234,
+          "distanceToPrintedLabelPt": 15.6
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "401",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 246,
+          "distanceToPrintedLabelPt": 13.42
+        },
+        {
+          "sourceDrawingId": 231,
+          "distanceToPrintedLabelPt": 13.86
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "402",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 229,
+          "distanceToPrintedLabelPt": 13.46
+        },
+        {
+          "sourceDrawingId": 247,
+          "distanceToPrintedLabelPt": 13.48
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "403",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 227,
+          "distanceToPrintedLabelPt": 13.1
+        },
+        {
+          "sourceDrawingId": 228,
+          "distanceToPrintedLabelPt": 13.25
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "404",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 112,
+          "distanceToPrintedLabelPt": 13.09
+        },
+        {
+          "sourceDrawingId": 111,
+          "distanceToPrintedLabelPt": 13.17
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "405",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 110,
+          "distanceToPrintedLabelPt": 9.17
+        },
+        {
+          "sourceDrawingId": 113,
+          "distanceToPrintedLabelPt": 10.01
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "406",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 109,
+          "distanceToPrintedLabelPt": 9.03
+        },
+        {
+          "sourceDrawingId": 114,
+          "distanceToPrintedLabelPt": 9.86
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "407",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 108,
+          "distanceToPrintedLabelPt": 8.45
+        },
+        {
+          "sourceDrawingId": 115,
+          "distanceToPrintedLabelPt": 10.06
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "408",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 107,
+          "distanceToPrintedLabelPt": 8.83
+        },
+        {
+          "sourceDrawingId": 116,
+          "distanceToPrintedLabelPt": 9.79
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "409",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 120,
+          "distanceToPrintedLabelPt": 9.96
+        },
+        {
+          "sourceDrawingId": 532,
+          "distanceToPrintedLabelPt": 14.15
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "410",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 119,
+          "distanceToPrintedLabelPt": 9.71
+        },
+        {
+          "sourceDrawingId": 211,
+          "distanceToPrintedLabelPt": 13.47
+        }
+      ],
+      "pairingApproved": false
+    },
+    {
+      "stand": "507",
+      "nearestUnreviewedCurves": [
+        {
+          "sourceDrawingId": 625,
+          "distanceToPrintedLabelPt": 39.46
+        },
+        {
+          "sourceDrawingId": 69,
+          "distanceToPrintedLabelPt": 160.63
+        }
+      ],
+      "pairingApproved": false
+    }
+  ],
+  "qa": {
+    "allConnectionsBlocked": true,
+    "noApprovedLinks": true,
+    "verifiedCount": 0,
+    "requiredBeforeGraph": "Visually trace each actual stand exit curve to junction/centerline, reject labels and buildings, check pushback rules, set verified geometry and runway gates."
+  }
+}
