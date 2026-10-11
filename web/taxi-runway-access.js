@@ -21,6 +21,51 @@ function nearestOnEdge(p,a,b){
   const lat=a.lat+(b.lat-a.lat)*t,lon=a.lon+(b.lon-a.lon)*t;
   return {t,point:{lat,lon},distance:Math.hypot(x-dx*t,y-dy*t)};
 }
+// The two printed backtrack vectors describe different portions of the SAME
+// RWY 13R/31L. A source-constrained intermediate runway axis may connect
+// those portions for a simulator QA route. Reject if their bearings/lateral
+// offsets disagree rather than guessing a pavement bend.
+function reviewedAxisBridge(graph){
+  const bt13=graph.runwayBacktracks?.BT13R,bt31=graph.runwayBacktracks?.BT31L;
+  if(!bt13||!bt31||bt13.runway!==bt31.runway)return [];
+  const j=graph.taxiways?.[bt13.fromTaxiway]?.exitNode;
+  const a=graph.taxiways?.[bt31.fromTaxiway]?.exitNode;
+  if(!j||!a||!graph.nodes[j]||!graph.nodes[a])return [];
+  const heading=toXY(graph.nodes[a],graph.nodes[j].lat);
+  const origin=toXY(graph.nodes[j],graph.nodes[j].lat);
+  const vx=heading.x-origin.x,vy=heading.y-origin.y,len=Math.hypot(vx,vy);
+  if(!(len>80&&len<4500))return [];
+  const ux=vx/len,uy=vy/len;
+  const pick=(token,hold,sign)=>{
+    const p=graph.nodes[hold];let best=null;
+    for(const e of graph.edges){
+      if(!e.runway||normal(e.taxiway)!==token)continue;
+      const b=graph.nodes[e.from],c=graph.nodes[e.to];if(!b||!c)continue;
+      const p0=toXY(b,p.lat),p1=toXY(c,p.lat);
+      const dx=p1.x-p0.x,dy=p1.y-p0.y,length=Math.hypot(dx,dy);
+      if(length<.01)continue;
+      const alignment=sign*(dx*ux+dy*uy)/length;
+      if(alignment<.975)continue;
+      const d=Math.hypot(p0.x-toXY(p,p.lat).x,p0.y-toXY(p,p.lat).y);
+      if(d<12||d>155)continue;
+      if(!best||d<best.distance)best={id:e.from,distance:d};
+    }
+    return best;
+  };
+  const jCenter=pick("BT13R",j,-1),aCenter=pick("BT31L",a,1);
+  if(!jCenter||!aCenter)return [];
+  const jp=toXY(graph.nodes[jCenter.id],graph.nodes[j].lat),
+    ap=toXY(graph.nodes[aCenter.id],graph.nodes[j].lat);
+  const bx=ap.x-jp.x,by=ap.y-jp.y,
+    along=bx*ux+by*uy,cross=Math.abs(bx*uy-by*ux);
+  if(along<30||along>4500||cross>45)return [];
+  const attrs={runway:true,runwayUse:bt13.runway,
+    sourcePage:601,bidirectional:false,requiresExplicitClearance:true,
+    geometry:"axis-between-reviewed-runway-vectors-QA-NOT-SURVEYED",
+    runwayAccessCandidate:true,bridgedLengthMeters:Math.round(Math.hypot(bx,by))};
+  return [{from:jCenter.id,to:aCenter.id,taxiway:"BT31L",...attrs},
+    {from:aCenter.id,to:jCenter.id,taxiway:"BT13R",...attrs}];
+}
 function build(graph,token,{maxJoinMeters=115}={}){
   const bt=normal(token),info=graph?.runwayBacktracks?.[bt];
   if(!info||!info.requiresExplicitClearance||!graph.simulatorTestOnly||graph.airport!=="OIMM")
@@ -32,9 +77,10 @@ function build(graph,token,{maxJoinMeters=115}={}){
     return p&&taxi&&graph.taxiways?.[taxi]&&!graph.taxiways[taxi].militaryOnly&&
       !/^L$|^M$|^N$|^P$/.test(taxi)&&normal(x.runway)===normal(info.runway);
   });
-  const runwayEdges=graph.edges.filter(e=>e.runway&&normal(e.taxiway)===bt&&
+  const bridges=reviewedAxisBridge(graph);
+  const runwayEdges=[...graph.edges,...bridges].filter(e=>e.runway&&normal(e.taxiway)===bt&&
     graph.nodes[e.from]&&graph.nodes[e.to]);
-  const additions=[],nodes={...graph.nodes},access=[],splits=new Map();
+  const additions=[...bridges],nodes={...graph.nodes},access=[],splits=new Map();
   for(const [hold,meta] of eligible){
     const source=graph.nodes[hold];let winner=null;
     for(let i=0;i<runwayEdges.length;i++){
@@ -79,7 +125,7 @@ function build(graph,token,{maxJoinMeters=115}={}){
 function candidates(graph,token){
   return build(graph,token).access.map(x=>({...x}));
 }
-const api={build,candidates,nearestOnEdge};
+const api={build,candidates,nearestOnEdge,reviewedAxisBridge};
 root.JEPPIRAN_TAXI_RUNWAY=api;
 if(typeof module!=="undefined"&&module.exports)module.exports=api;
 })(typeof window!=="undefined"?window:globalThis);
