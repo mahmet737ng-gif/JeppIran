@@ -42,9 +42,10 @@ function index(raw){
     routeGeometryApproved:false,
     neighbors(name){return [...(adj.get(norm(name))?.keys()||[])].sort()},
     parse(command){
-      const tokens=norm(command).replace(/^(?:QA|SIM QA)\s+/,"").replace(/[>,]+/g," ").split(/\s+/).filter(Boolean).map(id);
+      const tokens=norm(command).replace(/^(?:QA|SIM QA)\s+/,"").replace(/[>,]+/g," ").split(/\s+/).filter(Boolean).map((t,i)=>i===0?id(t):norm(t).replace(/^RUNWAY\s*|^RWY\s*/,""));
       if(tokens.length<2)return {ok:false,error:"Enter a stand and one or more taxiway names"};
       for(const t of tokens){
+        if(runway.has(t))return {ok:false,error:"RWY "+t+" recognized, but its taxiway entrance/holding geometry is not chart-verified. No route drawn."};
         if(!known.has(t))return {ok:false,error:"Unrecognized or unscanned ADC identifier: "+t};
       }
       const traversed=[];
