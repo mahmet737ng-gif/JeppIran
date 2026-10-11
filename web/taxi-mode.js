@@ -1179,10 +1179,26 @@ function renderRoutePreview(){
   }
   root.appendChild(background);
   const chain=pts.map(p=>p.x.toFixed(2)+","+p.y.toFixed(2)).join(" ");
-  root.appendChild(s("polyline",{points:chain,fill:"none",stroke:"rgba(24,10,38,.33)",
-    "stroke-width":"3.4","stroke-linecap":"round","stroke-linejoin":"round"}));
-  root.appendChild(s("polyline",{points:chain,fill:"none",stroke:"rgba(244,43,184,.64)",
-    "stroke-width":"1.9","stroke-linecap":"round","stroke-linejoin":"round"}));
+  const sections=r.airport==="OIMM"&&r.runwayRender?.runs;
+  if(sections){
+    for(const segment of sections){
+      if(segment.type==="unverified")continue;
+      const strip=pts.slice(segment.startIndex,segment.endIndex+1)
+        .map(p=>p.x.toFixed(2)+","+p.y.toFixed(2)).join(" ");
+      const approximate=segment.type==="projected-access";
+      root.appendChild(s("polyline",{points:strip,fill:"none",
+        stroke:approximate?"rgba(255,182,92,.8)":"rgba(244,43,184,.64)",
+        "stroke-width":approximate?"2.2":"1.9",
+        "stroke-dasharray":approximate?"4 5":undefined,
+        "stroke-linecap":"round","stroke-linejoin":"round",
+        "class":approximate?"taxi-preview-unverified-projection":"taxi-preview-centerline"}));
+    }
+  }else{
+    root.appendChild(s("polyline",{points:chain,fill:"none",stroke:"rgba(24,10,38,.33)",
+      "stroke-width":"3.4","stroke-linecap":"round","stroke-linejoin":"round"}));
+    root.appendChild(s("polyline",{points:chain,fill:"none",stroke:"rgba(244,43,184,.64)",
+      "stroke-width":"1.9","stroke-linecap":"round","stroke-linejoin":"round"}));
+  }
   // Clearly mark ONLY the traversed real OSM edges that have no taxiway name.
   if(r.mappedUnnamedTransitions?.length){
     for(let i=1;i<r.path.length;i++){
