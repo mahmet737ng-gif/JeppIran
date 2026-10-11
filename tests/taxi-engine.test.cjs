@@ -68,8 +68,10 @@ assert.equal(fixture.edges[4].geometry[1].lat,36.00002);
 
 // Current ground location must actually snap to a MAPPED node.
 const pos={lat:36,lon:59,accuracy:4,groundspeed:0};
-assert(engine.plan("ST109",{position:pos}).route===undefined,
-  "Do not snap an aircraft to a parked stand as a live position");
+assert.notEqual(engine.nearest(pos)?.node,"S101",
+  "Live position must NOT select an occupied stand as its graph origin");
+assert(engine.plan("ST109",{position:pos}).route,
+  "A chart-mapped civil lead-out 9 m from the stand may be used as live origin");
 const enroute=engine.plan("ST109",{position:{lat:36,lon:59.00021,accuracy:4,groundspeed:2}});
 assert(enroute.route,enroute.error);
 assert(!engine.plan("ST109",{position:{lat:0,lon:0}}).route);
