@@ -60,6 +60,13 @@ for(const input of ['ST109 Q BT31L D','ST109 Q BT13R H','ST109 B BT31L D']){
  assert(!t.adjacent(graph)[graph.taxiways.A.exitNode]?.some(e=>e.way===runwayToken),
    'unrequested runway traversal cannot appear in ordinary adjacency');
 }
+// A mapped taxiway on the far side can use its own documented hold
+// without borrowing the Q/J apron lead-in or silently crossing another runway.
+ctx.lastPosition=graph.nodes[graph.taxiways.F.nodes[0]];
+el('taxiQaInput').value='F BT13R H';t.go();
+assert(t.taxi.route?.path.length>2,'F → BT13R → H should use F chart hold QA junction');
+assert(t.taxi.route.graph.edges.some(e=>e.fromTaxiway==='F'&&e.runwayAccessCandidate));
+ctx.lastPosition=null;
 el('taxiQaInput').value='ST113 A D';t.go();assert.equal(t.taxi.route,null,'implicit runway crossing forbidden');
 el('taxiQaInput').value='ST113 BT31L D';t.go();assert.equal(t.taxi.route,null,'explicit A approach required');
 el('taxiQaInput').value='ST109 BT13R H';t.go();assert.equal(t.taxi.route,null,'explicit J approach required');
