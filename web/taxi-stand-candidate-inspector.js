@@ -7,23 +7,26 @@ function getData(){
   if(!task)task=Promise.all([
     fetch("./data/taxi-stand-registry/LTFM.json",{cache:"no-store"}),
     fetch("./data/taxi-stand-candidates/LTFM.json",{cache:"no-store"}),
-    fetch("./data/taxi-egress-geometry/LTFM.json",{cache:"no-store"})
-  ]).then(async([registryResponse,candidateResponse,egressResponse])=>{
-    if(!registryResponse.ok||!candidateResponse.ok||!egressResponse.ok)
+    fetch("./data/taxi-egress-geometry/LTFM.json",{cache:"no-store"}),
+    fetch("./data/taxi-stand-leads/LTFM.json",{cache:"no-store"})
+  ]).then(async([registryResponse,candidateResponse,egressResponse,leadResponse])=>{
+    if(!registryResponse.ok||!candidateResponse.ok||!egressResponse.ok||!leadResponse.ok)
       throw Error("Published stand registry or mapped egress-edge geometry unavailable offline");
-    const [registry,candidates,geometry]=await Promise.all([
-      registryResponse.json(),candidateResponse.json(),egressResponse.json()]);
+    const [registry,candidates,geometry,leads]=await Promise.all([
+      registryResponse.json(),candidateResponse.json(),egressResponse.json(),leadResponse.json()]);
     if(registry.airport!=="LTFM"||candidates.airport!=="LTFM"||
        String(registry.cycle)!=="2621"||String(candidates.cycle)!=="2621"||
        Object.keys(registry.stands||{}).length<370||
        Object.keys(candidates.stands||{}).length<260||
        geometry.airport!=="LTFM"||String(geometry.cycle)!=="2621"||
-       !geometry.stands||geometry.stats.standsWithMappedPublishedTaxiwayGeometry<195)
+       !geometry.stands||geometry.stats.standsWithMappedPublishedTaxiwayGeometry<195||
+       leads.airport!=="LTFM"||String(leads.cycle)!=="2621"||
+       leads.stats.exactJoinedStandIdentifiers<350)
       throw Error("Wrong airport/cycle in merged stand inventory");
     const merged={airport:"LTFM",cycle:"2621",stats:registry.stats,stands:{}};
     for(const [id,record] of Object.entries(registry.stands))
       merged.stands[id]={...record,candidates:candidates.stands[id]?.candidates||[],
-      egress:geometry.stands[id]||null};
+      egress:geometry.stands[id]||null,lead:leads.stands[id]||null};
     return merged;
   }).catch(error=>{task=null;throw error});
   return task;
@@ -53,7 +56,8 @@ function install(){
     (stats.individuallyPrinted||0)+" individual label anchors / "+
     (stats.roundedGroupOnly||0)+" rounded INS groups · "+
     (stats.publishedPushbackStands||0)+" with published pushback taxiways · "+
-    (stats.publishedNameAndNearestEdgeAgreements||0)+" with actual OSM source taxiway segment geometry. 0 stand pushback curves verified.";
+    leads.stats.exactJoinedStandIdentifiers+" stands with actual OSM parking-centerline geometry sharing exact taxi graph nodes · "+
+    (stats.publishedNameAndNearestEdgeAgreements||0)+" chart-pushback named nearby lines. Jeppesen/ATC approval pending.";
   function updateList(){
     const filter=finder.value.trim().toUpperCase();
     list.replaceChildren();
@@ -69,6 +73,11 @@ function install(){
    const related=(entry.publishedPushbackTaxiways||[]).join(", ")||"none extracted";
    const mapped=(entry.egress?.publishedNamedTaxiwaySegments||[])
      .map(g=>g.taxiway+" ("+g.segments.length+" original OSM segments)").join(", ");
+   const leadPaths=(entry.lead?.sourceParkingLeadVariants||[])
+     .filter(x=>x.geometryContinuous);
+   const leadList=leadPaths.map(w=>"OSM parking way "+w.osmParkingWay+
+     " · "+w.lengthMeters+" m · exact join "+w.exactTaxiGraphJoinNode+
+     " ("+(w.taxiwayNamesAtGraphJoin||[]).join("/")+")").join("\n");
    const notes=(entry.candidates||[]).map(v=>" • "+(v.taxiway||"UNNAMED")+
      " · "+v.distanceMeters+" m"+(v.chartNamedTaxiwayMatch?" · matches published pushback name":" · proximity only")).join("\n");
    details.textContent="ST "+id+" · "+
@@ -76,10 +85,12 @@ function install(){
     "\nPUBLISHED PUSHBACK TWYs: "+related+
     "\nCHARTS: "+(entry.sourcePushbackCharts||[]).join(", ")+
     "\nNON-GEOMETRIC INS GROUP: "+(entry.officialInsGroups||[]).map(x=>x.group).join(" | ")+
-    "\nACTUAL MAPPED SEGMENTS (MAGENTA): "+(mapped||"none nearby with chart-name match")+
+    "\nREAL OSM STAND CENTERLINE(S) ("+leadPaths.length+"):\n"+
+    (leadList||"No original parking-position way connected to a taxi graph node")+
+    "\nNEARBY NAMED OSM EDGES: "+(mapped||"none independently chart corroborated")+
     "\nNEARBY GRAPH EDGES ("+entry.candidates.length+"):\n"+(notes||"No individual near-edge geometry")+
-    "\nSOLID MAGENTA = existing OSM taxiway centerline, NOT stand exit. "+
-    "DASHED CYAN/VIOLET = stand-to-network UNVERIFIED GAP. No taxi movement authorized.";
+    "\nSOLID MAGENTA = original OSM parking/taxiway geometry, with exact shared OSM nodes. "+
+    "Jeppesen pushback direction/clearance NOT verified. No straight-line connections invented.";
   };
   updateList();
  }).catch(e=>{caption.textContent=String(e.message||e);details.textContent="No generated connections loaded."});
