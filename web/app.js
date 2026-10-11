@@ -1884,7 +1884,16 @@ if(LOCAL_SIM_WEB){
 window.addEventListener("jeppiran-taxi-route-updated",()=>updateAircraftMarker());
 window.addEventListener("resize",()=>requestAnimationFrame(()=>{applyChartTransform();updateAircraftMarker()}));
 window.addEventListener("orientationchange",()=>setTimeout(()=>{window.dispatchEvent(new Event("resize"));refitSelectedChartForLayout()},180));
-if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")) navigator.serviceWorker.register("./service-worker.js",{updateViaCache:"none"}).then(reg=>reg.update().catch(()=>{})).catch(()=>{});
+if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")){
+  // A running installed app otherwise keeps its old code after a new worker
+  // takes control of subsequent requests.
+  const hadController=Boolean(navigator.serviceWorker.controller);
+  let refreshing=false;
+  navigator.serviceWorker.addEventListener("controllerchange",()=>{
+    if(hadController&&!refreshing){refreshing=true;location.reload()}
+  });
+  navigator.serviceWorker.register("./service-worker.js",{updateViaCache:"none"})
+    .then(reg=>reg.update().catch(()=>{})).catch(()=>{});
+}
 loadData();
 const start=(location.hash||"#home").slice(1); const initial=["home","charts","wx","simulator"].includes(start)?start:"home"; renderRoute(initial); if(!location.hash)history.replaceState({route:initial},"","#"+initial);
-
