@@ -16,6 +16,11 @@ function parse(raw){
   if(registered||/^(ST|P)\d{1,4}[A-Z]?$/.test(s)||(taxi.airport==="OMDB"&&/^[A-HQS]\d{1,3}[LR]$/.test(s)))
     return {kind:"stand",destination:s};
   const parts=s.replace(/[,→>]+/g," ").split(" ").filter(Boolean),stops=[],taxiways=[];
+  // Explicit ST prefix distinguishes PARKING STAND D3 from TAXIWAY D3.
+  // E.g. STD3 T5 N2 = Stand D3, then taxiways T5 and N2.
+  const leadingStand=parts.length>1?parts[0].match(/^ST([A-Z][0-9]{1,3}[A-Z]?)$/):null;
+  const startStand=leadingStand?leadingStand[1]:null;
+  if(startStand)parts.shift();
   let destination=null;
   if(parts.length>1&&(/^(ST|P)\d{1,4}[A-Z]?$/.test(parts[parts.length-1])||
       Object.prototype.hasOwnProperty.call(taxi.standReference?.stands||{},parts[parts.length-1])||
@@ -27,7 +32,7 @@ function parse(raw){
     if(part.startsWith("/"))stops.push(taxiways.length);
     taxiways.push(part.replace(/^\//,""));
   }
-  return taxiways.length?{kind:"sequence",taxiways,stops,destination}:{error:"No taxiways entered"};
+  return taxiways.length?{kind:"sequence",taxiways,stops,destination,startStand}:{error:"No taxiways entered"};
 }
 const dist=(a,b)=>Math.hypot((Number(a.lat)-Number(b.lat))*111195,
   (Number(a.lon)-Number(b.lon))*111195*Math.cos((Number(a.lat)+Number(b.lat))*Math.PI/360));
@@ -214,8 +219,15 @@ function view(){
     if(taxi.airport!=="LTFM"||!taxi.graph){
       message("Demo route is available only for the loaded LTFM centerline network.",true);return;
     }
-    $("taxiQaInput").value="A4 A A7 B /B8A";
-    taxi.testStart=null;
+    // Preview the user's entered route rather than silently replacing it.
+    // Only use the pre-vetted sample if the input is empty.
+    if(!$("taxiQaInput").value.trim())$("taxiQaInput").value="A4 A A7 B /B8A";
+    const candidate=parse($("taxiQaInput").value);
+    if(candidate.error){message(candidate.error,true);return}
+    if(candidate.kind!=="sequence"){
+      message("DEMO ROUTE needs named taxiways (e.g. STD3 T5 N2). It does not simulate a stand pushback.",true);
+      return;
+    }
     go({demo:true});
   };
   $("taxiQaStart").onclick=()=>{
@@ -298,6 +310,8 @@ function go(options={}){
   const p=parse($("taxiQaInput").value);
   if(p.error){message(p.error,true);return}
   taxi.trace=false;$("taxiQaTrace").classList.remove("on");
+  // Never leave an old route on the ADC after a new route fails validation.
+  taxi.route=null;draw();
   if(!taxi.graph){
     if(p.kind==="stand"&&taxi.standReference?.stands[p.destination]){
       taxi.selectedStand=p.destination;taxi.showStands=true;
@@ -307,6 +321,8 @@ function go(options={}){
       const lead=taxi.standReference.publishedLeadInTopology?.cases?.[p.destination];
       const leadText=lead?" Published lead-in: "+lead.publishedApproach.join(" / ")+". "+lead.directionNote:"";
       message("Stand "+p.destination+": published AIP POSITION selected"+(georefByPage.get(Number(selectedChart?.page))?" and highlighted.":", but this chart has no validated georeferencing to display the point.")+leadText+" Centerline connector geometry still unverified; no route generated.",true);
+    }else if(p.startStand){
+      message("STAND "+p.startStand+" recognized, but this airport has no loaded stand/lead-out graph. No route drawn.",true);
     }else message("Parsed "+p.kind+". No verified taxiway + stand connector network for "+selectedAirport+"; automatic routing is disabled.",true);
     return;
   }
@@ -318,7 +334,17 @@ function go(options={}){
       return;
     }
   }
-  let startPosition=taxi.testStart||lastPosition;
+  if(p.startStand&&!options.demo&&!taxi.testStart){
+    const prefix=p.taxiways.length?" The mapped section "+p.taxiways.join(" → ")+" can be previewed separately.":"";
+    message("STAND "+p.startStand+" recognized (not TWY "+p.startStand+"). Stand lead-out / pushback to "+
+      p.taxiways[0]+" is NOT mapped."+prefix+
+      " Press DEMO ROUTE for the mapped section only, or SET START after pushback on "+
+      p.taxiways[0]+". No invented stand link.",true);
+    return;
+  }
+  // When a stand name is given, a simulator fix MUST NOT be misrepresented
+  // as its verified parking connector; only an explicit QA start can be used.
+  let startPosition=p.startStand?taxi.testStart:(taxi.testStart||lastPosition);
   let start=startPosition?nearest(taxi.graph,startPosition,p.kind==="sequence"?p.taxiways[0]:null):null;
   let demo=false,planned=null,info="";
   if(p.kind==="sequence"&&!p.destination&&(!start||options.demo===true)&&taxi.graph.simulatorTestOnly){
@@ -360,10 +386,13 @@ function go(options={}){
   if(!planned||planned.path.length<2){message("No connected path matching ALL named taxiways, in that order. Verify the clearance or data; nothing invented.",true);return}
   taxi.route={...planned,graph:taxi.graph,airport:selectedAirport,previewOnly:demo};
   if(demo){
-    message("DEMO PREVIEW · NOT THE AIRCRAFT POSITION · "+planned.path.length+
-      " nodes · "+(planned.length||0)+" m · OSM DATA NOT AIP VERIFIED. SET START to choose your own origin.",true);
+    const noStandLink=p.startStand?"STAND "+p.startStand+" → "+p.taxiways[0]+" NOT MAPPED. This is ONLY "+
+      p.taxiways.join(" → ")+" from a separate OSM demo point. ":"";
+    message("DEMO PREVIEW · "+noStandLink+"NOT THE AIRCRAFT POSITION · "+planned.path.length+
+      " nodes · "+(planned.length||0)+" m · OSM DATA NOT AIP VERIFIED.",true);
   }else{
-    message("SIMULATION QA · "+info+" · "+planned.path.length+" nodes · "+(planned.length||0)+
+    message("SIMULATION QA · "+(p.startStand?"MANUAL POST-PUSHBACK QA START (STAND "+
+      p.startStand+" LEAD-OUT NOT MAPPED) · ":"")+info+" · "+planned.path.length+" nodes · "+(planned.length||0)+
       " m. OSM SOURCE · NOT APPROVED FOR ACTUAL NAVIGATION.",true);
   }
   draw();
@@ -550,7 +579,7 @@ function draw(){
 // A departure/arrival route is QA-only and must never be used as a clearance.
 function routeDeviationMeters(pos){
   const r=taxi.route;
-  if(!taxi.active||!r||r.airport!==selectedAirport||!isAdc(selectedChart)||
+  if(!taxi.active||!r||r.previewOnly||r.airport!==selectedAirport||!isAdc(selectedChart)||
      !pos||!Number.isFinite(Number(pos.lat))||!Number.isFinite(Number(pos.lon)))return null;
   let min=Infinity;
   const path=r.path||[];
