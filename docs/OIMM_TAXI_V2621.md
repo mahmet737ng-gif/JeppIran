@@ -75,3 +75,16 @@ rejection, explicit-only `BT13R` backtrack, stale route clearing and LTFM
 parsing regression checks passed.
 The local browser binary could not be downloaded; automated browser rendering
 was not completed. The map overlay itself was rendered and visually reviewed.
+
+## R11 · graph download / first-GO reliability (2026-10-11)
+
+- Reuses a single pending OIMM graph download when the TAXI panel opens and GO
+  is pressed before the download completes. A ready network is reused, rather
+  than fetched again for every route.
+- Automatically retries the originally typed GO command after successful
+  network load, provided the airport and input have not changed.
+- If offline loading fails, the previous route is cleared; no old magenta
+  runway segment remains on an unrelated new clearance.
+- Adds automated tests for duplicate request prevention, queued route generation,
+  cache reuse, and failure without a misleading route. The graph, simulator bridge,
+  live position source and original runway authorization gating are unchanged.
