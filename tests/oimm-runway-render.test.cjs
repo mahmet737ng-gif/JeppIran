@@ -51,4 +51,31 @@ const typed=overlay.parts(shoulderGraph,{path:["HOLD","RW0","RW1","D0","D1"],
 assert.equal(typed.runway.length,1,"only the middle runway axis is solid");
 assert.equal(typed.projections.length,2,"BT entry/exit shoulder legs must be amber dashed");
 assert.equal(typed.runs.at(-1).way,"H");
+// Regression on the ORIGINAL 1.3MB OIMM chart graph, not only fixtures.
+// The old 10-9B-to-ADC interpolation bent the magenta line onto the runway
+// border. Both runway names must now share a straight H/M/D midpoint axis.
+const fs=require("node:fs");
+const oimm=JSON.parse(fs.readFileSync("web/data/taxi-networks/OIMM.json","utf8"));
+const axis=overlay.adcMidline(oimm);
+assert(axis,"ADC boundary midpoint was not derived");
+assert(axis.spanMetres>3600&&axis.spanMetres<4200);
+for(const way of ["BT13R","BT31L"]){
+  const es=oimm.edges.filter(e=>e.runway&&e.taxiway===way);
+  assert(es.length>100,way+" must have source runway vertices");
+  const path=[es[0].from,...es.map(e=>e.to)];
+  const route={path,taxiways:[way]};
+  const full=overlay.parts(oimm,route);
+  const rendered=overlay.displayRuns(oimm,{...route,runwayRender:full});
+  assert(rendered?.axis&&rendered.runway.length,way+" midpoint renderer failed");
+  assert.equal(rendered.invalid.length,0,way+" must not produce a warped axis");
+  for(const section of rendered.runway){
+    for(const p of section.coordinates){
+      const snapped=axis.project(p);
+      assert(Math.abs(p.lat-snapped.lat)<1e-9&&Math.abs(p.lon-snapped.lon)<1e-9,
+        way+" must lie exactly on a common straight ADC midline");
+    }
+  }
+  assert(rendered.runs.some(r=>r.type==="projected-access"),
+    way+" must visually disclose the chart-only shoulder connection");
+}
 console.log("OIMM EXACT AXIS / COMPLETE D / PROJECTED ACCESS DISPLAY QA: PASS");

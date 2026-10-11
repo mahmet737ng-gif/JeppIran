@@ -508,7 +508,7 @@ function view(){
   const panel=document.createElement("section");
   panel.id="taxiQaPanel";panel.className="taxi-qa-panel";panel.hidden=true;
   panel.innerHTML='<div class="taxi-qa-title"><strong>TAXI <small>QA TEST</small></strong>'+
-    '<span id="taxiQaAirport"></span><span class="taxi-qa-build">R13</span><button id="taxiQaToolsBtn" type="button" aria-expanded="false" aria-controls="taxiQaButtons">TOOLS ▾</button>'+
+    '<span id="taxiQaAirport"></span><span class="taxi-qa-build">R25</span><button id="taxiQaToolsBtn" type="button" aria-expanded="false" aria-controls="taxiQaButtons">TOOLS ▾</button>'+
     '<button id="taxiQaClose" type="button" aria-label="Close taxi panel">×</button></div>'+
     '<label for="taxiQaInput">Stand STD3 T5 N2 · Hold /N2 · Procedure 34L2A</label>'+
     '<div class="taxi-qa-entry"><input id="taxiQaInput" autocomplete="off" spellcheck="false" placeholder="Stand / taxiways / procedure"><button id="taxiQaGo" type="button">GO</button></div>'+
@@ -820,7 +820,13 @@ function oimmGo(p,options){
   // A sequence names PHYSICAL connected segments. Reject any implicit
   // centreline-to-terminal shortcut, and preserve every runway-axis node.
   const rendered=window.JEPPIRAN_TAXI_RENDER?.parts(working,{...planned,taxiways:ways});
-  if(bt.length&&(!rendered||!rendered.runway.length||rendered.invalid.length)){
+  const midline=bt.length&&rendered?
+    window.JEPPIRAN_TAXI_RENDER?.displayRuns?.(working,{...planned,
+      taxiways:ways,runwayRender:rendered}):null;
+  if(bt.length&&(!rendered||!rendered.runway.length||rendered.invalid.length||
+      !midline?.axis||!midline.runway.length||midline.invalid.length)){
+    // Never depict a diagonal or malformed runway line as a verified path.
+    taxi.route=null;draw();
     message("No complete mapped runway-centreline path for "+bt[0]+
       "; no line is drawn across an unverified taxiway/runway gap.",true);
     return;
@@ -837,6 +843,7 @@ function oimmGo(p,options){
   if(p.stops?.includes(0)&&planned.holds.length===0)planned.holds.push(planned.path.length-1);
   taxi.route={...planned,graph:working,airport:"OIMM",previewOnly:preview,
     taxiways:ways,startStand:p.startStand||null,runwayRender:rendered,
+    runwayDisplaySource:midline?.source||null,
     runwayDestination:runwayTarget?.runway||null};
   if(from)taxi.selectedStand=p.startStand;
   message((preview?"CHART PREVIEW":"SIMULATOR TEST")+" · "+(from?"ST"+p.startStand+" → ":"")+
@@ -844,7 +851,7 @@ function oimmGo(p,options){
     (runwayTarget?" → RWY "+runwayTarget.runway:"")+" · "+planned.length+" m"+
     (runwayTarget?" · "+runwayTarget.warning:"")+
     (goal&&g.holdNodes[goal]?" · HOLD SHORT RWY "+g.holdNodes[goal].runway:"")+
-    (bt.length?" · EXPLICIT RWY "+bt[0].slice(2)+
+    (bt.length?" · STRAIGHT ADC RUNWAY MIDLINE (GRAPHIC QA, NOT SURVEYED) · EXPLICIT RWY "+bt[0].slice(2)+
       " via "+ways[ix-1]+" → "+ways[ix+1]+
       " · "+(selectedAccess?.confidence==="LONG-REACH-QA-UNVERIFIED"?
         "LONG-REACH UNVERIFIED "+selectedAccess.distanceMeters+"m; geometry may omit paved connector. ":
@@ -1245,11 +1252,12 @@ function renderRoutePreview(){
   }
   root.appendChild(background);
   const chain=pts.map(p=>p.x.toFixed(2)+","+p.y.toFixed(2)).join(" ");
-  const sections=r.airport==="OIMM"&&r.runwayRender?.runs;
+  const sections=r.airport==="OIMM"&&r.runwayRender&&
+    window.JEPPIRAN_TAXI_RENDER?.displayRuns?.(r.graph,r);
   if(sections){
-    for(const segment of sections){
+    for(const segment of sections.runs){
       if(segment.type==="unverified")continue;
-      const strip=pts.slice(segment.startIndex,segment.endIndex+1)
+      const strip=segment.coordinates.map(toScreen)
         .map(p=>p.x.toFixed(2)+","+p.y.toFixed(2)).join(" ");
       const approximate=segment.type==="projected-access";
       root.appendChild(s("polyline",{points:strip,fill:"none",
@@ -1468,15 +1476,15 @@ function draw(){
     }
   }
   if(r&&r.airport===selectedAirport&&model){
-    const spec=r.airport==="OIMM"&&r.runwayRender;
+    const spec=r.airport==="OIMM"&&r.runwayRender&&
+      window.JEPPIRAN_TAXI_RENDER?.displayRuns?.(r.graph,r);
     if(spec){
-      // An actual runway backtrack follows ONLY the ordered runway-axis
-      // centreline edges. A projected hold-to-axis leg (107m at Q in the
-      // current source, for example) is NOT a surveyed taxi connector: show
-      // its uncertainty explicitly instead of a solid direct shortcut.
+      // On the 10-9 ADC chart, the solid runway path uses the midpoint of
+      // BOTH printed runway borders (H/M near the north end; H→D axis).
+      // Never reuse the oblique J/A parking-detail interpolation as a solid
+      // runway centreline. Projected runway entries/exits remain amber.
       for(const span of spec.runs){
-        const nodes=span.nodes.map(id=>r.graph.nodes[id])
-          .map(p=>p?projectGeo(model,p.lat,p.lon):null);
+        const nodes=span.coordinates.map(p=>p?projectGeo(model,p.lat,p.lon):null);
         if(nodes.some(p=>!p))continue;
         if(span.type==="projected-access"){
           svg.appendChild(s("polyline",{points:nodes.map(p=>p.x+","+p.y).join(" "),

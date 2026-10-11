@@ -254,3 +254,45 @@ not measured with survey-grade control. **R24 does not assert that the
 RWY 13L threshold is located at the far H endpoint.** Completing an actual
 threshold route requires independent AIP/Jeppesen holding/threshold coordinates
 and validated mapped connectors. `31R` currently refuses a route without them.
+
+## R25 · OIMM runway graphical MIDLINE, screenshot regression (2026-10-11)
+
+**Root cause:** The V2621 runway graph was constructed from a 10-9B
+parking-detail holding point projected onto the 10-9 ADC runway with a
+fixed small offset. Those two diagrams' cross-chart geometry is not
+equivalent. The old pink "runway" path gradually drifted onto a black
+runway border even though its BT graph edges were logically connected.
+
+**Fix in both main chart and TAXI miniature:**
+
+- Derive one straight, common 13R/31L graphic midline from the opposite
+  marked ADC runway edges **H + M** at the north-west end, and the
+  physical **D** end of the long runway corridor. The midpoint of H/M
+  determines the origin. The same border-to-middle displacement at D
+  determines the other end. The derived line covers the full ~3.87 km
+  chart longitudinal span in simulator geometry, but is **not surveyed**.
+- Every part classified `runway-axis` in an explicit `BT13R` or
+  `BT31L` route is projected onto this same straight midline, with
+  progression and bounds validated. Non-monotone/reversing segments are
+  not painted as solid runway paths.
+- The projected apron-to-runway and runway-to-taxiway transition is
+  **dashed amber**, and its runway endpoint is now co-located with the
+  recomputed straight midline. This prevents magenta from prematurely
+  cutting across pavement toward H, J, A, D or Q. Turns are made at
+  the labelled available chart-derived connector, never a shortcut.
+- The short taxiway H axis is still drawn to its last mapped endpoint
+  for requests such as `ST117 A BT13R H 13L`. Its destination remains
+  **H ACCESS QA**, NOT the certified RWY 13L threshold/holding point.
+- **Underlying OIMM ground graph, source PDF, locked home backgrounds,
+  other airports, simulator bridge and georeferences are unchanged.**
+  The replacement is a *display geometry* derived from ADC edges,
+  isolated from route permission and aircraft-position calculations.
+- GitHub Actions tests specifically verify all continuous BT runway
+  coordinates are collinear on the derived schematic runway midpoint
+  and that QA connectors join the corrected axis without a direct
+  magenta shortcut.
+
+This remains **SIMULATOR QA ONLY**. The ADC exaggerates runway graphic
+width; the true geographic centreline cannot be certified by its PDF
+border midpoints. A future replacement requires surveyed AIP/Jeppesen
+runway-centreline and taxiway intersection anchors.

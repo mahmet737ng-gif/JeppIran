@@ -132,6 +132,26 @@ for(const entry of ['ST115 J BT13R H 13L','ST115 J BT13R H RWY 13L']){
   assert(t.taxi.route?.path?.length>5,entry+' missing physical route');
   assert.equal(t.taxi.route.runwayDestination,'13L');
   assert.equal(t.taxi.route.path.at(-1),graph.taxiways.H.nodes.at(-1));
+  const drawing=runwayRender.displayRuns(t.taxi.route.graph,t.taxi.route);
+  assert(drawing?.axis&&drawing.runway.length>0,"runway must have chart-derived midpoint axis");
+  assert.equal(drawing.invalid.length,0,"a warped runway path must not be drawn solid");
+  const anchor=drawing.axis,earth=111195,cos=Math.cos(anchor.start.lat*Math.PI/180);
+  for(const part of drawing.runway){
+    for(const p of part.coordinates){
+      const x=(p.lon-anchor.start.lon)*earth*cos,y=(p.lat-anchor.start.lat)*earth;
+      const vx=(anchor.end.lon-anchor.start.lon)*earth*cos,
+        vy=(anchor.end.lat-anchor.start.lat)*earth;
+      assert(Math.abs(x*vy-y*vx)/Math.hypot(vx,vy)<0.08,
+        "BT13R path must stay straight on common ADC runway axis");
+    }
+  }
+  for(let j=1;j<drawing.runs.length;j++){
+    const before=drawing.runs[j-1],after=drawing.runs[j];
+    if(before.type==="unverified"||after.type==="unverified")continue;
+    const a=before.coordinates.at(-1),b=after.coordinates[0];
+    assert(Math.hypot((a.lon-b.lon)*earth*cos,(a.lat-b.lat)*earth)<.15,
+      "runway midpoint and taxi exit QA connector must share their actual turn point");
+  }
   const axis=t.taxi.route.runwayRender;
   assert(axis.runway.length>2,entry+' must follow multiple runway-centreline edges');
   assert(axis.projections.some(x=>x.to===graph.taxiways.H.nodes[0]&&x.type==='projected-access'),
