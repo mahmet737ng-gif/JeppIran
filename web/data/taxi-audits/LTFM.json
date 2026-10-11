@@ -4834,6 +4834,55 @@
       "status": "NEEDS_CHART_CONFLATION",
       "note": "Published pushback names TWY T5; available OSM label T5 terminates north of the D3 approximate stand area. Adjacent OSM T6 is not a validated substitute. Do not change labels or build an automatic connector by snapping.",
       "chartTokenTextCheck": "T6 NOT FOUND on 26 Jeppesen LTFM ADC/PDC/TAXI CHARTS while T5 is present; compare source geometry before conflation."
+    },
+    {
+      "area": "Full LTFM aerodrome",
+      "status": "GEOMETRY_MISSING",
+      "chartOnlyCount": 41,
+      "labels": [
+        "A13",
+        "C4B",
+        "C5B",
+        "C7B",
+        "D8",
+        "D9",
+        "D10",
+        "D11",
+        "D12",
+        "E1B",
+        "E8",
+        "E9",
+        "E10",
+        "F1",
+        "F2",
+        "F3",
+        "F4",
+        "F5",
+        "F6",
+        "F7",
+        "G1A",
+        "G1B",
+        "G1C",
+        "G1D",
+        "G1E",
+        "G2A",
+        "G2B",
+        "G2C",
+        "G2G",
+        "G2M",
+        "G3",
+        "G4",
+        "G5",
+        "G6",
+        "G7",
+        "G8",
+        "G9",
+        "TC",
+        "TD",
+        "T8",
+        "T12"
+      ],
+      "note": "Do not invent edges or map them to differently named OSM lines."
     }
   ],
   "notes": [
@@ -4841,7 +4890,8 @@
     "Topological junction means exact OSM shared node, NOT any crossing of two plotted lines.",
     "Missing stand lead-out and pushback centerline geometry remain unverified; only published procedural descriptions may be shown.",
     "Individual chart names and operational restrictions are to be checked against current AIP and NOTAM before use.",
-    "Published Jeppesen 30-9J4 pushback wording has been categorized for 19 terminal contact stand IDs, without inventing any apron connector geometry."
+    "Published Jeppesen 30-9J4 pushback wording has been categorized for 19 terminal contact stand IDs, without inventing any apron connector geometry.",
+    "41 additional names appear as distinct taxiway candidates on Jeppesen ADC 30-9 but have no same-name OSM centerline. They remain CHART-ONLY until geometrically digitized and verified."
   ],
   "stats": {
     "nodes": 4008,
@@ -4855,7 +4905,9 @@
     "namesSeenInPublishedChartText": 130,
     "nameMissingFromPublishedChartText": [
       "T6"
-    ]
+    ],
+    "additionalAdcLabelsWithoutSameNamedOsm": 41,
+    "totalTaxiwayNamesForReview": 172
   },
   "chartTextQA": {
     "source": "User supplied Jeppesen terminal cycle 21-2026 (Iran2621, LTFM pages 1244,1247,1248,1251–1272,1286)",
@@ -4893,5 +4945,458 @@
       1286
     ],
     "warning": "Text occurrence alone can reflect a table/annotation, stand label or procedure name. Each centerline still requires chart-to-graph geometry QA."
+  },
+  "chartOnlyTaxiwayLabels": {
+    "A13": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "C4B": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "C5B": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "C7B": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "D8": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "D9": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "D10": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "D11": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "D12": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "E1B": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "E8": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "E9": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "E10": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "F1": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "F2": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "F3": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "F4": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "F5": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "F6": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "F7": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "G1A": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "G1B": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "G1C": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "G1D": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "G1E": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "G2A": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "G2B": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "G2C": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "G2G": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "G2M": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "G3": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "G4": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "G5": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "G6": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "G7": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "G8": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "G9": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "TC": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "TD": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "T8": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    },
+    "T12": {
+      "sourceCharts": [
+        "30-9",
+        "30-9H"
+      ],
+      "mapStatus": "CHART_TOKEN_ONLY_NO_OSM_CENTERLINE",
+      "labelSeenInADC": true,
+      "verifiedCenterline": false,
+      "requiresVisualReview": true,
+      "note": "Label seen in 2621 Jeppesen ADC; OSM graph contains no same-named taxiway. Cartographic symbol classification and centerline coordinates require manual chart QA."
+    }
   }
 }
