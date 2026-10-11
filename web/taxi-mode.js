@@ -1253,6 +1253,34 @@ function draw(){
     }
     svg.appendChild(pins);
   }
+  // Printed parking-label positions and their nearby graph projections
+  // remain distinctly DASHED; these are QA markers, NEVER a taxi route.
+  const sp=taxi.standPreview;
+  if(sp&&taxi.airport==="LTFM"&&selectedAirport==="LTFM"&&model){
+    const center=projectGeo(model,sp.position.lat,sp.position.lon);
+    if(center){
+      const stroke=Math.max(1.2,w*.0015);
+      const group=s("g",{class:"taxi-stand-candidate-preview"});
+      for(const candidate of (sp.candidates||[])){
+        if(!candidate.projectedPoint)continue;
+        const to=projectGeo(model,candidate.projectedPoint.lat,candidate.projectedPoint.lon);
+        if(!to)continue;
+        group.appendChild(s("line",{x1:center.x,y1:center.y,x2:to.x,y2:to.y,
+          stroke:candidate.chartNamedTaxiwayMatch?"#e07dff":"#46dffc",
+          "stroke-width":stroke,"stroke-dasharray":"4 5",opacity:".74"}));
+        group.appendChild(s("circle",{cx:to.x,cy:to.y,r:stroke*2,fill:"none",
+          stroke:candidate.chartNamedTaxiwayMatch?"#e07dff":"#46dffc",
+          "stroke-width":stroke}));
+      }
+      group.appendChild(s("circle",{cx:center.x,cy:center.y,r:stroke*4.5,
+        fill:"rgba(240,37,191,.15)",stroke:"#f025c2","stroke-width":stroke*2}));
+      const t=s("text",{x:center.x+stroke*6,y:center.y-stroke*4,
+        fill:"#fcf7fd","font-size":Math.max(6,w*.012),
+        "font-weight":"bold",stroke:"#101622","stroke-width":Math.max(2,w*.004),"paint-order":"stroke"});
+      t.textContent="ST "+sp.id+" · APPROX / UNVERIFIED";group.appendChild(t);
+      svg.appendChild(group);
+    }
+  }
   const r=taxi.route;
   // Display selected OSM taxiway on the georeferenced ADC without inventing
   // any connection to another name or a parking stand.
@@ -1337,7 +1365,11 @@ function chartHint(){
   bar.append(label,jump,no);document.querySelector("#chartsView .viewer-pane")?.appendChild(bar);
   setTimeout(()=>bar.remove(),12000);
 }
-window.JEPPIRAN_TAXI={open:openTaxi,parse,openAdc,draw,routeDeviationMeters};
+function previewStandCandidate(id,entry){
+  if(taxi.airport!=="LTFM"||!entry||!entry.position)return false;
+  taxi.standPreview={id,...entry};draw();return true;
+}
+window.JEPPIRAN_TAXI={open:openTaxi,parse,openAdc,draw,routeDeviationMeters,previewStandCandidate};
 window.addEventListener("jeppiran-chart-rendered",()=>{draw();chartHint()});
 function monitorOimmAuto(e){
   chartHint();
