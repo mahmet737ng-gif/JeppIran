@@ -1,4 +1,4 @@
-/* JEPPIRAN CDFA Geometry Engine v1.4 - offline, framework independent.
+/* JEPPIRAN CDFA Geometry Engine v1.5 - offline, framework independent.
    Engineering/simulator QA only; not authorized for actual flight navigation.
    No use of AC 120-108 as a computation input or authority.
    Source of truth for published fixes, limits, and station location is the
@@ -34,6 +34,26 @@
     // User-authorized block: exactly 318 ft/NM at 3.00 degrees.
     return Math.abs(deg - 3) < EPS ? 318 : FEET_PER_NM * Math.tan(deg * Math.PI / 180);
   }
+  // The published heading identifies the PROCEDURE NAVAID, not necessarily
+  // the transmitter defining DME distances. An NDB is not a DME receiver.
+  // For PDF extraction, the header is visually transcribed into an explicit
+  // string; do not infer source of DME from its shared ident alone.
+  function identifyProcedureReference(headerText) {
+    if (typeof headerText !== 'string' || !headerText.trim())
+      throw new Error('PROCEDURE_HEADER_REQUIRED');
+    const header = headerText.toUpperCase().replace(/\s+/g, ' ').trim();
+    const matches = Array.from(header.matchAll(/\b(NDB|VOR(?:\/DME)?)\s+([A-Z]{2,5})\s+(\d{3}(?:\.\d+)?)\b/g));
+    if (matches.length !== 1)
+      throw new Error(matches.length ? 'PROCEDURE_HEADER_AMBIGUOUS' : 'PROCEDURE_NAVAID_NOT_FOUND_IN_HEADER');
+    const m = matches[0];
+    const family = m[1].startsWith('VOR') ? 'VOR' : 'NDB';
+    const f = Number(m[3]);
+    if (family === 'NDB' && (f < 190 || f > 1750)) throw new Error('NDB_FREQUENCY_KHZ_INVALID');
+    if (family === 'VOR' && (f < 108 || f > 118)) throw new Error('VOR_FREQUENCY_MHZ_INVALID');
+    return { type: family, id: m[2], frequency: f,
+      unit: family === 'NDB' ? 'kHz' : 'MHz', source: 'VISUALLY_TRANSCRIBED_CHART_HEADER' };
+  }
+
   function normalizeConfig(input) {
     if (!input || typeof input !== 'object') throw new TypeError('config is required');
     const c = { ...input };
@@ -69,6 +89,28 @@
     c.angleDeg = hasPublished ? number(c.publishedAngleDeg, 'publishedAngleDeg')
       : hasLegacy ? number(c.angleDeg, 'angleDeg') : 3;
     c.gradientFtPerNm = gradientForAngle(c.angleDeg);
+    if (c.procedureHeader !== undefined) {
+      c.procedureReference = identifyProcedureReference(c.procedureHeader);
+      if (c.procedureFamily && c.procedureReference.type !== String(c.procedureFamily).toUpperCase()) {
+        throw new Error('PROCEDURE_FAMILY_MISMATCH_WITH_HEADER');
+      }
+      if (c.procedureReferenceId && c.procedureReference.id !== String(c.procedureReferenceId).toUpperCase()) {
+        throw new Error('PROCEDURE_REFERENCE_MISMATCH_WITH_HEADER');
+      }
+    } else if (c.procedureReference) {
+      throw new Error('PROCEDURE_HEADER_REQUIRED_FOR_NAVAID_VERIFICATION');
+    }
+    // chartDmeId refers only to the explicit numeric-DME station on the map.
+    // It must NOT silently be replaced by the NDB reference, even when both
+    // sources happen to share an ident (e.g. ABD, ABM).
+    if (c.procedureReference?.type === 'NDB' && !c.distanceAidEvidence)
+      throw new Error('NDB_SUPPORTING_DME_CHART_EVIDENCE_REQUIRED');
+    if (c.distanceAidEvidence) {
+      if (c.distanceAidEvidence.type !== 'DME' ||
+          String(c.distanceAidEvidence.id).toUpperCase() !== String(c.chartDmeId).toUpperCase() ||
+          !(Number(c.distanceAidEvidence.frequencyMhz) >= 108 && Number(c.distanceAidEvidence.frequencyMhz) <= 118))
+        throw new Error('DISTANCE_AID_EVIDENCE_MISMATCH');
+    }
     if (!c.chartDmeId || typeof c.chartDmeId !== 'string') throw new Error('chartDmeId from chart header is required');
     if (!c.station || typeof c.station !== 'object' || !c.station.id) throw new Error('station with id is required');
     if (String(c.chartDmeId).trim().toUpperCase() !== String(c.station.id).trim().toUpperCase()) {
@@ -367,7 +409,12 @@
     };
     const blocked = issues.length > 0;
     return {
-      version: '1.4.0', chartId: c.chartId || null, referenceDmeId: c.chartDmeId,
+      version: '1.5.0', chartId: c.chartId || null, referenceDmeId: c.chartDmeId,
+      procedureReference: c.procedureReference || null,
+      distanceMeasurementReference: c.distanceAidEvidence ? { ...c.distanceAidEvidence } : null,
+      separateReferenceWarning: c.procedureReference?.type === 'NDB'
+        ? 'NDB is the procedure navaid. Published DME numbers are NOT NDB distances; they are readings from the map-labelled supporting DME and the transmitter offsets are only chart-interpreted QA.' : null,
+
       parameters: {
         thresholdElevationFt: c.thresholdElevationFt,
         airportElevationFt: c.airportElevationFt ?? null,
@@ -392,5 +439,5 @@
     };
   }
 
-  return { buildTable, round20, gradientForAngle, horizontalDistanceFromDme, dmeAtThresholdDistance, calculatedVdp };
+  return { buildTable, round20, gradientForAngle, horizontalDistanceFromDme, dmeAtThresholdDistance, calculatedVdp, identifyProcedureReference };
 });
