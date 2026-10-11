@@ -460,7 +460,7 @@ function view(){
   const panel=document.createElement("section");
   panel.id="taxiQaPanel";panel.className="taxi-qa-panel";panel.hidden=true;
   panel.innerHTML='<div class="taxi-qa-title"><strong>TAXI <small>QA TEST</small></strong>'+
-    '<span id="taxiQaAirport"></span><span class="taxi-qa-build">R11</span><button id="taxiQaToolsBtn" type="button" aria-expanded="false" aria-controls="taxiQaButtons">TOOLS ▾</button>'+
+    '<span id="taxiQaAirport"></span><span class="taxi-qa-build">R12</span><button id="taxiQaToolsBtn" type="button" aria-expanded="false" aria-controls="taxiQaButtons">TOOLS ▾</button>'+
     '<button id="taxiQaClose" type="button" aria-label="Close taxi panel">×</button></div>'+
     '<label for="taxiQaInput">Stand STD3 T5 N2 · Hold /N2 · Procedure 34L2A</label>'+
     '<div class="taxi-qa-entry"><input id="taxiQaInput" autocomplete="off" spellcheck="false" placeholder="Stand / taxiways / procedure"><button id="taxiQaGo" type="button">GO</button></div>'+
@@ -768,12 +768,13 @@ function go(options={}){
         previewOnly:true,standLinkVerified:false,taxiways:p.taxiways.slice(),
         startStand:p.startStand};
       const bridgeText=(preview.mappedUnnamedTransitions||[]).map(x=>
-        " MAPPED OSM UNNAMED LINK "+x.from+" → "+x.to+
-        " ("+x.edgeCount+" segments, "+Math.round(x.lengthMeters)+" m; NOT chart-approved).").join("");
-      message("PARTIAL QA: Stand "+p.startStand+" → "+p.taxiways[0]+
-        " is NOT mapped. Preview starts at the mapped "+p.taxiways[0]+
-        " end and follows "+p.taxiways.join(" → ")+" ("+preview.length+
-        " m)."+bridgeText+" Not a stand-to-runway route. "+publishedStandMessage(p.startStand),true);
+        x.from+" → "+x.to+" uses "+x.edgeCount+" real unnamed OSM edges (~"+
+        Math.round(x.lengthMeters)+"m)").join("; ");
+      message("QA PREVIEW · "+p.taxiways.join(" → ")+" · "+preview.length+
+        "m on mapped OSM centerlines"+(bridgeText?" (including "+bridgeText+")":"")+
+        ". Stand "+p.startStand+" → "+p.taxiways[0]+
+        " pushback/lead-out is NOT mapped or chart-verified. "+
+        "Not a stand-to-runway route. "+publishedStandMessage(p.startStand),true);
       draw();
       return;
     }
