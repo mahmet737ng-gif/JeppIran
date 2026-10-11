@@ -127,3 +127,51 @@ test('no model altitude below published MDA enters candidate rows',()=>{
   assert.ok(!r.candidateRows.some(x=>x.dmeNm===1));
   assert.ok(r.candidateRows.some(x=>x.dmeNm===2));
 });
+
+test('published 3.30 degree angle takes priority over the missing-angle fallback', () => {
+  const c = base();
+  delete c.angleDeg;
+  c.publishedAngleDeg = 3.3;
+  const r = buildTable(c);
+  const expectedGradient = gradientForAngle(3.3);
+  assert.equal(r.parameters.angleSource, 'PUBLISHED_CHART_INPUT');
+  assert.equal(r.parameters.angleDeg, 3.3);
+  assert.equal(r.parameters.gradientFtPerNm, expectedGradient);
+  assert.ok(expectedGradient > 349 && expectedGradient < 352);
+  assert.equal(r.rows[0].roundedAltitudeFt, round20(150 + .5 * expectedGradient));
+  assert.ok(!r.rows[0].reasons.includes('DEFAULT_3_DEG_ASSUMED_NOT_PUBLISHED'));
+});
+test('an absent published angle defaults to 3 degrees and exact 318 ft/NM', () => {
+  const c = base(); delete c.angleDeg;
+  const r = buildTable(c);
+  assert.equal(r.parameters.angleDeg, 3);
+  assert.equal(r.parameters.gradientFtPerNm, 318);
+  assert.equal(r.parameters.angleSource, 'DEFAULT_ASSUMED_3_DEG');
+  assert.equal(r.rows[1].rawAltitudeFt, 627);
+  assert.equal(r.rows[1].status, 'MODEL_ONLY');
+  assert.ok(r.rows[1].reasons.includes('DEFAULT_3_DEG_ASSUMED_NOT_PUBLISHED'));
+  assert.deepEqual(r.candidateRows, []);
+});
+test('explicit published 3 degrees is distinct from fallback 3 degrees', () => {
+  const c = base(); delete c.angleDeg; c.publishedAngleDeg = 3;
+  const r = buildTable(c);
+  assert.equal(r.parameters.angleSource, 'PUBLISHED_CHART_INPUT');
+  assert.equal(r.parameters.gradientFtPerNm, 318);
+  assert.equal(r.rows[1].status, 'CANDIDATE_QA');
+});
+test('empty string and null angles use the fallback; zero is rejected', () => {
+  for(const angle of ['',null]){
+    const c = base(); c.angleDeg = angle;
+    assert.equal(buildTable(c).parameters.angleSource, 'DEFAULT_ASSUMED_3_DEG');
+  }
+  const c=base(); c.angleDeg=0;
+  assert.throws(()=>buildTable(c), /angleDeg must be between/);
+});
+test('invalid published angle is not silently replaced by default', () => {
+  const c=base(); delete c.angleDeg; c.publishedAngleDeg='garbled';
+  assert.throws(()=>buildTable(c), /publishedAngleDeg must be a finite number/);
+});
+test('disagreeing chart angle properties require correction', () => {
+  const c=base(); c.angleDeg=3; c.publishedAngleDeg=3.3;
+  assert.throws(()=>buildTable(c), /ANGLE_SOURCE_CONFLICT/);
+});
