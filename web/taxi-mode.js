@@ -1183,7 +1183,7 @@ function renderRoutePreview(){
   };
   const firstName=r.taxiways?.[0]||"START";
   const lastName=r.taxiways?.at(-1)||"END";
-  note(firstName+" · QA START",pts[0],9,14,"#79efff");
+  note(firstName+" · START",pts[0],9,14,"#79efff");
   note(lastName+" · END",end,9,-9,"#fff7fd");
   note("N ↑",{x:W-24,y:14},0,0,"#b7d8e9");
   note(r.airport==="OIMM"?"CHART-DERIVED · NOT ADC":"OSM CONTEXT · NOT ADC",
@@ -1281,15 +1281,8 @@ function draw(){
     }
     paintPath(svg,segment,holdPositions,w,true);
   }
-  if(taxi.testStart&&model){
-    const p=projectGeo(model,taxi.testStart.lat,taxi.testStart.lon);
-    if(p){
-      svg.appendChild(s("circle",{cx:p.x,cy:p.y,r:7,fill:"#06effc",stroke:"#042431","stroke-width":2}));
-      const t=s("text",{x:p.x+11,y:p.y-9,fill:"#06effc","font-size":13,
-        "font-weight":"900",stroke:"#041824","stroke-width":3,"paint-order":"stroke"});
-      t.textContent="QA START";svg.appendChild(t);
-    }
-  }
+  // No DEMO START / QA START decorations on the airport chart. The selected
+  // internal test origin remains available for route calculation only.
   const manual=taxi.manual.get(Number(selectedChart?.page));
   if(manual)paintPath(svg,manual.points.map(p=>({x:p.x*w,y:p.y*h})),manual.holds,w);
   layer.appendChild(svg);
