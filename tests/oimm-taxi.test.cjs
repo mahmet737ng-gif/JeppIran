@@ -36,6 +36,14 @@ assert.equal(t.taxi.route.path.at(-1),graph.taxiways.H.nodes[1]);
 const pathEdges=new Set(t.taxi.route.path.slice(0,-1).map((n,i)=>n+'>'+t.taxi.route.path[i+1]));
 assert(graph.edges.some(e=>e.runway&&e.taxiway==='BT13R'&&pathEdges.has(e.from+'>'+e.to)));
 assert.equal(t.adjacent(graph)[graph.taxiways.J.exitNode]?.some(e=>e.way==='BT13R'),false);
+el('taxiQaInput').value='ST113 A BT31L D';t.go();
+assert(t.taxi.route?.path.length>2,'explicit A → BT31L → D backtrack missing');
+assert.equal(t.taxi.route.path.at(-1),graph.taxiways.D.nodes[1]);
+const backtrackEdges=new Set(t.taxi.route.path.slice(0,-1).map((n,i)=>n+'>'+t.taxi.route.path[i+1]));
+assert(graph.edges.some(e=>e.runway&&e.taxiway==='BT31L'&&backtrackEdges.has(e.from+'>'+e.to)));
+assert.equal(t.adjacent(graph)[graph.taxiways.A.exitNode]?.some(e=>e.way==='BT31L'),false);
+el('taxiQaInput').value='ST113 A D';t.go();assert.equal(t.taxi.route,null,'implicit runway crossing forbidden');
+el('taxiQaInput').value='ST113 BT31L D';t.go();assert.equal(t.taxi.route,null,'explicit A approach required');
 el('taxiQaInput').value='ST109 BT13R H';t.go();assert.equal(t.taxi.route,null,'explicit J approach required');
 // Live simulator route, as opposed to named stand preview, enables deviation tracking.
 ctx.lastPosition=graph.nodes[graph.stands['101'].node];el('taxiQaInput').value='A';t.go();assert(t.taxi.route&&!t.taxi.route.previewOnly);
