@@ -1,0 +1,75 @@
+/* JEPPIRAN · LTFM printed stand label index inspector (simulator QA).
+ * This tool never approves a movement or turns proximity into graph edges.
+ */
+(function(root){"use strict";
+let task=null,container=null,lastAirport="";
+function getData(){
+  if(!task)task=fetch("./data/taxi-stand-candidates/LTFM.json",{cache:"no-store"})
+    .then(r=>{if(!r.ok)throw Error("LTFM stand inventory is not cached");return r.json()})
+    .then(data=>{
+      if(data.airport!=="LTFM"||String(data.cycle)!=="2621"||
+        !data.stands||Object.keys(data.stands).length<260)throw Error("LTFM stand cycle/index mismatch");
+      return data
+    }).catch(error=>{task=null;throw error});
+  return task;
+}
+function text(tag,str,parent){
+ const n=document.createElement(tag);n.textContent=str;parent.appendChild(n);return n
+}
+function install(){
+ const panel=document.getElementById("taxiQaPanel");
+ if(!panel||document.getElementById("taxiStandCandidateInspector"))return;
+ const wrapper=document.createElement("section");wrapper.id="taxiStandCandidateInspector";
+ wrapper.style.cssText="padding:9px 11px;margin:7px 0;border:1px solid rgba(164,205,226,.25);border-radius:10px;background:rgba(17,32,45,.75);color:#e7efff";
+ text("strong","ISTANBUL · STAND NEIGHBORS (UNVERIFIED QA)",wrapper);
+ const caption=text("div","Loading cycle 2621 Jeppesen label anchors...",wrapper);caption.style.fontSize="11px";
+ const finder=document.createElement("input");finder.type="search";finder.placeholder="Find stand D3, 601, K50…";
+ finder.style.cssText="display:block;width:100%;box-sizing:border-box;margin:7px 0;padding:7px;color:inherit;background:rgba(12,25,38,.8);border:1px solid #58687c;border-radius:6px";
+ const list=document.createElement("select");list.size=5;list.style.cssText="display:block;width:100%;min-height:95px;color:inherit;background:#132536;border:1px solid #58687c;border-radius:6px";
+ const details=text("div","Select a stand to inspect candidate taxiways.",wrapper);
+ details.style.cssText="white-space:pre-line;font-size:11px;line-height:1.5;padding-top:7px";
+ wrapper.insertBefore(finder,details);wrapper.insertBefore(list,details);
+ panel.appendChild(wrapper);container=wrapper;
+ getData().then(data=>{
+  if(!wrapper.isConnected)return;
+  const ids=Object.keys(data.stands).sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+  const stats=data.stats||{};
+  caption.textContent=ids.length+" printed stand labels · "+
+    (stats.standsWithPublishedPushback||0)+" with published pushback instructions · "+
+    (stats.standsWithMatchedPublishedTaxiwayCandidate||0)+" aligned name/proximity matches. NOT cleared routes.";
+  function updateList(){
+    const filter=finder.value.trim().toUpperCase();
+    list.replaceChildren();
+    for(const id of ids.filter(x=>x.includes(filter))){
+      const option=document.createElement("option");option.value=id;option.textContent="ST "+id;
+      list.appendChild(option)
+    }
+  }
+  finder.oninput=updateList;
+  list.onchange=()=>{
+   const id=list.value, entry=data.stands[id];if(!entry)return;
+   root.JEPPIRAN_TAXI?.previewStandCandidate?.(id,entry);
+   const related=(entry.publishedPushbackTaxiways||[]).join(", ")||"none extracted";
+   const notes=(entry.candidates||[]).map(v=>" • "+(v.taxiway||"UNNAMED")+
+     " · "+v.distanceMeters+" m"+(v.chartNamedTaxiwayMatch?" · matches published pushback name":" · proximity only")).join("\n");
+   details.textContent="ST "+id+" · "+(entry.source||"Jeppesen chart")+
+    "\nPUBLISHED PUSHBACK TWYs: "+related+
+    "\nCHARTS: "+(entry.pushbackSourceCharts||[]).join(", ")+
+    "\nNEARBY GRAPH EDGES ("+entry.candidates.length+"):\n"+(notes||"No candidate")+
+    "\nCyan/purple dashed connectors = NOT A TAXI ROUTE. No stand-to-taxi movement authorized.";
+  };
+  updateList();
+ }).catch(e=>{caption.textContent=String(e.message||e);details.textContent="No generated connections loaded."});
+}
+function refresh(){
+ const icao=typeof selectedAirport==="string"?selectedAirport:"";
+ if(icao==="LTFM"){install();if(container)container.hidden=false}
+ else if(container)container.hidden=true;
+ lastAirport=icao
+}
+new MutationObserver(()=>{if(document.getElementById("taxiQaPanel")&&!container)refresh()})
+  .observe(document.documentElement,{subtree:true,childList:true});
+root.addEventListener("jeppiran-chart-rendered",refresh);
+root.addEventListener("hashchange",refresh);
+setTimeout(refresh,500);
+})(typeof window!=="undefined"?window:globalThis);
