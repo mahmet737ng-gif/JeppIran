@@ -40,6 +40,12 @@ def fetch():
                 if response.read(1):raise ValueError("Overpass reply too large")
             data=json.loads(raw)
             if "elements" not in data:raise ValueError("Invalid response")
+            # In the previous OSM graph the named stand 601 was found via
+            # node[aeroway=parking_position]. An empty query is inconsistent,
+            # NOT trustworthy evidence that no lead-out ways exist.
+            if not any(x.get("tags",{}).get("aeroway")=="parking_position"
+                       for x in data["elements"]):
+                raise ValueError("Empty parking-position inventory; server returned incomplete area data")
             return data,server
         except Exception as e:
             fail.append(server+": "+str(e))
