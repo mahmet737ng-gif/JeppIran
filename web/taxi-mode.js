@@ -34,13 +34,22 @@ function parse(raw){
       return {kind:"auto",destination:stand(tokens[2])};
     const startStand=tokens.length>1?stand(tokens[0]):null;if(startStand)tokens.shift();
     const destination=tokens.length?stand(tokens[tokens.length-1]):null;if(destination)tokens.pop();
+    // A final runway token is a DESTINATION, not a TWY label:
+    // ST115 J BT13R H 13L / ST115 J BT13R H RWY 13L.
+    let runwayDestination=null;
+    if(!destination&&tokens.length>=2&&runwayToken(tokens.at(-1))){
+      runwayDestination=window.JEPPIRAN_OIMM_RUNWAY_GOALS?.canon(tokens.pop())||
+        tokens.at(-1);
+      if(["RWY","RUNWAY"].includes(tokens.at(-1)))tokens.pop();
+    }
     const taxiways=[],stops=[];
     for(const t of tokens){
       const k=t.replace(/^\//,"");
       if(!/^[A-Z][A-Z0-9]*$/.test(k))return {error:"Unknown token: "+t};
       if(t.startsWith("/"))stops.push(taxiways.length);taxiways.push(k);
     }
-    if(startStand||taxiways.length)return {kind:"sequence",startStand,destination,taxiways,stops};
+    if(startStand||taxiways.length)return {kind:"sequence",startStand,destination,
+      runwayDestination,taxiways,stops};
   }
   // Procedure designator is RUNWAY + PROCEDURE, no whitespace: 34L2A not 34L 2A.
   if(/^\d{2}[LRC]?\s+\d+[A-Z][A-Z0-9-]*$/.test(s))
@@ -738,6 +747,17 @@ function oimmAutoGo(p){
 }
 function oimmGo(p,options){
   const g=taxi.graph,ways=p.taxiways||[],stand=g.stands[p.destination];
+  const runwayTarget=p.runwayDestination?
+    window.JEPPIRAN_OIMM_RUNWAY_GOALS?.goal(g,p.runwayDestination):null;
+  if(p.runwayDestination&&(!runwayTarget||runwayTarget.error)){
+    message(runwayTarget?.error||"Runway destinations module unavailable; reload the PWA.",true);
+    return;
+  }
+  if(runwayTarget&&ways.at(-1)!==runwayTarget.approachTaxiway){
+    message("RWY "+runwayTarget.runway+" must be reached through the chart-mapped " +
+      runwayTarget.approachTaxiway+" connector. No shortcut from "+(ways.at(-1)||"the previous taxiway")+".",true);
+    return;
+  }
   if(p.kind==="procedure"){message("No named taxi procedure is published in the supplied OIMM layout charts.",true);return}
   const bt=ways.filter(way=>g.runwayBacktracks?.[way]);
   const backtrack=bt.length===1?g.runwayBacktracks[bt[0]]:null;
@@ -771,7 +791,7 @@ function oimmGo(p,options){
   const last=ways[ways.length-1],entry=g.taxiways[last],
     // The LAST named taxiway must finish at its chart-mapped outer endpoint.
     // Never let the pathfinder stop at its first runway-side intersection.
-    goal=stand?.node||entry?.nodes?.at(-1)||entry?.exitNode;
+    goal=stand?.node||runwayTarget?.node||entry?.nodes?.at(-1)||entry?.exitNode;
   const links=adjacent(working,{runwayWay:bt[0]}),request={...p,taxiways:ways,allowStandAccess:true,allowStandExit:!!stand};
   let planned=null;
   if(!start&&stand&&p.kind==="stand"){
@@ -814,10 +834,13 @@ function oimmGo(p,options){
   planned.holds=[...new Set([...planned.holds,...planned.path.flatMap((n,i)=>working.holdNodes[n]?[i]:[])])];
   if(p.stops?.includes(0)&&planned.holds.length===0)planned.holds.push(planned.path.length-1);
   taxi.route={...planned,graph:working,airport:"OIMM",previewOnly:preview,
-    taxiways:ways,startStand:p.startStand||null,runwayRender:rendered};
+    taxiways:ways,startStand:p.startStand||null,runwayRender:rendered,
+    runwayDestination:runwayTarget?.runway||null};
   if(from)taxi.selectedStand=p.startStand;
   message((preview?"CHART PREVIEW":"SIMULATOR TEST")+" · "+(from?"ST"+p.startStand+" → ":"")+
-    (ways.join(" → ")||"ST"+p.destination)+" · "+planned.length+" m"+
+    (ways.join(" → ")||"ST"+p.destination)+
+    (runwayTarget?" → RWY "+runwayTarget.runway:"")+" · "+planned.length+" m"+
+    (runwayTarget?" · "+runwayTarget.warning:"")+
     (goal&&g.holdNodes[goal]?" · HOLD SHORT RWY "+g.holdNodes[goal].runway:"")+
     (bt.length?" · EXPLICIT RWY "+bt[0].slice(2)+
       " via "+ways[ix-1]+" → "+ways[ix+1]+
