@@ -1,7 +1,7 @@
 /* JEPPIRAN TAXI preview · verified graphs only · NOT FOR ACTUAL NAVIGATION */
 (function(){
 "use strict";
-const ns="http://www.w3.org/2000/svg", taxi={auto:null,graphRequest:null,active:false,trace:false,startSelect:false,testStart:null,airport:"",graph:null,standReference:null,selectedStand:"",showStands:false,showNetwork:false,route:null,survey:null,surveyEngine:null,surveyVector:null,manual:new Map(),prompted:"",goTicket:0,networkAudit:null,networkOpen:false,highlightTaxiway:"",insGroups:null,standGroupAudit:null,standGroupOpen:false};
+const ns="http://www.w3.org/2000/svg", taxi={auto:null,graphRequest:null,active:false,trace:false,startSelect:false,testStart:null,airport:"",graph:null,standReference:null,selectedStand:"",showStands:false,showNetwork:false,route:null,survey:null,surveyEngine:null,surveyVector:null,o3Survey:null,o3Selected:'',manual:new Map(),prompted:"",goTicket:0,networkAudit:null,networkOpen:false,highlightTaxiway:"",insGroups:null,standGroupAudit:null,standGroupOpen:false};
 const $=id=>document.getElementById(id);
 const name=s=>String(s||"").trim().toUpperCase().replace(/\s+/g," ");
 function parse(raw){
@@ -454,12 +454,30 @@ function message(s,warning=false){
 const OIAW_QA_REVISION="2621-oiaw-inset-registration-r3";
 async function fetchGraph(icao){
   taxi.graph=null;taxi.genericEngine=null;taxi.genericMonitor=null;
-  taxi.survey=null;taxi.surveyEngine=null;taxi.surveyVector=null;
+  taxi.survey=null;taxi.surveyEngine=null;taxi.surveyVector=null;taxi.o3Survey=null;taxi.o3Selected='';
   message("Checking verified ground network for "+icao+"…");
   try{
     // The ADC inventory is the sole OIAW source until source PDF curves and
     // hold lines have been fully traced. Previous projected OIAW.json routes
     // MUST NEVER be presented as mapped taxi centreline geometry.
+    if(icao==="OIII"){
+      const rr=await fetch("./data/taxi-surveys/OIII.json?v=2621-o3-native-inventory-r1",{cache:"no-store"});
+      if(!rr.ok)throw Error("Mehrabad ADC inventory HTTP "+rr.status);
+      const data=await rr.json();
+      const probe=window.JEPPIRAN_TAXI_OIII_LAYER?.compose(data,430);
+      if(data.airport!==icao||String(data.cycle)!==String(manifest?.cycle)||
+        data.source?.sha256!==manifest?.source_sha256||
+        data.stands?.length!==53||data.runwayPolygons?.length!==2||!probe?.ok)
+        throw Error("Mehrabad PDF identity or source revision mismatch");
+      if(taxi.airport!==icao)return null;
+      taxi.o3Survey=data;
+      $("taxiQaInput").placeholder="ST100 · ST507 · A4 · B6 (chart labels; routes pending)";
+      $("taxiQaStands").textContent="STANDS (53)";
+      message("OIII CHART INVENTORY · 2 original runway strips · 53 stand labels · "+
+        data.taxiways.length+" named taxiways. Physical taxi centreline endpoints, "+
+        "hold-short and stand access remain UNTRACED; no route invented.",true);
+      draw();return data;
+    }
     if(icao==="OIAW"){
       const surveyApi=window.JEPPIRAN_TAXI_SURVEY;
       if(!surveyApi?.index)throw Error("ADC inventory engine script not loaded");
@@ -573,6 +591,8 @@ async function fetchGraph(icao){
 // Share an in-flight graph load across TAXI open and GO. Avoid duplicate
 // no-store downloads and prevent a stale request from clobbering a new route.
 function loadGraph(icao){
+  if(taxi.o3Survey?.airport===icao&&String(taxi.o3Survey.cycle)===String(manifest?.cycle))
+    return Promise.resolve(taxi.o3Survey);
   if(taxi.surveyEngine&&taxi.survey?.airport===icao&&
      String(taxi.survey.cycle)===String(manifest?.cycle))
     return Promise.resolve(taxi.survey);
@@ -656,6 +676,26 @@ function focusPdfVectorOnADC(points,chartHeight){
   const top=Math.min(stage.scrollHeight-stage.clientHeight,
     Math.max(0,Math.round(y-stage.clientHeight*.55)));
   stage.scrollTo({top,behavior:"smooth"});
+}
+function mehrabadInventoryGo(typed){
+  const token=name(typed).replace(/\s+/g,"");
+  const data=taxi.o3Survey;
+  if(!data)return;
+  taxi.route=null;taxi.auto=null;taxi.o3Selected="";
+  if(/^ST\d{3}$/.test(token)&&data.stands.some(v=>"ST"+v.id===token)){
+    taxi.o3Selected=token;draw();
+    message("OIII · "+token+" on chart 10-9B is highlighted. Printed label "+
+      "is not a verified parking nose or taxiway lead-out. No path invented.",true);return;
+  }
+  if(data.taxiways.some(v=>v.id===token)){
+    taxi.o3Selected=token;draw();
+    message("OIII · TWY "+token+" native label locations highlighted. "+
+      "Exact centreline start/end, neighbouring junctions and hold lines "+
+      "must still be traced. No automatic route.",true);return;
+  }
+  draw();message("OIII ground graph incomplete: input a single ST### or "+
+    "named TWY for source-chart highlighting. Combined taxi clearance "+
+    "blocked until all exact connections are extracted.",true);
 }
 function surveyGo(typed){
   const audit=taxi.surveyEngine?.parse(typed);
@@ -896,7 +936,7 @@ function nearest(graph,pos,firstTaxiway=null){
 }
 function syncAirport(){
   if(!taxi.active||taxi.airport===selectedAirport)return;
-  taxi.goTicket++;taxi.airport=selectedAirport;taxi.graph=null;taxi.genericEngine=null;taxi.genericMonitor=null;taxi.survey=null;taxi.surveyEngine=null;taxi.surveyVector=null;
+  taxi.goTicket++;taxi.airport=selectedAirport;taxi.graph=null;taxi.genericEngine=null;taxi.genericMonitor=null;taxi.survey=null;taxi.surveyEngine=null;taxi.surveyVector=null;taxi.o3Survey=null;taxi.o3Selected='';
   taxi.route=null;taxi.auto=null;taxi.standPreview=null;taxi.standEgress=null;taxi.standLead=null;taxi.standQaRoute=null;taxi.testStart=null;taxi.prompted="";
   taxi.networkAudit=null;taxi.highlightTaxiway="";
   $("taxiQaAirport").textContent=selectedAirport;
@@ -916,7 +956,8 @@ function updateAirportControls(){
   if(taxi.genericEngine)fillGenericTaxiDestinations(taxi.genericEngine);
   document.querySelector('label[for="taxiQaInput"]').textContent=oimm?
     "Mashhad: ST109 Q BT31L D · ST109 B BT31L D · ST113 RAMP · ST109":
-    selectedAirport==="OIAW"?"OIAW ADC: ST2 A B · ST4 A B · topology scanned, curves not calibrated":
+    selectedAirport==="OIAW"?"OIAW ADC: ST2 A B · ST4 A B · source PDF vectors":
+    selectedAirport==="OIII"?"Mehrabad ADC: ST100 / ST507 / A4 / B6 · labels only":
     "LTFM example: A4 A A7 B B8A · Hold: /B8A · 34L2A format";
 }
 // AUTO requires an actual start (simulator/device/SET START) or an explicit
@@ -1102,6 +1143,7 @@ function go(options={}){
     return;
   }
   publisher?.clear();
+  if(taxi.o3Survey){mehrabadInventoryGo(typed);return}
   if(taxi.surveyEngine){surveyGo(typed);return}
   if(taxi.genericEngine){
     genericGo(typed);
@@ -1121,11 +1163,12 @@ function go(options={}){
     loadGraph(airport).then(loaded=>{
       if(goTicket!==taxi.goTicket||!taxi.active||taxi.airport!==airport||
          selectedAirport!==airport||$("taxiQaInput")?.value!==input)return;
-      if(!loaded||(!taxi.genericEngine&&!taxi.surveyEngine)){
+      if(!loaded||(!taxi.genericEngine&&!taxi.surveyEngine&&!taxi.o3Survey)){
         message(airport+" ADC inventory/ground network unavailable; no route was fabricated.",true);
         return;
       }
-      if(taxi.surveyEngine)surveyGo(input);else genericGo(input);
+      if(taxi.o3Survey)mehrabadInventoryGo(input);
+      else if(taxi.surveyEngine)surveyGo(input);else genericGo(input);
     }).catch(error=>{
       if(goTicket===taxi.goTicket&&taxi.active&&taxi.airport===airport)
         message(airport+" network load failed: "+String(error?.message||error)+
@@ -1608,11 +1651,34 @@ function draw(){
     isAdc(selectedChart)?taxi.graph.previewChartTransform:null;
   const vectorPage=taxi.route?.surveyPDFRoute&&
     Number(selectedChart?.page)===38&&taxi.airport==="OIAW"?taxi.route:null;
+  const o3Layer=taxi.o3Survey&&selectedAirport==="OIII"?
+    window.JEPPIRAN_TAXI_OIII_LAYER?.compose(taxi.o3Survey,Number(selectedChart?.page),taxi.o3Selected):null;
   const model=qaChart||publishedModel,
-    w=vectorPage?.chartWidth||model?.width||1000,
-    h=vectorPage?.chartHeight||model?.height||1000;
+    w=o3Layer?.ok?o3Layer.width:(vectorPage?.chartWidth||model?.width||1000),
+    h=o3Layer?.ok?o3Layer.height:(vectorPage?.chartHeight||model?.height||1000);
   const svg=s("svg",{class:"taxi-qa-overlay",viewBox:"0 0 "+w+" "+h,preserveAspectRatio:"none"});
   svg.style.cssText="position:absolute;inset:0;width:100%;height:100%;z-index:12;pointer-events:none";
+  if(o3Layer?.ok){
+    for(const runway of o3Layer.runways){
+      svg.appendChild(s("polygon",{
+        points:runway.outline.map(p=>p[0]+","+p[1]).join(" "),
+        fill:"none",stroke:"rgba(255,169,50,.90)",
+        "stroke-width":1.25,"stroke-dasharray":"3 2",
+        "class":"taxi-o3-published-black-runway"
+      }));
+    }
+    for(const stand of o3Layer.stands)
+      svg.appendChild(s("circle",{
+        cx:stand.x,cy:stand.y,r:stand.selected?4:1.25,
+        fill:stand.selected?"#ffec6c":"rgba(232,43,183,.56)",
+        "class":"taxi-o3-printed-stand-label"
+      }));
+    for(const t of o3Layer.taxiLabels)if(t.selected)
+      svg.appendChild(s("circle",{
+        cx:t.x,cy:t.y,r:5,fill:"none",stroke:"#ffe45e",
+        "stroke-width":1.6,"class":"taxi-o3-source-taxi-label"
+      }));
+  }
   if(taxi.airport==="OIMM"&&taxi.showNetwork&&taxi.graph&&model){
     const normal=[],military=[],runway=[];
     for(const e of taxi.graph.edges){
