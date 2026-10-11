@@ -1162,3 +1162,69 @@ body.viewer-fullscreen .aircraft-follow-btn{
  .taxi-audit-panel{padding:8px}
  .taxi-audit-panel select{max-height:110px}
 }
+
+
+/* TAXI QA: keep the chart visible even when an unmapped stand is queried. */
+#chartsView .taxi-qa-panel{
+  width:min(430px,calc(100% - 18px));
+  max-height:min(46vh,420px);
+  overflow-y:auto;
+  overscroll-behavior:contain;
+}
+#taxiQaStatus{
+  font-size:12px;
+  line-height:1.45;
+  overflow-wrap:anywhere;
+}
+.taxi-status-details{
+  margin-top:6px;
+  padding:6px 9px;
+  background:rgba(9,23,40,.92);
+  border:1px solid rgba(67,128,165,.66);
+  border-radius:7px;
+  color:#e7f6ff;
+}
+.taxi-status-details[hidden]{display:none!important}
+.taxi-status-details summary{
+  color:#8bdffc;
+  cursor:pointer;
+  font-weight:750;
+  font-size:11px;
+  touch-action:manipulation;
+}
+.taxi-status-details #taxiQaFullMessage{
+  white-space:pre-wrap;
+  padding:8px 1px 2px;
+  color:#f4d9ba;
+  font-size:11.5px;
+  line-height:1.55;
+}
+.taxi-route-preview{
+  display:grid;
+  grid-template-columns:minmax(0,1fr);
+  gap:4px;
+  margin-top:8px;
+  padding:7px;
+  background:#071b2b;
+  border:1px solid rgba(255,57,212,.52);
+  border-radius:9px;
+  color:#eafcff
+}
+.taxi-route-preview[hidden]{display:none!important}
+.taxi-route-preview strong{font-size:11px;line-height:1.3}
+.taxi-route-preview svg{
+  display:block;
+  width:100%;
+  max-height:95px;
+  border-radius:5px;
+  background:linear-gradient(160deg,#07213a,#0b1528);
+}
+.taxi-route-preview small{
+  font-size:10px;
+  line-height:1.4;
+  color:#f3cfb7;
+}
+@media(max-width:680px){
+ #chartsView .taxi-qa-panel{width:calc(100% - 14px);max-height:42vh}
+ .taxi-route-preview svg{max-height:78px}
+}
