@@ -122,6 +122,30 @@ function firstUnmappedTransition(graph,ways){
   }
   return null;
 }
+// Demo starts at the mapped end of the requested first taxiway nearest to the
+// approximate published stand AREA, never at the stand itself. It cannot infer
+// a pushback connector from proximity. Applies only to an explicit D3/T5 QA.
+function demoFromStandArea(graph,parsed){
+  const stand=parsed.startStand&&taxi.networkAudit?.standLeads?.[parsed.startStand];
+  const first=parsed.taxiways?.[0];
+  if(!stand?.insApprox||parsed.startStand!=="D3"||first!=="T5")return null;
+  const onWay=graph.edges.filter(e=>name(e.taxiway)===first&&!e.closed&&!e.runway);
+  const degree=new Map();
+  for(const e of onWay){
+    degree.set(e.from,(degree.get(e.from)||0)+1);
+    degree.set(e.to,(degree.get(e.to)||0)+1);
+  }
+  const endpoints=[...degree].filter(([,count])=>count===1).map(([id])=>id)
+    .filter(id=>graph.nodes[id]);
+  if(endpoints.length!==2)return null;
+  const approx=stand.insApprox;
+  endpoints.sort((a,b)=>dist(graph.nodes[a],approx)-dist(graph.nodes[b],approx));
+  // A large ambiguity would make the stand-side endpoint indefensible.
+  const near=dist(graph.nodes[endpoints[0]],approx),far=dist(graph.nodes[endpoints[1]],approx);
+  if(!(near<600&&far-near>250))return null;
+  const route=shortest(graph,endpoints[0],null,parsed,adjacent(graph));
+  return route?{...route,start:endpoints[0],fromStandArea:true}:null;
+}
 function demoRoute(graph,parsed){
   // Select a sample start ON the first requested OSM taxiway. This is a
   // source-attributed QA preview, never an assumed aircraft position.
@@ -251,7 +275,22 @@ function publishedStandMessage(stand){
     " · Lead-out geometry NOT mapped. Select applicable ATC pushback instruction.";
 }
 function message(s,warning=false){
-  const t=$("taxiQaStatus");if(t){t.textContent=s;t.classList.toggle("warning",warning);}
+  const t=$("taxiQaStatus"),detail=$("taxiQaStatusDetails"),full=$("taxiQaFullMessage");
+  if(!t)return;
+  // Prevent multi-paragraph chart citations and pushback options from blocking
+  // the entire ADC. Full text stays available on demand, not discarded.
+  const value=String(s||"");
+  const paragraphs=value.split(/(?<=\.)\s+(?=[A-Z])/);
+  const compact=value.length>200?
+    (paragraphs[0]?.length<155?paragraphs[0]:value.slice(0,157).replace(/\s+\S*$/,"")+"…"):
+    value;
+  t.textContent=compact;
+  t.classList.toggle("warning",warning);
+  if(detail&&full){
+    full.textContent=value;
+    detail.hidden=value.length<=200;
+    detail.open=false;
+  }
 }
 async function loadGraph(icao){
   taxi.graph=null;
@@ -292,6 +331,8 @@ function view(){
     '<div class="taxi-qa-entry"><input id="taxiQaInput" autocomplete="off" spellcheck="false" placeholder="Taxi clearance or stand"><button id="taxiQaGo" type="button">GO</button></div>'+
     '<div class="taxi-qa-buttons"><button id="taxiQaAdc" type="button">ADC</button><button id="taxiQaNetworkBtn" type="button" aria-pressed="false">NETWORK</button><button id="taxiQaStart" type="button" aria-pressed="false">SET START</button><button id="taxiQaDemo" type="button">DEMO ROUTE</button><button id="taxiQaStands" type="button" aria-pressed="false">STANDS</button><button id="taxiQaTrace" type="button">TRACE QA</button><button id="taxiQaHold" type="button">HOLD HERE</button><button id="taxiQaUndo" type="button">UNDO</button><button id="taxiQaClear" type="button">CLEAR</button></div>'+
     '<div id="taxiQaStatus" role="status"></div>'+
+    '<details id="taxiQaStatusDetails" class="taxi-status-details" hidden><summary>Show complete message / pushback instructions</summary><div id="taxiQaFullMessage"></div></details>'+
+    '<div id="taxiQaRoutePreview" class="taxi-route-preview" hidden aria-label="Mapped segment preview"></div>'+
     '<section id="taxiQaNetwork" class="taxi-audit-panel" hidden><strong>ISTANBUL · TAXIWAY INVENTORY / SIM QA ONLY</strong>'+
     '<input id="taxiQaFilter" type="search" autocomplete="off" spellcheck="false" placeholder="Find A, T5, N2…">'+
     '<select id="taxiQaNames" size="8" aria-label="Select mapped taxiway"></select>'+
@@ -466,11 +507,24 @@ function go(options={}){
     }
   }
   if(p.startStand&&!options.demo&&!taxi.testStart){
-    const prefix=p.taxiways.length?" The mapped section "+p.taxiways.join(" → ")+" can be previewed separately.":"";
-    message("STAND "+p.startStand+" recognized (not TWY "+p.startStand+"). "+
-      (publishedStandMessage(p.startStand)||"Published stand pushback information not digitized.")+
-      " Stand lead-out geometry to "+p.taxiways[0]+" is NOT mapped."+prefix+
-      " Press DEMO ROUTE for mapped taxiways only or SET START post-pushback. No invented stand link.",true);
+    // Pressing GO should give a useful, clearly labeled partial preview rather
+    // than filling the screen with a paragraph and drawing nothing.
+    const preview=taxi.graph.simulatorTestOnly&&p.kind==="sequence"&&
+      !p.destination?demoFromStandArea(taxi.graph,p):null;
+    if(preview){
+      taxi.route={...preview,graph:taxi.graph,airport:selectedAirport,
+        previewOnly:true,standLinkVerified:false,taxiways:p.taxiways.slice(),
+        startStand:p.startStand};
+      message("PARTIAL QA: Stand "+p.startStand+" → "+p.taxiways[0]+
+        " is NOT mapped. Preview starts at the mapped "+p.taxiways[0]+
+        " end and follows "+p.taxiways.join(" → ")+" ("+preview.length+
+        " m). Not a stand-to-runway route. "+publishedStandMessage(p.startStand),true);
+      draw();
+      return;
+    }
+    message("STAND "+p.startStand+" recognized, but its lead-out geometry to "+
+      p.taxiways[0]+" is not mapped. Press DEMO ROUTE for a separate mapped taxiway segment. "+
+      publishedStandMessage(p.startStand),true);
     return;
   }
   // When a stand name is given, a simulator fix MUST NOT be misrepresented
@@ -646,9 +700,42 @@ function drawStandMap(){
   note.style.cssText="display:block;color:#c4d9ea;margin-top:5px;font-size:10px";
   el.appendChild(note);
 }
+function renderRoutePreview(){
+  const container=$("taxiQaRoutePreview"),r=taxi.route;
+  if(!container)return;
+  container.hidden=!(taxi.active&&r?.airport===selectedAirport&&r.path?.length>1);
+  if(container.hidden){container.replaceChildren();return}
+  const nodes=r.path.map(id=>r.graph.nodes[id]).filter(Boolean);
+  if(nodes.length<2){container.hidden=true;return}
+  const lat0=nodes.reduce((a,p)=>a+p.lat,0)/nodes.length;
+  const cos=Math.cos(lat0*Math.PI/180),W=370,H=105,pad=16;
+  const xs=nodes.map(p=>p.lon*cos),ys=nodes.map(p=>p.lat);
+  const xmin=Math.min(...xs),xmax=Math.max(...xs),ymin=Math.min(...ys),ymax=Math.max(...ys);
+  const xSpan=Math.max(1e-7,xmax-xmin),ySpan=Math.max(1e-7,ymax-ymin);
+  const scale=Math.min((W-2*pad)/xSpan,(H-2*pad)/ySpan);
+  const offsetX=(W-xSpan*scale)/2,offsetY=(H-ySpan*scale)/2;
+  const pts=nodes.map((p,i)=>({x:offsetX+(xs[i]-xmin)*scale,y:offsetY+(ymax-p.lat)*scale}));
+  const root=s("svg",{viewBox:"0 0 "+W+" "+H,role:"img",
+    "aria-label":"Geographically scaled OSM taxiway segment, not the airport ADC"});
+  const chain=pts.map(p=>p.x.toFixed(2)+","+p.y.toFixed(2)).join(" ");
+  root.appendChild(s("polyline",{points:chain,fill:"none",stroke:"#4b1348",
+    "stroke-width":"7","stroke-linecap":"round","stroke-linejoin":"round"}));
+  root.appendChild(s("polyline",{points:chain,fill:"none",stroke:"#fc30d3",
+    "stroke-width":"3.1","stroke-linecap":"round","stroke-linejoin":"round"}));
+  root.appendChild(s("circle",{cx:pts[0].x,cy:pts[0].y,r:5,fill:"#26edff",stroke:"#0a1826","stroke-width":2}));
+  const end=pts[pts.length-1];
+  root.appendChild(s("circle",{cx:end.x,cy:end.y,r:5,fill:"#eaffff",stroke:"#0a1826","stroke-width":2}));
+  const caption=document.createElement("strong");
+  caption.textContent=(r.startStand?"UNMAPPED STAND "+r.startStand+" → ":"")+
+    (r.taxiways?.join(" → ")||"MAPPED QA SECTION")+" · "+(r.length||0)+" m";
+  const warning=document.createElement("small");
+  warning.textContent="OSM geometry only · not on a validated ADC · no stand/pushback connector · NOT FOR NAVIGATION";
+  container.replaceChildren(caption,root,warning);
+}
 function draw(){
   syncAirport();
   drawStandMap();
+  renderRoutePreview();
   const layer=$("chartTransformLayer"),canvas=$("pdfCanvas");if(!layer||!canvas)return;
   layer.querySelector(".taxi-qa-overlay")?.remove();
   if(!taxi.active)return;
