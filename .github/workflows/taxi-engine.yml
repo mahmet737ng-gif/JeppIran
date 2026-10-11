@@ -56,7 +56,7 @@ jobs:
             const g=JSON.parse(fs.readFileSync(path.join('web/data/taxi-networks',name)));
             if(g.engineVersion!==1)continue;
             const result=E.validate(g);
-            if(g.enabled===true&&(!result.ok||g.source?.reviewStatus==='NOT REVIEWED')){
+            if(g.enabled===true&&(!result.ok||g.source?.reviewStatus!=='SIM_QA_REVIEWED')){
               throw Error(name+': enabled network without valid source/topology: '+result.errors.join('; '));
             }
             console.log(name, g.enabled?'ACTIVE REVIEWED':'INACTIVE / REQUIRES REVIEW');
