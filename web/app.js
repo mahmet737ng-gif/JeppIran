@@ -1083,11 +1083,11 @@ function clampChartPan(){
   chartPanY=Math.max(-maxY,Math.min(80,chartPanY));
 }
 // The SVG was too large and its original inverse-scale kept it screen-fixed.
-// Scale below inversely to zoom^(1.75): on-screen size decreases as users zoom.
-// At extreme zoom, keep a minimum visible 9px marker for situational awareness.
+// Scale below inversely to zoom^(1.65): the on-screen marker gets
+// continuously smaller up to 400%, with an 8px absolute visibility floor.
 function aircraftMarkerScaleForZoom(zoom){
   const z=Math.max(1,Number(zoom)||1);
-  return Math.max(9/(20*z),Math.pow(z,-1.75));
+  return Math.max(8/(20*z),Math.pow(z,-1.65));
 }
 function paintChartTransform(){
   const layer=$("#chartTransformLayer");
