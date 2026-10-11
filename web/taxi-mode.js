@@ -475,7 +475,7 @@ async function fetchGraph(icao){
       // geographic edges. Fingerprint the CURRENT terminal chart source.
       let pdfVectors=null,vectorWarning="";
       try{
-        const vr=await fetch("./data/taxi-chart-traces/OIAW-2621.json?v=2621-vector-pdf-r2",{cache:"no-store"});
+        const vr=await fetch("./data/taxi-chart-traces/OIAW-2621.json?v=2621-overview-dual-r3",{cache:"no-store"});
         if(!vr.ok)throw Error("PDF vector HTTP "+vr.status);
         const record=await vr.json();
         if(record.airport!==icao||String(record.cycle)!==String(manifest?.cycle)||
