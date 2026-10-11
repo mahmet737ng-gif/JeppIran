@@ -285,6 +285,8 @@ let airportMetadata={}, airportRunwayMetadata={};
 let charts=[], manifest=null, selectedAirport="", selectedChart=null, expanded=new Set();
 let airportTreeExpanded=false;
 let chartZoom=1, chartPanX=0, chartPanY=0;
+// Dual Layer Ops marker: chart follow is a viewer-only feature; no simulator transport changes.
+let aircraftFollowEnabled=false, taxiOffRouteCount=0, taxiOffRouteActive=false;
 let chartMetarTimer=null, chartMetarAirport="", chartMetarValue="";
 const CHART_METAR_POLL_INTERVAL=5*60*1000;
 // Keep this session's displayed reports when switching charts or airports.
@@ -792,6 +794,76 @@ function refreshPositionStatus(){
   setPositionStatus("live",code+" LIVE"+acc,"Position is live and inside this chart.");
 }
 
+// Center aircraft at 150% and follow it as live simulator/GPS positions change.
+// Transform origin is 50% 0, while the PDF canvas sits centered horizontally in the stage.
+function updateAircraftFollowControl(){
+  const btn=$("#aircraftFollowBtn");
+  if(!btn)return;
+  const ready=!!(lastPosition&&selectedChart&&georefByPage.get(Number(selectedChart.page))&&$("#pdfCanvas"));
+  btn.disabled=!ready;
+  btn.classList.toggle("following",aircraftFollowEnabled&&ready);
+  btn.setAttribute("aria-pressed",String(aircraftFollowEnabled&&ready));
+  btn.setAttribute("aria-label",aircraftFollowEnabled&&ready?"Stop following the aircraft":"Center on aircraft at 150% and follow");
+  btn.title=ready?(aircraftFollowEnabled?"Stop following aircraft":"Center aircraft and follow at 150%"):"A live position and georeferenced chart are required";
+  const label=btn.querySelector(".aircraft-follow-label");
+  if(label)label.textContent=aircraftFollowEnabled&&ready?"FOLLOW ON":"CTR 150%";
+}
+function cancelAircraftFollow(){
+  if(!aircraftFollowEnabled)return;
+  aircraftFollowEnabled=false;
+  updateAircraftFollowControl();
+}
+function ensureAircraftFollowControl(){
+  const stage=$("#pdfStage");
+  if(!stage)return;
+  let btn=$("#aircraftFollowBtn");
+  if(!btn){
+    btn=document.createElement("button");
+    btn.id="aircraftFollowBtn";
+    btn.type="button";
+    btn.className="aircraft-follow-btn";
+    btn.innerHTML='<svg viewBox="0 0 24 24" width="19" height="19" aria-hidden="true"><circle cx="12" cy="12" r="7.5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 1.8v5 M12 17.2v5 M1.8 12h5 M17.2 12h5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="12" r="2.2" fill="currentColor"/></svg><span class="aircraft-follow-label">CTR 150%</span>';
+    btn.addEventListener("pointerdown",e=>e.stopPropagation());
+    btn.addEventListener("pointermove",e=>e.stopPropagation());
+    btn.addEventListener("pointerup",e=>e.stopPropagation());
+    btn.addEventListener("click",e=>{
+      e.preventDefault();e.stopPropagation();
+      if(btn.disabled)return;
+      aircraftFollowEnabled=!aircraftFollowEnabled;
+      if(aircraftFollowEnabled)chartZoom=1.5;
+      updateAircraftFollowControl();
+      if(aircraftFollowEnabled)updateAircraftMarker();
+    });
+    stage.appendChild(btn);
+  }
+  updateAircraftFollowControl();
+}
+function followAircraftAt(model,p,canvas){
+  const stage=$("#pdfStage"),layer=$("#chartTransformLayer");
+  if(!stage||!layer||!canvas.clientWidth||!canvas.clientHeight)return;
+  const x=p.x/model.width*canvas.clientWidth;
+  const y=p.y/model.height*canvas.clientHeight;
+  chartZoom=1.5;
+  chartPanX=chartZoom*(layer.offsetWidth/2-x);
+  chartPanY=stage.clientHeight/2-chartZoom*y;
+  // Do not clamp in FOLLOW: even an aircraft near the chart boundary must remain centered.
+  layer.style.transform="translate3d("+chartPanX+"px,"+chartPanY+"px,0) scale("+chartZoom+")";
+  layer.style.setProperty("--marker-inverse-scale",(1/chartZoom).toFixed(5));
+  const zoom=$("#zoomValue");if(zoom)zoom.textContent="150%";
+}
+function updateTaxiDeviationClass(marker,pos){
+  const deviation=window.JEPPIRAN_TAXI?.routeDeviationMeters?.(pos);
+  if(!Number.isFinite(deviation)){
+    taxiOffRouteCount=0;taxiOffRouteActive=false;
+  }else if(deviation>45){
+    taxiOffRouteCount=Math.min(3,taxiOffRouteCount+1);
+    if(taxiOffRouteCount>=2)taxiOffRouteActive=true;
+  }else if(deviation<30){
+    taxiOffRouteCount=0;taxiOffRouteActive=false;
+  }
+  marker.classList.toggle("off-route",taxiOffRouteActive);
+  marker.title=taxiOffRouteActive?"OFF ROUTE · SIMULATOR QA ONLY":"Aircraft position";
+}
 function updateAircraftMarker(){
   const canvas=$("#pdfCanvas"),chart=selectedChart,pos=lastPosition;
   if(!canvas||!chart||!pos){hideAircraftMarker();refreshPositionStatus();return}
@@ -805,7 +877,7 @@ function updateAircraftMarker(){
     marker=document.createElement("div");
     marker.id="aircraftMarker";
     marker.className="aircraft-marker";
-    marker.innerHTML='<span class="aircraft-pulse"></span><span class="aircraft-arrow"></span>';
+    marker.innerHTML='<span class="aircraft-pulse"></span><svg class="aircraft-dual-arrow" viewBox="0 0 36 36" aria-hidden="true"><path class="aircraft-arrow-outline" d="M18 2.8 31 32.1 18 26 5 32.1Z"/><path class="aircraft-arrow-core" d="M18 7.6 26.2 27.4 18 22.9 9.8 27.4Z"/><path class="aircraft-arrow-glint" d="M18 9.7V20"/></svg>';
     wrap.appendChild(marker);
   }else if(marker.parentElement!==wrap){
     wrap.appendChild(marker);
@@ -815,6 +887,9 @@ function updateAircraftMarker(){
   marker.style.left=x+"px";marker.style.top=y+"px";
   marker.style.setProperty("--aircraft-heading",renderedGeoHeading(model,Number(pos.lat),Number(pos.heading),canvas)+"deg");
   marker.classList.add("visible");
+  updateTaxiDeviationClass(marker,pos);
+  if(aircraftFollowEnabled)followAircraftAt(model,p,canvas);
+  updateAircraftFollowControl();
   refreshPositionStatus();
 }
 
@@ -865,6 +940,7 @@ async function renderSelectedPdf(c){
   }
   const stage=$("#pdfStage");
   stage.innerHTML='<div class="pdf-loading">Loading chart…</div><div class="pdf-canvas-wrap"><div id="chartTransformLayer" class="chart-transform-layer"><canvas id="pdfCanvas"></canvas></div></div>';
+  ensureAircraftFollowControl();
   showPublishedExperimentalGeorefNotice();
   const lib=await pdfJs(), bytes=await getPdfBytes(currentPdfUrl,true);
   if(token!==pdfRenderToken)return;
@@ -919,19 +995,21 @@ function clampChartPan(){
 function applyChartTransform(){
   const layer=$("#chartTransformLayer");
   if(!layer)return;
-  clampChartPan();
+  if(!aircraftFollowEnabled)clampChartPan();
   layer.style.transform="translate3d("+chartPanX+"px,"+chartPanY+"px,0) scale("+chartZoom+")";
   layer.style.setProperty("--marker-inverse-scale",(1/chartZoom).toFixed(5));
   const label=$("#zoomValue"); if(label)label.textContent=Math.round(chartZoom*100)+"%";
   updateAircraftMarker();
 }
 function setChartZoom(next,{resetPan=false}={}){
+  cancelAircraftFollow();
   chartZoom=Math.max(1,Math.min(4,Number(next)||1));
   if(resetPan||chartZoom<=1.001){chartPanX=0;chartPanY=0}
   applyChartTransform();
 }
 function resetChartView(){setChartZoom(1,{resetPan:true})}
 function zoomAround(next,cx,cy){
+  cancelAircraftFollow();
   const stage=$("#pdfStage");
   if(!stage){setChartZoom(next);return}
   const old=chartZoom;
@@ -962,6 +1040,7 @@ function setupChartGestures(){
       const factor=e.deltaY<0?1.12:1/1.12;
       zoomAround(chartZoom*factor,e.clientX,e.clientY);
     }else{
+      cancelAircraftFollow();
       chartPanY-=e.deltaY;
       if(chartZoom>1.001)chartPanX-=e.deltaX;
       applyChartTransform();
@@ -969,6 +1048,7 @@ function setupChartGestures(){
   },{passive:false});
   stage.addEventListener("pointerdown",e=>{
     if(!$("#pdfCanvas"))return;
+    cancelAircraftFollow();
     try{stage.setPointerCapture(e.pointerId)}catch(_){}
     chartPointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
     if(chartPointers.size===1){
@@ -1034,6 +1114,8 @@ function setupChartGestures(){
 setupChartGestures();
 
 function selectChart(c,options={}){
+  cancelAircraftFollow();
+  taxiOffRouteCount=0;taxiOffRouteActive=false;
   selectedChart=c;
   $("#chartsView").classList.add("chart-open");
   expanded.add(c.category||"Other");
@@ -1698,6 +1780,7 @@ if(LOCAL_SIM_WEB){
 }
 /* ===== End position sources ===== */
 
+window.addEventListener("jeppiran-taxi-route-updated",()=>updateAircraftMarker());
 window.addEventListener("resize",()=>requestAnimationFrame(()=>{applyChartTransform();updateAircraftMarker()}));
 window.addEventListener("orientationchange",()=>setTimeout(()=>{window.dispatchEvent(new Event("resize"));refitSelectedChartForLayout()},180));
 if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")) navigator.serviceWorker.register("./service-worker.js").catch(()=>{});
