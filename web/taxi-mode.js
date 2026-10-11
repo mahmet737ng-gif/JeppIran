@@ -444,6 +444,13 @@ function go(options={}){
     return;
   }
   if(p.kind==="sequence"){
+    const nameConflict=p.taxiways.find(n=>taxi.networkAudit?.taxiways?.[n]?.chartTokenSeen===false);
+    if(nameConflict){
+      message("NAME CONFLICT: OSM TWY "+nameConflict+
+        " has no matching taxiway-label token on the supplied Jeppesen ADC/PDC/GMC charts. "+
+        "Do not route this name until the centerline nomenclature is reviewed.",true);
+      return;
+    }
     const chartOnly=p.taxiways.find(n=>taxi.networkAudit?.chartOnlyTaxiwayLabels?.[n]);
     if(chartOnly){
       message("TWY "+chartOnly+" is printed on Jeppesen LTFM 30-9, but its "+
