@@ -524,14 +524,15 @@
       "Holding positions mapped and airport QA reviewed",
       "Taxi route alignment and flight-simulator positional check"
     ],
-    "warn": "ALL STAND AND TAXIWAY LINKS ARE PROJECTED QA PREVIEW ONLY; NOT FOR ACTUAL NAVIGATION"
+    "warn": "Schematic pixel route inferred from a cropped Jeppesen ADC screenshot. The individual stand lead-outs, taxi centerlines and chart-space registration are not flight tested.",
+    "chartOverlayPrecision": "UNVERIFIED_SCREENSHOT_TRACING"
   },
   "previewChartTransform": {
     "chartPage": 38,
     "chartNumber": "10-9",
     "width": 612,
     "height": 792,
-    "source": "Visually aligned 2026-10-11 screenshot of V2621 chart, approximate QA display only",
+    "source": "QA viewport only; separate screenshot-traced schematic vertices are used to draw amber route. NEVER publish as certified georeferencing.",
     "meanLon": 48.747172222222225,
     "meanLat": 31.346019444444444,
     "meanX": 154,
@@ -548,5 +549,67 @@
     },
     "excluded": [],
     "qaOnly": true
+  },
+  "previewChartPixelPoints": {
+    "S1": {
+      "x": 171.154,
+      "y": 175
+    },
+    "S2": {
+      "x": 178.846,
+      "y": 180.385
+    },
+    "S3": {
+      "x": 190,
+      "y": 184.615
+    },
+    "S4": {
+      "x": 203.462,
+      "y": 185.769
+    },
+    "S5": {
+      "x": 211.154,
+      "y": 189.231
+    },
+    "S6": {
+      "x": 218.846,
+      "y": 193.846
+    },
+    "BA": {
+      "x": 179.231,
+      "y": 164.615
+    },
+    "AA": {
+      "x": 197.692,
+      "y": 174.615
+    },
+    "CA": {
+      "x": 210,
+      "y": 180.769
+    },
+    "DA": {
+      "x": 224.231,
+      "y": 188.846
+    },
+    "BH": {
+      "x": 179.615,
+      "y": 157.308
+    },
+    "CH": {
+      "x": 210.769,
+      "y": 175
+    },
+    "DH": {
+      "x": 224.615,
+      "y": 178.846
+    },
+    "EH": {
+      "x": 298.846,
+      "y": 241.154
+    },
+    "EP": {
+      "x": 296.154,
+      "y": 247.692
+    }
   }
 }
