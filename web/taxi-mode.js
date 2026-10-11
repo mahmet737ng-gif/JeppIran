@@ -437,12 +437,27 @@ function message(s,warning=false){
   }
 }
 async function fetchGraph(icao){
-  taxi.graph=null;
+  taxi.graph=null;taxi.genericEngine=null;taxi.genericMonitor=null;
   message("Checking verified ground network for "+icao+"…");
   try{
     const r=await fetch("./data/taxi-networks/"+encodeURIComponent(icao)+".json",{cache:"no-store"});
     if(!r.ok)throw Error("Not digitized");
     const d=await r.json();
+    if(d.engineVersion===1&&icao!=="OIMM"&&icao!=="LTFM"){
+      const factory=window.JEPPIRAN_TAXI_ENGINE;
+      if(!factory||d.enabled!==true||d.source?.reviewStatus==="NOT REVIEWED"||
+         d.airport!==icao||String(d.cycle)!==String(manifest?.cycle))
+        throw Error("New-airport engine, QA signoff or matching cycle unavailable");
+      const engine=factory.create(d);
+      if(taxi.airport!==icao)return null;
+      taxi.graph=d;taxi.genericEngine=engine;
+      fillGenericTaxiDestinations(engine);
+      $("taxiQaInput").placeholder="ST101 · RWY 13R · ST101 J BT13R H 13L";
+      message(icao+" UNIVERSAL TAXI ENGINE v"+factory.version+" · "+
+        d.edges.length+" source-linked edges, "+Object.keys(d.stands).length+
+        " stands · SIMULATOR QA ONLY. Missing runway/stand links cannot be invented.");
+      draw();return d;
+    }
     if(!graphOk(d,icao))throw Error("Invalid, unverified, or wrong-cycle network");
     if(taxi.airport!==icao)return null;
     taxi.graph=d;
@@ -502,6 +517,43 @@ function fillOimmQuickDestinations(graph){
     '<option value="RAMP">MAIN RAMP · NEAREST CONNECTED ENTRY</option>'+
     runwayOptions+Object.keys(graph.stands).sort((a,b)=>Number(a)-Number(b))
       .map(id=>'<option value="ST'+id+'">STAND '+id+'</option>').join("");
+}
+function fillGenericTaxiDestinations(engine){
+  const row=$("taxiQaAutoRow"),select=$("taxiQaAutoDestination");
+  if(!row||!select||!engine)return;
+  const goals=engine.destinations();
+  const runways=goals.runways.map(g=>
+    '<option value="'+g.id+'"'+(g.mapped?'':' disabled')+'>RWY '+g.id+
+    (g.mapped?' · '+g.goalKind.toUpperCase():' · UNMAPPED')+'</option>').join("");
+  const stands=goals.stands.map(id=>'<option value="ST'+id+'">STAND '+id+'</option>').join("");
+  select.innerHTML='<option value="">Choose a chart-mapped destination</option>'+
+    runways+stands;
+  row.hidden=false;
+}
+function genericGo(typed){
+  const engine=taxi.genericEngine;
+  if(!engine)return;
+  const result=engine.plan(typed,{
+    position:taxi.testStart||lastPosition,
+    allowProjectedQA:false,maxSnapMeters:65
+  });
+  taxi.route=null;taxi.auto=null;taxi.genericMonitor=null;
+  if(!result.route){
+    draw();message("TAXI ENGINE · "+result.error+" · NO ROUTE FABRICATED.",true);
+    return;
+  }
+  const route=result.route;
+  taxi.route={...route,airport:taxi.airport,graph:taxi.graph,
+    genericRoute:true,genericLinework:engine.linework(route),
+    previewOnly:!!result.parsed?.startStand,
+    holds:[],length:route.lengthMetres};
+  if(!taxi.route.previewOnly)
+    taxi.genericMonitor={command:typed,route:route,monitor:{count:0,last:0}};
+  draw();
+  message("SIM QA · "+taxi.airport+" · "+
+    (route.taxiways.join(" → ")||"SOURCE-CONNECTED TAXIWAY")+
+    " → "+route.destination+" · "+route.lengthMetres+
+    " m · NOT FOR ACTUAL NAVIGATION / ATC CLEARANCE.");
 }
 function view(){
   if($("taxiQaPanel"))return;
@@ -673,7 +725,8 @@ function nearest(graph,pos,firstTaxiway=null){
 }
 function syncAirport(){
   if(!taxi.active||taxi.airport===selectedAirport)return;
-  taxi.airport=selectedAirport;taxi.graph=null;taxi.route=null;taxi.auto=null;taxi.standPreview=null;taxi.standEgress=null;taxi.standLead=null;taxi.standQaRoute=null;taxi.testStart=null;taxi.prompted="";
+  taxi.airport=selectedAirport;taxi.graph=null;taxi.genericEngine=null;taxi.genericMonitor=null;
+  taxi.route=null;taxi.auto=null;taxi.standPreview=null;taxi.standEgress=null;taxi.standLead=null;taxi.standQaRoute=null;taxi.testStart=null;taxi.prompted="";
   taxi.networkAudit=null;taxi.highlightTaxiway="";
   $("taxiQaAirport").textContent=selectedAirport;
   updateAirportControls();
@@ -687,8 +740,9 @@ function updateAirportControls(){
   const oimm=selectedAirport==="OIMM";
   $("taxiQaOimmParking").hidden=!oimm;$("taxiQaOimmNetwork").hidden=!oimm;
   $("taxiQaNetworkBtn").hidden=oimm;
-  if($("taxiQaAutoRow"))$("taxiQaAutoRow").hidden=!oimm;
+  if($("taxiQaAutoRow"))$("taxiQaAutoRow").hidden=!(oimm||taxi.genericEngine);
   if(oimm&&taxi.graph)fillOimmQuickDestinations(taxi.graph);
+  if(taxi.genericEngine)fillGenericTaxiDestinations(taxi.genericEngine);
   document.querySelector('label[for="taxiQaInput"]').textContent=oimm?
     "Mashhad: ST109 Q BT31L D · ST109 B BT31L D · ST113 RAMP · ST109":
     "LTFM example: A4 A A7 B B8A · Hold: /B8A · 34L2A format";
@@ -875,6 +929,10 @@ function go(options={}){
     return;
   }
   publisher?.clear();
+  if(taxi.genericEngine){
+    genericGo(typed);
+    return;
+  }
   // Enter STAND + one official pushback taxiway (STD3 T5; ST100 N6).
   // The route is a single continuous chain of pre-existing original OSM
   // parking-position and taxiway vertices; no user-label snap is ever used.
@@ -1192,7 +1250,7 @@ function renderRoutePreview(){
   // The user wants the ADC itself to be the only OIMM route visualization.
   // Do not open the miniature preview or allocate its tall panel space.
   // Keep only the editable clearance, GO, live guidance and status.
-  if(taxi.airport==="OIMM"||selectedAirport==="OIMM"){
+  if(taxi.airport==="OIMM"||selectedAirport==="OIMM"||taxi.genericEngine){
     container.hidden=true;
     container.replaceChildren();
     container.dataset.routeKey="";
@@ -1486,7 +1544,23 @@ function draw(){
       if(info)info.dataset.mapShown="false";
     }
   }
-  if(r&&r.airport===selectedAirport&&model){
+  if(r&&r.airport===selectedAirport&&model&&r.genericRoute){
+    // Use original multi-point centreline, NEVER a smoothing curve or
+    // direct chord across unconnected taxiways/parallel runways.
+    for(const strip of r.genericLinework||[]){
+      const coords=strip.coordinates.map(p=>projectGeo(model,p.lat,p.lon));
+      if(coords.some(p=>!p)||coords.length<2)continue;
+      const projected=strip.style==="dashed-amber";
+      svg.appendChild(s("polyline",{
+        points:coords.map(p=>p.x+","+p.y).join(" "),fill:"none",
+        stroke:projected?"rgba(255,182,92,.85)":"rgba(244,43,184,.73)",
+        "stroke-width":Math.max(1.2,w*.00135),
+        "stroke-dasharray":projected?"3.5 5":undefined,
+        "stroke-linecap":"round","stroke-linejoin":"round",
+        "class":projected?"taxi-projected-qa-only":"taxi-engine-chart-centreline"
+      }));
+    }
+  }else if(r&&r.airport===selectedAirport&&model){
     const spec=r.airport==="OIMM"&&r.runwayRender&&
       window.JEPPIRAN_TAXI_RENDER?.displayRuns?.(r.graph,r);
     if(spec){
@@ -1628,6 +1702,23 @@ function monitorOimmAuto(e){
   }
 }
 window.addEventListener("jeppiran-position",monitorOimmAuto);
+window.addEventListener("jeppiran-position",e=>{
+  if(!taxi.active||!taxi.genericEngine||!taxi.genericMonitor)return;
+  const progress=taxi.genericEngine.monitor(taxi.genericMonitor,e?.detail);
+  if(progress.status==="replanned"){
+    const route=progress.route;
+    taxi.route={...route,airport:taxi.airport,graph:taxi.graph,
+      genericRoute:true,genericLinework:taxi.genericEngine.linework(route),
+      holds:[],length:route.lengthMetres,previewOnly:false};
+    draw();
+    message("TAXI AUTO RE-ROUTE · "+route.taxiways.join(" → ")+" → "+
+      route.destination+" · "+route.lengthMetres+" m · check ATC clearance.");
+  }else if(progress.status==="reclearance-required"){
+    message(progress.message,true);
+  }else if(progress.status==="unmapped"){
+    message("OFF ROUTE · "+progress.error+" No replacement invented.",true);
+  }
+});
 // The chart toolbar owns the TAXI button and opens this API after the script
 // loads. Do not attach a second listener: its button may be rebuilt mid-render.
 })();
