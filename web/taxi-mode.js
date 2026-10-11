@@ -71,6 +71,12 @@ function adjacent(graph,options={}){
 }
 function shortest(graph,start,goal,requested,links){
   const edges=links||adjacent(graph),ways=requested?.taxiways||[],slash=requested?.stops||[];
+  // Opt-in, bounded, REAL unnamed centerlines between named OSM taxiways.
+  // These are simulator previews only, never invented straight connectors.
+  const unmapped=window.JEPPIRAN_TAXI_UNNAMED;
+  const bridges=(graph.simulatorTestOnly&&unmapped?.enabled(graph))?
+    ways.slice(0,-1).map((from,i)=>unmapped.scan(graph,from,ways[i+1],
+      {maxMeters:graph.qaUnnamedConnectorMaxMeters,maxEdges:graph.qaUnnamedConnectorMaxEdges})):[];
   const key=(n,i,u)=>n+"~"+i+"~"+u,first=key(start,0,0),
     seen=new Map([[first,0]]),previous=new Map(),heap=[];
   const push=(item)=>{
@@ -99,13 +105,19 @@ function shortest(graph,start,goal,requested,links){
     if((!goal||p.n===goal)&&(!ways.length||(p.i===ways.length-1&&p.u===1))){
       final=p;break;
     }
-    function add(n,i,u,extra,hold,move){
+    function add(n,i,u,extra,hold,move,viaNodes=null,bridgeInfo=null){
       const k=key(n,i,u),w=p.w+extra;
       if(w>=(seen.get(k)??Infinity))return;
-      seen.set(k,w);previous.set(k,{prev:p.k,n:p.n,hold,move});push({n,i,u,w,k});
+      seen.set(k,w);previous.set(k,{prev:p.k,n:p.n,hold,move,viaNodes,bridgeInfo});push({n,i,u,w,k});
     }
-    if(ways.length&&p.u&&p.i+1<ways.length)
+    if(ways.length&&p.u&&p.i+1<ways.length){
       add(p.n,p.i+1,0,0,slash.includes(p.i+1),false);
+      for(const mapped of bridges[p.i]?.get(p.n)||[]){
+        add(mapped.end,p.i+1,0,mapped.length,slash.includes(p.i+1),true,
+          mapped.nodes,{from:ways[p.i],to:ways[p.i+1],
+            lengthMeters:mapped.length,edgeCount:mapped.nodes.length-1,approval:"OSM_QA_ONLY"});
+      }
+    }
     for(const e of edges[p.n]||[]){
       if(ways.length&&e.way!==ways[p.i]){
         if(requested.allowStandAccess&&e.access&&p.i===0&&p.u===0)add(e.to,p.i,0,e.cost,false,true);
@@ -116,14 +128,22 @@ function shortest(graph,start,goal,requested,links){
     }
   }
   if(!final)return null;
-  const reverse=[final.n],rawHolds=[];
+  const reverse=[final.n],rawHolds=[],mappedUnnamedTransitions=[];
   for(let k=final.k;previous.has(k);){
     const p=previous.get(k);
     if(p.hold)rawHolds.push(reverse.length-1);
-    if(p.move)reverse.push(p.n);
+    if(p.bridgeInfo)mappedUnnamedTransitions.push(p.bridgeInfo);
+    if(p.move){
+      if(p.viaNodes){
+        // Preserve every mapped OSM node, so the rendered route follows
+        // the actual connected geometry without cutting across the chart.
+        for(let j=p.viaNodes.length-2;j>=0;j--)reverse.push(p.viaNodes[j]);
+      }else reverse.push(p.n);
+    }
     k=p.prev;
   }
-  return {path:reverse.reverse(),holds:rawHolds.map(i=>reverse.length-1-i),length:Math.round(final.w)};
+  return {path:reverse.reverse(),holds:rawHolds.map(i=>reverse.length-1-i),
+    length:Math.round(final.w),mappedUnnamedTransitions:mappedUnnamedTransitions.reverse()};
 }
 function firstUnmappedTransition(graph,ways){
   // Diagnose a missing named-taxiway junction on the OSM source only.
@@ -141,6 +161,7 @@ function firstUnmappedTransition(graph,ways){
     if(from===to)continue;
     let found=false;
     for(const group of nodeNames.values())if(group.has(from)&&group.has(to)){found=true;break}
+    if(!found&&window.JEPPIRAN_TAXI_UNNAMED?.connected(graph,from,to))found=true;
     if(!found)return {from,to};
   }
   return null;
@@ -734,10 +755,13 @@ function go(options={}){
       taxi.route={...preview,graph:taxi.graph,airport:selectedAirport,
         previewOnly:true,standLinkVerified:false,taxiways:p.taxiways.slice(),
         startStand:p.startStand};
+      const bridgeText=(preview.mappedUnnamedTransitions||[]).map(x=>
+        " MAPPED OSM UNNAMED LINK "+x.from+" → "+x.to+
+        " ("+x.edgeCount+" segments, "+Math.round(x.lengthMeters)+" m; NOT chart-approved).").join("");
       message("PARTIAL QA: Stand "+p.startStand+" → "+p.taxiways[0]+
         " is NOT mapped. Preview starts at the mapped "+p.taxiways[0]+
         " end and follows "+p.taxiways.join(" → ")+" ("+preview.length+
-        " m). Not a stand-to-runway route. "+publishedStandMessage(p.startStand),true);
+        " m)."+bridgeText+" Not a stand-to-runway route. "+publishedStandMessage(p.startStand),true);
       draw();
       return;
     }
@@ -792,8 +816,12 @@ function go(options={}){
   if(demo){
     const noStandLink=p.startStand?"STAND "+p.startStand+" → "+p.taxiways[0]+" NOT MAPPED. This is ONLY "+
       p.taxiways.join(" → ")+" from a separate OSM demo point. ":"";
+    const bridgeNote=(planned.mappedUnnamedTransitions||[]).map(x=>x.from+" → "+
+      x.to+" via "+x.edgeCount+" existing unnamed OSM segments (~"+
+      Math.round(x.lengthMeters)+"m)").join("; ");
     message("DEMO PREVIEW · "+noStandLink+"NOT THE AIRCRAFT POSITION · "+planned.path.length+
-      " nodes · "+(planned.length||0)+" m · OSM DATA NOT AIP VERIFIED.",true);
+      " nodes · "+(planned.length||0)+" m · "+(bridgeNote?"UNNAMED LINKS: "+bridgeNote+" · ":"")+
+      "OSM DATA NOT AIP VERIFIED.",true);
   }else{
     message("SIMULATION QA · "+(p.startStand?"MANUAL POST-PUSHBACK QA START (STAND "+
       p.startStand+" LEAD-OUT NOT MAPPED) · ":"")+info+" · "+planned.path.length+" nodes · "+(planned.length||0)+
