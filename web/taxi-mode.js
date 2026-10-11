@@ -11,6 +11,9 @@ function parse(raw){
   if(/^\d{2}[LRC]?\s+\d+[A-Z][A-Z0-9-]*$/.test(s))
     return {error:"No space between runway and taxi procedure. Use "+s.replace(/\s+/g,"")};
   if(/^\d{2}[LRC]?\d+[A-Z][A-Z0-9-]*$/.test(s))return {kind:"procedure",key:s};
+  // Published stand identifiers are not interchangeable with same-named taxiways.
+  if(/^ST[A-Z][0-9]{1,3}[A-Z]?$/.test(s)&&taxi.networkAudit?.standLeads?.[s.slice(2)])
+    return {kind:"publishedStand",destination:s.slice(2)};
   const registered=Object.prototype.hasOwnProperty.call(taxi.standReference?.stands||{},s)||
     Object.prototype.hasOwnProperty.call(taxi.graph?.stands||{},s);
   if(registered||/^(ST|P)\d{1,4}[A-Z]?$/.test(s)||(taxi.airport==="OMDB"&&/^[A-HQS]\d{1,3}[LR]$/.test(s)))
@@ -178,7 +181,9 @@ async function loadNetworkAudit(icao){
     const d=await resp.json();
     if(d.airport!=="LTFM"||String(d.cycle)!==String(manifest?.cycle)||
       d.routeApproved!==false||!d.taxiways||
-      Object.keys(d.taxiways).length!==131)throw Error("Incomplete or mismatched network QA inventory");
+      Object.keys(d.taxiways).length!==131||
+      Object.keys(d.chartOnlyTaxiwayLabels||{}).length!==41)
+      throw Error("Incomplete or mismatched network QA inventory");
     if(taxi.airport!==icao)return;
     taxi.networkAudit=d;
     renderNetworkAudit();
@@ -199,36 +204,51 @@ function renderNetworkAudit(){
   list.replaceChildren();
   if(!d){info.textContent="Loading network inventory…";return}
   const query=name(search?.value||"");
-  for(const label of Object.keys(d.taxiways)){
+  const names=[...new Set([...Object.keys(d.taxiways),
+    ...Object.keys(d.chartOnlyTaxiwayLabels||{})])].sort((a,b)=>a.localeCompare(b,undefined,{numeric:true}));
+  for(const label of names){
     if(query&&!label.includes(query))continue;
-    const entry=d.taxiways[label];
+    const entry=d.taxiways[label],chartOnly=!entry;
     const opt=document.createElement("option");
     opt.value=label;
-    opt.textContent=label+" · "+entry.edges+" segments"+(entry.neighbors.length?" · "+entry.neighbors.length+" junction labels":" · NO NAMED JUNCTION");
+    opt.textContent=chartOnly?
+      label+" · CHART LABEL · NO MAPPED CENTERLINE":
+      label+" · "+entry.edges+" OSM segments"+(entry.neighbors.length?" · "+entry.neighbors.length+" junction labels":" · NO NAMED JUNCTION");
     if(label===taxi.highlightTaxiway)opt.selected=true;
     list.appendChild(opt);
   }
-  if(!taxi.highlightTaxiway||!d.taxiways[taxi.highlightTaxiway]){
-    info.textContent=d.stats.namedTaxiways+" OSM-named taxiways · "+d.stats.nodes+
-      " nodes · "+d.stats.edges+" edges · "+d.stats.unnamedEdges+
-      " unnamed edges. Select a taxiway to highlight its mapped centerline. All connections are QA ONLY.";
+  if(!taxi.highlightTaxiway){
+    info.textContent=d.stats.totalTaxiwayNamesForReview+" taxiway labels for QA · "+
+      d.stats.namedTaxiways+" OSM mapped · "+d.stats.additionalAdcLabelsWithoutSameNamedOsm+
+      " chart-only labels without matched mapped geometry · "+d.stats.nodes+
+      " graph nodes · "+d.stats.edges+" edges. Select a label to inspect its topology.";
     return;
   }
   const item=d.taxiways[taxi.highlightTaxiway];
+  if(!item){
+    info.textContent="TWY "+taxi.highlightTaxiway+
+      " · CHART LABEL FOUND on 30-9 · NO MATCHED OSM CENTERLINE."+
+      "\nCenterline geometry not digitized. Automatic routing must remain disabled here."+
+      "\nDo NOT reinterpret a differently named OSM taxiway as this one.";
+    return;
+  }
   const neighbors=item.neighbors.map(x=>x.taxiway).join(", ")||"None at shared OSM nodes";
   info.textContent="TWY "+taxi.highlightTaxiway+" · "+item.lengthMeters+" m · "+
     item.edges+" mapped segments · "+item.parts+" connected named parts."+
     "\nDirect named-node junctions: "+neighbors+
-    "\nOSM MAP ONLY — official chart/NOTAM approval PENDING. No stand connector inferred.";
+    "\n"+(item.chartTokenSeen?"Name appears in Jeppesen chart text.":"NOT found in Jeppesen chart text — nomenclature conflict.")+
+    " OSM GEOMETRY ONLY; chart-aligned verification / NOTAM review PENDING. No stand connector inferred.";
 }
 function publishedStandMessage(stand){
   const x=taxi.networkAudit?.standLeads?.[stand];
   if(!x)return "";
+  const variants=[x.standard&&"STANDARD: "+x.standard.description,
+    x.alternate1&&"ALTERNATE 1: "+x.alternate1.description,
+    x.alternate2&&"ALTERNATE 2: "+x.alternate2.description].filter(Boolean);
   return "PUBLISHED PUSHBACK ("+x.sourceChart+", stand "+stand+") · "+
-    "STANDARD: "+x.standard.description+
-    " ALTERNATE 1: "+x.alternate1.description+
-    " ALTERNATE 2: "+x.alternate2.description+
-    " HS4 CAUTION. Lead-in geometry NOT mapped. Select applicable ATC pushback instruction.";
+    variants.join(" · ")+" · "+
+    (x.caution||"Pushback direction subject to ATC clearance.")+
+    " · Lead-out geometry NOT mapped. Select applicable ATC pushback instruction.";
 }
 function message(s,warning=false){
   const t=$("taxiQaStatus");if(t){t.textContent=s;t.classList.toggle("warning",warning);}
@@ -405,6 +425,10 @@ function go(options={}){
   taxi.trace=false;$("taxiQaTrace").classList.remove("on");
   // Never leave an old route on the ADC after a new route fails validation.
   taxi.route=null;draw();
+  if(p.kind==="publishedStand"){
+    message(publishedStandMessage(p.destination)||"This stand has no approved digitized pushback geometry.",true);
+    return;
+  }
   if(!taxi.graph){
     if(p.kind==="stand"&&taxi.standReference?.stands[p.destination]){
       taxi.selectedStand=p.destination;taxi.showStands=true;
@@ -420,6 +444,13 @@ function go(options={}){
     return;
   }
   if(p.kind==="sequence"){
+    const chartOnly=p.taxiways.find(n=>taxi.networkAudit?.chartOnlyTaxiwayLabels?.[n]);
+    if(chartOnly){
+      message("TWY "+chartOnly+" is printed on Jeppesen LTFM 30-9, but its "+
+        "centerline is missing from the current OSM graph. Geometry must be digitized "+
+        "and chart-validated before routing. Nothing invented.",true);
+      return;
+    }
     const missing=firstUnmappedTransition(taxi.graph,p.taxiways);
     if(missing){
       message("OSM MAP GAP: no mapped direct junction "+missing.from+" → "+missing.to+
