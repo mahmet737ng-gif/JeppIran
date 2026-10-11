@@ -6,19 +6,24 @@ let task=null,container=null,lastAirport="";
 function getData(){
   if(!task)task=Promise.all([
     fetch("./data/taxi-stand-registry/LTFM.json",{cache:"no-store"}),
-    fetch("./data/taxi-stand-candidates/LTFM.json",{cache:"no-store"})
-  ]).then(async([registryResponse,candidateResponse])=>{
-    if(!registryResponse.ok||!candidateResponse.ok)
-      throw Error("Published stand registry/nearby index unavailable offline");
-    const [registry,candidates]=await Promise.all([registryResponse.json(),candidateResponse.json()]);
+    fetch("./data/taxi-stand-candidates/LTFM.json",{cache:"no-store"}),
+    fetch("./data/taxi-egress-geometry/LTFM.json",{cache:"no-store"})
+  ]).then(async([registryResponse,candidateResponse,egressResponse])=>{
+    if(!registryResponse.ok||!candidateResponse.ok||!egressResponse.ok)
+      throw Error("Published stand registry or mapped egress-edge geometry unavailable offline");
+    const [registry,candidates,geometry]=await Promise.all([
+      registryResponse.json(),candidateResponse.json(),egressResponse.json()]);
     if(registry.airport!=="LTFM"||candidates.airport!=="LTFM"||
        String(registry.cycle)!=="2621"||String(candidates.cycle)!=="2621"||
        Object.keys(registry.stands||{}).length<370||
-       Object.keys(candidates.stands||{}).length<260)
+       Object.keys(candidates.stands||{}).length<260||
+       geometry.airport!=="LTFM"||String(geometry.cycle)!=="2621"||
+       !geometry.stands||geometry.stats.standsWithMappedPublishedTaxiwayGeometry<195)
       throw Error("Wrong airport/cycle in merged stand inventory");
     const merged={airport:"LTFM",cycle:"2621",stats:registry.stats,stands:{}};
     for(const [id,record] of Object.entries(registry.stands))
-      merged.stands[id]={...record,candidates:candidates.stands[id]?.candidates||[]};
+      merged.stands[id]={...record,candidates:candidates.stands[id]?.candidates||[],
+      egress:geometry.stands[id]||null};
     return merged;
   }).catch(error=>{task=null;throw error});
   return task;
@@ -48,7 +53,7 @@ function install(){
     (stats.individuallyPrinted||0)+" individual label anchors / "+
     (stats.roundedGroupOnly||0)+" rounded INS groups · "+
     (stats.publishedPushbackStands||0)+" with published pushback taxiways · "+
-    (stats.publishedNameAndNearestEdgeAgreements||0)+" chart-name/proximity matches. NONE certified as routable.";
+    (stats.publishedNameAndNearestEdgeAgreements||0)+" with actual OSM source taxiway segment geometry. 0 stand pushback curves verified.";
   function updateList(){
     const filter=finder.value.trim().toUpperCase();
     list.replaceChildren();
@@ -62,6 +67,8 @@ function install(){
    const id=list.value, entry=data.stands[id];if(!entry)return;
    root.JEPPIRAN_TAXI?.previewStandCandidate?.(id,entry);
    const related=(entry.publishedPushbackTaxiways||[]).join(", ")||"none extracted";
+   const mapped=(entry.egress?.publishedNamedTaxiwaySegments||[])
+     .map(g=>g.taxiway+" ("+g.segments.length+" original OSM segments)").join(", ");
    const notes=(entry.candidates||[]).map(v=>" • "+(v.taxiway||"UNNAMED")+
      " · "+v.distanceMeters+" m"+(v.chartNamedTaxiwayMatch?" · matches published pushback name":" · proximity only")).join("\n");
    details.textContent="ST "+id+" · "+
@@ -69,8 +76,10 @@ function install(){
     "\nPUBLISHED PUSHBACK TWYs: "+related+
     "\nCHARTS: "+(entry.sourcePushbackCharts||[]).join(", ")+
     "\nNON-GEOMETRIC INS GROUP: "+(entry.officialInsGroups||[]).map(x=>x.group).join(" | ")+
+    "\nACTUAL MAPPED SEGMENTS (MAGENTA): "+(mapped||"none nearby with chart-name match")+
     "\nNEARBY GRAPH EDGES ("+entry.candidates.length+"):\n"+(notes||"No individual near-edge geometry")+
-    "\nCyan/purple dashed connectors = NOT A TAXI ROUTE. No stand-to-taxi movement authorized.";
+    "\nSOLID MAGENTA = existing OSM taxiway centerline, NOT stand exit. "+
+    "DASHED CYAN/VIOLET = stand-to-network UNVERIFIED GAP. No taxi movement authorized.";
   };
   updateList();
  }).catch(e=>{caption.textContent=String(e.message||e);details.textContent="No generated connections loaded."});
