@@ -180,7 +180,7 @@ test('disagreeing chart angle properties require correction', () => {
 test('v1.2: automatic table extends to both 10 NM from runway threshold and DME 10', () => {
   const c=base(); c.dmeReadingsNm=[1,2,3,10]; c.validAngleDmeRange={from:1,to:10};
   const r=buildTable(c);
-  assert.equal(r.version,'1.3.0');
+  assert.equal(r.version,'1.4.0');
   assert.equal(r.coverage.requiredThresholdDistanceNm,10);
   assert.equal(r.coverage.requiredDmeReadoutNm,10);
   assert.equal(r.coverage.dmeAtRequiredThresholdNm,10.5);
@@ -297,4 +297,61 @@ test('v1.3 sample Urmia reaches threshold+10 by integer D13 and VDP has .1 digit
  assert.equal(r.coverage.gridEndDmeNm,13);
  assert.equal(r.coverage.meetsThresholdModelCoverage,true);
  assert.equal(r.vdp.dmeDisplay,'D3.2');
+});
+
+// v1.4: elevation source precedence and safe airport fallback.
+test('v1.4: published threshold always wins over airport elevation', () => {
+ const c=base();c.thresholdElevationFt=100;c.airportElevationFt=120;
+ const r=buildTable(c);
+ assert.equal(r.parameters.elevationSource,'RUNWAY_THRESHOLD');
+ assert.equal(r.parameters.crossingAltitudeFt,150);
+ assert.equal(r.rows[1].rawAltitudeFt,627);
+ assert.equal(r.parameters.usedAirportElevationFallback,false);
+ assert.equal(r.warnings.length,0);
+});
+test('v1.4: missing runway elevation uses airport elevation plus TCH, flagged QA-only', () => {
+ const c=base();delete c.thresholdElevationFt;c.airportElevationFt=100;
+ const r=buildTable(c);
+ assert.equal(r.parameters.thresholdElevationFt,100);
+ assert.equal(r.parameters.elevationSource,'AIRPORT_ELEVATION_FALLBACK_QA');
+ assert.equal(r.parameters.usedAirportElevationFallback,true);
+ assert.equal(r.parameters.crossingAltitudeFt,150);
+ assert.equal(r.rows[0].rawAltitudeFt,309);
+ assert.equal(r.rows[1].rawAltitudeFt,627);
+ assert.equal(r.rows[1].roundedAltitudeFt,620);
+ assert.ok(r.rows.every(row=>row.reasons.includes('AIRPORT_ELEVATION_USED_INSTEAD_OF_RUNWAY_THRESHOLD_QA') || row.status==='UNRESOLVED'));
+ assert.equal(r.status,'PRELIMINARY_AIRPORT_ELEV_FALLBACK');
+ assert.equal(r.candidateRows.length,0);
+ assert.ok(r.warnings.some(x=>x.includes('FALLBACK')));
+ assert.ok(r.coverage.meetsThresholdModelCoverage);
+});
+test('v1.4: null and blank threshold trigger airport fallback, including zero feet', () => {
+ for(const thr of [null,'',undefined]) {
+  const c=base();c.thresholdElevationFt=thr;c.airportElevationFt=0;
+  const r=buildTable(c);
+  assert.equal(r.parameters.thresholdElevationFt,0);
+  assert.equal(r.parameters.crossingAltitudeFt,50);
+  assert.equal(r.parameters.usedAirportElevationFallback,true);
+ }
+});
+test('v1.4: published runway elevation of 0 is not discarded',()=>{
+ const c=base();c.thresholdElevationFt=0;c.airportElevationFt=300;
+ const r=buildTable(c);
+ assert.equal(r.parameters.elevationSource,'RUNWAY_THRESHOLD');
+ assert.equal(r.parameters.crossingAltitudeFt,50);
+});
+test('v1.4: no runway nor airport elevation fails closed',()=>{
+ const c=base();delete c.thresholdElevationFt;delete c.airportElevationFt;
+ assert.throws(()=>buildTable(c),/THRESHOLD_OR_AIRPORT_ELEVATION_REQUIRED/);
+});
+test('v1.4: invalid published threshold must not silently fall back to airport elevation',()=>{
+ const c=base();c.thresholdElevationFt='bad';c.airportElevationFt=100;
+ assert.throws(()=>buildTable(c),/thresholdElevationFt must be a finite number/);
+});
+test('v1.4: height conflicts remain blocked when airport fallback is used',()=>{
+ const c=base();delete c.thresholdElevationFt;c.airportElevationFt=100;
+ c.publishedConstraints=[{dmeNm:2,altitudeFt:900,type:'minimum'}];
+ const r=buildTable(c);
+ assert.equal(r.status,'BLOCKED_BY_QA');
+ assert.ok(r.issues.some(x=>x.code==='BELOW_PUBLISHED_MINIMUM'));
 });
