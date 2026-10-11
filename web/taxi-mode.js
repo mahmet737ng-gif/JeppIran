@@ -495,6 +495,7 @@ function view(){
     '<div class="taxi-qa-entry"><input id="taxiQaInput" autocomplete="off" spellcheck="false" placeholder="Stand / taxiways / procedure"><button id="taxiQaGo" type="button">GO</button></div>'+
     '<div id="taxiQaAutoRow" class="taxi-qa-entry" hidden><select id="taxiQaAutoDestination" aria-label="Select stand or runway hold" style="min-width:0;width:100%;background:#112c45;color:#e6f7ff;border:1px solid #467c9a;border-radius:10px;padding:10px;font-size:14px"></select></div>'+
     '<div id="taxiQaRoutePreview" class="taxi-route-preview" hidden aria-label="Mapped taxiway segment preview"></div>'+
+    '<div id="taxiQaGuidance" hidden style="margin:3px 0;padding:8px 12px;border-radius:10px;background:#15374c;color:#c9f9f9;font-size:12px;font-weight:700"></div>'+
     '<div id="taxiQaStatus" role="status" aria-live="polite"></div>'+
     '<details id="taxiQaStatusDetails" class="taxi-status-details" hidden><summary>Pushback details / full message</summary><div id="taxiQaFullMessage"></div></details>'+
     '<div id="taxiQaButtons" class="taxi-qa-buttons"><button id="taxiQaAdc" type="button">ADC</button><button id="taxiQaOimmParking" type="button" hidden>PARKING</button><button id="taxiQaOimmNetwork" type="button" hidden aria-pressed="false">NETWORK</button><button id="taxiQaNetworkBtn" type="button" aria-pressed="false">NETWORK</button><button id="taxiQaStart" type="button" aria-pressed="false">SET START</button><button id="taxiQaDemo" type="button">DEMO ROUTE</button><button id="taxiQaStands" type="button" aria-pressed="false">STANDS</button><button id="taxiQaTrace" type="button">TRACE QA</button><button id="taxiQaHold" type="button">HOLD HERE</button><button id="taxiQaUndo" type="button">UNDO</button><button id="taxiQaClear" type="button">CLEAR</button></div>'+
@@ -675,6 +676,22 @@ function updateAirportControls(){
 }
 // AUTO requires an actual start (simulator/device/SET START) or an explicit
 // stand. It NEVER silently guesses a departure point on a taxiway.
+function updateTaxiGuidance(pos){
+  const label=$("taxiQaGuidance"),state=taxi.auto;
+  if(!label)return;
+  if(!taxi.active||taxi.airport!=="OIMM"||!state||state.previewOnly||!pos){
+    label.hidden=true;return;
+  }
+  const p=window.JEPPIRAN_TAXI_AUTO?.progress?.(taxi.graph,state.route,pos);
+  if(!p){label.hidden=true;return}
+  label.hidden=false;
+  label.textContent="LIVE TAXI QA · "+(p.remainingMeters<20?
+    "NEAR "+state.target.name:
+    "NEXT "+(p.nextTaxiways.join(" → ")||"APRON CENTRELINE")+
+      " · "+p.remainingMeters+" m TO "+state.target.name)+
+    (p.deviationMeters>45?" · OFF ROUTE":"")+
+    " · FOLLOW ATC CLEARANCE";
+}
 function oimmAutoGo(p){
   const engine=window.JEPPIRAN_TAXI_AUTO;
   if(!engine){message("AUTO routing module not loaded. Reload this PWA.",true);return}
@@ -709,6 +726,7 @@ function oimmAutoGo(p){
     (result.target.warning?" · "+result.target.warning:"")+
     " · GRAPH ONLY, NOT ATC TAXI CLEARANCE.");
   draw();
+  updateTaxiGuidance(actual);
 }
 function oimmGo(p,options){
   const g=taxi.graph,ways=p.taxiways||[],stand=g.stands[p.destination];
@@ -789,7 +807,7 @@ function go(options={}){
   if(p.error){message(p.error,true);return}
   taxi.trace=false;$("taxiQaTrace").classList.remove("on");
   // Never leave an old route on the ADC after a new route fails validation.
-  taxi.route=null;taxi.auto=null;draw();
+  taxi.route=null;taxi.auto=null;updateTaxiGuidance(null);draw();
   if(p.kind==="publishedStand"){
     message(publishedStandMessage(p.destination)||"This stand has no approved digitized pushback geometry.",true);
     return;
@@ -1310,6 +1328,7 @@ function monitorOimmAuto(e){
      !taxi.graph||!pos||taxi.route!==state.route)return;
   const engine=window.JEPPIRAN_TAXI_AUTO;
   if(!engine)return;
+  updateTaxiGuidance(pos);
   // At the target hold/stand, stop monitoring, rather than proposing an
   // unauthorized movement after reaching the end of the planned segment.
   const finish=taxi.graph.nodes[state.target.node];
@@ -1325,6 +1344,7 @@ function monitorOimmAuto(e){
       " → "+state.target.name+" · "+taxi.route.length+
       " m. Recheck ATC clearance; runway crossing still prohibited.");
     draw();
+    updateTaxiGuidance(pos);
   }else if(change.action==="unmapped"){
     message("OFF ROUTE · "+change.error+" Existing route is not an authorized clearance.",true);
   }

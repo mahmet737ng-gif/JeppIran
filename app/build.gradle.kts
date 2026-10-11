@@ -48,6 +48,10 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    // Share exact V2621 ground JSON with the PWA, rather than maintaining an
+    // incompatible Android copy. Bundle it for completely offline simulator QA.
+    sourceSets.getByName("main").assets.srcDir("../web/data/taxi-networks")
+
     signingConfigs {
         if (stableSigningReady) {
             create("jeppiranStable") {
@@ -76,6 +80,7 @@ android {
 
 dependencies {
     testImplementation("junit:junit:4.13.2")
+    testImplementation("org.json:json:20240303")
     implementation("androidx.core:core-ktx:1.17.0")
     implementation("androidx.appcompat:appcompat:1.7.1")
     implementation("com.google.android.material:material:1.13.0")

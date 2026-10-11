@@ -10,6 +10,9 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
+import android.widget.ArrayAdapter
+import android.widget.Spinner
+import android.widget.AdapterView
 import androidx.appcompat.app.AppCompatActivity
 import java.util.Locale
 
@@ -67,6 +70,37 @@ class TaxiModeActivity : AppCompatActivity() {
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
         ))
+
+        if (icao == "OIMM") {
+            body.addView(TextView(this).apply {
+                text = "OIMM · Enter ST109 for nearest connected route from live SIM/GPS, or 13R / 31L for HOLD SHORT only. ST113 13R previews from stand 113. Manual BT routes require explicit clearance. All results are SIM QA."
+                textSize = 12f
+                setTextColor(getColor(R.color.jeppiran_text_secondary))
+            }, LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ))
+            val destinations = listOf("CHOOSE DESTINATION", "RWY 13R · HOLD SHORT", "RWY 31L · HOLD SHORT") +
+                ((101..131).toList() + listOf(133, 135, 137)).map { "ST$it" }
+            body.addView(Spinner(this).apply {
+                adapter = ArrayAdapter(this@TaxiModeActivity,
+                    android.R.layout.simple_spinner_dropdown_item, destinations)
+                onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                    override fun onNothingSelected(parent: AdapterView<*>?) = Unit
+                    override fun onItemSelected(parent: AdapterView<*>?, view: android.view.View?,
+                                                position: Int, id: Long) {
+                        if (position == 0) return
+                        val value = if (position == 1) "13R"
+                            else if (position == 2) "31L"
+                            else destinations[position]
+                        route.setText(value)
+                    }
+                }
+            }, LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+            ))
+        }
 
         val preview = TextView(this).apply {
             text = "ROUTE PREVIEW\n—"

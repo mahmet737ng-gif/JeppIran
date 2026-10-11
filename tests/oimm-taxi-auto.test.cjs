@@ -55,6 +55,11 @@ const fixture={
 };
 const first=auto.route(fixture,{startStand:"101",destination:"ST109"});
 assert.deepEqual(first.route.path,["A","B","D"]);
+const guidance=auto.progress(fixture,first.route,fixture.nodes.B);
+assert(guidance&&guidance.remainingMeters>0);
+assert(guidance.nextTaxiways.length>0);
+assert.match(auto.route(fixture,{destination:"ST109",position:{...fixture.nodes.A,accuracy:90}}).error,/accurate/i);
+assert.match(auto.route(fixture,{destination:"ST109",position:{...fixture.nodes.A,groundspeed:30}}).error,/fast/i);
 const active={target:first.target,route:first.route,monitor:{count:0,last:0}};
 assert.equal(auto.reroute(fixture,active,fixture.nodes.C,10000).action,"checking");
 const rerouted=auto.reroute(fixture,active,fixture.nodes.C,11000);

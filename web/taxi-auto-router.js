@@ -65,6 +65,9 @@ function bestStart(graph,position,maxSnapMeters=65){
   const g=index(graph);let closest=null,meters=Infinity;
   for(const id of g.accessible){
     const d=metres(position,graph.nodes[id]);
+    // Never select an adjacent parked aircraft's lead-in as the live taxi
+    // origin. A true stand origin must be within 8 m of its printed endpoint.
+    if(g.standNodes.has(id)&&d>8)continue;
     if(d<meters){closest=id;meters=d}
   }
   return meters<=maxSnapMeters?{node:closest,distanceMeters:meters}:null;
@@ -104,6 +107,10 @@ function route(graph,options={}){
   if(!graph||graph.airport!=="OIMM"||!graph.simulatorTestOnly)return {error:"OIMM simulator QA graph unavailable"};
   const target=goal(graph,options.destination);
   if(target.error)return {error:target.error};
+  if(!options.startStand&&options.position&&
+     (Number(options.position.accuracy)>35||Number(options.position.groundspeed)>23)){
+    return {error:"Ground position is not sufficiently accurate or is moving too fast for simulator taxi routing."};
+  }
   const stand=options.startStand&&graph.stands?.[String(options.startStand).replace(/^ST/i,"")];
   const source=stand?{node:stand.node,distanceMeters:0}:bestStart(graph,options.position);
   if(!source)return {error:"No connected ground centreline within 65 m of position. Select SET START at a mapped taxiway, or connect simulator. No guessed runway exit."};
@@ -112,6 +119,41 @@ function route(graph,options={}){
   found.holds=found.path.flatMap((n,i)=>graph.holdNodes?.[n]?[i]:[]);
   if(target.kind==="runway-hold"&&!found.holds.includes(found.path.length-1))found.holds.push(found.path.length-1);
   return {route:found,target,snapMeters:source.distanceMeters};
+}
+// Progress uses existing node-by-node line geometry, not straight-line
+// distance to the stand. Heading advice is informational, never ATC clearance.
+function progress(graph,route,position){
+  if(!route?.path?.length||!position)return null;
+  const path=route.path,links=index(graph).links,M=METERS;
+  let nearest={distance:Infinity,index:0,fraction:0};
+  const lat=Number(position.lat),lon=Number(position.lon);
+  if(!Number.isFinite(lat)||!Number.isFinite(lon))return null;
+  const scale=Math.cos(lat*Math.PI/180);
+  for(let i=1;i<path.length;i++){
+    const a=graph.nodes[path[i-1]],b=graph.nodes[path[i]];
+    if(!a||!b)continue;
+    const x=(a.lon-lon)*M*scale,y=(a.lat-lat)*M;
+    const dx=(b.lon-a.lon)*M*scale,dy=(b.lat-a.lat)*M;
+    const div=dx*dx+dy*dy;
+    if(div<.01)continue;
+    const t=Math.max(0,Math.min(1,-(x*dx+y*dy)/div));
+    const d=Math.hypot(x+t*dx,y+t*dy);
+    if(d<nearest.distance)nearest={distance:d,index:i-1,fraction:t};
+  }
+  const i=nearest.index;
+  let remaining=0;
+  const current=path[i],following=path[i+1];
+  if(following)remaining+=(1-nearest.fraction)*metres(graph.nodes[current],graph.nodes[following]);
+  for(let j=i+2;j<path.length;j++)remaining+=metres(graph.nodes[path[j-1]],graph.nodes[path[j]]);
+  const names=[];
+  for(let j=i;j<path.length-1;j++){
+    const edge=(links.get(path[j])||[]).find(x=>x.to===path[j+1]);
+    const label=edge?.way||"";
+    if(label&&label!=="APRON"&&label!=="UNNAMED"&&names.at(-1)!==label)names.push(label);
+  }
+  return {remainingMeters:Math.ceil(remaining),deviationMeters:nearest.distance,
+    nextTaxiways:names.slice(0,3),next: names[0]||"APRON",
+    destination:route.destination||""};
 }
 function deviation(graph,route,position){
   if(!position||!route?.path?.length)return Infinity;
@@ -149,7 +191,7 @@ function reroute(graph,active,position,now=Date.now()){
   state.count=0;
   return {action:"replanned",deviation:m,...result};
 }
-const api={index,goal,bestStart,solve,route,deviation,reroute,metres};
+const api={index,goal,bestStart,solve,route,progress,deviation,reroute,metres};
 root.JEPPIRAN_TAXI_AUTO=api;
 if(typeof module!=="undefined"&&module.exports)module.exports=api;
 })(typeof window!=="undefined"?window:globalThis);

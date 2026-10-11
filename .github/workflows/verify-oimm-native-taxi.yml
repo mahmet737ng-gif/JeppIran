@@ -1,0 +1,39 @@
+name: Verify Android OIMM Taxi
+on:
+  pull_request:
+    paths:
+      - 'app/src/main/java/com/tareghmsr/jeppiran/OimmTaxiRouter.kt'
+      - 'app/src/main/java/com/tareghmsr/jeppiran/PdfViewerActivity.kt'
+      - 'app/src/main/java/com/tareghmsr/jeppiran/TaxiModeActivity.kt'
+      - 'app/src/test/java/com/tareghmsr/jeppiran/OimmTaxiRouterTest.kt'
+      - 'app/build.gradle.kts'
+      - 'web/data/taxi-networks/OIMM.json'
+      - '.github/workflows/verify-oimm-native-taxi.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  native-taxi:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v4
+        with:
+          packages: platform-tools
+      - name: Android 36
+        run: |
+          yes | sdkmanager --licenses > /dev/null || true
+          sdkmanager "platforms;android-36" "build-tools;36.0.0"
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Compile, unit-test and build Android debug
+        run: gradle testDebugUnitTest assembleDebug --stacktrace --no-daemon
+      - name: Verify packaged offline Mashhad taxi graph
+        run: |
+          set -e
+          test -s app/build/outputs/apk/debug/app-debug.apk
+          unzip -l app/build/outputs/apk/debug/app-debug.apk | grep -E 'assets/OIMM.json'

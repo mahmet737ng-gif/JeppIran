@@ -241,6 +241,22 @@ private val locationPermissionLauncher =
         TextView? =
         null
 
+    // Ground graph and PDF overlay are simulator QA only. These fields never
+    // change the live position source, PDF renderer or simulator bridge.
+    private var nativeTaxiRouter: OimmTaxiRouter? = null
+    private var nativeTaxiPlan: OimmTaxiRouter.Plan? = null
+    private var nativeTaxiDestination: String? = null
+    private var nativeTaxiStartStand: String? = null
+    private var nativeTaxiOffRouteFixes = 0
+    private var nativeTaxiLastReroute = 0L
+    private val nativeTaxiTick = object : Runnable {
+        override fun run() {
+            if (!positionResumed) return
+            updateNativeTaxiRoute()
+            handler.postDelayed(this, 1200L)
+        }
+    }
+
     private lateinit var metarIcon:
         TextView
 
@@ -666,10 +682,13 @@ private val locationPermissionLauncher =
         }
         startGps()
         showPendingCachedMetar()
+        handler.removeCallbacks(nativeTaxiTick)
+        if (nativeTaxiDestination != null) handler.post(nativeTaxiTick)
     }
 
     override fun onPause() {
         positionResumed = false
+        handler.removeCallbacks(nativeTaxiTick)
         stopGps()
         handler.removeCallbacks(simulatorUpdateRunnable)
         super.onPause()
@@ -700,6 +719,7 @@ private val locationPermissionLauncher =
         handler.removeCallbacks(
             simulatorUpdateRunnable
         )
+        handler.removeCallbacks(nativeTaxiTick)
 
 
         previousBitmap
@@ -2337,6 +2357,119 @@ private val locationPermissionLauncher =
     }
 
 
+    private fun prepareNativeTaxiPreview(rawRoute: String) {
+        if (currentIcao != "OIMM") return
+        if (repository.getDataVersion() != "V2621") {
+            taxiRouteBanner?.text = "OIMM AUTO · New chart cycle requires a matching reviewed ground graph."
+            return
+        }
+        val raw = rawRoute.uppercase(Locale.US).replace(Regex("\\s+"), " ").trim()
+        val withStand = Regex("^(ST\\d{3})\\s+((?:RWY\\s*)?\\d{2}[LRC]?)$")
+            .matchEntire(raw)
+        val destination = withStand?.groupValues?.get(2)
+            ?: raw.takeIf { it.matches(Regex("^(?:ST\\d{3}|(?:RWY\\s*)?\\d{2}[LRC]?)$")) }
+            ?: return // Explicit multi-taxiway sequences are not auto-rewritten.
+        nativeTaxiDestination = destination
+        nativeTaxiStartStand = withStand?.groupValues?.get(1)
+        taxiRouteBanner?.text = "OIMM AUTO QA · Loading connected ground graph..."
+        thread(name = "oimm-native-taxi-graph") {
+            val loaded = OimmTaxiRouter.load(applicationContext)
+            runOnUiThread {
+                if (isFinishing || isDestroyed || nativeTaxiDestination != destination) return@runOnUiThread
+                nativeTaxiRouter = loaded
+                if (loaded == null) {
+                    taxiRouteBanner?.text = "OIMM TAXI · Chart-derived graph missing or cycle mismatch; no route."
+                } else {
+                    updateNativeTaxiRoute(force = true)
+                }
+            }
+        }
+    }
+
+    private fun nativeTaxiPosition(): OimmTaxiRouter.Point? {
+        if (!AircraftPositionStore.isEnabled(this)) return null
+        if (AircraftPositionStore.usesSimulator(this)) {
+            if (!SimulatorLocationStore.isConnected()) return null
+            val p = SimulatorLocationStore.getPosition() ?: return null
+            if (System.currentTimeMillis() - p.timestampMillis > 6500L) return null
+            return OimmTaxiRouter.Point(p.latitude, p.longitude)
+        }
+        val p = lastGpsLocation ?: return null
+        if (System.currentTimeMillis() - p.time > 10000L) return null
+        return OimmTaxiRouter.Point(p.latitude, p.longitude)
+    }
+
+    private fun updateNativeTaxiRoute(force: Boolean = false) {
+        val router = nativeTaxiRouter ?: return
+        val goal = nativeTaxiDestination ?: return
+        if (repository.getDataVersion() != "V2621") {
+            nativeTaxiPlan = null
+            taxiRouteBanner?.text = "OIMM AUTO · Chart cycle changed; route cancelled until graph review."
+            return
+        }
+        if (!::chartView.isInitialized) return
+        val position = nativeTaxiPosition()
+        val start = nativeTaxiStartStand
+        if (start == null && position != null && !force) {
+            // Simulator airspeed and poor GPS are not reliable taxi origins.
+            val sound = if (AircraftPositionStore.usesSimulator(this)) {
+                (SimulatorLocationStore.getPosition()?.groundSpeedMps ?: 0.0) <= 23.0
+            } else {
+                val fix = lastGpsLocation
+                fix != null && fix.accuracy <= 35f && fix.speed <= 23f
+            }
+            if (!sound) {
+                nativeTaxiOffRouteFixes = 0
+                return
+            }
+        }
+        if (start == null && position == null) {
+            if (nativeTaxiPlan == null)
+                taxiRouteBanner?.text = "OIMM AUTO · Waiting for a current ground position (SIM or GPS)."
+            return
+        }
+        if (!force && nativeTaxiPlan != null) {
+            if (start != null) return // Static chart preview: never auto-reroute.
+            val p = position ?: return
+            val plan = nativeTaxiPlan ?: return
+            if (plan.nodes.lastOrNull()?.let { OimmTaxiRouter.distance(it, p) < 20 } == true) {
+                nativeTaxiOffRouteFixes = 0
+                return
+            }
+            val positionOk = if (AircraftPositionStore.usesSimulator(this)) {
+                (SimulatorLocationStore.getPosition()?.groundSpeedMps ?: 0.0) <= 23.0
+            } else {
+                val gps = lastGpsLocation
+                gps != null && gps.accuracy <= 35f && gps.speed <= 23f
+            }
+            if (!positionOk) { nativeTaxiOffRouteFixes = 0; return }
+            if (router.deviation(plan, p) <= 45.0) {
+                nativeTaxiOffRouteFixes = 0
+                return
+            }
+            nativeTaxiOffRouteFixes++
+            if (nativeTaxiOffRouteFixes < 2 ||
+                System.currentTimeMillis() - nativeTaxiLastReroute < 3000L) return
+            nativeTaxiLastReroute = System.currentTimeMillis()
+        }
+        val result = router.route(goal, fromStand = start, position = if (start == null) position else null)
+        val plan = result.plan
+        if (plan == null) {
+            // A previously calculated path is no longer a valid new clearance.
+            taxiRouteBanner?.text = "OIMM TAXI · " + (result.error ?: "No connected route")
+            nativeTaxiOffRouteFixes = 0
+            return
+        }
+        nativeTaxiPlan = plan
+        nativeTaxiOffRouteFixes = 0
+        taxiRouteBanner?.text = (if (start == null) "OIMM AUTO QA" else "OIMM PREVIEW QA") +
+            " · " + plan.taxiways.joinToString(" → ") +
+            " → " + plan.destination + " · " + plan.metres + " m" +
+            (if (plan.holdShort) " · HOLD SHORT (NOT RUNWAY ENTRY)" else "") +
+            " · NOT FOR NAVIGATION"
+        chartView.invalidate()
+    }
+
     private fun buildTaxiRouteBanner() {
 
         if (
@@ -2402,6 +2535,8 @@ private val locationPermissionLauncher =
                 maxLines =
                     3
             }
+
+        prepareNativeTaxiPreview(route)
 
         root.addView(
             taxiRouteBanner,
@@ -8262,6 +8397,8 @@ private val locationPermissionLauncher =
             }
 
 
+            drawNativeTaxiRoute(canvas, image, finalScale)
+
             drawAircraftPosition(
                 canvas,
                 image,
@@ -8273,6 +8410,52 @@ private val locationPermissionLauncher =
             canvas.restore()
         }
 
+
+        private var taxiOverlayImage: Bitmap? = null
+        private var taxiOverlayPlan: OimmTaxiRouter.Plan? = null
+        private var taxiOverlayPage = -1
+        private var taxiOverlayPath: Path? = null
+
+        private fun drawNativeTaxiRoute(canvas: Canvas, image: Bitmap, displayScale: Float) {
+            val plan = nativeTaxiPlan ?: return
+            if (currentIcao != "OIMM" || plan.nodes.size < 2) return
+            val page = currentChartGlobalPage()
+            // The same geographic area appears in approach plates; never
+            // draw a surface taxi suggestion across unrelated charts.
+            if (page != 601 && page != 603) return
+            if (taxiOverlayImage !== image || taxiOverlayPlan !== plan || taxiOverlayPage != page) {
+                taxiOverlayImage = image
+                taxiOverlayPlan = plan
+                taxiOverlayPage = page
+                taxiOverlayPath = null
+                val geo = renderGeometries[image] ?: return
+                val line = Path()
+                var penDown = false
+                for (node in plan.nodes) {
+                    // Never draw through chart areas without a valid georeference.
+                    val pt = ChartGeoreferenceStore.renderedPoint(
+                        this@PdfViewerActivity, page, node.lat, node.lon, 0.0,
+                        repository.getDataVersion(), geo.pdfWidth, geo.pdfHeight,
+                        geo.fullWidth, geo.fullHeight, geo.cropLeft, geo.cropTop,
+                        image.width, image.height
+                    )
+                    if (pt == null) { penDown = false; continue }
+                    if (penDown) line.lineTo(pt.x, pt.y)
+                    else { line.moveTo(pt.x, pt.y); penDown = true }
+                }
+                taxiOverlayPath = line
+            }
+            val drawn = taxiOverlayPath ?: return
+            val paint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
+                style = Paint.Style.STROKE
+                color = Color.argb(155, 244, 35, 188)
+                strokeCap = Paint.Cap.ROUND
+                strokeJoin = Paint.Join.ROUND
+                strokeWidth = 2.2f * resources.displayMetrics.density /
+                    displayScale.coerceAtLeast(0.01f)
+            }
+            canvas.drawPath(drawn, paint)
+        }
 
         private fun drawAircraftPosition(
             canvas: Canvas,
