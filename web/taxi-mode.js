@@ -748,8 +748,9 @@ function oimmGo(p,options){
     message("Runway access module unavailable. Cannot invent a crossing; reload to try again.",true);return;
   }
   const working=qa?.graph||g;
-  if(bt.length&&!qa.access.some(x=>x.taxiway===ways[ix-1])){
-    message(ways[ix-1]+" has no mapped/within-tolerance holding-point connection to "+
+  const selectedAccess=bt.length?qa.access.find(x=>x.taxiway===ways[ix-1]):null;
+  if(bt.length&&!selectedAccess){
+    message(ways[ix-1]+" has no mapped/within-tolerance holding-point connection to " +
       bt[0]+" in V2621. No runway crossing drawn.",true);return;
   }
   for(const way of ways){
@@ -795,7 +796,10 @@ function oimmGo(p,options){
     (goal&&g.holdNodes[goal]?" · HOLD SHORT RWY "+g.holdNodes[goal].runway:"")+
     (bt.length?" · EXPLICIT RWY "+bt[0].slice(2)+
       " via "+ways[ix-1]+" → "+ways[ix+1]+
-      " · Projected runway-entry QA connector, NOT surveyed. ATC clearance required.":"")+
+      " · "+(selectedAccess?.confidence==="LONG-REACH-QA-UNVERIFIED"?
+        "LONG-REACH UNVERIFIED "+selectedAccess.distanceMeters+"m; geometry may omit paved connector. ":
+        "Chart-hold projection (not surveyed). ")+
+      "Runway access requires ATC clearance.":"")+
     (from?.pushbackRequired?" · South stand: push-back required per 10-1P1.":""));
   draw();
 }
