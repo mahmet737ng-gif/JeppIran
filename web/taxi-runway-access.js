@@ -66,7 +66,10 @@ function reviewedAxisBridge(graph){
   return [{from:jCenter.id,to:aCenter.id,taxiway:"BT31L",...attrs},
     {from:aCenter.id,to:jCenter.id,taxiway:"BT13R",...attrs}];
 }
-function build(graph,token,{maxJoinMeters=115}={}){
+// 180 m is a MAXIMUM QA projection for a chart-labelled HOLD node ONLY.
+ // Beyond 115 m it is LONG-REACH / low confidence and must NEVER be used
+ // without the BT runway-use token. This is not a taxiway centreline survey.
+function build(graph,token,{maxJoinMeters=180}={}){
   const bt=normal(token),info=graph?.runwayBacktracks?.[bt];
   if(!info||!info.requiresExplicitClearance||!graph.simulatorTestOnly||graph.airport!=="OIMM")
     return {graph:null,access:[],error:"Runway access requires an explicitly mapped BT runway token."};
@@ -110,14 +113,17 @@ function build(graph,token,{maxJoinMeters=115}={}){
       bidirectional:true,sourcePage:meta.sourcePage||winner.edge.sourcePage,
       geometry:"projected-hold-to-runway-AXIS-QA-not-surveyed",
       runwayAccessCandidate:true,fromTaxiway:normal(meta.taxiway),
-      distanceMeters:+winner.distance.toFixed(1)});
+      distanceMeters:+winner.distance.toFixed(1),
+      confidence:winner.distance<=115?"CHART-HOLD-QA":"LONG-REACH-QA-UNVERIFIED"});
     access.push({taxiway:normal(meta.taxiway),holdNode:hold,runwayNode:projection,
-      distanceMeters:Math.round(winner.distance),geometry:"CHART-PROJECTED-QA-ONLY",
+      distanceMeters:Math.round(winner.distance),
+      confidence:winner.distance<=115?"CHART-HOLD-QA":"LONG-REACH-QA-UNVERIFIED",
+      geometry:"CHART-PROJECTED-QA-ONLY",
       runway:info.runway,requiresExplicitClearance:true});
   }
   const result={graph:{...graph,nodes,edges:[...graph.edges,...additions],
       runwayAccessQA:true},access,
-      note:"Simulator preview using printed hold points and chart-derived runway axis; connector projections are NOT survey-verified."};
+      note:"Simulator-only chart-labelled hold and source-runway axis projection, max 180 m; >115 m is LOW CONFIDENCE, may cross unmapped pavement and must not be treated as a surveyed or approved runway access."};
   let lookup=seen;if(!lookup){lookup=new Map();cache.set(graph,lookup)}
   lookup.set(bt,result);
   return result;
