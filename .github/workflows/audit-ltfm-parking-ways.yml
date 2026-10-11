@@ -19,9 +19,23 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: true
-      - name: Retrieve parking-position ways AND nodes from public OSM
+      - name: Use source-audited original OSM parking ways or refresh when missing
         run: |
-          python scripts/fetch_ltfm_osm_parking_leads.py web/data/taxi-networks/LTFM.json web/data/taxi-stand-registry/LTFM.json web/data/taxi-parking-ways/LTFM.json
+          set -euo pipefail
+          if python - <<'PY'
+          import json
+          d=json.load(open('web/data/taxi-parking-ways/LTFM.json'))
+          assert d['airport']=='LTFM'
+          assert d['stats']['allOsmParkingWays']>=700
+          assert d['stats']['exactGraphJoinedStandWays']>=450
+          assert d['source']['license']=='ODbL 1.0'
+          print('Reuse existing source-audited original OSM way geometry:',d['stats'])
+          PY
+          then
+            echo 'Source data already validated for cycle 2621; skip unreliable live Overpass servers.'
+          else
+            python scripts/fetch_ltfm_osm_parking_leads.py web/data/taxi-networks/LTFM.json web/data/taxi-stand-registry/LTFM.json web/data/taxi-parking-ways/LTFM.json
+          fi
       - name: Create physically connected stand source lines from exact OSM node IDs
         run: |
           node scripts/build_ltfm_stand_lead_geometries.cjs
