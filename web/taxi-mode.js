@@ -9,7 +9,10 @@ function parse(raw){
   if(!s)return {error:"Enter a stand, taxiway sequence or published procedure"};
   if(taxi.airport==="OIMM"&&taxi.graph){
     const tokens=s.replace(/STAND\s*/g,"ST").replace(/[,→>]+/g," ").split(/\s+/).filter(Boolean);
-    const stand=t=>{const k=t.replace(/^(ST|P)/,"");return taxi.graph.stands[k]?k:null};
+    // In Mashhad, STD109 is a common slip for ST109; preserve STD3 for
+    // airports that actually have letter-prefixed stand D3.
+    const stand=t=>{const k=t.replace(/^(ST|P)/,"");
+      return taxi.graph.stands[k]?k:(/^D\d+$/.test(k)&&taxi.graph.stands[k.slice(1)]?k.slice(1):null)};
     if(tokens.length===1&&stand(tokens[0]))return {kind:"stand",destination:stand(tokens[0])};
     const startStand=tokens.length>1?stand(tokens[0]):null;if(startStand)tokens.shift();
     const destination=tokens.length?stand(tokens[tokens.length-1]):null;if(destination)tokens.pop();
@@ -356,7 +359,7 @@ function view(){
   const panel=document.createElement("section");
   panel.id="taxiQaPanel";panel.className="taxi-qa-panel";panel.hidden=true;
   panel.innerHTML='<div class="taxi-qa-title"><strong>TAXI <small>QA TEST</small></strong>'+
-    '<span id="taxiQaAirport"></span><span class="taxi-qa-build">R4</span><button id="taxiQaToolsBtn" type="button" aria-expanded="false" aria-controls="taxiQaButtons">TOOLS ▾</button>'+
+    '<span id="taxiQaAirport"></span><span class="taxi-qa-build">R5</span><button id="taxiQaToolsBtn" type="button" aria-expanded="false" aria-controls="taxiQaButtons">TOOLS ▾</button>'+
     '<button id="taxiQaClose" type="button" aria-label="Close taxi panel">×</button></div>'+
     '<label for="taxiQaInput">Stand STD3 T5 N2 · Hold /N2 · Procedure 34L2A</label>'+
     '<div class="taxi-qa-entry"><input id="taxiQaInput" autocomplete="off" spellcheck="false" placeholder="Stand / taxiways / procedure"><button id="taxiQaGo" type="button">GO</button></div>'+
@@ -570,6 +573,15 @@ function oimmGo(p,options){
 }
 function go(options={}){
   syncAirport();
+  if(taxi.airport==="OIMM"&&!taxi.graph&&!options.graphRetried){
+    const airport=taxi.airport,input=$("taxiQaInput").value;
+    message("Loading Mashhad stand and taxiway network…");
+    loadGraph(airport).then(()=>{
+      if(taxi.active&&taxi.airport===airport&&$("taxiQaInput")?.value===input)
+        go({...options,graphRetried:true});
+    });
+    return;
+  }
   const p=parse($("taxiQaInput").value);
   if(p.error){message(p.error,true);return}
   taxi.trace=false;$("taxiQaTrace").classList.remove("on");

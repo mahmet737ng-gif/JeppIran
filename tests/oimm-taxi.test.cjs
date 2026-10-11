@@ -13,6 +13,7 @@ assert.equal(t.graphOk(graph,'OIMM'),true);assert.equal(t.graphOk({...graph,cycl
 assert.equal(Object.keys(graph.stands).length,34);assert.equal(Object.keys(graph.taxiways).length,18);
 for(const s of Object.values(graph.stands))assert(s.node&&graph.nodes[s.node]&&s.labelBounds&&s.publishedINS);
 for(const form of ['ST101 A','101 A','STAND 101 A','P101 A'])assert.equal(t.parse(form).startStand,'101');
+assert.equal(t.parse('STD109 J BT13R H').startStand,'109');
 for(const form of ['ST101','101','STAND 101','P101'])assert.equal(t.parse(form).destination,'101');
 const links=t.adjacent(graph);let checks=0;
 for(const [id,stand] of Object.entries(graph.stands))for(const way of ['J','Q','A','B']){

@@ -1,6 +1,6 @@
-const CACHE="jeppiran-pwa-2621-taxi-context-r4";
+const CACHE="jeppiran-pwa-2621-taxi-context-r5";
 const PDF_CACHE="jeppiran-chart-pdfs-v2621-printclean-3";
-const SHELL=["./","./index.html","./styles.css?v=2621-taxi-context-r4","./app.js?v=2621-findme-r2-20261011","./taxi-mode.js?v=2621-taxi-context-r4","./toolbar-artwork/toolbar-matte.png","./toolbar-artwork/position-matte.png","./toolbar-artwork/taxi-matte.png","./manifest.webmanifest","./data/georef-provisional-v2621.json","./data/othh-flight-qa-v2621.json","./data/othh-flight-qa-extra-v2621.json","./data/taxi-stands/OMDB.json","./data/taxi-networks/LTFM.json","./data/taxi-networks/OIMM.json","./data/taxi-audits/LTFM.json","./app-icon.png","./vendor/pdf.min.mjs","./vendor/pdf.worker.min.mjs"];
+const SHELL=["./","./index.html","./styles.css?v=2621-taxi-context-r4","./app.js?v=2621-taxi-refresh-r5","./taxi-mode.js?v=2621-taxi-context-r5","./toolbar-artwork/toolbar-matte.png","./toolbar-artwork/position-matte.png","./toolbar-artwork/taxi-matte.png","./manifest.webmanifest","./data/georef-provisional-v2621.json","./data/othh-flight-qa-v2621.json","./data/othh-flight-qa-extra-v2621.json","./data/taxi-stands/OMDB.json","./data/taxi-networks/LTFM.json","./data/taxi-networks/OIMM.json","./data/taxi-audits/LTFM.json","./app-icon.png","./vendor/pdf.min.mjs","./vendor/pdf.worker.min.mjs"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(SHELL)).then(()=>self.skipWaiting()));
 });
@@ -34,4 +34,3 @@ self.addEventListener("fetch",event=>{
     return response;
   })));
 });
-
