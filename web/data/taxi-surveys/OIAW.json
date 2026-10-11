@@ -21,13 +21,14 @@
       "parking inset ST1–ST6",
       "curved parking leads",
       "main-runway black strip and isolated parking position",
-      "Source-PDF black Bézier centreline/parking curves for ST1–ST6 via taxi A to taxi B; PDF fingerprint checked"
+      "Source-PDF black Bézier centreline/parking curves for ST1–ST6 via taxi A to taxi B; PDF fingerprint checked",
+      "Source-PDF original curve paths for the A-to-C and A-to-D junctions"
     ],
     "unresolved": [
       "Individual stand WGS84 coordinates are not given (only rounded position groups)",
       "Hold-short, runway entry and crossing gates require surveyed or chart-validated points",
       "Inset-to-full-ADC calibration awaits vector map / full PDF geometry",
-      "Full vectorization beyond taxi B, including C/D/E and all runway-hold points, remains incomplete"
+      "Runway gates/holding lines and isolated parking connector E remain unverified or untraced"
     ],
     "supersedes": "Do not use OIAW.json projected stand/taxiway edges as chart-confirmed routing; they are previous hand-created approximation"
   },
@@ -247,14 +248,27 @@
     "partialPdfVectorTrace": "data/taxi-chart-traces/OIAW-2621.json",
     "partialCommands": [
       "ST1 A B",
+      "ST1 A C",
+      "ST1 A D",
       "ST2 A B",
+      "ST2 A C",
+      "ST2 A D",
       "ST3 A B",
+      "ST3 A C",
+      "ST3 A D",
       "ST4 A B",
+      "ST4 A C",
+      "ST4 A D",
       "ST5 A B",
-      "ST6 A B"
+      "ST5 A C",
+      "ST5 A D",
+      "ST6 A B",
+      "ST6 A C",
+      "ST6 A D"
     ],
     "pdfSourceSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
-    "routeApprovalNote": "Source PDF path geometry has been traced in page coordinates for A/B only. This is not equivalent to certified WGS84 taxi centerlines or runway clearance."
+    "routeApprovalNote": "Original chart-PDF vector curves of A/B/C/D and ST1–6 traced in PDF points; no geographic georeference, holding line, runway gates or aircraft pushback/tow approval.",
+    "partialPdfVectorRevision": "2621-pdf-branches-BCD-r2"
   },
   "restrictions": {
     "disallowStraightLineToNearestTaxiway": true,
