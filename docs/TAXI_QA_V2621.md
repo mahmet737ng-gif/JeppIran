@@ -56,3 +56,11 @@ Never change `verified` to true without airport-specific mapping QA. The supplie
 - Input `34L2A` is the correct **no-space syntax**, `34L 2A` is rejected. **34L is merely a syntax example**; OMDB has runways 12L/12R/30L/30R, and no numeric taxi procedure for OMDB is claimed to be digitized.
 - Missing to claim complete airport topology: current-cycle revalidation against UAE AIP charts OMDB AD 2-21, 22A/22B/22C, 24/25/26 and effective NOTAM; remaining aprons; all taxiway centreline nodes/edges, service boundaries, restrictions, holds, jet blast, runway crossings, operational direction and pushback connections. The app correctly refuses to calculate taxi routes until each published segment and stand connector is verified.
 - This QA change does **not** modify simulator bridge, aircraft position, charts, or existing PDF/gps rendering logic.
+
+## OMDB additional stand reference overlay · AIRAC 12/2025
+- Cross-checked official GCAA OMDB-AD-2-22B chart, source https://www.gcaa.gov.ae/en/ais/AIPHtmlFiles/AIP/Current/AIRACs/2026-P02/graphics/OMDB-AD-2-22B_2025-12.pdf (effective 27 Nov 2025, not yet recertified for current date).
+- Added **79** more accurately published parking positions: Apron Echo **42**, Golf **22**, Hotel **4**, Quebec **11**, in addition to earlier Charlie **55**. **134** WGS84 positions total in the OMDB position-only QA dataset.
+- The nine Echo box stands **E30–E38** do not have individual published coordinates on 22B; excluded from points and listed as unlocated, not invented.
+- Independent MARS coordinates E44L/E44/E44R and E45L/E45/E45R are kept distinct.
+- The overlay uses apron-specific colors. This is NOT a navigable taxiway graph; no runway, hold, taxi, turn restriction, lead-in, pushback, or node adjacency is inferred.
+- QA required: current effective GCAA source check and time-valid NOTAMs, remaining Aprons Alpha/Bravo/Delta/Foxtrot/Sierra, and explicit QA of real centerlines and intersections.
