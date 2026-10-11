@@ -1032,6 +1032,20 @@ function renderRoutePreview(){
     "stroke-width":"3.4","stroke-linecap":"round","stroke-linejoin":"round"}));
   root.appendChild(s("polyline",{points:chain,fill:"none",stroke:"rgba(244,43,184,.64)",
     "stroke-width":"1.9","stroke-linecap":"round","stroke-linejoin":"round"}));
+  // Clearly mark ONLY the traversed real OSM edges that have no taxiway name.
+  if(r.mappedUnnamedTransitions?.length){
+    for(let i=1;i<r.path.length;i++){
+      const before=r.path[i-1],after=r.path[i];
+      const isMappedUnnamed=r.graph.edges.some(e=>name(e.taxiway)==="UNNAMED"&&
+        !e.runway&&!e.closed&&((e.from===before&&e.to===after)||
+        (e.bidirectional!==false&&e.from===after&&e.to===before)));
+      if(!isMappedUnnamed)continue;
+      const p=pts[i-1],q=pts[i];
+      root.appendChild(s("line",{x1:p.x,y1:p.y,x2:q.x,y2:q.y,
+        stroke:"rgba(255,195,112,.87)","stroke-width":"2.1","stroke-dasharray":"3 3",
+        "stroke-linecap":"round"}));
+    }
+  }
   root.appendChild(s("circle",{cx:pts[0].x,cy:pts[0].y,r:5.4,fill:"#25e8f5",stroke:"#071a2d","stroke-width":1.5}));
   const end=pts[pts.length-1];
   root.appendChild(s("circle",{cx:end.x,cy:end.y,r:5.4,fill:"#fef0ff",stroke:"#071a2d","stroke-width":1.5}));
@@ -1055,11 +1069,17 @@ function renderRoutePreview(){
     (r.startStand?"ST"+r.startStand+" → ":"")+waypointText+" · "+(r.length||0)+" m";
   const warning=document.createElement("small");
   const model=georefByPage.get(Number(selectedChart?.page));
+  const mappedLinks=(r.mappedUnnamedTransitions||[]).map(x=>
+    x.from+"→"+x.to+": "+x.edgeCount+" unlabeled mapped OSM segments (~"+
+    Math.round(x.lengthMeters)+"m)").join("; ");
   warning.textContent=r.airport==="OIMM"?
     "Chart-derived test geometry · confirm exact position and clearance · NOT FOR NAVIGATION":
     (model?"OSM-only QA: overlay on georeferenced chart is unapproved.":
       "No usable ADC georeference: route shown here, NOT positioned on printed chart.")+
-    " Stand D3 lead-out NOT mapped · NOT FOR NAVIGATION.";
+    (r.startStand&&r.standLinkVerified===false?" Stand "+r.startStand+
+      " lead-out NOT mapped.":"")+
+    (mappedLinks?" Dashed amber link(s): "+mappedLinks+"; not chart-verified.":"")+
+    " NOT FOR NAVIGATION.";
   container.replaceChildren(caption,root,warning);
 }
 function draw(){
