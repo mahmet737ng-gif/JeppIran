@@ -18,8 +18,12 @@ function parse(raw){
       /^RUNWAY(?:13R|13L|31R|31L)$/.test(t);
     if(tokens.length===1&&runwayToken(tokens[0]))
       return {kind:"auto",destination:tokens[0]};
+    if(tokens.length===2&&["RUNWAY","RWY"].includes(tokens[0])&&runwayToken(tokens[1]))
+      return {kind:"auto",destination:tokens[1]};
     if(tokens.length===2&&stand(tokens[0])&&runwayToken(tokens[1]))
       return {kind:"auto",startStand:stand(tokens[0]),destination:tokens[1]};
+    if(tokens.length===3&&stand(tokens[0])&&["RWY","RUNWAY"].includes(tokens[1])&&runwayToken(tokens[2]))
+      return {kind:"auto",startStand:stand(tokens[0]),destination:tokens[2]};
     if(tokens.length===3&&tokens[0]==="RUNWAY"&&runwayToken(tokens[1])&&stand(tokens[2]))
       return {kind:"auto",destination:stand(tokens[2])};
     const startStand=tokens.length>1?stand(tokens[0]):null;if(startStand)tokens.shift();
@@ -482,7 +486,7 @@ function view(){
   const panel=document.createElement("section");
   panel.id="taxiQaPanel";panel.className="taxi-qa-panel";panel.hidden=true;
   panel.innerHTML='<div class="taxi-qa-title"><strong>TAXI <small>QA TEST</small></strong>'+
-    '<span id="taxiQaAirport"></span><span class="taxi-qa-build">R12</span><button id="taxiQaToolsBtn" type="button" aria-expanded="false" aria-controls="taxiQaButtons">TOOLS ▾</button>'+
+    '<span id="taxiQaAirport"></span><span class="taxi-qa-build">R13</span><button id="taxiQaToolsBtn" type="button" aria-expanded="false" aria-controls="taxiQaButtons">TOOLS ▾</button>'+
     '<button id="taxiQaClose" type="button" aria-label="Close taxi panel">×</button></div>'+
     '<label for="taxiQaInput">Stand STD3 T5 N2 · Hold /N2 · Procedure 34L2A</label>'+
     '<div class="taxi-qa-entry"><input id="taxiQaInput" autocomplete="off" spellcheck="false" placeholder="Stand / taxiways / procedure"><button id="taxiQaGo" type="button">GO</button></div>'+
@@ -685,7 +689,7 @@ function oimmAutoGo(p){
   const result=engine.route(taxi.graph,{destination:p.destination,
     startStand:p.startStand,position:explicitStart?null:actual});
   if(!result.route){message(result.error,true);return}
-  const preview=!!explicitStart||!!taxi.testStart&&!lastPosition;
+  const preview=!!explicitStart||!!taxi.testStart;
   const r={...result.route,airport:"OIMM",previewOnly:preview,
     startStand:p.startStand||null};
   taxi.route=r;
