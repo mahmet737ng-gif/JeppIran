@@ -326,7 +326,7 @@ function s(tag,attrs){
   for(const [k,v] of Object.entries(attrs))t.setAttribute(k,v);
   return t;
 }
-function paintPath(svg,pts,holds,width){
+function paintPath(svg,pts,holds,width,isCalculatedTaxiRoute=false){
   if(pts.length<2)return;
   // Minimal corner rounding; never use broad splines that cut taxiway corners.
   let d="M "+pts[0].x+" "+pts[0].y;
@@ -344,8 +344,28 @@ function paintPath(svg,pts,holds,width){
     d+=" L "+p.x+" "+p.y;
   }
   const stroke=Math.max(2,width*.0035);
-  svg.appendChild(s("path",{d,fill:"none",stroke:"#1c0630","stroke-width":stroke+2,"stroke-linejoin":"round","stroke-linecap":"round"}));
-  svg.appendChild(s("path",{d,fill:"none",stroke:"#f200d9","stroke-width":stroke,"stroke-linejoin":"round","stroke-linecap":"round"}));
+  svg.appendChild(s("path",{d,fill:"none",stroke:"#1c0630","stroke-width":stroke+2.2,"stroke-linejoin":"round","stroke-linecap":"round"}));
+  const line=s("path",{d,fill:"none",stroke:isCalculatedTaxiRoute?"#25dcff":"#f200d9",
+    "stroke-width":isCalculatedTaxiRoute?stroke*1.2:stroke,"stroke-linejoin":"round","stroke-linecap":"round"});
+  if(isCalculatedTaxiRoute){
+    line.setAttribute("class","taxi-route-line");
+    line.setAttribute("stroke-dasharray",Math.round(stroke*3.8)+" "+Math.round(stroke*2.2));
+    // Directional chevrons: follow the digitized node-to-node centerline,
+    // never cut curves/corners or infer unconnected shortcuts.
+    for(let n=1;n<pts.length;n++){
+      const a=pts[n-1],b=pts[n],dx=b.x-a.x,dy=b.y-a.y,len=Math.hypot(dx,dy);
+      if(len<24)continue;
+      const ux=dx/len,uy=dy/len,perpX=-uy,perpY=ux;
+      for(let at=25;at<len-10;at+=56){
+        const x=a.x+ux*at,y=a.y+uy*at,size=Math.max(3.5,stroke*2.2);
+        svg.appendChild(s("path",{d:"M "+(x-ux*size+perpX*size*.6)+" "+(y-uy*size+perpY*size*.6)+
+          " L "+x+" "+y+" L "+(x-ux*size-perpX*size*.6)+" "+(y-uy*size-perpY*size*.6),
+          fill:"none",stroke:"#6af1ff","stroke-width":Math.max(1.4,stroke*.7),
+          "stroke-linecap":"round","stroke-linejoin":"round","class":"taxi-route-chevron"}));
+      }
+    }
+  }
+  svg.appendChild(line);
   for(const i of holds){
     const p=pts[i];if(!p)continue;
     const a=pts[Math.max(0,i-1)],b=pts[Math.min(pts.length-1,i+1)],
@@ -425,11 +445,11 @@ function draw(){
     let segment=[],holdPositions=[];
     for(let i=0;i<r.path.length;i++){
       const pt=r.graph.nodes[r.path[i]],p=pt?projectGeo(model,pt.lat,pt.lon):null;
-      if(!p){paintPath(svg,segment,holdPositions,w);segment=[];holdPositions=[];continue;}
+      if(!p){paintPath(svg,segment,holdPositions,w,true);segment=[];holdPositions=[];continue;}
       if(r.holds.includes(i))holdPositions.push(segment.length);
       segment.push(p);
     }
-    paintPath(svg,segment,holdPositions,w);
+    paintPath(svg,segment,holdPositions,w,true);
   }
   if(taxi.testStart&&model){
     const p=projectGeo(model,taxi.testStart.lat,taxi.testStart.lon);
@@ -443,6 +463,28 @@ function draw(){
   const manual=taxi.manual.get(Number(selectedChart?.page));
   if(manual)paintPath(svg,manual.points.map(p=>({x:p.x*w,y:p.y*h})),manual.holds,w);
   layer.appendChild(svg);
+  window.dispatchEvent(new Event("jeppiran-taxi-route-updated"));
+}
+// Distance to actual mapped route segments (metres), not an invented corridor.
+// A departure/arrival route is QA-only and must never be used as a clearance.
+function routeDeviationMeters(pos){
+  const r=taxi.route;
+  if(!taxi.active||!r||r.airport!==selectedAirport||!isAdc(selectedChart)||
+     !pos||!Number.isFinite(Number(pos.lat))||!Number.isFinite(Number(pos.lon)))return null;
+  let min=Infinity;
+  const path=r.path||[];
+  for(let i=1;i<path.length;i++){
+    const a=r.graph.nodes[path[i-1]],b=r.graph.nodes[path[i]];
+    if(!a||!b)continue;
+    const cos=Math.cos(Number(pos.lat)*Math.PI/180);
+    const ax=(a.lon-pos.lon)*111195*cos,ay=(a.lat-pos.lat)*111195;
+    const bx=(b.lon-pos.lon)*111195*cos,by=(b.lat-pos.lat)*111195;
+    const dx=bx-ax,dy=by-ay,den=dx*dx+dy*dy;
+    if(den<.01)continue;
+    const u=Math.max(0,Math.min(1,-(ax*dx+ay*dy)/den));
+    min=Math.min(min,Math.hypot(ax+u*dx,ay+u*dy));
+  }
+  return Number.isFinite(min)?min:null;
 }
 function chartHint(){
   if(!taxi.active||!lastPosition||!selectedChart||!isAdc(selectedChart))return;
@@ -465,7 +507,7 @@ function chartHint(){
   bar.append(label,jump,no);document.querySelector("#chartsView .viewer-pane")?.appendChild(bar);
   setTimeout(()=>bar.remove(),12000);
 }
-window.JEPPIRAN_TAXI={open:openTaxi,parse,openAdc,draw};
+window.JEPPIRAN_TAXI={open:openTaxi,parse,openAdc,draw,routeDeviationMeters};
 window.addEventListener("jeppiran-chart-rendered",()=>{draw();chartHint()});
 window.addEventListener("jeppiran-position",chartHint);
 document.getElementById("chartTaxiBtn")?.addEventListener("click",openTaxi);
