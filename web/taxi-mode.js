@@ -662,7 +662,7 @@ function nearest(graph,pos,firstTaxiway=null){
 }
 function syncAirport(){
   if(!taxi.active||taxi.airport===selectedAirport)return;
-  taxi.airport=selectedAirport;taxi.graph=null;taxi.route=null;taxi.auto=null;taxi.standPreview=null;taxi.testStart=null;taxi.prompted="";
+  taxi.airport=selectedAirport;taxi.graph=null;taxi.route=null;taxi.auto=null;taxi.standPreview=null;taxi.standEgress=null;taxi.testStart=null;taxi.prompted="";
   taxi.networkAudit=null;taxi.highlightTaxiway="";
   $("taxiQaAirport").textContent=selectedAirport;
   updateAirportControls();
@@ -837,7 +837,7 @@ function go(options={}){
   const publisher=window.JEPPIRAN_PUBLISHED_TAXI;
   const typed=$("taxiQaInput")?.value||"";
   if(publisher?.recognize(typed,taxi.airport)){
-    taxi.route=null;taxi.auto=null;taxi.standPreview=null;draw();
+    taxi.route=null;taxi.auto=null;taxi.standPreview=null;taxi.standEgress=null;draw();
     publisher.go(typed,taxi.airport);
     return;
   }
@@ -876,7 +876,7 @@ function go(options={}){
     });
     return;
   }
-  taxi.standPreview=null;
+  taxi.standPreview=null;taxi.standEgress=null;
   const p=parse($("taxiQaInput").value);
   if(p.error){message(p.error,true);return}
   taxi.trace=false;$("taxiQaTrace").classList.remove("on");
@@ -1336,6 +1336,27 @@ function draw(){
       svg.appendChild(group);
     }
   }
+  // These magenta lines are exact ORIGINAL WGS84 OSM taxiway edge segments
+  // corroborated by published Jeppesen pushback taxiway NAMES. They are not
+  // stand exit / pushback paths: the stand-to-graph gap remains DISCONNECTED.
+  const egress=taxi.standEgress;
+  if(egress&&taxi.airport==="LTFM"&&selectedAirport==="LTFM"&&model){
+    for(const group of egress.publishedNamedTaxiwaySegments||[]){
+      for(const segment of group.segments||[]){
+        const coordinates=segment.geometry;
+        if(!Array.isArray(coordinates)||coordinates.length!==2||
+          segment.source!=="ORIGINAL_OSM_TAXIWAY_EDGE")continue;
+        const a=projectGeo(model,coordinates[0][1],coordinates[0][0]),
+          b=projectGeo(model,coordinates[1][1],coordinates[1][0]);
+        if(!a||!b)continue;
+        const thickness=Math.max(1.2,w*.0021);
+        svg.appendChild(s("line",{x1:a.x,y1:a.y,x2:b.x,y2:b.y,
+          stroke:"rgba(241,41,183,.86)","stroke-width":thickness,
+          "stroke-linejoin":"round","stroke-linecap":"round",
+          "class":"taxi-verified-source-edge-unverified-stand-link"}));
+      }
+    }
+  }
   const r=taxi.route;
   // Display selected OSM taxiway on the georeferenced ADC without inventing
   // any connection to another name or a parking stand.
@@ -1447,7 +1468,9 @@ function chartHint(){
 }
 function previewStandCandidate(id,entry){
   if(taxi.airport!=="LTFM"||!entry||!entry.position)return false;
-  taxi.standPreview={id,...entry};draw();return true;
+  taxi.standPreview={id,...entry};
+  taxi.standEgress=entry.egress||null;
+  draw();return true;
 }
 window.JEPPIRAN_TAXI={open:openTaxi,parse,openAdc,draw,routeDeviationMeters,previewStandCandidate};
 window.addEventListener("jeppiran-chart-rendered",()=>{draw();chartHint()});
