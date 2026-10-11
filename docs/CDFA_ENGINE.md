@@ -1,4 +1,4 @@
-# JEPPIRAN CDFA geometry engine — V1.2
+# JEPPIRAN CDFA geometry engine — V1.3
 
 **Engineering/simulator QA only; not approved for real-world navigation.**
 
@@ -99,3 +99,21 @@ Open `cdfa-engine-demo.html` in any modern browser alongside `cdfa-engine.js` (o
 const hamdan = { ...config, publishedAngleDeg: 3.30 }; // use chart angle
 const noPublishedAngle = { ...config }; // omit both angleDeg and publishedAngleDeg: defaults to 3.00° assumed
 ```
+
+
+## V1.3 QA catalog / Oct 11 2026
+
+- **Integer-only DME table rows:** `D1`, `D2`, ..., `DN` on the inbound branch, step exactly 1 NM. No fractional row for the precise 10-NM threshold crossing. Round the final DME bound *up* to the next integer; compute until both a DME reading >=10 and distance from threshold >=10 NM are covered.
+- **VDP (mathematical only):** `result.vdp.dmeDisplay` is a one-decimal string such as `D3.2`. Calculated by intersecting the modeled path with **MDA**, then converting threshold distance back into DME. It is NOT a published VDP or a clearance for descent; stored separately and optionally annotated next to the closest integer grid row.
+- **Published angles:** use angle stated on each plate; only when genuinely missing use `3.00° ASSUMED`. Exactly 3° means exactly 318 ft/NM; other angles use `6076.11548556 * tan(deg)`.
+- **QA catalog:** `web/cdfa-review.html` loads `web/data/cdfa-v2621-v13-qa.json` and shows 164 runway-specific VOR/NDB candidates without touching approved home/viewer designs.
+- **Release register:** 164 scoped chart pages; 3 chart-profile-interpreted models, 54 additional fitted mathematical models (DME geometry inferred from ONE published header altitude, NOT surveyed or independently verified), 107 held for missing threshold and/or DME evidence. No geometry/data has operational flight-approval. All 164 charts are listed for QA, but only 57 have numeric model tables.
+- **Safety gate:** do not present a chart with a fitted station offset as a valid flight CDFA. Published minima, MAP, missing-angle scope, mandatory restrictions and obstacle clearances remain separate constraints; a table extending outside published angle scope does not authorize that path. These models require chart-by-chart review before enabling in the normal app.
+
+### Run checks
+
+```
+node --test tests/cdfa-engine.test.cjs tests/cdfa-bulk-v2621.test.cjs
+```
+
+The entire CDFA QA catalogue is read-only, isolated from the normal JeppIran Charts UX and does not change the simulator bridges or locked visual assets.
