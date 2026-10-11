@@ -668,5 +668,72 @@
         "holdVerified": false
       }
     }
+  },
+  "overviewPreview": {
+    "chartPage": 38,
+    "source": "Jeppesen 10-9 main airport diagram original PDF, broad grey paved apron near taxi labels B A C D; overview symbols only",
+    "sourcePdfDrawingIds": [
+      9
+    ],
+    "coordSpace": "pdf_points_top_left",
+    "status": "DIAGRAM_ONLY_NOT_STAND_SURVEY",
+    "noIndividualStandLocation": true,
+    "entranceByTaxiway": {
+      "B": [
+        [
+          164.2,
+          212.4
+        ],
+        [
+          160.8,
+          208.9
+        ],
+        [
+          156,
+          204.1
+        ],
+        [
+          150.7,
+          196.9
+        ]
+      ],
+      "C": [
+        [
+          164.2,
+          212.4
+        ],
+        [
+          168.1,
+          212.9
+        ],
+        [
+          172.5,
+          214.3
+        ],
+        [
+          176.7,
+          215
+        ]
+      ],
+      "D": [
+        [
+          164.2,
+          212.4
+        ],
+        [
+          171.2,
+          215.3
+        ],
+        [
+          179.9,
+          219
+        ],
+        [
+          191.9,
+          223.6
+        ]
+      ]
+    },
+    "disclaimer": "Symbolic A-to-named-exit highlight on MAIN ADC. Stand-to-A details are only shown in the enlarged parking inset. Not a measured duplicate track or geographic position."
   }
 }
