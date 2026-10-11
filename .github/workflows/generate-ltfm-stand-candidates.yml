@@ -37,7 +37,7 @@ jobs:
           python scripts/extract_ltfm_stand_anchors.py web/data/charts/LTFM.pdf web/data/taxi-stand-positions/LTFM.json
       - name: Extract published stand-specific pushback restrictions and taxiway names
         run: |
-          python scripts/extract_ltfm_pushback_targets.py web/data/charts/LTFM.pdf web/data/taxi-stand-pushback/LTFM.json
+          python scripts/extract_ltfm_pushback_targets.py web/data/charts/LTFM.pdf web/data/taxi-stand-pushback/LTFM.json web/data/taxi-stand-positions/LTFM.json
       - name: Compute proximity links for EVERY extracted individual stand label
         run: |
           node scripts/import_taxi_stands.cjs web/data/taxi-networks/LTFM.json web/data/taxi-stand-positions/LTFM.json web/data/taxi-stand-candidates/LTFM.json
@@ -57,9 +57,13 @@ jobs:
           assert c['stats']['valid']==p['stats']['chartLabels']
           assert c['stats']['withCandidates']>=260
           push=json.load(open('web/data/taxi-stand-pushback/LTFM.json'))
-          assert push['stats']['tableRows']>=60
-          assert push['stats']['standNamesCovered']>=240
+          assert push['stats']['tableRows']>=75
+          assert push['stats']['standNamesCovered']>=270
           assert 'T5' in c['stands']['D3']['publishedPushbackTaxiways']
+          assert 'A' in c['stands']['K50']['publishedPushbackTaxiways']
+          assert 'T7' in c['stands']['D6']['publishedPushbackTaxiways']
+          assert c['stats']['standsWithPublishedPushback']>=220
+          assert c['stats']['standsWithMatchedPublishedTaxiwayCandidate']>=175
           assert not c['routingApproved']
           assert all(not item['routingApproved'] and not item['connectorVerified'] for x in c['stands'].values() for item in x['candidates'])
           assert all(x['positionType']=='APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER' for x in p['stands'])
