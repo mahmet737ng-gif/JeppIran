@@ -525,15 +525,15 @@
       "Taxi route alignment and flight-simulator positional check",
       "Check the new inset screenshot-space points against the ORIGINAL PDF intrinsic dimensions and surveyed airport centerlines"
     ],
-    "warn": "V2621 OIAW inset-only dashed schematic: screenshot-registration, unverified stand 4 lead-out and taxi A/B centerline; no measured taxi geometry. Must not be used for navigation.",
-    "chartOverlayPrecision": "SCREENSHOT_REGISTERED_INSET_QA_ONLY"
+    "warn": "The ST4→A→B graphic is a screenshot-registered dotted QA sketch of the PARKING INSET, not a surveyed taxiway or ATC clearance. Do not use it to position aircraft.",
+    "chartOverlayPrecision": "SCREENSHOT_MATCHED_INSET_ONLY"
   },
   "previewChartTransform": {
     "chartPage": 38,
     "chartNumber": "10-9",
     "width": 612,
     "height": 792,
-    "source": "QA viewport only; separate screenshot-traced schematic vertices are used to draw amber route. NEVER publish as certified georeferencing.",
+    "source": "Display-space reference only, not a georeference and never registered in georefByPage; frame geometry traced from visible Jeppesen PDF screenshot.",
     "meanLon": 48.747172222222225,
     "meanLat": 31.346019444444444,
     "meanX": 154,
@@ -553,125 +553,130 @@
   },
   "previewChartPixelPoints": {
     "S1": {
-      "x": 151,
-      "y": 322
+      "x": 137,
+      "y": 428
     },
     "S2": {
-      "x": 161,
-      "y": 332
+      "x": 151,
+      "y": 435
     },
     "S3": {
-      "x": 173.6,
-      "y": 341
+      "x": 172,
+      "y": 445
     },
     "S4": {
-      "x": 181.8,
-      "y": 346
+      "x": 197,
+      "y": 459
     },
     "S5": {
-      "x": 197.5,
-      "y": 356
+      "x": 216,
+      "y": 474
     },
     "S6": {
-      "x": 212.5,
-      "y": 368
+      "x": 234,
+      "y": 489
     },
     "BA": {
-      "x": 157.3,
-      "y": 302.4
+      "x": 160,
+      "y": 390
     },
     "AA": {
-      "x": 186.7,
-      "y": 326.4
+      "x": 184,
+      "y": 426
     },
     "CA": {
-      "x": 204,
-      "y": 334
+      "x": 222,
+      "y": 448
     },
     "DA": {
-      "x": 225,
-      "y": 349
+      "x": 248,
+      "y": 470
     },
     "BH": {
-      "x": 161.9,
-      "y": 296.3
+      "x": 160,
+      "y": 383
     },
     "CH": {
-      "x": 209,
-      "y": 327
+      "x": 225,
+      "y": 440
     },
     "DH": {
-      "x": 226,
-      "y": 336
+      "x": 252,
+      "y": 461
     }
   },
   "previewChartInsetBounds": {
-    "left": 130,
-    "top": 285,
-    "right": 238,
-    "bottom": 392,
+    "left": 99,
+    "top": 374,
+    "right": 287,
+    "bottom": 507,
     "chartPage": 38,
     "coordinateSpace": "pdf_points",
-    "source": "OIAW chart 10-9 page 38 inset only. Registered visually against browser screenshot at V2621; still NOT surveyed."
+    "source": "OIAW Jeppesen 10-9 parking inset, screenshot-aligned against the full 612pt wide chart canvas; schematic QA only, not surveyed"
   },
   "previewChartEdgePaths": {
     "S4>AA": [
       {
-        "x": 181.8,
-        "y": 346
+        "x": 197,
+        "y": 459
       },
       {
-        "x": 185.6,
-        "y": 339
+        "x": 198.5,
+        "y": 451
       },
       {
-        "x": 187.8,
-        "y": 333.5
+        "x": 196,
+        "y": 444
       },
       {
-        "x": 186.7,
-        "y": 326.4
+        "x": 191,
+        "y": 435
+      },
+      {
+        "x": 184,
+        "y": 426
       }
     ],
     "AA>BA": [
       {
-        "x": 186.7,
-        "y": 326.4
+        "x": 184,
+        "y": 426
       },
       {
-        "x": 179,
-        "y": 319.2
+        "x": 177.5,
+        "y": 421
       },
       {
-        "x": 170.3,
-        "y": 312.7
+        "x": 171,
+        "y": 411
       },
       {
-        "x": 162.3,
-        "y": 306.2
+        "x": 165.5,
+        "y": 402
       },
       {
-        "x": 157.3,
-        "y": 302.4
+        "x": 160,
+        "y": 390
       }
     ],
     "BA>BH": [
       {
-        "x": 157.3,
-        "y": 302.4
+        "x": 160,
+        "y": 390
       },
       {
-        "x": 154.6,
-        "y": 299.4
+        "x": 157.7,
+        "y": 386.7
       },
       {
-        "x": 156.6,
-        "y": 297
+        "x": 158.5,
+        "y": 384
       },
       {
-        "x": 161.9,
-        "y": 296.3
+        "x": 160,
+        "y": 383
       }
     ]
-  }
+  },
+  "qaGeometryRevision": "2621-oiaw-inset-registration-r3"
 }
