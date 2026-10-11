@@ -69,6 +69,9 @@ function parse(raw){
 const dist=(a,b)=>Math.hypot((Number(a.lat)-Number(b.lat))*111195,
   (Number(a.lon)-Number(b.lon))*111195*Math.cos((Number(a.lat)+Number(b.lat))*Math.PI/360));
 function adjacent(graph,options={}){
+  // Reuse the physical node graph already indexed for this airport/cycle.
+  // All known junctions are in memory; no PDF scanning or OSM fetch on GO.
+  if(window.JEPPIRAN_TAXI_ADJACENCY)return window.JEPPIRAN_TAXI_ADJACENCY.nodeLinks(graph,options);
   const links={};
   for(const e of graph.edges){
     if(e.closed||e.military||!graph.nodes[e.from]||!graph.nodes[e.to])continue;
