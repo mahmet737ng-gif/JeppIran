@@ -105,5 +105,6 @@ async function go(textInput,airport) {
   return true;
 }
 root.addEventListener("jeppiran-taxi-route-updated",paint);
+root.addEventListener("jeppiran-chart-rendered",paint);
 root.JEPPIRAN_PUBLISHED_TAXI={recognize,go,clear,paint,load};
 })(typeof window!=="undefined"?window:globalThis);
