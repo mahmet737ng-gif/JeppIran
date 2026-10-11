@@ -1,7 +1,7 @@
 'use strict';
 const { test } = require('node:test');
 const assert = require('node:assert/strict');
-const { buildTable, round20, gradientForAngle } = require('../cdfa-engine.js');
+const { buildTable, round20, gradientForAngle, horizontalDistanceFromDme } = require('../cdfa-engine.js');
 const base = () => ({
   chartId: 'TRAINING-ONLY', chartDmeId: 'DEMO',
   thresholdElevationFt: 100, tchFt: 50, angleDeg: 3,
@@ -49,9 +49,10 @@ test('before-threshold DME station needs explicit aircraft-side branch', () => {
 test('behind DME station, aircraft between station and threshold', () => {
   const c = base(); c.station = {id:'DEMO',placement:'before_threshold',offsetNm:0.5,lateralNm:0,branch:'between_station_and_threshold'};
   c.dmeReadingsNm = [0.2]; c.validAngleDmeRange = { from:0, to:1};
-  const r = buildTable(c);
-  assert.equal(r.rows[0].thresholdDistanceNm, 0.3);
-  assert.equal(r.rows[0].rawAltitudeFt, 245.4);
+  const p=horizontalDistanceFromDme(0.2,{station:c.station,thresholdElevationFt:100,tchFt:50,gradientFtPerNm:318});
+  assert.equal(p.distanceNm, 0.3);
+  const r=buildTable(c);
+  assert.ok(r.rows.every(x=>Number.isInteger(x.dmeNm)));
 });
 test('off-axis DME must use geometric projection, not blindly subtract offset', () => {
   const c = base(); c.station.lateralNm = 0.6;
@@ -104,7 +105,7 @@ test('unresolvable slant distance blocks the QA table', () => {
   const c=base(); c.station.lateralNm=2;
   const r=buildTable(c);
   assert.equal(r.status,'BLOCKED_BY_QA');
-  assert.equal(r.rows[0].rawAltitudeFt,null);
+  assert.ok(r.issues.some(x=>x.code==='REQUESTED_DME_GEOMETRY_UNRESOLVED'));
 });
 
 test('explicit lateral offset is required, no silent centerline assumption', () => {
@@ -179,15 +180,15 @@ test('disagreeing chart angle properties require correction', () => {
 test('v1.2: automatic table extends to both 10 NM from runway threshold and DME 10', () => {
   const c=base(); c.dmeReadingsNm=[1,2,3,10]; c.validAngleDmeRange={from:1,to:10};
   const r=buildTable(c);
-  assert.equal(r.version,'1.2.0');
+  assert.equal(r.version,'1.3.0');
   assert.equal(r.coverage.requiredThresholdDistanceNm,10);
   assert.equal(r.coverage.requiredDmeReadoutNm,10);
   assert.equal(r.coverage.dmeAtRequiredThresholdNm,10.5);
-  assert.ok(r.coverage.autoAddedDmeReadingsNm.includes(10.5));
+  assert.ok(r.coverage.autoAddedDmeReadingsNm.includes(11));
   assert.equal(r.coverage.meetsThresholdModelCoverage,true);
   assert.equal(r.coverage.meetsDmeModelCoverage,true);
-  assert.equal(r.rows.find(x=>x.dmeNm===10.5).thresholdDistanceNm,10);
-  assert.equal(r.rows.find(x=>x.dmeNm===10.5).status,'MODEL_ONLY');
+  assert.equal(r.rows.find(x=>x.dmeNm===11).thresholdDistanceNm,10.5);
+  assert.equal(r.rows.find(x=>x.dmeNm===11).status,'MODEL_ONLY');
 });
 
 test('v1.2: published 3.77 degrees and offset 2.2 NM: threshold 10 NM occurs at DME 12.2', () => {
@@ -207,10 +208,10 @@ test('v1.2: published 3.77 degrees and offset 2.2 NM: threshold 10 NM occurs at 
   assert.equal(r.coverage.dmeAtRequiredThresholdNm,12.2);
   assert.ok(r.coverage.meetsThresholdModelCoverage);
   assert.equal(r.coverage.publishedAngleCovers10Nm,false);
-  assert.ok(r.coverage.autoAddedDmeReadingsNm.includes(12.2));
-  const edge=r.rows.find(x=>Math.abs(x.dmeNm-12.2)<0.00001);
-  assert.equal(edge.thresholdDistanceNm,10);
-  assert.equal(edge.roundedAltitudeFt,8400);
+  assert.ok(r.coverage.autoAddedDmeReadingsNm.includes(13));
+  const edge=r.rows.find(x=>x.dmeNm===13);
+  assert.equal(edge.thresholdDistanceNm,10.8);
+  assert.equal(edge.roundedAltitudeFt,8720);
   assert.ok(edge.reasons.includes('OUTSIDE_PUBLISHED_ANGLE_SCOPE'));
   assert.ok(edge.reasons.includes('STATION_GEOMETRY_NOT_SURVEY_VERIFIED'));
   assert.equal(r.checks.every(x=>x.ok),true);
@@ -238,7 +239,7 @@ test('v1.2: mandatory stop does not truncate diagnostic 10 NM coverage, but supp
   c.publishedConstraints=[{dmeNm:2,altitudeFt:627,type:'mandatory'}];
   const r=buildTable(c);
   assert.equal(r.coverage.meetsThresholdModelCoverage,true);
-  assert.ok(r.rows.find(x=>x.dmeNm>=10.5).reasons.includes('BEYOND_MANDATORY_STOP'));
+  assert.ok(r.rows.find(x=>x.dmeNm>=11).reasons.includes('BEYOND_MANDATORY_STOP'));
   assert.equal(r.candidateRows.length,2);
 });
 
@@ -247,8 +248,8 @@ test('v1.2: slant and lateral transmitter offsets are included in 10 NM coverage
   c.station={...c.station,lateralNm:0.5,elevationFt:90};
   const r=buildTable(c);
   assert.equal(r.coverage.meetsThresholdModelCoverage,true);
-  const edge=r.rows.find(x=>Math.abs(x.dmeNm-r.coverage.dmeAtRequiredThresholdNm)<0.0001);
-  assert.ok(edge && Math.abs(edge.thresholdDistanceNm-10)<.001);
+  const edge=r.rows.find(x=>x.dmeNm===Math.ceil(r.coverage.dmeAtRequiredThresholdNm));
+  assert.ok(edge && edge.thresholdDistanceNm >= 10);
   assert.ok(r.coverage.dmeAtRequiredThresholdNm>10.5);
 });
 
@@ -259,4 +260,41 @@ test('v1.2: station before threshold covers both minimums (DME 10 and 10 NM from
   assert.equal(r.coverage.meetsDmeModelCoverage,true);
   assert.equal(r.coverage.meetsThresholdModelCoverage,true);
   assert.ok(r.coverage.maxModeledThresholdDistanceNm>=10.5);
+});
+
+
+test('v1.3 displays ONLY integer DME steps even if fractional inputs supplied', () => {
+  const c=base(); c.dmeReadingsNm=[1,1.5,2,2.2,3,3.5,10.5];
+  const r=buildTable(c);
+  assert.ok(r.rows.every(x=>Number.isInteger(x.dmeNm)));
+  assert.deepEqual(r.rows.map(x=>x.dmeNm),Array.from({length:11},(_,i)=>i+1));
+  assert.equal(r.coverage.gridStepDmeNm,1);
+});
+test('v1.3 VDP is calculated with one decimal but is NOT inserted as a fractional DME row',()=>{
+ const c=base();c.mdaFt=563;
+ const r=buildTable(c);
+ assert.equal(r.vdp.dmeDisplay,'D1.8');
+ assert.ok(r.rows.every(x=>Number.isInteger(x.dmeNm)));
+ assert.equal(r.vdp.status,'CALCULATED_MDA_INTERCEPT_QA_ONLY');
+ assert.equal(r.vdp.published,false);
+ assert.equal(r.rows.filter(x=>x.vdpMarker).length,1);
+});
+test('v1.3 VDP missing MDA is visibly unavailable',()=>{
+ const r=buildTable(base());
+ assert.equal(r.vdp.dmeDisplay,null);
+ assert.equal(r.vdp.reason,'MDA_NOT_SUPPLIED');
+});
+test('v1.3 engine rejects half-mile table spacing',()=>{
+ const c=base(); c.coverageStepDmeNm=.5;
+ assert.throws(()=>buildTable(c),/INTEGER_DME_GRID_REQUIRED/);
+});
+test('v1.3 sample Urmia reaches threshold+10 by integer D13 and VDP has .1 digit',()=>{
+ const c={...base(),thresholdElevationFt:4342,tchFt:50,chartDmeId:'UMH',publishedAngleDeg:3.77,mdaFt:4800,
+  station:{id:'UMH',placement:'after_threshold',offsetNm:2.2,lateralNm:0,geometryVerified:false},
+  dmeReadingsNm:[3,4,5,6,7,8,9,10,11,12,13],validAngleDmeRange:{from:3,to:9}};
+ delete c.angleDeg;
+ const r=buildTable(c);
+ assert.equal(r.coverage.gridEndDmeNm,13);
+ assert.equal(r.coverage.meetsThresholdModelCoverage,true);
+ assert.equal(r.vdp.dmeDisplay,'D3.2');
 });
