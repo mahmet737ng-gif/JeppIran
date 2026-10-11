@@ -644,6 +644,19 @@ function focusQaParkingInset(bounds){
   if(Math.abs(stage.scrollTop-target)>Math.min(80,stage.clientHeight*.13))
     stage.scrollTo({top:target,behavior:"smooth"});
 }
+function focusPdfVectorOnADC(points,chartHeight){
+  if(taxi.airport!=="OIAW"||Number(selectedChart?.page)!==38||
+     !taxi.active||typeof chartZoom==="number"&&chartZoom>1.001)return;
+  const stage=$("pdfStage"),canvas=$("pdfCanvas");
+  if(!stage||!canvas||!(chartHeight>0)||!(canvas.clientHeight>0)||
+     stage.scrollHeight<=stage.clientHeight+20||typeof stage.scrollTo!=="function")return;
+  const nearStand=points?.[0]?.[1];
+  if(!Number.isFinite(nearStand))return;
+  const y=nearStand/chartHeight*canvas.clientHeight;
+  const top=Math.min(stage.scrollHeight-stage.clientHeight,
+    Math.max(0,Math.round(y-stage.clientHeight*.55)));
+  stage.scrollTo({top,behavior:"smooth"});
+}
 function surveyGo(typed){
   const audit=taxi.surveyEngine?.parse(typed);
   taxi.route=null;taxi.auto=null;taxi.genericMonitor=null;
@@ -666,6 +679,8 @@ function surveyGo(typed){
     chartWidth:traced.chartWidth,chartHeight:traced.chartHeight,
     previewOnly:true,routeLabels:audit.tokens,sourceSha:traced.sourceSha};
   draw();
+  if(typeof requestAnimationFrame==="function")
+    requestAnimationFrame(()=>focusPdfVectorOnADC(traced.points,traced.chartHeight));
   message("OIAW ORIGINAL PDF VECTOR QA · "+audit.tokens.join(" → ")+
     " · "+traced.points.length+" source-chart vertices · "+
     "NO real distance/ground GPS derived. RWY access and hold-short "+
