@@ -1,7 +1,7 @@
 /* JEPPIRAN TAXI preview · verified graphs only · NOT FOR ACTUAL NAVIGATION */
 (function(){
 "use strict";
-const ns="http://www.w3.org/2000/svg", taxi={auto:null,graphRequest:null,active:false,trace:false,startSelect:false,testStart:null,airport:"",graph:null,standReference:null,selectedStand:"",showStands:false,showNetwork:false,route:null,survey:null,surveyEngine:null,manual:new Map(),prompted:"",goTicket:0,networkAudit:null,networkOpen:false,highlightTaxiway:"",insGroups:null,standGroupAudit:null,standGroupOpen:false};
+const ns="http://www.w3.org/2000/svg", taxi={auto:null,graphRequest:null,active:false,trace:false,startSelect:false,testStart:null,airport:"",graph:null,standReference:null,selectedStand:"",showStands:false,showNetwork:false,route:null,survey:null,surveyEngine:null,surveyVector:null,manual:new Map(),prompted:"",goTicket:0,networkAudit:null,networkOpen:false,highlightTaxiway:"",insGroups:null,standGroupAudit:null,standGroupOpen:false};
 const $=id=>document.getElementById(id);
 const name=s=>String(s||"").trim().toUpperCase().replace(/\s+/g," ");
 function parse(raw){
@@ -454,7 +454,7 @@ function message(s,warning=false){
 const OIAW_QA_REVISION="2621-oiaw-inset-registration-r3";
 async function fetchGraph(icao){
   taxi.graph=null;taxi.genericEngine=null;taxi.genericMonitor=null;
-  taxi.survey=null;taxi.surveyEngine=null;
+  taxi.survey=null;taxi.surveyEngine=null;taxi.surveyVector=null;
   message("Checking verified ground network for "+icao+"…");
   try{
     // The ADC inventory is the sole OIAW source until source PDF curves and
@@ -470,14 +470,36 @@ async function fetchGraph(icao){
          inventory.routeGeometryApproved!==false)
         throw Error("ADC survey identity/geometry approval mismatch");
       const compiled=surveyApi.index(inventory);
+      // Source-PDF black-stroke paths are separate from the topology audit.
+      // A missing vector file must never trigger fallback to hand-projected
+      // geographic edges. Fingerprint the CURRENT terminal chart source.
+      let pdfVectors=null,vectorWarning="";
+      try{
+        const vr=await fetch("./data/taxi-chart-traces/OIAW-2621.json?v=2621-vector-pdf-r1",{cache:"no-store"});
+        if(!vr.ok)throw Error("PDF vector HTTP "+vr.status);
+        const record=await vr.json();
+        if(record.airport!==icao||String(record.cycle)!==String(manifest?.cycle)||
+           record.chart?.globalPage!==38||record.source?.sha256!==manifest?.source_sha256)
+          throw Error("PDF source hash/cycle does not match current V2621 charts");
+        pdfVectors=window.JEPPIRAN_TAXI_PDF_VECTOR?.build(record);
+        if(!pdfVectors)throw Error("PDF vector renderer script not loaded");
+        for(const n of compiled.stands){
+          const preview=pdfVectors.route([n,"A","B"],38);
+          if(!preview.ok)throw Error(n+" source curve mismatch: "+preview.error);
+        }
+      }catch(err){pdfVectors=null;vectorWarning=String(err?.message||err)}
       if(taxi.airport!==icao)return null;
-      taxi.survey=inventory;taxi.surveyEngine=compiled;
-      $("taxiQaInput").placeholder="ST2 A B · ST4 A B (ADC topology, geometry pending)";
+      taxi.survey=inventory;taxi.surveyEngine=compiled;taxi.surveyVector=pdfVectors;
+      $("taxiQaInput").placeholder=pdfVectors?
+        "ST2 A B · ST4 A B (vector-traced PDF QA)":
+        "ST2 A B · ST4 A B (topology only)";
       $("taxiQaStands").textContent="STANDS ("+compiled.stands.length+")";
-      message("OIAW ADC INVENTORY · "+compiled.stands.length+
-        " stand curves · "+compiled.taxiways.length+" named taxiways · "+
-        compiled.connections.length+" observed graph links · RUNWAY GATES AND "+
-        "TRUE CURVE GEOMETRY NOT VERIFIED. No guessed chart lines are drawn.",true);
+      message("OIAW ADC SURVEY · "+compiled.stands.length+
+        " stand branches · "+compiled.taxiways.length+" named taxiways · "+
+        (pdfVectors?"PDF ORIGINAL VECTOR CURVES LOADED (A/B ONLY) · ":
+          "SOURCE VECTOR GEOMETRY UNAVAILABLE: "+vectorWarning+" · ")+
+        "RUNWAY GATES, C/D/E and GPS ROUTING are not yet traced/approved. "+
+        "Simulator chart QA only.",true);
       draw();return inventory;
     }
     // OIAW screenshot-registered QA overlay must not be mixed with a stale
@@ -625,18 +647,29 @@ function focusQaParkingInset(bounds){
 function surveyGo(typed){
   const audit=taxi.surveyEngine?.parse(typed);
   taxi.route=null;taxi.auto=null;taxi.genericMonitor=null;
-  draw();
   if(!audit){
-    message("No airport survey index loaded. No path invented.",true);return;
+    draw();message("No airport survey index loaded. No path invented.",true);return;
   }
   if(!audit.ok){
-    message("OIAW ADC INVENTORY · "+audit.error+" · LINEWORK NOT DRAWN.",true);return;
+    draw();message("OIAW ADC INVENTORY · "+audit.error+" · LINEWORK NOT DRAWN.",true);return;
   }
-  message("OIAW ADC TOPOLOGY · "+audit.tokens.join(" → ")+
-    " · "+audit.segments.length+" observed adjacency links. "+
-    "Exact stand lead-out curves and taxiway centreline remain UNTRACED "+
-    "from the source PDF. No guessed route is drawn; runway access requires "+
-    "separate hold-short QA.",true);
+  const traced=taxi.surveyVector?.route(audit.tokens,Number(selectedChart?.page));
+  if(!traced?.ok){
+    draw();
+    message("OIAW ADC TOPOLOGY · "+audit.tokens.join(" → ")+
+      " · observed junctions ONLY. Source PDF path not mapped for this "+
+      "command: "+(traced?.error||"vector tracing unavailable")+
+      ". No shortcut or fabricated connector.",true);
+    return;
+  }
+  taxi.route={airport:taxi.airport,surveyPDFRoute:true,points:traced.points,
+    chartWidth:traced.chartWidth,chartHeight:traced.chartHeight,
+    previewOnly:true,routeLabels:audit.tokens,sourceSha:traced.sourceSha};
+  draw();
+  message("OIAW ORIGINAL PDF VECTOR QA · "+audit.tokens.join(" → ")+
+    " · "+traced.points.length+" source-chart vertices · "+
+    "NO real distance/ground GPS derived. RWY access and hold-short "+
+    "remain blocked. Chart-only simulator preview; NOT FOR NAVIGATION.",true);
 }
 function genericGo(typed){
   const engine=taxi.genericEngine;
@@ -848,7 +881,7 @@ function nearest(graph,pos,firstTaxiway=null){
 }
 function syncAirport(){
   if(!taxi.active||taxi.airport===selectedAirport)return;
-  taxi.goTicket++;taxi.airport=selectedAirport;taxi.graph=null;taxi.genericEngine=null;taxi.genericMonitor=null;taxi.survey=null;taxi.surveyEngine=null;
+  taxi.goTicket++;taxi.airport=selectedAirport;taxi.graph=null;taxi.genericEngine=null;taxi.genericMonitor=null;taxi.survey=null;taxi.surveyEngine=null;taxi.surveyVector=null;
   taxi.route=null;taxi.auto=null;taxi.standPreview=null;taxi.standEgress=null;taxi.standLead=null;taxi.standQaRoute=null;taxi.testStart=null;taxi.prompted="";
   taxi.networkAudit=null;taxi.highlightTaxiway="";
   $("taxiQaAirport").textContent=selectedAirport;
@@ -1558,7 +1591,11 @@ function draw(){
   const qaChart=taxi.graph?.qaPreviewOnly&&
     taxi.graph?.previewChartTransform?.chartPage===Number(selectedChart?.page)&&
     isAdc(selectedChart)?taxi.graph.previewChartTransform:null;
-  const model=qaChart||publishedModel,w=model?.width||1000,h=model?.height||1000;
+  const vectorPage=taxi.route?.surveyPDFRoute&&
+    Number(selectedChart?.page)===38&&taxi.airport==="OIAW"?taxi.route:null;
+  const model=qaChart||publishedModel,
+    w=vectorPage?.chartWidth||model?.width||1000,
+    h=vectorPage?.chartHeight||model?.height||1000;
   const svg=s("svg",{class:"taxi-qa-overlay",viewBox:"0 0 "+w+" "+h,preserveAspectRatio:"none"});
   svg.style.cssText="position:absolute;inset:0;width:100%;height:100%;z-index:12;pointer-events:none";
   if(taxi.airport==="OIMM"&&taxi.showNetwork&&taxi.graph&&model){
@@ -1679,6 +1716,19 @@ function draw(){
     }
   }
   const r=taxi.route;
+  if(r?.surveyPDFRoute&&r.airport===selectedAirport&&
+     Number(selectedChart?.page)===38&&r.points?.length>1){
+    // Actual JEPPIRAN V2621 PDF black Bezier centerlines, not geographic
+    // straight-line projections. No aircraft position or ATC clearance.
+    svg.appendChild(s("polyline",{
+      points:r.points.map(p=>p[0].toFixed(3)+","+p[1].toFixed(3)).join(" "),
+      fill:"none",stroke:"rgba(234,35,187,.92)",
+      "stroke-width":Math.max(1.2,w*.0021),
+      "stroke-dasharray":"4 3",
+      "stroke-linecap":"round","stroke-linejoin":"round",
+      "class":"taxi-pdf-vector-qa-only"
+    }));
+  }
   // Display selected OSM taxiway on the georeferenced ADC without inventing
   // any connection to another name or a parking stand.
   if(taxi.highlightTaxiway&&taxi.graph&&taxi.airport===selectedAirport&&model){
