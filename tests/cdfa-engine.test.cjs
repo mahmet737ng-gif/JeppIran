@@ -180,7 +180,7 @@ test('disagreeing chart angle properties require correction', () => {
 test('v1.2: automatic table extends to both 10 NM from runway threshold and DME 10', () => {
   const c=base(); c.dmeReadingsNm=[1,2,3,10]; c.validAngleDmeRange={from:1,to:10};
   const r=buildTable(c);
-  assert.equal(r.version,'1.4.0');
+  assert.equal(r.version,'1.5.0');
   assert.equal(r.coverage.requiredThresholdDistanceNm,10);
   assert.equal(r.coverage.requiredDmeReadoutNm,10);
   assert.equal(r.coverage.dmeAtRequiredThresholdNm,10.5);
@@ -354,4 +354,39 @@ test('v1.4: height conflicts remain blocked when airport fallback is used',()=>{
  const r=buildTable(c);
  assert.equal(r.status,'BLOCKED_BY_QA');
  assert.ok(r.issues.some(x=>x.code==='BELOW_PUBLISHED_MINIMUM'));
+});
+
+// v1.5: chart header determines PROCEDURE navaid; DME is independent distance aid.
+const { identifyProcedureReference } = require('../cdfa-engine.js');
+test('v1.5: NDB source header resolves navaid, not a VOR', () => {
+ assert.deepEqual(identifyProcedureReference('NDB ABD 210'),{type:'NDB',id:'ABD',frequency:210,unit:'kHz',source:'VISUALLY_TRANSCRIBED_CHART_HEADER'});
+ assert.equal(identifyProcedureReference('NDB ABM 285').type,'NDB');
+});
+test('v1.5: separate NDB procedure aid and map-labelled supporting DME',()=>{
+ const c=base();c.chartDmeId='ABM';c.station.id='ABM';
+ c.procedureHeader='NDB ABM 285';c.procedureFamily='NDB';c.procedureReferenceId='ABM';
+ c.distanceAidEvidence={type:'DME',id:'ABM',frequencyMhz:115.4,source:'CHART_MAP_D_115.4_ABM'};
+ const r=buildTable(c);
+ assert.equal(r.procedureReference.type,'NDB');
+ assert.equal(r.procedureReference.frequency,285);
+ assert.equal(r.distanceMeasurementReference.frequencyMhz,115.4);
+ assert.match(r.separateReferenceWarning,/NDB.*NOT NDB distances/);
+});
+test('v1.5: conflicting header cannot silently switch NDB to VOR',()=>{
+ const c=base(); c.procedureHeader='NDB ABM 285';c.procedureFamily='VOR';
+ c.distanceAidEvidence={type:'DME',id:'DEMO',frequencyMhz:115.4};
+ assert.throws(()=>buildTable(c),/PROCEDURE_FAMILY_MISMATCH_WITH_HEADER/);
+});
+test('v1.5: NDB header without independently labelled DME source must fail',()=>{
+ const c=base();c.procedureHeader='NDB ABM 285';
+ assert.throws(()=>buildTable(c),/NDB_SUPPORTING_DME_CHART_EVIDENCE_REQUIRED/);
+});
+test('v1.5: DME source must match station id, cannot borrow another navaid',()=>{
+ const c=base();c.procedureHeader='NDB ABM 285';
+ c.distanceAidEvidence={type:'DME',id:'OTHER',frequencyMhz:115.4};
+ assert.throws(()=>buildTable(c),/DISTANCE_AID_EVIDENCE_MISMATCH/);
+});
+test('v1.5: heading not read or ambiguous fails closed',()=>{
+ assert.throws(()=>identifyProcedureReference('NDB ABM 285 VOR ABD 115.1'),/AMBIGUOUS/);
+ assert.throws(()=>identifyProcedureReference('NDB only'),/NOT_FOUND/);
 });
