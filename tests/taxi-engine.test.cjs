@@ -116,7 +116,11 @@ const converted=taxi.fromLegacy(oimm,profile);
 assert.equal(converted.airport,"OIMM");
 assert.equal(converted.edges.length,oldSize);
 assert.equal(converted.runways["13L"].goalKind,"access-qa");
-assert.equal(converted.edges.some(e=>e.quality==="projected"),true);
+assert(converted.edges.some(e=>e.kind==="runway"),"Source runway vectors must be preserved");
+assert(converted.edges.filter(e=>e.kind==="runway").every(e=>e.physicalRunway==="13R/31L"),
+ "Legacy OIMM physical runway label must be explicit in adapter settings");
+assert(converted.edges.every(e=>["qa","projected","blocked"].includes(e.quality)),
+ "Published legacy QA must never be upgraded to approved navigation geometry");
 const convertedLtfm=taxi.fromLegacy(ltfm);
 assert.equal(convertedLtfm.airport,"LTFM");
 assert(convertedLtfm.edges.length>4000);
