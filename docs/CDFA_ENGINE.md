@@ -1,4 +1,4 @@
-# JEPPIRAN CDFA geometry engine — V1.4
+# JEPPIRAN CDFA geometry engine — V1.5
 
 **Engineering/simulator QA only; not approved for real-world navigation.**
 
@@ -101,13 +101,13 @@ const noPublishedAngle = { ...config }; // omit both angleDeg and publishedAngle
 ```
 
 
-## V1.4 QA catalog / Oct 11 2026
+## V1.4 QA catalog / Oct 11 2026 (historical)
 
 - **Integer-only DME table rows:** `D1`, `D2`, ..., `DN` on the inbound branch, step exactly 1 NM. No fractional row for the precise 10-NM threshold crossing. Round the final DME bound *up* to the next integer; compute until both a DME reading >=10 and distance from threshold >=10 NM are covered.
 - **VDP (mathematical only):** `result.vdp.dmeDisplay` is a one-decimal string such as `D3.2`. Calculated by intersecting the modeled path with **MDA**, then converting threshold distance back into DME. It is NOT a published VDP or a clearance for descent; stored separately and optionally annotated next to the closest integer grid row.
 - **Published angles:** use angle stated on each plate; only when genuinely missing use `3.00° ASSUMED`. Exactly 3° means exactly 318 ft/NM; other angles use `6076.11548556 * tan(deg)`.
-- **QA catalog:** `web/cdfa-review.html` loads `web/data/cdfa-v2621-v14-qa.json` and shows 164 runway-specific VOR/NDB candidates without touching approved home/viewer designs.
-- **Release register:** 164 scoped chart pages; 4 chart-profile-interpreted models, 113 fitted mathematical models (DME geometry inferred from ONE published header altitude, NOT surveyed or independently verified), 47 withheld for missing DME reference, TCH, or other geometry evidence. Among the 117 table models, 59 apply the airport-elevation fallback and carry QA-only warnings. No geometry/data has operational flight approval.
+- **QA catalog:** `web/cdfa-review.html` loads `web/data/cdfa-v2621-v15-qa.json` and shows 164 runway-specific VOR/NDB candidates without touching approved home/viewer designs.
+- **Release register:** 164 scoped chart pages; 4 chart-profile-interpreted models, 113 fitted mathematical models (DME geometry inferred from ONE published header altitude, NOT surveyed or independently verified), 47 withheld for missing DME reference, TCH, or other geometry evidence. In this historical v1.4 snapshot, 117 table models existed and 59 used airport-elevation fallback and carry QA-only warnings. No geometry/data has operational flight approval.
 - **Safety gate:** do not present a chart with a fitted station offset as a valid flight CDFA. Published minima, MAP, missing-angle scope, mandatory restrictions and obstacle clearances remain separate constraints; a table extending outside published angle scope does not authorize that path. These models require chart-by-chart review before enabling in the normal app.
 
 ### Run checks
@@ -126,3 +126,16 @@ The entire CDFA QA catalogue is read-only, isolated from the normal JeppIran Cha
 - Every result records `parameters.elevationSource` and `parameters.usedAirportElevationFallback`.
 - With fallback, all rows carry `AIRPORT_ELEVATION_USED_INSTEAD_OF_RUNWAY_THRESHOLD_QA`, `candidateRows` is empty, and status is `PRELIMINARY_AIRPORT_ELEV_FALLBACK` unless published constraints fail. This is a **diagnostic model only**, not verified runway-specific obstacle clearance.
 - Fallback elevation never cures uncertain VOR/DME position, angle scope, mandatory/step-down conflict, or MDA restrictions.
+
+
+## V1.5 — NDB as procedure navaid vs supporting DME
+
+The heading identifies the **procedure navigation aid** (`NDB ABD 210`, `NDB ABM 285`). This is distinct from the map-printed supporting DME source (`ABD DME 115.1`, `ABM DME 115.4`), which supplies published **D distances**. NDB does not transmit a DME range. Never replace DME measurements with NDB distances or assume NDB/DME antennas are colocated without independent station coordinates.
+
+`identifyProcedureReference(heading)` only accepts one unambiguous navaid. The engine rejects family/ident mismatches and NDB chart models with unrecorded supporting-DME evidence. The five manually reviewed V2621 charts (PDF pp. 18, 56, 57, 59, 60) have modeled one-NM DME tables, inferred chart-derived offsets, and computed VDP in DME with one decimal; they remain **simulator engineering QA only**.
+
+For the two RWY08 charts, **D7 = 2300 ft MANDATORY** remains exactly published and the angle is not claimed valid beyond it. For the two RWY26 charts, the published 3.6 NM to RW26 from D5 defines a chart-interpreted DME/threshold offset, not a surveyed NDB/DME coincidence. Rows beyond the end of the final-angle segment are **EXTRAPOLATED MODEL ONLY** even though shown to >= 10 NM from threshold.
+
+New QA register: `web/data/cdfa-v2621-v15-qa.json`. Supersedes v1.4 register without deleting that historical QA file.
+
+Current V1.5 totals: **164 reviewed; 122 QA geometry tables; 42 withheld**. Five NDB-header models added (OIAA page18 and OIBA pages56,57,59,60). The v1.4 register remains available as historical snapshot; v1.5 is the viewer's data source.
