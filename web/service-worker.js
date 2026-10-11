@@ -22,6 +22,15 @@ self.addEventListener("fetch",event=>{
   const url=new URL(event.request.url);
   if(url.origin!==self.location.origin)return;
   if(url.pathname.includes("/charts/"))return;
+  // V2621 chart-title hotfix: refresh only the chart index when online.
+  // Keep the prior index available offline and preserve cached airport PDFs.
+  if(url.pathname.endsWith("/data/charts-current.json")){
+    event.respondWith(fetch(event.request).then(response=>{
+      if(response.ok){const copy=response.clone();event.waitUntil(caches.open(CACHE).then(cache=>cache.put(event.request,copy)))}
+      return response;
+    }).catch(()=>caches.match(event.request)));
+    return;
+  }
   if(/\/(app\.js|taxi-mode\.js|index\.html|styles\.css|service-worker\.js)$/.test(url.pathname)||url.pathname.endsWith("/JeppIran/")){
     event.respondWith(fetch(event.request).then(response=>{
       if(response.ok){const copy=response.clone();event.waitUntil(caches.open(CACHE).then(cache=>cache.put(event.request,copy)))}
