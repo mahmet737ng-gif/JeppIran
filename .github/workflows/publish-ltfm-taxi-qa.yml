@@ -1,0 +1,42 @@
+name: Publish LTFM OSM Taxi QA Network
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/publish-ltfm-taxi-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build-network:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Fetch actual LTFM OSM centerline data and inspect graph
+        run: python scripts/build_ltfm_osm_taxi.py
+      - name: Sanity test published JSON
+        run: |
+          python3 - <<'PY'
+          import json
+          path='web/data/taxi-networks/LTFM.json'
+          g=json.load(open(path))
+          assert g['airport']=='LTFM' and g['cycle']=='2621'
+          assert g['simulatorTestOnly'] and not g['verified']
+          assert len(g['edges'])>=100 and len(g['nodes'])>=100
+          print("LTFM GRAPH READY",len(g['nodes']),len(g['edges']),len(g['stands']))
+          PY
+      - name: Publish QA ground graph to main
+        run: |
+          git config user.name "jeppiran-taxi-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git add web/data/taxi-networks/LTFM.json
+          git diff --cached --quiet && { echo "No network changes"; exit 0; }
+          git commit -m "data(taxi): publish source-attributed LTFM OSM simulator QA graph"
+          git pull --rebase origin main
+          git push origin HEAD:main
