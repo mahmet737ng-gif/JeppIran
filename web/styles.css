@@ -1228,3 +1228,29 @@ body.viewer-fullscreen .aircraft-follow-btn{
  #chartsView .taxi-qa-panel{width:calc(100% - 14px);max-height:42vh}
  .taxi-route-preview svg{max-height:78px}
 }
+
+/* Mobile-first TAXI QA v3: path visible before advanced controls. */
+#chartsView #taxiQaPanel {width:min(408px,calc(100% - 14px));max-height:min(72dvh,610px);overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;padding:10px}
+#chartsView #taxiQaPanel .taxi-qa-title {margin-bottom:6px;gap:6px}
+#chartsView #taxiQaPanel .taxi-qa-title strong {font-size:15px}
+#chartsView #taxiQaPanel .taxi-qa-title small {font-size:9px;padding:2px 4px}
+#chartsView #taxiQaPanel .taxi-qa-title button {font-size:14px;min-width:30px;height:31px}
+#chartsView #taxiQaToolsBtn {white-space:nowrap;padding:3px 7px;min-width:64px;font-size:10px!important;border-color:#297f9d;color:#90eaff}
+#chartsView #taxiQaPanel label {font-size:10px;margin:0 0 7px;line-height:1.25;color:#bcd4e5}
+#chartsView #taxiQaPanel .taxi-qa-entry input {padding:9px;font-size:13px}
+#chartsView #taxiQaPanel .taxi-qa-entry>button {min-width:50px;padding:8px}
+#chartsView #taxiQaPanel .taxi-qa-buttons {display:none}
+#chartsView #taxiQaPanel.tools-expanded .taxi-qa-buttons {display:flex}
+#chartsView #taxiQaPanel .taxi-route-preview {margin:8px 0 6px;padding:7px 9px}
+#chartsView #taxiQaPanel .taxi-route-preview strong {font-size:12px}
+#chartsView #taxiQaPanel .taxi-route-preview svg {max-height:108px}
+#chartsView #taxiQaPanel #taxiQaStatus {min-height:0;padding:7px 9px;font-size:11px;line-height:1.35}
+#chartsView #taxiQaPanel .taxi-status-details {margin-top:5px;padding:6px 8px}
+#chartsView #taxiQaPanel #taxiQaFullMessage {max-height:150px;overflow-y:auto}
+#chartsView #taxiQaPanel .taxi-qa-warning {margin-top:6px;font-size:9px;line-height:1.3}
+#chartsView #taxiQaPanel.has-preview {border-color:#e93bc1}
+@media(max-width:680px){
+ #chartsView #taxiQaPanel {top:58px;right:7px;width:calc(100% - 14px);max-height:min(68dvh,570px);padding:9px}
+ #chartsView #taxiQaPanel .taxi-route-preview svg {max-height:95px}
+}
+@media(max-height:550px){#chartsView #taxiQaPanel {max-height:calc(100dvh - 60px);top:40px}}
