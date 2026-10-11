@@ -296,3 +296,31 @@ This remains **SIMULATOR QA ONLY**. The ADC exaggerates runway graphic
 width; the true geographic centreline cannot be certified by its PDF
 border midpoints. A future replacement requires surveyed AIP/Jeppesen
 runway-centreline and taxiway intersection anchors.
+
+## R26 · Explicit runway junction stations + remove OIMM mini-preview
+
+- The separate embedded *small route map/card* in the OIMM TAXI panel is
+  suppressed, while route output remains directly over the large ADC.
+  GO, the destination selector, the status banner, warnings, and the live
+  off-route monitor remain available. LTFM/other airports retain their
+  previously approved separate route preview behavior.
+- For a single explicit `BT13R` or `BT31L` stage, the runway leg shown in
+  the ADC is now **one straight line between the perpendicular stations of
+  the specifically requested entry and exit taxiways**, not an arbitrary
+  middle sample selected by the shortest-path solver. Thus `ST109 J BT13R
+  H 13L` anchors the drawn backtrack to J and H; `ST117 A BT13R H 13L`
+  to A and H; `ST109 Q BT31L D` to Q and D. The taxiways continue to
+  their chart-mapped terminal endpoints.
+- Entry and exit connectors remain **dashed amber, not a magenta verified
+  runway route**: the 10-9B J hold and the 10-9 ADC display midline
+  differ substantially in the source chart georeferences. They are
+  diagram-derived visual QA estimates and may *not* be presented as
+  published runway/taxiway intersections or physical taxi clearance.
+- No OIMM graph edges, source PDF, chart georeferences, X-Plane/FSX bridge,
+  PWA home backgrounds, other airports or stand connectivity have changed.
+  An explicit `BT` still gates every runway movement.
+
+**Status:** Automatic checks now assert the OIMM preview is hidden, and that
+the visual runway section has exactly two aligned endpoints for each of the
+three explicit J/A/Q backtracks. This does not amount to visual flight
+verification of a real runway centreline. The app is SIM QA ONLY.
