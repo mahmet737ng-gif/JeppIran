@@ -111,10 +111,11 @@ function runwayToken(raw){
   return /^[0-3][0-9][LRC]?$/.test(x)?x:null;
 }
 function normalizeStand(s){
-  return upper(s).replace(/^STAND\s*/,"").replace(/^ST/,"");
+  return upper(s).replace(/^STAND\s*/,"").replace(/^ST/,"").replace(/^P(?=[A-Z0-9])/,"");
 }
 function tokenize(s){
-  return upper(s).replace(/[,→>]+/g," ").replace(/\bRUNWAY\s+([0-9])/g,"RWY$1")
+  return upper(s).replace(/[,→>]+/g," ").replace(/\bSTAND\s+([A-Z0-9]+)/g,"ST$1")
+    .replace(/\bRUNWAY\s+([0-9])/g,"RWY$1")
     .replace(/\bRWY\s+([0-9])/g,"RWY$1").split(/\s+/).filter(Boolean);
 }
 function parse(raw,net){
