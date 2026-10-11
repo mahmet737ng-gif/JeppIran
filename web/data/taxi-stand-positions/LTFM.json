@@ -1,13 +1,4243 @@
 {
   "airport": "LTFM",
   "cycle": "2621",
-  "warning": "Only currently mapped position records. Not a complete stand inventory.",
+  "kind": "individual-chart-stand-label-anchors",
+  "routeApproved": false,
+  "simulationOnly": true,
+  "warning": "Individual printed label anchors, not surveyed stand positions/lead-out geometry. Never auto-enable taxi routing from proximity.",
+  "graticuleFitsMeters": {
+    "30-9B_lon": 3.41,
+    "30-9B_lat": 3.28,
+    "30-9C_W_lon": 4.56,
+    "30-9C_W_lat": 2.56,
+    "30-9C_E_lon": 1.91,
+    "30-9C_E_lat": 6.68
+  },
+  "stats": {
+    "chartLabels": 263,
+    "perPrefix": {
+      "D": 19,
+      "E": 4,
+      "F": 37,
+      "A": 21,
+      "B": 37,
+      "G": 20,
+      "C": 4,
+      "3": 34,
+      "2": 34,
+      "H": 20,
+      "K": 25,
+      "6": 4,
+      "7": 4
+    }
+  },
   "stands": [
     {
+      "id": "D1",
+      "lat": 41.26324904,
+      "lon": 28.74103088,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        313.61,
+        371.23
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "D2",
+      "lat": 41.26365759,
+      "lon": 28.74348715,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        360.41,
+        360.91
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "D3",
+      "lat": 41.26365759,
+      "lon": 28.74140247,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        320.69,
+        360.91
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "D4",
+      "lat": 41.26417065,
+      "lon": 28.74343677,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        359.45,
+        347.95
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "D5",
+      "lat": 41.26409464,
+      "lon": 28.74154103,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        323.33,
+        349.87
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "D6",
+      "lat": 41.26470746,
+      "lon": 28.74341787,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        359.09,
+        334.39
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "D7",
+      "lat": 41.26467896,
+      "lon": 28.74155362,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        323.57,
+        335.11
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "D8",
+      "lat": 41.26535829,
+      "lon": 28.74339883,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        358.72,
+        317.95
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "D9",
+      "lat": 41.26532979,
+      "lon": 28.74160401,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        324.53,
+        318.67
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "D10",
+      "lat": 41.26603287,
+      "lon": 28.74331692,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        357.16,
+        300.91
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "D11",
+      "lat": 41.26598061,
+      "lon": 28.74160398,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        324.53,
+        302.23
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "D12",
+      "lat": 41.26666944,
+      "lon": 28.74332967,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        357.41,
+        284.83
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "D13",
+      "lat": 41.26664569,
+      "lon": 28.74176143,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        327.53,
+        285.43
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "D14",
+      "lat": 41.26731077,
+      "lon": 28.7432163,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        355.25,
+        268.63
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "D15",
+      "lat": 41.26731077,
+      "lon": 28.74167326,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        325.85,
+        268.63
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "D16",
+      "lat": 41.26797585,
+      "lon": 28.74326669,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        356.21,
+        251.83
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "D17",
+      "lat": 41.26796159,
+      "lon": 28.74159138,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        324.29,
+        252.19
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "D20",
+      "lat": 41.26862667,
+      "lon": 28.74327913,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        356.44,
+        235.39
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "D19",
+      "lat": 41.26861242,
+      "lon": 28.74155359,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        323.57,
+        235.75
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "E1",
+      "lat": 41.26328705,
+      "lon": 28.74392485,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        368.75,
+        370.27
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "E2",
+      "lat": 41.26322529,
+      "lon": 28.74457356,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        381.11,
+        371.83
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "E3",
+      "lat": 41.26323954,
+      "lon": 28.74519708,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        392.99,
+        371.47
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "E4",
+      "lat": 41.26323954,
+      "lon": 28.74571982,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        402.95,
+        371.47
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F2",
+      "lat": 41.26331555,
+      "lon": 28.74645056,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        416.87,
+        369.55
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F1",
+      "lat": 41.26281674,
+      "lon": 28.74837779,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        453.59,
+        382.15
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F1R",
+      "lat": 41.26303527,
+      "lon": 28.74851632,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        456.23,
+        376.63
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F1L",
+      "lat": 41.26259822,
+      "lon": 28.74859676,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        457.76,
+        387.67
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F3",
+      "lat": 41.26370985,
+      "lon": 28.74861712,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        458.15,
+        359.59
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F4",
+      "lat": 41.26392837,
+      "lon": 28.74707407,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        428.75,
+        354.07
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F5",
+      "lat": 41.26438918,
+      "lon": 28.7490076,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        465.59,
+        342.43
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F6",
+      "lat": 41.26465521,
+      "lon": 28.74743307,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        435.59,
+        335.71
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F7",
+      "lat": 41.26515402,
+      "lon": 28.74930992,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        471.35,
+        323.11
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F8",
+      "lat": 41.26556256,
+      "lon": 28.74773523,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        441.35,
+        312.79
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F9",
+      "lat": 41.2659046,
+      "lon": 28.74961223,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        477.11,
+        304.15
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F12",
+      "lat": 41.26636541,
+      "lon": 28.74773535,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        441.35,
+        292.51
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F13",
+      "lat": 41.26666944,
+      "lon": 28.7499334,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        483.23,
+        284.83
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F14",
+      "lat": 41.26703999,
+      "lon": 28.7475653,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        438.11,
+        275.47
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F16",
+      "lat": 41.26765281,
+      "lon": 28.74827699,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        451.67,
+        259.99
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F17",
+      "lat": 41.26766706,
+      "lon": 28.74919022,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        469.07,
+        259.63
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F18",
+      "lat": 41.26802335,
+      "lon": 28.74985138,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        481.67,
+        250.63
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F19",
+      "lat": 41.26734877,
+      "lon": 28.75000268,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        484.55,
+        267.67
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F3L",
+      "lat": 41.26345332,
+      "lon": 28.74883609,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        462.32,
+        366.07
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F4L",
+      "lat": 41.2641564,
+      "lon": 28.74704112,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        428.12,
+        348.31
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F5L",
+      "lat": 41.26413265,
+      "lon": 28.74920768,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        469.4,
+        348.91
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F6L",
+      "lat": 41.26491174,
+      "lon": 28.74734343,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        433.88,
+        329.23
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F7L",
+      "lat": 41.26488323,
+      "lon": 28.74954778,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        475.88,
+        329.95
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F8L",
+      "lat": 41.26581434,
+      "lon": 28.74749459,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        436.76,
+        306.43
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F9L",
+      "lat": 41.26566232,
+      "lon": 28.74990048,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        482.6,
+        310.27
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F12L",
+      "lat": 41.26658393,
+      "lon": 28.74763312,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        439.4,
+        286.99
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F13L",
+      "lat": 41.26642716,
+      "lon": 28.75022166,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        488.72,
+        290.95
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F3R",
+      "lat": 41.26391412,
+      "lon": 28.74871786,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        460.07,
+        354.43
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F4R",
+      "lat": 41.26370985,
+      "lon": 28.74717482,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        430.67,
+        359.59
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F5R",
+      "lat": 41.26460295,
+      "lon": 28.74912094,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        467.75,
+        337.03
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F6R",
+      "lat": 41.26442718,
+      "lon": 28.74748343,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        436.55,
+        341.47
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F7R",
+      "lat": 41.26536779,
+      "lon": 28.74939176,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        472.91,
+        317.71
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F8R",
+      "lat": 41.26534404,
+      "lon": 28.74781723,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        442.91,
+        318.31
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F9R",
+      "lat": 41.26612313,
+      "lon": 28.74971297,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        479.03,
+        298.63
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F12R",
+      "lat": 41.26610888,
+      "lon": 28.7478361,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        443.27,
+        298.99
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F13R",
+      "lat": 41.26688797,
+      "lon": 28.75009083,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        486.23,
+        279.31
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "A9",
+      "lat": 41.25676453,
+      "lon": 28.73558306,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        209.81,
+        535.03
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "A2",
+      "lat": 41.26137257,
+      "lon": 28.73672932,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        231.65,
+        418.63
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "A3",
+      "lat": 41.26060773,
+      "lon": 28.73649629,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        227.21,
+        437.95
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "A5",
+      "lat": 41.25972888,
+      "lon": 28.73615619,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        220.73,
+        460.15
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "A6",
+      "lat": 41.25893554,
+      "lon": 28.73586647,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        215.21,
+        480.19
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "A7",
+      "lat": 41.25819445,
+      "lon": 28.73553267,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        208.85,
+        498.91
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "A8",
+      "lat": 41.25744387,
+      "lon": 28.73538137,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        205.97,
+        517.87
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "A2R",
+      "lat": 41.26113029,
+      "lon": 28.73678597,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        232.73,
+        424.75
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "A2L",
+      "lat": 41.26160535,
+      "lon": 28.73673415,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        231.74,
+        412.75
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "A3L",
+      "lat": 41.26084051,
+      "lon": 28.73650112,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        227.3,
+        432.07
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "A5L",
+      "lat": 41.25997116,
+      "lon": 28.73606025,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        218.9,
+        454.03
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "A6L",
+      "lat": 41.25919207,
+      "lon": 28.73578943,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        213.74,
+        473.71
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "A7L",
+      "lat": 41.25843673,
+      "lon": 28.73553751,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        208.94,
+        492.79
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "A8L",
+      "lat": 41.25767189,
+      "lon": 28.73517851,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        202.1,
+        512.11
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "A3R",
+      "lat": 41.26036546,
+      "lon": 28.73656554,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        228.53,
+        444.07
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "A5R",
+      "lat": 41.2594961,
+      "lon": 28.73620654,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        221.69,
+        466.03
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "A6R",
+      "lat": 41.25869326,
+      "lon": 28.73595462,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        216.89,
+        486.31
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "A7R",
+      "lat": 41.25794267,
+      "lon": 28.73565231,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        211.13,
+        505.27
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "A8R",
+      "lat": 41.25722534,
+      "lon": 28.73526182,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        203.69,
+        523.39
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "A10L",
+      "lat": 41.25710227,
+      "lon": 28.73611529,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        219.95,
+        526.5
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "A11R",
+      "lat": 41.25711762,
+      "lon": 28.7372817,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        242.17,
+        526.11
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B1",
+      "lat": 41.2624462,
+      "lon": 28.73692124,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        235.31,
+        391.51
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B2",
+      "lat": 41.26354358,
+      "lon": 28.73812419,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        258.23,
+        363.79
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B3",
+      "lat": 41.26321104,
+      "lon": 28.73639849,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        225.35,
+        372.19
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B4",
+      "lat": 41.26404239,
+      "lon": 28.73781558,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        252.35,
+        351.19
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B5",
+      "lat": 41.26406614,
+      "lon": 28.73598912,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        217.55,
+        350.59
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B6",
+      "lat": 41.26470746,
+      "lon": 28.73749437,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        246.23,
+        334.39
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B7",
+      "lat": 41.26482148,
+      "lon": 28.73556714,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        209.51,
+        331.51
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B8",
+      "lat": 41.26567658,
+      "lon": 28.73727379,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        242.02,
+        309.91
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B9",
+      "lat": 41.26557206,
+      "lon": 28.73532781,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        204.95,
+        312.55
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B10",
+      "lat": 41.26642716,
+      "lon": 28.73731155,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        242.74,
+        290.95
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B12",
+      "lat": 41.2663274,
+      "lon": 28.73516403,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        201.82,
+        293.47
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B13",
+      "lat": 41.26696398,
+      "lon": 28.7349247,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        197.26,
+        277.39
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B14",
+      "lat": 41.26751504,
+      "lon": 28.73435157,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        186.34,
+        263.47
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B15",
+      "lat": 41.26751504,
+      "lon": 28.73532778,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        204.94,
+        263.47
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B16",
+      "lat": 41.26751504,
+      "lon": 28.73612765,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        220.18,
+        263.47
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B17",
+      "lat": 41.26785708,
+      "lon": 28.73711016,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        238.9,
+        254.83
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B18",
+      "lat": 41.26716825,
+      "lon": 28.73717299,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        240.1,
+        272.23
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B1L",
+      "lat": 41.26263622,
+      "lon": 28.73652929,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        227.84,
+        386.71
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B1R",
+      "lat": 41.26220392,
+      "lon": 28.73705977,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        237.94,
+        397.63
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B3R",
+      "lat": 41.26298301,
+      "lon": 28.73668188,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        230.74,
+        377.95
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B5R",
+      "lat": 41.26385236,
+      "lon": 28.73625991,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        222.7,
+        355.99
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B6R",
+      "lat": 41.26492124,
+      "lon": 28.73726131,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        241.78,
+        328.99
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B7R",
+      "lat": 41.26459345,
+      "lon": 28.73576865,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        213.34,
+        337.27
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B8R",
+      "lat": 41.2658951,
+      "lon": 28.73736208,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        243.7,
+        304.39
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B9R",
+      "lat": 41.26536779,
+      "lon": 28.73556711,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        209.5,
+        317.71
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B10R",
+      "lat": 41.26664569,
+      "lon": 28.73741244,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        244.66,
+        285.43
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B12R",
+      "lat": 41.26609938,
+      "lon": 28.73532775,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        204.94,
+        299.23
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B18R",
+      "lat": 41.26741053,
+      "lon": 28.73729277,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        242.38,
+        266.11
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B3L",
+      "lat": 41.26340581,
+      "lon": 28.7361766,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        221.12,
+        367.27
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B5L",
+      "lat": 41.26427041,
+      "lon": 28.73580501,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        214.04,
+        345.43
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B6L",
+      "lat": 41.26451269,
+      "lon": 28.7378708,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        253.4,
+        339.31
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B7L",
+      "lat": 41.26502575,
+      "lon": 28.73539563,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        206.24,
+        326.35
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B8L",
+      "lat": 41.26545805,
+      "lon": 28.7375307,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        246.92,
+        315.43
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B9L",
+      "lat": 41.26576684,
+      "lon": 28.73504293,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        199.52,
+        307.63
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B10L",
+      "lat": 41.26619914,
+      "lon": 28.73749288,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        246.2,
+        296.71
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B12L",
+      "lat": 41.26654593,
+      "lon": 28.73487285,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        196.28,
+        287.95
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "B18L",
+      "lat": 41.26695448,
+      "lon": 28.73744249,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        245.24,
+        277.63
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "G11L",
+      "lat": 41.2573968,
+      "lon": 28.74869268,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        459.59,
+        519.06
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "G9R",
+      "lat": 41.25741099,
+      "lon": 28.74977073,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        480.13,
+        518.7
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "C1",
+      "lat": 41.26318729,
+      "lon": 28.74028766,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        299.45,
+        372.79
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "C2",
+      "lat": 41.26317303,
+      "lon": 28.7397964,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        290.09,
+        373.15
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "C3",
+      "lat": 41.26317303,
+      "lon": 28.73920438,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        278.81,
+        373.15
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "C4",
+      "lat": 41.26318729,
+      "lon": 28.73861235,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        267.53,
+        372.79
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "G2",
+      "lat": 41.26175737,
+      "lon": 28.74815415,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        449.33,
+        408.91
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "G2R",
+      "lat": 41.26198539,
+      "lon": 28.74805336,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        447.41,
+        403.15
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "G2L",
+      "lat": 41.26155309,
+      "lon": 28.74839832,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        453.98,
+        414.07
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "G4",
+      "lat": 41.26101628,
+      "lon": 28.74851315,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        456.17,
+        427.63
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "G5",
+      "lat": 41.26021344,
+      "lon": 28.74895402,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        464.57,
+        447.91
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "G6",
+      "lat": 41.25947235,
+      "lon": 28.74925633,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        470.33,
+        466.63
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "G7",
+      "lat": 41.25873127,
+      "lon": 28.74952715,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        475.49,
+        485.35
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "G8",
+      "lat": 41.25799018,
+      "lon": 28.74989859,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        482.57,
+        504.07
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "G4R",
+      "lat": 41.26123481,
+      "lon": 28.74841235,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        454.25,
+        422.11
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "G5R",
+      "lat": 41.26043196,
+      "lon": 28.74876505,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        460.97,
+        442.39
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "G6R",
+      "lat": 41.25967662,
+      "lon": 28.74911774,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        467.69,
+        461.47
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "G7R",
+      "lat": 41.25894979,
+      "lon": 28.74940746,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        473.21,
+        479.83
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "G8R",
+      "lat": 41.25822295,
+      "lon": 28.74976645,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        480.05,
+        498.19
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "G4L",
+      "lat": 41.26079776,
+      "lon": 28.74873842,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        460.46,
+        433.15
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "G5L",
+      "lat": 41.26000916,
+      "lon": 28.74917299,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        468.74,
+        453.07
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "G6L",
+      "lat": 41.25926808,
+      "lon": 28.74943122,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        473.66,
+        471.79
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "G7L",
+      "lat": 41.25854124,
+      "lon": 28.74971463,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        479.06,
+        490.15
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "G8L",
+      "lat": 41.2577859,
+      "lon": 28.75010512,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        486.5,
+        509.23
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "316L",
+      "lat": 41.25190472,
+      "lon": 28.75196613,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        521.96,
+        657.79
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "316",
+      "lat": 41.25167194,
+      "lon": 28.75196759,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        521.99,
+        663.67
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "316R",
+      "lat": 41.25142966,
+      "lon": 28.75198646,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        522.35,
+        669.79
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "317",
+      "lat": 41.25076458,
+      "lon": 28.75201798,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        522.95,
+        686.59
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "318",
+      "lat": 41.25170044,
+      "lon": 28.75281139,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        538.06,
+        662.95
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "319",
+      "lat": 41.25075508,
+      "lon": 28.75283044,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        538.43,
+        686.83
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "317L",
+      "lat": 41.25100686,
+      "lon": 28.75199762,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        522.56,
+        680.47
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "318R",
+      "lat": 41.25191422,
+      "lon": 28.7528493,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        538.79,
+        657.55
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "319R",
+      "lat": 41.25100686,
+      "lon": 28.75283041,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        538.43,
+        680.47
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "317R",
+      "lat": 41.25055081,
+      "lon": 28.75196757,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        521.99,
+        691.99
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "318L",
+      "lat": 41.25146767,
+      "lon": 28.75287936,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        539.36,
+        668.83
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "319L",
+      "lat": 41.25053656,
+      "lon": 28.75291085,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        539.96,
+        692.35
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "300",
+      "lat": 41.2552206,
+      "lon": 28.74873649,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        460.42,
+        574.03
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "301",
+      "lat": 41.25481206,
+      "lon": 28.74874924,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        460.67,
+        584.35
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "302",
+      "lat": 41.25447002,
+      "lon": 28.74873665,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        460.43,
+        592.99
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "303",
+      "lat": 41.25412323,
+      "lon": 28.74874924,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        460.67,
+        601.75
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "304",
+      "lat": 41.25371468,
+      "lon": 28.74873665,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        460.43,
+        612.07
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "305",
+      "lat": 41.25337264,
+      "lon": 28.74874924,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        460.67,
+        620.71
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "306",
+      "lat": 41.25285958,
+      "lon": 28.74874924,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        460.67,
+        633.67
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "307",
+      "lat": 41.25248903,
+      "lon": 28.74874924,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        460.67,
+        643.03
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "308",
+      "lat": 41.25211849,
+      "lon": 28.74873649,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        460.42,
+        652.39
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "309",
+      "lat": 41.25178595,
+      "lon": 28.74873665,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        460.43,
+        660.79
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "310",
+      "lat": 41.25140591,
+      "lon": 28.74873649,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        460.42,
+        670.39
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "311",
+      "lat": 41.25103537,
+      "lon": 28.74874924,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        460.67,
+        679.75
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "312",
+      "lat": 41.25067907,
+      "lon": 28.74873665,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        460.43,
+        688.75
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "313L",
+      "lat": 41.25559115,
+      "lon": 28.75187796,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        520.28,
+        564.67
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "313",
+      "lat": 41.25537262,
+      "lon": 28.75184793,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        519.71,
+        570.19
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "313R",
+      "lat": 41.25515885,
+      "lon": 28.7518479,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        519.71,
+        575.59
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "314",
+      "lat": 41.25459828,
+      "lon": 28.75184793,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        519.71,
+        589.75
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "315",
+      "lat": 41.25378119,
+      "lon": 28.75184793,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        519.71,
+        610.39
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "314L",
+      "lat": 41.25481206,
+      "lon": 28.75187796,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        520.28,
+        584.35
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "315L",
+      "lat": 41.25402346,
+      "lon": 28.75187796,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        520.28,
+        604.27
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "314R",
+      "lat": 41.25437976,
+      "lon": 28.7518479,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        519.71,
+        595.27
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "315R",
+      "lat": 41.25356266,
+      "lon": 28.7518479,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        519.71,
+        615.91
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "200",
+      "lat": 41.25523485,
+      "lon": 28.73668184,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        230.74,
+        573.67
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "201",
+      "lat": 41.25487856,
+      "lon": 28.73668199,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        230.75,
+        582.67
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "202",
+      "lat": 41.25449377,
+      "lon": 28.73668199,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        230.75,
+        592.39
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "203",
+      "lat": 41.25412323,
+      "lon": 28.73668199,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        230.75,
+        601.75
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "204",
+      "lat": 41.25376693,
+      "lon": 28.73668199,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        230.75,
+        610.75
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "205",
+      "lat": 41.25341064,
+      "lon": 28.73668199,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        230.75,
+        619.75
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "206",
+      "lat": 41.25289758,
+      "lon": 28.73668199,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        230.75,
+        632.71
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "207",
+      "lat": 41.25252704,
+      "lon": 28.73668199,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        230.75,
+        642.07
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "208",
+      "lat": 41.25211849,
+      "lon": 28.73668184,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        230.74,
+        652.39
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "209",
+      "lat": 41.25167194,
+      "lon": 28.73668199,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        230.75,
+        663.67
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "210",
+      "lat": 41.25129189,
+      "lon": 28.73668184,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        230.74,
+        673.27
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "211",
+      "lat": 41.25093085,
+      "lon": 28.73668199,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        230.75,
+        682.39
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "212",
+      "lat": 41.25057456,
+      "lon": 28.73668199,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        230.75,
+        691.39
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "213",
+      "lat": 41.25019452,
+      "lon": 28.73668199,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        230.75,
+        700.99
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "214",
+      "lat": 41.24980972,
+      "lon": 28.73668199,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        230.75,
+        710.71
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "224R",
+      "lat": 41.24877899,
+      "lon": 28.73289201,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        158.54,
+        736.75
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "220L",
+      "lat": 41.24879345,
+      "lon": 28.73399207,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        179.5,
+        736.38
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "218L",
+      "lat": 41.25161018,
+      "lon": 28.73275679,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        155.96,
+        665.23
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "218",
+      "lat": 41.25140591,
+      "lon": 28.73283998,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        157.54,
+        670.39
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "218R",
+      "lat": 41.25118738,
+      "lon": 28.73275822,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        155.99,
+        675.91
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "219L",
+      "lat": 41.25088335,
+      "lon": 28.73275679,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        155.96,
+        683.59
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "219",
+      "lat": 41.25066482,
+      "lon": 28.73275825,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        155.99,
+        689.11
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "219R",
+      "lat": 41.2504368,
+      "lon": 28.73273933,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        155.63,
+        694.87
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "215R",
+      "lat": 41.25524911,
+      "lon": 28.73326837,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        165.71,
+        573.31
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "215",
+      "lat": 41.25503058,
+      "lon": 28.73324951,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        165.35,
+        578.83
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "215L",
+      "lat": 41.25482631,
+      "lon": 28.73341809,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        168.56,
+        583.99
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "216",
+      "lat": 41.25422774,
+      "lon": 28.73324951,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        165.35,
+        599.11
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "217",
+      "lat": 41.2534344,
+      "lon": 28.73324951,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        165.35,
+        619.15
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "216R",
+      "lat": 41.25447002,
+      "lon": 28.73326837,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        165.71,
+        592.99
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "217R",
+      "lat": 41.25367667,
+      "lon": 28.73326837,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        165.71,
+        613.03
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "216L",
+      "lat": 41.25403296,
+      "lon": 28.73341809,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        168.56,
+        604.03
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "217L",
+      "lat": 41.25323012,
+      "lon": 28.73341809,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        168.56,
+        624.31
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "225",
+      "lat": 41.25139166,
+      "lon": 28.73348884,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        169.91,
+        670.75
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "226",
+      "lat": 41.25070283,
+      "lon": 28.73348884,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        169.91,
+        688.15
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "F15",
+      "lat": 41.26764331,
+      "lon": 28.74734487,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        433.91,
+        260.23
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "H35L",
+      "lat": 41.27222779,
+      "lon": 28.73986903,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        291.47,
+        144.43
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "H36R",
+      "lat": 41.27224264,
+      "lon": 28.74099774,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        312.98,
+        144.05
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "H43L",
+      "lat": 41.27235606,
+      "lon": 28.74850378,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        455.99,
+        141.19
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "H46R",
+      "lat": 41.27237091,
+      "lon": 28.74963249,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        477.5,
+        140.81
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "H40L",
+      "lat": 41.27234656,
+      "lon": 28.74354714,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        361.55,
+        141.43
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "H41R",
+      "lat": 41.2723614,
+      "lon": 28.74467585,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        383.06,
+        141.05
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "H30L",
+      "lat": 41.27218979,
+      "lon": 28.73481162,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        195.11,
+        145.39
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "H33R",
+      "lat": 41.27220464,
+      "lon": 28.73594033,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1247,
+      "sourcePdfPage": 86,
+      "chart": "30-9B",
+      "pdfPoint": [
+        216.62,
+        145.01
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "K50",
+      "lat": 41.27828582,
+      "lon": 28.71377309,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        135.87,
+        483.38
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "K51",
+      "lat": 41.27760582,
+      "lon": 28.71377326,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        135.87,
+        497.9
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "K52",
+      "lat": 41.27693143,
+      "lon": 28.71377326,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        135.87,
+        512.3
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "K53",
+      "lat": 41.27629638,
+      "lon": 28.71377326,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        135.87,
+        525.86
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "K54",
+      "lat": 41.27148577,
+      "lon": 28.71392992,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        138.39,
+        628.58
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "K55",
+      "lat": 41.27081138,
+      "lon": 28.71392992,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        138.39,
+        642.98
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "K56",
+      "lat": 41.27013138,
+      "lon": 28.71392992,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        138.39,
+        657.5
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "K57",
+      "lat": 41.26950195,
+      "lon": 28.71392992,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        138.39,
+        670.94
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "K10",
+      "lat": 41.26978857,
+      "lon": 28.72117315,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        254.91,
+        664.82
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "K11",
+      "lat": 41.27045171,
+      "lon": 28.72117332,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        254.91,
+        650.66
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "K12",
+      "lat": 41.2710699,
+      "lon": 28.72117332,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        254.91,
+        637.46
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "K13",
+      "lat": 41.27235123,
+      "lon": 28.7211957,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        255.27,
+        610.1
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "K14",
+      "lat": 41.27299751,
+      "lon": 28.72117332,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        254.91,
+        596.3
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "K15",
+      "lat": 41.27367752,
+      "lon": 28.7211957,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        255.27,
+        581.78
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "K16",
+      "lat": 41.27434067,
+      "lon": 28.7211957,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        255.27,
+        567.62
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "K17",
+      "lat": 41.2749701,
+      "lon": 28.7211957,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        255.27,
+        554.18
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "K18",
+      "lat": 41.2756501,
+      "lon": 28.72117315,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        254.91,
+        539.66
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "K19",
+      "lat": 41.27708879,
+      "lon": 28.72106142,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        253.11,
+        508.94
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "K20",
+      "lat": 41.27770697,
+      "lon": 28.72100157,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        252.15,
+        495.74
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "K21",
+      "lat": 41.27841508,
+      "lon": 28.72092715,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        250.95,
+        480.62
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "K1L",
+      "lat": 41.26881479,
+      "lon": 28.71673182,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        183.47,
+        685.62
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "K9R",
+      "lat": 41.26882863,
+      "lon": 28.71778465,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        200.4,
+        685.32
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "K25",
+      "lat": 41.28271991,
+      "lon": 28.72113602,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        254.31,
+        388.7
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "K26",
+      "lat": 41.28335495,
+      "lon": 28.7211584,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        254.67,
+        375.14
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "K27",
+      "lat": 41.2840181,
+      "lon": 28.72113602,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        254.31,
+        360.98
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "H20L",
+      "lat": 41.26598952,
+      "lon": 28.71590778,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        170.21,
+        745.94
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "H25R",
+      "lat": 41.26600639,
+      "lon": 28.71719236,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        190.87,
+        745.58
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "H50R",
+      "lat": 41.25407886,
+      "lon": 28.7614333,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_E",
+      "pdfPoint": [
+        358.23,
+        99.86
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "H50L",
+      "lat": 41.2545733,
+      "lon": 28.76143744,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_E",
+      "pdfPoint": [
+        358.33,
+        81.74
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "H51",
+      "lat": 41.25497605,
+      "lon": 28.7614262,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_E",
+      "pdfPoint": [
+        358.05,
+        66.98
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "H50",
+      "lat": 41.25433754,
+      "lon": 28.76165561,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_E",
+      "pdfPoint": [
+        363.81,
+        90.38
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
       "id": "601",
-      "lat": 41.2521389,
-      "lon": 28.7626944,
-      "source": "LTFM taxi-network existing stand record",
+      "lat": 41.25199633,
+      "lon": 28.76277219,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_E",
+      "pdfPoint": [
+        391.83,
+        176.18
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "602",
+      "lat": 41.25199633,
+      "lon": 28.76336989,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_E",
+      "pdfPoint": [
+        406.83,
+        176.18
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "603",
+      "lat": 41.25198978,
+      "lon": 28.76543073,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_E",
+      "pdfPoint": [
+        458.55,
+        176.42
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "604",
+      "lat": 41.25198978,
+      "lon": 28.76590888,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_E",
+      "pdfPoint": [
+        470.55,
+        176.42
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "H13",
+      "lat": 41.29597158,
+      "lon": 28.71758123,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        197.13,
+        105.74
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "H15",
+      "lat": 41.29551075,
+      "lon": 28.72002802,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        236.49,
+        115.58
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "H14",
+      "lat": 41.29574117,
+      "lon": 28.71911047,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        221.73,
+        110.66
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "701",
+      "lat": 41.25165251,
+      "lon": 28.76745332,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_E",
+      "pdfPoint": [
+        509.31,
+        188.78
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "702",
+      "lat": 41.25165251,
+      "lon": 28.76795538,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_E",
+      "pdfPoint": [
+        521.91,
+        188.78
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "703",
+      "lat": 41.25165251,
+      "lon": 28.76849092,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_E",
+      "pdfPoint": [
+        535.35,
+        188.78
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "704",
+      "lat": 41.25165251,
+      "lon": 28.76899298,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_E",
+      "pdfPoint": [
+        547.95,
+        188.78
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "H11",
+      "lat": 41.29564441,
+      "lon": 28.7152262,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        159.25,
+        112.73
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "H12L",
+      "lat": 41.2956599,
+      "lon": 28.71640432,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        178.2,
+        112.4
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
+      "connectorVerified": false
+    },
+    {
+      "id": "H10",
+      "lat": 41.29601654,
+      "lon": 28.71385865,
+      "source": "Jeppesen cycle 2621 printed stand label",
+      "chartPage": 1248,
+      "sourcePdfPage": 87,
+      "chart": "30-9C_W",
+      "pdfPoint": [
+        137.25,
+        104.78
+      ],
+      "positionType": "APPROXIMATE_PRINTED_LABEL_NOT_STAND_CENTER",
+      "positionSurveyed": false,
       "connectorVerified": false
     }
   ]
