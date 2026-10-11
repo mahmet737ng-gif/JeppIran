@@ -662,7 +662,7 @@ function nearest(graph,pos,firstTaxiway=null){
 }
 function syncAirport(){
   if(!taxi.active||taxi.airport===selectedAirport)return;
-  taxi.airport=selectedAirport;taxi.graph=null;taxi.route=null;taxi.auto=null;taxi.standPreview=null;taxi.standEgress=null;taxi.standLead=null;taxi.testStart=null;taxi.prompted="";
+  taxi.airport=selectedAirport;taxi.graph=null;taxi.route=null;taxi.auto=null;taxi.standPreview=null;taxi.standEgress=null;taxi.standLead=null;taxi.standQaRoute=null;taxi.testStart=null;taxi.prompted="";
   taxi.networkAudit=null;taxi.highlightTaxiway="";
   $("taxiQaAirport").textContent=selectedAirport;
   updateAirportControls();
@@ -837,11 +837,31 @@ function go(options={}){
   const publisher=window.JEPPIRAN_PUBLISHED_TAXI;
   const typed=$("taxiQaInput")?.value||"";
   if(publisher?.recognize(typed,taxi.airport)){
-    taxi.route=null;taxi.auto=null;taxi.standPreview=null;taxi.standEgress=null;taxi.standLead=null;draw();
+    taxi.route=null;taxi.auto=null;taxi.standPreview=null;taxi.standEgress=null;taxi.standLead=null;taxi.standQaRoute=null;draw();
     publisher.go(typed,taxi.airport);
     return;
   }
   publisher?.clear();
+  // Enter STAND + one official pushback taxiway (STD3 T5; ST100 N6).
+  // The route is a single continuous chain of pre-existing original OSM
+  // parking-position and taxiway vertices; no user-label snap is ever used.
+  const standWay=taxi.airport==="LTFM"?
+    name(typed).match(/^ST([A-Z]?\d{1,3}[LR]?)\s+([A-Z][A-Z0-9]*)$/):null;
+  if(standWay&&window.JEPPIRAN_LTFM_STANDS){
+    const airport=taxi.airport,[,id,target]=standWay,input=typed;
+    taxi.route=null;taxi.auto=null;
+    window.JEPPIRAN_LTFM_STANDS.previewNamedSourceRoute(id,target).then(x=>{
+      if(taxi.airport!==airport||$("taxiQaInput")?.value!==input)return;
+      if(x.error){message(x.error,true);return}
+      const q=x.route;
+      message("SIM SOURCE-CONTINUOUS TAXI QA · ST"+id+" → "+target+" · "+
+        q.totalSourceGeometryLengthMetres+"m · parking-way OSM "+
+        q.parkingWay+" joins via exact shared OSM node "+
+        q.exactOsmTaxiJoin+". THIS IS NOT A JEPPESEN PUSHBACK CLEARANCE; "+
+        "reverse/towing and ATC restrictions require verification.",true);
+    }).catch(e=>message("Source stand geometry unavailable: "+e.message,true));
+    return;
+  }
   // Any source-listed Istanbul parking stand (not just its OSM-mapped 601)
   // can now be entered by ID, including ST100, STD3, STK50, ST601.
   // Display official stand/taxiway names and QA reference positions.
@@ -876,7 +896,7 @@ function go(options={}){
     });
     return;
   }
-  taxi.standPreview=null;taxi.standEgress=null;taxi.standLead=null;
+  taxi.standPreview=null;taxi.standEgress=null;taxi.standLead=null;taxi.standQaRoute=null;
   const p=parse($("taxiQaInput").value);
   if(p.error){message(p.error,true);return}
   taxi.trace=false;$("taxiQaTrace").classList.remove("on");
@@ -1357,6 +1377,25 @@ function draw(){
         fill:"#54eeae",stroke:"#153449","stroke-width":stroke*.85}));
     }
   }
+  // Selectable TRUE ORIGINAL continuous parking-way + taxiway graph path.
+  // No arbitrary stand->taxi snapping: every vertex belongs to an existing
+  // OSM parking-position way or a physically connected taxi graph edge.
+  const qaPath=taxi.standQaRoute;
+  if(qaPath&&taxi.airport==="LTFM"&&selectedAirport==="LTFM"&&model&&isAdc(selectedChart)
+     &&qaPath.coordinateProvenance==="ORIGINAL_OSM_WAY_AND_EDGE_NODES"&&
+       qaPath.noArtificialConnector===true&&qaPath.approvedForNavigation===false){
+    const pts=(qaPath.geometry||[]).map(pt=>projectGeo(model,pt[1],pt[0]));
+    if(pts.length>=2&&pts.every(Boolean)){
+      svg.appendChild(s("path",{d:pts.map((p,i)=>(i?"L ":"M ")+p.x+" "+p.y).join(" "),
+        fill:"none",stroke:"rgba(248,31,189,.94)",
+        "stroke-width":Math.max(2.5,w*.0046),
+        "stroke-linecap":"round","stroke-linejoin":"round",
+        "class":"taxi-osm-stand-published-target-sim-qa"}));
+      const end=pts.at(-1);
+      svg.appendChild(s("circle",{cx:end.x,cy:end.y,r:Math.max(3,w*.006),
+        fill:"#1bf0a3",stroke:"#123744","stroke-width":Math.max(1,w*.0018)}));
+    }
+  }
   // These magenta lines are exact ORIGINAL WGS84 OSM taxiway edge segments
   // corroborated by published Jeppesen pushback taxiway NAMES. They are not
   // stand exit / pushback paths: the stand-to-graph gap remains DISCONNECTED.
@@ -1500,10 +1539,20 @@ function previewStandCandidate(id,entry){
   taxi.standPreview=pinned?{id,...entry,position:pinned}:null;
   taxi.standEgress=entry.hasIndividualStandPosition===true?(entry.egress||null):null;
   taxi.standLead=entry.lead||null;
+  taxi.standQaRoute=null;
   if(!isAdc(selectedChart))openAdc();
   draw();return true;
 }
-window.JEPPIRAN_TAXI={open:openTaxi,parse,openAdc,draw,routeDeviationMeters,previewStandCandidate};
+function previewStandSourceRoute(id,entry,qaRoute){
+  if(taxi.airport!=="LTFM"||!qaRoute||
+     qaRoute.stand!==id||qaRoute.coordinateProvenance!=="ORIGINAL_OSM_WAY_AND_EDGE_NODES"||
+     qaRoute.approvedForNavigation!==false||qaRoute.noArtificialConnector!==true)return false;
+  previewStandCandidate(id,entry);
+  taxi.standQaRoute=qaRoute;
+  draw();
+  return true;
+}
+window.JEPPIRAN_TAXI={open:openTaxi,parse,openAdc,draw,routeDeviationMeters,previewStandCandidate,previewStandSourceRoute};
 window.addEventListener("jeppiran-chart-rendered",()=>{draw();chartHint()});
 function monitorOimmAuto(e){
   chartHint();
