@@ -78,7 +78,78 @@ function parts(graph,route){
     incomplete:invalid.length>0||projections.length>0,
     renderedRunwayNodeCount:new Set(runway.flatMap(s=>[s.from,s.to])).size};
 }
-const api={classify,parts};
+// Construct the SCHEMATIC centreline from opposite ADC pavement-edge
+// anchors, not from the parking-detail J/A positions. In the current V2621
+// PDF, H is on one runway border, M is opposite H on the other border;
+// H->D follows the runway long axis. The original taxi BT vectors inherited
+// a cross-chart offset that visibly drifted onto the black runway border.
+// This midline is graphic QA and NOT survey-grade georeferencing.
+function adcMidline(graph){
+  if(graph?.airport!=="OIMM"||graph.cycle!=="2621")return null;
+  const get=(name,index=0)=>{
+    const n=graph.taxiways?.[name]?.nodes?.[index],p=n&&graph.nodes?.[n];
+    return p?.sourcePage===601&&Array.isArray(p.pdfPoint)?p:null;
+  };
+  const h=get("H"),m=get("M"),d=get("D");
+  if(!h||!m||!d)return null;
+  const mid={lat:(h.lat+m.lat)/2,lon:(h.lon+m.lon)/2};
+  const end={lat:d.lat+(m.lat-h.lat)/2,lon:d.lon+(m.lon-h.lon)/2};
+  const earth=111195,c=Math.cos(mid.lat*Math.PI/180);
+  const dx=(end.lon-mid.lon)*earth*c,dy=(end.lat-mid.lat)*earth;
+  const sq=dx*dx+dy*dy,width=Math.hypot((m.lon-h.lon)*earth*c,(m.lat-h.lat)*earth);
+  if(!(sq>2500**2&&sq<5000**2&&width>70&&width<250))return null;
+  const project=p=>{
+    const px=(p.lon-mid.lon)*earth*c,py=(p.lat-mid.lat)*earth;
+    const rawT=(px*dx+py*dy)/sq,t=Math.max(0,Math.min(1,rawT));
+    return {lat:mid.lat+(end.lat-mid.lat)*t,lon:mid.lon+(end.lon-mid.lon)*t,t,rawT};
+  };
+  return {start:mid,end,spanMetres:Math.sqrt(sq),
+    graphicWidthMetres:width,project,provenance:"V2621 ADC H/M/D BOUNDARY MIDPOINT QA NOT SURVEYED"};
+}
+// This geometry exists ONLY for visualizing the approved simulation test
+// on the ADC. It never rewrites the underlying OIMM graph or grants runway
+// access. Solid magenta remains straight along the same midpoint axis;
+// turn-in/out starts ONLY at the graph's known (or projected QA) connection.
+function displayRuns(graph,route){
+  const spec=route?.runwayRender||parts(graph,route);
+  if(!spec)return null;
+  const axis=adcMidline(graph);
+  const runs=spec.runs.map(run=>{
+    let type=run.type;
+    const source=run.nodes.map(id=>graph.nodes?.[id]);
+    let coordinates=source.map(p=>p&&{lat:p.lat,lon:p.lon});
+    if(run.type==="runway-axis"){
+      if(!axis||coordinates.some(p=>!p))type="unverified";
+      else{
+        const projected=coordinates.map(p=>axis.project(p));
+        const values=projected.map(p=>p.rawT);
+        // The backtrack must advance consistently along the runway. If the
+        // supplied graph doubles back or jumps past the known ADC limits,
+        // leave a gap rather than pretending its shape is authoritative.
+        const sign=run.steps[0]?.way==="BT13R"?-1:1;
+        if(projected.some(p=>p.rawT<-.045||p.rawT>1.045)||
+          values.some((v,i)=>i&&sign*(v-values[i-1])<-.003)){
+          type="unverified";
+        }else coordinates=projected.map(({lat,lon})=>({lat,lon}));
+      }
+    }
+    return {...run,type,coordinates};
+  });
+  for(let i=0;i<runs.length;i++){
+    const run=runs[i];if(run.type!=="projected-access")continue;
+    // Anchor both ends of every QA connection to its neighbouring
+    // straight runway-axis segment, not its old oblique source vertex.
+    const prev=runs[i-1],next=runs[i+1];
+    if(prev?.type==="runway-axis"&&run.coordinates.length)
+      run.coordinates[0]=prev.coordinates.at(-1);
+    if(next?.type==="runway-axis"&&run.coordinates.length)
+      run.coordinates[run.coordinates.length-1]=next.coordinates[0];
+  }
+  return {runs,axis,invalid:runs.filter(x=>x.type==="unverified"),
+    runway:runs.filter(x=>x.type==="runway-axis"),
+    source:axis?.provenance||"NO ADC MIDLINE"};
+}
+const api={classify,parts,adcMidline,displayRuns};
 root.JEPPIRAN_TAXI_RENDER=api;
 if(typeof module!=="undefined"&&module.exports)module.exports=api;
 })(typeof window!=="undefined"?window:globalThis);
