@@ -1,0 +1,36 @@
+/* JEPPIRAN approved Template 2 / ADC-inspired airport sidebar banners.
+ * Scoped only to airport tiles under Charts. Homepage, toolbar, navigation
+ * and the airport profile are intentionally unaffected. Keep this visual
+ * contract unchanged in later cycles unless the user approves a redesign.
+ */
+#chartsView .airport-item,
+#chartsView .airport-item.selected{
+  background-color:#071d34!important;
+  background-image:linear-gradient(90deg,rgba(4,17,32,.97) 0%,rgba(4,18,35,.92) 43%,rgba(5,23,41,.29) 100%),var(--adc-banner-dark,none)!important;
+  background-size:cover,cover!important;
+  background-position:center,center!important;
+  background-repeat:no-repeat!important;
+}
+#chartsView .airport-item .airport-copy{
+  z-index:1;
+  position:relative;
+  pointer-events:none;
+}
+#chartsView .airport-item .airport-chevron{
+  z-index:2;
+}
+#chartsView .airport-item.selected{
+  border-color:#36c8ff!important;
+}
+:root.light #chartsView .airport-item,
+:root.light #chartsView .airport-item.selected{
+  background-color:#eef8ff!important;
+  background-image:linear-gradient(90deg,rgba(251,254,255,.98) 0%,rgba(248,252,255,.92) 45%,rgba(245,252,255,.18) 100%),var(--adc-banner-light,none)!important;
+  background-size:cover,cover!important;
+  background-position:center,center!important;
+}
+:root.light #chartsView .airport-item .airport-copy b{color:#183c58!important}
+:root.light #chartsView .airport-item .airport-copy small{color:#456c88!important}
+@media (prefers-reduced-motion: reduce){
+  #chartsView .airport-item{transition:none!important}
+}
