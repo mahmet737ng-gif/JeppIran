@@ -33,6 +33,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
 
+      - name: Validate LTFM TAXI connector topology (simulator QA)
+        run: node scripts/test_ltfm_unnamed_connectors.cjs
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
