@@ -1,4 +1,11 @@
 const RAW_ROOT="./data/";
+// V2621 APPROACH display titles are UI-only: never mutate c.name, chart keys,
+// georef chartKey, stable bookmark IDs, simulator bridges or PDF page indices.
+let chartDisplayNamesByPage=Object.create(null);
+function displayChartName(c){
+  const page=String(Number(c?.page));
+  return chartDisplayNamesByPage[page] || c?.name || ("Chart "+page);
+}
 
 /* === V2621 REVERSIBLE EXPERIMENTAL GEOREF LAYER (WEB ONLY) ===
  * Stable chart-georef.json remains unchanged; every experimental model is explicitly TEST ONLY.
@@ -409,14 +416,19 @@ async function loadLtfmGridGeorefs(m){
 }
 async function loadData(){
   try{
-    const [m,c,g,profiles,runways]=await Promise.all([
+    const [m,c,g,profiles,runways,chartNameData]=await Promise.all([
       fetch(RAW_ROOT+"charts-manifest.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error("manifest");return r.json()}),
       fetch(RAW_ROOT+"charts-current.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error("charts");return r.json()}),
       fetch(RAW_ROOT+"chart-georef.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null),
       fetch(RAW_ROOT+"airport-profiles.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null),
-      fetch(RAW_ROOT+"airport-runways.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null)
+      fetch(RAW_ROOT+"airport-runways.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null),
+      fetch(RAW_ROOT+"chart-display-names-v2621.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null)
     ]);
     manifest=m; charts=Array.isArray(c)?c:(c.charts||[]);
+    // Display-only title mapping; the original chart records remain untouched.
+    chartDisplayNamesByPage=(chartNameData&&chartNameData.cycle==="2621"&&chartNameData.pages&&
+      charts.some(c=>c.airport==="OIKR"&&Number(c.page)===541))
+      ? chartNameData.pages : Object.create(null);
     airportMetadata=profiles&&profiles.airports&&profiles.cycle===m.version?profiles.airports:{};
     airportRunwayMetadata=runways&&runways.airports&&runways.cycle===m.version?runways.airports:{};
     georefByPage=buildGeorefIndex(g);
@@ -525,7 +537,7 @@ function renderTreeInto(root){
     if(groupOpen)items.forEach(c=>{
       const item=document.createElement("button");item.type="button";
       item.className="tree-item"+(selectedChart&&Number(selectedChart.page)===Number(c.page)?" selected":"");
-      item.innerHTML=profileEsc(c.chart_number?c.chart_number+" • "+c.name:c.name||("Chart "+c.page));
+      item.innerHTML=profileEsc(c.chart_number?c.chart_number+" • "+displayChartName(c):displayChartName(c));
       item.onclick=e=>{e.stopPropagation();selectChart(c)};
       wrap.appendChild(item)
     });
@@ -1222,7 +1234,7 @@ function selectChart(c,options={}){
   expanded.add(c.category||"Other");
   renderAirports($("#airportSearch").value);
   refreshPositionStatus();
-  $("#viewerChart").textContent=(c.chart_number?c.chart_number+" • ":"")+(c.name||("Chart "+c.page));
+  $("#viewerChart").textContent=(c.chart_number?c.chart_number+" • ":"")+displayChartName(c);
   showChartMetar(true,true);
   renderSelectedPdf(c).catch(e=>{
     $("#pdfStage").innerHTML='<div class="empty-state"><img src="./app-icon.png" alt=""><b>Chart unavailable</b><span>'+escapeHtml(e.message)+'</span></div>';
