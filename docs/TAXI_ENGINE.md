@@ -115,7 +115,8 @@ goals remain unrouteable. `runway` edges also require a matching physical ID.
 
 4. Validate and examine the generated graph, and perform a simulator QA
    dry run of the expected stand-to-runway, stand-to-stand, and runway
-   exit-to-stand cases. Then change `enabled` to `true`:
+   exit-to-stand cases. Set `source.reviewStatus` to
+   `SIM_QA_REVIEWED` and only then change `enabled` to `true`:
 
    ```powershell
    node scripts/taxi-engine/validate.cjs web/data/taxi-networks/OISS.json
@@ -150,7 +151,10 @@ const routeToStand = taxi.plan("ST109", {
 
 The browser exposes the same `window.JEPPIRAN_TAXI_ENGINE` API. A new
 network is activated by presence of a matching `ICAO.json` with
-`engineVersion:1`, reviewed sources, and `enabled:true`. Older OIMM/LTFM
+`engineVersion:1`, `source.reviewStatus:"SIM_QA_REVIEWED"`, and
+`enabled:true`. To deliberately preview source-projected connectors
+use `QA ST101 J BT13R H 13L` in TAXI; these legs are dashed amber,
+and such routes are not auto-monitored or cleared for runway crossing. Older OIMM/LTFM
 networks deliberately remain on their existing routing implementation.
 
 The adapter `Engine.fromLegacy(old, options)` loads previous source
