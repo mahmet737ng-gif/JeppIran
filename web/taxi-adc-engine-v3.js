@@ -27,8 +27,8 @@ function pages(airport,entries){
   if(p.airport&&U(p.airport)!==U(airport))continue;
   const title=U([p.title,p.chartNumber,p.section].filter(Boolean).join(" "));
   let type=/\b(ADC|AIRPORT DIAGRAM|AIRPORT CHART|10-9)\b/.test(title)?"ADC":
+   /DOCKING|STAND COORDINATES|STAND COORDINATE TABLE/.test(title)?"DOCKING":
    /PARKING|APRON|STAND POSITIONS?/.test(title)?"PARKING":
-   /DOCKING|STAND COORDINATES/.test(title)?"DOCKING":
    /BRIEFING|TAXI PROCEDURE|PUSHBACK/.test(title)?"BRIEFING":"OTHER";
   if(p.insetTypes?.includes("PARKING")&&type==="ADC")
    groups.PARKING.push({page:p.page,region:"INSET",parentPage:p.page});
