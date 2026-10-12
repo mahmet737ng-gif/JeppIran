@@ -1,0 +1,1354 @@
+{
+  "schemaVersion": 3,
+  "airport": "OIIE",
+  "cycle": "2621",
+  "source": {
+    "document": "2621.pdf",
+    "sha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+    "coordinateSystem": "PDF_POINTS_TOP_LEFT",
+    "pages": [
+      380,
+      381,
+      382,
+      383,
+      384
+    ],
+    "sourceType": "Jeppesen terminal charts"
+  },
+  "chartPages": [
+    {
+      "page": 380,
+      "chart": "20-9",
+      "kind": "ADC",
+      "insetTypes": [],
+      "title": "Airport Diagram"
+    },
+    {
+      "page": 381,
+      "chart": "20-9A",
+      "kind": "RUNWAY_INFO",
+      "title": "Additional Runway Information"
+    },
+    {
+      "page": 382,
+      "chart": "20-9B",
+      "kind": "PARKING",
+      "title": "Passenger Apron 1 and stand 400 series"
+    },
+    {
+      "page": 383,
+      "chart": "20-9C",
+      "kind": "PARKING",
+      "title": "Cargo Apron 2 and Salam Apron 3"
+    },
+    {
+      "page": 384,
+      "chart": "20-9D",
+      "kind": "STAND_COORDINATES",
+      "title": "Parking stand coordinate table"
+    }
+  ],
+  "runwayPolygons": [
+    {
+      "physicalId": "11L_29R",
+      "ends": [
+        "11L",
+        "29R"
+      ],
+      "publishedLengthM": 4198,
+      "lengthSourcePage": 380,
+      "geometryVerified": false
+    },
+    {
+      "physicalId": "11R_29L",
+      "ends": [
+        "11R",
+        "29L"
+      ],
+      "publishedLengthM": 4092,
+      "lengthSourcePage": 380,
+      "geometryVerified": false
+    }
+  ],
+  "taxiways": [
+    {
+      "id": "A",
+      "sourcePage": 380,
+      "knownTaxiway": true,
+      "centerlineTraced": false,
+      "startVerified": false,
+      "endVerified": false,
+      "connectionsVerified": false
+    },
+    {
+      "id": "B",
+      "sourcePage": 380,
+      "knownTaxiway": true,
+      "centerlineTraced": false,
+      "startVerified": false,
+      "endVerified": false,
+      "connectionsVerified": false
+    },
+    {
+      "id": "C",
+      "sourcePage": 380,
+      "knownTaxiway": true,
+      "centerlineTraced": false,
+      "startVerified": false,
+      "endVerified": false,
+      "connectionsVerified": false
+    },
+    {
+      "id": "D",
+      "sourcePage": 380,
+      "knownTaxiway": true,
+      "centerlineTraced": false,
+      "startVerified": false,
+      "endVerified": false,
+      "connectionsVerified": false
+    },
+    {
+      "id": "E",
+      "sourcePage": 380,
+      "knownTaxiway": true,
+      "centerlineTraced": false,
+      "startVerified": false,
+      "endVerified": false,
+      "connectionsVerified": false
+    },
+    {
+      "id": "F",
+      "sourcePage": 380,
+      "knownTaxiway": true,
+      "centerlineTraced": false,
+      "startVerified": false,
+      "endVerified": false,
+      "connectionsVerified": false
+    },
+    {
+      "id": "G",
+      "sourcePage": 380,
+      "knownTaxiway": true,
+      "centerlineTraced": false,
+      "startVerified": false,
+      "endVerified": false,
+      "connectionsVerified": false
+    },
+    {
+      "id": "H",
+      "sourcePage": 380,
+      "knownTaxiway": true,
+      "centerlineTraced": false,
+      "startVerified": false,
+      "endVerified": false,
+      "connectionsVerified": false
+    },
+    {
+      "id": "J",
+      "sourcePage": 380,
+      "knownTaxiway": true,
+      "centerlineTraced": false,
+      "startVerified": false,
+      "endVerified": false,
+      "connectionsVerified": false
+    },
+    {
+      "id": "K",
+      "sourcePage": 380,
+      "knownTaxiway": true,
+      "centerlineTraced": false,
+      "startVerified": false,
+      "endVerified": false,
+      "connectionsVerified": false
+    },
+    {
+      "id": "L",
+      "sourcePage": 380,
+      "knownTaxiway": true,
+      "centerlineTraced": false,
+      "startVerified": false,
+      "endVerified": false,
+      "connectionsVerified": false
+    },
+    {
+      "id": "M",
+      "sourcePage": 380,
+      "knownTaxiway": true,
+      "centerlineTraced": false,
+      "startVerified": false,
+      "endVerified": false,
+      "connectionsVerified": false
+    },
+    {
+      "id": "N",
+      "sourcePage": 380,
+      "knownTaxiway": true,
+      "centerlineTraced": false,
+      "startVerified": false,
+      "endVerified": false,
+      "connectionsVerified": false
+    },
+    {
+      "id": "P",
+      "sourcePage": 380,
+      "knownTaxiway": true,
+      "centerlineTraced": false,
+      "startVerified": false,
+      "endVerified": false,
+      "connectionsVerified": false
+    },
+    {
+      "id": "S",
+      "sourcePage": 380,
+      "knownTaxiway": true,
+      "centerlineTraced": false,
+      "startVerified": false,
+      "endVerified": false,
+      "connectionsVerified": false
+    },
+    {
+      "id": "U",
+      "sourcePage": 380,
+      "knownTaxiway": true,
+      "centerlineTraced": false,
+      "startVerified": false,
+      "endVerified": false,
+      "connectionsVerified": false
+    },
+    {
+      "id": "Y",
+      "sourcePage": 380,
+      "knownTaxiway": true,
+      "centerlineTraced": false,
+      "startVerified": false,
+      "endVerified": false,
+      "connectionsVerified": false
+    },
+    {
+      "id": "Z",
+      "sourcePage": 380,
+      "knownTaxiway": true,
+      "centerlineTraced": false,
+      "startVerified": false,
+      "endVerified": false,
+      "connectionsVerified": false
+    },
+    {
+      "id": "R1",
+      "sourcePage": 380,
+      "knownTaxiway": true,
+      "centerlineTraced": false,
+      "startVerified": false,
+      "endVerified": false,
+      "connectionsVerified": false
+    },
+    {
+      "id": "R2",
+      "sourcePage": 380,
+      "knownTaxiway": true,
+      "centerlineTraced": false,
+      "startVerified": false,
+      "endVerified": false,
+      "connectionsVerified": false
+    },
+    {
+      "id": "R3",
+      "sourcePage": 380,
+      "knownTaxiway": true,
+      "centerlineTraced": false,
+      "startVerified": false,
+      "endVerified": false,
+      "connectionsVerified": false
+    },
+    {
+      "id": "R4",
+      "sourcePage": 380,
+      "knownTaxiway": true,
+      "centerlineTraced": false,
+      "startVerified": false,
+      "endVerified": false,
+      "connectionsVerified": false
+    },
+    {
+      "id": "R5",
+      "sourcePage": 380,
+      "knownTaxiway": true,
+      "centerlineTraced": false,
+      "startVerified": false,
+      "endVerified": false,
+      "connectionsVerified": false
+    },
+    {
+      "id": "R6",
+      "sourcePage": 380,
+      "knownTaxiway": true,
+      "centerlineTraced": false,
+      "startVerified": false,
+      "endVerified": false,
+      "connectionsVerified": false
+    }
+  ],
+  "stands": [
+    {
+      "id": "100",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "102",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "104",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "104L",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "104R",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "106",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "106L",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "106R",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "108",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "108L",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "108R",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "110",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "112L",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "114L",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "116",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "116L",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "116R",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "118",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "120",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "120R",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "122",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "124",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "126",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "128",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "130",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "132",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "134L",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "134R",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "136",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "138",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "140",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "142",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "144",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "146",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "148",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "150",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "152",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "154",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "156",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "158",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "160",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "162",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "164L",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "164R",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "400",
+      "apron": "PASSENGER_SOUTH",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "400L",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "400R",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "401",
+      "apron": "PASSENGER_SOUTH",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "402",
+      "apron": "PASSENGER_SOUTH",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "402L",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "402R",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "403",
+      "apron": "PASSENGER_SOUTH",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "404",
+      "apron": "PASSENGER_SOUTH",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "404L",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "404R",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "405",
+      "apron": "PASSENGER_SOUTH",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "406",
+      "apron": "PASSENGER_SOUTH",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "406L",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "406R",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "407",
+      "apron": "PASSENGER_SOUTH",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "408",
+      "apron": "PASSENGER_SOUTH",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "408R",
+      "apron": "PASSENGER",
+      "sourcePage": 382,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "301",
+      "apron": "CARGO",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "302",
+      "apron": "CARGO",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "303",
+      "apron": "CARGO",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "304",
+      "apron": "CARGO",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "305",
+      "apron": "CARGO",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "306",
+      "apron": "CARGO",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "307",
+      "apron": "CARGO",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "308",
+      "apron": "CARGO",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "309",
+      "apron": "CARGO",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "310",
+      "apron": "CARGO",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "311",
+      "apron": "CARGO",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "312",
+      "apron": "CARGO",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "313",
+      "apron": "CARGO",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "314",
+      "apron": "CARGO",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "315",
+      "apron": "CARGO",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "316",
+      "apron": "CARGO",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "317",
+      "apron": "CARGO",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "318",
+      "apron": "CARGO",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "319",
+      "apron": "CARGO",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "320",
+      "apron": "CARGO",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "321",
+      "apron": "CARGO",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "201",
+      "apron": "SALAM",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "202",
+      "apron": "SALAM",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "202L",
+      "apron": "SALAM",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "202R",
+      "apron": "SALAM",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "203",
+      "apron": "SALAM",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "203L",
+      "apron": "SALAM",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "203R",
+      "apron": "SALAM",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "204",
+      "apron": "SALAM",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "204L",
+      "apron": "SALAM",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "204R",
+      "apron": "SALAM",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "205",
+      "apron": "SALAM",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "205L",
+      "apron": "SALAM",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "205R",
+      "apron": "SALAM",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "206",
+      "apron": "SALAM",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "206L",
+      "apron": "SALAM",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "206R",
+      "apron": "SALAM",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "207",
+      "apron": "SALAM",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "207L",
+      "apron": "SALAM",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "207R",
+      "apron": "SALAM",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    },
+    {
+      "id": "208",
+      "apron": "SALAM",
+      "sourcePage": 383,
+      "sourceLabel": "PDF text extraction",
+      "chartPosition": null,
+      "geographicCoordinatesVerified": false,
+      "leadCurveVerified": false,
+      "connectedTaxiway": null
+    }
+  ],
+  "classifications": [
+    {
+      "label": "R1–R6",
+      "kind": "TAXIWAY",
+      "sourcePage": 380,
+      "sourceCrossCheckRequired": true
+    },
+    {
+      "label": "VIP",
+      "kind": "LANDMARK"
+    },
+    {
+      "label": "VOR",
+      "kind": "NAVAID"
+    },
+    {
+      "label": "MET",
+      "kind": "LANDMARK"
+    }
+  ],
+  "qa": {
+    "status": "SOURCE_INVENTORY_ONLY",
+    "centerlinesVerified": false,
+    "standLeadsVerified": false,
+    "intersectionsVerified": false,
+    "runwayGatesVerified": false,
+    "pageRegistrationVerified": false,
+    "routeable": false,
+    "requiresAdditionalAIPBriefing": true
+  },
+  "caveat": "Stand labels sourced from page 382/383 PDF text; page 384 rounded INS stand coordinate table contains printed longitude values requiring verification before any WGS84 use. Lengths/areas/stands are not a verified route graph."
+}
