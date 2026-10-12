@@ -1,44 +1,49 @@
-/* CDFA independent vertical drag/pinch + horizontal screen anchor.
- * No new column; toolbar, PDF canvas geometry and protected CDFA values intact.
- * #jpCdfaSide is an ABSOLUTE child of viewer-pane, outside chartTransformLayer. */
+/* Owner-approved CDFA annotation: attached to the PDF coordinates, never viewport.
+ * The existing chart transform scales/translates the whole page AND the table.
+ * Do not add gutter width, change the PDF scale, or modify the CDFA toolbar.
+ */
 #chartsView.chart-open #jpCdfaWorkspace{width:100%!important;min-width:0!important}
 #chartsView.chart-open #jpCdfaWorkspace > #pdfStage{
  width:100%!important;flex:1 1 auto!important;min-width:0!important;
 }
-#chartsView .viewer-pane > #jpCdfaSide.jp-cdfa-side{
- position:absolute!important;z-index:75;flex:none!important;
- height:auto!important;min-height:0!important;width:auto;
- max-width:none;box-sizing:border-box;overflow-x:hidden!important;
- overflow-y:auto!important;scrollbar-width:none;
- padding:0!important;margin:0!important;border:0!important;
- pointer-events:auto!important;touch-action:none!important;
- overscroll-behavior:contain;user-select:none;-webkit-user-select:none;
- cursor:ns-resize;
+#chartsView #chartTransformLayer > #jpCdfaSide.jp-cdfa-side{
+ position:absolute!important;z-index:35;flex:none!important;
+ box-sizing:border-box;height:auto!important;min-height:0!important;
+ width:auto;max-width:none;margin:0!important;padding:0!important;
+ border:0!important;overflow:hidden!important;
+ /* Chart gesture targets (not a separate table gesture handler). */
+ pointer-events:none!important;touch-action:none!important;
+ user-select:none;-webkit-user-select:none;
 }
-#chartsView .viewer-pane > #jpCdfaSide.jp-cdfa-side::-webkit-scrollbar{display:none}
-#chartsView .viewer-pane > #jpCdfaSide .jp-cdfa-table{width:100%;table-layout:fixed}
-#chartsView .viewer-pane > #jpCdfaSide .jp-cdfa-table th,
-#chartsView .viewer-pane > #jpCdfaSide .jp-cdfa-table td{
+#chartsView #chartTransformLayer > #jpCdfaSide.jp-cdfa-side *{
+ pointer-events:none!important;
+}
+#chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-table{
+ width:100%;table-layout:fixed;
+}
+#chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-table th,
+#chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-table td{
  font-size:var(--jp-cdfa-margin-font,13px)!important;
- padding:clamp(2px,.35vw,7px) 1px!important;border:1px solid currentColor;
+ padding:clamp(2px,.35vw,7px) 1px!important;
+ border:1px solid currentColor;
 }
-#chartsView .viewer-pane > #jpCdfaSide .jp-cdfa-table thead tr:first-child th{
+#chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-table thead tr:first-child th{
  font-size:calc(var(--jp-cdfa-margin-font,13px)*1.10)!important;
  padding:clamp(3px,.45vw,9px) 1px!important;
 }
-#chartsView .viewer-pane > #jpCdfaSide .jp-cdfa-table thead tr:nth-child(2) th{
+#chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-table thead tr:nth-child(2) th{
  font-size:calc(var(--jp-cdfa-margin-font,13px)*.88)!important;
 }
-#chartsView .viewer-pane > #jpCdfaSide .jp-cdfa-qa-note{
+#chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-qa-note{
  font-size:clamp(6px,.58vw,10px);line-height:1.3;margin:5px 0 0;
 }
-/* CDFA colors follow chart INVERT only, never Light/Dark app appearance.
-   Normal: black background / white text; Inverted: white / black. */
-#chartsView .viewer-pane > #jpCdfaSide.jp-cdfa-side,
-#chartsView .viewer-pane > #jpCdfaSide .jp-cdfa-table{
- background:#000!important;color:#fff!important;
-}
-body.chart-inverted #chartsView .viewer-pane > #jpCdfaSide.jp-cdfa-side,
-body.chart-inverted #chartsView .viewer-pane > #jpCdfaSide .jp-cdfa-table{
+/* INVERT OFF: same white paper and black text as the original PDF. */
+#chartsView #chartTransformLayer > #jpCdfaSide.jp-cdfa-side,
+#chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-table{
  background:#fff!important;color:#000!important;
+}
+/* INVERT ON: same black paper and white text as the inverted PDF. */
+body.chart-inverted #chartsView #chartTransformLayer > #jpCdfaSide.jp-cdfa-side,
+body.chart-inverted #chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-table{
+ background:#000!important;color:#fff!important;
 }

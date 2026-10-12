@@ -45,3 +45,14 @@ change CDFA/VDP computations, toolbar or fullscreen controls, and retain
 independent vertical drag and pinch zoom. The CDFA table follows INVERT:
 INVERT OFF => black background/white text; ON => white background/black text.
 The app's separate Light/Dark theme NEVER determines CDFA table colors.
+
+## V1.6 — PDF-anchored CDFA and corrected inversion (owner override)
+Supersedes earlier separate-table drag/zoom rules in V1.4 and color polarity
+in V1.5. CDFA is an annotation placed at fixed local PDF coordinates inside
+`chartTransformLayer`, aligned with the plan-view beginning in the existing
+right paper margin. It MUST scale and pan with the PDF, like printed page text,
+with no independent screen-fixed size, positioning, gesture handling or refit.
+Touching/pinching CDFA must use chart gestures. INVERT OFF means white
+background and black CDFA type; INVERT ON means black background and white
+CDFA type. App Light/Dark theme never determines the colors. Keep the original
+toolbar CDFA button, fullscreen CDFA/X buttons, data/VDP and chart unchanged.

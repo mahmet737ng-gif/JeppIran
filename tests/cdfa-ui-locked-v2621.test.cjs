@@ -56,54 +56,35 @@ test('calculated VDP is the LAST row, with no DME altitudes below it',()=>{
  assert.match(native,/descending\.take\(vdpIndex \+ 1\)/);
 });
 
-test('owner-approved WEB CDFA uses only existing PDF white margin',()=>{
- const html=read('web/index.html'),js=read('web/cdfa-chart-panel.js');
- const overlay=read('web/cdfa-margin-overlay.js'),css=read('web/cdfa-margin-overlay.css');
+
+test('CDFA is part of the PDF transform and never reserves a sidebar',()=>{
+ const html=read('web/index.html'),overlay=read('web/cdfa-margin-overlay.js');
+ const css=read('web/cdfa-margin-overlay.css'),controller=read('web/cdfa-chart-panel.js');
  assert.match(html,/id="chartCdfaBtn"/);
  assert.match(html,/id="fullscreenCdfaBtn"/);
- assert.match(html,/cdfa-margin-overlay\.js/);
- assert.match(overlay,/outerRightBorder\(canvas\)/);
- assert.match(overlay,/paperIsBlank\(canvas/);
- assert.match(overlay,/if\(marginWidth<64\)return false/);
- assert.match(overlay,/viewer\.appendChild\(panel\)/);
+ assert.match(css,/#jpCdfaWorkspace > #pdfStage\{/);
  assert.match(css,/width:100%!important;flex:1 1 auto!important/);
+ assert.match(css,/#chartTransformLayer > #jpCdfaSide\.jp-cdfa-side\{/);
  assert.match(css,/position:absolute!important/);
- assert.match(css,/body\.chart-inverted #chartsView[\s\S]*?background:#fff!important;color:#000!important/);
- assert.match(css,/#chartsView \.viewer-pane > #jpCdfaSide\.jp-cdfa-side,[\s\S]*?background:#000!important;color:#fff!important/);
- assert.doesNotMatch(css,/:root\.light #chartsView/);
- assert.doesNotMatch(js,/dispatchEvent\(new Event\('jeppiran-cdfa-layout-changed'\)\)/);
+ assert.match(overlay,/layer\.appendChild\(panel\)/);
+ assert.doesNotMatch(overlay,/viewer\.appendChild\(panel\)/);
+ assert.doesNotMatch(overlay,/tableZoom|updateVertical|attachGestures|MutationObserver/);
+ assert.doesNotMatch(controller,/dispatchEvent\(new Event\('jeppiran-cdfa-layout-changed'\)\)/);
 });
-
-test('CDFA drag and zoom stay interactive and chart horizontal pan never shifts the overlay',()=>{
- const overlay=read('web/cdfa-margin-overlay.js'),css=read('web/cdfa-margin-overlay.css');
- assert.match(overlay,/viewer\.appendChild\(panel\)/);
- assert.match(overlay,/s\.dragY\+=e\.clientY-s\.dragLastY/);
- assert.match(overlay,/s\.tableZoom=clamp\(s\.pinchStart\.zoom\*current\/s\.pinchStart\.distance/);
- assert.match(overlay,/panel\.setPointerCapture\(e\.pointerId\)/);
- assert.match(overlay,/chartObserver\.observe\(layer/);
- assert.match(overlay,/stage\.addEventListener\('scroll',scheduleVertical/);
- assert.match(overlay,/chartPanX is ignored/);
- assert.match(css,/touch-action:none!important/);
- assert.match(css,/pointer-events:auto!important/);
- assert.match(css,/position:absolute!important/);
- assert.doesNotMatch(css,/pointer-events:none/);
-});
-
-test('CDFA finger drag starts immediately even after long vertical chart scrolling',()=>{
+test('CDFA uses real Plan View boundary and no overlap with frame or PDF edge',()=>{
  const overlay=read('web/cdfa-margin-overlay.js');
- assert.match(overlay,/const visual=view\.top\+\(parseFloat\(panel\.style\.top\)\|\|0\)/);
- assert.match(overlay,/s\.dragY\+=visual-computed/);
-});
-
-test('CDFA aligns alongside the PLAN VIEW and colors follow INVERT only',()=>{
- const overlay=read('web/cdfa-margin-overlay.js'),css=read('web/cdfa-margin-overlay.css');
- const html=read('web/index.html');
  assert.match(overlay,/function planViewTop\(canvas,borderX\)/);
  assert.match(overlay,/const planBoundary=planViewTop\(canvas,border\)/);
- assert.match(overlay,/const paperTop=Math\.round\(planBoundary\*h\/canvas\.height/);
- assert.match(overlay,/const low=area\.top\+6,high=Math\.max\(low,area\.bottom-44\)/);
- assert.match(css,/body\.chart-inverted #chartsView[\s\S]*?background:#fff!important;color:#000!important/);
- assert.doesNotMatch(css,/:root\.light #chartsView/);
- assert.match(html,/id="chartCdfaBtn"/);
- assert.match(html,/id="fullscreenCdfaBtn"/);
+ assert.match(overlay,/const borderGap=Math\.max\(10/);
+ assert.match(overlay,/const edgeGap=Math\.max\(10/);
+ assert.match(overlay,/paperIsBlank\(canvas,x,marginWidth,y/);
+ assert.match(overlay,/if\(marginWidth<64\)return false/);
+});
+test('CDFA INVERT OFF = white/black; INVERT ON = black/white independent of app theme',()=>{
+ const css=read('web/cdfa-margin-overlay.css'),html=read('web/index.html');
+ assert.match(css,/#chartsView #chartTransformLayer > #jpCdfaSide\.jp-cdfa-side,[\s\S]*?background:#fff!important;color:#000!important/);
+ assert.match(css,/body\.chart-inverted #chartsView #chartTransformLayer > #jpCdfaSide\.jp-cdfa-side,[\s\S]*?background:#000!important;color:#fff!important/);
+ assert.doesNotMatch(css,/:root\.light|:root:not\(\.light\)/);
+ assert.match(css,/pointer-events:none!important/);
+ assert.match(html,/cdfa-margin-overlay\.js\?v=2621-cdfa-pdf-attached-invert-r2/);
 });
