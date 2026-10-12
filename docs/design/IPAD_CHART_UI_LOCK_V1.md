@@ -78,3 +78,14 @@ keep its center alignment and safe side margins, and preserve the original PDF
 scale. CDFA SVG rectangle background tracks INVERT OFF=white, ON=black;
 numbers use corresponding black/white text, regardless of app Light/Dark.
 Existing validated data, VDP rule, buttons and all other appearance remain locked.
+
+## V1.9 — iPad Safari CDFA column-fit protection
+An iPad chart often has a narrower right-paper margin (roughly 106-115px)
+than Windows (about 172px). Intrinsic 33px SVG numbers cause adjacent DME
+and ALT labels to collide at 100% on iPad. Measure every actual SVG label
+against its own half-column, not the whole table, fit type to available
+width, and verify using getComputedTextLength after the panel is visible.
+Retain the largest possible vector font in that half-column; do not shrink
+the underlying PDF or add a side panel, use bitmap text or remove values.
+Safari font inflation should not cause column overlap. INVERT coloring,
+centered Plan View alignment and original toolbar/CDFA data remain locked.
