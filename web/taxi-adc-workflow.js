@@ -159,22 +159,84 @@ function compile(input){
   j.touches?.filter(id=>reviewedById.get(id)?.kind==="taxiway").length>=2);
  if(present.size>1&&!taxiJunctions.length)
   block("TAXI_JUNCTIONS_UNVERIFIED","No reviewed intersections between named taxiways");
+ // A runway stripe or its printed label is NOT a taxi entry. An entry requires
+ // a source-traced, connected taxi -> connector -> runway-axis path and a
+ // published/verified hold-short point. Never create a shortcut across a stripe.
+ const axes=new Set(approved.filter(t=>t.kind==="runway-axis").map(t=>U(t.physicalRunway||t.label)));
+ for(const runway of runways){
+   if(!axes.has(U(runway.physicalId)))
+     block("RUNWAY_AXIS_UNTRACED","Physical runway axis needs reviewed original PDF geometry",runway.physicalId);
+ }
  for(const g of gates){
   if(g.reviewed!==true)continue;
-  const p1=reviewedById.get(g.taxiTraceId),p2=reviewedById.get(g.runwayTraceId);
-  if(!g.holdShortReviewed||!finite(g.holdPoint)||!p1||!p2||
-     p2.kind!=="runway-axis"||Number(p1.page)!==Number(p2.page)||
-     nearest(p1.points,g.holdPoint).distance>.8)
-   block("RUNWAY_GATE_INVALID","Verified entry requires named hold-short and mapped runway axis",g.id);
+  const taxi=reviewedById.get(g.taxiTraceId),
+    runway=reviewedById.get(g.runwayTraceId),
+    access=reviewedById.get(g.connectorTraceId);
+  const joins=junctions.filter(j=>j.reviewed===true&&j.touches?.includes(g.connectorTraceId));
+  const taxiTouch=joins.some(j=>j.touches.includes(g.taxiTraceId));
+  const runwayTouch=joins.some(j=>j.touches.includes(g.runwayTraceId));
+  if(!g.holdShortReviewed||!finite(g.holdPoint)||!finite(g.runwayPoint)||
+     !taxi||!runway||!access||access.kind!=="runway-connector"||
+     runway.kind!=="runway-axis"||!g.physicalRunway||
+     U(runway.physicalRunway||runway.label)!==U(g.physicalRunway)||
+     [taxi,runway,access].some(t=>Number(t.page)!==Number(g.page))||
+     nearest(taxi.points,g.holdPoint).distance>.8||
+     nearest(access.points,g.holdPoint).distance>.8||
+     nearest(runway.points,g.runwayPoint).distance>.8||
+     nearest(access.points,g.runwayPoint).distance>.8||
+     !taxiTouch||!runwayTouch)
+   block("RUNWAY_GATE_INVALID","Gate must have reviewed taxi/connector/axis junctions and verified hold line",g.id);
  }
- if(!gates.length||gates.some(g=>g.reviewed!==true))
-  block("RUNWAY_GATES_UNVERIFIED","Runway hold-short and entry locations not fully confirmed",
-   gates.filter(g=>!g.reviewed).map(g=>g.id));
- for(const link of links){
-  if(link.reviewed!==true||!link.controlPoints||link.controlPoints.length<3)
-   block("PAGE_ALIGNMENT_PENDING","ADC/parking links need >=3 reviewed control-point pairs",link.id);
+ for(const runway of runways){
+  if(!gates.some(g=>g.reviewed===true&&U(g.physicalRunway)===U(runway.physicalId)))
+   block("RUNWAY_GATES_UNVERIFIED","Each physical runway needs a reviewed entry and hold point",runway.physicalId);
  }
- if(expectedPages.size>1&&!links.length)block("PAGE_ALIGNMENT_PENDING","No verified alignment between distinct page coordinate frames");
+ if(gates.some(g=>g.reviewed!==true))
+  block("RUNWAY_GATES_UNVERIFIED","Unreviewed runway gate candidates remain",gates.filter(g=>!g.reviewed).map(g=>g.id));
+ const geometryPages=new Set(approved.map(t=>Number(t.page)));
+ const routingPages=new Set(input.routingPages||[...geometryPages]);
+ // Two PDF pages never share coordinates. A portal must be created only
+ // from two VERIFIED source junctions and audited page registration.
+ if(routingPages.size>1){
+  if(!links.length)block("PAGE_ALIGNMENT_PENDING","Missing reviewed registration and junction portals between ADC/Parking");
+  for(const link of links){
+   if(link.reviewed!==true||!Array.isArray(link.controlPoints)||link.controlPoints.length<3||
+      !link.fromJunction||!link.toJunction||!Number.isFinite(link.rmsErrorPt)||
+      link.rmsErrorPt>.75||
+      !junctions.some(j=>j.reviewed&&j.id===link.fromJunction&&Number(j.page)===Number(link.fromPage))||
+      !junctions.some(j=>j.reviewed&&j.id===link.toJunction&&Number(j.page)===Number(link.toPage))){
+    block("PAGE_ALIGNMENT_PENDING","Page link requires 3+ anchors (RMS<=.75pt) and two reviewed matching junctions",link.id);
+    continue;
+   }
+   const from=nodeMap.get("J_"+link.fromPage+"_"+link.fromJunction),
+     to=nodeMap.get("J_"+link.toPage+"_"+link.toJunction);
+   if(!from||!to){block("PAGE_ALIGNMENT_PENDING","Registered page portal nodes not found",link.id);continue}
+   edges.push({id:"PORTAL_"+link.id,from,to,kind:"page-transfer",label:"CHART_PORTAL",
+     reviewed:true,source:SOURCE,sourceDrawingIds:link.sourceDrawingIds||[],
+     registrationRmsPt:link.rmsErrorPt,
+     bidirectional:true,requiresClearance:false,notGroundDistance:true});
+  }
+ }
+ // Validate physical graph connectivity rather than the appearance of a
+ // line on top of a runway, label, or another chart page.
+ const adjacency=new Map(),connect=(a,b)=>{if(!adjacency.has(a))adjacency.set(a,new Set());adjacency.get(a).add(b)};
+ for(const e of edges){connect(e.from,e.to);if(e.bidirectional)connect(e.to,e.from)}
+ function reachable(start){
+  const seen=new Set([start]),q=[start];
+  for(let i=0;i<q.length;i++)for(const n of adjacency.get(q[i])||[])
+   if(!seen.has(n)){seen.add(n);q.push(n)}
+  return seen;
+ }
+ const standSources=approved.filter(t=>t.kind==="stand-lead");
+ const runwayNodes=new Set(edges.filter(e=>e.kind==="runway-axis").flatMap(e=>[e.from,e.to]));
+ for(const t of standSources){
+  const initial=nodeMap.get("E_"+t.id+"_START");
+  if(!initial)continue;
+  const seen=reachable(initial);
+  if(![...runwayNodes].some(n=>seen.has(n))&&runwayNodes.size)
+   block("DISCONNECTED_STAND","Stand lead has no reviewed path to runway via explicit gate",t.standId);
+ }
+ if(approved.length&&!edges.length)block("NO_ROUTABLE_EDGES","No reviewed graph edges exist");
  if(approved.length&&!junctions.some(j=>j.reviewed))
   block("NODE_CONTACTS_UNVERIFIED","Source lines are not connected until reviewed contacts are mapped");
  // Do not silently promote mere geometric crossings to legal connections.
@@ -187,10 +249,12 @@ function compile(input){
  jobs.push(job("geometry",STAGES[2][1],!!absentTaxi.length||!!absentStands.length||blocking.has("TRACE_GEOMETRY"),["source-Bezier traced centerlines for all names and stand leads"]));
  jobs.push(job("junctions",STAGES[3][1],blocking.has("NODE_CONTACTS_UNVERIFIED")||blocking.has("JUNCTION_FIT")||blocking.has("TAXI_JUNCTIONS_UNVERIFIED")||!junctions.length,["reviewed endpoint-to-endpoint and crossing contacts"]));
  jobs.push(job("semantics",STAGES[4][1],blocking.has("TRACE_LABEL")||absentTaxi.length>0||absentStands.length>0,["verified labels, directions, stand association"]));
- jobs.push(job("runway-access",STAGES[5][1],blocking.has("RUNWAY_GATES_UNVERIFIED")||blocking.has("RUNWAY_GATE_INVALID"),["hold position, runway gate, permission flag, backtrack alignment"]));
+ jobs.push(job("runway-access",STAGES[5][1],blocking.has("RUNWAY_GATES_UNVERIFIED")||blocking.has("RUNWAY_GATE_INVALID")||blocking.has("RUNWAY_AXIS_UNTRACED"),["hold position, runway gate, permission flag, backtrack alignment"]));
  jobs.push(job("page-registration",STAGES[6][1],blocking.has("PAGE_ALIGNMENT_PENDING"),["3+ audited matched points per page link"]));
  jobs.push(job("quality",STAGES[7][1],issues.length>0,["all edges source-backed; connectivity/turn restrictions and dead ends tested"]));
- const releaseApproved=input.releaseReviewed===true&&issues.length===0;
+ const releaseApproved=input.releaseReviewed===true&&issues.length===0&&
+  edges.length>0&&standSources.length===knownStands.size&&
+  gates.length>0;
  jobs.push(job("release",STAGES[8][1],!releaseApproved,["manual QA approval; source fingerprint unchanged; no unsafe gap"]));
  if(!releaseApproved)block("NOT_ROUTEABLE","One or more QA gates still block routing/release");
  return {schemaVersion:2,engine:"JEPPIRAN_ADC_WORKFLOW",airport:input.airport,cycle:String(input.cycle),
@@ -213,9 +277,11 @@ function fromSurvey(survey){
    publishedLengthM:x.publishedLengthM,sourceDrawingIds:[x.sourcePdfDrawingId]})),
    taxiways:(survey.taxiways||[]).map(x=>({id:x.id})),
    stands:(survey.stands||[]).map(x=>({id:"ST"+x.id,page:x.source.page,labelPosition:[x.source.x,x.source.y]}))},
-  traces:[],junctions:[],runwayGates:[],pageLinks:[],releaseReviewed:false};
+  traces:[],junctions:[],runwayGates:[],pageLinks:[],
+  routingPages:[survey.qaCharts?.mainADC?.page,survey.qaCharts?.parking?.page].filter(Number.isInteger),
+  releaseReviewed:false};
 }
-const api={version:"2.0.0",stages:STAGES,compile,fromSurvey,nearest};
+const api={version:"2.1.0",stages:STAGES,compile,fromSurvey,nearest};
 root.JEPPIRAN_ADC_WORKFLOW=api;
 if(typeof module!=="undefined"&&module.exports)module.exports=api;
 })(typeof window!=="undefined"?window:globalThis);
