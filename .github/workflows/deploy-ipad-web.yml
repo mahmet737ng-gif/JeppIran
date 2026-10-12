@@ -120,6 +120,12 @@ jobs:
           print(f"Bundled {downloaded} airport PDFs ({total_bytes / 1048576:.1f} MiB).")
           PY
 
+      - name: Generate complete on-device offline package
+        run: python3 scripts/build_offline_manifest.py
+
+      - name: Verify offline package before publication
+        run: python3 scripts/build_offline_manifest.py --check
+
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
         with:

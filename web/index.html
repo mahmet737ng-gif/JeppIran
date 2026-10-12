@@ -317,6 +317,17 @@
         <label><input type="radio" name="appearanceTheme" value="light"><span>Light Mode</span></label>
         <label><input type="radio" name="appearanceTheme" value="dark"><span>Dark Mode</span></label>
       </fieldset>
+      <section class="offline-settings-section" aria-labelledby="offlinePackTitle">
+        <h4 id="offlinePackTitle">Offline access</h4>
+        <p>Save the app, airport charts and local data on this device. Internet is required once for the download; live weather still needs a connection.</p>
+        <div class="offline-settings-buttons">
+          <button id="goOfflineBtn" type="button">Go Offline</button>
+          <button id="stopOfflineBtn" type="button" hidden>Stop</button>
+        </div>
+        <progress id="offlinePackProgress" max="100" value="0" hidden></progress>
+        <small id="offlinePackCount" aria-live="polite"></small>
+        <p id="offlinePackStatus" role="status" aria-live="polite">Checking saved files…</p>
+      </section>
       <button id="appearanceSettingsCloseBtn" class="appearance-settings-close" type="button">Done</button>
     </div>
   </dialog>
@@ -369,6 +380,7 @@
   })();
   </script>
   <script src="./app.js?v=2621-aircraft-marker-locked-r1" defer></script>
+  <script src="./offline-manager.js?v=2621-go-offline-r1" defer></script>
   <script src="./cdfa-margin-overlay.js?v=2621-cdfa-ipad-column-fit-r3" defer></script>
   <script src="./cdfa-chart-panel.js?v=2621-cdfa-inpage-white-margin-r1" defer></script>
   <script src="./airport-adc-banners.js?v=2621-adc-template2-r1" defer></script>
