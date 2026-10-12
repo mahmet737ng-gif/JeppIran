@@ -98,6 +98,12 @@ def main():
         subprocess.run([sys.executable,str(label_script),"--survey",a.survey,
             "--candidates",str(output),
             "--out",str(output/f"{icao}_taxiway_label_hypotheses.json")],check=True)
+        # Build native-line contact proposals and name/stand candidates.
+        # All associations remain UNREVIEWED until compared with the actual
+        # ADC and Parking PDF curves.
+        contact_script=Path(__file__).with_name("adc_graph_proposals.py")
+        subprocess.run([sys.executable,str(contact_script),"--survey",a.survey,
+            "--candidates",str(output),"--out",str(output)],check=True)
         node=shutil.which("node")
         if not node:
             print("Node.js unavailable; finish workflow report with:")
