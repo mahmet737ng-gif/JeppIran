@@ -1,0 +1,101 @@
+{
+  "schemaVersion": 3,
+  "airport": "OIIE",
+  "cycle": "2621",
+  "engineVersion": "3.0.0",
+  "sourceSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+  "runwayCount": 2,
+  "standLabelCount": 103,
+  "taxiwayCandidateCount": 24,
+  "chartPages": [
+    380,
+    381,
+    382,
+    383,
+    384
+  ],
+  "scannedVectorPages": [
+    380,
+    382,
+    383
+  ],
+  "scanResults": {
+    "380": {
+      "sourceDrawings": 1478,
+      "unreviewedCandidateTraces": 82,
+      "unreviewedGeometricContacts": 74
+    },
+    "382": {
+      "sourceDrawings": 361,
+      "unreviewedCandidateTraces": 236,
+      "unreviewedGeometricContacts": 499
+    },
+    "383": {
+      "sourceDrawings": 461,
+      "unreviewedCandidateTraces": 168,
+      "unreviewedGeometricContacts": 177
+    }
+  },
+  "totalUnreviewedTraces": 486,
+  "totalUnreviewedGeometricContacts": 750,
+  "qaStatus": "SOURCE_GEOMETRY_CANDIDATES_UNREVIEWED",
+  "approvedStandConnections": 0,
+  "approvedRunwayHoldGates": 0,
+  "approvedTaxywayJunctions": 0,
+  "routeable": false,
+  "worklist": [
+    {
+      "id": "DISCOVER",
+      "status": "DONE",
+      "notes": "ADC 20-9, runway info 20-9A, passenger apron 20-9B, cargo/salam apron 20-9C, stand coordinates 20-9D"
+    },
+    {
+      "id": "CLASSIFY",
+      "status": "PARTIAL",
+      "notes": "Differentiate taxiways from stand numbers, R1–R6 ramp access, hot spots, navaids, printed coordinate graticules"
+    },
+    {
+      "id": "EXTRACT",
+      "status": "PARTIAL",
+      "notes": "486 native black-stroke candidates; review width/length and source positions, stand coordinate table rounded values not stand noses"
+    },
+    {
+      "id": "TRACE",
+      "status": "PENDING",
+      "notes": "Confirm taxi centerlines versus apron decoration and curved stand lead-outs"
+    },
+    {
+      "id": "CONNECT",
+      "status": "PENDING",
+      "notes": "Review 750 visual contacts as real physical junctions; no assumed connections"
+    },
+    {
+      "id": "REGISTER",
+      "status": "PENDING",
+      "notes": "Register page 382/383 to ADC 380 with independent shared map points"
+    },
+    {
+      "id": "RESTRICT",
+      "status": "PENDING",
+      "notes": "Source AIP hold lines, runway gates, crossing/backtrack, one-way or pushback"
+    },
+    {
+      "id": "TEST",
+      "status": "PENDING",
+      "notes": "Check bidirectional 103-stand to each runway (when source evidence allows)"
+    },
+    {
+      "id": "RELEASE",
+      "status": "BLOCKED",
+      "notes": "No operational or simulator route graph without audited geometry"
+    }
+  ],
+  "nextAction": "Classify and trace source geometry; verify stand leads and multi-page registration",
+  "sourceBundleName": "OIIE_ADC_v3_source_QA.zip",
+  "cautions": [
+    "Geometric contact is not proof of a real taxiway intersection",
+    "Runway ends must never share inferred hold gates",
+    "PDF coordinates not interchangeable across pages",
+    "Insufficient airport metadata in one ADC must be supplemented with parking/docking/AIP"
+  ]
+}
