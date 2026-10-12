@@ -94,7 +94,8 @@ def main():
             'sourceSha256':raw.get('sourceSha256',raw.get('sha256')),
             'coordinateSystem':'PDF_POINTS_TOP_LEFT','status':'UNREVIEWED',
             'traces':arr,'junctions':near}
-        name=f'OIII_page_{page}_line_candidates.json'
+        airport=raw.get('airport',raw.get('icao','UNKNOWN'))
+        name=f'{airport}_page_{page}_line_candidates.json'
         (folder/name).write_text(json.dumps(output,separators=(',',':'))+'\n')
         report['pages'].append({'page':page,'sourceDrawings':len(raw.get('drawings',raw.get('sourceStrokes',[]))),
              'candidateLines':len(arr),'candidateTouches':len(near),
