@@ -60,3 +60,11 @@ test('fullscreen CDFA and Find Me safeguards',()=>{
  assert.match(js,/fullscreenButton\.hidden=!record/);
  assert.match(js,/button\.click\(\)/);
 });
+
+test('full screen CDFA files are cache-busted and CDFA script is network-first',()=>{
+ const html=read('web/index.html'),sw=read('web/service-worker.js');
+ assert.match(html,/cdfa-chart-panel\.js\?v=2621-ipad-fullscreen-cdfa-r2/);
+ assert.match(sw,/cdfa-chart-panel\.js\?v=2621-ipad-fullscreen-cdfa-r2/);
+ assert.match(sw,/app\\\.js\|cdfa-chart-panel\\\.js/);
+ assert.doesNotMatch(sw,/self\.skipWaiting\(/);
+});
