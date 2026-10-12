@@ -42,6 +42,17 @@ jobs:
       - name: Enforce owner-locked iPad chart gestures and appearance
         run: node --test tests/ipad-chart-ui-locked-v2621.test.cjs
 
+      - name: Enforce owner-locked aircraft marker and constant screen size
+        run: node --test tests/aircraft-marker-locked.test.cjs
+
+      - name: Verify aircraft marker size in Chrome before publishing
+        run: |
+          npm install --prefix "$RUNNER_TEMP/jeppiran-browser-qa" --no-audit --no-fund --package-lock=false playwright@1.58.2
+          export NODE_PATH="$RUNNER_TEMP/jeppiran-browser-qa/node_modules"
+          export JEPPIRAN_CHROME_BIN="$(command -v google-chrome)"
+          test -n "$JEPPIRAN_CHROME_BIN"
+          node scripts/verify_aircraft_marker_browser.cjs
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:

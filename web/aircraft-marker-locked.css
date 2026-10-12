@@ -1,0 +1,59 @@
+/* OWNER-APPROVED / LOCKED 2026-10-12. See docs/design/AIRCRAFT_MARKER_LOCK_V1.md.
+   Keep the approved arrow, thin dual outline, pulse and constant screen size.
+   This file loads after legacy styles. Do not redesign without owner approval. */
+.aircraft-marker{
+  --aircraft-color:#ef1ca8;
+  --aircraft-pulse-rgb:239,28,168;
+  /* Explicit inheritance prevents a legacy local default from cancelling 1/zoom. */
+  --marker-inverse-scale:inherit;
+  position:absolute;display:none;z-index:25;width:32px;height:32px;
+  transform:translate(-50%,-50%) rotate(var(--aircraft-heading,0deg)) scale(var(--marker-inverse-scale,1));
+  transform-origin:50% 50%;pointer-events:none;
+}
+.aircraft-marker.visible{display:block}
+.aircraft-marker::before{content:none}
+.aircraft-heading-arrow{
+  position:absolute;inset:0;display:block;width:32px;height:32px;
+  overflow:visible;pointer-events:none;
+}
+.aircraft-arrow-white,.aircraft-arrow-black{
+  fill:var(--aircraft-color);stroke-linejoin:round;stroke-linecap:round;
+}
+.aircraft-arrow-white{stroke:#fff;stroke-width:4.10}
+.aircraft-arrow-black{stroke:#101116;stroke-width:1.68}
+.aircraft-marker .aircraft-halo{
+  position:absolute;left:50%;top:50%;width:38.67px;height:38.67px;
+  margin:-19.335px 0 0 -19.335px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(circle,rgba(var(--aircraft-pulse-rgb),.27) 0%,rgba(var(--aircraft-pulse-rgb),.12) 38%,rgba(var(--aircraft-pulse-rgb),0) 72%);
+  animation:jeppiranAircraftHeartbeat 1.9s ease-in-out infinite;
+}
+.aircraft-marker .aircraft-pulse{
+  position:absolute;left:50%;top:50%;width:17.33px;height:17.33px;
+  margin:-8.665px 0 0 -8.665px;border-radius:50%;box-sizing:border-box;
+  border:.87px solid var(--aircraft-color);background:rgba(var(--aircraft-pulse-rgb),.035);
+  box-shadow:none;opacity:0;pointer-events:none;
+  animation:jeppiranAircraftRipple 1.9s cubic-bezier(.16,.6,.35,1) infinite;
+}
+.aircraft-marker .aircraft-pulse-second{animation-delay:.24s}
+@keyframes jeppiranAircraftRipple{
+  0%{transform:scale(.52);opacity:0}
+  10%{opacity:.5}
+  65%{opacity:.1}
+  92%,100%{transform:scale(2.7);opacity:0}
+}
+@keyframes jeppiranAircraftHeartbeat{
+  0%,60%,100%{transform:scale(.85);opacity:.44}
+  9%{transform:scale(1.08);opacity:.94}
+  17%{transform:scale(.91);opacity:.52}
+  26%{transform:scale(1.03);opacity:.78}
+}
+/* Preserve the existing taxi deviation alert; it never changes geometry or size. */
+.aircraft-marker.off-route{--aircraft-color:#f92340;--aircraft-pulse-rgb:249,35,64}
+.aircraft-marker.off-route .aircraft-pulse{
+  border-color:var(--aircraft-color);background:rgba(var(--aircraft-pulse-rgb),.035);
+  box-shadow:none;animation-duration:1.9s;
+}
+@media(prefers-reduced-motion:reduce){
+  .aircraft-marker .aircraft-pulse{animation:none!important;opacity:0}
+  .aircraft-marker .aircraft-halo{animation:none;opacity:.44}
+}

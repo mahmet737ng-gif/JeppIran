@@ -1032,7 +1032,6 @@ body:has(#homeView.active),body:has(#chartsView.active){background:#030c19}
 .aircraft-marker{
   width:14px;height:14px;z-index:25;
   --aircraft-heading:0deg;
-  --marker-inverse-scale:1;
 }
 .aircraft-dual-arrow{
   display:block;position:absolute;inset:0;width:14px;height:14px;

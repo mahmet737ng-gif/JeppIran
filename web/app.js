@@ -983,6 +983,11 @@ function updateTaxiDeviationClass(marker,pos){
   marker.classList.toggle("off-route",taxiOffRouteActive);
   marker.title=taxiOffRouteActive?"OFF ROUTE · SIMULATOR QA ONLY":"Aircraft position";
 }
+// OWNER LOCK 2026-10-12: approved thin-outline magenta arrow + soft double pulse.
+// Shape/appearance and screen size: docs/design/AIRCRAFT_MARKER_LOCK_V1.md.
+function aircraftMarkerMarkup(){
+  return '<span class="aircraft-halo"></span><span class="aircraft-pulse"></span><span class="aircraft-pulse aircraft-pulse-second"></span><svg class="aircraft-heading-arrow" viewBox="-24 -24 48 48" aria-hidden="true"><path class="aircraft-arrow-white" d="M0-21 L11 15 L0 8 L-11 15 Z"/><path class="aircraft-arrow-black" d="M0-21 L11 15 L0 8 L-11 15 Z"/></svg>';
+}
 function updateAircraftMarker(){
   const canvas=$("#pdfCanvas"),chart=selectedChart,pos=lastPosition;
   if(!canvas||!chart||!pos){hideAircraftMarker();refreshPositionStatus();return}
@@ -996,7 +1001,7 @@ function updateAircraftMarker(){
     marker=document.createElement("div");
     marker.id="aircraftMarker";
     marker.className="aircraft-marker";
-    marker.innerHTML='<span class="aircraft-pulse"></span><svg class="aircraft-dual-arrow" viewBox="0 0 36 36" aria-hidden="true"><path class="aircraft-arrow-outline" d="M18 2.8 31 32.1 18 26 5 32.1Z"/><path class="aircraft-arrow-core" d="M18 7.6 26.2 27.4 18 22.9 9.8 27.4Z"/><path class="aircraft-arrow-glint" d="M18 9.7V20"/></svg>';
+    marker.innerHTML=aircraftMarkerMarkup();
     wrap.appendChild(marker);
   }else if(marker.parentElement!==wrap){
     wrap.appendChild(marker);
@@ -1111,19 +1116,18 @@ function clampChartPan(){
   chartPanX=Math.max(-maxX,Math.min(maxX,chartPanX));
   chartPanY=Math.max(-maxY,Math.min(80,chartPanY));
 }
-// The SVG was too large and its original inverse-scale kept it screen-fixed.
-// Precision marker. On-screen arrow shrinks monotonically with zoom;
-// retain a small 5.5px minimum at maximum zoom, not an oversize obstruction.
+// OWNER LOCK: cancel the chart's scale exactly, on every animation/pinch frame.
+// Position stays in chart coordinates; arrow, outlines and pulse stay screen-sized.
 function aircraftMarkerScaleForZoom(zoom){
-  const z=Math.max(1,Number(zoom)||1);
-  return Math.max(5.5/(14*z),Math.pow(z,-1.65));
+  const z=Number(zoom);
+  return Number.isFinite(z)&&z>0?1/z:1;
 }
 function paintChartTransform(){
   const layer=$("#chartTransformLayer"),stage=$("#pdfStage");
   if(!layer)return;
   if(stage)stage.style.overflowY=chartZoom<=1.001?"auto":"hidden";
   layer.style.transform="translate3d("+chartPanX+"px,"+chartPanY+"px,0) scale("+chartZoom+")";
-  layer.style.setProperty("--marker-inverse-scale",aircraftMarkerScaleForZoom(chartZoom).toFixed(6));
+  layer.style.setProperty("--marker-inverse-scale",String(aircraftMarkerScaleForZoom(chartZoom)));
   const label=$("#zoomValue");if(label)label.textContent=Math.round(chartZoom*100)+"%";
 }
 function applyChartTransform(){
