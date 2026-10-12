@@ -1,0 +1,46 @@
+name: ADC Taxi Network QA
+on:
+  push:
+    paths:
+      - "web/taxi-adc-*.js"
+      - "web/tools/adc_*.py"
+      - "web/tests/taxi-adc-*.test.cjs"
+      - "web/tests/test_adc_graph_proposals.py"
+      - ".github/workflows/adc-network-qa.yml"
+  workflow_dispatch:
+jobs:
+  adc-unit-qa:
+    runs-on: ubuntu-latest
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Node 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install source geometry tools
+        run: python -m pip install --disable-pip-version-check shapely pymupdf
+      - name: Check Python source syntax
+        run: python -m py_compile web/tools/adc_autopilot.py web/tools/adc_trace_candidates.py web/tools/adc_graph_proposals.py web/tools/adc_pavement_fallback.py web/tools/adc_label_hypotheses.py
+      - name: Validate geometric contact proposals
+        run: python web/tests/test_adc_graph_proposals.py
+      - name: Verify reviewed graph safety gates
+        run: |
+          node web/tests/taxi-adc-workflow.test.cjs
+          node web/tests/taxi-adc-router.test.cjs
+      - name: Confirm Mehrabad cannot be routed until survey is reviewed
+        run: |
+          node web/tools/adc_workflow_cli.cjs --survey web/data/taxi-surveys/OIII.json --out /tmp/mehrabad-qa
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/mehrabad-qa/workflow_report.json'))
+          assert d['summary']['routeable'] is False
+          assert d['summary']['stands']==53
+          assert d['summary']['taxiways']==43
+          assert d['summary']['runways']==2
+          print('PASS: OIII source network is correctly blocked until true stand/runway junction review.')
+          PY
