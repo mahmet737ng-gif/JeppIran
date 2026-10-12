@@ -20,7 +20,7 @@ const fixture=()=>({
    {id:"AB",page:1,point:[30,10],touches:["A","B"],reviewed:true},
    {id:"BG",page:1,point:[40,10],touches:["B","G"],reviewed:true},
    {id:"GR",page:1,point:[50,10],touches:["G","R"],reviewed:true}],
- runwayGates:[{id:"G1",reviewed:true,page:1,physicalRunway:"11_29",
+ runwayGates:[{id:"G1",reviewed:true,page:1,physicalRunway:"11_29",runwayEnd:"11",
    taxiTraceId:"B",connectorTraceId:"G",runwayTraceId:"R",
    holdShortReviewed:true,holdPoint:[40,10],runwayPoint:[50,10]}],
  routingPages:[1],pageLinks:[],releaseReviewed:true});
@@ -32,6 +32,8 @@ assert.deepEqual(toTaxi.edges.map(e=>e.label),["ST1","A","B"]);
 const toHold=router.plan(graph,"ST1 A B RWY11");
 assert.equal(toHold.ok,true,toHold.error);
 assert.equal(toHold.destination.kind,"runway-hold");
+assert.match(router.plan(graph,"ST1 A B RWY29").error,/No reviewed hold-short/,
+ "Opposite end of the same black strip MUST NOT use RWY11's gate");
 assert.equal(toHold.edges.some(e=>e.kind==="runway-connector"),false);
 assert.equal(toHold.edges.some(e=>e.kind==="runway-axis"),false);
 assert.deepEqual(toHold.edges.at(-1).points.at(-1),[40,10]);
