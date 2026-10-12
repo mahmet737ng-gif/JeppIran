@@ -22,17 +22,19 @@
       String(r.status).startsWith('WITHHELD')||!Array.isArray(r.table)||!r.table.length)return null;
    return r;
  }
- function notifyResize(){
-   window.dispatchEvent(new Event('jeppiran-cdfa-layout-changed'));
+ function mountInPaperMargin(){
+   return !!window.JEPPIRAN_CDFA_MARGIN?.position(panel);
  }
  function setVisible(value){
    if(open===value)return;
+   // If the PDF has no verified blank margin, never overlay chart content.
+   if(value&&!mountInPaperMargin())return;
    open=value;
    panel.hidden=!value;
    workspace.classList.toggle('jp-cdfa-open',value);
    button.setAttribute('aria-pressed',value?'true':'false');
-    if(fullscreenButton)fullscreenButton.setAttribute('aria-pressed',value?'true':'false');
-   notifyResize();
+   if(fullscreenButton)fullscreenButton.setAttribute('aria-pressed',value?'true':'false');
+   // No layout change, chart rescale, or PDF re-render is permitted here.
  }
  function element(name,text,cls){
    const e=document.createElement(name);
@@ -82,9 +84,13 @@
    const record=ready?currentRecord():null;
    button.disabled=!record;
     if(fullscreenButton){fullscreenButton.hidden=!record;fullscreenButton.disabled=!record;fullscreenButton.setAttribute('aria-pressed',open?'true':'false')}
-   button.title=record?'Toggle CDFA data outside the chart · QA only':'No validated CDFA QA table for this chart';
+   button.title=record?'Toggle CDFA data in the chart white margin · QA only':'No validated CDFA QA table for this chart';
    if(!record&&open)setVisible(false);
-   if(open)render();
+   if(open){
+     render();
+     // Re-attach to the newly rendered chart layer after changing charts/fullscreen.
+     if(!mountInPaperMargin())setVisible(false);
+   }
  }
  button.addEventListener('click',()=>{
    if(!currentRecord())return;

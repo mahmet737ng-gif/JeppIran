@@ -55,3 +55,20 @@ test('calculated VDP is the LAST row, with no DME altitudes below it',()=>{
  assert.match(native,/indexOfFirst\s*\{\s*it\.isVdp\s*\}/);
  assert.match(native,/descending\.take\(vdpIndex \+ 1\)/);
 });
+
+test('owner-approved WEB CDFA uses only existing PDF white margin',()=>{
+ const html=read('web/index.html'),js=read('web/cdfa-chart-panel.js');
+ const overlay=read('web/cdfa-margin-overlay.js'),css=read('web/cdfa-margin-overlay.css');
+ assert.match(html,/id="chartCdfaBtn"/);
+ assert.match(html,/id="fullscreenCdfaBtn"/);
+ assert.match(html,/cdfa-margin-overlay\.js/);
+ assert.match(overlay,/outerRightBorder\(canvas\)/);
+ assert.match(overlay,/paperIsBlank\(canvas/);
+ assert.match(overlay,/if\(available<64\)return false/);
+ assert.match(overlay,/layer\.appendChild\(panel\)/);
+ assert.match(css,/width:100%!important;flex:1 1 auto!important/);
+ assert.match(css,/position:absolute!important/);
+ assert.match(css,/:root\.light #chartsView[\s\S]*?background:#fff!important;color:#000!important/);
+ assert.match(css,/:root:not\(\.light\) #chartsView[\s\S]*?background:#000!important;color:#fff!important/);
+ assert.doesNotMatch(js,/dispatchEvent\(new Event\('jeppiran-cdfa-layout-changed'\)\)/);
+});

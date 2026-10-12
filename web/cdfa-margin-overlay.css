@@ -1,0 +1,41 @@
+/* Owner-approved CDFA table ONLY on original PDF white right margin.
+   Loaded after the legacy CDFA CSS and aircraft marker lock.
+   No reserve-width, no PDF rescaling, no toolbar edits. */
+#chartsView.chart-open #jpCdfaWorkspace{width:100%!important;min-width:0!important}
+#chartsView.chart-open #jpCdfaWorkspace > #pdfStage{
+ width:100%!important;flex:1 1 auto!important;min-width:0!important;
+}
+#chartsView #chartTransformLayer > #jpCdfaSide.jp-cdfa-side{
+ position:absolute!important;z-index:35;flex:none!important;
+ height:auto!important;min-height:0!important;width:auto;
+ max-width:none;box-sizing:border-box;overflow-x:hidden!important;
+ overflow-y:auto!important;scrollbar-width:none;
+ padding:0!important;margin:0!important;border:0!important;pointer-events:none;
+}
+#chartsView #chartTransformLayer > #jpCdfaSide.jp-cdfa-side::-webkit-scrollbar{display:none}
+#chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-table{width:100%;table-layout:fixed}
+#chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-table th,
+#chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-table td{
+ font-size:var(--jp-cdfa-margin-font,13px)!important;
+ padding:clamp(2px,.35vw,7px) 1px!important;
+ border:1px solid currentColor;
+}
+#chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-table thead tr:first-child th{
+ font-size:calc(var(--jp-cdfa-margin-font,13px)*1.10)!important;
+ padding:clamp(3px,.45vw,9px) 1px!important;
+}
+#chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-table thead tr:nth-child(2) th{
+ font-size:calc(var(--jp-cdfa-margin-font,13px)*.88)!important;
+}
+#chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-qa-note{
+ font-size:clamp(6px,.58vw,10px);line-height:1.3;margin:5px 0 0;
+}
+/* Appearance theme wins over chart color inversion. */
+:root.light #chartsView #chartTransformLayer > #jpCdfaSide.jp-cdfa-side,
+:root.light #chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-table{
+ background:#fff!important;color:#000!important;
+}
+:root:not(.light) #chartsView #chartTransformLayer > #jpCdfaSide.jp-cdfa-side,
+:root:not(.light) #chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-table{
+ background:#000!important;color:#fff!important;
+}

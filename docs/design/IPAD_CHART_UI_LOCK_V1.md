@@ -16,3 +16,12 @@ Release guard: `node --test tests/ipad-chart-ui-locked-v2621.test.cjs` runs in t
 
 ## V1.2 Fullscreen CDFA and Find Me
 Hide Find Me in fullscreen. Show the matching CDFA toggle next to Exit X only for an eligible chart. Reuse the owner-locked CDFA side panel without altering its calculations, layout or PDF.
+
+## V1.3 Owner-approved CDFA chart whitespace, no shrink
+The WEB/iPAD CDFA table uses only the existing blank margin between the
+printed black frame and the original PDF's right edge, using an overlay *inside*
+the chart transform. No additional column, resize, refit, change to PDF scale,
+or toolbar CDFA button modification. Border clearance and right edge clearance
+are required, and the margin must be visually blank. Under Settings Light the
+table is white/black; under Dark it is black/white, independently of INVERT.
+No change to CDFA altitude/VDP logic.
