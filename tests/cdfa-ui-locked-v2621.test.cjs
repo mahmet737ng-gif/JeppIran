@@ -86,7 +86,7 @@ test('CDFA INVERT OFF = white/black; INVERT ON = black/white independent of app 
  assert.match(css,/body\.chart-inverted #chartsView #chartTransformLayer > #jpCdfaSide\.jp-cdfa-side,[\s\S]*?background:#000!important;color:#fff!important/);
  assert.doesNotMatch(css,/:root\.light|:root:not\(\.light\)/);
  assert.match(css,/pointer-events:none!important/);
- assert.match(html,/cdfa-margin-overlay\.js\?v=2621-cdfa-large-vector-r2/);
+ assert.match(html,/cdfa-margin-overlay\.js\?v=2621-cdfa-ipad-column-fit-r3/);
 });
 
 test('CDFA uses sharp vector SVG text and centers on Plan View',()=>{
