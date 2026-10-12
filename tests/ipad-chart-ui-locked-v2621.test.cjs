@@ -36,3 +36,19 @@ test('the four approved ILS Home backgrounds remain the sole theme/rotation asse
   assert.match(css,/:root\.light #homeView\.flight-home\.active/);
   assert.match(css,/@media \(orientation:landscape\)/);
 });
+
+test('fullscreen exit is a compact corner X without label',()=>{
+  const html=read('web/index.html'),css=read('web/styles.css');
+  assert.match(html,/<button id="fullscreenExitBtn"[^>]*aria-label="Exit fullscreen"[^>]*>×<\/button>/);
+  assert.doesNotMatch(html,/>✕ Exit Fullscreen<\/button>/);
+  assert.match(css,/\.fullscreen-exit\{[\s\S]*?width:32px;height:32px/);
+  assert.match(css,/body\.viewer-fullscreen \.fullscreen-exit\{display:flex\}/);
+});
+test('service worker never forces a mid-chart session reload on update',()=>{
+  const js=read('web/app.js'),sw=read('web/service-worker.js');
+  assert.doesNotMatch(js,/addEventListener\("controllerchange"/);
+  assert.doesNotMatch(js,/location\.reload\(\)/);
+  assert.doesNotMatch(sw,/self\.skipWaiting\s*\(/);
+  assert.match(js,/navigator\.serviceWorker\.register\("\.\/service-worker\.js"/);
+  assert.match(sw,/event\.waitUntil\(caches\.open\(CACHE\)\.then\(cache=>cache\.addAll\(SHELL\)\)\)/);
+});

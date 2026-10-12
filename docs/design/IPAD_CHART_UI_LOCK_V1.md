@@ -8,3 +8,8 @@ Owner-approved specification (2026-10-12). Do not modify these behaviors or the 
 - Existing CDFA locked side table, taxi model and simulator transport must not change as collateral to this iPad UI task.
 
 Release guard: `node --test tests/ipad-chart-ui-locked-v2621.test.cjs` runs in the iPad Pages workflow.
+
+## V1.1 — Small exit X and interruption-free sessions (2026-10-12)
+- In chart fullscreen show a compact **32×32 px** top-right X, not the long “Exit Fullscreen” label. Keep the accessible label and the single-tap-to-exit chart behavior.
+- Do not forcibly reload on service worker controller changes, and do not force-activate a waiting service worker while a chart session is active. Pending updates activate after normal app close/reopen. Preserve map position, gestures, zoom and fullscreen.
+- Preserve Home background originals and all prior owner-locked UI/CDFA/TAXI/simulator behavior.

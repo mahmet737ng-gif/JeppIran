@@ -1993,15 +1993,9 @@ window.addEventListener("jeppiran-cdfa-layout-changed",()=>{
   if(selectedChart)requestAnimationFrame(()=>refitSelectedChartForLayout());
 });
 if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")){
-  // A running installed app otherwise keeps its old code after a new worker
-  // takes control of subsequent requests.
-  const hadController=Boolean(navigator.serviceWorker.controller);
-  let refreshing=false;
-  navigator.serviceWorker.addEventListener("controllerchange",()=>{
-    if(hadController&&!refreshing){refreshing=true;location.reload()}
-  });
-  navigator.serviceWorker.register("./service-worker.js",{updateViaCache:"none"})
-    .then(reg=>reg.update().catch(()=>{})).catch(()=>{});
+  // Never force a mid-session reload when a PWA worker is updated.
+  // Let the browser activate waiting updates at the next natural reopen.
+  navigator.serviceWorker.register("./service-worker.js",{updateViaCache:"none"}).catch(()=>{});
 }
 loadData();
 const start=(location.hash||"#home").slice(1); const initial=["home","charts","wx","simulator"].includes(start)?start:"home"; renderRoute(initial); if(!location.hash)history.replaceState({route:initial},"","#"+initial);

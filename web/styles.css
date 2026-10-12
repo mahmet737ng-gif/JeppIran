@@ -186,12 +186,15 @@ body.viewer-fullscreen .pdf-stage{height:100vh}
 
 .fullscreen-exit{
   display:none;position:fixed;z-index:10000;
-  top:max(14px,env(safe-area-inset-top));right:max(14px,env(safe-area-inset-right));
-  height:44px;padding:0 14px;border:1px solid rgba(255,255,255,.22);border-radius:12px;
-  background:rgba(8,18,27,.88);color:#fff;font-weight:900;backdrop-filter:blur(12px);
-  box-shadow:0 8px 26px rgba(0,0,0,.35)
+  top:max(11px,env(safe-area-inset-top));right:max(11px,env(safe-area-inset-right));
+  width:32px;height:32px;padding:0;align-items:center;justify-content:center;
+  border:1px solid rgba(255,255,255,.19);border-radius:8px;
+  background:rgba(8,18,27,.65);color:#fff;font:400 23px/1 -apple-system,BlinkMacSystemFont,Arial,sans-serif;
+  box-shadow:0 2px 9px rgba(0,0,0,.22);backdrop-filter:blur(9px);
+  -webkit-backdrop-filter:blur(9px);touch-action:manipulation;
 }
-body.viewer-fullscreen .fullscreen-exit{display:block}
+.fullscreen-exit:focus-visible{outline:2px solid #72e9ff;outline-offset:2px}
+body.viewer-fullscreen .fullscreen-exit{display:flex}
 .pdf-canvas-wrap{position:relative}
 .aircraft-marker{
   --aircraft-heading:0deg;
