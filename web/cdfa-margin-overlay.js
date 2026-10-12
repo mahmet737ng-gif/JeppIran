@@ -112,7 +112,19 @@
    e.preventDefault();stop(e);
    s.active.set(e.pointerId,{x:e.clientX,y:e.clientY});
    try{panel.setPointerCapture(e.pointerId)}catch(_){}
-   if(s.active.size===1){s.dragLastY=e.clientY;s.pinchStart=null}
+   if(s.active.size===1){
+    // Normalize to the VISIBLE table position before dragging.
+    // Without this, a chart scrolled past the top clamp can require hundreds
+    // of pixels of finger movement before CDFA starts to move.
+    if(s.canvas&&s.viewer){
+     const paper=s.canvas.getBoundingClientRect();
+     const view=s.viewer.getBoundingClientRect();
+     const visual=view.top+(parseFloat(panel.style.top)||0);
+     const computed=paper.top+s.paperTop*chartScale()+s.dragY;
+     if(Number.isFinite(visual)&&Number.isFinite(computed))s.dragY+=visual-computed;
+    }
+    s.dragLastY=e.clientY;s.pinchStart=null;
+   }
    else if(s.active.size===2){
     s.dragLastY=null;
     s.pinchStart={distance:distance([...s.active.values()]),zoom:s.tableZoom};

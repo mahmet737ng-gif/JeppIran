@@ -87,3 +87,9 @@ test('CDFA drag and zoom stay interactive and chart horizontal pan never shifts 
  assert.match(css,/position:absolute!important/);
  assert.doesNotMatch(css,/pointer-events:none/);
 });
+
+test('CDFA finger drag starts immediately even after long vertical chart scrolling',()=>{
+ const overlay=read('web/cdfa-margin-overlay.js');
+ assert.match(overlay,/const visual=view\.top\+\(parseFloat\(panel\.style\.top\)\|\|0\)/);
+ assert.match(overlay,/s\.dragY\+=visual-computed/);
+});
