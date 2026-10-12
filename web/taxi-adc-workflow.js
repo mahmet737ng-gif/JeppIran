@@ -265,6 +265,15 @@ function compile(input){
    approvedRunwayGates:gates.filter(g=>g.reviewed).length,discoveredGraphNodes:Object.keys(nodes).length,
    reviewedGraphEdges:edges.length,routeable:releaseApproved},
   jobs,issues,nodes,edges,
+  inventory:{runways,stands,taxiways},
+  gates:gates.filter(g=>g.reviewed===true).map(g=>{
+    const t=junctions.find(j=>j.reviewed&&j.touches?.includes(g.taxiTraceId)&&
+      j.touches?.includes(g.connectorTraceId));
+    const a=junctions.find(j=>j.reviewed&&j.touches?.includes(g.runwayTraceId)&&
+      j.touches?.includes(g.connectorTraceId));
+    return {...g,holdNode:t?nodeMap.get("J_"+g.page+"_"+t.id):null,
+      runwayNode:a?nodeMap.get("J_"+g.page+"_"+a.id):null};
+  }),
   releaseStatus:releaseApproved?"REVIEWED_CHART_GRAPH_ONLY":"BLOCKED_INCOMPLETE_SOURCE_GRAPH",
   requirements:{flightOperationalApproval:false,georeferenced:false,routeableInSimulatorQA:releaseApproved}};
 }
