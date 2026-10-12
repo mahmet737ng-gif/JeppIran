@@ -104,6 +104,12 @@ def main():
         contact_script=Path(__file__).with_name("adc_graph_proposals.py")
         subprocess.run([sys.executable,str(contact_script),"--survey",a.survey,
             "--candidates",str(output),"--out",str(output)],check=True)
+        # The pavement fallback only yields source-drawing contour candidates
+        # for labels with no extracted ink centerline; none is an approved route.
+        pavement_script=Path(__file__).with_name("adc_pavement_fallback.py")
+        subprocess.run([sys.executable,str(pavement_script),"--pdf",a.pdf,
+            "--survey",a.survey,"--out",
+            str(output/f"{icao}_pavement_fallback_UNREVIEWED.json")],check=True)
         node=shutil.which("node")
         if not node:
             print("Node.js unavailable; finish workflow report with:")
