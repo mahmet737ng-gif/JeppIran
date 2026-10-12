@@ -63,8 +63,8 @@ test('fullscreen CDFA and Find Me safeguards',()=>{
 
 test('full screen CDFA files are cache-busted and CDFA script is network-first',()=>{
  const html=read('web/index.html'),sw=read('web/service-worker.js');
- assert.match(html,/cdfa-chart-panel\.js\?v=2621-ipad-fullscreen-cdfa-r2/);
- assert.match(sw,/cdfa-chart-panel\.js\?v=2621-ipad-fullscreen-cdfa-r2/);
+ assert.match(html,/cdfa-chart-panel\.js\?v=2621-cdfa-inpage-white-margin-r1/);
+ assert.match(sw,/cdfa-chart-panel\.js\?v=2621-cdfa-inpage-white-margin-r1/);
  assert.match(sw,/app\\\.js\|cdfa-chart-panel\\\.js/);
  assert.doesNotMatch(sw,/self\.skipWaiting\(/);
 });
