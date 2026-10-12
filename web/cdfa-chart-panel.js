@@ -5,6 +5,7 @@
 (function(){
  'use strict';
  const button=document.getElementById('chartCdfaBtn');
+ const fullscreenButton=document.getElementById('fullscreenCdfaBtn');
  const heading=document.getElementById('viewerChart');
  const panel=document.getElementById('jpCdfaSide');
  const workspace=document.getElementById('jpCdfaWorkspace');
@@ -30,6 +31,7 @@
    panel.hidden=!value;
    workspace.classList.toggle('jp-cdfa-open',value);
    button.setAttribute('aria-pressed',value?'true':'false');
+    if(fullscreenButton)fullscreenButton.setAttribute('aria-pressed',value?'true':'false');
    notifyResize();
  }
  function element(name,text,cls){
@@ -79,6 +81,7 @@
  function sync(){
    const record=ready?currentRecord():null;
    button.disabled=!record;
+    if(fullscreenButton){fullscreenButton.hidden=!record;fullscreenButton.disabled=!record;fullscreenButton.setAttribute('aria-pressed',open?'true':'false')}
    button.title=record?'Toggle CDFA data outside the chart · QA only':'No validated CDFA QA table for this chart';
    if(!record&&open)setVisible(false);
    if(open)render();
@@ -88,7 +91,8 @@
    if(open){setVisible(false);return}
    render();setVisible(true);
  });
- new MutationObserver(sync).observe(heading,{childList:true,subtree:true,characterData:true});
+ if(fullscreenButton)fullscreenButton.addEventListener('click',()=>{if(currentRecord())button.click()});
+  new MutationObserver(sync).observe(heading,{childList:true,subtree:true,characterData:true});
  window.addEventListener('jeppiran-chart-rendered',sync);
  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&open)setVisible(false)});
  async function load(){

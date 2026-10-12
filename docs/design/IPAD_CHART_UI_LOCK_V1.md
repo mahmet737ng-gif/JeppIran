@@ -13,3 +13,6 @@ Release guard: `node --test tests/ipad-chart-ui-locked-v2621.test.cjs` runs in t
 - In chart fullscreen show a compact **32×32 px** top-right X, not the long “Exit Fullscreen” label. Keep the accessible label and the single-tap-to-exit chart behavior.
 - Do not forcibly reload on service worker controller changes, and do not force-activate a waiting service worker while a chart session is active. Pending updates activate after normal app close/reopen. Preserve map position, gestures, zoom and fullscreen.
 - Preserve Home background originals and all prior owner-locked UI/CDFA/TAXI/simulator behavior.
+
+## V1.2 Fullscreen CDFA and Find Me
+Hide Find Me in fullscreen. Show the matching CDFA toggle next to Exit X only for an eligible chart. Reuse the owner-locked CDFA side panel without altering its calculations, layout or PDF.

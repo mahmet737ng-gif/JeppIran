@@ -52,3 +52,11 @@ test('service worker never forces a mid-chart session reload on update',()=>{
   assert.match(js,/navigator\.serviceWorker\.register\("\.\/service-worker\.js"/);
   assert.match(sw,/event\.waitUntil\(caches\.open\(CACHE\)\.then\(cache=>cache\.addAll\(SHELL\)\)\)/);
 });
+
+test('fullscreen CDFA and Find Me safeguards',()=>{
+ const html=read('web/index.html'),css=read('web/styles.css'),js=read('web/cdfa-chart-panel.js');
+ assert.match(html,/id="fullscreenCdfaBtn"[^>]*hidden>CDFA<\/button>/);
+ assert.match(css,/body\.viewer-fullscreen #aircraftFollowBtn/);
+ assert.match(js,/fullscreenButton\.hidden=!record/);
+ assert.match(js,/button\.click\(\)/);
+});
