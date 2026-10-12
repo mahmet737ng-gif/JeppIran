@@ -106,7 +106,21 @@
   if(value!==undefined)node.textContent=String(value);
   return node;
  }
- function drawVectorTable(panel,width){
+ // Increase the intrinsic VECTOR glyph size; do not zoom the HTML viewport.
+ // Available Plan View height limits row height, while numbers remain large.
+ function tableMetrics(width,planHeight,count){
+  const preferredRowH=Math.max(50,Math.min(72,Math.round(width*.34)));
+  const fittingRowH=Math.floor((planHeight-28)/(count+2.95));
+  const rowH=Math.max(34,Math.min(preferredRowH,fittingRowH));
+  const titleH=Math.round(rowH*1.16);
+  const headingH=Math.round(rowH*1.05);
+  const footerH=Math.max(26,Math.round(rowH*.64));
+  const tableH=titleH+headingH+count*rowH;
+  const fullH=tableH+footerH;
+  const textSize=Math.max(23,Math.min(34,width/5.25,rowH*.84));
+  return {rowH,titleH,headingH,footerH,tableH,fullH,textSize};
+ }
+ function drawVectorTable(panel,width,planHeight){
   // The protected controller remains the single source of displayed DME,
   // altitude and VDP labels. This is presentation ONLY; no new calculations.
   const existing=panel.querySelector('.jp-cdfa-table');
@@ -115,17 +129,14 @@
    [...tr.querySelectorAll('td')].map(cell=>cell.textContent.trim()));
   if(!rows.length||rows.some(row=>row.length!==2))return null;
 
-  const rowH=Math.max(28,Math.min(49,Math.round(width*.212)));
-  const titleH=Math.round(rowH*1.22),headingH=rowH;
-  const footerH=Math.max(26,Math.round(rowH*.82));
-  const tableH=titleH+headingH+rows.length*rowH;
-  const fullH=tableH+footerH;
+  const {rowH,titleH,headingH,footerH,tableH,fullH,textSize}=
+   tableMetrics(width,planHeight,rows.length);
   const svg=svgNode('svg',{
    class:'jp-cdfa-vector',xmlns:SVG_NS,
    width:width,height:fullH,viewBox:`0 0 ${width} ${fullH}`,
    role:'img','aria-label':'CDFA data displayed as vector text'
   });
-  const textSize=Math.max(11,Math.min(23,width/8.05));
+  // Keep actual SVG font sizes large; SVG remains crisp as the chart zooms.
   const lineY=(y)=>svg.appendChild(svgNode('line',{x1:0,y1:y,x2:width,y2:y,class:'jp-cdfa-rule'}));
   const label=(value,cx,cy,size,bold=800)=>svg.appendChild(svgNode('text',{
    x:cx,y:cy,class:'jp-cdfa-vector-text',
@@ -137,9 +148,9 @@
   svg.appendChild(frame);
   lineY(titleH);lineY(titleH+headingH);
   svg.appendChild(svgNode('line',{x1:width*.5,y1:titleH,x2:width*.5,y2:tableH,class:'jp-cdfa-rule'}));
-  label('CDFA DATA',width*.5,titleH*.51,Math.min(textSize*1.14,width/7.3),900);
-  label('DME',width*.25,titleH+headingH*.51,textSize*.88,850);
-  label('ALT (ft)',width*.75,titleH+headingH*.51,textSize*.79,850);
+  label('CDFA DATA',width*.5,titleH*.51,Math.min(textSize*1.04,width/6.05),900);
+  label('DME',width*.25,titleH+headingH*.51,textSize*.76,850);
+  label('ALT (ft)',width*.75,titleH+headingH*.51,textSize*.72,850);
   rows.forEach((row,i)=>{
    const y=titleH+headingH+i*rowH;
    if(i)lineY(y);
@@ -181,7 +192,7 @@
   const planBottom=planEnd*h/canvas.height-Math.max(8,w*.006);
   if(planBottom<=planTop+100)return false;
 
-  const tableHeight=drawVectorTable(panel,marginWidth);
+  const tableHeight=drawVectorTable(panel,marginWidth,planBottom-planTop);
   if(!tableHeight)return false;
   // Center the complete table vertically in the PLAN VIEW, never the toolbar
   // or current viewport. Keep its bottom within the printed Plan View.
