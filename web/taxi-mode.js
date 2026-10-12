@@ -473,6 +473,16 @@ async function fetchGraph(icao){
         data.source?.sha256!==manifest?.source_sha256||
         data.stands?.length!==53||data.runwayPolygons?.length!==2||!probe?.ok)
         throw Error("Mehrabad PDF identity or source revision mismatch");
+      let progress=null;
+      try{
+        const report=await fetch("./data/taxi-surveys/OIII-workflow-2621.json?v=2621-graph-contact-qa-r2",{cache:"no-store"});
+        if(report.ok){
+          const candidate=await report.json();
+          if(candidate.airport===icao&&candidate.sourceSha256===data.source.sha256&&
+             candidate.engineVersion===wf.version&&candidate.summary?.routeable===false)
+            progress=candidate.additionalTopologyQA;
+        }
+      }catch(_){/* Report is optional; never weakens route QA gates. */}
       if(taxi.airport!==icao)return null;
       taxi.o3Survey=data;taxi.o3Workflow=evaluation;
       $("taxiQaInput").placeholder="ST100 · ST507 · A4 · B6 (chart labels; routes pending)";
@@ -481,6 +491,8 @@ async function fetchGraph(icao){
       message("OIII ADC WORKFLOW v"+wf.version+" · "+data.runwayPolygons.length+
         " source runway strips · "+data.stands.length+" stand labels · "+
         data.taxiways.length+" taxiway names. "+
+        (progress?"PROPOSED: "+progress.unreviewedGeometricContacts+
+          " unreviewed contacts; 53 stand lead candidates · ":"")+
         "NEXT: "+(next?.id||"none")+" — "+(next?.title||"")+
         ". Routeable: NO. No unverified taxi connections inferred.",true);
       draw();return data;
