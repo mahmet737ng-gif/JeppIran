@@ -1,0 +1,288 @@
+{
+  "schemaVersion": 2,
+  "airport": "OIII",
+  "cycle": "2621",
+  "sourceSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+  "engineVersion": "2.1.0",
+  "generation": "Produced from JEPPIRAN_ADC_WORKFLOW.compile(fromSurvey(OIII))",
+  "vectorScan": {
+    "430": {
+      "sourceDrawings": 1592,
+      "unreviewedCandidateStrokes": 62,
+      "unreviewedEndpointContacts": 19
+    },
+    "432": {
+      "sourceDrawings": 688,
+      "unreviewedCandidateStrokes": 247,
+      "unreviewedEndpointContacts": 113
+    },
+    "warning": "These are *unclassified* PDF strokes, not approved taxi edges/junctions. Counts depend on scanner thresholds."
+  },
+  "engine": "JEPPIRAN_ADC_WORKFLOW",
+  "coordinateSystem": "PDF_PAGE_LOCAL_NOT_WGS84",
+  "summary": {
+    "pages": 4,
+    "runways": 2,
+    "taxiways": 43,
+    "stands": 53,
+    "reviewedSourceTraces": 0,
+    "untracedTaxiways": 43,
+    "untracedStandLeads": 53,
+    "reviewedIntersections": 0,
+    "approvedRunwayGates": 0,
+    "discoveredGraphNodes": 0,
+    "reviewedGraphEdges": 0,
+    "routeable": false
+  },
+  "jobs": [
+    {
+      "id": "source",
+      "title": "Read pages, verify source fingerprint and dimensions",
+      "status": "READY",
+      "blocking": false,
+      "required": [
+        "PDF source hash, page number, dimensions"
+      ],
+      "blockingIssues": []
+    },
+    {
+      "id": "inventory",
+      "title": "Identify physical runways, taxiway names, stands and layout pages",
+      "status": "READY",
+      "blocking": false,
+      "required": [
+        "runway polygons + ends, stand labels, taxiway names"
+      ],
+      "blockingIssues": []
+    },
+    {
+      "id": "geometry",
+      "title": "Trace taxiway centerlines and individual stand lead-out curves",
+      "status": "PENDING",
+      "blocking": true,
+      "required": [
+        "source-Bezier traced centerlines for all names and stand leads"
+      ],
+      "blockingIssues": []
+    },
+    {
+      "id": "junctions",
+      "title": "Locate true touch points and split traced lines into segments",
+      "status": "PENDING",
+      "blocking": true,
+      "required": [
+        "reviewed endpoint-to-endpoint and crossing contacts"
+      ],
+      "blockingIssues": []
+    },
+    {
+      "id": "semantics",
+      "title": "Attach verified taxiway/stand names and directions to segments",
+      "status": "PENDING",
+      "blocking": true,
+      "required": [
+        "verified labels, directions, stand association"
+      ],
+      "blockingIssues": []
+    },
+    {
+      "id": "runway-access",
+      "title": "Mark hold-short, gate, runway entry and backtrack connections",
+      "status": "PENDING",
+      "blocking": true,
+      "required": [
+        "hold position, runway gate, permission flag, backtrack alignment"
+      ],
+      "blockingIssues": []
+    },
+    {
+      "id": "page-registration",
+      "title": "Align overlapping ADC and parking diagrams with audited control points",
+      "status": "PENDING",
+      "blocking": true,
+      "required": [
+        "3+ audited matched points per page link"
+      ],
+      "blockingIssues": []
+    },
+    {
+      "id": "quality",
+      "title": "Test connectivity, dead ends, duplicates and crossing safety",
+      "status": "PENDING",
+      "blocking": true,
+      "required": [
+        "all edges source-backed; connectivity/turn restrictions and dead ends tested"
+      ],
+      "blockingIssues": []
+    },
+    {
+      "id": "release",
+      "title": "Generate chart overlays and routeable network only after approval",
+      "status": "PENDING",
+      "blocking": true,
+      "required": [
+        "manual QA approval; source fingerprint unchanged; no unsafe gap"
+      ],
+      "blockingIssues": []
+    }
+  ],
+  "issues": [
+    {
+      "code": "TAXIWAY_UNTRACED",
+      "message": "43 named taxiways lack reviewed centerlines",
+      "evidence": [
+        "A",
+        "A1",
+        "A2",
+        "A3",
+        "A4",
+        "A5",
+        "A6",
+        "A7",
+        "A8",
+        "A9",
+        "B1",
+        "B2",
+        "B3",
+        "B4",
+        "B5",
+        "B6",
+        "B8",
+        "B9",
+        "C",
+        "C1",
+        "C2",
+        "C3",
+        "C4E",
+        "C4W",
+        "C5",
+        "C6",
+        "C8",
+        "C9",
+        "E1",
+        "E2",
+        "E3",
+        "E4",
+        "E5",
+        "E6",
+        "E7",
+        "E8",
+        "E9",
+        "F",
+        "K",
+        "U",
+        "V",
+        "W",
+        "Y"
+      ],
+      "blocking": true
+    },
+    {
+      "code": "STAND_LEADS_UNTRACED",
+      "message": "53 stand lead-outs require source tracing",
+      "evidence": [
+        "ST100",
+        "ST101",
+        "ST102",
+        "ST103",
+        "ST104",
+        "ST105",
+        "ST106",
+        "ST107",
+        "ST108",
+        "ST109",
+        "ST110",
+        "ST111",
+        "ST112",
+        "ST113",
+        "ST114",
+        "ST115",
+        "ST116",
+        "ST117",
+        "ST118",
+        "ST119",
+        "ST120",
+        "ST121",
+        "ST123",
+        "ST125",
+        "ST200",
+        "ST201",
+        "ST202",
+        "ST203",
+        "ST204",
+        "ST205",
+        "ST206",
+        "ST207",
+        "ST208",
+        "ST301",
+        "ST302",
+        "ST303",
+        "ST304",
+        "ST305",
+        "ST306",
+        "ST308",
+        "ST310",
+        "ST400",
+        "ST401",
+        "ST402",
+        "ST403",
+        "ST404",
+        "ST405",
+        "ST406",
+        "ST407",
+        "ST408",
+        "ST409",
+        "ST410",
+        "ST507"
+      ],
+      "blocking": true
+    },
+    {
+      "code": "RUNWAY_AXIS_UNTRACED",
+      "message": "Physical runway axis needs reviewed original PDF geometry",
+      "evidence": "11L_29R",
+      "blocking": true
+    },
+    {
+      "code": "RUNWAY_AXIS_UNTRACED",
+      "message": "Physical runway axis needs reviewed original PDF geometry",
+      "evidence": "11R_29L",
+      "blocking": true
+    },
+    {
+      "code": "RUNWAY_GATES_UNVERIFIED",
+      "message": "Each physical runway needs a reviewed entry and hold point",
+      "evidence": "11L_29R",
+      "blocking": true
+    },
+    {
+      "code": "RUNWAY_GATES_UNVERIFIED",
+      "message": "Each physical runway needs a reviewed entry and hold point",
+      "evidence": "11R_29L",
+      "blocking": true
+    },
+    {
+      "code": "PAGE_ALIGNMENT_PENDING",
+      "message": "Missing reviewed registration and junction portals between ADC/Parking",
+      "evidence": null,
+      "blocking": true
+    },
+    {
+      "code": "NOT_ROUTEABLE",
+      "message": "One or more QA gates still block routing/release",
+      "evidence": null,
+      "blocking": true
+    }
+  ],
+  "nodes": {},
+  "edges": [],
+  "releaseStatus": "BLOCKED_INCOMPLETE_SOURCE_GRAPH",
+  "requirements": {
+    "flightOperationalApproval": false,
+    "georeferenced": false,
+    "routeableInSimulatorQA": false
+  },
+  "nextAction": "geometry",
+  "routeable": false,
+  "autoApprove": false
+}
