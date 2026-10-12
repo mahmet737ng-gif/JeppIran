@@ -57,8 +57,9 @@ function plan(graph,request){
  // Unnamed connectors are traversed only when the user explicitly requests
  // intermediate runway use, not when stopping at a holding position.
  const labels=[{label:cmd.start,kind:"stand-lead"},...cmd.via];
- const terminalGates=cmd.destination?gates.filter(g=>upper(g.physicalRunway)===
-   cmd.destination.physicalId&&g.holdNode):[];
+ const terminalGates=cmd.destination?gates.filter(g=>
+   upper(g.physicalRunway)===cmd.destination.physicalId&&
+   upper(g.runwayEnd)===cmd.destination.runway&&g.holdNode):[];
  if(cmd.destination&&!terminalGates.length)
   return {error:"No reviewed hold-short for runway "+cmd.destination.runway};
  const goalNodes=new Set(terminalGates.map(g=>g.holdNode));
@@ -83,9 +84,11 @@ function plan(graph,request){
      continue;
    }
    const current=labels[q.stage],upcoming=labels[q.stage+1];
-   const canLabel=(s)=>e.label===s.label||
-     (s.kind==="runway-use"&&e.kind==="runway-axis"&&
-      e.label===s.label);
+   const canLabel=(s)=>{
+     if(s.kind==="runway-use")return e.kind==="runway-axis"&&
+       e.label===s.label&&upper(e.runwayDirection)===s.designator;
+     return e.kind!=="runway-axis"&&e.label===s.label;
+   };
    let stage=-1;
    if(canLabel(current))stage=q.stage;
    else if(upcoming&&canLabel(upcoming))stage=q.stage+1;
@@ -111,7 +114,7 @@ function plan(graph,request){
        sourceDrawingIds:e.sourceDrawingIds})),
    warnings};
 }
-const api={version:"2.0.0",parse,plan};
+const api={version:"2.1.0",parse,plan};
 root.JEPPIRAN_ADC_ROUTER=api;
 if(typeof module!=="undefined"&&module.exports)module.exports=api;
 })(typeof window!=="undefined"?window:globalThis);
