@@ -75,8 +75,8 @@ test('CDFA uses real Plan View boundary and no overlap with frame or PDF edge',(
  const overlay=read('web/cdfa-margin-overlay.js');
  assert.match(overlay,/function planViewTop\(canvas,borderX\)/);
  assert.match(overlay,/const planBoundary=planViewTop\(canvas,border\)/);
- assert.match(overlay,/const borderGap=Math\.max\(10/);
- assert.match(overlay,/const edgeGap=Math\.max\(10/);
+ assert.match(overlay,/const borderGap=Math\.max\(8/);
+ assert.match(overlay,/const edgeGap=Math\.max\(8/);
  assert.match(overlay,/paperIsBlank\(canvas,x,marginWidth,y/);
  assert.match(overlay,/if\(marginWidth<64\)return false/);
 });
