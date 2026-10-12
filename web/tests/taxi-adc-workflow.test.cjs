@@ -32,7 +32,7 @@ function fixture(){
    {id:"BG",page:1,point:[40,10],touches:["B","G"],reviewed:true},
    {id:"GR",page:1,point:[50,10],touches:["G","R"],reviewed:true}],
  runwayGates:[{id:"G1",reviewed:true,page:1,taxiTraceId:"B",
-   connectorTraceId:"G",runwayTraceId:"R",physicalRunway:"11_29",
+   connectorTraceId:"G",runwayTraceId:"R",physicalRunway:"11_29",runwayEnd:"11",
    holdShortReviewed:true,holdPoint:[40,10],runwayPoint:[50,10]}],
  routingPages:[1],pageLinks:[],releaseReviewed:true};
 }
