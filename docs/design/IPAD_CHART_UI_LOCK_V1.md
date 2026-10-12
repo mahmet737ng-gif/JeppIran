@@ -68,3 +68,13 @@ between detected Plan View top and bottom rules (fallback bottom at 76% of
 paper height). It remains a child of chartTransformLayer and zooms/pans in
 precise synchrony with the printed PDF. INVERT OFF = white/black, ON =
 black/white. No changes to toolbar, VDP ordering, data or PDF scaling.
+
+## V1.8 — Large crisp CDFA typography (owner-confirmed)
+The CDFA table must be visibly large at original PDF 100% scale. On an
+approximately 172px wide blank paper margin, display SVG vector DME/altitude
+numerals at >=32px and rows >=44px when Plan View height >=600px. Preserve
+SVG glyph quality at pinch/double-tap zoom, fit the chart Plan View vertically,
+keep its center alignment and safe side margins, and preserve the original PDF
+scale. CDFA SVG rectangle background tracks INVERT OFF=white, ON=black;
+numbers use corresponding black/white text, regardless of app Light/Dark.
+Existing validated data, VDP rule, buttons and all other appearance remain locked.
