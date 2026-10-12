@@ -32,12 +32,13 @@
 #chartsView .viewer-pane > #jpCdfaSide .jp-cdfa-qa-note{
  font-size:clamp(6px,.58vw,10px);line-height:1.3;margin:5px 0 0;
 }
-/* User appearance theme, not the independent chart INVERT toggle. */
-:root.light #chartsView .viewer-pane > #jpCdfaSide.jp-cdfa-side,
-:root.light #chartsView .viewer-pane > #jpCdfaSide .jp-cdfa-table{
- background:#fff!important;color:#000!important;
-}
-:root:not(.light) #chartsView .viewer-pane > #jpCdfaSide.jp-cdfa-side,
-:root:not(.light) #chartsView .viewer-pane > #jpCdfaSide .jp-cdfa-table{
+/* CDFA colors follow chart INVERT only, never Light/Dark app appearance.
+   Normal: black background / white text; Inverted: white / black. */
+#chartsView .viewer-pane > #jpCdfaSide.jp-cdfa-side,
+#chartsView .viewer-pane > #jpCdfaSide .jp-cdfa-table{
  background:#000!important;color:#fff!important;
+}
+body.chart-inverted #chartsView .viewer-pane > #jpCdfaSide.jp-cdfa-side,
+body.chart-inverted #chartsView .viewer-pane > #jpCdfaSide .jp-cdfa-table{
+ background:#fff!important;color:#000!important;
 }

@@ -68,8 +68,9 @@ test('owner-approved WEB CDFA uses only existing PDF white margin',()=>{
  assert.match(overlay,/viewer\.appendChild\(panel\)/);
  assert.match(css,/width:100%!important;flex:1 1 auto!important/);
  assert.match(css,/position:absolute!important/);
- assert.match(css,/:root\.light #chartsView[\s\S]*?background:#fff!important;color:#000!important/);
- assert.match(css,/:root:not\(\.light\) #chartsView[\s\S]*?background:#000!important;color:#fff!important/);
+ assert.match(css,/body\.chart-inverted #chartsView[\s\S]*?background:#fff!important;color:#000!important/);
+ assert.match(css,/#chartsView \.viewer-pane > #jpCdfaSide\.jp-cdfa-side,[\s\S]*?background:#000!important;color:#fff!important/);
+ assert.doesNotMatch(css,/:root\.light #chartsView/);
  assert.doesNotMatch(js,/dispatchEvent\(new Event\('jeppiran-cdfa-layout-changed'\)\)/);
 });
 
@@ -92,4 +93,17 @@ test('CDFA finger drag starts immediately even after long vertical chart scrolli
  const overlay=read('web/cdfa-margin-overlay.js');
  assert.match(overlay,/const visual=view\.top\+\(parseFloat\(panel\.style\.top\)\|\|0\)/);
  assert.match(overlay,/s\.dragY\+=visual-computed/);
+});
+
+test('CDFA aligns alongside the PLAN VIEW and colors follow INVERT only',()=>{
+ const overlay=read('web/cdfa-margin-overlay.js'),css=read('web/cdfa-margin-overlay.css');
+ const html=read('web/index.html');
+ assert.match(overlay,/function planViewTop\(canvas,borderX\)/);
+ assert.match(overlay,/const planBoundary=planViewTop\(canvas,border\)/);
+ assert.match(overlay,/const paperTop=Math\.round\(planBoundary\*h\/canvas\.height/);
+ assert.match(overlay,/const low=area\.top\+6,high=Math\.max\(low,area\.bottom-44\)/);
+ assert.match(css,/body\.chart-inverted #chartsView[\s\S]*?background:#fff!important;color:#000!important/);
+ assert.doesNotMatch(css,/:root\.light #chartsView/);
+ assert.match(html,/id="chartCdfaBtn"/);
+ assert.match(html,/id="fullscreenCdfaBtn"/);
 });

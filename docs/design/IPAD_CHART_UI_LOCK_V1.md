@@ -35,3 +35,13 @@ independent one-finger up/down drag. Two-finger pinch on CDFA zooms table type;
 ctrl+wheel zooms table; plain wheel moves it up/down. Leave main CDFA toolbar
 button and CDFA data/minima/VDP logic unchanged. Still no extra column,
 shrink or PDF scale changes. Light and Dark use the previously selected colors.
+
+## V1.5 — Plan View alignment and INVERT-only colors (2026-10-12)
+The WEB/iPad CDFA table starts adjacent to the PLAN VIEW (beneath the bottom
+full-width horizontal line of the Jeppesen briefing strip). Its X remains in
+the existing paper-white margin outside the printed black chart frame and
+inside the PDF page edge, with clearance. Do not shift PDF scale/layout or
+change CDFA/VDP computations, toolbar or fullscreen controls, and retain
+independent vertical drag and pinch zoom. The CDFA table follows INVERT:
+INVERT OFF => black background/white text; ON => white background/black text.
+The app's separate Light/Dark theme NEVER determines CDFA table colors.

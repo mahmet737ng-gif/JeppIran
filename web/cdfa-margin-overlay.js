@@ -34,6 +34,34 @@
   return null;
  }
 
+ // Find the FULL-WIDTH horizontal rule ending the Jeppesen briefing strip.
+ // The plan view begins immediately BELOW this rule. Never estimate from the
+ // viewport top; that puts CDFA beside the briefing strip instead of the map.
+ function planViewTop(canvas,borderX){
+  const w=canvas.width,h=canvas.height;
+  const x0=Math.floor(w*.20),x1=Math.floor(borderX-9);
+  if(x1-x0<Math.floor(w*.30))return null;
+  const ctx=canvas.getContext('2d');if(!ctx)return null;
+  const y0=Math.floor(h*.13),y1=Math.floor(h*.42);
+  const yStep=Math.max(1,Math.floor(h/900));
+  const xStep=Math.max(2,Math.floor((x1-x0)/75));
+  let last=null;
+  try{
+   for(let y=y0;y<y1;y+=yStep){
+    const pixels=ctx.getImageData(x0,y,x1-x0,1).data;
+    let dark=0,total=0;
+    for(let x=0;x<x1-x0;x+=xStep){
+     const i=x*4;
+     if(pixels[i]<105&&pixels[i+1]<105&&pixels[i+2]<105)dark++;
+     total++;
+    }
+    // Only continuous chart frame rules run across >=88% of the page.
+    // Diagram arrows, text, and isolated horizontal strokes cannot qualify.
+    if(total&&dark/total>=.88)last=y;
+   }
+  }catch(_){return null}
+  return last;
+ }
  function paperIsBlank(canvas,xCss,wCss,yCss,hCss){
   const cssW=canvas.clientWidth||parseFloat(canvas.style.width)||0;
   const cssH=canvas.clientHeight||parseFloat(canvas.style.height)||0;
@@ -74,8 +102,9 @@
   if(!paper.height||!area.height)return;
   // The table follows only VERTICAL chart scrolling/pan; chartPanX is ignored.
   const intended=paper.top + s.paperTop*chartScale() + s.dragY;
-  const h=Math.min(s.panel.offsetHeight||area.height,area.height-12);
-  const low=area.top+6,high=Math.max(low,area.bottom-h-6);
+  // Never pull a long table UP into the briefing strip just to fit all rows.
+  // It may extend below the viewer; the user can drag it vertically.
+  const low=area.top+6,high=Math.max(low,area.bottom-44);
   const top=clamp(intended,low,high);
   s.panel.style.top=Math.round(top-view.top)+'px';
   updateFont();
@@ -189,7 +218,9 @@
   const start=Math.ceil(edge+gap);
   const marginWidth=Math.floor(w-start-rightPad);
   if(marginWidth<64)return false;
-  const paperTop=Math.round(Math.max(28,w*.086));
+  const planBoundary=planViewTop(canvas,border);
+  if(planBoundary===null)return false;
+  const paperTop=Math.round(planBoundary*h/canvas.height+Math.max(9,w*.007));
   if(h-paperTop<100||!paperIsBlank(canvas,start,marginWidth,paperTop,Math.min(h-paperTop-18,w*.46)))return false;
   const canvasRect=canvas.getBoundingClientRect();
   const stageRect=stage.getBoundingClientRect();
