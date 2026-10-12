@@ -18,13 +18,17 @@ def scan(pdf,survey,names=None):
  p=Path(pdf);d=json.loads(Path(survey).read_text())
  h=hashlib.sha256(p.read_bytes()).hexdigest()
  if h!=d["source"]["sha256"]:raise ValueError("Source PDF hash mismatch")
- doc=fitz.open(p);result=[]
+ doc=fitz.open(p);result=[];cache={}
+ for entry in d["taxiways"]:
+  for label in entry["sourceLabelPositions"]:
+   page=label["page"]
+   if page not in cache:cache[page]=doc[page-1].get_drawings()
  for name in d["taxiways"]:
   if names is not None and name["id"] not in names:continue
   candidates=[]
   for label in name["sourceLabelPositions"]:
    number=label["page"];center=(label["x"],label["y"]);items=[]
-   for j,shape in enumerate(doc[number-1].get_drawings()):
+   for j,shape in enumerate(cache[number]):
     fill=shape.get("fill")
     if not fill or len(fill)<3 or not all(abs(v-.7019)<.035 for v in fill):continue
     rect=shape["rect"];sep=distance(rect,center)
