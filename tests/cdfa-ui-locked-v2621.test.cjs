@@ -119,3 +119,31 @@ test('CDFA vector numerals are at least 32px in a 172px chart gutter',()=>{
  assert.match(css,/--jp-cdfa-bg:#fff/);
  assert.match(css,/--jp-cdfa-bg:#000/);
 });
+
+test('iPad WebKit CDFA numbers never exceed their real SVG half-column width',()=>{
+ const vm=require('node:vm'),js=read('web/cdfa-margin-overlay.js');
+ const from=js.indexOf(' function fittedSvgFont(');
+ const to=js.indexOf(' function ensureSvgColumnFit(',from);
+ assert.ok(from>=0&&to>from);
+ const fit=vm.runInNewContext('(function(){'+js.slice(from,to)+'return fittedSvgFont;})()', {});
+ const fakeCtx={font:'',measureText(str){
+  const font=Number(this.font.match(/([0-9.]+)px/)?.[1]||0);
+  return {width:str.length*font*.69};
+ }};
+ for(const w of [106,112,172,200]){
+  const cell=w/2-10;
+  for(const text of ['11.0','3320','3000','VDP']){
+   const preferred=33;
+   const actual=fit(fakeCtx,text,preferred,cell,850);
+   assert.ok(actual>0&&actual<=preferred);
+   const measured=text.length*actual*.69;
+   assert.ok(measured<=cell/1.05,'Text must fit iPad half-column');
+  }
+ }
+ assert.match(js,/getComputedTextLength\(\)/);
+ assert.match(js,/lengthAdjust','spacingAndGlyphs'/);
+ assert.match(js,/data-cdfa-max-width/);
+ assert.match(js,/requestAnimationFrame\(\(\)=>ensureSvgColumnFit\(svg\)\)/);
+ const css=read('web/cdfa-margin-overlay.css');
+ assert.match(css,/-webkit-text-size-adjust:100%/);
+});
