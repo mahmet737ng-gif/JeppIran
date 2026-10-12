@@ -65,10 +65,25 @@ test('owner-approved WEB CDFA uses only existing PDF white margin',()=>{
  assert.match(overlay,/outerRightBorder\(canvas\)/);
  assert.match(overlay,/paperIsBlank\(canvas/);
  assert.match(overlay,/if\(available<64\)return false/);
- assert.match(overlay,/layer\.appendChild\(panel\)/);
+ assert.match(overlay,/viewer\.appendChild\(panel\)/);
  assert.match(css,/width:100%!important;flex:1 1 auto!important/);
  assert.match(css,/position:absolute!important/);
  assert.match(css,/:root\.light #chartsView[\s\S]*?background:#fff!important;color:#000!important/);
  assert.match(css,/:root:not\(\.light\) #chartsView[\s\S]*?background:#000!important;color:#fff!important/);
  assert.doesNotMatch(js,/dispatchEvent\(new Event\('jeppiran-cdfa-layout-changed'\)\)/);
+});
+
+test('CDFA drag and zoom stay interactive and chart horizontal pan never shifts the overlay',()=>{
+ const overlay=read('web/cdfa-margin-overlay.js'),css=read('web/cdfa-margin-overlay.css');
+ assert.match(overlay,/viewer\.appendChild\(panel\)/);
+ assert.match(overlay,/s\.dragY\+=e\.clientY-s\.dragLastY/);
+ assert.match(overlay,/s\.tableZoom=clamp\(s\.pinchStart\.zoom\*current\/s\.pinchStart\.distance/);
+ assert.match(overlay,/panel\.setPointerCapture\(e\.pointerId\)/);
+ assert.match(overlay,/chartObserver\.observe\(layer/);
+ assert.match(overlay,/stage\.addEventListener\('scroll',scheduleVertical/);
+ assert.match(overlay,/chartPanX is ignored/);
+ assert.match(css,/touch-action:none!important/);
+ assert.match(css,/pointer-events:auto!important/);
+ assert.match(css,/position:absolute!important/);
+ assert.doesNotMatch(css,/pointer-events:none/);
 });

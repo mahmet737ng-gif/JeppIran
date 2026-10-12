@@ -25,3 +25,13 @@ or toolbar CDFA button modification. Border clearance and right edge clearance
 are required, and the margin must be visually blank. Under Settings Light the
 table is white/black; under Dark it is black/white, independently of INVERT.
 No change to CDFA altitude/VDP logic.
+
+## V1.4 Owner-approved CDFA gestures
+CDFA sits over the existing verified white right-hand PDF margin, but is now
+an absolutely positioned child of `viewer-pane` rather than a child of the
+pan/zoom-transformed chart layer. Horizontal viewer X stays pinned while the
+chart pans left/right. The table follows vertical chart scroll/pan and supports
+independent one-finger up/down drag. Two-finger pinch on CDFA zooms table type;
+ctrl+wheel zooms table; plain wheel moves it up/down. Leave main CDFA toolbar
+button and CDFA data/minima/VDP logic unchanged. Still no extra column,
+shrink or PDF scale changes. Light and Dark use the previously selected colors.
