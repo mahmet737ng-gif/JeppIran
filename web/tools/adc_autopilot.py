@@ -98,7 +98,7 @@ def main():
             print("node",cli,"--survey",a.survey,"--out",output)
         else:
             cmd=[node,str(cli),"--survey",a.survey,
-                 "--candidates",",".join(str(output/f"OIII_page_{n}_line_candidates.json") for n in pages),
+                 "--candidates",",".join(str(output/f"{icao}_page_{n}_line_candidates.json") for n in pages),
                  "--out",str(output)]
             if a.review:cmd.extend(["--review",a.review])
             subprocess.run(cmd,check=True)
