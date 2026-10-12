@@ -1,7 +1,7 @@
 /* JEPPIRAN TAXI preview · verified graphs only · NOT FOR ACTUAL NAVIGATION */
 (function(){
 "use strict";
-const ns="http://www.w3.org/2000/svg", taxi={auto:null,graphRequest:null,active:false,trace:false,startSelect:false,testStart:null,airport:"",graph:null,standReference:null,selectedStand:"",showStands:false,showNetwork:false,route:null,survey:null,surveyEngine:null,surveyVector:null,o3Survey:null,o3Workflow:null,o3Selected:'',manual:new Map(),prompted:"",goTicket:0,networkAudit:null,networkOpen:false,highlightTaxiway:"",insGroups:null,standGroupAudit:null,standGroupOpen:false};
+const ns="http://www.w3.org/2000/svg", taxi={auto:null,graphRequest:null,active:false,trace:false,startSelect:false,testStart:null,airport:"",graph:null,standReference:null,selectedStand:"",showStands:false,showNetwork:false,route:null,survey:null,surveyEngine:null,surveyVector:null,o3Survey:null,o3Workflow:null,o3Selected:'',oiieSurvey:null,oiieStatus:null,manual:new Map(),prompted:"",goTicket:0,networkAudit:null,networkOpen:false,highlightTaxiway:"",insGroups:null,standGroupAudit:null,standGroupOpen:false};
 const $=id=>document.getElementById(id);
 const name=s=>String(s||"").trim().toUpperCase().replace(/\s+/g," ");
 function parse(raw){
@@ -454,12 +454,45 @@ function message(s,warning=false){
 const OIAW_QA_REVISION="2621-oiaw-inset-registration-r3";
 async function fetchGraph(icao){
   taxi.graph=null;taxi.genericEngine=null;taxi.genericMonitor=null;
-  taxi.survey=null;taxi.surveyEngine=null;taxi.surveyVector=null;taxi.o3Survey=null;taxi.o3Workflow=null;taxi.o3Selected='';
+  taxi.survey=null;taxi.surveyEngine=null;taxi.surveyVector=null;taxi.o3Survey=null;taxi.o3Workflow=null;taxi.o3Selected='';taxi.oiieSurvey=null;taxi.oiieStatus=null;
   message("Checking verified ground network for "+icao+"…");
   try{
     // The ADC inventory is the sole OIAW source until source PDF curves and
     // hold lines have been fully traced. Previous projected OIAW.json routes
     // MUST NEVER be presented as mapped taxi centreline geometry.
+    if(icao==="OIIE"){
+      const [sr,qr]=await Promise.all([
+        fetch("./data/taxi-surveys/OIIE.json?v=2621-oiie-v3-source-r1",{cache:"no-store"}),
+        fetch("./data/taxi-surveys/OIIE-workflow-2621.json?v=2621-oiie-v3-qa-r1",{cache:"no-store"})
+      ]);
+      if(!sr.ok||!qr.ok)throw Error("OIIE ADC/Parking inventory unavailable");
+      const info=await sr.json(),report=await qr.json();
+      const engine=window.JEPPIRAN_ADC_ENGINE_V3;
+      const audit=engine?.evaluate({
+        airport:"OIIE",chartPages:info.chartPages,scannedLabels:[],
+        taxiwayNames:info.taxiways.map(x=>x.id),
+        runwayDesignators:info.runwayPolygons.flatMap(x=>x.ends),
+        taxonomiesApproved:false,inventoryComplete:false,
+        centerlinesVerified:false,junctionsVerified:false,
+        pagesRegistered:false,runwayGatesVerified:false
+      });
+      if(info.airport!==icao||report.airport!==icao||
+        String(info.cycle)!==String(manifest?.cycle)||
+        info.source?.sha256!==manifest?.source_sha256||
+        report.sourceSha256!==info.source.sha256||
+        info.stands?.length!==103||!audit||audit.routeable!==false)
+        throw Error("OIIE chart cycle, source fingerprint or QA state mismatch");
+      if(taxi.airport!==icao)return null;
+      taxi.oiieSurvey=info;taxi.oiieStatus=report;
+      $("taxiQaInput").placeholder="ST100 / ST301 / ST201 / A / R1 (source lookup only)";
+      $("taxiQaStands").textContent="STANDS ("+info.stands.length+")";
+      message("OIIE ADC v3 · 5 chart pages, 2 physical runways, "+
+        info.stands.length+" printed stand identifiers, "+
+        report.totalUnreviewedTraces+" source line candidates and "+
+        report.totalUnreviewedGeometricContacts+" unreviewed contacts. "+
+        "NEXT: source tracing / review / page alignment. TAXI ROUTING BLOCKED.",true);
+      draw();return info;
+    }
     if(icao==="OIII"){
       const rr=await fetch("./data/taxi-surveys/OIII.json?v=2621-o3-native-inventory-r1",{cache:"no-store"});
       if(!rr.ok)throw Error("Mehrabad ADC inventory HTTP "+rr.status);
@@ -610,6 +643,8 @@ async function fetchGraph(icao){
 // Share an in-flight graph load across TAXI open and GO. Avoid duplicate
 // no-store downloads and prevent a stale request from clobbering a new route.
 function loadGraph(icao){
+  if(taxi.oiieSurvey?.airport===icao&&String(taxi.oiieSurvey.cycle)===String(manifest?.cycle))
+    return Promise.resolve(taxi.oiieSurvey);
   if(taxi.o3Survey?.airport===icao&&String(taxi.o3Survey.cycle)===String(manifest?.cycle))
     return Promise.resolve(taxi.o3Survey);
   if(taxi.surveyEngine&&taxi.survey?.airport===icao&&
@@ -695,6 +730,24 @@ function focusPdfVectorOnADC(points,chartHeight){
   const top=Math.min(stage.scrollHeight-stage.clientHeight,
     Math.max(0,Math.round(y-stage.clientHeight*.55)));
   stage.scrollTo({top,behavior:"smooth"});
+}
+function imamInventoryGo(typed){
+  const token=name(typed).replace(/\s+/g,"");
+  const data=taxi.oiieSurvey;
+  if(!data)return;
+  taxi.route=null;taxi.auto=null;draw();
+  const stand=token.replace(/^STAND/,"ST").replace(/^ST/,"");
+  if(data.stands.some(v=>v.id===stand)){
+    message("OIIE ST"+stand+" found on Parking page "+
+      data.stands.find(v=>v.id===stand).sourcePage+
+      ". Stand lead and exact route not yet reviewed; no line drawn.",true);return;
+  }
+  if(data.taxiways.some(v=>v.id===token)){
+    message("OIIE TWY "+token+" listed in ADC source; centerline, neighbours "+
+      "and gate intersections not yet verified. No route drawn.",true);return;
+  }
+  message("OIIE scanned source inventory only. Compound taxi instructions "+
+    "remain blocked until reviewed stand/ADC/runway graph exists.",true);
 }
 function mehrabadInventoryGo(typed){
   const token=name(typed).replace(/\s+/g,"");
@@ -1162,6 +1215,7 @@ function go(options={}){
     return;
   }
   publisher?.clear();
+  if(taxi.oiieSurvey){imamInventoryGo(typed);return}
   if(taxi.o3Survey){mehrabadInventoryGo(typed);return}
   if(taxi.surveyEngine){surveyGo(typed);return}
   if(taxi.genericEngine){
@@ -1182,11 +1236,12 @@ function go(options={}){
     loadGraph(airport).then(loaded=>{
       if(goTicket!==taxi.goTicket||!taxi.active||taxi.airport!==airport||
          selectedAirport!==airport||$("taxiQaInput")?.value!==input)return;
-      if(!loaded||(!taxi.genericEngine&&!taxi.surveyEngine&&!taxi.o3Survey)){
+      if(!loaded||(!taxi.genericEngine&&!taxi.surveyEngine&&!taxi.o3Survey&&!taxi.oiieSurvey)){
         message(airport+" ADC inventory/ground network unavailable; no route was fabricated.",true);
         return;
       }
-      if(taxi.o3Survey)mehrabadInventoryGo(input);
+      if(taxi.oiieSurvey)imamInventoryGo(input);
+      else if(taxi.o3Survey)mehrabadInventoryGo(input);
       else if(taxi.surveyEngine)surveyGo(input);else genericGo(input);
     }).catch(error=>{
       if(goTicket===taxi.goTicket&&taxi.active&&taxi.airport===airport)
