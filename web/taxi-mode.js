@@ -1,7 +1,7 @@
 /* JEPPIRAN TAXI preview · verified graphs only · NOT FOR ACTUAL NAVIGATION */
 (function(){
 "use strict";
-const ns="http://www.w3.org/2000/svg", taxi={auto:null,graphRequest:null,active:false,trace:false,startSelect:false,testStart:null,airport:"",graph:null,standReference:null,selectedStand:"",showStands:false,showNetwork:false,route:null,survey:null,surveyEngine:null,surveyVector:null,o3Survey:null,o3Selected:'',manual:new Map(),prompted:"",goTicket:0,networkAudit:null,networkOpen:false,highlightTaxiway:"",insGroups:null,standGroupAudit:null,standGroupOpen:false};
+const ns="http://www.w3.org/2000/svg", taxi={auto:null,graphRequest:null,active:false,trace:false,startSelect:false,testStart:null,airport:"",graph:null,standReference:null,selectedStand:"",showStands:false,showNetwork:false,route:null,survey:null,surveyEngine:null,surveyVector:null,o3Survey:null,o3Workflow:null,o3Selected:'',manual:new Map(),prompted:"",goTicket:0,networkAudit:null,networkOpen:false,highlightTaxiway:"",insGroups:null,standGroupAudit:null,standGroupOpen:false};
 const $=id=>document.getElementById(id);
 const name=s=>String(s||"").trim().toUpperCase().replace(/\s+/g," ");
 function parse(raw){
@@ -454,7 +454,7 @@ function message(s,warning=false){
 const OIAW_QA_REVISION="2621-oiaw-inset-registration-r3";
 async function fetchGraph(icao){
   taxi.graph=null;taxi.genericEngine=null;taxi.genericMonitor=null;
-  taxi.survey=null;taxi.surveyEngine=null;taxi.surveyVector=null;taxi.o3Survey=null;taxi.o3Selected='';
+  taxi.survey=null;taxi.surveyEngine=null;taxi.surveyVector=null;taxi.o3Survey=null;taxi.o3Workflow=null;taxi.o3Selected='';
   message("Checking verified ground network for "+icao+"…");
   try{
     // The ADC inventory is the sole OIAW source until source PDF curves and
@@ -465,17 +465,24 @@ async function fetchGraph(icao){
       if(!rr.ok)throw Error("Mehrabad ADC inventory HTTP "+rr.status);
       const data=await rr.json();
       const probe=window.JEPPIRAN_TAXI_OIII_LAYER?.compose(data,430);
+      const wf=window.JEPPIRAN_ADC_WORKFLOW;
+      const evaluation=wf?.compile(wf.fromSurvey(data));
+      if(!evaluation||evaluation.summary.routeable!==false)
+        throw Error("Mehrabad ADC workflow QA gates unavailable");
       if(data.airport!==icao||String(data.cycle)!==String(manifest?.cycle)||
         data.source?.sha256!==manifest?.source_sha256||
         data.stands?.length!==53||data.runwayPolygons?.length!==2||!probe?.ok)
         throw Error("Mehrabad PDF identity or source revision mismatch");
       if(taxi.airport!==icao)return null;
-      taxi.o3Survey=data;
+      taxi.o3Survey=data;taxi.o3Workflow=evaluation;
       $("taxiQaInput").placeholder="ST100 · ST507 · A4 · B6 (chart labels; routes pending)";
       $("taxiQaStands").textContent="STANDS (53)";
-      message("OIII CHART INVENTORY · 2 original runway strips · 53 stand labels · "+
-        data.taxiways.length+" named taxiways. Physical taxi centreline endpoints, "+
-        "hold-short and stand access remain UNTRACED; no route invented.",true);
+      const next=evaluation.jobs.find(j=>j.status==="PENDING");
+      message("OIII ADC WORKFLOW v"+wf.version+" · "+data.runwayPolygons.length+
+        " source runway strips · "+data.stands.length+" stand labels · "+
+        data.taxiways.length+" taxiway names. "+
+        "NEXT: "+(next?.id||"none")+" — "+(next?.title||"")+
+        ". Routeable: NO. No unverified taxi connections inferred.",true);
       draw();return data;
     }
     if(icao==="OIAW"){
@@ -936,7 +943,7 @@ function nearest(graph,pos,firstTaxiway=null){
 }
 function syncAirport(){
   if(!taxi.active||taxi.airport===selectedAirport)return;
-  taxi.goTicket++;taxi.airport=selectedAirport;taxi.graph=null;taxi.genericEngine=null;taxi.genericMonitor=null;taxi.survey=null;taxi.surveyEngine=null;taxi.surveyVector=null;taxi.o3Survey=null;taxi.o3Selected='';
+  taxi.goTicket++;taxi.airport=selectedAirport;taxi.graph=null;taxi.genericEngine=null;taxi.genericMonitor=null;taxi.survey=null;taxi.surveyEngine=null;taxi.surveyVector=null;taxi.o3Survey=null;taxi.o3Workflow=null;taxi.o3Selected='';
   taxi.route=null;taxi.auto=null;taxi.standPreview=null;taxi.standEgress=null;taxi.standLead=null;taxi.standQaRoute=null;taxi.testStart=null;taxi.prompted="";
   taxi.networkAudit=null;taxi.highlightTaxiway="";
   $("taxiQaAirport").textContent=selectedAirport;
