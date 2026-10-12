@@ -3,7 +3,7 @@
   "airport": "OIII",
   "cycle": "2621",
   "sourceSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
-  "engineVersion": "2.2.0",
+  "engineVersion": "2.3.0",
   "generation": "Produced from JEPPIRAN_ADC_WORKFLOW.compile(fromSurvey(OIII))",
   "vectorScan": {
     "430": {
@@ -282,7 +282,7 @@
     "georeferenced": false,
     "routeableInSimulatorQA": false
   },
-  "nextAction": "geometry-and-junction-review",
+  "nextAction": "Review source taxi centerlines and all stand lead-outs; verify real crossings and exact runway-end gates before enabling OIII routes",
   "routeable": false,
   "autoApprove": false,
   "note": "Source-contact candidates are NOT automatically traversable. 326 proposed geometrical contacts are not 326 taxi intersections.",
@@ -300,7 +300,17 @@
     "standLeadCandidates": 53,
     "taxiwayLabelCandidates": 43,
     "reviewedConnections": 0,
-    "approvedRunwayGates": 0
+    "approvedRunwayGates": 0,
+    "unreviewedInkCandidates": 309,
+    "unreviewedGeometricContacts": 326,
+    "taxiwayNamesWithNearbyInkCandidate": 40,
+    "grayPavementFallbackTaxiways": [
+      "C3",
+      "K",
+      "V"
+    ],
+    "standLabelsWithCandidateCurves": 53
   },
-  "nextStepDetailed": "Classify each source native PDF curve as actual taxiway centerline or non-route art; approve physical contacts for all named taxiway segments and 53 stand lead-outs; independently review runway gates / hold-short and ADC-to-Parking inter-page alignment."
+  "nextStepDetailed": "Classify each source native PDF curve as actual taxiway centerline or non-route art; approve physical contacts for all named taxiway segments and 53 stand lead-outs; independently review runway gates / hold-short and ADC-to-Parking inter-page alignment.",
+  "runwayDesignatorSafety": "Individual reviewed hold-short gates must name exact runway end; opposite ends of same physical runway cannot share an inferred gate."
 }
