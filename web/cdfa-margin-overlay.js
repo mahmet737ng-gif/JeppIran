@@ -100,6 +100,41 @@
  }
 
  const SVG_NS='http://www.w3.org/2000/svg';
+ // iPad Safari may render large SVG fonts differently from Chromium.
+ // Fit each label to its ACTUAL half-column, never the full table width.
+ function fittedSvgFont(ctx,value,preferred,maxWidth,bold){
+  const text=String(value);
+  const room=Math.max(1,maxWidth);
+  const size=Math.max(1,preferred);
+  if(ctx){
+   ctx.font=String(bold)+' '+size+'px Arial';
+   const measured=ctx.measureText(text).width;
+   if(Number.isFinite(measured)&&measured>0)
+    return Math.min(size,size*room/(measured*1.065));
+  }
+  // Conservative fallback if canvas text measurement is unavailable.
+  return Math.min(size,room/(Math.max(1,text.length)*.72));
+ }
+ function ensureSvgColumnFit(svg){
+  if(!svg||!svg.isConnected)return;
+  for(const t of svg.querySelectorAll('text[data-cdfa-max-width]')){
+   const allowed=Number(t.getAttribute('data-cdfa-max-width'));
+   if(!allowed||typeof t.getComputedTextLength!=='function')continue;
+   try{
+    const measured=t.getComputedTextLength();
+    if(Number.isFinite(measured)&&measured>allowed){
+     const current=Number(t.getAttribute('font-size'));
+     t.setAttribute('font-size',(current*allowed/measured*.97).toFixed(2));
+     // iOS Safari text inflation safeguard (font-size correction first).
+     const finalLength=t.getComputedTextLength();
+     if(Number.isFinite(finalLength)&&finalLength>allowed){
+      t.setAttribute('textLength',allowed.toFixed(2));
+      t.setAttribute('lengthAdjust','spacingAndGlyphs');
+     }
+    }
+   }catch(_){}
+  }
+ }
  function svgNode(tag,attrs={},value){
   const node=document.createElementNS(SVG_NS,tag);
   for(const [name,attribute] of Object.entries(attrs))node.setAttribute(name,String(attribute));
@@ -136,19 +171,29 @@
    width:width,height:fullH,viewBox:`0 0 ${width} ${fullH}`,
    role:'img','aria-label':'CDFA data displayed as vector text'
   });
-  // Keep actual SVG font sizes large; SVG remains crisp as the chart zooms.
+  // Keep SVG crisp; prefit with canvas metrics, then check real SVG length
+  // after the panel becomes visible (essential for iPad WebKit).
+  const mctx=document.createElement('canvas').getContext('2d');
+  const halfCell=Math.max(1,width/2-10);
+  const fullCell=Math.max(1,width-12);
   const lineY=(y)=>svg.appendChild(svgNode('line',{x1:0,y1:y,x2:width,y2:y,class:'jp-cdfa-rule'}));
-  const label=(value,cx,cy,size,bold=800)=>svg.appendChild(svgNode('text',{
-   x:cx,y:cy,class:'jp-cdfa-vector-text',
-   'font-size':size,'font-weight':bold,'text-anchor':'middle',
-   'dominant-baseline':'middle'
-  },value));
+  const label=(value,cx,cy,size,bold=800,maxWidth=halfCell)=>{
+   const safeFont=fittedSvgFont(mctx,value,size,maxWidth,bold);
+   const node=svgNode('text',{
+    x:cx,y:cy,class:'jp-cdfa-vector-text',
+    'font-size':safeFont.toFixed(2),'font-weight':bold,
+    'text-anchor':'middle','dominant-baseline':'middle',
+    'data-cdfa-max-width':maxWidth.toFixed(2)
+   },value);
+   svg.appendChild(node);
+   return node;
+  };
   svg.appendChild(svgNode('rect',{x:0,y:0,width,height:tableH,class:'jp-cdfa-fill'}));
   const frame=svgNode('rect',{x:.7,y:.7,width:width-1.4,height:tableH-1.4,class:'jp-cdfa-frame'});
   svg.appendChild(frame);
   lineY(titleH);lineY(titleH+headingH);
   svg.appendChild(svgNode('line',{x1:width*.5,y1:titleH,x2:width*.5,y2:tableH,class:'jp-cdfa-rule'}));
-  label('CDFA DATA',width*.5,titleH*.51,Math.min(textSize*1.04,width/6.05),900);
+  label('CDFA DATA',width*.5,titleH*.51,Math.min(textSize*1.04,width/6.05),900,fullCell);
   label('DME',width*.25,titleH+headingH*.51,textSize*.76,850);
   label('ALT (ft)',width*.75,titleH+headingH*.51,textSize*.72,850);
   rows.forEach((row,i)=>{
@@ -158,14 +203,17 @@
    label(row[1],width*.75,y+rowH*.53,textSize,850);
   });
   const warningSize=Math.max(6,Math.min(9.5,width/18));
-  label('SIMULATOR QA ONLY',width*.5,tableH+footerH*.37,warningSize,700);
-  label('NOT FOR ACTUAL NAVIGATION',width*.5,tableH+footerH*.73,warningSize*.84,700);
+  label('SIMULATOR QA ONLY',width*.5,tableH+footerH*.37,warningSize,700,fullCell);
+  label('NOT FOR ACTUAL NAVIGATION',width*.5,tableH+footerH*.73,warningSize*.84,700,fullCell);
   // Preserve the original, accessible owner-locked table in the DOM.
   existing.hidden=true;
   const qaNote=panel.querySelector('.jp-cdfa-qa-note');
   if(qaNote)qaNote.hidden=true;
   panel.querySelector('.jp-cdfa-vector')?.remove();
   panel.appendChild(svg);
+  // Panel can be hidden during creation. Measure rendered SVG once it becomes
+  // visible, and repeat after font layout has settled in Mobile Safari.
+  requestAnimationFrame(()=>ensureSvgColumnFit(svg));
   return fullH;
  }
 
