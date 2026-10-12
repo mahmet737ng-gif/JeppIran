@@ -64,7 +64,7 @@ test('owner-approved WEB CDFA uses only existing PDF white margin',()=>{
  assert.match(html,/cdfa-margin-overlay\.js/);
  assert.match(overlay,/outerRightBorder\(canvas\)/);
  assert.match(overlay,/paperIsBlank\(canvas/);
- assert.match(overlay,/if\(available<64\)return false/);
+ assert.match(overlay,/if\(marginWidth<64\)return false/);
  assert.match(overlay,/viewer\.appendChild\(panel\)/);
  assert.match(css,/width:100%!important;flex:1 1 auto!important/);
  assert.match(css,/position:absolute!important/);
