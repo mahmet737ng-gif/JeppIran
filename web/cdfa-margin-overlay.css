@@ -42,10 +42,12 @@
 /* INVERT OFF: same white paper and black text as the original PDF. */
 #chartsView #chartTransformLayer > #jpCdfaSide.jp-cdfa-side,
 #chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-table{
+ --jp-cdfa-bg:#fff;
  background:#fff!important;color:#000!important;
 }
 /* INVERT ON: same black paper and white text as the inverted PDF. */
 body.chart-inverted #chartsView #chartTransformLayer > #jpCdfaSide.jp-cdfa-side,
 body.chart-inverted #chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-table{
+ --jp-cdfa-bg:#000;
  background:#000!important;color:#fff!important;
 }
