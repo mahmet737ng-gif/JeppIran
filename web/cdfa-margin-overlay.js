@@ -1,7 +1,6 @@
-/* JEPPIRAN owner-approved CDFA annotation in original PDF paper margin.
- * The panel is a child of the SAME transformed layer as the PDF canvas.
- * No independent floating position or separate table zoom is allowed.
- * Leave chart scale, PDF geometry, toolbar, and CDFA calculations unchanged.
+/* JEPPIRAN vector CDFA in the existing PDF margin.
+ * SVG glyphs remain crisp at every chart zoom. No PDF refit, rasterized table,
+ * new layout column or CDFA data/VDP computation changes.
  */
 (function(){
  'use strict';
@@ -74,9 +73,93 @@
  }
 
 
- // The CDFA is a PDF-coordinate overlay, not a screen-anchored widget.
- // The existing chartTransformLayer already implements scroll, pan and zoom,
- // so it must perform every transformation for the CDFA as well.
+
+ // Detect the line separating Plan View from the lower approach profile.
+ // A fallback fraction is used only if no continuous horizontal rule exists.
+ function planViewBottom(canvas,borderX,topPixel){
+  const w=canvas.width,h=canvas.height,ctx=canvas.getContext('2d');
+  const x0=Math.floor(w*.20),x1=Math.floor(borderX-9);
+  const begin=Math.max(Math.floor(h*.51),Math.floor(topPixel+h*.23));
+  const finish=Math.floor(h*.86);
+  const stepY=Math.max(1,Math.floor(h/1300));
+  const stepX=Math.max(2,Math.floor((x1-x0)/85));
+  if(!ctx||x1<=x0||finish<=begin)return Math.min(h*.76,h-1);
+  try{
+   for(let y=begin;y<finish;y+=stepY){
+    const pixels=ctx.getImageData(x0,y,x1-x0,1).data;
+    let dark=0,total=0;
+    for(let x=0;x<x1-x0;x+=stepX){
+     const i=x*4;
+     if(pixels[i]<105&&pixels[i+1]<105&&pixels[i+2]<105)dark++;
+     total++;
+    }
+    if(total&&dark/total>=.89)return y;
+   }
+  }catch(_){}
+  return Math.min(h*.76,h-1);
+ }
+
+ const SVG_NS='http://www.w3.org/2000/svg';
+ function svgNode(tag,attrs={},value){
+  const node=document.createElementNS(SVG_NS,tag);
+  for(const [name,attribute] of Object.entries(attrs))node.setAttribute(name,String(attribute));
+  if(value!==undefined)node.textContent=String(value);
+  return node;
+ }
+ function drawVectorTable(panel,width){
+  // The protected controller remains the single source of displayed DME,
+  // altitude and VDP labels. This is presentation ONLY; no new calculations.
+  const existing=panel.querySelector('.jp-cdfa-table');
+  if(!existing)return null;
+  const rows=[...existing.querySelectorAll('tbody tr')].map(tr=>
+   [...tr.querySelectorAll('td')].map(cell=>cell.textContent.trim()));
+  if(!rows.length||rows.some(row=>row.length!==2))return null;
+
+  const rowH=Math.max(28,Math.min(49,Math.round(width*.212)));
+  const titleH=Math.round(rowH*1.22),headingH=rowH;
+  const footerH=Math.max(26,Math.round(rowH*.82));
+  const tableH=titleH+headingH+rows.length*rowH;
+  const fullH=tableH+footerH;
+  const svg=svgNode('svg',{
+   class:'jp-cdfa-vector',xmlns:SVG_NS,
+   width:width,height:fullH,viewBox:`0 0 ${width} ${fullH}`,
+   role:'img','aria-label':'CDFA data displayed as vector text'
+  });
+  const textSize=Math.max(11,Math.min(23,width/8.05));
+  const lineY=(y)=>svg.appendChild(svgNode('line',{x1:0,y1:y,x2:width,y2:y,class:'jp-cdfa-rule'}));
+  const label=(value,cx,cy,size,bold=800)=>svg.appendChild(svgNode('text',{
+   x:cx,y:cy,class:'jp-cdfa-vector-text',
+   'font-size':size,'font-weight':bold,'text-anchor':'middle',
+   'dominant-baseline':'middle'
+  },value));
+  svg.appendChild(svgNode('rect',{x:0,y:0,width,height:tableH,class:'jp-cdfa-fill'}));
+  const frame=svgNode('rect',{x:.7,y:.7,width:width-1.4,height:tableH-1.4,class:'jp-cdfa-frame'});
+  svg.appendChild(frame);
+  lineY(titleH);lineY(titleH+headingH);
+  svg.appendChild(svgNode('line',{x1:width*.5,y1:titleH,x2:width*.5,y2:tableH,class:'jp-cdfa-rule'}));
+  label('CDFA DATA',width*.5,titleH*.51,Math.min(textSize*1.14,width/7.3),900);
+  label('DME',width*.25,titleH+headingH*.51,textSize*.88,850);
+  label('ALT (ft)',width*.75,titleH+headingH*.51,textSize*.79,850);
+  rows.forEach((row,i)=>{
+   const y=titleH+headingH+i*rowH;
+   if(i)lineY(y);
+   label(row[0],width*.25,y+rowH*.53,textSize,850);
+   label(row[1],width*.75,y+rowH*.53,textSize,850);
+  });
+  const warningSize=Math.max(6,Math.min(9.5,width/18));
+  label('SIMULATOR QA ONLY',width*.5,tableH+footerH*.37,warningSize,700);
+  label('NOT FOR ACTUAL NAVIGATION',width*.5,tableH+footerH*.73,warningSize*.84,700);
+  // Preserve the original, accessible owner-locked table in the DOM.
+  existing.hidden=true;
+  const qaNote=panel.querySelector('.jp-cdfa-qa-note');
+  if(qaNote)qaNote.hidden=true;
+  panel.querySelector('.jp-cdfa-vector')?.remove();
+  panel.appendChild(svg);
+  return fullH;
+ }
+
+ // The SVG is in the SAME PDF transform layer. At 100/200/400% zoom,
+ // SVG glyphs and grid lines remain vector shapes, not scaled bitmaps.
  function position(panel){
   const layer=document.getElementById('chartTransformLayer');
   const canvas=document.getElementById('pdfCanvas');
@@ -86,26 +169,28 @@
   if(!w||!h)return false;
   const border=outerRightBorder(canvas);
   if(border===null)return false;
-  const frameRight=border*w/canvas.width;
-  // Preserve a real gap on both sides of the printed page margin.
-  const borderGap=Math.max(10,Math.round(w*.008));
-  const edgeGap=Math.max(10,Math.round(w*.009));
-  const x=Math.ceil(frameRight+borderGap);
+  const borderGap=Math.max(8,Math.round(w*.006));
+  const edgeGap=Math.max(8,Math.round(w*.006));
+  const x=Math.ceil(border*w/canvas.width+borderGap);
   const marginWidth=Math.floor(w-x-edgeGap);
   if(marginWidth<64)return false;
   const planBoundary=planViewTop(canvas,border);
   if(planBoundary===null)return false;
-  const y=Math.round(planBoundary*h/canvas.height+Math.max(9,w*.007));
-  if(h-y<100||!paperIsBlank(canvas,x,marginWidth,y,Math.min(h-y-18,w*.46)))return false;
+  const planEnd=planViewBottom(canvas,border,planBoundary);
+  const planTop=planBoundary*h/canvas.height+Math.max(8,w*.006);
+  const planBottom=planEnd*h/canvas.height-Math.max(8,w*.006);
+  if(planBottom<=planTop+100)return false;
 
-  // Direct child of chartTransformLayer: when the PDF is zoomed or panned,
-  // the table inherits EXACTLY the same matrix, like a chart annotation.
+  const tableHeight=drawVectorTable(panel,marginWidth);
+  if(!tableHeight)return false;
+  // Center the complete table vertically in the PLAN VIEW, never the toolbar
+  // or current viewport. Keep its bottom within the printed Plan View.
+  const y=Math.round(Math.max(planTop,planTop+(planBottom-planTop-tableHeight)/2));
+  if(y+tableHeight>h-12||!paperIsBlank(canvas,x,marginWidth,y,Math.min(tableHeight,h-y-12)))return false;
   panel.style.left=x+'px';
   panel.style.top=y+'px';
   panel.style.width=marginWidth+'px';
-  panel.style.maxHeight=Math.max(0,h-y-16)+'px';
-  const font=Math.max(8,Math.min(19,marginWidth/9.8));
-  panel.style.setProperty('--jp-cdfa-margin-font',font.toFixed(1)+'px');
+  panel.style.maxHeight='none';
   if(panel.parentElement!==layer)layer.appendChild(panel);
   return true;
  }

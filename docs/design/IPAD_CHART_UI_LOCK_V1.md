@@ -56,3 +56,15 @@ Touching/pinching CDFA must use chart gestures. INVERT OFF means white
 background and black CDFA type; INVERT ON means black background and white
 CDFA type. App Light/Dark theme never determines the colors. Keep the original
 toolbar CDFA button, fullscreen CDFA/X buttons, data/VDP and chart unchanged.
+
+## V1.7 — Crisp vector CDFA, centered in Plan View (2026-10-12)
+The original calculated DOM table remains the source of every displayed
+DME, altitude and VDP entry; the viewer now draws those labels and rules as
+DOM-backed SVG vector text, not raster pixels, so pinch/double-tap zoom keeps
+its legibility at all chart zoom levels. The CDFA table is enlarged to use as
+much of the EXISTING paper gutter as possible, respecting the black printed
+frame and outer paper edge. Its vertical center is aligned with the midpoint
+between detected Plan View top and bottom rules (fallback bottom at 76% of
+paper height). It remains a child of chartTransformLayer and zooms/pans in
+precise synchrony with the printed PDF. INVERT OFF = white/black, ON =
+black/white. No changes to toolbar, VDP ordering, data or PDF scaling.

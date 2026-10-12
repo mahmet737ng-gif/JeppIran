@@ -86,5 +86,18 @@ test('CDFA INVERT OFF = white/black; INVERT ON = black/white independent of app 
  assert.match(css,/body\.chart-inverted #chartsView #chartTransformLayer > #jpCdfaSide\.jp-cdfa-side,[\s\S]*?background:#000!important;color:#fff!important/);
  assert.doesNotMatch(css,/:root\.light|:root:not\(\.light\)/);
  assert.match(css,/pointer-events:none!important/);
- assert.match(html,/cdfa-margin-overlay\.js\?v=2621-cdfa-pdf-attached-invert-r2/);
+ assert.match(html,/cdfa-margin-overlay\.js\?v=2621-cdfa-svg-center-r1/);
+});
+
+test('CDFA uses sharp vector SVG text and centers on Plan View',()=>{
+ const overlay=read('web/cdfa-margin-overlay.js'),css=read('web/cdfa-margin-overlay.css');
+ assert.match(overlay,/document\.createElementNS\(SVG_NS,tag\)/);
+ assert.match(overlay,/class:'jp-cdfa-vector'/);
+ assert.match(overlay,/function planViewBottom\(canvas,borderX,topPixel\)/);
+ assert.match(overlay,/planTop\+\(planBottom-planTop-tableHeight\)\/2/);
+ assert.match(overlay,/existing\.hidden=true/);
+ assert.match(css,/shape-rendering:geometricPrecision/);
+ assert.match(css,/text-rendering:geometricPrecision/);
+ assert.match(css,/\.jp-cdfa-table\[hidden\]/);
+ assert.match(overlay,/layer\.appendChild\(panel\)/);
 });

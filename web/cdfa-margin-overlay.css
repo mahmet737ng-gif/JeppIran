@@ -6,36 +6,38 @@
 #chartsView.chart-open #jpCdfaWorkspace > #pdfStage{
  width:100%!important;flex:1 1 auto!important;min-width:0!important;
 }
+
 #chartsView #chartTransformLayer > #jpCdfaSide.jp-cdfa-side{
  position:absolute!important;z-index:35;flex:none!important;
  box-sizing:border-box;height:auto!important;min-height:0!important;
- width:auto;max-width:none;margin:0!important;padding:0!important;
- border:0!important;overflow:hidden!important;
- /* Chart gesture targets (not a separate table gesture handler). */
+ width:auto!important;max-width:none!important;margin:0!important;
+ padding:0!important;border:0!important;overflow:visible!important;
  pointer-events:none!important;touch-action:none!important;
  user-select:none;-webkit-user-select:none;
 }
 #chartsView #chartTransformLayer > #jpCdfaSide.jp-cdfa-side *{
  pointer-events:none!important;
 }
-#chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-table{
- width:100%;table-layout:fixed;
+#chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-table[hidden],
+#chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-qa-note[hidden]{
+ display:none!important;
 }
-#chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-table th,
-#chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-table td{
- font-size:var(--jp-cdfa-margin-font,13px)!important;
- padding:clamp(2px,.35vw,7px) 1px!important;
- border:1px solid currentColor;
+#chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-vector{
+ display:block;overflow:visible;width:100%;height:auto;
+ font-family:Arial,"Helvetica Neue",sans-serif;
+ font-variant-numeric:tabular-nums;
+ shape-rendering:geometricPrecision;text-rendering:geometricPrecision;
 }
-#chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-table thead tr:first-child th{
- font-size:calc(var(--jp-cdfa-margin-font,13px)*1.10)!important;
- padding:clamp(3px,.45vw,9px) 1px!important;
+#chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-fill{
+ fill:var(--jp-cdfa-bg,#fff);
 }
-#chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-table thead tr:nth-child(2) th{
- font-size:calc(var(--jp-cdfa-margin-font,13px)*.88)!important;
+#chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-rule,
+#chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-frame{
+ fill:none;stroke:currentColor;stroke-width:1.2;
+ shape-rendering:geometricPrecision;
 }
-#chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-qa-note{
- font-size:clamp(6px,.58vw,10px);line-height:1.3;margin:5px 0 0;
+#chartsView #chartTransformLayer > #jpCdfaSide .jp-cdfa-vector-text{
+ fill:currentColor;stroke:none;text-rendering:geometricPrecision;
 }
 /* INVERT OFF: same white paper and black text as the original PDF. */
 #chartsView #chartTransformLayer > #jpCdfaSide.jp-cdfa-side,
