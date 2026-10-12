@@ -92,6 +92,12 @@ def main():
     subprocess.run(cmd,check=True)
     cli=Path(__file__).with_name("adc_workflow_cli.cjs")
     if survey:
+        # Stage 4 candidates: taxiway label -> nearest native vector proposals.
+        # These are NOT stand connections or reviewed centerlines.
+        label_script=Path(__file__).with_name("adc_label_hypotheses.py")
+        subprocess.run([sys.executable,str(label_script),"--survey",a.survey,
+            "--candidates",str(output),
+            "--out",str(output/f"{icao}_taxiway_label_hypotheses.json")],check=True)
         node=shutil.which("node")
         if not node:
             print("Node.js unavailable; finish workflow report with:")
