@@ -101,3 +101,21 @@ test('CDFA uses sharp vector SVG text and centers on Plan View',()=>{
  assert.match(css,/\.jp-cdfa-table\[hidden\]/);
  assert.match(overlay,/layer\.appendChild\(panel\)/);
 });
+
+test('CDFA vector numerals are at least 32px in a 172px chart gutter',()=>{
+ const vm=require('node:vm'),source=read('web/cdfa-margin-overlay.js');
+ const start=source.indexOf(' function tableMetrics(');
+ const end=source.indexOf(' function drawVectorTable(',start);
+ assert.ok(start>0&&end>start);
+ const metric=vm.runInNewContext('(function(){'+source.slice(start,end)+'return tableMetrics;})()',{});
+ for(const planHeight of [600,740]){
+  const m=metric(172,planHeight,10);
+  assert.ok(m.textSize>=32, 'CDFA numbers must be significantly larger at 100%');
+  assert.ok(m.rowH>=44, 'Each row needs readable spacing');
+  assert.ok(m.fullH<=planHeight, 'Center the full table within Plan View');
+ }
+ assert.match(source,/drawVectorTable\(panel,marginWidth,planBottom-planTop\)/);
+ const css=read('web/cdfa-margin-overlay.css');
+ assert.match(css,/--jp-cdfa-bg:#fff/);
+ assert.match(css,/--jp-cdfa-bg:#000/);
+});
