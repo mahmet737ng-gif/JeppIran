@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en" data-jeppiran-build="2621-std3-partial-preview-2">
+<html lang="en" data-jeppiran-build="2621-ipad-chart-ui-locked-r1">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=yes">
@@ -14,7 +14,7 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./app-icon.png" type="image/png">
   <link rel="apple-touch-icon" sizes="256x256" href="./app-icon.png">
-  <link rel="stylesheet" href="./styles.css?v=2621-taxi-free-scroll-r1">
+  <link rel="stylesheet" href="./styles.css?v=2621-ipad-chart-ui-locked-r1">
   <link rel="stylesheet" href="./home-ils-background.css?v=2621-ils-bg-fixed-r1">
   <link rel="stylesheet" href="./airport-adc-banners.css?v=2621-adc-template2-r1">
   <link rel="stylesheet" href="./cdfa-locked.css?v=2621-cdfa-gutter-r2">
@@ -105,6 +105,7 @@
             <button id="chartMetarBtn" class="icon-btn metar-toolbar-btn raster-btn" title="Show or hide airport METAR"><span class="toolbar-art art-metar" aria-hidden="true"></span><span class="toolbar-label">METAR</span></button>
             <button id="chartCdfaBtn" class="icon-btn raster-btn" disabled type="button" title="CDFA QA data unavailable for this chart" aria-label="CDFA engineering QA table"><span class="toolbar-art art-cdfa" aria-hidden="true"></span><span class="toolbar-label">CDFA</span></button>
             <button id="chartTaxiBtn" class="icon-btn raster-btn" type="button" title="TAXI · Open airport diagram" aria-label="TAXI · Open airport diagram"><span class="toolbar-art art-taxi" aria-hidden="true"></span><span class="toolbar-label">TAXI</span></button>
+            <button id="chartInvertBtn" class="icon-btn raster-btn chart-invert-btn" type="button" aria-label="Invert chart colors" aria-pressed="false" title="Invert chart colors"><span class="toolbar-art art-invert" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><circle cx="16" cy="16" r="11.5" fill="none" stroke="currentColor" stroke-width="2.3"/><path d="M16 4.5A11.5 11.5 0 0 1 16 27.5Z" fill="currentColor"/></svg></span><span class="toolbar-label">INVERT</span></button>
             <button id="positionStatusBtn" class="icon-btn position-status-btn raster-btn" data-state="off" type="button" aria-label="POS OFF" aria-haspopup="dialog" aria-controls="positionSourceDialog">
               <span class="toolbar-art art-position" aria-hidden="true"></span><span class="position-status-label">POS OFF</span>
             </button>
@@ -304,6 +305,19 @@
     </div>
   </dialog>
 
+  <dialog id="appearanceSettingsDialog" aria-labelledby="appearanceSettingsTitle">
+    <div class="dialog-body appearance-settings-sheet">
+      <h3 id="appearanceSettingsTitle">Settings · Appearance</h3>
+      <p>Choose the app theme. Chart inversion is controlled separately in the chart toolbar.</p>
+      <fieldset class="appearance-theme-options">
+        <legend>App theme</legend>
+        <label><input type="radio" name="appearanceTheme" value="light"><span>Light Mode</span></label>
+        <label><input type="radio" name="appearanceTheme" value="dark"><span>Dark Mode</span></label>
+      </fieldset>
+      <button id="appearanceSettingsCloseBtn" class="appearance-settings-close" type="button">Done</button>
+    </div>
+  </dialog>
+
   <dialog id="positionSourceDialog" aria-labelledby="positionSourceTitle">
     <div class="dialog-body">
       <h3 id="positionSourceTitle">Position source</h3>
@@ -351,7 +365,7 @@
     });
   })();
   </script>
-  <script src="./app.js?v=2621-taxi-free-scroll-r1" defer></script>
+  <script src="./app.js?v=2621-ipad-chart-ui-locked-r1" defer></script>
   <script src="./cdfa-chart-panel.js?v=2621-cdfa-vdp-final-r2" defer></script>
   <script src="./airport-adc-banners.js?v=2621-adc-template2-r1" defer></script>
   <script src="./taxi-stand-engine.js?v=2621-stand-groups-generic-r10" defer></script>\n  <script src="./taxi-unnamed-connectors.js?v=2621-ltfm-n2c-r12" defer></script>

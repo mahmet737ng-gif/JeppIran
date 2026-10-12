@@ -300,7 +300,7 @@ let chartMetarTimer=null, chartMetarAirport="", chartMetarValue="";
 const CHART_METAR_POLL_INTERVAL=5*60*1000;
 // Keep this session's displayed reports when switching charts or airports.
 const chartMetarShown=new Map(), chartMetarRequests=new Map(), chartMetarCheckedAt=new Map();
-let chartPointers=new Map(), pinchStartDistance=0, pinchStartZoom=1, panStart=null, swipeStart=null, lastTapAt=0;
+let chartPointers=new Map(), pinchStartDistance=0, pinchStartZoom=1, panStart=null, swipeStart=null, lastTapAt=0, lastTapPoint=null;
 let georefByPage=new Map(), githubWxCache=null, githubWxCacheAt=0;
 const $=s=>document.querySelector(s);
 const $$=s=>[...document.querySelectorAll(s)];
@@ -382,11 +382,23 @@ if(jeppiranStandalone&&typeof jeppiranStandalone.addEventListener==="function"){
 }
 syncInstallGuideVisibility();
 $("#infoCard").addEventListener("click",()=>dialog("JEPPIRAN "+VERSION,"iPad web/PWA build. Chart PDFs and weather require internet on first load. The app shell remains available offline."));
-$("#themeBtn").addEventListener("click",()=>{
-  document.documentElement.classList.toggle("light");
-  localStorage.setItem("theme",document.documentElement.classList.contains("light")?"light":"dark");
-});
-if(localStorage.getItem("theme")==="light") document.documentElement.classList.add("light");
+// Appearance is an explicit Settings choice; switching themes never alters chart inversion
+// or any of the four owner-locked ILS Home background images.
+function applyAppearanceTheme(mode){
+  const theme=mode==="light"?"light":"dark";
+  document.documentElement.classList.toggle("light",theme==="light");
+  try{localStorage.setItem("theme",theme)}catch(_){}
+  document.querySelectorAll('input[name="appearanceTheme"]').forEach(input=>{input.checked=input.value===theme});
+  $("#themeBtn").setAttribute("aria-label",theme==="light"?"Switch to Dark Mode":"Switch to Light Mode");
+  document.querySelector('meta[name="theme-color"]')?.setAttribute("content",theme==="light"?"#edf6fc":"#07121b");
+}
+applyAppearanceTheme(localStorage.getItem("theme")==="light"?"light":"dark");
+$("#themeBtn").addEventListener("click",()=>applyAppearanceTheme(document.documentElement.classList.contains("light")?"dark":"light"));
+document.querySelectorAll('input[name="appearanceTheme"]').forEach(input=>input.addEventListener("change",()=>{
+  if(input.checked)applyAppearanceTheme(input.value);
+}));
+$("#appearanceSettingsCloseBtn").addEventListener("click",()=>$("#appearanceSettingsDialog").close());
+$("#appearanceSettingsDialog").addEventListener("click",e=>{if(e.target===e.currentTarget)e.currentTarget.close()});
 
 async function loadLtfmGridGeorefs(m){
   try{
@@ -474,7 +486,12 @@ function utcDisplay(){
 }
 utcDisplay();setInterval(utcDisplay,30000);
 if($("#enrouteHomeBtn"))$("#enrouteHomeBtn").addEventListener("click",()=>dialog("Enroute","The Enroute tile viewer is not included in this web build yet. Existing Android Enroute data is unchanged."));
-if($("#settingsHomeBtn"))$("#settingsHomeBtn").addEventListener("click",()=>{document.documentElement.classList.toggle("light");localStorage.setItem("theme",document.documentElement.classList.contains("light")?"light":"dark");dialog("Settings","Appearance switched. For GPS / simulator connection use Connect to Simulator at the bottom of Home.");});
+if($("#settingsHomeBtn"))$("#settingsHomeBtn").addEventListener("click",()=>{
+  const settings=$("#appearanceSettingsDialog");
+  document.querySelectorAll('input[name="appearanceTheme"]').forEach(input=>{input.checked=input.value===(document.documentElement.classList.contains("light")?"light":"dark")});
+  if(settings?.showModal)settings.showModal();
+  else dialog("Settings","Use the theme button in the top bar to switch Light Mode / Dark Mode.");
+});
 $$("[data-airport-filter]").forEach(b=>b.addEventListener("click",()=>{
   airportFilterMode=b.dataset.airportFilter;
   $$("[data-airport-filter]").forEach(x=>x.classList.toggle("active",x===b));
@@ -1152,38 +1169,79 @@ $("#zoomInBtn").addEventListener("click",()=>setChartZoom(chartZoom*1.25));
 $("#zoomResetBtn").addEventListener("click",resetChartView);
 $("#prevChartBtn").addEventListener("click",()=>navigateChart(-1));
 $("#nextChartBtn").addEventListener("click",()=>navigateChart(1));
+// Independent PDF inversion: visual filter only, never rewrite PDF pixels, GPS,
+// simulator data, CDFA calculations or the locked CDFA table layout.
+function setChartInverted(enabled){
+  const inverted=!!enabled;
+  document.body.classList.toggle("chart-inverted",inverted);
+  const btn=$("#chartInvertBtn");
+  btn?.setAttribute("aria-pressed",String(inverted));
+  btn?.classList.toggle("chart-invert-active",inverted);
+  if(btn)btn.title=inverted?"Restore normal chart colors":"Invert chart colors";
+  try{localStorage.setItem("jeppiran-chart-inverted",inverted?"1":"0")}catch(_){}
+}
+setChartInverted(localStorage.getItem("jeppiran-chart-inverted")==="1");
+$("#chartInvertBtn").addEventListener("click",()=>setChartInverted(!document.body.classList.contains("chart-inverted")));
 
+// iPad interaction lock V1: single chart tap toggles full screen; two taps zoom;
+// gestures do not trigger taps. The 90ms, <=2.5px finish is NOT fling/inertia.
 function setupChartGestures(){
   const stage=$("#pdfStage");
   if(!stage||stage.dataset.gestures==="1")return;
   stage.dataset.gestures="1";
+  let tailFrame=0, singleTapTimer=0, recentMove=null, pinched=false;
+  function cancelTail(){if(tailFrame)cancelAnimationFrame(tailFrame);tailFrame=0;}
+  function chartHit(target){
+    if(!(target instanceof Element))return false;
+    if(target.closest("button,a,input,select,textarea,summary,[role='button'],.taxi-qa-panel"))return false;
+    return !!target.closest(".pdf-canvas-wrap,#chartTransformLayer,#pdfCanvas");
+  }
+  function tinyPanStop(){
+    const sample=recentMove;
+    if(!sample||pinched||performance.now()-sample.time>75)return;
+    if(Math.hypot(sample.dx,sample.dy)<0.25)return;
+    // Movement is intentionally almost imperceptible, not a kinetic scroll.
+    const dx=Math.max(-2.5,Math.min(2.5,sample.dx*0.36));
+    const dy=Math.max(-2.5,Math.min(2.5,sample.dy*0.36));
+    const x0=chartPanX,y0=chartPanY,scroll0=stage.scrollTop,t0=performance.now();
+    function frame(now){
+      const p=Math.min(1,(now-t0)/90);
+      const eased=1-Math.pow(1-p,3);
+      if(chartZoom>1.001){
+        chartPanX=x0+dx*eased;chartPanY=y0+dy*eased;applyChartTransform();
+      }else{
+        stage.scrollTop=scroll0-dy*eased;
+      }
+      if(p<1)tailFrame=requestAnimationFrame(frame);else tailFrame=0;
+    }
+    tailFrame=requestAnimationFrame(frame);
+  }
   stage.addEventListener("wheel",e=>{
     if(!$("#pdfCanvas"))return;
+    cancelTail();
     if(e.ctrlKey||e.metaKey){
       e.preventDefault();
-      const factor=e.deltaY<0?1.12:1/1.12;
-      zoomAround(chartZoom*factor,e.clientX,e.clientY);
+      zoomAround(chartZoom*(e.deltaY<0?1.12:1/1.12),e.clientX,e.clientY);
     }else if(chartZoom>1.001){
       e.preventDefault();
       cancelAircraftFollow();
-      chartPanY-=e.deltaY;
-      chartPanX-=e.deltaX;
-      applyChartTransform();
-    }else{
-      // Browser/native scrolling keeps PDF, taxi overlay and stand inset
-      // together. Never intercept the wheel at 100% zoom.
-      cancelAircraftFollow();
-    }
+      chartPanY-=e.deltaY;chartPanX-=e.deltaX;applyChartTransform();
+    }else cancelAircraftFollow();
   },{passive:false});
   stage.addEventListener("pointerdown",e=>{
-    if(!$("#pdfCanvas"))return;
+    if(!$("#pdfCanvas")||!chartHit(e.target))return;
+    cancelTail();
     cancelAircraftFollow();
     try{stage.setPointerCapture(e.pointerId)}catch(_){}
     chartPointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
     if(chartPointers.size===1){
+      pinched=false;
+      recentMove={x:e.clientX,y:e.clientY,dx:0,dy:0,time:performance.now()};
       panStart={x:e.clientX,y:e.clientY,panX:chartPanX,panY:chartPanY,scrollTop:stage.scrollTop};
       swipeStart={x:e.clientX,y:e.clientY,time:Date.now()};
     }else if(chartPointers.size===2){
+      pinched=true;
+      clearTimeout(singleTapTimer);singleTapTimer=0;lastTapAt=0;
       const pts=[...chartPointers.values()];
       pinchStartDistance=Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y);
       pinchStartZoom=chartZoom;
@@ -1194,6 +1252,7 @@ function setupChartGestures(){
     if(!chartPointers.has(e.pointerId))return;
     chartPointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
     if(chartPointers.size===2){
+      pinched=true;
       const pts=[...chartPointers.values()];
       const dist=Math.hypot(pts[0].x-pts[1].x,pts[0].y-pts[1].y);
       const cx=(pts[0].x+pts[1].x)/2,cy=(pts[0].y+pts[1].y)/2;
@@ -1204,37 +1263,49 @@ function setupChartGestures(){
       const dx=e.clientX-panStart.x,dy=e.clientY-panStart.y;
       const stageEl=$("#pdfStage"),layerEl=$("#chartTransformLayer");
       const canVerticalPan=!!(stageEl&&layerEl&&layerEl.offsetHeight*chartZoom>stageEl.clientHeight+1);
+      recentMove={x:e.clientX,y:e.clientY,dx:e.clientX-(recentMove?.x??e.clientX),dy:e.clientY-(recentMove?.y??e.clientY),time:performance.now()};
       if(chartZoom>1.001){
-        chartPanX=panStart.panX+dx;
-        chartPanY=panStart.panY+dy;
-        applyChartTransform();
+        chartPanX=panStart.panX+dx;chartPanY=panStart.panY+dy;applyChartTransform();
       }else if(canVerticalPan&&Math.abs(dy)>Math.abs(dx)*0.65){
-        // Mouse/touch grab at normal zoom uses the same scroll offset
-        // as wheels and scrollbars; transform pan remains zero.
         stageEl.scrollTop=panStart.scrollTop-dy;
       }
     }
   });
   const finishPointer=e=>{
+    if(!chartPointers.has(e.pointerId))return;
     const start=swipeStart;
     chartPointers.delete(e.pointerId);
+    const canceled=e.type==="pointercancel";
     if(chartPointers.size===0){
-      if(chartZoom<=1.001&&start){
-        const dx=e.clientX-start.x,dy=e.clientY-start.y,dt=Date.now()-start.time;
-        if(dt<700&&Math.abs(dx)>80&&Math.abs(dx)>Math.abs(dy)*1.35){
-          dx<0?navigateChart(1):navigateChart(-1);
-        }else if(dt<320&&Math.hypot(dx,dy)<18){
-          const now=Date.now();
-          if(now-lastTapAt<330){
-            zoomAround(chartZoom>1.2?1:2,e.clientX,e.clientY);
-            lastTapAt=0;
-          }else lastTapAt=now;
+      const dx=start?e.clientX-start.x:0,dy=start?e.clientY-start.y:0;
+      const travel=Math.hypot(dx,dy),dt=start?Date.now()-start.time:Infinity;
+      if(!canceled&&!pinched&&start&&chartZoom<=1.001&&dt<700&&Math.abs(dx)>80&&Math.abs(dx)>Math.abs(dy)*1.35){
+        clearTimeout(singleTapTimer);singleTapTimer=0;lastTapAt=0;
+        dx<0?navigateChart(1):navigateChart(-1);
+      }else if(!canceled&&!pinched&&start&&dt<380&&travel<12){
+        const now=Date.now();
+        if(now-lastTapAt<315&&lastTapPoint&&Math.hypot(lastTapPoint.x-e.clientX,lastTapPoint.y-e.clientY)<36){
+          clearTimeout(singleTapTimer);singleTapTimer=0;lastTapAt=0;lastTapPoint=null;
+          zoomAround(chartZoom>1.2?1:2,e.clientX,e.clientY);
+        }else{
+          clearTimeout(singleTapTimer);
+          lastTapAt=now;lastTapPoint={x:e.clientX,y:e.clientY};
+          singleTapTimer=setTimeout(()=>{
+            singleTapTimer=0;lastTapAt=0;lastTapPoint=null;
+            if(!$("#chartsView").classList.contains("chart-open")||!selectedChart)return;
+            document.body.classList.contains("viewer-fullscreen")?exitViewerFullscreen():enterViewerFullscreen();
+          },315);
         }
+      }else if(!canceled&&start&&travel>=12&&!pinched){
+        tinyPanStop();
       }
       panStart=null;swipeStart=null;pinchStartDistance=0;
+      recentMove=null;pinched=false;
     }else if(chartPointers.size===1&&chartZoom>1.001){
+      // A completed pinch cannot become a one-finger tap or swipe.
       const p=[...chartPointers.values()][0];
       panStart={x:p.x,y:p.y,panX:chartPanX,panY:chartPanY};
+      swipeStart=null;
     }
   };
   stage.addEventListener("pointerup",finishPointer);
