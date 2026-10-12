@@ -31,9 +31,10 @@ self.addEventListener("fetch",event=>{
   const url=new URL(event.request.url);
   if(url.origin!==self.location.origin)return;
   if(url.pathname.includes("/charts/")){
-    event.respondWith(fetch(event.request).catch(async()=>(
-      (await caches.open(PDF_CACHE)).match(event.request)||Response.error()
-    )));
+    event.respondWith(fetch(event.request).catch(async()=>{
+      const saved=await (await caches.open(PDF_CACHE)).match(event.request);
+      return saved||Response.error();
+    }));
     return;
   }
   // V2621 chart-title hotfix: refresh only the chart index when online.
@@ -52,7 +53,7 @@ self.addEventListener("fetch",event=>{
     }).catch(()=>localFallback(event.request)));
     return;
   }
-  if(url.pathname.endsWith("/data/charts-current.json")||url.pathname.endsWith("/data/airport-runways.json")){
+  if(url.pathname.endsWith("/offline-assets.json")||url.pathname.endsWith("/data/charts-current.json")||url.pathname.endsWith("/data/airport-runways.json")){
     event.respondWith(fetch(event.request).then(response=>{
       if(response.ok){const copy=response.clone();event.waitUntil(caches.open(CACHE).then(cache=>cache.put(event.request,copy)))}
       return response;
