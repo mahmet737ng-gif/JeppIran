@@ -1,4 +1,4 @@
-# JEPPIRAN ADC → Routable (source-first workflow v2.1)
+# JEPPIRAN ADC → Routable (source-first workflow v2.3)
 
 This replaces ad-hoc airport-specific taxi network guessing. **A PDF scan is not
 a routeable graph.** The engine maintains an executable queue of missing tasks
@@ -9,7 +9,7 @@ and does not authorize phantom stand/taxiway/runway links.
 With Python and PyMuPDF installed, plus Node.js for the graph compiler:
 
 ```bash
-python -m pip install pymupdf
+python -m pip install pymupdf shapely
 python web/tools/adc_autopilot.py --pdf 2621.pdf --icao OIII \
   --survey web/data/taxi-surveys/OIII.json --out build/adc/OIII
 ```
@@ -80,12 +80,34 @@ node web/tools/adc_workflow_cli.cjs --survey web/data/taxi-surveys/OIII.json \
 is machine-readable. `approved-chart-graph.json` appears **only** when every
 safety/geometry gate passes and `releaseReviewed:true` is supplied.
 
+## Additional native-vector topology QA
+
+The one-command scanner now also runs `adc_graph_proposals.py` to examine
+**both** endpoint and interior contacts between source-PDF candidate strokes.
+Each result records exact page-local PDF coordinates, original source drawing
+IDs, and a gap. All 326 OIII candidate contacts remain `reviewed:false`.
+
+The report includes top nearby source strokes for **all 53 stand numbers**
+and **40/43 taxiway labels**. For C3, K and V the ink centerline filter is
+insufficient. `adc_pavement_fallback.py` provides source drawing IDs of the
+gray pavement polygons instead; an apron or grey filled runway boundary
+cannot be used as a taxi centerline without separate tracing.
+
+The reviewed gate schema requires a specific `runwayEnd`, such as `11L`.
+A holding gate for `11L` may never be reused for reciprocal `29R`.
+Intermediate runway-use tokens likewise need reviewed runway-direction
+metadata rather than drawing along an arbitrary runway axis.
+
+**Current release gates**: zero verified taxi links; zero published hold
+gates; missing ADC-to-Parking affine registration. The extra candidate
+output is not a navigable graph or a published route.
+
 ## Mehrabad cycle 2621: actual state
 
 - **Source inventory:** 2 physical runway strips, 43 *distinct* taxiway identifiers,
   53 printed stand numbers across five aprons.
-- **Native-vector proposals:** ADC p430: 62 candidate strokes/19 endpoint contacts;
-  Parking p432: 247 strokes/113 endpoint contacts.
+- **Native-vector proposals:** ADC p430: 62 candidate strokes/19 preliminary endpoint contacts; 20 full proximity/crossing proposals;
+  Parking p432: 247 strokes/113 preliminary endpoint contacts; 306 full proximity/crossing proposals.
 - **Approved source-graph edges:** zero at the time this queue was generated.
 - **Missing:** reviewed stand lead-outs (53), named centerlines (43), true
   intersections, runway gate/hold-short geometry and common coordinate registration
