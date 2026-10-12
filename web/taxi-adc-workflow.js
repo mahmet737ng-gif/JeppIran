@@ -126,6 +126,10 @@ function compile(input){
     block("TRACE_LABEL","Taxiway segment missing a declared label",t.id);
    else if(t.kind==="stand-lead"&&!knownStands.has(U(t.standId)))
     block("STAND_TRACE_ID","Stand lead must name its actual stand",t.id);
+   else if(t.kind==="runway-axis"&&t.runwayDirection&&
+      !runways.some(r=>U(r.physicalId)===U(t.physicalRunway||t.label)&&
+        r.ends.map(U).includes(U(t.runwayDirection))))
+    block("RUNWAY_AXIS_DIRECTION","Runway centerline direction must match a declared physical runway end",t.id);
    else approved.push(t);
   }
  }
@@ -180,6 +184,7 @@ function compile(input){
    edges.push({id:t.id+"_"+i,from:a.node,to:b.node,kind:t.kind,label:U(t.label||t.standId||t.physicalRunway),
     page:t.page,points:geometry,sourceDrawingIds:t.sourceDrawingIds,
     reviewed:true,bidirectional:t.oneWay!==true,requiresClearance:t.kind==="runway-connector",
+    runwayDirection:t.kind==="runway-axis"?U(t.runwayDirection):null,
     sourceTrace:t.id,source:SOURCE});
   }
  }
