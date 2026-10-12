@@ -216,7 +216,9 @@ function compile(input){
   const runwayTouch=joins.some(j=>j.touches.includes(g.runwayTraceId));
   if(!g.holdShortReviewed||!finite(g.holdPoint)||!finite(g.runwayPoint)||
      !taxi||!runway||!access||access.kind!=="runway-connector"||
-     runway.kind!=="runway-axis"||!g.physicalRunway||
+     runway.kind!=="runway-axis"||!g.physicalRunway||!g.runwayEnd||
+     !runways.some(r=>U(r.physicalId)===U(g.physicalRunway)&&
+       r.ends.map(U).includes(U(g.runwayEnd)))||
      U(runway.physicalRunway||runway.label)!==U(g.physicalRunway)||
      [taxi,runway,access].some(t=>Number(t.page)!==Number(g.page))||
      nearest(taxi.points,g.holdPoint).distance>.8||
@@ -332,7 +334,7 @@ function fromSurvey(survey){
   routingPages:[survey.qaCharts?.mainADC?.page,survey.qaCharts?.parking?.page].filter(Number.isInteger),
   releaseReviewed:false};
 }
-const api={version:"2.2.0",stages:STAGES,compile,fromSurvey,nearest,fitPages};
+const api={version:"2.3.0",stages:STAGES,compile,fromSurvey,nearest,fitPages};
 root.JEPPIRAN_ADC_WORKFLOW=api;
 if(typeof module!=="undefined"&&module.exports)module.exports=api;
 })(typeof window!=="undefined"?window:globalThis);
