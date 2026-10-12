@@ -37,6 +37,16 @@ function main(){
     const review=read(a.review);
     if(review.airport!==input.airport||review.sourceSha256!==input.source.sha256||
        review.cycle!==input.cycle)throw Error("Reviewed edits must target EXACT PDF and cycle");
+    if(found.length&&Array.isArray(review.traces)){
+      const observed=new Set(found.flatMap(x=>(x.sourceDrawingIds||[])
+        .map(id=>x.page+"|"+id)));
+      for(const t of review.traces){
+        if(!t.reviewed)continue;
+        if(!t.sourceDrawingIds?.length||
+          t.sourceDrawingIds.some(id=>!observed.has(t.page+"|"+id)))
+          throw Error("Review trace "+t.id+" refers to an unextracted drawing id; rescan PDF or reject it");
+      }
+    }
     for(const key of ["traces","junctions","runwayGates","pageLinks"]){
       if(review[key])input[key]=review[key];
     }
