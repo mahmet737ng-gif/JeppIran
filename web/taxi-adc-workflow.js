@@ -51,6 +51,45 @@ function section(poly,start,end){
  }
  arr.push(pointAt(poly,end));return arr;
 }
+// Audited per-page registration. >=4 independent control pairs (three
+// would fit any affine transform perfectly and cannot detect an outlier).
+// The math is done HERE, not trusted from a hand-entered RMS field.
+function solve3(A,b){
+ const m=A.map((r,i)=>[...r,b[i]]);
+ for(let j=0;j<3;j++){
+  let max=j;for(let i=j+1;i<3;i++)if(Math.abs(m[i][j])>Math.abs(m[max][j]))max=i;
+  if(Math.abs(m[max][j])<1e-7)return null;
+  [m[j],m[max]]=[m[max],m[j]];
+  const d=m[j][j];for(let k=j;k<4;k++)m[j][k]/=d;
+  for(let i=0;i<3;i++)if(i!==j){
+   const c=m[i][j];for(let k=j;k<4;k++)m[i][k]-=c*m[j][k]
+  }
+ }
+ return m.map(row=>row[3]);
+}
+function fitPages(pairs){
+ if(!Array.isArray(pairs)||pairs.length<4||
+     pairs.some(p=>!finite(p.from)||!finite(p.to)))
+  return {ok:false,error:"Need >=4 independent valid PDF page control-point pairs"};
+ const A=[[0,0,0],[0,0,0],[0,0,0]], bx=[0,0,0],by=[0,0,0];
+ for(const p of pairs){
+  const v=[p.from[0],p.from[1],1];
+  for(let i=0;i<3;i++){
+   for(let j=0;j<3;j++)A[i][j]+=v[i]*v[j];
+   bx[i]+=v[i]*p.to[0];by[i]+=v[i]*p.to[1];
+  }
+ }
+ const cx=solve3(A,bx),cy=solve3(A,by);
+ if(!cx||!cy)return {ok:false,error:"Registration controls are nearly collinear"};
+ const map=p=>[cx[0]*p[0]+cx[1]*p[1]+cx[2],
+                cy[0]*p[0]+cy[1]*p[1]+cy[2]];
+ const rms=Math.sqrt(pairs.reduce((sum,p)=>{
+  const q=map(p.from);return sum+hyp(q,p.to)**2},0)/pairs.length);
+ const determinant=cx[0]*cy[1]-cx[1]*cy[0];
+ if(!Number.isFinite(rms)||Math.abs(determinant)<1e-5||rms>.75)
+  return {ok:false,error:"Invalid/warped PDF chart transform",rmsErrorPt:round(rms)};
+ return {ok:true,rmsErrorPt:round(rms),affine:{x:cx,y:cy},map};
+}
 function compile(input){
  const issues=[],jobs=[],block=(id,message,evidence=null)=>issues.push({code:id,message,evidence,blocking:true});
  if(!input||!/^[A-Z]{4}$/.test(input.airport||"")||!/^\d{4}$/.test(String(input.cycle||"")))
@@ -200,12 +239,15 @@ function compile(input){
  if(routingPages.size>1){
   if(!links.length)block("PAGE_ALIGNMENT_PENDING","Missing reviewed registration and junction portals between ADC/Parking");
   for(const link of links){
-   if(link.reviewed!==true||!Array.isArray(link.controlPoints)||link.controlPoints.length<3||
-      !link.fromJunction||!link.toJunction||!Number.isFinite(link.rmsErrorPt)||
-      link.rmsErrorPt>.75||
-      !junctions.some(j=>j.reviewed&&j.id===link.fromJunction&&Number(j.page)===Number(link.fromPage))||
-      !junctions.some(j=>j.reviewed&&j.id===link.toJunction&&Number(j.page)===Number(link.toPage))){
-    block("PAGE_ALIGNMENT_PENDING","Page link requires 3+ anchors (RMS<=.75pt) and two reviewed matching junctions",link.id);
+   const fit=fitPages(link.controlPoints);
+   const fromJ=junctions.find(j=>j.reviewed&&j.id===link.fromJunction&&Number(j.page)===Number(link.fromPage));
+   const toJ=junctions.find(j=>j.reviewed&&j.id===link.toJunction&&Number(j.page)===Number(link.toPage));
+   if(link.reviewed!==true||!fit.ok||!fromJ||!toJ||
+      !expectedPages.has(Number(link.fromPage))||!expectedPages.has(Number(link.toPage))||
+      Number(link.fromPage)===Number(link.toPage)||
+      hyp(fit.map(fromJ.point),toJ.point)>.75){
+    block("PAGE_ALIGNMENT_PENDING",
+      "Page link needs four audited noncollinear controls, fitted RMS<=.75pt and real matching junctions",link.id);
     continue;
    }
    const from=nodeMap.get("J_"+link.fromPage+"_"+link.fromJunction),
@@ -213,7 +255,7 @@ function compile(input){
    if(!from||!to){block("PAGE_ALIGNMENT_PENDING","Registered page portal nodes not found",link.id);continue}
    edges.push({id:"PORTAL_"+link.id,from,to,kind:"page-transfer",label:"CHART_PORTAL",
      reviewed:true,source:SOURCE,sourceDrawingIds:link.sourceDrawingIds||[],
-     registrationRmsPt:link.rmsErrorPt,
+     registrationRmsPt:fit.rmsErrorPt,
      bidirectional:true,requiresClearance:false,notGroundDistance:true});
   }
  }
@@ -290,7 +332,7 @@ function fromSurvey(survey){
   routingPages:[survey.qaCharts?.mainADC?.page,survey.qaCharts?.parking?.page].filter(Number.isInteger),
   releaseReviewed:false};
 }
-const api={version:"2.1.0",stages:STAGES,compile,fromSurvey,nearest};
+const api={version:"2.2.0",stages:STAGES,compile,fromSurvey,nearest,fitPages};
 root.JEPPIRAN_ADC_WORKFLOW=api;
 if(typeof module!=="undefined"&&module.exports)module.exports=api;
 })(typeof window!=="undefined"?window:globalThis);
