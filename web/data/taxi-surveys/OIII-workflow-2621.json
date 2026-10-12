@@ -3,7 +3,7 @@
   "airport": "OIII",
   "cycle": "2621",
   "sourceSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
-  "engineVersion": "2.1.0",
+  "engineVersion": "2.2.0",
   "generation": "Produced from JEPPIRAN_ADC_WORKFLOW.compile(fromSurvey(OIII))",
   "vectorScan": {
     "430": {
@@ -284,5 +284,6 @@
   },
   "nextAction": "geometry",
   "routeable": false,
-  "autoApprove": false
+  "autoApprove": false,
+  "note": "v2.2 also requires mathematically fitted 4-point cross-page registration before any inter-page taxi edge can be created."
 }
