@@ -1,0 +1,589 @@
+{
+  "schemaVersion": 1,
+  "source": {
+    "cycle": "2621",
+    "sha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+    "pdfPageCount": 1654,
+    "coordinateSpace": "pdf_points",
+    "coordinateSystem": "WGS84"
+  },
+  "type": "MULTI_REGION_GEOREFERENCE",
+  "safeForNavigation": false,
+  "regions": [
+    {
+      "id": "SALAM_APRON_3",
+      "airport": "OIIE",
+      "page": 383,
+      "source": "printed graticules (independent from CARGO_APRON_2)",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 316.68,
+        "top": 419.04,
+        "right": 525,
+        "bottom": 781.56
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 35.43333333333333,
+          "lon": 51.12833333333333,
+          "x": 333.72,
+          "y": 449.52,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.43333333333333,
+          "lon": 51.126666666666665,
+          "x": 333.72,
+          "y": 526.56,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.43333333333333,
+          "lon": 51.125,
+          "x": 333.72,
+          "y": 603.24,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.43333333333333,
+          "lon": 51.123333333333335,
+          "x": 333.72,
+          "y": 680.04,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.43333333333333,
+          "lon": 51.12166666666667,
+          "x": 333.72,
+          "y": 756.72,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.431666666666665,
+          "lon": 51.12833333333333,
+          "x": 427.56,
+          "y": 449.52,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.431666666666665,
+          "lon": 51.126666666666665,
+          "x": 427.56,
+          "y": 526.56,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.431666666666665,
+          "lon": 51.125,
+          "x": 427.56,
+          "y": 603.24,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.431666666666665,
+          "lon": 51.123333333333335,
+          "x": 427.56,
+          "y": 680.04,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.431666666666665,
+          "lon": 51.12166666666667,
+          "x": 427.56,
+          "y": 756.72,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.43,
+          "lon": 51.12833333333333,
+          "x": 521.28,
+          "y": 449.52,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.43,
+          "lon": 51.126666666666665,
+          "x": 521.28,
+          "y": 526.56,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.43,
+          "lon": 51.125,
+          "x": 521.28,
+          "y": 603.24,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.43,
+          "lon": 51.123333333333335,
+          "x": 521.28,
+          "y": 680.04,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.43,
+          "lon": 51.12166666666667,
+          "x": 521.28,
+          "y": 756.72,
+          "source": "V2621 native printed grid vector ticks"
+        }
+      ],
+      "maxResidualPdfPoints": 0.75,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "controlPointCount": 15,
+        "qaTestOnly": true,
+        "source": "Jeppesen OIIE 20-9C page 383; Salam inset only",
+        "visualReview": false
+      },
+      "standRange": [
+        "201",
+        "208"
+      ],
+      "routingApproved": false
+    },
+    {
+      "id": "OIII_PARKING_MAIN",
+      "airport": "OIII",
+      "page": 432,
+      "source": "printed main parking graticules (not Apron 5 inset)",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 84.48,
+        "top": 51.48,
+        "right": 585.48,
+        "bottom": 781.68
+      },
+      "excludedBounds": [
+        {
+          "left": 84.48,
+          "top": 51.48,
+          "right": 346.68,
+          "bottom": 243
+        }
+      ],
+      "points": [
+        {
+          "lat": 35.695,
+          "lon": 51.31166666666667,
+          "x": 115.92,
+          "y": 738,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.695,
+          "lon": 51.31333333333333,
+          "x": 115.92,
+          "y": 676.08,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.695,
+          "lon": 51.315,
+          "x": 115.92,
+          "y": 614.16,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.695,
+          "lon": 51.31666666666667,
+          "x": 115.92,
+          "y": 552.24,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.695,
+          "lon": 51.318333333333335,
+          "x": 115.92,
+          "y": 490.32,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.695,
+          "lon": 51.32,
+          "x": 115.92,
+          "y": 428.4,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.695,
+          "lon": 51.321666666666665,
+          "x": 115.92,
+          "y": 366.48,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.695,
+          "lon": 51.32333333333333,
+          "x": 115.92,
+          "y": 304.68,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.693333333333335,
+          "lon": 51.31166666666667,
+          "x": 192.48,
+          "y": 738,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.693333333333335,
+          "lon": 51.31333333333333,
+          "x": 192.48,
+          "y": 676.08,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.693333333333335,
+          "lon": 51.315,
+          "x": 192.48,
+          "y": 614.16,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.693333333333335,
+          "lon": 51.31666666666667,
+          "x": 192.48,
+          "y": 552.24,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.693333333333335,
+          "lon": 51.318333333333335,
+          "x": 192.48,
+          "y": 490.32,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.693333333333335,
+          "lon": 51.32,
+          "x": 192.48,
+          "y": 428.4,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.693333333333335,
+          "lon": 51.321666666666665,
+          "x": 192.48,
+          "y": 366.48,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.693333333333335,
+          "lon": 51.32333333333333,
+          "x": 192.48,
+          "y": 304.68,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.69166666666667,
+          "lon": 51.31166666666667,
+          "x": 268.32,
+          "y": 738,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.69166666666667,
+          "lon": 51.31333333333333,
+          "x": 268.32,
+          "y": 676.08,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.69166666666667,
+          "lon": 51.315,
+          "x": 268.32,
+          "y": 614.16,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.69166666666667,
+          "lon": 51.31666666666667,
+          "x": 268.32,
+          "y": 552.24,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.69166666666667,
+          "lon": 51.318333333333335,
+          "x": 268.32,
+          "y": 490.32,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.69166666666667,
+          "lon": 51.32,
+          "x": 268.32,
+          "y": 428.4,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.69166666666667,
+          "lon": 51.321666666666665,
+          "x": 268.32,
+          "y": 366.48,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.69166666666667,
+          "lon": 51.32333333333333,
+          "x": 268.32,
+          "y": 304.68,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.69,
+          "lon": 51.31166666666667,
+          "x": 343.92,
+          "y": 738,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.69,
+          "lon": 51.31333333333333,
+          "x": 343.92,
+          "y": 676.08,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.69,
+          "lon": 51.315,
+          "x": 343.92,
+          "y": 614.16,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.69,
+          "lon": 51.31666666666667,
+          "x": 343.92,
+          "y": 552.24,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.69,
+          "lon": 51.318333333333335,
+          "x": 343.92,
+          "y": 490.32,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.69,
+          "lon": 51.32,
+          "x": 343.92,
+          "y": 428.4,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.69,
+          "lon": 51.321666666666665,
+          "x": 343.92,
+          "y": 366.48,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.69,
+          "lon": 51.32333333333333,
+          "x": 343.92,
+          "y": 304.68,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.68833333333333,
+          "lon": 51.31166666666667,
+          "x": 420.24,
+          "y": 738,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.68833333333333,
+          "lon": 51.31333333333333,
+          "x": 420.24,
+          "y": 676.08,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.68833333333333,
+          "lon": 51.315,
+          "x": 420.24,
+          "y": 614.16,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.68833333333333,
+          "lon": 51.31666666666667,
+          "x": 420.24,
+          "y": 552.24,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.68833333333333,
+          "lon": 51.318333333333335,
+          "x": 420.24,
+          "y": 490.32,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.68833333333333,
+          "lon": 51.32,
+          "x": 420.24,
+          "y": 428.4,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.68833333333333,
+          "lon": 51.321666666666665,
+          "x": 420.24,
+          "y": 366.48,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.68833333333333,
+          "lon": 51.32333333333333,
+          "x": 420.24,
+          "y": 304.68,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.68666666666667,
+          "lon": 51.31166666666667,
+          "x": 494.76,
+          "y": 738,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.68666666666667,
+          "lon": 51.31333333333333,
+          "x": 494.76,
+          "y": 676.08,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.68666666666667,
+          "lon": 51.315,
+          "x": 494.76,
+          "y": 614.16,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.68666666666667,
+          "lon": 51.31666666666667,
+          "x": 494.76,
+          "y": 552.24,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.68666666666667,
+          "lon": 51.318333333333335,
+          "x": 494.76,
+          "y": 490.32,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.68666666666667,
+          "lon": 51.32,
+          "x": 494.76,
+          "y": 428.4,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.68666666666667,
+          "lon": 51.321666666666665,
+          "x": 494.76,
+          "y": 366.48,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.68666666666667,
+          "lon": 51.32333333333333,
+          "x": 494.76,
+          "y": 304.68,
+          "source": "V2621 native printed grid vector ticks"
+        }
+      ],
+      "maxResidualPdfPoints": 1.8,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "controlPointCount": 48,
+        "qaTestOnly": true,
+        "source": "Jeppesen OIII 10-9B native PDF grid ticks page 432; main parking map",
+        "visualReview": false
+      },
+      "routingApproved": false
+    },
+    {
+      "id": "OIII_APRON_5_INSET",
+      "airport": "OIII",
+      "page": 432,
+      "source": "printed inset graticules independent from main map",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 84.48,
+        "top": 51.48,
+        "right": 346.68,
+        "bottom": 243
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 35.69833333333333,
+          "lon": 51.3,
+          "x": 100.2,
+          "y": 63.48,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.69833333333333,
+          "lon": 51.29833333333333,
+          "x": 100.2,
+          "y": 151.68,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.696666666666665,
+          "lon": 51.3,
+          "x": 207.24,
+          "y": 63.48,
+          "source": "V2621 native printed grid vector ticks"
+        },
+        {
+          "lat": 35.696666666666665,
+          "lon": 51.29833333333333,
+          "x": 207.24,
+          "y": 151.68,
+          "source": "V2621 native printed grid vector ticks"
+        }
+      ],
+      "maxResidualPdfPoints": 0.75,
+      "validation": {
+        "method": "paired_printed_graticule_vector_ticks",
+        "controlPointCount": 4,
+        "qaTestOnly": true,
+        "source": "Jeppesen OIII 10-9B Apron 5 inset: 2x2 independent ticks",
+        "visualReview": false
+      },
+      "routingApproved": false
+    }
+  ],
+  "existingApprovedModelsToKeep": [
+    {
+      "airport": "OIIE",
+      "page": 383,
+      "region": "CARGO_APRON_2"
+    },
+    {
+      "airport": "OIII",
+      "page": 430,
+      "region": "ADC"
+    }
+  ],
+  "notes": [
+    "OIIE p383 old CARGO 60 source-grid points and exclusion mask remain untouched",
+    "OIII p432 new region models additive and simulator QA only",
+    "Overlay selection applies geographic transform only within each crop; no cross-region false aircraft position or taxi edges"
+  ]
+}
