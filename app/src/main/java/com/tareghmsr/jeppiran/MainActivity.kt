@@ -432,10 +432,7 @@ class MainActivity :
         ).setOnClickListener {
 
             startActivity(
-                Intent(
-                    this,
-                    AirportChartsActivity::class.java
-                )
+                Intent(this, MobileWebActivity::class.java)
             )
         }
 
