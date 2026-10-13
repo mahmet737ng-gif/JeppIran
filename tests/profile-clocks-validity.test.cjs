@@ -71,12 +71,39 @@ test("Enroute without installed files is never shown as current; overdue turns r
 test("live UTC and local clocks and visibility alerts are confined to profile",()=>{
   assert.match(app,/id="profileUtcClock"/);
   assert.match(app,/id="profileLocalTime"/);
-  assert.match(app,/id="profileValidityRows"/);
+  const html=fs.readFileSync(path.join(root,"web/index.html"),"utf8");
+  const clockIndex=html.indexOf('id="homeUtc"');
+  const validityIndex=html.indexOf('id="homeTerminalValidity"');
+  const cycleIndex=html.indexOf('id="homeCycle"');
+  assert.ok(clockIndex>=0&&validityIndex>clockIndex&&cycleIndex>validityIndex,
+    "Home inline terminal validity must sit between UTC and Data Cycle");
+  assert.match(app,/id="profileTerminalValidity"/);
+  assert.doesNotMatch(app,/id="profileValidity"/);
+  assert.doesNotMatch(app,/id="profileValidityRows"/);
+  assert.match(app,/function updateTerminalValidityDisplay\(\)/);
+  assert.match(css,/#homeView \.home-terminal-validity/);
+  assert.match(css,/#chartsView \.profile-terminal-validity/);
+  assert.match(css,/:root\.light #homeView \.home-terminal-validity/);
+  assert.match(css,/:root\.light #chartsView \.profile-terminal-validity/);
   assert.match(app,/setInterval\(utcDisplay,1000\)/);
   assert.match(app,/document\.querySelectorAll\("\.profile-utc"\)\.forEach/);
   assert.match(css,/#chartsView \.profile-utc-clock/);
   assert.match(css,/\.profile-validity-entry\[data-state="expired"\]/);
   assert.match(css,/:root\.light #chartsView \.profile-validity-entry/);
+});
+test("compact validity indicator changes to red overdue state and recovers on cycle update",()=>{
+  const current=build("2026-10-13T12:00:00Z");
+  assert.equal(current.terminalValidityIndicator().state,"current");
+  assert.match(current.terminalValidityIndicator().markup,/TERMINAL CHARTS/);
+  assert.match(current.terminalValidityIndicator().markup,/Next issue 23 Oct 2026/);
+  const overdue=build("2026-10-23T00:00:00Z");
+  assert.equal(overdue.terminalValidityIndicator().state,"expired");
+  assert.match(overdue.terminalValidityIndicator().markup,/UPDATE OVERDUE/);
+  assert.match(overdue.terminalValidityIndicator().markup,/New cycle due 23 Oct 2026/);
+  const updated=build("2026-10-23T00:00:00Z",{version:"V2622",cycle:"2622"});
+  assert.equal(updated.terminalValidityIndicator().state,"current");
+  assert.match(css,/#homeView \.home-terminal-validity\[data-state="expired"\]/);
+  assert.match(css,/#chartsView \.profile-terminal-validity\[data-state="expired"\]/);
 });
 test("manifest synchronization remains mandatory before Pages deployment",()=>{
   const action=fs.readFileSync(path.join(root,".github/workflows/deploy-ipad-web.yml"),"utf8");
