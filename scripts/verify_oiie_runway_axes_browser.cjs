@@ -41,6 +41,21 @@ async function waitServer(){
     "TAXI must be the second toolbar directly below the primary viewer toolbar");
   for(const id of ["#taxiQaGo","#taxiQaStartQuick","#taxiQaClearQuick","#taxiQaEnd"])
     assert.equal(await page.locator(id).isVisible(),true,id+" should be immediately accessible");
+  for(const viewport of [{width:1280,height:920},{width:1024,height:768},{width:768,height:1024}]){
+    await page.setViewportSize(viewport);
+    const geometry=await page.evaluate(()=>{
+      const bar=document.querySelector("#taxiQaPanel").getBoundingClientRect(),
+        top=document.querySelector("#chartsView .viewer-toolbar").getBoundingClientRect();
+      return {barLeft:bar.left,barRight:bar.right,barTop:bar.top,topBottom:top.bottom,
+        visibleHeight:bar.height,screen:window.innerWidth};
+    });
+    assert.ok(geometry.barTop>=geometry.topBottom-2,
+      "TAXI must be physically underneath toolbar "+JSON.stringify(viewport));
+    assert.ok(geometry.barLeft>=-2&&geometry.barRight<=geometry.screen+2,
+      "TAXI must fit portrait/landscape viewport "+JSON.stringify(viewport));
+    assert.ok(geometry.visibleHeight>=36,"TAXI toolbar must be usable");
+  }
+  await page.setViewportSize({width:1280,height:920});
 
   await page.waitForFunction(()=>
     document.querySelector("#taxiQaStatus")?.textContent?.includes("OIIE Stage 4"),
