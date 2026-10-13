@@ -1,0 +1,18 @@
+{
+  "schemaVersion": 1,
+  "airport": "OIIE",
+  "cycle": "2621",
+  "sourceSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+  "status": "STAGE4_GRID_QA; STAGE5_GATE_REVIEW_PENDING; STAGE6_NO_CERTIFIED_ROUTES",
+  "policy": "Never infer chart portals, hold-short positions, taxiway intersections or routes from ink proximity",
+  "regions": [
+    "ADC@380",
+    "PASSENGER@382",
+    "CARGO@383",
+    "SALAM@383"
+  ],
+  "nodes": [],
+  "edges": [],
+  "gates": [],
+  "comments": "Add only source-traced, physically reviewed graph items. Placeholder contains no approved paths."
+}
