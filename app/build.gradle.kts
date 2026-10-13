@@ -53,6 +53,9 @@ android {
     // Share exact V2621 ground JSON with the PWA, rather than maintaining an
     // incompatible Android copy. Bundle it for completely offline simulator QA.
     sourceSets.getByName("main").assets.srcDir("../web/data/taxi-networks")
+    // Self-contained Android application shell: generated at build time,
+    // packed inside the signed APK, never read from hosted GitHub Pages.
+    sourceSets.getByName("main").assets.srcDir("build/generated/jeppiran-local-web")
 
     signingConfigs {
         if (stableSigningReady) {
@@ -87,7 +90,26 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.7.1")
     implementation("com.google.android.material:material:1.13.0")
     implementation("androidx.activity:activity-ktx:1.10.1")
+    implementation("androidx.webkit:webkit:1.13.0")
     implementation("androidx.work:work-runtime-ktx:2.10.1")
     implementation("org.apache.commons:commons-compress:1.27.1")
     implementation("com.squareup.okhttp3:okhttp:4.12.0")
 }
+
+// Do not ship an Android build that can only boot from the remote website.
+// The staging script MUST have completed before Gradle starts.
+val verifyJeppiranLocalAssets = tasks.register("verifyJeppiranLocalAssets") {
+    doLast {
+        val dir = file("build/generated/jeppiran-local-web/jeppiran-web")
+        val required = listOf("index.html", "app.js", "styles.css",
+            "vendor/pdf.min.mjs", "vendor/pdf.worker.min.mjs",
+            "charts/OIII.pdf", "data/charts-current.json", "android-phone.css")
+        for (entry in required) {
+            check(dir.resolve(entry).isFile) {
+                "Missing bundled Android asset: $entry. Run python3 scripts/build_android_local_web.py first."
+            }
+        }
+    }
+}
+tasks.matching { it.name.startsWith("merge") && it.name.endsWith("Assets") }
+    .configureEach { dependsOn(verifyJeppiranLocalAssets) }
