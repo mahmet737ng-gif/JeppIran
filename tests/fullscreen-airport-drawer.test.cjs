@@ -40,5 +40,5 @@ test('chart pan is proportional to actual finger motion (no post-release animati
  assert.match(js,/stage\.style\.touchAction="none"/);
  assert.match(js,/chartPanX=panStart\.panX\+dx;chartPanY=panStart\.panY\+dy/);
  assert.match(js,/stageEl\.scrollTop=panStart\.scrollTop-dy/);
- assert.match(js,/cancelTail\(\);\s*\/\/ No delayed scrolling/);
+ assert.match(js,/No delayed scrolling\/fling after finger release\.[\s\S]*?cancelTail\(\)/);
 });
