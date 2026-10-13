@@ -11,6 +11,9 @@ on:
       - 'scripts/build_offline_manifest.py'
       - 'scripts/build_web_admin_test.py'
       - 'scripts/admin-test-controls.js'
+      - 'scripts/admin-qa-home.js'
+      - 'scripts/admin-qa-home.css'
+      - 'tests/admin-qa-preview.test.cjs'
       - 'scripts/build_airport_profiles.py'
       - 'scripts/build_airport_runways.py'
       - 'app/src/main/assets/charts-current.json'
@@ -154,6 +157,8 @@ jobs:
         run: |
           python3 scripts/build_web_admin_test.py
           node --check web/admin-test/admin-test-controls.js
+          node --check web/admin-test/admin-qa-home.js
+          node --test tests/admin-qa-preview.test.cjs
           node --check web/admin-test/app.js
           node --check web/admin-test/offline-manager.js
           node --check web/admin-test/service-worker.js
@@ -167,6 +172,9 @@ jobs:
           assert all((d/unquote(x["url"][2:])).exists() for x in m["assets"]+m["pdfs"] if x["url"] != "./")
           assert 'JEPPIRAN_TEST_ADMIN = true' in (d/"index.html").read_text()
           assert 'admin-test-controls.js' in (d/"index.html").read_text()
+          assert 'admin-qa-home.js?v=2' in (d/"index.html").read_text()
+          assert 'admin-qa-home.css?v=2' in (d/"index.html").read_text()
+          assert 'id="adminQaHomeBtn"' in (d/"admin-qa-home.js").read_text() or 'tile.id="adminQaHomeBtn"' in (d/"admin-qa-home.js").read_text()
           assert 'key.startsWith("jeppiran-test-pwa-")' in (d/"service-worker.js").read_text()
           assert 'key.startsWith("jeppiran-pwa-")' in Path("web/service-worker.js").read_text()
           assert 'jeppiran-test-offline-meta-v2' in (d/"offline-manager.js").read_text()
