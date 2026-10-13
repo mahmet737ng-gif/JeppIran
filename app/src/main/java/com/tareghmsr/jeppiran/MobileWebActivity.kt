@@ -38,7 +38,7 @@ import org.json.JSONObject
 class MobileWebActivity : AppCompatActivity() {
     private val appHost = "mahmet737ng-gif.github.io"
     private val appPath = "/JeppIran/"
-    private val appUrl = "https://$appHost$appPath?platform=android-phone"
+    private val appUrl = "https://$appHost$appPath?platform=android-phone&native_revision=2621-charts-content-r1"
 
     private lateinit var browser: WebView
     private lateinit var progress: ProgressBar
@@ -80,6 +80,7 @@ class MobileWebActivity : AppCompatActivity() {
                 allowFileAccess = false
                 allowContentAccess = false
                 mixedContentMode = WebSettings.MIXED_CONTENT_NEVER_ALLOW
+                cacheMode = WebSettings.LOAD_NO_CACHE
             }
             CookieManager.getInstance().setAcceptThirdPartyCookies(this, false)
         }
@@ -170,6 +171,7 @@ class MobileWebActivity : AppCompatActivity() {
                 progress.visibility = View.GONE
                 if (url != null && Uri.parse(url).host == appHost) {
                     applyPhoneLayout()
+                    discardStalePhoneServiceWorkers()
                 }
             }
 
@@ -221,8 +223,38 @@ class MobileWebActivity : AppCompatActivity() {
                 }
             }
         }
+        // Android chart UI is online-only: discard stale WebView HTTP cache
+        // rather than mixing old HTML and current airport metadata.
+        browser.clearCache(true)
         if (savedInstanceState == null) browser.loadUrl(appUrl)
         else browser.restoreState(savedInstanceState)
+    }
+
+    private fun discardStalePhoneServiceWorkers() {
+        // Dedicated online-only Android WebView storage. A prior installed
+        // JEPPIRAN PWA worker may keep obsolete HTML/JS after an APK upgrade.
+        // Do not affect Safari/iPad service workers or native chart assets.
+        val script = """
+            (async () => {
+              const marker = 'jeppiran-android-chart-cache-reset-r1';
+              try {
+                if (sessionStorage.getItem(marker) === 'done') return;
+                sessionStorage.setItem(marker, 'done');
+                const regs = 'serviceWorker' in navigator
+                    ? await navigator.serviceWorker.getRegistrations() : [];
+                await Promise.all(regs.map(reg => reg.unregister()));
+                if ('caches' in window) {
+                  const keys = await caches.keys();
+                  await Promise.all(keys.filter(key => key.startsWith('jeppiran-'))
+                    .map(key => caches.delete(key)));
+                }
+                if (regs.length) location.reload();
+              } catch(error) {
+                console.warn('JEPPIRAN Android shell refresh', error);
+              }
+            })();
+        """.trimIndent()
+        browser.evaluateJavascript(script, null)
     }
 
     private fun applyPhoneLayout() {
