@@ -454,20 +454,21 @@ function message(s,warning=false){
 const OIAW_QA_REVISION="2621-oiaw-inset-registration-r3";
 async function fetchGraph(icao){
   taxi.graph=null;taxi.genericEngine=null;taxi.genericMonitor=null;
-  taxi.survey=null;taxi.surveyEngine=null;taxi.surveyVector=null;taxi.o3Survey=null;taxi.o3Workflow=null;taxi.o3Selected='';taxi.oiieSurvey=null;taxi.oiieStatus=null;taxi.oiieReview=null;taxi.oiieSelected='';
+  taxi.survey=null;taxi.surveyEngine=null;taxi.surveyVector=null;taxi.o3Survey=null;taxi.o3Workflow=null;taxi.o3Selected='';taxi.oiieSurvey=null;taxi.oiieStatus=null;taxi.oiieReview=null;taxi.oiieSelected='';taxi.oiieStages=null;taxi.oiieApprovedRoute=null;
   message("Checking verified ground network for "+icao+"…");
   try{
     // The ADC inventory is the sole OIAW source until source PDF curves and
     // hold lines have been fully traced. Previous projected OIAW.json routes
     // MUST NEVER be presented as mapped taxi centreline geometry.
     if(icao==="OIIE"){
-      const [sr,qr,rr]=await Promise.all([
+      const [sr,qr,rr,pr]=await Promise.all([
         fetch("./data/taxi-surveys/OIIE.json?v=2621-oiie-v3-source-r1",{cache:"no-store"}),
         fetch("./data/taxi-surveys/OIIE-workflow-2621.json?v=2621-oiie-v3-qa-r1",{cache:"no-store"}),
-        fetch("./data/taxi-surveys/OIIE-3step-source-review-2621.json?v=2621-oiie-native-3step-r1",{cache:"no-store"})
+        fetch("./data/taxi-surveys/OIIE-3step-source-review-2621.json?v=2621-oiie-native-3step-r1",{cache:"no-store"}),
+        fetch("./data/taxi-surveys/OIIE-stages456-approved-v2621.json?v=2621-oiie-stage456-r2",{cache:"no-store"})
       ]);
-      if(!sr.ok||!qr.ok||!rr.ok)throw Error("OIIE ADC/Parking QA source files unavailable");
-      const [info,report,review]=await Promise.all([sr.json(),qr.json(),rr.json()]);
+      if(!sr.ok||!qr.ok||!rr.ok||!pr.ok)throw Error("OIIE ADC/Parking or gated QA source files unavailable");
+      const [info,report,review,partialGraph]=await Promise.all([sr.json(),qr.json(),rr.json(),pr.json()]);
       const engine=window.JEPPIRAN_ADC_ENGINE_V3;
       const audit=engine?.evaluate({
         airport:"OIIE",chartPages:info.chartPages,scannedLabels:[],
@@ -487,17 +488,26 @@ async function fetchGraph(icao){
         review.reviewedCenterlines!==0||review.reviewedPhysicalTaxiJunctions!==0||
         info.stands?.length!==103||!audit||audit.routeable!==false)
         throw Error("OIIE chart cycle, source fingerprint or QA state mismatch");
+      const stageEngine=window.JEPPIRAN_OIIE_STAGES456;
+      const stages=stageEngine?.evaluate({airport:icao,cycle:info.cycle,
+        sourceSha256:info.source.sha256,graph:partialGraph});
+      if(!stages?.ok||partialGraph.airport!==icao||
+        String(partialGraph.cycle)!==String(info.cycle)||
+        partialGraph.sourceSha256!==info.source.sha256)
+        throw Error("OIIE Stage 4-6 source registration or approved-graph identity mismatch");
       if(taxi.airport!==icao)return null;
       taxi.oiieSurvey=info;taxi.oiieStatus=report;taxi.oiieReview=review;taxi.oiieSelected='';
+      taxi.oiieStages=stages;taxi.oiieApprovedRoute=null;
       $("taxiQaInput").placeholder="ST100 / ST301 / ST201 / A / R1 (source lookup only)";
       $("taxiQaStands").textContent="STANDS ("+info.stands.length+")";
-      message("OIIE ADC v3 · 5 pages · 2 runways · "+
-        review.taxiways.length+" named taxiway labels · "+review.stands.length+
-        " printed stand anchors · 725 native source strokes · "+
-        "926 geometrical contact candidates. Source-stroke clusters span "+
-        "62 passenger, 21 cargo and 20 Salam stands; no physical junctions "+
-        "or stand-lead paths approved. Select ST100 / ST301 / ST201 to inspect "+
-        "source ink reference. TAXI ROUTING BLOCKED.",true);
+      message("OIIE Stage 4 · "+stages.phase4.regions.length+
+        " separate source-grid regions registered (ADC, Passenger, Cargo, Salam). "+
+        "Stage 5 · "+stages.phase5.approvedGates+" reviewed runway/hold-short gates. "+
+        "Stage 6 · "+stages.phase6.bidirectionalPairs+
+        " two-way source-backed stand-to-runway pairs. "+
+        (stages.routeable?"Only certified pairs can display a route.":
+         "No verified junction/stand lead/hold short has passed; TAXI ROUTING BLOCKED. ")+
+        "Inspect ST100 / ST301 / ST201 / A / R1 source labels.",true);
       draw();return info;
     }
     if(icao==="OIII"){
