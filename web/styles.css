@@ -1543,3 +1543,126 @@ body.viewer-fullscreen .fullscreen-cdfa:not([hidden]){display:flex}
   #chartsView .profile-utc-clock{font-size:18px}
   #chartsView .profile-validity-entry{margin:0 8px 9px}
 }
+
+/* JEPPIRAN approved inline TERMINAL CHARTS currency placement V2 — 2026-10-13.
+   No changes to the four locked Home ILS backgrounds, chart tools, or TAXI UI.
+   Home: UTC | terminal validity | data cycle. Profile: under UTC clock. */
+#homeView .home-capsules{
+  display:grid;
+  grid-template-columns:max-content minmax(0,1fr) max-content;
+  align-items:center;
+  gap:8px 16px;
+}
+#homeView .home-terminal-validity{
+  display:flex;
+  align-items:baseline;
+  align-content:center;
+  justify-content:center;
+  flex-wrap:wrap;
+  gap:3px 9px;
+  min-width:0;
+  color:#d4edff;
+  text-shadow:0 1px 4px rgba(2,18,36,.8);
+  padding:3px 5px;
+  text-align:center;
+}
+.terminal-validity-label{
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.07em;
+  white-space:nowrap;
+}
+.terminal-validity-status{
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.02em;
+  white-space:nowrap;
+}
+.terminal-validity-note{
+  font-size:10px;
+  line-height:1.4;
+  opacity:.9;
+}
+#homeView .home-terminal-validity .terminal-validity-status{color:#70f5bf}
+#homeView .home-terminal-validity[data-state="unknown"] .terminal-validity-status{color:#f0c476}
+#homeView .home-terminal-validity[data-state="expired"]{
+  border:1px solid #f47288;
+  border-radius:7px;
+  background:rgba(104,23,42,.94);
+  color:#fff0f2;
+  text-shadow:none;
+}
+#homeView .home-terminal-validity[data-state="expired"] .terminal-validity-status,
+#homeView .home-terminal-validity[data-state="expired"] .terminal-validity-note{
+  color:#ffcad1;
+  opacity:1;
+}
+#chartsView .profile-terminal-validity{
+  display:flex;
+  align-items:baseline;
+  justify-content:flex-end;
+  gap:2px 7px;
+  flex-wrap:wrap;
+  max-width:350px;
+  margin:5px 0 0 auto;
+  padding-top:5px;
+  border-top:1px solid rgba(70,177,233,.35);
+  color:#c6e6fa;
+  text-align:right;
+  font-variant-numeric:tabular-nums;
+  white-space:normal;
+  line-height:1.4;
+}
+#chartsView .profile-terminal-validity .terminal-validity-status{color:#6ff3b9}
+#chartsView .profile-terminal-validity .terminal-validity-note{flex-basis:100%;color:#a9cfe6}
+#chartsView .profile-terminal-validity[data-state="unknown"] .terminal-validity-status{color:#efc576}
+#chartsView .profile-terminal-validity[data-state="expired"]{
+  border:1px solid #ef5a76;
+  border-radius:7px;
+  padding:6px 8px;
+  color:#ffeaf0;
+  background:linear-gradient(110deg,#632239,#3c172b);
+}
+#chartsView .profile-terminal-validity[data-state="expired"] .terminal-validity-status,
+#chartsView .profile-terminal-validity[data-state="expired"] .terminal-validity-note{color:#ffd0da}
+:root.light #homeView .home-terminal-validity{
+  color:#17435c;
+  text-shadow:none;
+}
+:root.light #homeView .home-terminal-validity .terminal-validity-status{color:#137448}
+:root.light #homeView .home-terminal-validity[data-state="unknown"] .terminal-validity-status{color:#995c04}
+:root.light #homeView .home-terminal-validity[data-state="expired"]{
+  border-color:#ca2c49;
+  background:rgba(255,228,234,.95);
+  color:#91253d;
+}
+:root.light #homeView .home-terminal-validity[data-state="expired"] .terminal-validity-status,
+:root.light #homeView .home-terminal-validity[data-state="expired"] .terminal-validity-note{color:#ad1c3a}
+:root.light #chartsView .profile-terminal-validity{
+  color:#28516e;
+  border-top-color:#aecfe3;
+}
+:root.light #chartsView .profile-terminal-validity .terminal-validity-status{color:#167047}
+:root.light #chartsView .profile-terminal-validity .terminal-validity-note{color:#486e85}
+:root.light #chartsView .profile-terminal-validity[data-state="unknown"] .terminal-validity-status{color:#955e08}
+:root.light #chartsView .profile-terminal-validity[data-state="expired"]{
+  border-color:#c62743;
+  background:linear-gradient(110deg,#ffe6eb,#fff2f4);
+  color:#9b2841;
+}
+:root.light #chartsView .profile-terminal-validity[data-state="expired"] .terminal-validity-status,
+:root.light #chartsView .profile-terminal-validity[data-state="expired"] .terminal-validity-note{color:#a91d38}
+@media(max-width:690px){
+  #homeView .home-capsules{
+    grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+    column-gap:6px;
+  }
+  #homeView .home-capsules .utc-clock{grid-area:1 / 1;justify-self:start}
+  #homeView .home-capsules .cycle-pill{grid-area:1 / 2;justify-self:end}
+  #homeView .home-terminal-validity{grid-area:2 / 1 / 3 / 3}
+  #chartsView .profile-terminal-validity{
+    margin-left:0;
+    justify-content:flex-start;
+    text-align:left;
+  }
+}
