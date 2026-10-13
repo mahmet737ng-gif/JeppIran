@@ -12,7 +12,10 @@ on:
     # pending run, even with cancel-in-progress: false).
     paths:
       - 'app/**'
-      - 'web/**'
+      # The Android project renders the hosted PWA; general web changes are
+      # deployed independently and do not require rebuilding the Android APK.
+      # Only the shared taxi network JSON is bundled as a native asset.
+      - 'web/data/taxi-networks/**'
       - '.github/workflows/build-apk.yml'
       - 'build.gradle.kts'
       - 'settings.gradle.kts'
