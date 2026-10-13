@@ -236,3 +236,23 @@ html.jp-android-phone {
     -webkit-overflow-scrolling:touch;touch-action:pan-y;
   }
 }
+
+/* Root fix: original desktop grid-column:2/grid-row:1 was surviving on phones,
+   placing the chart pane in the 24dvh airport-picker row (the remaining
+   screen was empty). Explicitly position both grid children on each axis. */
+@media(max-width:749px){
+  html.jp-android-phone #chartsView.charts-layout.active .airport-pane{
+    grid-column:1!important;grid-row:1!important;
+  }
+  html.jp-android-phone #chartsView.charts-layout.active .viewer-pane{
+    grid-column:1!important;grid-row:2!important;
+  }
+}
+@media(max-width:749px) and (orientation:landscape){
+  html.jp-android-phone #chartsView.charts-layout.active .airport-pane{
+    grid-column:1!important;grid-row:1!important;
+  }
+  html.jp-android-phone #chartsView.charts-layout.active .viewer-pane{
+    grid-column:2!important;grid-row:1!important;
+  }
+}
