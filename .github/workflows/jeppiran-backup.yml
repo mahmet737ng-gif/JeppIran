@@ -1,0 +1,139 @@
+name: JEPPIRAN Full Repository Backup
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/jeppiran-backup.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Checkout every Git commit and current LFS PDFs
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          lfs: true
+          persist-credentials: false
+
+      - name: Verify full Git history and prepare bundle
+        shell: bash
+        run: |
+          mkdir -p "$RUNNER_TEMP/jeppiran-backup"
+          git fetch --all --tags --force
+          git bundle create "$RUNNER_TEMP/jeppiran-backup/history.bundle" --all
+          git bundle verify "$RUNNER_TEMP/jeppiran-backup/history.bundle"
+
+      - name: Build complete ZIP with source, Git history and latest chart release
+        shell: bash
+        env:
+          BACKUP_ROOT: ${{ runner.temp }}/jeppiran-backup
+          BACKUP_COMMIT: ${{ github.sha }}
+        run: |
+          python3 - <<'PY'
+          import datetime
+          import hashlib
+          import json
+          import os
+          import pathlib
+          import shutil
+          import tempfile
+          import time
+          import urllib.request
+          import zipfile
+
+          root = pathlib.Path.cwd()
+          work = pathlib.Path(os.environ["BACKUP_ROOT"])
+          sha = os.environ["BACKUP_COMMIT"]
+          today = datetime.datetime.now(datetime.timezone.utc).date().isoformat()
+          name = f"JEPPIRAN-FULL-BACKUP-{today}-{sha[:10]}"
+          out = work / (name + ".zip")
+          source = "JeppIran/"
+          manifest = json.loads((root / "app/src/main/assets/charts-manifest.json").read_text(encoding="utf-8"))
+          airports = manifest["airports"]
+          file_manifest = {}
+          with tempfile.TemporaryDirectory(prefix="jeppiran-pdf-") as temp:
+            temp = pathlib.Path(temp)
+            release_files = []
+            for icao, info in sorted(airports.items()):
+              filename = info.get("file") or f"{icao}.pdf"
+              assert pathlib.Path(filename).name == filename
+              url = info["url"]
+              target = temp / filename
+              for attempt in range(1, 5):
+                try:
+                  req = urllib.request.Request(url, headers={"User-Agent": "JeppIran-Backup/1.0"})
+                  hasher = hashlib.sha256()
+                  length = 0
+                  with urllib.request.urlopen(req, timeout=120) as inp, target.open("wb") as dst:
+                    while True:
+                      block = inp.read(1024 * 1024)
+                      if not block: break
+                      hasher.update(block)
+                      length += len(block)
+                      dst.write(block)
+                  if length != info["size"] or hasher.hexdigest().lower() != info["sha256"].lower():
+                    raise ValueError(f"Release file verification failed: {icao}, {filename}")
+                  release_files.append((filename, target))
+                  break
+                except Exception:
+                  target.unlink(missing_ok=True)
+                  if attempt == 4: raise
+                  time.sleep(attempt * 2)
+            with zipfile.ZipFile(out, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=4, allowZip64=True) as z:
+              source_count = 0
+              for f in sorted(root.rglob("*")):
+                if not f.is_file() or ".git" in f.relative_to(root).parts or work in f.parents:
+                  continue
+                relative = f.relative_to(root).as_posix()
+                contents = f.read_bytes()
+                if relative.endswith(".pdf") and contents.startswith(b"version https://git-lfs.github.com/spec/v1"):
+                  raise ValueError("Unresolved Git LFS pointer: " + relative)
+                z.writestr(source + relative, contents)
+                file_manifest[source + relative] = {"sha256": hashlib.sha256(contents).hexdigest(), "size": len(contents)}
+                source_count += 1
+              z.write(work / "history.bundle", "JeppIran-Git-History/history.bundle")
+              for filename, target in release_files:
+                z.write(target, "JeppIran-Chart-Releases/" + manifest["release_tag"] + "/" + filename)
+              notes = (
+                "JEPPIRAN COMPLETE BACKUP\n"
+                f"UTC date: {today}\nGit commit: {sha}\n"
+                f"Current chart cycle: {manifest['version']}\n"
+                f"Source files: {source_count}\n"
+                f"Current airport PDF releases: {len(release_files)}\n\n"
+                "JeppIran/ contains all tracked source and configuration files (including .github).\n"
+                "JeppIran-Git-History/history.bundle contains Git commit history, branches and tags.\n"
+                "JeppIran-Chart-Releases/ contains verified latest cycle PDF chart assets.\n"
+                "Git bundle restoration: git clone history.bundle JeppIran-restored\n"
+                "Release archives are not the same as Git LFS; this backup includes latest chart releases.\n"
+                "Git LFS historical objects beyond the current checkout are not guaranteed in the bundle.\n"
+              )
+              z.writestr("BACKUP-README.txt", notes)
+              z.writestr("BACKUP-MANIFEST.json", json.dumps(
+                {"head_commit": sha, "utc_date": today, "chart_cycle": manifest["version"],
+                 "chart_release_tag": manifest["release_tag"],
+                 "source_files": source_count, "airport_releases": len(release_files),
+                 "source_checksums": file_manifest}, indent=2))
+            with zipfile.ZipFile(out) as z:
+              corrupt = z.testzip()
+              assert corrupt is None, "Corrupt ZIP member: " + str(corrupt)
+              assert source_count > 100
+              assert len(release_files) == len(airports)
+              print(f"Backup verified: {out}, {out.stat().st_size / 1048576:.1f} MiB")
+              print(f"Repository source files: {source_count}, verified release PDFs: {len(release_files)}")
+          PY
+
+      - name: Upload downloadable backup ZIP
+        uses: actions/upload-artifact@v4
+        with:
+          name: jeppiran-full-backup-${{ github.sha }}
+          path: ${{ runner.temp }}/jeppiran-backup/*.zip
+          compression-level: 0
+          retention-days: 90
+          if-no-files-found: error
