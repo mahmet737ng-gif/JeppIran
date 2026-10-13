@@ -8,6 +8,7 @@ on:
       - 'web/**'
       - 'tests/offline-auto-sync.test.cjs'
       - 'tests/profile-clocks-validity.test.cjs'
+      - 'scripts/verify_profile_validity_browser.cjs'
       - 'scripts/build_offline_manifest.py'
       - 'scripts/build_oiie_*.py'
       - 'scripts/verify_oiie_runway_axes_browser.cjs'
