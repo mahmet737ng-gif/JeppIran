@@ -7,6 +7,7 @@ on:
       - "scripts/build_oiie_runway_axes.py"
       - "scripts/build_oiie_stand_coordinates_qa.py"
       - "scripts/build_oiie_stand_label_georeg.py"
+      - "scripts/build_oiie_page_portal_candidates.py"
       - "web/taxi-oiie-stages456.js"
       - "web/tests/taxi-oiie-runway-axes.test.cjs"
       - ".github/workflows/oiie-native-ground-evidence.yml"
@@ -40,6 +41,18 @@ jobs:
           PY
       - name: Extract page-specific original vector geometry
         run: python scripts/build_oiie_pdf_ground_evidence.py --pdf /tmp/OIIE.pdf --output /tmp/oiie-v2621-native-evidence.json
+      - name: Generate PDF seam candidates between independent OIIE regions
+        run: python scripts/build_oiie_page_portal_candidates.py --source /tmp/oiie-v2621-native-evidence.json --output /tmp/oiie-v2621-portal-candidates.json
+      - name: Require unreviewed portal candidates to remain non-routeable
+        run: |
+          python - <<'PY'
+          import json
+          d=json.load(open("/tmp/oiie-v2621-portal-candidates.json"))
+          assert d["candidateCount"]>0 and d["approvedPhysicalPortals"]==0
+          assert not d["allowAutomaticTaxiRouting"]
+          assert all(not c["physicalContactReviewed"] and not c["legalTaxiPortal"] for c in d["candidates"])
+          print("PASS source endpoint seam candidate isolation")
+          PY
       - name: Verify original OIIE runway polygon axes against published lengths
         run: python scripts/build_oiie_runway_axes.py --pdf /tmp/OIIE.pdf --output /tmp/oiie-v2621-runway-axes.json
       - name: Verify native two-way runway-only route contract
@@ -101,6 +114,7 @@ jobs:
           name: OIIE-V2621-native-geometry-review
           path: |
             /tmp/oiie-v2621-native-evidence.json
+            /tmp/oiie-v2621-portal-candidates.json
             /tmp/oiie-v2621-runway-axes.json
             /tmp/oiie-v2621-stand-coordinate-audit.json
             /tmp/oiie-v2621-stand-label-registration.json
