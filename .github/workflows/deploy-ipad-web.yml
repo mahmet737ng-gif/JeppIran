@@ -29,9 +29,11 @@ permissions:
   pages: write
   id-token: write
 
+# Do not cancel a nearly completed Pages deployment when unrelated chart/QA
+# commits arrive; queue the newest pending run instead.
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   deploy:
