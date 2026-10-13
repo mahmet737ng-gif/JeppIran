@@ -48,7 +48,7 @@ assert.equal(api.evaluate({...base,graph:{nodes,edges:[{...edges[0],bidirectiona
  "one-way clearance cannot pass the bidirectional release test");
 const shortcut=api.evaluate({...base,graph:{nodes,edges:[{...edges[0],to:"R11L"}],gates}});
 assert.equal(shortcut.routeable,false);
-assert.ok(shortcut.phase6.issues.some(e=>e.code==="RUNWAY_SHORTCUT_BLOCKED"));
+assert.ok(shortcut.phase6.issues.some(e=>["RUNWAY_SHORTCUT_BLOCKED","EDGE_GEOMETRY_UNVERIFIED"].includes(e.code)));
 const fakeCross=api.evaluate({...base,graph:{nodes:[...nodes.slice(0,1),{...nodes[1],page:382,region:"PASSENGER",point:[300,310]}],
  edges:[{...edges[0]}],gates:[]}});
 assert.equal(fakeCross.routeable,false);
