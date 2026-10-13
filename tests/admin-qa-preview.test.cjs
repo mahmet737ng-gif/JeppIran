@@ -31,3 +31,26 @@ test('preview is online only, production PWA remains untouched',()=>{
   assert.match(deployment,/Build isolated Admin QA test website/);
   assert.match(deployment,/python3 scripts\/build_web_admin_test\.py/);
 });
+
+test('Admin home tile and dashboard exist only in the separate QA builder',()=>{
+  const home=fs.readFileSync('scripts/admin-qa-home.js','utf8');
+  const css=fs.readFileSync('scripts/admin-qa-home.css','utf8');
+  const html=fs.readFileSync('web/index.html','utf8');
+  assert.match(home,/tile\.id="adminQaHomeBtn"/);
+  assert.match(home,/adminView\.id="adminQaView"/);
+  assert.match(home,/SESSION_KEY="jeppiran-admin-qa-signed-in-v1"/);
+  assert.match(home,/tile\.hidden=!isAdmin\(\)/);
+  assert.match(home,/data-qa-signin="admin"/);
+  assert.match(home,/dashboardContent\.appendChild\(legacyPanel\)/);
+  assert.match(home,/legacyButton\.click\(\)/);
+  assert.match(home,/sessionStorage\.removeItem\(SESSION_KEY\)/);
+  assert.match(css,/#adminQaView #jpAdminTestPanel/);
+  assert.doesNotMatch(html,/adminQaHomeBtn|admin-qa-home\.js|qaAccountButton/);
+});
+test('only test preview gains the new Admin JS/CSS and previous service worker registration is disabled',()=>{
+  const builder=fs.readFileSync('scripts/build_web_admin_test.py','utf8');
+  assert.match(builder,/admin-qa-home\.js\?v=2/);
+  assert.match(builder,/admin-qa-home\.css\?v=2/);
+  assert.match(builder,/shutil\.copy2\(pathlib\.Path\("scripts"\) \/ asset, draft \/ asset\)/);
+  assert.match(builder,/if\(false&&"serviceWorker" in navigator\)/);
+});

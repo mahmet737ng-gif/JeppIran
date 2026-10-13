@@ -24,8 +24,10 @@ with tempfile.TemporaryDirectory(prefix="jeppiran-admin-preview-") as tempdir:
     draft = pathlib.Path(tempdir) / "admin-test"
     shutil.copytree(ROOT, draft, ignore=shutil.ignore_patterns("admin-test"))
     index = draft / "index.html"
-    change(index, "</head>", '<script>window.JEPPIRAN_TEST_ADMIN = true;</script>\n</head>')
-    change(index, "</body>", '<script src="./admin-test-controls.js" defer></script>\n</body>')
+    change(index, "</head>", '<script>window.JEPPIRAN_TEST_ADMIN = true;</script>\n'+
+           '<link rel="stylesheet" href="./admin-qa-home.css?v=2">\n</head>')
+    change(index, "</body>", '<script src="./admin-test-controls.js?v=2" defer></script>\n'+
+           '<script src="./admin-qa-home.js?v=2" defer></script>\n</body>')
     change(index, "<title>JeppIran", "<title>ADMIN TEST · JeppIran")
 
     # Admin QA is intentionally ONLINE-ONLY: do not sync PDFs to browser storage.
@@ -60,6 +62,8 @@ with tempfile.TemporaryDirectory(prefix="jeppiran-admin-preview-") as tempdir:
         path.write_text(source, encoding="utf-8")
     qa = pathlib.Path("scripts/admin-test-controls.js").read_text(encoding="utf-8")
     (draft / "admin-test-controls.js").write_text(qa, encoding="utf-8")
+    for asset in ("admin-qa-home.js", "admin-qa-home.css"):
+        shutil.copy2(pathlib.Path("scripts") / asset, draft / asset)
     # Recreate checksums after changing the preview files; do not alter live manifest.
     spec = importlib.util.spec_from_file_location("offline_manifest", "scripts/build_offline_manifest.py")
     module = importlib.util.module_from_spec(spec)
@@ -69,7 +73,10 @@ with tempfile.TemporaryDirectory(prefix="jeppiran-admin-preview-") as tempdir:
     manifest = module.make_manifest()
     module.OUT.write_text(json.dumps(manifest, ensure_ascii=False, separators=(",", ":")) + "\n",
                           encoding="utf-8")
-    assert manifest["pdfs"] and any(x["url"] == "./admin-test-controls.js" for x in manifest["assets"])
+    assert manifest["pdfs"] and all(
+        any(x["url"] == "./"+name for x in manifest["assets"])
+        for name in ("admin-test-controls.js", "admin-qa-home.js", "admin-qa-home.css")
+    )
     assert manifest["totalBytes"] > 1_000_000
     if PREVIEW.exists():
         shutil.rmtree(PREVIEW)
