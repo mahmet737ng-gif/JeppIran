@@ -10,6 +10,7 @@ on:
       - "scripts/build_oiie_page_portal_candidates.py"
       - "scripts/build_oiie_real_source_ink_graph.py"
       - "scripts/build_oiie_adc_pavement_islands.py"
+      - "scripts/build_oiie_apron_source_corridors.py"
       - "web/taxi-oiie-stages456.js"
       - "web/tests/taxi-oiie-runway-axes.test.cjs"
       - ".github/workflows/oiie-native-ground-evidence.yml"
@@ -75,6 +76,24 @@ jobs:
           assert v["approvedCrossRunwayLinks"]==0 and v["approvedADCToApronPortals"]==0
           assert v["routeable"] is False and v["publishedRunwayCrossingPermissionRequired"]
           print("PASS: separated Salam vs Passenger/Cargo pavement islands; no false crossing")
+          PY
+      - name: Validate all 800 actual source curved stand-to-stand routes, no runway shortcut
+        run: |
+          python scripts/build_oiie_apron_source_corridors.py \
+            --pdf /tmp/OIIE.pdf \
+            --vectors /tmp/oiie-v2621-native-evidence.json \
+            --out /tmp/oiie-v2621-apron-source-corridors.json
+          python - <<'PY'
+          import json
+          x=json.load(open("/tmp/oiie-v2621-apron-source-corridors.json"))
+          a=x["sourceCorridors"]
+          assert len(a["CARGO"]["routes"])==420 and len(a["SALAM"]["routes"])==380
+          assert len(a["CARGO"]["standIds"])==21 and len(a["SALAM"]["standIds"])==20
+          assert x["approvedADCPagePortals"]==0 and x["approvedRunwayHoldShorts"]==0
+          assert all(r["maximumSourceSeamPt"]<=.9 for r in a["CARGO"]["routes"])
+          assert all(r["maximumSourceSeamPt"]<=.6 for r in a["SALAM"]["routes"])
+          assert not x["readyForFullAirportRouting"] and x["simulatorOnly"]
+          print("PASS: 800 independent original PDF drawn-line candidate route geometries")
           PY
       - name: Generate PDF seam candidates between independent OIIE regions
         run: python scripts/build_oiie_page_portal_candidates.py --source /tmp/oiie-v2621-native-evidence.json --output /tmp/oiie-v2621-portal-candidates.json
@@ -151,6 +170,7 @@ jobs:
             /tmp/oiie-v2621-native-evidence.json
             /tmp/oiie-v2621-real-ink-graph.json
             /tmp/oiie-v2621-pavement-islands.json
+            /tmp/oiie-v2621-apron-source-corridors.json
             /tmp/oiie-v2621-portal-candidates.json
             /tmp/oiie-v2621-runway-axes.json
             /tmp/oiie-v2621-stand-coordinate-audit.json
