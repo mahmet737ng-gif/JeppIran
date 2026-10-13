@@ -331,6 +331,8 @@ private val locationPermissionLauncher =
     private var chartTreeOpen =
         false
 
+    private var floatingChartMenu: TextView? = null
+
     private var viewerChromeTransitioning =
         false
 
@@ -1304,6 +1306,7 @@ private val locationPermissionLauncher =
 
         buildTaxiRouteBanner()
 
+        buildFloatingChartMenu()
 
         setContentView(
             root
@@ -1313,8 +1316,34 @@ private val locationPermissionLauncher =
         applyInsets()
 
         startMetarPolling()
+        // Immersive full chart immediately on opening a procedure.
+        root.post {
+            if (!isFinishing && controlsVisible) {
+                controlsVisible = false
+                hideViewerControls()
+            }
+        }
     }
 
+    private fun buildFloatingChartMenu() {
+        val button = TextView(this).apply {
+            text = "☰"
+            textSize = 25f
+            typeface = Typeface.DEFAULT_BOLD
+            gravity = Gravity.CENTER
+            setTextColor(Color.WHITE)
+            contentDescription = "Browse airport charts"
+            background = roundedBackground(
+                Color.argb(185, 4, 23, 43), Color.argb(175, 54, 177, 226), 12
+            )
+            elevation = 26.dp.toFloat()
+            setOnClickListener { toggleChartTree() }
+        }
+        floatingChartMenu = button
+        root.addView(button, FrameLayout.LayoutParams(
+            52.dp, 52.dp, Gravity.TOP or Gravity.START
+        ).apply { leftMargin = 8.dp; topMargin = 8.dp })
+    }
 
     private fun buildTopToolbar() {
 
@@ -1836,7 +1865,7 @@ private val locationPermissionLauncher =
 
                 setBackgroundColor(
                     Color.argb(
-                        245,
+                        213,
                         3,
                         17,
                         38
@@ -2205,7 +2234,7 @@ private val locationPermissionLauncher =
                                 )
 
                             setOnClickListener {
-
+                                if (chartTreeOpen) toggleChartTree()
                                 if (
                                     indexed.index !=
                                     currentChartIndex
@@ -2246,12 +2275,6 @@ private val locationPermissionLauncher =
 
     private fun toggleChartTree() {
 
-        if (
-            !controlsVisible
-        ) {
-            return
-        }
-
         chartTreeOpen =
             !chartTreeOpen
 
@@ -2271,6 +2294,9 @@ private val locationPermissionLauncher =
                 false
             )
         }
+
+        floatingChartMenu?.contentDescription =
+            if (chartTreeOpen) "Close airport charts" else "Browse airport charts"
 
         chartTreeButton.background =
             roundedBackground(
@@ -2313,43 +2339,11 @@ private val locationPermissionLauncher =
             resources.configuration.orientation ==
                 Configuration.ORIENTATION_LANDSCAPE
 
-
+        // Translucent left drawer spans screen height, no matter orientation.
+        val sideWidth = minOf(302.dp, (resources.displayMetrics.widthPixels * 0.82f).toInt())
         chartTreePanel.layoutParams =
-            FrameLayout.LayoutParams(
-                if (
-                    landscapeDevice
-                ) {
-
-                    270.dp
-
-                } else {
-
-                    FrameLayout.LayoutParams.MATCH_PARENT
-                },
-                if (
-                    landscapeDevice
-                ) {
-
-                    FrameLayout.LayoutParams.MATCH_PARENT
-
-                } else {
-
-                    245.dp
-                }
-            ).apply {
-
-                gravity =
-                    if (
-                        landscapeDevice
-                    ) {
-
-                        Gravity.START or
-                            Gravity.TOP
-
-                    } else {
-
-                        Gravity.BOTTOM
-                    }
+            FrameLayout.LayoutParams(sideWidth, FrameLayout.LayoutParams.MATCH_PARENT).apply {
+                gravity = Gravity.START or Gravity.TOP
             }
 
 
@@ -2690,6 +2684,12 @@ private val locationPermissionLauncher =
             insetBottom =
                 bars.bottom
 
+            floatingChartMenu?.let { menu ->
+                val lp = menu.layoutParams as FrameLayout.LayoutParams
+                lp.topMargin = if (controlsVisible) insetTop + 8.dp else 8.dp
+                lp.leftMargin = insetLeft + 8.dp
+                menu.layoutParams = lp
+            }
 
             val topParams =
                 topToolbar.layoutParams
