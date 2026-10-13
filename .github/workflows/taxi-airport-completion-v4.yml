@@ -23,6 +23,11 @@ on:
       - 'docs/JEPPIRAN_AIRPORT_TAXI_ENGINE_V4_ONE_COMMAND.md'
       - '.github/workflows/taxi-airport-completion-v4.yml'
       - 'web/data/taxi-networks/OIIE.json'
+      - 'scripts/build_oiie_passenger_source_corridors.py'
+      - 'scripts/build_oiie_apron_source_corridors.py'
+      - 'scripts/build_oiie_adc_pavement_islands.py'
+      - 'scripts/build_oiie_pdf_ground_evidence.py'
+      - 'scripts/verify_oiie_runway_axes_browser.cjs'
 permissions:
   contents: read
 jobs:
