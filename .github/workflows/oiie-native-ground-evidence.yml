@@ -11,6 +11,7 @@ on:
       - "scripts/build_oiie_real_source_ink_graph.py"
       - "scripts/build_oiie_adc_pavement_islands.py"
       - "scripts/build_oiie_apron_source_corridors.py"
+      - "scripts/build_oiie_passenger_source_corridors.py"
       - "web/taxi-oiie-stages456.js"
       - "web/tests/taxi-oiie-runway-axes.test.cjs"
       - ".github/workflows/oiie-native-ground-evidence.yml"
@@ -95,6 +96,24 @@ jobs:
           assert not x["readyForFullAirportRouting"] and x["simulatorOnly"]
           print("PASS: 800 independent original PDF drawn-line candidate route geometries")
           PY
+      - name: Verify all 3422 original Passenger stand-source curved candidates
+        run: |
+          python scripts/build_oiie_passenger_source_corridors.py \
+            --pdf /tmp/OIIE.pdf \
+            --vectors /tmp/oiie-v2621-native-evidence.json \
+            --out /tmp/oiie-v2621-passenger-source-corridors.json
+          python - <<'PY'
+          import json
+          x=json.load(open("/tmp/oiie-v2621-passenger-source-corridors.json"))
+          assert x['sourceMatchedStandCount']==62
+          assert x['sourceCorridorConnectedStandCount']==59
+          assert x['unmatchedStandIds']==['ST403','ST405','ST407']
+          assert len(x['routes'])==3422 and x['directedOriginalCurvedCorridorCases']==3422
+          assert all(r['maximumSourceSeamPt']<=.95 and r['page']==382 for r in x['routes'])
+          assert x['approvedPagePortals']==x['approvedRunwayHoldShorts']==x['approvedPhysicalTaxiRoutes']==0
+          assert x['readyForFullAirportRouting'] is False
+          print("PASS 3422 source-ink Passenger corridors, 3 unresolved")
+          PY
       - name: Generate PDF seam candidates between independent OIIE regions
         run: python scripts/build_oiie_page_portal_candidates.py --source /tmp/oiie-v2621-native-evidence.json --output /tmp/oiie-v2621-portal-candidates.json
       - name: Require unreviewed portal candidates to remain non-routeable
@@ -171,6 +190,7 @@ jobs:
             /tmp/oiie-v2621-real-ink-graph.json
             /tmp/oiie-v2621-pavement-islands.json
             /tmp/oiie-v2621-apron-source-corridors.json
+            /tmp/oiie-v2621-passenger-source-corridors.json
             /tmp/oiie-v2621-portal-candidates.json
             /tmp/oiie-v2621-runway-axes.json
             /tmp/oiie-v2621-stand-coordinate-audit.json
