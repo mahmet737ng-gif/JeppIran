@@ -454,23 +454,25 @@ function message(s,warning=false){
 const OIAW_QA_REVISION="2621-oiaw-inset-registration-r3";
 async function fetchGraph(icao){
   taxi.graph=null;taxi.genericEngine=null;taxi.genericMonitor=null;
-  taxi.survey=null;taxi.surveyEngine=null;taxi.surveyVector=null;taxi.o3Survey=null;taxi.o3Workflow=null;taxi.o3Selected='';taxi.oiieSurvey=null;taxi.oiieStatus=null;taxi.oiieReview=null;taxi.oiieSelected='';taxi.oiieStages=null;taxi.oiieApprovedRoute=null;taxi.oiieNativeReview=null;taxi.oiieRunwayOnly=null;taxi.oiieRunwayTrace=null;
+  taxi.survey=null;taxi.surveyEngine=null;taxi.surveyVector=null;taxi.o3Survey=null;taxi.o3Workflow=null;taxi.o3Selected='';taxi.oiieSurvey=null;taxi.oiieStatus=null;taxi.oiieReview=null;taxi.oiieSelected='';taxi.oiieStages=null;taxi.oiieApprovedRoute=null;taxi.oiieNativeReview=null;taxi.oiieRunwayOnly=null;taxi.oiieRunwayTrace=null;taxi.oiieStandGeo=null;taxi.oiieInsAudit=null;
   message("Checking verified ground network for "+icao+"…");
   try{
     // The ADC inventory is the sole OIAW source until source PDF curves and
     // hold lines have been fully traced. Previous projected OIAW.json routes
     // MUST NEVER be presented as mapped taxi centreline geometry.
     if(icao==="OIIE"){
-      const [sr,qr,rr,pr,vr,ar]=await Promise.all([
+      const [sr,qr,rr,pr,vr,ar,ir,lr]=await Promise.all([
         fetch("./data/taxi-surveys/OIIE.json?v=2621-oiie-v3-source-r1",{cache:"no-store"}),
         fetch("./data/taxi-surveys/OIIE-workflow-2621.json?v=2621-oiie-v3-qa-r1",{cache:"no-store"}),
         fetch("./data/taxi-surveys/OIIE-3step-source-review-2621.json?v=2621-oiie-native-3step-r1",{cache:"no-store"}),
         fetch("./data/taxi-surveys/OIIE-stages456-approved-v2621.json?v=2621-oiie-stage456-r2",{cache:"no-store"}),
         fetch("./data/taxi-surveys/OIIE-native-vectors-v2621.json?v=2621-oiie-native-source-r1",{cache:"no-store"}),
-        fetch("./data/taxi-surveys/OIIE-runway-axes-v2621.json?v=2621-oiie-source-runways-r1",{cache:"no-store"})
+        fetch("./data/taxi-surveys/OIIE-runway-axes-v2621.json?v=2621-oiie-source-runways-r1",{cache:"no-store"}),
+        fetch("./data/taxi-surveys/OIIE-stand-coordinate-audit-v2621.json?v=2621-oiie-ins-source-r1",{cache:"no-store"}),
+        fetch("./data/taxi-surveys/OIIE-stand-label-registration-v2621.json?v=2621-oiie-stand-labels-r1",{cache:"no-store"})
       ]);
-      if(!sr.ok||!qr.ok||!rr.ok||!pr.ok||!vr.ok||!ar.ok)throw Error("OIIE PDF evidence or gated QA source files unavailable");
-      const [info,report,review,partialGraph,native,runwayAxes]=await Promise.all([sr.json(),qr.json(),rr.json(),pr.json(),vr.json(),ar.json()]);
+      if(!sr.ok||!qr.ok||!rr.ok||!pr.ok||!vr.ok||!ar.ok||!ir.ok||!lr.ok)throw Error("OIIE PDF evidence or gated QA source files unavailable");
+      const [info,report,review,partialGraph,native,runwayAxes,insAudit,standGeo]=await Promise.all([sr.json(),qr.json(),rr.json(),pr.json(),vr.json(),ar.json(),ir.json(),lr.json()]);
       if(native.airport!==icao||String(native.cycle)!=="2621"||
         native.parentSourceSha256!==manifest?.source_sha256||
         native.verifiedTaxiEdges!==0||native.verifiedRunwayGates!==0||
@@ -503,6 +505,15 @@ async function fetchGraph(icao){
       const runwayQA=stageEngine?.reviewRunwayAxes(runwayAxes);
       if(!runwayQA?.ok||runwayAxes.airportPdfSha256!==native.inputPdfSha256)
         throw Error("OIIE actual runway axes PDF fingerprint or physical dimensions are unverified");
+      if(insAudit.airport!=="OIIE"||insAudit.entryCount!==49||
+        insAudit.sourcePdfSha256!==native.inputPdfSha256||
+        insAudit.suitableForStandNoseRouting!==false||
+        standGeo.sourceSha256!==info.source.sha256||
+        standGeo.count!==103||standGeo.positions?.length!==103||
+        standGeo.approvedStandRoutes!==0||
+        !["ST301","ST302","ST303","ST321"].every(id=>
+          standGeo.suspectPublishedINSStandIds?.includes(id)))
+        throw Error("OIIE published stand INS table/grid source checks failed");
       if(!stages?.ok||partialGraph.airport!==icao||
         String(partialGraph.cycle)!==String(info.cycle)||
         partialGraph.sourceSha256!==info.source.sha256)
@@ -510,13 +521,16 @@ async function fetchGraph(icao){
       if(taxi.airport!==icao)return null;
       taxi.oiieSurvey=info;taxi.oiieStatus=report;taxi.oiieReview=review;taxi.oiieSelected='';
       taxi.oiieStages=stages;taxi.oiieApprovedRoute=null;taxi.oiieNativeReview=native;
-      taxi.oiieRunwayOnly=runwayQA;taxi.oiieRunwayTrace=null;
+      taxi.oiieRunwayOnly=runwayQA;taxi.oiieRunwayTrace=null;taxi.oiieStandGeo=standGeo;taxi.oiieInsAudit=insAudit;
       $("taxiQaInput").placeholder="ST100 / ST301 / ST201 / A / R1 (source lookup only)";
       $("taxiQaStands").textContent="STANDS ("+info.stands.length+")";
       message("OIIE Stage 4 · "+stages.phase4.regions.length+
         " registered chart regions, "+
         [380,382,383].reduce((n,p)=>n+native.pages[p].candidateVectorStrokes,0)+
-        " native long-stroke candidates extracted and available for source QA. "+
+        " native long-stroke candidates extracted and available for source QA, "+
+        standGeo.count+" grid-registered stand labels and "+
+        insAudit.issues.filter(x=>x.code==="PRINTED_CARGO_LONGITUDE_CONFLICTS_WITH_20_9C_GRID").length+
+        " printed Cargo INS coordinate conflicts. "+
         "Stage 5 · "+runwayQA.axes.length+" original-PDF runway axes verified, "+
         stages.phase5.approvedGates+" runway-entry/hold-short gates reviewed. "+
         "Stage 6 · "+stages.phase6.bidirectionalPairs+
@@ -816,12 +830,16 @@ function imamInventoryGo(typed){
   const st=review.stands.find(v=>v.id==="ST"+stand);
   if(st){
     taxi.oiieSelected=st.id;draw();
-    message("OIIE "+st.id+" · source stand LABEL on PDF page "+st.page+
-      " · nearest original ink drawing #"+st.nearestNativeDrawingId+
-      " · connected INK component "+st.sourceStrokeComponent+
-      " · nearby printed names in this SOURCE component: "+
-      st.cooccurringTaxiwayLabels.join(", ")+
-      ". This is not a verified taxiway junction, parking nose or route.",true);
+    const geo=taxi.oiieStandGeo?.positions?.find(x=>x.id===st.id);
+    const gridPoint=geo?.labelGeographicWGS84;
+    const warning=geo?.qaStatus==="PRINTED_INS_CONFLICT";
+    message("OIIE "+st.id+" · printed stand LABEL on PDF page "+st.page+
+      (gridPoint?" · label-grid position "+gridPoint[0].toFixed(6)+
+        " N, "+gridPoint[1].toFixed(6)+" E":"")+
+      " · drawing #"+st.nearestNativeDrawingId+
+      (warning?" · WARNING: INS coordinates in 20-9D conflict with printed Cargo chart graticules.":"")+
+      " · status: "+(geo?.qaStatus||"SOURCE_REVIEW_REQUIRED")+
+      ". Printed label point is NOT a stand nose; no stand lead or route approved.",true);
     return;
   }
   if(/^R[1-6]$/.test(token)){
