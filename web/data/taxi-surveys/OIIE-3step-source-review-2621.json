@@ -1,0 +1,2560 @@
+{
+  "schemaVersion": 3,
+  "airport": "OIIE",
+  "cycle": "2621",
+  "sourceSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+  "coordinateSpace": "PDF_POINTS_TOP_LEFT_PER_PAGE",
+  "status": "NATIVE_STROKE_SOURCE_EVIDENCE_UNREVIEWED",
+  "sourcePages": [
+    380,
+    382,
+    383
+  ],
+  "reviewedCenterlines": 0,
+  "reviewedStandLeads": 0,
+  "reviewedPhysicalTaxiJunctions": 0,
+  "routeable": false,
+  "sourceStrokeScan": {
+    "380": {
+      "candidateStrokes": 258,
+      "candidateContacts": 149,
+      "endpointContactPairs": 66,
+      "branchEndToInterior": 77
+    },
+    "382": {
+      "candidateStrokes": 259,
+      "candidateContacts": 497,
+      "endpointContactPairs": 227,
+      "branchEndToInterior": 177
+    },
+    "383": {
+      "candidateStrokes": 208,
+      "candidateContacts": 280,
+      "endpointContactPairs": 154,
+      "branchEndToInterior": 60
+    }
+  },
+  "taxiways": [
+    {
+      "name": "A",
+      "page": 380,
+      "printedLabelPdf": [
+        353.31,
+        368.61
+      ],
+      "nearestNativeDrawingId": 1473,
+      "sourceStrokeComponent": "P380_C171",
+      "labelToStrokeGapPdfPoints": 14.91,
+      "physicalStartPdf": null,
+      "physicalEndPdf": null,
+      "widthM": null,
+      "lengthM": null,
+      "centerlineApproved": false,
+      "neighborTaxiwayIdsApproved": []
+    },
+    {
+      "name": "B",
+      "page": 380,
+      "printedLabelPdf": [
+        415.95,
+        147.18
+      ],
+      "nearestNativeDrawingId": 1096,
+      "sourceStrokeComponent": "P380_C137",
+      "labelToStrokeGapPdfPoints": 15.42,
+      "physicalStartPdf": null,
+      "physicalEndPdf": null,
+      "widthM": null,
+      "lengthM": null,
+      "centerlineApproved": false,
+      "neighborTaxiwayIdsApproved": []
+    },
+    {
+      "name": "C",
+      "page": 380,
+      "printedLabelPdf": [
+        218.79,
+        697.63
+      ],
+      "nearestNativeDrawingId": 459,
+      "sourceStrokeComponent": "P380_C129",
+      "labelToStrokeGapPdfPoints": 6.17,
+      "physicalStartPdf": null,
+      "physicalEndPdf": null,
+      "widthM": null,
+      "lengthM": null,
+      "centerlineApproved": false,
+      "neighborTaxiwayIdsApproved": []
+    },
+    {
+      "name": "D",
+      "page": 380,
+      "printedLabelPdf": [
+        223.47,
+        684.79
+      ],
+      "nearestNativeDrawingId": 459,
+      "sourceStrokeComponent": "P380_C129",
+      "labelToStrokeGapPdfPoints": 16.61,
+      "physicalStartPdf": null,
+      "physicalEndPdf": null,
+      "widthM": null,
+      "lengthM": null,
+      "centerlineApproved": false,
+      "neighborTaxiwayIdsApproved": []
+    },
+    {
+      "name": "E",
+      "page": 380,
+      "printedLabelPdf": [
+        186.11,
+        133.31
+      ],
+      "nearestNativeDrawingId": 237,
+      "sourceStrokeComponent": "P380_C117",
+      "labelToStrokeGapPdfPoints": 6.84,
+      "physicalStartPdf": null,
+      "physicalEndPdf": null,
+      "widthM": null,
+      "lengthM": null,
+      "centerlineApproved": false,
+      "neighborTaxiwayIdsApproved": []
+    },
+    {
+      "name": "F",
+      "page": 380,
+      "printedLabelPdf": [
+        288.75,
+        496.6
+      ],
+      "nearestNativeDrawingId": 448,
+      "sourceStrokeComponent": "P380_C127",
+      "labelToStrokeGapPdfPoints": 19.72,
+      "physicalStartPdf": null,
+      "physicalEndPdf": null,
+      "widthM": null,
+      "lengthM": null,
+      "centerlineApproved": false,
+      "neighborTaxiwayIdsApproved": []
+    },
+    {
+      "name": "G",
+      "page": 382,
+      "printedLabelPdf": [
+        161.43,
+        542.08
+      ],
+      "nearestNativeDrawingId": 243,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 5.09,
+      "physicalStartPdf": null,
+      "physicalEndPdf": null,
+      "widthM": null,
+      "lengthM": null,
+      "centerlineApproved": false,
+      "neighborTaxiwayIdsApproved": []
+    },
+    {
+      "name": "H",
+      "page": 380,
+      "printedLabelPdf": [
+        309.27,
+        429.77
+      ],
+      "nearestNativeDrawingId": 273,
+      "sourceStrokeComponent": "P380_C120",
+      "labelToStrokeGapPdfPoints": 5.63,
+      "physicalStartPdf": null,
+      "physicalEndPdf": null,
+      "widthM": null,
+      "lengthM": null,
+      "centerlineApproved": false,
+      "neighborTaxiwayIdsApproved": []
+    },
+    {
+      "name": "J",
+      "page": 380,
+      "printedLabelPdf": [
+        329.91,
+        375.33
+      ],
+      "nearestNativeDrawingId": 1476,
+      "sourceStrokeComponent": "P380_C171",
+      "labelToStrokeGapPdfPoints": 25.5,
+      "physicalStartPdf": null,
+      "physicalEndPdf": null,
+      "widthM": null,
+      "lengthM": null,
+      "centerlineApproved": false,
+      "neighborTaxiwayIdsApproved": []
+    },
+    {
+      "name": "K",
+      "page": 380,
+      "printedLabelPdf": [
+        363.27,
+        359.58
+      ],
+      "nearestNativeDrawingId": 1473,
+      "sourceStrokeComponent": "P380_C171",
+      "labelToStrokeGapPdfPoints": 16.12,
+      "physicalStartPdf": null,
+      "physicalEndPdf": null,
+      "widthM": null,
+      "lengthM": null,
+      "centerlineApproved": false,
+      "neighborTaxiwayIdsApproved": []
+    },
+    {
+      "name": "L",
+      "page": 380,
+      "printedLabelPdf": [
+        358.71,
+        332.67
+      ],
+      "nearestNativeDrawingId": 1415,
+      "sourceStrokeComponent": "P380_C169",
+      "labelToStrokeGapPdfPoints": 20.42,
+      "physicalStartPdf": null,
+      "physicalEndPdf": null,
+      "widthM": null,
+      "lengthM": null,
+      "centerlineApproved": false,
+      "neighborTaxiwayIdsApproved": []
+    },
+    {
+      "name": "M",
+      "page": 380,
+      "printedLabelPdf": [
+        350.31,
+        309.46
+      ],
+      "nearestNativeDrawingId": 1415,
+      "sourceStrokeComponent": "P380_C169",
+      "labelToStrokeGapPdfPoints": 5.3,
+      "physicalStartPdf": null,
+      "physicalEndPdf": null,
+      "widthM": null,
+      "lengthM": null,
+      "centerlineApproved": false,
+      "neighborTaxiwayIdsApproved": []
+    },
+    {
+      "name": "N",
+      "page": 380,
+      "printedLabelPdf": [
+        354.27,
+        297.53
+      ],
+      "nearestNativeDrawingId": 1252,
+      "sourceStrokeComponent": "P380_C141",
+      "labelToStrokeGapPdfPoints": 6.21,
+      "physicalStartPdf": null,
+      "physicalEndPdf": null,
+      "widthM": null,
+      "lengthM": null,
+      "centerlineApproved": false,
+      "neighborTaxiwayIdsApproved": []
+    },
+    {
+      "name": "P",
+      "page": 382,
+      "printedLabelPdf": [
+        242.55,
+        304.84
+      ],
+      "nearestNativeDrawingId": 184,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 5.84,
+      "physicalStartPdf": null,
+      "physicalEndPdf": null,
+      "widthM": null,
+      "lengthM": null,
+      "centerlineApproved": false,
+      "neighborTaxiwayIdsApproved": []
+    },
+    {
+      "name": "S",
+      "page": 380,
+      "printedLabelPdf": [
+        171.63,
+        680.82
+      ],
+      "nearestNativeDrawingId": 453,
+      "sourceStrokeComponent": "P380_C128",
+      "labelToStrokeGapPdfPoints": 31.35,
+      "physicalStartPdf": null,
+      "physicalEndPdf": null,
+      "widthM": null,
+      "lengthM": null,
+      "centerlineApproved": false,
+      "neighborTaxiwayIdsApproved": []
+    },
+    {
+      "name": "U",
+      "page": 380,
+      "printedLabelPdf": [
+        385.95,
+        331.73
+      ],
+      "nearestNativeDrawingId": 586,
+      "sourceStrokeComponent": "P380_C136",
+      "labelToStrokeGapPdfPoints": 24.32,
+      "physicalStartPdf": null,
+      "physicalEndPdf": null,
+      "widthM": null,
+      "lengthM": null,
+      "centerlineApproved": false,
+      "neighborTaxiwayIdsApproved": []
+    },
+    {
+      "name": "Y",
+      "page": 380,
+      "printedLabelPdf": [
+        280.11,
+        523.56
+      ],
+      "nearestNativeDrawingId": 447,
+      "sourceStrokeComponent": "P380_C127",
+      "labelToStrokeGapPdfPoints": 30.97,
+      "physicalStartPdf": null,
+      "physicalEndPdf": null,
+      "widthM": null,
+      "lengthM": null,
+      "centerlineApproved": false,
+      "neighborTaxiwayIdsApproved": []
+    },
+    {
+      "name": "Z",
+      "page": 380,
+      "printedLabelPdf": [
+        264.87,
+        562.84
+      ],
+      "nearestNativeDrawingId": null,
+      "sourceStrokeComponent": null,
+      "labelToStrokeGapPdfPoints": null,
+      "physicalStartPdf": null,
+      "physicalEndPdf": null,
+      "widthM": null,
+      "lengthM": null,
+      "centerlineApproved": false,
+      "neighborTaxiwayIdsApproved": []
+    },
+    {
+      "name": "R1",
+      "page": 380,
+      "printedLabelPdf": [
+        381.27,
+        210.67
+      ],
+      "nearestNativeDrawingId": 321,
+      "sourceStrokeComponent": "P380_C123",
+      "labelToStrokeGapPdfPoints": 5.53,
+      "physicalStartPdf": null,
+      "physicalEndPdf": null,
+      "widthM": null,
+      "lengthM": null,
+      "centerlineApproved": false,
+      "neighborTaxiwayIdsApproved": []
+    },
+    {
+      "name": "R2",
+      "page": 380,
+      "printedLabelPdf": [
+        387.63,
+        191.47
+      ],
+      "nearestNativeDrawingId": 342,
+      "sourceStrokeComponent": "P380_C124",
+      "labelToStrokeGapPdfPoints": 4.63,
+      "physicalStartPdf": null,
+      "physicalEndPdf": null,
+      "widthM": null,
+      "lengthM": null,
+      "centerlineApproved": false,
+      "neighborTaxiwayIdsApproved": []
+    },
+    {
+      "name": "R3",
+      "page": 380,
+      "printedLabelPdf": [
+        399.87,
+        161.35
+      ],
+      "nearestNativeDrawingId": 268,
+      "sourceStrokeComponent": "P380_C118",
+      "labelToStrokeGapPdfPoints": 3.63,
+      "physicalStartPdf": null,
+      "physicalEndPdf": null,
+      "widthM": null,
+      "lengthM": null,
+      "centerlineApproved": false,
+      "neighborTaxiwayIdsApproved": []
+    },
+    {
+      "name": "R4",
+      "page": 380,
+      "printedLabelPdf": [
+        410.19,
+        129.91
+      ],
+      "nearestNativeDrawingId": 1096,
+      "sourceStrokeComponent": "P380_C137",
+      "labelToStrokeGapPdfPoints": 3.98,
+      "physicalStartPdf": null,
+      "physicalEndPdf": null,
+      "widthM": null,
+      "lengthM": null,
+      "centerlineApproved": false,
+      "neighborTaxiwayIdsApproved": []
+    },
+    {
+      "name": "R5",
+      "page": 380,
+      "printedLabelPdf": [
+        435.51,
+        120.67
+      ],
+      "nearestNativeDrawingId": 522,
+      "sourceStrokeComponent": "P380_C134",
+      "labelToStrokeGapPdfPoints": 17.02,
+      "physicalStartPdf": null,
+      "physicalEndPdf": null,
+      "widthM": null,
+      "lengthM": null,
+      "centerlineApproved": false,
+      "neighborTaxiwayIdsApproved": []
+    },
+    {
+      "name": "R6",
+      "page": 380,
+      "printedLabelPdf": [
+        467.55,
+        89.59
+      ],
+      "nearestNativeDrawingId": 89,
+      "sourceStrokeComponent": "P380_C008",
+      "labelToStrokeGapPdfPoints": 6.11,
+      "physicalStartPdf": null,
+      "physicalEndPdf": null,
+      "widthM": null,
+      "lengthM": null,
+      "centerlineApproved": false,
+      "neighborTaxiwayIdsApproved": []
+    }
+  ],
+  "stands": [
+    {
+      "id": "ST100",
+      "page": 382,
+      "labelPointPdf": [
+        431.72,
+        94.45
+      ],
+      "nearestNativeDrawingId": 98,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 5.96,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST102",
+      "page": 382,
+      "labelPointPdf": [
+        423.08,
+        120.13
+      ],
+      "nearestNativeDrawingId": 99,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 5.21,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST104",
+      "page": 382,
+      "labelPointPdf": [
+        412.76,
+        153.01
+      ],
+      "nearestNativeDrawingId": 100,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 4.83,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST104L",
+      "page": 382,
+      "labelPointPdf": [
+        404.96,
+        138.23
+      ],
+      "nearestNativeDrawingId": 144,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 4.9,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST104R",
+      "page": 382,
+      "labelPointPdf": [
+        401.84,
+        159.85
+      ],
+      "nearestNativeDrawingId": 143,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 9.6,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST106",
+      "page": 382,
+      "labelPointPdf": [
+        404.72,
+        178.93
+      ],
+      "nearestNativeDrawingId": 140,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 4.89,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST106L",
+      "page": 382,
+      "labelPointPdf": [
+        392.36,
+        166.91
+      ],
+      "nearestNativeDrawingId": 142,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 4.48,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST106R",
+      "page": 382,
+      "labelPointPdf": [
+        397.28,
+        190.57
+      ],
+      "nearestNativeDrawingId": 141,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 9.55,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST108",
+      "page": 382,
+      "labelPointPdf": [
+        393.2,
+        210.13
+      ],
+      "nearestNativeDrawingId": 138,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 5.03,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST108L",
+      "page": 382,
+      "labelPointPdf": [
+        385.52,
+        197.03
+      ],
+      "nearestNativeDrawingId": 139,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 5.34,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST108R",
+      "page": 382,
+      "labelPointPdf": [
+        385.52,
+        219.85
+      ],
+      "nearestNativeDrawingId": 137,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 9.58,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST110",
+      "page": 382,
+      "labelPointPdf": [
+        381.56,
+        238.33
+      ],
+      "nearestNativeDrawingId": 136,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 5.12,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST112L",
+      "page": 382,
+      "labelPointPdf": [
+        354.08,
+        272.39
+      ],
+      "nearestNativeDrawingId": 188,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 7.98,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST114L",
+      "page": 382,
+      "labelPointPdf": [
+        346.4,
+        304.67
+      ],
+      "nearestNativeDrawingId": 174,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 3.1,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST116",
+      "page": 382,
+      "labelPointPdf": [
+        347.24,
+        346.57
+      ],
+      "nearestNativeDrawingId": 170,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 4.64,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST116L",
+      "page": 382,
+      "labelPointPdf": [
+        338,
+        334.55
+      ],
+      "nearestNativeDrawingId": 171,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 6.19,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST116R",
+      "page": 382,
+      "labelPointPdf": [
+        338.84,
+        358.69
+      ],
+      "nearestNativeDrawingId": 169,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 8.71,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST118",
+      "page": 382,
+      "labelPointPdf": [
+        330.92,
+        389.65
+      ],
+      "nearestNativeDrawingId": 219,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 6.19,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST120",
+      "page": 382,
+      "labelPointPdf": [
+        320.72,
+        410.41
+      ],
+      "nearestNativeDrawingId": 218,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 6.77,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST120R",
+      "page": 382,
+      "labelPointPdf": [
+        319.16,
+        427.93
+      ],
+      "nearestNativeDrawingId": 221,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 9.84,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST122",
+      "page": 382,
+      "labelPointPdf": [
+        311.24,
+        443.89
+      ],
+      "nearestNativeDrawingId": 217,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 5.32,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST124",
+      "page": 382,
+      "labelPointPdf": [
+        303.08,
+        471.49
+      ],
+      "nearestNativeDrawingId": 216,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 6.59,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST126",
+      "page": 382,
+      "labelPointPdf": [
+        292.88,
+        496.93
+      ],
+      "nearestNativeDrawingId": 215,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 5.45,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST128",
+      "page": 382,
+      "labelPointPdf": [
+        283.52,
+        524.53
+      ],
+      "nearestNativeDrawingId": 214,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 5.29,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST130",
+      "page": 382,
+      "labelPointPdf": [
+        274.76,
+        551.29
+      ],
+      "nearestNativeDrawingId": 213,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 5.47,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST132",
+      "page": 382,
+      "labelPointPdf": [
+        265.64,
+        578.53
+      ],
+      "nearestNativeDrawingId": 212,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 5.73,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST134L",
+      "page": 382,
+      "labelPointPdf": [
+        255.44,
+        603.47
+      ],
+      "nearestNativeDrawingId": 211,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 4.92,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST134R",
+      "page": 382,
+      "labelPointPdf": [
+        242.84,
+        611.89
+      ],
+      "nearestNativeDrawingId": 210,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 8.8,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST136",
+      "page": 382,
+      "labelPointPdf": [
+        335.36,
+        84.73
+      ],
+      "nearestNativeDrawingId": 104,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 4.44,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST138",
+      "page": 382,
+      "labelPointPdf": [
+        329.6,
+        102.37
+      ],
+      "nearestNativeDrawingId": 106,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 3.65,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST140",
+      "page": 382,
+      "labelPointPdf": [
+        303.68,
+        177.37
+      ],
+      "nearestNativeDrawingId": 108,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 2.98,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST142",
+      "page": 382,
+      "labelPointPdf": [
+        296.6,
+        198.85
+      ],
+      "nearestNativeDrawingId": 109,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 3.06,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST144",
+      "page": 382,
+      "labelPointPdf": [
+        275.84,
+        256.93
+      ],
+      "nearestNativeDrawingId": 179,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 3.88,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST146",
+      "page": 382,
+      "labelPointPdf": [
+        270.08,
+        272.65
+      ],
+      "nearestNativeDrawingId": 185,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 4.4,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST148",
+      "page": 382,
+      "labelPointPdf": [
+        247.28,
+        339.73
+      ],
+      "nearestNativeDrawingId": 192,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 4.25,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST150",
+      "page": 382,
+      "labelPointPdf": [
+        241.52,
+        354.97
+      ],
+      "nearestNativeDrawingId": 240,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 4.78,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST152",
+      "page": 382,
+      "labelPointPdf": [
+        220.76,
+        411.49
+      ],
+      "nearestNativeDrawingId": 249,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 4.42,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST154",
+      "page": 382,
+      "labelPointPdf": [
+        214.52,
+        429.01
+      ],
+      "nearestNativeDrawingId": 248,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 4.77,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST156",
+      "page": 382,
+      "labelPointPdf": [
+        206.84,
+        451.33
+      ],
+      "nearestNativeDrawingId": 247,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 4.52,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST158",
+      "page": 382,
+      "labelPointPdf": [
+        198.68,
+        474.37
+      ],
+      "nearestNativeDrawingId": 246,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 4.96,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST160",
+      "page": 382,
+      "labelPointPdf": [
+        191.36,
+        497.53
+      ],
+      "nearestNativeDrawingId": 245,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 4.72,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST162",
+      "page": 382,
+      "labelPointPdf": [
+        183.2,
+        520.57
+      ],
+      "nearestNativeDrawingId": 244,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 4.75,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST164L",
+      "page": 382,
+      "labelPointPdf": [
+        176.12,
+        564.35
+      ],
+      "nearestNativeDrawingId": 222,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 8.34,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST164R",
+      "page": 382,
+      "labelPointPdf": [
+        165.2,
+        576.97
+      ],
+      "nearestNativeDrawingId": 250,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 3.69,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST400",
+      "page": 382,
+      "labelPointPdf": [
+        244.4,
+        640.21
+      ],
+      "nearestNativeDrawingId": 296,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 5.45,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST400L",
+      "page": 382,
+      "labelPointPdf": [
+        236.48,
+        628.07
+      ],
+      "nearestNativeDrawingId": 291,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 5.03,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST400R",
+      "page": 382,
+      "labelPointPdf": [
+        232.88,
+        647.29
+      ],
+      "nearestNativeDrawingId": 288,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 5,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST401",
+      "page": 382,
+      "labelPointPdf": [
+        154.88,
+        605.05
+      ],
+      "nearestNativeDrawingId": 257,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 4.36,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST402",
+      "page": 382,
+      "labelPointPdf": [
+        233.36,
+        672.25
+      ],
+      "nearestNativeDrawingId": 301,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 5.29,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST402L",
+      "page": 382,
+      "labelPointPdf": [
+        224.96,
+        659.15
+      ],
+      "nearestNativeDrawingId": 285,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 4.98,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST402R",
+      "page": 382,
+      "labelPointPdf": [
+        222.8,
+        679.33
+      ],
+      "nearestNativeDrawingId": 282,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 5.16,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST403",
+      "page": 382,
+      "labelPointPdf": [
+        148.28,
+        626.53
+      ],
+      "nearestNativeDrawingId": 256,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 3.99,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST404",
+      "page": 382,
+      "labelPointPdf": [
+        222.92,
+        704.17
+      ],
+      "nearestNativeDrawingId": 304,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 5.7,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST404L",
+      "page": 382,
+      "labelPointPdf": [
+        215.72,
+        691.55
+      ],
+      "nearestNativeDrawingId": 279,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 4.83,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST404R",
+      "page": 382,
+      "labelPointPdf": [
+        211.04,
+        710.53
+      ],
+      "nearestNativeDrawingId": 276,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 4.94,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST405",
+      "page": 382,
+      "labelPointPdf": [
+        139.88,
+        649.93
+      ],
+      "nearestNativeDrawingId": 260,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 4.49,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST406",
+      "page": 382,
+      "labelPointPdf": [
+        213.08,
+        737.77
+      ],
+      "nearestNativeDrawingId": 307,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 6.03,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST406L",
+      "page": 382,
+      "labelPointPdf": [
+        204.44,
+        723.11
+      ],
+      "nearestNativeDrawingId": 273,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 4.58,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST406R",
+      "page": 382,
+      "labelPointPdf": [
+        200,
+        743.29
+      ],
+      "nearestNativeDrawingId": 270,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 5.07,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST407",
+      "page": 382,
+      "labelPointPdf": [
+        131.84,
+        673.21
+      ],
+      "nearestNativeDrawingId": 263,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 4.4,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST408",
+      "page": 382,
+      "labelPointPdf": [
+        203.12,
+        762.25
+      ],
+      "nearestNativeDrawingId": 269,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 14.52,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST408R",
+      "page": 382,
+      "labelPointPdf": [
+        189.56,
+        767.17
+      ],
+      "nearestNativeDrawingId": 269,
+      "sourceStrokeComponent": "P382_C029",
+      "labelToStrokeGapPdfPoints": 10.21,
+      "cooccurringTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST301",
+      "page": 383,
+      "labelPointPdf": [
+        160.88,
+        681.61
+      ],
+      "nearestNativeDrawingId": 58,
+      "sourceStrokeComponent": "P383_C001",
+      "labelToStrokeGapPdfPoints": 5.52,
+      "cooccurringTaxiwayLabels": [
+        "A",
+        "B",
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST302",
+      "page": 383,
+      "labelPointPdf": [
+        168.32,
+        659.05
+      ],
+      "nearestNativeDrawingId": 57,
+      "sourceStrokeComponent": "P383_C001",
+      "labelToStrokeGapPdfPoints": 5.07,
+      "cooccurringTaxiwayLabels": [
+        "A",
+        "B",
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST303",
+      "page": 383,
+      "labelPointPdf": [
+        176.96,
+        635.17
+      ],
+      "nearestNativeDrawingId": 56,
+      "sourceStrokeComponent": "P383_C001",
+      "labelToStrokeGapPdfPoints": 5.13,
+      "cooccurringTaxiwayLabels": [
+        "A",
+        "B",
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST304",
+      "page": 383,
+      "labelPointPdf": [
+        185.12,
+        611.41
+      ],
+      "nearestNativeDrawingId": 55,
+      "sourceStrokeComponent": "P383_C001",
+      "labelToStrokeGapPdfPoints": 5,
+      "cooccurringTaxiwayLabels": [
+        "A",
+        "B",
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST305",
+      "page": 383,
+      "labelPointPdf": [
+        193.76,
+        588.25
+      ],
+      "nearestNativeDrawingId": 54,
+      "sourceStrokeComponent": "P383_C001",
+      "labelToStrokeGapPdfPoints": 5.36,
+      "cooccurringTaxiwayLabels": [
+        "A",
+        "B",
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST306",
+      "page": 383,
+      "labelPointPdf": [
+        202.16,
+        564.85
+      ],
+      "nearestNativeDrawingId": 53,
+      "sourceStrokeComponent": "P383_C001",
+      "labelToStrokeGapPdfPoints": 5.36,
+      "cooccurringTaxiwayLabels": [
+        "A",
+        "B",
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST307",
+      "page": 383,
+      "labelPointPdf": [
+        210.32,
+        541.57
+      ],
+      "nearestNativeDrawingId": 52,
+      "sourceStrokeComponent": "P383_C001",
+      "labelToStrokeGapPdfPoints": 5.39,
+      "cooccurringTaxiwayLabels": [
+        "A",
+        "B",
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST308",
+      "page": 383,
+      "labelPointPdf": [
+        218.72,
+        518.53
+      ],
+      "nearestNativeDrawingId": 51,
+      "sourceStrokeComponent": "P383_C001",
+      "labelToStrokeGapPdfPoints": 5.47,
+      "cooccurringTaxiwayLabels": [
+        "A",
+        "B",
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST309",
+      "page": 383,
+      "labelPointPdf": [
+        226.76,
+        495.37
+      ],
+      "nearestNativeDrawingId": 50,
+      "sourceStrokeComponent": "P383_C001",
+      "labelToStrokeGapPdfPoints": 5.36,
+      "cooccurringTaxiwayLabels": [
+        "A",
+        "B",
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST310",
+      "page": 383,
+      "labelPointPdf": [
+        234.08,
+        475.45
+      ],
+      "nearestNativeDrawingId": 49,
+      "sourceStrokeComponent": "P383_C001",
+      "labelToStrokeGapPdfPoints": 5.72,
+      "cooccurringTaxiwayLabels": [
+        "A",
+        "B",
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST311",
+      "page": 383,
+      "labelPointPdf": [
+        241.52,
+        454.21
+      ],
+      "nearestNativeDrawingId": 48,
+      "sourceStrokeComponent": "P383_C001",
+      "labelToStrokeGapPdfPoints": 5.52,
+      "cooccurringTaxiwayLabels": [
+        "A",
+        "B",
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST312",
+      "page": 383,
+      "labelPointPdf": [
+        248.36,
+        435.25
+      ],
+      "nearestNativeDrawingId": 47,
+      "sourceStrokeComponent": "P383_C001",
+      "labelToStrokeGapPdfPoints": 5.74,
+      "cooccurringTaxiwayLabels": [
+        "A",
+        "B",
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST313",
+      "page": 383,
+      "labelPointPdf": [
+        254.6,
+        415.09
+      ],
+      "nearestNativeDrawingId": 46,
+      "sourceStrokeComponent": "P383_C001",
+      "labelToStrokeGapPdfPoints": 4.78,
+      "cooccurringTaxiwayLabels": [
+        "A",
+        "B",
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST314",
+      "page": 383,
+      "labelPointPdf": [
+        263.24,
+        393.01
+      ],
+      "nearestNativeDrawingId": 45,
+      "sourceStrokeComponent": "P383_C001",
+      "labelToStrokeGapPdfPoints": 5.47,
+      "cooccurringTaxiwayLabels": [
+        "A",
+        "B",
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST315",
+      "page": 383,
+      "labelPointPdf": [
+        270.92,
+        370.21
+      ],
+      "nearestNativeDrawingId": 44,
+      "sourceStrokeComponent": "P383_C001",
+      "labelToStrokeGapPdfPoints": 5.32,
+      "cooccurringTaxiwayLabels": [
+        "A",
+        "B",
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST316",
+      "page": 383,
+      "labelPointPdf": [
+        279.56,
+        347.65
+      ],
+      "nearestNativeDrawingId": 43,
+      "sourceStrokeComponent": "P383_C001",
+      "labelToStrokeGapPdfPoints": 5.99,
+      "cooccurringTaxiwayLabels": [
+        "A",
+        "B",
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST317",
+      "page": 383,
+      "labelPointPdf": [
+        291.08,
+        314.65
+      ],
+      "nearestNativeDrawingId": 42,
+      "sourceStrokeComponent": "P383_C001",
+      "labelToStrokeGapPdfPoints": 5.66,
+      "cooccurringTaxiwayLabels": [
+        "A",
+        "B",
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST318",
+      "page": 383,
+      "labelPointPdf": [
+        298.16,
+        294.13
+      ],
+      "nearestNativeDrawingId": 41,
+      "sourceStrokeComponent": "P383_C001",
+      "labelToStrokeGapPdfPoints": 5.49,
+      "cooccurringTaxiwayLabels": [
+        "A",
+        "B",
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST319",
+      "page": 383,
+      "labelPointPdf": [
+        305.48,
+        274.69
+      ],
+      "nearestNativeDrawingId": 40,
+      "sourceStrokeComponent": "P383_C001",
+      "labelToStrokeGapPdfPoints": 5.85,
+      "cooccurringTaxiwayLabels": [
+        "A",
+        "B",
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST320",
+      "page": 383,
+      "labelPointPdf": [
+        313.4,
+        250.33
+      ],
+      "nearestNativeDrawingId": 59,
+      "sourceStrokeComponent": "P383_C001",
+      "labelToStrokeGapPdfPoints": 5.23,
+      "cooccurringTaxiwayLabels": [
+        "A",
+        "B",
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST321",
+      "page": 383,
+      "labelPointPdf": [
+        323.12,
+        222.49
+      ],
+      "nearestNativeDrawingId": 60,
+      "sourceStrokeComponent": "P383_C001",
+      "labelToStrokeGapPdfPoints": 5,
+      "cooccurringTaxiwayLabels": [
+        "A",
+        "B",
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST201",
+      "page": 383,
+      "labelPointPdf": [
+        337.52,
+        723.85
+      ],
+      "nearestNativeDrawingId": 339,
+      "sourceStrokeComponent": "P383_C053",
+      "labelToStrokeGapPdfPoints": 4.47,
+      "cooccurringTaxiwayLabels": [
+        "S"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST202",
+      "page": 383,
+      "labelPointPdf": [
+        351.2,
+        678.73
+      ],
+      "nearestNativeDrawingId": 344,
+      "sourceStrokeComponent": "P383_C053",
+      "labelToStrokeGapPdfPoints": 4.02,
+      "cooccurringTaxiwayLabels": [
+        "S"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST202L",
+      "page": 383,
+      "labelPointPdf": [
+        354.8,
+        697.91
+      ],
+      "nearestNativeDrawingId": 360,
+      "sourceStrokeComponent": "P383_C053",
+      "labelToStrokeGapPdfPoints": 3.27,
+      "cooccurringTaxiwayLabels": [
+        "S"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST202R",
+      "page": 383,
+      "labelPointPdf": [
+        361.88,
+        670.93
+      ],
+      "nearestNativeDrawingId": 365,
+      "sourceStrokeComponent": "P383_C053",
+      "labelToStrokeGapPdfPoints": 7.37,
+      "cooccurringTaxiwayLabels": [
+        "S"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST203",
+      "page": 383,
+      "labelPointPdf": [
+        365.12,
+        635.17
+      ],
+      "nearestNativeDrawingId": 347,
+      "sourceStrokeComponent": "P383_C053",
+      "labelToStrokeGapPdfPoints": 4.87,
+      "cooccurringTaxiwayLabels": [
+        "S"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST203L",
+      "page": 383,
+      "labelPointPdf": [
+        369.32,
+        653.51
+      ],
+      "nearestNativeDrawingId": 368,
+      "sourceStrokeComponent": "P383_C053",
+      "labelToStrokeGapPdfPoints": 4.17,
+      "cooccurringTaxiwayLabels": [
+        "S"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST203R",
+      "page": 383,
+      "labelPointPdf": [
+        376.88,
+        628.09
+      ],
+      "nearestNativeDrawingId": 371,
+      "sourceStrokeComponent": "P383_C053",
+      "labelToStrokeGapPdfPoints": 7.47,
+      "cooccurringTaxiwayLabels": [
+        "S"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST204",
+      "page": 383,
+      "labelPointPdf": [
+        380,
+        597.73
+      ],
+      "nearestNativeDrawingId": 350,
+      "sourceStrokeComponent": "P383_C053",
+      "labelToStrokeGapPdfPoints": 3.36,
+      "cooccurringTaxiwayLabels": [
+        "S"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST204L",
+      "page": 383,
+      "labelPointPdf": [
+        389,
+        612.59
+      ],
+      "nearestNativeDrawingId": 401,
+      "sourceStrokeComponent": "P383_C053",
+      "labelToStrokeGapPdfPoints": 3.26,
+      "cooccurringTaxiwayLabels": [
+        "S"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST204R",
+      "page": 383,
+      "labelPointPdf": [
+        389.24,
+        588.85
+      ],
+      "nearestNativeDrawingId": 403,
+      "sourceStrokeComponent": "P383_C053",
+      "labelToStrokeGapPdfPoints": 8.23,
+      "cooccurringTaxiwayLabels": [
+        "S"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST205",
+      "page": 383,
+      "labelPointPdf": [
+        393.44,
+        556.81
+      ],
+      "nearestNativeDrawingId": 353,
+      "sourceStrokeComponent": "P383_C053",
+      "labelToStrokeGapPdfPoints": 3.91,
+      "cooccurringTaxiwayLabels": [
+        "S"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST205L",
+      "page": 383,
+      "labelPointPdf": [
+        402.56,
+        571.91
+      ],
+      "nearestNativeDrawingId": 395,
+      "sourceStrokeComponent": "P383_C053",
+      "labelToStrokeGapPdfPoints": 3.43,
+      "cooccurringTaxiwayLabels": [
+        "S"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST205R",
+      "page": 383,
+      "labelPointPdf": [
+        403.16,
+        548.89
+      ],
+      "nearestNativeDrawingId": 397,
+      "sourceStrokeComponent": "P383_C053",
+      "labelToStrokeGapPdfPoints": 9.19,
+      "cooccurringTaxiwayLabels": [
+        "S"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST206",
+      "page": 383,
+      "labelPointPdf": [
+        406.28,
+        521.65
+      ],
+      "nearestNativeDrawingId": 356,
+      "sourceStrokeComponent": "P383_C053",
+      "labelToStrokeGapPdfPoints": 4.75,
+      "cooccurringTaxiwayLabels": [
+        "S"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST206L",
+      "page": 383,
+      "labelPointPdf": [
+        416.48,
+        536.87
+      ],
+      "nearestNativeDrawingId": 382,
+      "sourceStrokeComponent": "P383_C053",
+      "labelToStrokeGapPdfPoints": 4.88,
+      "cooccurringTaxiwayLabels": [
+        "S"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST206R",
+      "page": 383,
+      "labelPointPdf": [
+        416.48,
+        513.73
+      ],
+      "nearestNativeDrawingId": 399,
+      "sourceStrokeComponent": "P383_C053",
+      "labelToStrokeGapPdfPoints": 6.62,
+      "cooccurringTaxiwayLabels": [
+        "S"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST207",
+      "page": 383,
+      "labelPointPdf": [
+        421.16,
+        474.97
+      ],
+      "nearestNativeDrawingId": 359,
+      "sourceStrokeComponent": "P383_C053",
+      "labelToStrokeGapPdfPoints": 6.56,
+      "cooccurringTaxiwayLabels": [
+        "S"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST207L",
+      "page": 383,
+      "labelPointPdf": [
+        424.16,
+        491.99
+      ],
+      "nearestNativeDrawingId": 387,
+      "sourceStrokeComponent": "P383_C053",
+      "labelToStrokeGapPdfPoints": 3.6,
+      "cooccurringTaxiwayLabels": [
+        "S"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST207R",
+      "page": 383,
+      "labelPointPdf": [
+        431.48,
+        466.33
+      ],
+      "nearestNativeDrawingId": 390,
+      "sourceStrokeComponent": "P383_C053",
+      "labelToStrokeGapPdfPoints": 5.06,
+      "cooccurringTaxiwayLabels": [
+        "S"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    },
+    {
+      "id": "ST208",
+      "page": 383,
+      "labelPointPdf": [
+        436.16,
+        447.37
+      ],
+      "nearestNativeDrawingId": 393,
+      "sourceStrokeComponent": "P383_C053",
+      "labelToStrokeGapPdfPoints": 3.74,
+      "cooccurringTaxiwayLabels": [
+        "S"
+      ],
+      "leadVerified": false,
+      "physicalConnectionApproved": false
+    }
+  ],
+  "knownInkComponents": [
+    {
+      "page": 382,
+      "componentId": "P382_C029",
+      "printedStands": 62,
+      "printedTaxiwayLabels": [
+        "F",
+        "G",
+        "H",
+        "J",
+        "K",
+        "P"
+      ],
+      "meaning": "source-ink-connected drawing components, NOT a verified physical taxiway"
+    },
+    {
+      "page": 383,
+      "componentId": "P383_C001",
+      "printedStands": 21,
+      "printedTaxiwayLabels": [
+        "A",
+        "B",
+        "R1",
+        "R2",
+        "R3",
+        "R4"
+      ],
+      "meaning": "source-ink-connected drawing components, NOT a verified physical taxiway"
+    },
+    {
+      "page": 383,
+      "componentId": "P383_C053",
+      "printedStands": 20,
+      "printedTaxiwayLabels": [
+        "S"
+      ],
+      "meaning": "source-ink-connected drawing components, NOT a verified physical taxiway"
+    }
+  ],
+  "untracedTaxiwaySource": "Z has PDF text label but no accepted black stroke within current source candidate radius; inspect grey/white paved-lane drawing instead",
+  "blockedUntil": [
+    "Verify physical named taxiway centerline paths and actual endpoints (not nearby text leader lines)",
+    "Trace 103 aircraft stand centerline and lead-out paths against native curve source",
+    "Review physical intersection contacts, AIP taxi restrictions and runway entry/hold gates",
+    "Match independent PDF page coordinate systems with surveyed common control points",
+    "QA all requested stand/runway path directions"
+  ],
+  "notes": "105+ native labels and black source strokes are evidence, not permission to route aircraft. No guessed edges published."
+}
