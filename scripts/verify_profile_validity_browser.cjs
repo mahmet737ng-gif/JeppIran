@@ -47,6 +47,41 @@ async function waitForServer(){
   assert.ok(positions.periodWidth>=100,"date range has visible width");
   assert.ok(positions.headerBottom>=positions.periodTop,"range is in the header");
 
+  // Critical regression: the old QA saw only the header, while a phone
+  // could show a completely empty airport chart body. Exercise the actual
+  // Android phone style and verify visible, clickable procedure categories.
+  await page.setViewportSize({width:390,height:844});
+  await page.evaluate(()=>document.documentElement.classList.add("jp-android-phone"));
+  const phoneCss=require("node:fs").readFileSync(
+    path.join(root,"app/src/main/assets/phone-layout.css"),"utf8");
+  await page.addStyleTag({content:phoneCss});
+  await page.locator("#profileProcedures").waitFor({state:"visible",timeout:18000});
+  const geometry=await page.evaluate(()=>{
+    const profile=document.getElementById("airportProfile");
+    const procedures=document.getElementById("profileProcedures");
+    const rect=procedures.getBoundingClientRect();
+    return {
+      airports:document.querySelectorAll("#airportList .airport-item").length,
+      cards:document.querySelectorAll("#airportProfile .profile-card").length,
+      tabs:document.querySelectorAll("#profileProcedures [data-proc-cat]").length,
+      profileHeight:profile.getBoundingClientRect().height,
+      procedureHeight:rect.height,
+      procedureWidth:rect.width,
+      profileScrollHeight:profile.scrollHeight
+    };
+  });
+  assert.ok(geometry.airports>2,"phone must display multiple airports: "+JSON.stringify(geometry));
+  assert.ok(geometry.cards>=5,"phone profile missing visible data panels: "+JSON.stringify(geometry));
+  assert.equal(geometry.tabs,4,"STAR/SID/AIRPORT/APP category controls are mandatory");
+  assert.ok(geometry.procedureHeight>80&&geometry.procedureWidth>220,
+    "procedure panel has collapsed on phone: "+JSON.stringify(geometry));
+  await page.locator('#profileProcedures [data-proc-cat="SID"]').click();
+  assert.ok(await page.locator('#profileProcedures [data-proc-page]').count()>0,
+    "SID charts not rendered for OIII");
+  console.log("PASS Android phone chart body and procedures",JSON.stringify(geometry));
+  await page.setViewportSize({width:1440,height:900});
+  await page.evaluate(()=>document.documentElement.classList.remove("jp-android-phone"));
+
   // The entire Home artwork is unaffected and continues to show ONLY the status.
   await page.evaluate(()=>{
    document.querySelectorAll(".view").forEach(e=>e.classList.remove("active"));
