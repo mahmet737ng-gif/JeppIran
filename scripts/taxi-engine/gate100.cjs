@@ -63,14 +63,35 @@ function audit100({inventory,graph,sourceSha256}={}){
       e.kind==="connector"&&e.quality==="mapped")))
     fail("TAXI_LINE",id+" has no source-reviewed polyline");
  }
+ const usedHoldNodes=new Map();
  for(const end of ends){
   const r=graph.runways?.[end];
+  if(r?.goalNode){
+    if(usedHoldNodes.has(r.goalNode))
+      fail("HOLD_SHORT","RWY "+end+" shares a published hold node with "+usedHoldNodes.get(r.goalNode));
+    usedHoldNodes.set(r.goalNode,end);
+  }
+  if(!r?.holdShortReviewed||r.holdSource?.verified!==true||
+     !Number.isInteger(r.holdSource?.page)||
+     !Array.isArray(r.holdSource?.sourceDrawingIds)||
+     !r.holdSource.sourceDrawingIds.length)
+    fail("HOLD_SOURCE","RWY "+end+" lacks original PDF line/point evidence for its holding position");
   if(!r?.goalNode||r.goalKind!=="hold")
    fail("HOLD_SHORT",end+" needs real referenced hold-short goal, not runway stripe/threshold");
   if(!r?.axis||!r.axisSource)
    fail("RUNWAY_AXIS",end+" needs independent physical runway axis");
   if(r&&!physical.includes(r.physicalId))
    fail("RUNWAY_IDENTITY",end+" attached to unknown runway");
+ }
+ // A backtrack token must map to actual source-backed runway centerline,
+ // never to a taxi apron edge or a freehand shortcut between parallel RWYs.
+ for(const end of ends){
+  const runway=graph.runways?.[end];
+  const bt=(graph.edges||[]).filter(e=>
+    U(e.label||e.taxiway)==="BT"+end&&e.kind==="runway"&&
+    e.physicalRunway===runway?.physicalId&&
+    ["mapped","qa"].includes(e.quality)&&e.source);
+  if(!bt.length)fail("BACKTRACK","RWY "+end+" needs original-axis source-backed BT"+end+" segment(s)");
  }
  const checked=E.validate(graph);
  if(!checked.ok)for(const e of checked.errors)fail("GRAPH",e);
