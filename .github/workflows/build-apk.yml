@@ -7,6 +7,25 @@ on:
       - main
       - work-no-build
       - pilot-ops-suite
+    # Chart/taxi QA commits outside the Android build inputs must not evict
+    # the pending native APK release (GitHub concurrency retains only one
+    # pending run, even with cancel-in-progress: false).
+    paths:
+      - 'app/**'
+      - 'web/**'
+      - '.github/workflows/build-apk.yml'
+      - 'build.gradle.kts'
+      - 'settings.gradle.kts'
+      - 'scripts/build_approach_briefings.py'
+      - 'scripts/build_airport_profiles.py'
+      - 'scripts/build_airport_runways.py'
+      - 'scripts/repair_georef_orientation.py'
+      - 'scripts/repair_georef_excluded_bounds.py'
+      - 'scripts/extract_chart_georef.py'
+      - 'scripts/merge_chart_georef.py'
+      - 'scripts/apply_georef_overrides.py'
+      - 'scripts/publish_direct_delta_updates.py'
+      - 'scripts/requirements-georef.txt'
 
 # Subsequent APK runs must not race the published version counter.
 concurrency:
