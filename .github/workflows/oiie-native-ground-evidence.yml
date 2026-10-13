@@ -9,6 +9,7 @@ on:
       - "scripts/build_oiie_stand_label_georeg.py"
       - "scripts/build_oiie_page_portal_candidates.py"
       - "scripts/build_oiie_real_source_ink_graph.py"
+      - "scripts/build_oiie_adc_pavement_islands.py"
       - "web/taxi-oiie-stages456.js"
       - "web/tests/taxi-oiie-runway-axes.test.cjs"
       - ".github/workflows/oiie-native-ground-evidence.yml"
@@ -24,7 +25,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install native PDF vector parser
-        run: python -m pip install --disable-pip-version-check pymupdf==1.26.5 shapely==2.1.2 networkx==3.5
+        run: python -m pip install --disable-pip-version-check pymupdf==1.26.5 shapely==2.1.2 networkx==3.5 scikit-image==0.25.2 scipy==1.16.2
       - name: Download matching V2621 Imam airport chart PDF
         run: |
           python - <<'PY'
@@ -60,6 +61,20 @@ jobs:
           assert d['approvedPhysicalTaxiRoutes']==0 and d['routeable']==False
           assert all(not s['lineConnectionIsTaxiwayApproved'] for region in d['regions'].values() for s in region['standMarkers'])
           print("PASS: 103 real source markers, 4,460 intra-apron source-ink directed paths; no unapproved taxi routing")
+          PY
+      - name: Detect ADC source-pavement islands and disallow runway-crossing shortcut
+        run: python scripts/build_oiie_adc_pavement_islands.py --pdf /tmp/OIIE.pdf --out /tmp/oiie-v2621-pavement-islands.json
+      - name: Verify Salam island stays runway-separated from Cargo and Passenger
+        run: |
+          python - <<'PY'
+          import json
+          v=json.load(open("/tmp/oiie-v2621-pavement-islands.json"))
+          islands=v["distinctApronIslandIds"]
+          assert islands["PASSENGER"]==islands["CARGO"]
+          assert islands["SALAM"]!=islands["CARGO"]
+          assert v["approvedCrossRunwayLinks"]==0 and v["approvedADCToApronPortals"]==0
+          assert v["routeable"] is False and v["publishedRunwayCrossingPermissionRequired"]
+          print("PASS: separated Salam vs Passenger/Cargo pavement islands; no false crossing")
           PY
       - name: Generate PDF seam candidates between independent OIIE regions
         run: python scripts/build_oiie_page_portal_candidates.py --source /tmp/oiie-v2621-native-evidence.json --output /tmp/oiie-v2621-portal-candidates.json
@@ -135,6 +150,7 @@ jobs:
           path: |
             /tmp/oiie-v2621-native-evidence.json
             /tmp/oiie-v2621-real-ink-graph.json
+            /tmp/oiie-v2621-pavement-islands.json
             /tmp/oiie-v2621-portal-candidates.json
             /tmp/oiie-v2621-runway-axes.json
             /tmp/oiie-v2621-stand-coordinate-audit.json
