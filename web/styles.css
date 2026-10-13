@@ -1483,3 +1483,63 @@ body.viewer-fullscreen .fullscreen-cdfa:not([hidden]){display:flex}
   outline:2px solid #087fca;
   outline-offset:2px;
 }
+
+/* JEPPIRAN PROFILE CLOCKS & CYCLE CURRENCY V1 (2026-10-13).
+   Profile-only layout, identical markup in dark/light; Home assets locked. */
+#chartsView .profile-utc-clock{
+  display:inline-block;margin-top:3px;
+  font-size:clamp(17px,1.65vw,23px);
+  font-weight:850;line-height:1.35;
+  letter-spacing:.025em;font-variant-numeric:tabular-nums;
+  color:#eef9ff;
+}
+#chartsView #profileLocalTime{font-variant-numeric:tabular-nums;font-weight:800}
+#chartsView .profile-validity-entry{
+  margin:0 12px 11px;padding:10px 11px;
+  border-radius:9px;border:1px solid #1e5379;
+  background:#08253f;color:#d7eafe;
+}
+#chartsView .profile-validity-heading{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:8px;font-size:12px;
+}
+#chartsView .profile-validity-heading strong{font-size:12px;color:#e4f5ff}
+#chartsView .profile-validity-state{
+  color:#66dab2;font-weight:850;letter-spacing:.035em;font-size:10px;
+}
+#chartsView .profile-validity-dates{
+  margin-top:5px;font-size:12px;font-variant-numeric:tabular-nums;
+}
+#chartsView .profile-validity-footnote{display:block;margin-top:6px;line-height:1.45;font-size:11px;color:#91b5d0}
+#chartsView .profile-validity-entry[data-state="unknown"] .profile-validity-state{color:#edc36f}
+#chartsView .profile-validity-entry[data-state="expired"]{
+  border-color:#ff5369;background:linear-gradient(130deg,#481e2e,#2a1723);
+}
+#chartsView .profile-validity-entry[data-state="expired"] .profile-validity-state,
+#chartsView .profile-validity-entry[data-state="expired"] .profile-validity-heading strong{color:#ffb9c0}
+#chartsView .profile-validity-warning{
+  margin-top:8px;padding:8px 9px;border:1px solid #ed6276;
+  border-radius:6px;background:#692434;color:#fff1f3;
+  font-size:12px;font-weight:750;line-height:1.45;
+}
+:root.light #chartsView .profile-utc-clock{color:#0b4c7e}
+:root.light #chartsView .profile-validity-entry{
+  background:#f7fbff;border-color:#bad6e9;color:#254d69;
+}
+:root.light #chartsView .profile-validity-heading strong{color:#153e5c}
+:root.light #chartsView .profile-validity-state{color:#147849}
+:root.light #chartsView .profile-validity-footnote{color:#597993}
+:root.light #chartsView .profile-validity-entry[data-state="unknown"] .profile-validity-state{color:#99630b}
+:root.light #chartsView .profile-validity-entry[data-state="expired"]{
+  background:linear-gradient(130deg,#fff0f2,#ffe7eb);
+  border-color:#d72d4b;color:#742739;
+}
+:root.light #chartsView .profile-validity-entry[data-state="expired"] .profile-validity-state,
+:root.light #chartsView .profile-validity-entry[data-state="expired"] .profile-validity-heading strong{color:#b51e3b}
+:root.light #chartsView .profile-validity-warning{
+  border-color:#d94660;background:#ffe0e6;color:#8e2038;
+}
+@media(max-width:620px){
+  #chartsView .profile-utc-clock{font-size:18px}
+  #chartsView .profile-validity-entry{margin:0 8px 9px}
+}
