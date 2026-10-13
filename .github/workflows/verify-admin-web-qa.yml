@@ -1,0 +1,31 @@
+name: Verify Admin Web QA Preview
+
+on:
+  push:
+    branches: [feature/admin-web-qa-live]
+    paths:
+      - 'scripts/admin-test-controls.js'
+      - 'scripts/build_web_admin_test.py'
+      - 'tests/profile-clocks-validity.test.cjs'
+      - 'tests/admin-qa-preview.test.cjs'
+      - '.github/workflows/verify-admin-web-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate scripts and tests
+        run: |
+          node --check scripts/admin-test-controls.js
+          python3 -m py_compile scripts/build_web_admin_test.py
+          node --test tests/admin-qa-preview.test.cjs
+          node --test tests/profile-clocks-validity.test.cjs
+          node --test tests/ipad-chart-ui-locked-v2621.test.cjs
