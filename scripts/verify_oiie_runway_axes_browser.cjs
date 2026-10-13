@@ -116,6 +116,31 @@ async function waitServer(){
   await page.locator("#taxiQaEnd").click();
   assert.equal(await page.locator("#taxiQaPanel").isVisible(),false);
   assert.equal(await page.locator("polyline.taxi-oiie-physical-runway-axis-simulator-qa").count(),0);
+  await page.locator("#chartTaxiBtn").click();
+  assert.equal(await page.locator("#taxiQaPanel").isVisible(),true);
+  await page.locator("#taxiQaInput").fill("ST301 ST314");
+  await page.locator("#taxiQaGo").click();
+  await page.locator("polyline.taxi-oiie-source-drawn-curve-qa-not-cleared").waitFor({state:"attached",timeout:12000});
+  assert.match(await page.locator("#taxiQaStatus").innerText(),/ORIGINAL-DRAWN CURVED PARKING LINES/);
+  assert.equal(await page.evaluate(()=>Number(selectedChart?.page)),383);
+  await page.locator("#chartTaxiBtn").click();
+  assert.equal(await page.locator("#taxiQaPanel").isVisible(),false);
+  assert.equal(await page.locator("polyline.taxi-oiie-source-drawn-curve-qa-not-cleared").count(),1,
+    "Cargo source QA route must remain on chart after TAXI closed");
+  await page.locator("#chartTaxiBtn").click();
+  await page.locator("#taxiQaInput").fill("ST204 ST208");
+  await page.locator("#taxiQaGo").click();
+  assert.equal(await page.locator("polyline.taxi-oiie-source-drawn-curve-qa-not-cleared").count(),1);
+  assert.match(await page.locator("#taxiQaStatus").innerText(),/SALAM/);
+  await page.locator("#taxiQaInput").fill("ST204 ST314");
+  await page.locator("#taxiQaGo").click();
+  assert.equal(await page.locator("polyline.taxi-oiie-source-drawn-curve-qa-not-cleared").count(),1,
+    "Unreviewed cross-apron runway shortcut MUST NOT replace source-same-apron preview");
+  await page.locator("#taxiQaClearQuick").click();
+  assert.equal(await page.locator("polyline.taxi-oiie-source-drawn-curve-qa-not-cleared").count(),0);
+  await page.locator("#taxiQaEnd").click();
+  assert.equal(await page.locator("#taxiQaPanel").isVisible(),false);
+  console.log("PASS Chrome OIIE: 800 original Cargo/Salam same-apron SIM QA candidates, chart383, persistent overlay, cross-runway blocked, CLEAR/END lifecycle.");
   console.log("PASS Chrome: responsive second-toolbar, TAXI toggle keeps route, CLEAR/END delete route, and 11L↔29R/11R↔29L source geometry remains gated");
  }finally{
   if(browser)await browser.close();
