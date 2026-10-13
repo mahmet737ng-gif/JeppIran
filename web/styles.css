@@ -1715,3 +1715,104 @@ body.viewer-fullscreen .fullscreen-cdfa:not([hidden]){display:flex}
 @media(max-width:690px){
  #chartsView .profile-terminal-validity .terminal-validity-dates span{justify-content:flex-start;flex-wrap:wrap}
 }
+
+/* V2621 phone chart menu: overlay above chart, not a permanent left column.
+   Scrolling follows native finger velocity; no synthetic slowing. */
+#jpChartMenuBtn,#jpChartDrawer,#jpChartDrawerBackdrop{display:none}
+body.viewer-fullscreen #jpChartMenuBtn{
+  display:grid;place-items:center;position:fixed;
+  left:max(10px,env(safe-area-inset-left));top:max(12px,env(safe-area-inset-top));
+  z-index:2300;width:48px;height:48px;border-radius:12px;
+  background:rgba(4,23,39,.82);color:#e7f7ff;
+  border:1px solid rgba(107,189,227,.68);
+  font:800 27px/1 system-ui;box-shadow:0 5px 15px #0005;
+  touch-action:manipulation;
+}
+body.viewer-fullscreen.jp-chart-drawer-open #jpChartDrawerBackdrop{
+  display:block;position:fixed;inset:0;z-index:2298;
+  border:0;background:rgba(1,10,22,.28);backdrop-filter:blur(1px);
+}
+body.viewer-fullscreen #jpChartDrawer{
+  position:fixed;display:flex;flex-direction:column;
+  top:0;bottom:0;left:0;z-index:2299;
+  width:min(310px,82vw);max-width:calc(100vw - 30px);
+  background:rgba(7,24,41,.84);color:#eef8ff;
+  border-right:1px solid rgba(98,192,244,.46);
+  box-shadow:8px 0 22px #0006;backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);
+  transform:translate3d(-103%,0,0);visibility:hidden;
+  transition:transform .18s ease,visibility .18s;
+  pointer-events:none;
+  padding-top:max(70px,env(safe-area-inset-top) + 64px);
+  padding-bottom:env(safe-area-inset-bottom);
+}
+body.viewer-fullscreen.jp-chart-drawer-open #jpChartDrawer{
+  transform:translate3d(0,0,0);visibility:visible;pointer-events:auto
+}
+#jpChartDrawer .jp-chart-drawer-heading{
+  padding:8px 13px;display:flex;justify-content:space-between;
+  align-items:center;gap:10px;font-size:14px;
+}
+#jpChartDrawerClose{
+  min-width:44px;min-height:44px;border-radius:9px;
+  border:1px solid #477390;background:rgba(4,24,43,.88);color:#fff;
+  font-size:27px;
+}
+#jpChartDrawerList{
+  flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;
+  overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+  touch-action:pan-y;scroll-behavior:auto;
+  padding:4px 9px 22px;
+}
+#jpChartDrawer .jp-drawer-category{
+  position:sticky;top:0;z-index:1;
+  padding:10px 9px;font:800 12px/1.3 system-ui;
+  letter-spacing:.06em;background:rgba(7,26,44,.94);
+  color:#7addff;
+}
+#jpChartDrawer .jp-drawer-chart{
+  display:block;width:100%;min-height:48px;
+  border:1px solid rgba(71,125,161,.43);border-radius:8px;
+  padding:10px 12px;margin:4px 0;text-align:left;
+  color:#eef8ff;background:rgba(17,48,73,.62);
+  font:600 13px/1.4 system-ui;overflow-wrap:anywhere;
+  touch-action:manipulation;
+}
+#jpChartDrawer .jp-drawer-chart.is-current{
+  border-color:#48cfff;background:rgba(17,108,168,.46);
+}
+#chartsView .airport-list,#chartsView .tree-content,
+#chartsView .airport-inline-tree{
+  scroll-behavior:auto;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+}
+@media(max-width:749px){
+  /* Fullscreen must occupy the entire mobile screen, not retain chart/profile panes. */
+  body.viewer-fullscreen #chartsView.charts-layout.active,
+  body.viewer-fullscreen #chartsView.charts-layout.active.chart-open{
+    display:block!important;position:fixed!important;inset:0!important;
+    width:100vw!important;height:100dvh!important;
+    min-height:0!important;overflow:hidden!important;
+    z-index:1100;background:#07121b!important;
+  }
+  body.viewer-fullscreen #chartsView .airport-pane,
+  body.viewer-fullscreen #chartsView .airport-profile,
+  body.viewer-fullscreen #chartsView .viewer-toolbar{
+    display:none!important;
+  }
+  body.viewer-fullscreen #chartsView .viewer-pane{
+    display:flex!important;width:100%!important;height:100dvh!important;
+    min-height:0!important;max-width:none!important;
+  }
+  body.viewer-fullscreen #chartsView #jpCdfaWorkspace{
+    flex:1!important;min-width:0!important;min-height:0!important;
+  }
+  body.viewer-fullscreen #chartsView #pdfStage{
+    height:100%!important;min-height:0!important;
+    width:100%!important;touch-action:none;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  body.viewer-fullscreen #jpChartDrawer{transition:none}
+}
