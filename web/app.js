@@ -1355,7 +1355,8 @@ function setupChartGestures(){
     if(!sample||pinched||performance.now()-sample.time>75)return;
     if(Math.hypot(sample.dx,sample.dy)<0.25)return;
     // Movement is intentionally almost imperceptible, not a kinetic scroll.
-    const dx=0,dy=0; // No artificial coasting: chart displacement follows finger exactly.
+    const dx=Math.max(-2.5,Math.min(2.5,sample.dx*0.36));
+    const dy=Math.max(-2.5,Math.min(2.5,sample.dy*0.36));
     const x0=chartPanX,y0=chartPanY,scroll0=stage.scrollTop,t0=performance.now();
     function frame(now){
       const p=Math.min(1,(now-t0)/90);
