@@ -449,48 +449,73 @@ async function loadLtfmGridGeorefs(m){
   }catch(e){console.warn("LTFM overlays skipped; previous georefs unchanged",e)}
 }
 async function loadData(){
+  const root=$("#airportProfile");
+  if(!charts.length && root)root.innerHTML='<div class="profile-no-selection"><span>✈</span><h2>Loading airport charts…</h2><p>Loading the current airport index.</p></div>';
   try{
-    const [m,c,g,profiles,runways,chartNameData,enrouteInfo]=await Promise.all([
-      fetch(RAW_ROOT+"charts-manifest.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error("manifest");return r.json()}),
-      fetch(RAW_ROOT+"charts-current.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error("charts");return r.json()}),
-      fetch(RAW_ROOT+"chart-georef.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null),
-      fetch(RAW_ROOT+"airport-profiles.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null),
-      fetch(RAW_ROOT+"airport-runways.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null),
-      fetch(RAW_ROOT+"chart-display-names-v2621.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null),
-      fetch(RAW_ROOT+"enroute-manifest.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null)
+    // A slow/failed optional georeference, runway or weather file must NEVER
+    // block the terminal chart index or the airport selector.
+    const [m,c]=await Promise.all([
+      fetch(RAW_ROOT+"charts-manifest.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error("manifest HTTP "+r.status);return r.json()}),
+      fetch(RAW_ROOT+"charts-current.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error("charts HTTP "+r.status);return r.json()})
     ]);
-    manifest=m; enrouteValidityManifest=enrouteInfo&&enrouteInfo.schema===1?enrouteInfo:null; charts=Array.isArray(c)?c:(c.charts||[]);
-    // Display-only title mapping; the original chart records remain untouched.
-    chartDisplayNamesByPage=(chartNameData&&chartNameData.cycle==="2621"&&chartNameData.pages&&
-      charts.some(c=>c.airport==="OIKR"&&Number(c.page)===541))
-      ? chartNameData.pages : Object.create(null);
-    airportMetadata=profiles&&profiles.airports&&profiles.cycle===m.version?profiles.airports:{};
-    airportRunwayMetadata=runways&&runways.airports&&runways.cycle===m.version?runways.airports:{};
-    georefByPage=buildGeorefIndex(g);
-    // Core charts and airport profiles must render immediately. Optional
-    // georeference QA is not a prerequisite for opening the airport screen.
+    const records=Array.isArray(c)?c:(c.charts||[]);
+    if(!records.length)throw Error("Empty chart index");
+    manifest=m; charts=records;
     renderAirports();
     if(!selectedAirport && charts.some(c=>c.airport==="OIII"))selectAirport("OIII");
-    else if(selectedAirport&&!selectedChart)renderAirportProfile(selectedAirport);
-    Promise.resolve().then(async()=>{
-      for(const [label,task] of [
-        ["region",()=>loadIndependentAirportRegionGeorefs(m)],
-        ["adc",()=>enableAdcQaIfRequested(m)],
-        ["birjand",()=>enableBirjandAdcQaIfRequested(m)],
-        ["doha",()=>enableDohaAdcQaIfRequested(m)],
-        ["othh-flight",()=>loadOthhFlightApprovedGeorefs(m)],
-        ["othh-extra",()=>loadOthhFlightExtraGeorefs(m)],
-        ["ltfm",()=>loadLtfmGridGeorefs(m)],
-        ["published",()=>loadPublishedExperimentalGeorefs(m)]
-      ]){try{await task()}catch(error){console.warn("Optional georeference "+label+" failed",error)}}
-    });
+    else if(!selectedAirport)selectAirport(charts[0].airport);
+    else if(!selectedChart)renderAirportProfile(selectedAirport);
     if($("#homeCycle"))$("#homeCycle").textContent=(m.version||VERSION);
     updateTerminalValidityDisplay();
     refreshPositionStatus();
     $("#updateSubtitle").textContent=(m.version||VERSION)+" data • "+Object.keys(m.airports||{}).length+" airports";
-  }catch(e){
-    $("#updateSubtitle").textContent="Unable to load online chart index";
-    dialog("Chart data","Could not load the chart index. Check the internet connection and reload.");
+
+    // Optional data is loaded AFTER the working airport/charts UI is visible.
+    // This prevents one large JSON/network request from leaving Charts empty.
+    Promise.resolve().then(async()=>{
+      try{
+        const urls=["chart-georef.json","airport-profiles.json","airport-runways.json",
+          "chart-display-names-v2621.json","enroute-manifest.json"];
+        const optional=await Promise.all(urls.map(name=>
+          fetch(RAW_ROOT+name,{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(error=>{
+            console.warn("Optional airport asset unavailable:",name,error);return null;
+          })
+        ));
+        if(manifest!==m)return;
+        const [g,profiles,runways,chartNameData,enrouteInfo]=optional;
+        georefByPage=buildGeorefIndex(g);
+        enrouteValidityManifest=enrouteInfo&&enrouteInfo.schema===1?enrouteInfo:null;
+        chartDisplayNamesByPage=(chartNameData&&chartNameData.cycle==="2621"&&chartNameData.pages&&
+          charts.some(c=>c.airport==="OIKR"&&Number(c.page)===541))
+          ?chartNameData.pages:Object.create(null);
+        airportMetadata=profiles&&profiles.airports&&profiles.cycle===m.version?profiles.airports:{};
+        airportRunwayMetadata=runways&&runways.airports&&runways.cycle===m.version?runways.airports:{};
+        renderAirports($("#airportSearch").value);
+        if(selectedAirport&&!selectedChart)renderAirportProfile(selectedAirport);
+        if(selectedChart)updateAircraftMarker();
+        updateTerminalValidityDisplay();
+        for(const [label,task] of [
+          ["region",()=>loadIndependentAirportRegionGeorefs(m)],
+          ["adc",()=>enableAdcQaIfRequested(m)],
+          ["birjand",()=>enableBirjandAdcQaIfRequested(m)],
+          ["doha",()=>enableDohaAdcQaIfRequested(m)],
+          ["othh-flight",()=>loadOthhFlightApprovedGeorefs(m)],
+          ["othh-extra",()=>loadOthhFlightExtraGeorefs(m)],
+          ["ltfm",()=>loadLtfmGridGeorefs(m)],
+          ["published",()=>loadPublishedExperimentalGeorefs(m)]
+        ]){
+          try{await task()}catch(error){console.warn("Optional georeference "+label+" failed",error)}
+        }
+        if(selectedChart)updateAircraftMarker();
+      }catch(error){console.warn("Optional JEPPIRAN chart metadata failed without blocking Charts",error)}
+    });
+  }catch(error){
+    console.error("JEPPIRAN chart index could not load",error);
+    $("#updateSubtitle").textContent="Unable to load chart index";
+    if(root){
+      root.innerHTML='<div class="profile-no-selection" role="alert"><h2>Charts temporarily unavailable</h2><p>Could not load the airport index. Check the connection and retry.</p><button type="button" id="retryChartsLoad" class="profile-chip">RETRY CHARTS</button></div>';
+      $("#retryChartsLoad")?.addEventListener("click",()=>loadData());
+    }
   }
 }
 $("#updateCard").addEventListener("click",async()=>{
@@ -809,6 +834,23 @@ function renderAirportProfile(icao){
   const name=community.name||(/airport$/i.test(nameBase)?nameBase:nameBase+" Airport");
   const country=community.country|| (icao.startsWith("OI")?"Iran":icao.startsWith("LT")?"Türkiye":icao.startsWith("OM")?"United Arab Emirates":icao.startsWith("OO")?"Oman":icao.startsWith("OR")?"Iraq":icao.startsWith("UD")?"Armenia":icao.startsWith("UG")?"Georgia":"");
   const cityName=(meta[1]||"").toLowerCase().replace(/\b\w/g,m=>m.toUpperCase());
+  // Every airport must expose its actual STAR/SID/AIRPORT/APP procedures
+  // directly on the profile, even on narrow Android/WebView screens.
+  const airportProcedures=charts.filter(c=>c.airport===icao);
+  const procedureGroups=[["STAR","STAR"],["SID","SID"],["Airport","AIRPORT"],["Approach","APP"]];
+  const chosenGroup=procedureGroups.some(([key])=>key===profileProcedureTab)?profileProcedureTab:"Airport";
+  const activeProcedures=airportProcedures.filter(c=>c.category===chosenGroup)
+    .sort((a,b)=>Number(a.pdf_page||a.page)-Number(b.pdf_page||b.page));
+  const procedureMarkup='<section class="profile-card profile-procedures" id="profileProcedures">'+
+    '<header><span>TERMINAL CHARTS • '+profileEsc(icao)+'</span><small>'+airportProcedures.length+' charts</small></header>'+
+    '<div class="profile-proc-tabs" role="group" aria-label="Chart category">'+
+    procedureGroups.map(([key,label])=>'<button type="button" data-proc-cat="'+key+'" class="'+(key===chosenGroup?'active':'')+'">'+
+      label+' ('+airportProcedures.filter(c=>c.category===key).length+')</button>').join("")+'</div>'+
+    '<div class="profile-proc-list">'+
+    (activeProcedures.length?activeProcedures.map(c=>'<button type="button" data-proc-page="'+Number(c.page)+'"><span>'+
+      profileEsc(c.chart_number?c.chart_number+' • '+displayChartName(c):displayChartName(c))+
+      '</span><small>OPEN ›</small></button>').join(""):'<p class="profile-empty">No charts in this category.</p>')+
+    '</div></section>';
   const runwayRows=d.runways&&d.runways.length?d.runways.map(x=>{
     const adcHeading=Number.isFinite(x.headingAdc)?Math.round(x.headingAdc)+"°":"—";
     const magHeading=Number.isFinite(x.headingMag)?x.headingMag.toFixed(1)+"°":"—";
@@ -822,6 +864,7 @@ function renderAirportProfile(icao){
     }).join(""):'<div class="profile-empty">Runway data unavailable; consult current ADC/AIP.</div>';
   root.innerHTML='<div class="profile-shell">'+
     '<div class="profile-heading"><div><div class="profile-code-row"><strong class="profile-icao">'+profileEsc(icao)+'</strong><span class="profile-chip">'+profileEsc(d.iata||"—")+'</span><button type="button" class="profile-chip" id="profileFavBtn" aria-label="Favorite airport">'+(fav.has(icao)?"★":"☆")+'</button></div><h2>'+profileEsc(name)+'</h2><p>'+profileEsc(meta[1])+(meta[1]&&country?', ':'')+profileEsc(country)+'</p></div><div class="profile-elev">Elevation: '+(Number.isFinite(d.elevation)?d.elevation.toLocaleString()+' ft':'—')+'<br>⌖ '+formattedCoord+'<br><strong id="profileUtcClock" class="profile-utc-clock" aria-live="off">--:--:-- UTC</strong><div id="profileTerminalValidity" class="terminal-validity profile-terminal-validity" data-state="unknown" role="status" aria-live="polite">'+terminalValidityIndicator().profileMarkup+'</div></div></div>'+
+    procedureMarkup+
     '<nav class="profile-tabs" aria-label="Airport profile">'+["Overview"].map(t=>'<button type="button" class="profile-tab'+(profileTab===t?" active":"")+'" data-profile-tab="'+t+'">'+t+'</button>').join("")+'</nav>'+
     '<div class="profile-cols"><div class="profile-col">'+
       '<section class="profile-card" id="profileWeather"><header><span>METAR • '+profileEsc(icao)+'</span><small id="profileMetarAge">'+(raw?"Last received / cached":"Loading live METAR…")+'</small></header>'+
@@ -840,6 +883,14 @@ function renderAirportProfile(icao){
 
     '</div></div></div>';
   updateTerminalValidityDisplay();
+  root.querySelectorAll("[data-proc-cat]").forEach(button=>button.onclick=()=>{
+    profileProcedureTab=button.dataset.procCat;
+    renderAirportProfile(icao);
+  });
+  root.querySelectorAll("[data-proc-page]").forEach(button=>button.onclick=()=>{
+    const chart=airportProcedures.find(c=>Number(c.page)===Number(button.dataset.procPage));
+    if(chart)selectChart(chart);
+  });
   root.querySelector("#profileFavBtn").onclick=()=>{setAirportFavorite(icao);renderAirportProfile(icao)};
   root.querySelectorAll("[data-runway]").forEach(b=>b.onclick=()=>{window.jeppiranSelectedRunway=b.dataset.runway;renderAirportProfile(icao)});
   utcDisplay();
@@ -2367,7 +2418,8 @@ window.addEventListener("jeppiran-cdfa-layout-changed",()=>{
   // CDFA occupies its own fixed column, never overlapping the PDF or its gestures.
   if(selectedChart)requestAnimationFrame(()=>refitSelectedChartForLayout());
 });
-if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")){
+if(new URLSearchParams(location.search).get("platform")!=="android-phone"&&
+   "serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")){
   // Never force a mid-session reload when a PWA worker is updated.
   // Let the browser activate waiting updates at the next natural reopen.
   navigator.serviceWorker.register("./service-worker.js",{updateViaCache:"none"}).catch(()=>{});
