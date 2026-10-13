@@ -536,7 +536,7 @@ function terminalValidityIndicator(){
   const cycle=terminalRevisionWindow(manifest);
   if(!cycle)return {
     state:"unknown",
-    markup:'<span class="terminal-validity-label">TERMINAL CHARTS</span>'+
+    markup:'<b class="terminal-validity-label">TERMINAL CHARTS</b>'+
       '<strong class="terminal-validity-status">DATES UNAVAILABLE</strong>'+
       '<small class="terminal-validity-note">Verify the installed chart cycle</small>'
   };
@@ -550,7 +550,7 @@ function terminalValidityIndicator(){
     "Next issue "+utcCycleDate(cycle.until);
   return {
     state,
-    markup:'<span class="terminal-validity-label">TERMINAL CHARTS</span>'+
+    markup:'<b class="terminal-validity-label">TERMINAL CHARTS</b>'+
       '<strong class="terminal-validity-status">'+label+'</strong>'+
       '<small class="terminal-validity-note">'+profileEsc(note)+'</small>'
   };
