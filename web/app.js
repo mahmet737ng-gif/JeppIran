@@ -534,12 +534,13 @@ function utcCycleDate(date){
    A chart cycle issue date is not a substitute for an individual chart's effective date. */
 function terminalValidityIndicator(){
   const cycle=terminalRevisionWindow(manifest);
-  if(!cycle)return {
-    state:"unknown",
-    markup:'<b class="terminal-validity-label">TERMINAL CHARTS</b>'+
-      '<strong class="terminal-validity-status">DATES UNAVAILABLE</strong>'+
-      '<small class="terminal-validity-note">Verify the installed chart cycle</small>'
-  };
+  if(!cycle){
+    const heading='<b class="terminal-validity-label">TERMINAL CHARTS</b>'+
+      '<strong class="terminal-validity-status">DATES UNAVAILABLE</strong>';
+    const note='<small class="terminal-validity-note">Verify the installed chart cycle</small>';
+    return {state:"unknown",markup:heading+note,
+      profileMarkup:heading+'<span class="terminal-validity-range">Cycle period unavailable</span>'+note};
+  }
   const now=Date.now();
   const expired=now>=cycle.until.getTime();
   const pending=now<cycle.from.getTime();
@@ -548,11 +549,17 @@ function terminalValidityIndicator(){
   const note=expired?"New cycle due "+utcCycleDate(cycle.until)+" — update charts":
     pending?"Scheduled issue "+utcCycleDate(cycle.from):
     "Next issue "+utcCycleDate(cycle.until);
+  // Show the inclusive calendar-day range in airport profiles only.
+  // The next cycle is issued at 00:00 UTC on cycle.until (end exclusive).
+  const lastDay=new Date(cycle.until.getTime()-86400000);
+  const range='Cycle period: '+utcCycleDate(cycle.from)+' – '+utcCycleDate(lastDay);
+  const heading='<b class="terminal-validity-label">TERMINAL CHARTS</b>'+
+    '<strong class="terminal-validity-status">'+label+'</strong>';
+  const noteMarkup='<small class="terminal-validity-note">'+profileEsc(note)+'</small>';
   return {
     state,
-    markup:'<b class="terminal-validity-label">TERMINAL CHARTS</b>'+
-      '<strong class="terminal-validity-status">'+label+'</strong>'+
-      '<small class="terminal-validity-note">'+profileEsc(note)+'</small>'
+    markup:heading+noteMarkup,
+    profileMarkup:heading+'<span class="terminal-validity-range">'+profileEsc(range)+'</span>'+noteMarkup
   };
 }
 function updateTerminalValidityDisplay(){
@@ -561,7 +568,8 @@ function updateTerminalValidityDisplay(){
     const el=document.getElementById(id);
     if(!el)continue;
     if(el.dataset.state!==status.state)el.dataset.state=status.state;
-    if(el.innerHTML!==status.markup)el.innerHTML=status.markup;
+    const content=id==="profileTerminalValidity"?status.profileMarkup:status.markup;
+    if(el.innerHTML!==content)el.innerHTML=content;
   }
 }
 function profileValidityMarkup(){
