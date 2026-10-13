@@ -445,6 +445,7 @@ async function loadData(){
     airportMetadata=profiles&&profiles.airports&&profiles.cycle===m.version?profiles.airports:{};
     airportRunwayMetadata=runways&&runways.airports&&runways.cycle===m.version?runways.airports:{};
     georefByPage=buildGeorefIndex(g);
+    await loadIndependentAirportRegionGeorefs(m);
     await enableAdcQaIfRequested(m);
     await enableBirjandAdcQaIfRequested(m);
     await enableDohaAdcQaIfRequested(m);
@@ -885,10 +886,71 @@ function projectGeoRaw(model,lat,lon){
   const y=model.meanY+model.yLon*(lon-model.meanLon)+model.yLat*(lat-model.meanLat);
   return Number.isFinite(x)&&Number.isFinite(y)?{x,y}:null;
 }
-function projectGeo(model,lat,lon){
+// A single PDF page may contain TWO independently scaled/georeferenced maps.
+// Resolve in geographic space and require the projected point to fall inside
+// its actual sub-chart crop; never extrapolate Cargo into Salam or vice versa.
+function resolveGeoRegion(model,lat,lon){
+  if(!model)return null;
+  if(Array.isArray(model.regions)){
+    for(const r of model.regions){
+      const p=projectGeoRaw(r.model,lat,lon);
+      if(p&&geoBoundsContains(r.model.bounds,p.x,p.y,0)&&
+        !(r.model.excluded||[]).some(b=>geoBoundsContains(b,p.x,p.y)))
+        return {model:r.model,point:p,region:r.id};
+    }
+    return null; // no chart region covers this position
+  }
   const p=projectGeoRaw(model,lat,lon);
-  if(!p||!geoBoundsContains(model.bounds,p.x,p.y,6)||model.excluded.some(b=>geoBoundsContains(b,p.x,p.y)))return null;
-  return p;
+  return p&&geoBoundsContains(model.bounds,p.x,p.y,6)&&
+    !model.excluded.some(b=>geoBoundsContains(b,p.x,p.y))?
+    {model,point:p,region:null}:null;
+}
+function projectGeo(model,lat,lon){
+  return resolveGeoRegion(model,lat,lon)?.point||null;
+}
+/* JEPPIRAN V2621 two independent maps printed on the same PDF page.
+ * Additive overlay: never mutate/copy/rewrite the 776 protected original
+ * source georeferences, in particular OIIE Cargo and OIII ADC.
+ */
+async function loadIndependentAirportRegionGeorefs(m){
+  try{
+    const response=await fetch("./data/airport-region-georef-v2621.json?v=oiie-o3-multiregion-r1",{cache:"no-store"});
+    if(!response.ok)throw Error("region georef HTTP "+response.status);
+    const payload=await response.json();
+    if(payload.schemaVersion!==1||payload.type!=="MULTI_REGION_GEOREFERENCE"||
+      payload.source?.sha256!==m.source_sha256||
+      String(payload.source?.cycle)!==String(m.cycle)||payload.source.pdfPageCount!==1654)
+      throw Error("Region source/cycle mismatch");
+    const salam=payload.regions.find(r=>r.id==="SALAM_APRON_3"&&r.airport==="OIIE"&&r.page===383);
+    const o3Main=payload.regions.find(r=>r.id==="OIII_PARKING_MAIN"&&r.airport==="OIII"&&r.page===432);
+    const o3Inset=payload.regions.find(r=>r.id==="OIII_APRON_5_INSET"&&r.airport==="OIII"&&r.page===432);
+    if(!salam||!o3Main||!o3Inset||payload.regions.length!==3)
+      throw Error("All three source-grid regions required");
+    const originalCargo=georefByPage.get(383);
+    if(!originalCargo||originalCargo.excluded?.length<1||
+      originalCargo.page!==383||originalCargo.width!==612||originalCargo.height!==792)
+      throw Error("Approved OIIE Cargo georeference missing; refuse replacement");
+    const salModel=makeGeoModel(salam),mainModel=makeGeoModel(o3Main),insetModel=makeGeoModel(o3Inset);
+    if(!salModel||!mainModel||!insetModel)throw Error("Printed grid control points failed affine validation");
+    if(georefByPage.has(432))throw Error("Original OIII parking model exists: never overwrite it");
+    const cargoMask=originalCargo.excluded[0];
+    if(!geoBoundsContains(cargoMask,salModel.bounds.left,salModel.bounds.top)||
+       !geoBoundsContains(cargoMask,salModel.bounds.right,salModel.bounds.bottom))
+      throw Error("Salam crop must coincide with existing Cargo exclusion mask");
+    // The page's outer width/height remain PDF points, and the first model
+    // remains the original accepted one (Cargo) for other existing consumers.
+    georefByPage.set(383,{...originalCargo,regions:[
+      {id:"CARGO_APRON_2",model:originalCargo},
+      {id:"SALAM_APRON_3",model:salModel}
+    ]});
+    georefByPage.set(432,{...mainModel,regions:[
+      {id:"OIII_APRON_5_INSET",model:insetModel},
+      {id:"OIII_PARKING_MAIN",model:mainModel}
+    ]});
+    console.info("JEPPIRAN: OIIE 383 Cargo+Salam, OIII 432 Main+Apron5 region models loaded for simulator QA.");
+  }catch(e){
+    console.warn("Independent multi-region airport georefs skipped safely:",e);
+  }
 }
 function buildGeorefIndex(root){
   const map=new Map();
@@ -906,6 +968,11 @@ function hideAircraftMarker(){
 }
 function renderedGeoHeading(model,lat,heading,canvas){
   if(!Number.isFinite(heading))return 0;
+  if(Array.isArray(model?.regions)){
+    const active=resolveGeoRegion(model,Number(lastPosition?.lat),Number(lastPosition?.lon));
+    if(!active)return 0;
+    model=active.model;
+  }
   const r=Math.PI/180,cosLat=Math.cos(lat*r);
   if(Math.abs(cosLat)<1e-8)return 0;
   const east=Math.sin(heading*r)/cosLat,north=Math.cos(heading*r);
