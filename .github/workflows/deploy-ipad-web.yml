@@ -154,6 +154,10 @@ jobs:
             --pdf web/charts/OIIE.pdf \
             --vectors web/data/taxi-surveys/OIIE-native-vectors-v2621.json \
             --out web/data/taxi-surveys/OIIE-source-ink-graph-v2621.json
+          python3 scripts/build_oiie_apron_source_corridors.py \
+            --pdf web/charts/OIIE.pdf \
+            --vectors web/data/taxi-surveys/OIIE-native-vectors-v2621.json \
+            --out web/data/taxi-surveys/OIIE-source-apron-corridors-v2621.json
           python3 scripts/build_oiie_adc_pavement_islands.py \
             --pdf web/charts/OIIE.pdf \
             --out web/data/taxi-surveys/OIIE-adc-pavement-islands-v2621.json
@@ -181,6 +185,12 @@ jobs:
           assert ink['regions']['SALAM']['directedInkConnected']==380
           assert ink['regions']['PASSENGER']['directedInkConnected']==3660
           assert ink['approvedPhysicalTaxiRoutes']==0 and ink['routeable']==False
+          curved=json.loads(Path('web/data/taxi-surveys/OIIE-source-apron-corridors-v2621.json').read_text())
+          assert curved['directedOriginalCurvedCorridorCases']==800
+          assert len(curved['sourceCorridors']['CARGO']['routes'])==420
+          assert len(curved['sourceCorridors']['SALAM']['routes'])==380
+          assert curved['approvedADCPagePortals']==curved['approvedRunwayHoldShorts']==0
+          assert curved['readyForFullAirportRouting'] is False
           islands=json.loads(Path("web/data/taxi-surveys/OIIE-adc-pavement-islands-v2621.json").read_text())
           assert islands['distinctApronIslandIds']['PASSENGER']==islands['distinctApronIslandIds']['CARGO']
           assert islands['distinctApronIslandIds']['SALAM']!=islands['distinctApronIslandIds']['CARGO']
