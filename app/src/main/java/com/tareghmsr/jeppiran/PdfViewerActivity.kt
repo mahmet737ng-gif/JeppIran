@@ -10782,17 +10782,12 @@ private val locationPermissionLauncher =
                                                 width.toFloat()
                                             )
 
-                                } else if (
-                                    scale >
-                                        1.02f
-                                ) {
-
-                                    offsetX +=
-                                        dx
-
-                                    offsetY +=
-                                        dy
-
+                                } else {
+                                    // True 1:1 finger pan at all zoom levels.
+                                    // Width-fit portrait charts are taller than
+                                    // the screen and MUST also move at 100%.
+                                    offsetX += dx
+                                    offsetY += dy
                                     constrainPan()
                                 }
                             }
