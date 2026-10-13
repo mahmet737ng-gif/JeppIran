@@ -32,6 +32,11 @@ jobs:
           yes | sdkmanager --licenses >/dev/null || true
           sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
       - uses: gradle/actions/setup-gradle@v4
+      - name: Verify shared web viewer and locked UI
+        run: |
+          node --check web/app.js
+          node --test tests/ipad-chart-ui-locked-v2621.test.cjs
+          node --test tests/cdfa-ui-locked-v2621.test.cjs
       - name: Compile and unit-test phone preview
         env:
           JEPPIRAN_PHONE_QA: 'true'
