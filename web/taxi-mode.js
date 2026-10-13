@@ -1,7 +1,7 @@
 /* JEPPIRAN TAXI preview · verified graphs only · NOT FOR ACTUAL NAVIGATION */
 (function(){
 "use strict";
-const ns="http://www.w3.org/2000/svg", taxi={auto:null,graphRequest:null,active:false,trace:false,startSelect:false,testStart:null,airport:"",graph:null,standReference:null,selectedStand:"",showStands:false,showNetwork:false,route:null,survey:null,surveyEngine:null,surveyVector:null,o3Survey:null,o3Workflow:null,o3Selected:'',oiieSurvey:null,oiieStatus:null,manual:new Map(),prompted:"",goTicket:0,networkAudit:null,networkOpen:false,highlightTaxiway:"",insGroups:null,standGroupAudit:null,standGroupOpen:false};
+const ns="http://www.w3.org/2000/svg", taxi={auto:null,graphRequest:null,active:false,trace:false,startSelect:false,testStart:null,airport:"",graph:null,standReference:null,selectedStand:"",showStands:false,showNetwork:false,route:null,survey:null,surveyEngine:null,surveyVector:null,o3Survey:null,o3Workflow:null,o3Selected:'',oiieSurvey:null,oiieStatus:null,oiieReview:null,oiieSelected:'',manual:new Map(),prompted:"",goTicket:0,networkAudit:null,networkOpen:false,highlightTaxiway:"",insGroups:null,standGroupAudit:null,standGroupOpen:false};
 const $=id=>document.getElementById(id);
 const name=s=>String(s||"").trim().toUpperCase().replace(/\s+/g," ");
 function parse(raw){
@@ -454,19 +454,20 @@ function message(s,warning=false){
 const OIAW_QA_REVISION="2621-oiaw-inset-registration-r3";
 async function fetchGraph(icao){
   taxi.graph=null;taxi.genericEngine=null;taxi.genericMonitor=null;
-  taxi.survey=null;taxi.surveyEngine=null;taxi.surveyVector=null;taxi.o3Survey=null;taxi.o3Workflow=null;taxi.o3Selected='';taxi.oiieSurvey=null;taxi.oiieStatus=null;
+  taxi.survey=null;taxi.surveyEngine=null;taxi.surveyVector=null;taxi.o3Survey=null;taxi.o3Workflow=null;taxi.o3Selected='';taxi.oiieSurvey=null;taxi.oiieStatus=null;taxi.oiieReview=null;taxi.oiieSelected='';
   message("Checking verified ground network for "+icao+"…");
   try{
     // The ADC inventory is the sole OIAW source until source PDF curves and
     // hold lines have been fully traced. Previous projected OIAW.json routes
     // MUST NEVER be presented as mapped taxi centreline geometry.
     if(icao==="OIIE"){
-      const [sr,qr]=await Promise.all([
+      const [sr,qr,rr]=await Promise.all([
         fetch("./data/taxi-surveys/OIIE.json?v=2621-oiie-v3-source-r1",{cache:"no-store"}),
-        fetch("./data/taxi-surveys/OIIE-workflow-2621.json?v=2621-oiie-v3-qa-r1",{cache:"no-store"})
+        fetch("./data/taxi-surveys/OIIE-workflow-2621.json?v=2621-oiie-v3-qa-r1",{cache:"no-store"}),
+        fetch("./data/taxi-surveys/OIIE-3step-source-review-2621.json?v=2621-oiie-native-3step-r1",{cache:"no-store"})
       ]);
-      if(!sr.ok||!qr.ok)throw Error("OIIE ADC/Parking inventory unavailable");
-      const info=await sr.json(),report=await qr.json();
+      if(!sr.ok||!qr.ok||!rr.ok)throw Error("OIIE ADC/Parking QA source files unavailable");
+      const [info,report,review]=await Promise.all([sr.json(),qr.json(),rr.json()]);
       const engine=window.JEPPIRAN_ADC_ENGINE_V3;
       const audit=engine?.evaluate({
         airport:"OIIE",chartPages:info.chartPages,scannedLabels:[],
@@ -480,17 +481,23 @@ async function fetchGraph(icao){
         String(info.cycle)!==String(manifest?.cycle)||
         info.source?.sha256!==manifest?.source_sha256||
         report.sourceSha256!==info.source.sha256||
+        review.sourceSha256!==info.source.sha256||review.airport!==icao||
+        review.routeable!==false||review.stands?.length!==103||
+        review.taxiways?.length!==24||
+        review.reviewedCenterlines!==0||review.reviewedPhysicalTaxiJunctions!==0||
         info.stands?.length!==103||!audit||audit.routeable!==false)
         throw Error("OIIE chart cycle, source fingerprint or QA state mismatch");
       if(taxi.airport!==icao)return null;
-      taxi.oiieSurvey=info;taxi.oiieStatus=report;
+      taxi.oiieSurvey=info;taxi.oiieStatus=report;taxi.oiieReview=review;taxi.oiieSelected='';
       $("taxiQaInput").placeholder="ST100 / ST301 / ST201 / A / R1 (source lookup only)";
       $("taxiQaStands").textContent="STANDS ("+info.stands.length+")";
-      message("OIIE ADC v3 · 5 chart pages, 2 physical runways, "+
-        info.stands.length+" printed stand identifiers, "+
-        report.totalUnreviewedTraces+" source line candidates and "+
-        report.totalUnreviewedGeometricContacts+" unreviewed contacts. "+
-        "NEXT: source tracing / review / page alignment. TAXI ROUTING BLOCKED.",true);
+      message("OIIE ADC v3 · 5 pages · 2 runways · "+
+        review.taxiways.length+" named taxiway labels · "+review.stands.length+
+        " printed stand anchors · 725 native source strokes · "+
+        "926 geometrical contact candidates. Source-stroke clusters span "+
+        "62 passenger, 21 cargo and 20 Salam stands; no physical junctions "+
+        "or stand-lead paths approved. Select ST100 / ST301 / ST201 to inspect "+
+        "source ink reference. TAXI ROUTING BLOCKED.",true);
       draw();return info;
     }
     if(icao==="OIII"){
@@ -733,21 +740,34 @@ function focusPdfVectorOnADC(points,chartHeight){
 }
 function imamInventoryGo(typed){
   const token=name(typed).replace(/\s+/g,"");
-  const data=taxi.oiieSurvey;
-  if(!data)return;
-  taxi.route=null;taxi.auto=null;draw();
+  const data=taxi.oiieSurvey,review=taxi.oiieReview;
+  if(!data||!review)return;
+  taxi.route=null;taxi.auto=null;taxi.oiieSelected='';
   const stand=token.replace(/^STAND/,"ST").replace(/^ST/,"");
-  if(data.stands.some(v=>v.id===stand)){
-    message("OIIE ST"+stand+" found on Parking page "+
-      data.stands.find(v=>v.id===stand).sourcePage+
-      ". Stand lead and exact route not yet reviewed; no line drawn.",true);return;
+  const st=review.stands.find(v=>v.id==="ST"+stand);
+  if(st){
+    taxi.oiieSelected=st.id;draw();
+    message("OIIE "+st.id+" · source stand LABEL on PDF page "+st.page+
+      " · nearest original ink drawing #"+st.nearestNativeDrawingId+
+      " · connected INK component "+st.sourceStrokeComponent+
+      " · nearby printed names in this SOURCE component: "+
+      st.cooccurringTaxiwayLabels.join(", ")+
+      ". This is not a verified taxiway junction, parking nose or route.",true);
+    return;
   }
-  if(data.taxiways.some(v=>v.id===token)){
-    message("OIIE TWY "+token+" listed in ADC source; centerline, neighbours "+
-      "and gate intersections not yet verified. No route drawn.",true);return;
+  const tw=review.taxiways.find(v=>v.name===token);
+  if(tw){
+    taxi.oiieSelected=token;draw();
+    message("OIIE TWY "+token+" · native printed label page "+tw.page+
+      (tw.nearestNativeDrawingId==null?
+        " · no nearby qualified black centerline: gray pavement review needed.":
+        " · nearby source drawing #"+tw.nearestNativeDrawingId)+
+      " · physical start/end and links NOT YET VERIFIED. No taxi route.",true);
+    return;
   }
-  message("OIIE scanned source inventory only. Compound taxi instructions "+
-    "remain blocked until reviewed stand/ADC/runway graph exists.",true);
+  draw();message("OIIE · unsupported or compound taxi request. "+
+    "Only single stand/taxiway source-label lookup is ready. "+
+    "An incomplete airport graph must NOT draw a guessed route.",true);
 }
 function mehrabadInventoryGo(typed){
   const token=name(typed).replace(/\s+/g,"");
@@ -1008,7 +1028,7 @@ function nearest(graph,pos,firstTaxiway=null){
 }
 function syncAirport(){
   if(!taxi.active||taxi.airport===selectedAirport)return;
-  taxi.goTicket++;taxi.airport=selectedAirport;taxi.graph=null;taxi.genericEngine=null;taxi.genericMonitor=null;taxi.survey=null;taxi.surveyEngine=null;taxi.surveyVector=null;taxi.o3Survey=null;taxi.o3Workflow=null;taxi.o3Selected='';
+  taxi.goTicket++;taxi.airport=selectedAirport;taxi.graph=null;taxi.genericEngine=null;taxi.genericMonitor=null;taxi.survey=null;taxi.surveyEngine=null;taxi.surveyVector=null;taxi.o3Survey=null;taxi.o3Workflow=null;taxi.o3Selected='';taxi.oiieSurvey=null;taxi.oiieStatus=null;taxi.oiieReview=null;taxi.oiieSelected='';
   taxi.route=null;taxi.auto=null;taxi.standPreview=null;taxi.standEgress=null;taxi.standLead=null;taxi.standQaRoute=null;taxi.testStart=null;taxi.prompted="";
   taxi.networkAudit=null;taxi.highlightTaxiway="";
   $("taxiQaAirport").textContent=selectedAirport;
@@ -1727,9 +1747,11 @@ function draw(){
     Number(selectedChart?.page)===38&&taxi.airport==="OIAW"?taxi.route:null;
   const o3Layer=taxi.o3Survey&&selectedAirport==="OIII"?
     window.JEPPIRAN_TAXI_OIII_LAYER?.compose(taxi.o3Survey,Number(selectedChart?.page),taxi.o3Selected):null;
+  const oiieLayer=taxi.oiieReview&&selectedAirport==="OIIE"&&
+    [380,382,383].includes(Number(selectedChart?.page))?taxi.oiieReview:null;
   const model=qaChart||publishedModel,
-    w=o3Layer?.ok?o3Layer.width:(vectorPage?.chartWidth||model?.width||1000),
-    h=o3Layer?.ok?o3Layer.height:(vectorPage?.chartHeight||model?.height||1000);
+    w=oiieLayer?612:(o3Layer?.ok?o3Layer.width:(vectorPage?.chartWidth||model?.width||1000)),
+    h=oiieLayer?792:(o3Layer?.ok?o3Layer.height:(vectorPage?.chartHeight||model?.height||1000));
   const svg=s("svg",{class:"taxi-qa-overlay",viewBox:"0 0 "+w+" "+h,preserveAspectRatio:"none"});
   svg.style.cssText="position:absolute;inset:0;width:100%;height:100%;z-index:12;pointer-events:none";
   if(o3Layer?.ok){
@@ -1752,6 +1774,27 @@ function draw(){
         cx:t.x,cy:t.y,r:5,fill:"none",stroke:"#ffe45e",
         "stroke-width":1.6,"class":"taxi-o3-source-taxi-label"
       }));
+  }
+  if(oiieLayer){
+    // Native printed-label reference marks ONLY. Do not connect markers
+    // or label pointers: source-stroke touching is not verified ground topology.
+    const page=Number(selectedChart?.page);
+    for(const st of oiieLayer.stands){
+      if(st.page!==page)continue;
+      const selected=taxi.oiieSelected===st.id;
+      const p=st.labelPointPdf;
+      svg.appendChild(s("circle",{cx:p[0],cy:p[1],r:selected?5:1.6,
+        fill:selected?"#ffdc5b":"rgba(255,183,58,.70)",
+        stroke:selected?"#101922":"none","stroke-width":1,
+        "pointer-events":"none","class":"taxi-oiie-source-stand-anchor-qa"}));
+    }
+    for(const tw of oiieLayer.taxiways){
+      if(tw.name!==taxi.oiieSelected||tw.page!==page)continue;
+      const p=tw.printedLabelPdf;
+      svg.appendChild(s("circle",{cx:p[0],cy:p[1],r:5.4,
+        fill:"none",stroke:"#6feaff","stroke-width":1.7,
+        "pointer-events":"none","class":"taxi-oiie-source-taxi-label-qa"}));
+    }
   }
   if(taxi.airport==="OIMM"&&taxi.showNetwork&&taxi.graph&&model){
     const normal=[],military=[],runway=[];
