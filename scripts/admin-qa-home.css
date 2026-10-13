@@ -1,0 +1,144 @@
+/* JEPPIRAN isolated Admin Home QA only. Production Home backgrounds/layout stay unchanged. */
+#adminQaHomeBtn[hidden]{display:none!important}
+#homeView .home-tiles #adminQaHomeBtn{
+  grid-column:1 / -1;
+  min-height:88px;
+  display:flex;
+  flex-direction:row;
+  justify-content:center;
+  gap:14px;
+  align-items:center;
+  border:1px solid #56d3ee;
+  background:linear-gradient(105deg,rgba(8,54,80,.96),rgba(13,30,61,.96));
+}
+#homeView #adminQaHomeBtn .card-icon{
+  display:grid;place-items:center;
+  font-size:34px;
+  width:54px;height:54px;
+  color:#a2f1ff;
+}
+#homeView #adminQaHomeBtn b{
+  font-size:18px;letter-spacing:.12em;
+}
+#homeView #adminQaHomeBtn small{
+  font-size:12px;line-height:1.4;
+}
+#qaAccountButton{
+  min-height:44px;max-width:155px;
+  font:750 12px/1.2 system-ui;
+  white-space:nowrap;
+}
+#qaSigninDialog{
+  width:min(460px,calc(100vw - 24px));max-width:460px;
+  padding:0;border:1px solid #4c8dab;border-radius:17px;
+  background:#091e31;color:#f5faff;
+  box-shadow:0 20px 60px #000b;
+}
+#qaSigninDialog::backdrop{background:#000b;backdrop-filter:blur(4px)}
+#qaSigninDialog .qa-signin-content{padding:23px}
+#qaSigninDialog h2{margin:0 0 10px;font:800 22px/1.25 system-ui}
+#qaSigninDialog p{font:13px/1.5 system-ui;color:#c3d7e6;margin:0 0 18px}
+#qaSigninDialog .qa-identity-grid{display:grid;gap:10px}
+#qaSigninDialog button{
+  min-height:44px;color:#eefaff;background:#103953;
+  border:1px solid #578bac;border-radius:9px;padding:10px 12px;
+  cursor:pointer;text-align:left;
+}
+#qaSigninDialog button b,#qaSigninDialog button small{display:block}
+#qaSigninDialog button b{font:800 15px system-ui}
+#qaSigninDialog button small{color:#afc9d9;font:12px/1.5 system-ui}
+#qaSigninCancel{margin-top:14px;width:100%;text-align:center!important}
+
+#adminQaView.view{
+  min-height:calc(100dvh - 76px);
+  background:linear-gradient(160deg,#061324,#0c2236 65%,#061a2e);
+  color:#f3faff;
+  overflow:visible;
+}
+#adminQaView.view:not(.active){display:none!important}
+#adminQaView .qa-dashboard-inner{
+  max-width:1180px;margin:auto;
+  padding:30px 22px 60px;
+}
+#adminQaView .qa-dashboard-header{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:12px;
+  padding:0 0 21px;border-bottom:1px solid #325c79;
+}
+#adminQaView .qa-dashboard-header h1{
+  margin:4px 0 2px;
+  font:850 clamp(24px,3vw,35px)/1.25 system-ui;
+  letter-spacing:-.03em;
+}
+#adminQaView .qa-dashboard-header p{margin:3px 0;color:#a9cde3;font:13px/1.5 system-ui}
+#adminQaView .qa-env{
+  color:#ffd98a;font:850 11px/1.3 system-ui;
+  letter-spacing:.055em;
+}
+#adminQaView .qa-dashboard-actions{
+  display:flex;flex-wrap:wrap;gap:8px
+}
+#adminQaView .qa-dashboard-actions button{
+  min-height:46px;border:1px solid #497e9c;
+  border-radius:9px;color:#fff;background:#17415d;
+  padding:11px 16px;cursor:pointer;font-weight:700;
+}
+/* Reposition the previous working Admin QA controls as content of the full page. */
+#adminQaView #jpAdminTestPanel{
+  position:static!important;z-index:auto!important;
+  inset:auto!important;
+  display:block;
+  width:100%!important;
+  max-width:none!important;
+  max-height:none!important;
+  overflow:visible!important;
+  box-shadow:none!important;
+  background:transparent!important;
+  border:0!important;
+  padding:18px 0 0!important;
+  color:#effaff!important;
+}
+#adminQaView #jpAdminTestPanel[hidden]{display:none!important}
+#adminQaView #jpAdminTestPanel>div:first-child{
+  display:none!important; /* the dashboard already owns its heading/back button */
+}
+#adminQaView #jpAdminTestPanel .qa-metrics{
+  gap:12px;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+}
+#adminQaView #jpAdminTestPanel .qa-metrics div{
+  padding:18px 8px;
+  background:linear-gradient(135deg,#163c59,#10314d);
+}
+#adminQaView #jpAdminTestPanel .qa-metrics b{font-size:29px}
+#adminQaView #jpAdminTestPanel section{
+  padding:22px;
+  margin:17px 0;
+  border:1px solid #355d78;border-radius:14px;
+  background:rgba(10,35,56,.86);
+}
+#adminQaView #jpAdminTestPanel .qa-columns{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+}
+#adminQaView #jpAdminTestPanel .qa-users{
+  max-height:290px;
+  background:#081f33;padding:11px;border-radius:10px;
+}
+#adminQaView #jpAdminTestPanel .qa-users button{
+  min-height:46px;
+  font-size:13px;
+}
+#adminQaView #jpAdminTestPanel #qaOutput{max-height:340px}
+#jpAdminTestBackdrop{display:none!important}
+#jpAdminTestBtn{display:none!important}
+@media(max-width:650px){
+  #qaAccountButton{font-size:11px;max-width:115px;padding:7px 8px}
+  #adminQaView .qa-dashboard-inner{padding:16px 12px 45px}
+  #adminQaView .qa-dashboard-header{align-items:flex-start}
+  #adminQaView .qa-dashboard-header h1{font-size:25px}
+  #adminQaView #jpAdminTestPanel section{padding:13px 11px}
+  #adminQaView #jpAdminTestPanel .qa-columns{grid-template-columns:1fr}
+  #adminQaView #jpAdminTestPanel .qa-metrics b{font-size:22px}
+  #adminQaView #jpAdminTestPanel .qa-metrics small{font-size:9px}
+  #homeView .home-tiles #adminQaHomeBtn{min-height:92px;padding:9px 10px}
+}
