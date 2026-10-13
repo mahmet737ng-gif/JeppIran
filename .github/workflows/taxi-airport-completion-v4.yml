@@ -1,0 +1,94 @@
+name: One Command Airport Taxi Completion V4
+on:
+  workflow_dispatch:
+    inputs:
+      airport:
+        description: "ICAO: e.g. OIIE"
+        required: true
+        default: OIIE
+        type: string
+      cycle:
+        description: "4-digit JEPPIRAN cycle (e.g. 2621)"
+        required: true
+        default: "2621"
+        type: string
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/taxi-engine/gate100.cjs'
+      - 'scripts/taxi-engine/extract-sources.py'
+      - 'tests/taxi-engine-gate100.test.cjs'
+      - 'docs/JEPPIRAN_AIRPORT_TAXI_ENGINE_V4_ONE_COMMAND.md'
+      - '.github/workflows/taxi-airport-completion-v4.yml'
+      - 'web/data/taxi-networks/OIIE.json'
+permissions:
+  contents: read
+jobs:
+  finish-airport:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      TARGET_AIRPORT: ${{ inputs.airport || 'OIIE' }}
+      TARGET_CYCLE: ${{ inputs.cycle || '2621' }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install native PDF reading and QA dependencies
+        run: python -m pip install --disable-pip-version-check pymupdf==1.26.5
+      - name: Validate every-stand to every-runway bidirectional gate itself
+        run: |
+          node --check scripts/taxi-engine/gate100.cjs
+          node tests/taxi-engine-gate100.test.cjs
+      - name: Fetch and fingerprint airport source for requested cycle
+        run: |
+          mkdir -p "$RUNNER_TEMP/airport-evidence"
+          python - <<'PY'
+          import hashlib,json,os,pathlib,re,urllib.request
+          airport=os.environ["TARGET_AIRPORT"].strip().upper()
+          cycle=os.environ["TARGET_CYCLE"].strip()
+          if not re.fullmatch("[A-Z]{4}",airport) or not re.fullmatch("[0-9]{4}",cycle):
+            raise RuntimeError("INVALID ICAO OR CYCLE")
+          m=json.loads(pathlib.Path("app/src/main/assets/charts-manifest.json").read_text())
+          if str(m["cycle"])!=cycle:raise RuntimeError("PUBLISHED CYCLE DIFFERENT FROM REQUEST")
+          airport_info=m["airports"].get(airport)
+          if not airport_info:raise RuntimeError("NO ORIGINAL AIRPORT SOURCE IN CURRENT CYCLE")
+          url=airport_info["url"]
+          request=urllib.request.Request(url,headers={"User-Agent":"JEPPIRAN-TAXI-ENGINE-V4"})
+          with urllib.request.urlopen(request,timeout=180) as response:blob=response.read()
+          if hashlib.sha256(blob).hexdigest()!=airport_info["sha256"]:
+            raise RuntimeError("AIRPORT PDF SHA256 MISMATCH")
+          dest=pathlib.Path(os.environ["RUNNER_TEMP"])/"airport-evidence"/(airport+".pdf")
+          dest.write_bytes(blob)
+          print("Original cycle/source fingerprint verified",airport,cycle,"bytes",len(blob))
+          PY
+      - name: Extract all PDF source vector evidence without invented topology
+        run: |
+          python scripts/taxi-engine/extract-sources.py \
+            --pdf "$RUNNER_TEMP/airport-evidence/$TARGET_AIRPORT.pdf" \
+            --icao "$TARGET_AIRPORT" \
+            --out "$RUNNER_TEMP/airport-evidence/$TARGET_AIRPORT-native-evidence.json"
+      - name: Check source inventory and 100-percent routing in both directions
+        id: gate
+        continue-on-error: true
+        run: |
+          node scripts/taxi-engine/gate100.cjs "$TARGET_AIRPORT" \
+            --report "$RUNNER_TEMP/airport-evidence/$TARGET_AIRPORT-gate100.json"
+      - name: Save complete forensic evidence for QA correction and resume
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: taxi-v4-${{ env.TARGET_AIRPORT }}-source-checkpoint
+          path: ${{ runner.temp }}/airport-evidence
+          retention-days: 30
+      - name: Final source-verified release gate — NEVER announce partial as complete
+        run: |
+          if [ "${{ steps.gate.outcome }}" != "success" ]; then
+            echo "::error::Airport NOT READY. The mandatory stand x runway x two-direction test set is NOT 100% PASS. No taxi routing release permitted."
+            exit 1
+          fi
+          echo "GRAPH QA 100% PASS: ready for post-deploy real browser + simulator taxi QA."
