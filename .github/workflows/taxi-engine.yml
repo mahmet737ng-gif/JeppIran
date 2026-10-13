@@ -15,6 +15,7 @@ on:
       - 'tests/taxi-engine-destinations.test.cjs'
       - 'tests/taxi-engine-matrix.test.cjs'
       - 'tests/taxi-engine-matrix-synthetic.test.cjs'
+      - 'tests/taxi-engine-runway-crossing.test.cjs'
       - 'tests/taxi-engine-oiie-v4-release.test.cjs'
       - 'tests/fixtures/taxi-engine/**'
       - '.github/workflows/taxi-engine.yml'
@@ -66,6 +67,7 @@ jobs:
           node tests/taxi-engine-destinations.test.cjs
           node tests/taxi-engine-matrix.test.cjs
           node tests/taxi-engine-matrix-synthetic.test.cjs
+          node tests/taxi-engine-runway-crossing.test.cjs
           node tests/taxi-engine-oiie-v4-release.test.cjs
       - name: Preserve existing OIMM route regression
         run: |
