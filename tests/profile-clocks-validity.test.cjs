@@ -8,7 +8,7 @@ const root=path.resolve(__dirname,"..");
 const app=fs.readFileSync(path.join(root,"web/app.js"),"utf8");
 const css=fs.readFileSync(path.join(root,"web/styles.css"),"utf8");
 const begin=app.indexOf("function airportLocalZone(");
-const end=app.indexOf("let lastValidityCheckMinute;",begin);
+const end=app.indexOf("let lastValidityCheckMinute=",begin);
 assert.ok(begin>=0&&end>begin,"isolated profile helpers are present");
 const source=app.slice(begin,end);
 function build(date,manifest={version:"V2621",cycle:"2621"},enroute={
