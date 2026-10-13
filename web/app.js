@@ -351,6 +351,28 @@ $$("[data-route]").forEach(b=>b.addEventListener("click",e=>{
 }));
 window.addEventListener("popstate",()=>renderRoute((location.hash||"#home").slice(1)));
 window.JEPPIRAN_NAV_READY=true;
+/* Edge-swipe page history. Keep PDF pan/zoom and horizontal lists untouched. */
+(function(){
+  let touchStart=null;
+  document.addEventListener("touchstart",e=>{
+    if(e.touches.length!==1){touchStart=null;return}
+    const t=e.touches[0],target=e.target;
+    if(t.clientX>45&&t.clientX<innerWidth-45){touchStart=null;return}
+    if(target.closest("#pdfStage,.pdf-stage,input,textarea,select,dialog,.airport-list,.airport-inline-tree")){touchStart=null;return}
+    touchStart={x:t.clientX,y:t.clientY,when:Date.now()};
+  },{passive:true});
+  document.addEventListener("touchend",e=>{
+    if(!touchStart||!e.changedTouches.length)return;
+    const x=e.changedTouches[0].clientX-touchStart.x;
+    const y=e.changedTouches[0].clientY-touchStart.y;
+    if(Math.abs(x)>75&&Math.abs(x)>Math.abs(y)*1.7&&Date.now()-touchStart.when<900){
+      if(x>0)history.back();else history.forward();
+    }
+    touchStart=null;
+  },{passive:true});
+  document.addEventListener("touchcancel",()=>{touchStart=null},{passive:true});
+})();
+
 
 function dialog(title,text){
   $("#dialogTitle").textContent=title;
@@ -445,17 +467,23 @@ async function loadData(){
     airportMetadata=profiles&&profiles.airports&&profiles.cycle===m.version?profiles.airports:{};
     airportRunwayMetadata=runways&&runways.airports&&runways.cycle===m.version?runways.airports:{};
     georefByPage=buildGeorefIndex(g);
-    await loadIndependentAirportRegionGeorefs(m);
-    await enableAdcQaIfRequested(m);
-    await enableBirjandAdcQaIfRequested(m);
-    await enableDohaAdcQaIfRequested(m);
-    await loadOthhFlightApprovedGeorefs(m);
-    await loadOthhFlightExtraGeorefs(m);
-    await loadLtfmGridGeorefs(m);
-    await loadPublishedExperimentalGeorefs(m);
+    // Core charts and airport profiles must render immediately. Optional
+    // georeference QA is not a prerequisite for opening the airport screen.
     renderAirports();
     if(!selectedAirport && charts.some(c=>c.airport==="OIII"))selectAirport("OIII");
     else if(selectedAirport&&!selectedChart)renderAirportProfile(selectedAirport);
+    Promise.resolve().then(async()=>{
+      for(const [label,task] of [
+        ["region",()=>loadIndependentAirportRegionGeorefs(m)],
+        ["adc",()=>enableAdcQaIfRequested(m)],
+        ["birjand",()=>enableBirjandAdcQaIfRequested(m)],
+        ["doha",()=>enableDohaAdcQaIfRequested(m)],
+        ["othh-flight",()=>loadOthhFlightApprovedGeorefs(m)],
+        ["othh-extra",()=>loadOthhFlightExtraGeorefs(m)],
+        ["ltfm",()=>loadLtfmGridGeorefs(m)],
+        ["published",()=>loadPublishedExperimentalGeorefs(m)]
+      ]){try{await task()}catch(error){console.warn("Optional georeference "+label+" failed",error)}}
+    });
     if($("#homeCycle"))$("#homeCycle").textContent=(m.version||VERSION);
     updateTerminalValidityDisplay();
     refreshPositionStatus();
