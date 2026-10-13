@@ -5,6 +5,8 @@ on:
     paths:
       - "scripts/build_oiie_pdf_ground_evidence.py"
       - "scripts/build_oiie_runway_axes.py"
+      - "web/taxi-oiie-stages456.js"
+      - "web/tests/taxi-oiie-runway-axes.test.cjs"
       - ".github/workflows/oiie-native-ground-evidence.yml"
 permissions:
   contents: read
@@ -38,6 +40,8 @@ jobs:
         run: python scripts/build_oiie_pdf_ground_evidence.py --pdf /tmp/OIIE.pdf --output /tmp/oiie-v2621-native-evidence.json
       - name: Verify original OIIE runway polygon axes against published lengths
         run: python scripts/build_oiie_runway_axes.py --pdf /tmp/OIIE.pdf --output /tmp/oiie-v2621-runway-axes.json
+      - name: Verify native two-way runway-only route contract
+        run: node web/tests/taxi-oiie-runway-axes.test.cjs /tmp/oiie-v2621-runway-axes.json
       - name: Assert only the two runway axes pass QA
         run: |
           python - <<'PY'
