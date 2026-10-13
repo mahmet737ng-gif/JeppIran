@@ -6,6 +6,8 @@ on:
     branches: [main]
     paths:
       - 'web/**'
+      - 'tests/offline-auto-sync.test.cjs'
+      - 'scripts/build_offline_manifest.py'
       - 'scripts/build_airport_profiles.py'
       - 'scripts/build_airport_runways.py'
       - 'app/src/main/assets/charts-current.json'
