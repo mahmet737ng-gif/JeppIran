@@ -45,7 +45,8 @@ def run(survey_path,review_path,table_path):
             table_by_single["ST"+r["printedStandGroup"]]=r
     positions=[]
     for sid,st in by_id.items():
-        label=labels[sid];area=st["apron"]
+        label=labels[sid];original_area=st["apron"]
+        area="PASSENGER" if original_area=="PASSENGER_SOUTH" else original_area
         if area not in MAP or label["page"]!=MAP[area]["page"]:
             raise RuntimeError("Mixed stand region/page "+sid)
         p=label["labelPointPdf"]
@@ -58,7 +59,7 @@ def run(survey_path,review_path,table_path):
         difference=meters(geo,ref["printedWGS84"]) if ref else None
         status=("PRINTED_INS_CONFLICT" if difference is not None and difference>300
                 else "LABEL_REGISTERED_INS_ROUNDED_CHECK" if ref else "LABEL_REGISTERED_GROUP_INS_NOT_UNIQUE")
-        positions.append({"id":sid,"area":area,"sourcePage":label["page"],
+        positions.append({"id":sid,"area":area,"surveyArea":original_area,"sourcePage":label["page"],
             "sourceOriginalDrawingId":label["nearestNativeDrawingId"],
             "sourceTextPdfPoint":p,"labelGeographicWGS84":geo,
             "sourcePointIsParkingNose":False,"standLeadReviewed":False,
