@@ -474,6 +474,24 @@ async function fetchGraph(icao){
           const [network,survey]=await Promise.all(answer.map(r=>r.json()));
           const names=survey.stands.map(st=>String(st.id).toUpperCase());
           const ends=survey.runwayPolygons.flatMap(r=>r.ends);
+          // Do not unlock the browser merely because a graph happens to be
+          // connected. Each runway end must have its OWN reviewed hold-short
+          // and an explicit SOURCE-backed BT segment on its physical runway.
+          const holdNodes=new Set();
+          const gateEvidence=ends.every(end=>{
+            const r=network.runways?.[end];
+            if(!r?.goalNode||r.goalKind!=="hold"||
+               r.holdShortReviewed!==true||r.holdSource?.verified!==true||
+               !Number.isInteger(r.holdSource?.page)||
+               !Array.isArray(r.holdSource?.sourceDrawingIds)||
+               !r.holdSource.sourceDrawingIds.length||
+               holdNodes.has(r.goalNode))return false;
+            holdNodes.add(r.goalNode);
+            return network.edges?.some(e=>
+              String(e.label||e.taxiway).toUpperCase()==="BT"+end&&
+              e.kind==="runway"&&e.physicalRunway===r.physicalId&&
+              ["mapped","qa"].includes(e.quality)&&e.source);
+          });
           const factory=window.JEPPIRAN_TAXI_ENGINE;
           if(network.enabled===true&&
              network.source?.reviewStatus==="SIM_QA_REVIEWED"&&
@@ -482,7 +500,7 @@ async function fetchGraph(icao){
              network.airport==="OIIE"&&survey.airport==="OIIE"&&
              names.length===new Set(names).size&&
              ends.length===new Set(ends).size&&
-             factory?.create){
+             gateEvidence&&factory?.create){
             const engine=factory.create(network);
             let passed=0,failed=false;
             for(const stand of names){
