@@ -127,7 +127,7 @@ test("updated profile JS/CSS have matching cache-busting URLs in HTML and servic
   const sw=fs.readFileSync(path.join(root,"web/service-worker.js"),"utf8");
   for(const suffix of ["app.js","styles.css"]){
     const escaped=suffix.replace(".", "\\.");
-    const match=html.match(new RegExp(escaped+"\\\\?v=[a-z0-9-]+","i"));
+    const match=html.match(new RegExp(escaped+"[?]v=[a-z0-9-]+","i"));
     assert.ok(match,"HTML must request a versioned "+suffix);
     assert.ok(sw.includes(match[0]),"SW shell must cache the same current "+suffix+" URL");
   }
