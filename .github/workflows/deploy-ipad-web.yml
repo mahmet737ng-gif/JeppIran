@@ -165,6 +165,8 @@ jobs:
           print('PASS native source evidence generated (NO unreviewed route promotion)')
           PY
 
+      - name: Verify native two-way runway-only route contract
+        run: node web/tests/taxi-oiie-runway-axes.test.cjs web/data/taxi-surveys/OIIE-runway-axes-v2621.json
       - name: Verify visible airport chart validity in real Chrome
         run: |
           export NODE_PATH="$RUNNER_TEMP/jeppiran-browser-qa/node_modules"
