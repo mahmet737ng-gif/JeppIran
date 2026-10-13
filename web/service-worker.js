@@ -82,7 +82,7 @@ self.addEventListener("fetch",event=>{
     }).catch(()=>localFallback(event.request)));
     return;
   }
-  if(/\/(app\.js|offline-manager\.js|cdfa-chart-panel\.js|taxi-mode\.js|index\.html|styles\.css|service-worker\.js)$/.test(url.pathname)||url.pathname.endsWith("/JeppIran/")){
+  if(/\/(app\.js|cdfa-chart-panel\.js|offline-manager\.js|taxi-mode\.js|index\.html|styles\.css|service-worker\.js)$/.test(url.pathname)||url.pathname.endsWith("/JeppIran/")){
     event.respondWith(fetch(event.request).then(response=>{
       if(response.ok){const copy=response.clone();event.waitUntil(caches.open(CACHE).then(cache=>cache.put(event.request,copy)))}
       return response;
