@@ -6,7 +6,7 @@ const qa=fs.readFileSync('scripts/admin-test-controls.js','utf8');
 const deployment=fs.readFileSync('.github/workflows/deploy-ipad-web.yml','utf8');
 
 test('admin QA is a separate public test path and never claims production privileges',()=>{
-  assert.match(builder,/ROOT \/ "admin-test"/);
+  assert.match(builder,/ROOT \/ "admin-console"/);
   assert.match(builder,/JEPPIRAN_TEST_ADMIN = true/);
   assert.match(qa,/LOCAL QA · NOT REAL ADMIN ACCESS/);
   assert.match(qa,/No actual PDF encryption|NOT real admin|not actual PDF encryption|public test tools|no privileged server API/i);
