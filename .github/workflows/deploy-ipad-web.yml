@@ -10,6 +10,7 @@ on:
       - 'tests/profile-clocks-validity.test.cjs'
       - 'scripts/build_offline_manifest.py'
       - 'scripts/build_oiie_*.py'
+      - 'scripts/verify_oiie_runway_axes_browser.cjs'
       - 'scripts/build_web_admin_test.py'
       - 'scripts/admin-test-controls.js'
       - 'scripts/admin-qa-home.js'
