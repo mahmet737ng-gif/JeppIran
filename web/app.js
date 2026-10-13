@@ -1355,8 +1355,7 @@ function setupChartGestures(){
     if(!sample||pinched||performance.now()-sample.time>75)return;
     if(Math.hypot(sample.dx,sample.dy)<0.25)return;
     // Movement is intentionally almost imperceptible, not a kinetic scroll.
-    const dx=Math.max(-2.5,Math.min(2.5,sample.dx*0.36));
-    const dy=Math.max(-2.5,Math.min(2.5,sample.dy*0.36));
+    const dx=0,dy=0; // No artificial coasting: chart displacement follows finger exactly.
     const x0=chartPanX,y0=chartPanY,scroll0=stage.scrollTop,t0=performance.now();
     function frame(now){
       const p=Math.min(1,(now-t0)/90);
@@ -1477,6 +1476,11 @@ function selectChart(c,options={}){
   refreshPositionStatus();
   $("#viewerChart").textContent=(c.chart_number?c.chart_number+" • ":"")+displayChartName(c);
   showChartMetar(true,true);
+  // On phones, choosing a procedure opens the chart immediately, rather
+  // than leaving a tiny chart next to a permanent procedure column.
+  if(window.matchMedia("(max-width: 749px)").matches){
+    enterViewerFullscreen();
+  }
   renderSelectedPdf(c).catch(e=>{
     $("#pdfStage").innerHTML='<div class="empty-state"><img src="./app-icon.png" alt=""><b>Chart unavailable</b><span>'+escapeHtml(e.message)+'</span></div>';
   });
