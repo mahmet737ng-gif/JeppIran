@@ -1343,6 +1343,9 @@ function setupChartGestures(){
   const stage=$("#pdfStage");
   if(!stage||stage.dataset.gestures==="1")return;
   stage.dataset.gestures="1";
+  // Browser touch scrolling and manual PDF pan must not fight each other.
+  // Chart follows actual finger displacement at 1:1 in both axes.
+  stage.style.touchAction="none";
   let tailFrame=0, singleTapTimer=0, recentMove=null, pinched=false;
   function cancelTail(){if(tailFrame)cancelAnimationFrame(tailFrame);tailFrame=0;}
   function chartHit(target){
@@ -1444,14 +1447,21 @@ function setupChartGestures(){
         }else{
           clearTimeout(singleTapTimer);
           lastTapAt=now;lastTapPoint={x:e.clientX,y:e.clientY};
-          singleTapTimer=setTimeout(()=>{
-            singleTapTimer=0;lastTapAt=0;lastTapPoint=null;
-            if(!$("#chartsView").classList.contains("chart-open")||!selectedChart)return;
-            document.body.classList.contains("viewer-fullscreen")?exitViewerFullscreen():enterViewerFullscreen();
-          },315);
+          if(!document.body.classList.contains("viewer-fullscreen")){
+            // Enter full screen on the actual first tap, no 315ms delay.
+            enterViewerFullscreen();
+            singleTapTimer=setTimeout(()=>{singleTapTimer=0;lastTapAt=0;lastTapPoint=null},315);
+          }else{
+            singleTapTimer=setTimeout(()=>{
+              singleTapTimer=0;lastTapAt=0;lastTapPoint=null;
+              if(!$("#chartsView").classList.contains("chart-open")||!selectedChart)return;
+              exitViewerFullscreen();
+            },315);
+          }
         }
       }else if(!canceled&&start&&travel>=12&&!pinched){
-        tinyPanStop();
+        // No delayed scrolling/fling after finger release.
+        cancelTail();
       }
       panStart=null;swipeStart=null;pinchStartDistance=0;
       recentMove=null;pinched=false;
@@ -1472,6 +1482,7 @@ function selectChart(c,options={}){
   taxiOffRouteCount=0;taxiOffRouteActive=false;
   selectedChart=c;
   $("#chartsView").classList.add("chart-open");
+  if(jpChartDrawerOpen)refreshFullscreenChartDrawer();
   expanded.add(c.category||"Other");
   renderAirports($("#airportSearch").value);
   refreshPositionStatus();
@@ -1609,9 +1620,94 @@ async function refitSelectedChartForLayout(){
   if(!selectedChart)return;
   chartPointers.clear();
   panStart=null;swipeStart=null;pinchStartDistance=0;
-  try{await renderSelectedPdf(selectedChart)}catch(e){
+  const oldZoom=chartZoom,oldPanX=chartPanX,oldPanY=chartPanY;
+  const oldScroll=$("#pdfStage")?.scrollTop||0;
+  try{
+    await renderSelectedPdf(selectedChart);
+    // Preserve double-tap/pinch and chart offset during fullscreen transition.
+    chartZoom=oldZoom;
+    chartPanX=oldPanX;
+    chartPanY=oldPanY;
+    applyChartTransform();
+    if(oldZoom<=1.001)$("#pdfStage").scrollTop=oldScroll;
+  }catch(e){
     $("#pdfStage").innerHTML='<div class="empty-state"><img src="./app-icon.png" alt=""><b>Chart unavailable</b><span>'+escapeHtml(e.message)+'</span></div>';
   }
+}
+
+
+// Full-screen airport procedure drawer. Created outside #pdfStage so its
+// touches never become chart taps or interfere with the locked drawing layer.
+let jpChartDrawerOpen=false;
+function ensureFullscreenChartDrawer(){
+  if(document.getElementById("jpChartMenuBtn"))return;
+  const menu=document.createElement("button");
+  menu.id="jpChartMenuBtn";
+  menu.type="button";
+  menu.textContent="☰";
+  menu.setAttribute("aria-label","Browse charts at this airport");
+  menu.setAttribute("aria-controls","jpChartDrawer");
+  menu.setAttribute("aria-expanded","false");
+  const backdrop=document.createElement("button");
+  backdrop.id="jpChartDrawerBackdrop";
+  backdrop.type="button";
+  backdrop.setAttribute("aria-label","Close chart list");
+  const drawer=document.createElement("aside");
+  drawer.id="jpChartDrawer";
+  drawer.setAttribute("aria-label","Airport charts");
+  drawer.innerHTML='<div class="jp-chart-drawer-heading"><b id="jpChartDrawerAirport"></b><button type="button" id="jpChartDrawerClose" aria-label="Close chart list">×</button></div><div id="jpChartDrawerList" class="jp-chart-drawer-list"></div>';
+  document.body.append(backdrop,drawer,menu);
+  const close=()=>setFullscreenChartDrawer(false);
+  menu.addEventListener("click",()=>setFullscreenChartDrawer(!jpChartDrawerOpen));
+  backdrop.addEventListener("click",close);
+  drawer.querySelector("#jpChartDrawerClose").addEventListener("click",close);
+  drawer.addEventListener("keydown",e=>{if(e.key==="Escape"){e.stopPropagation();close();menu.focus()}});
+}
+function refreshFullscreenChartDrawer(){
+  const host=document.getElementById("jpChartDrawerList");
+  if(!host)return;
+  const heading=document.getElementById("jpChartDrawerAirport");
+  if(heading)heading.textContent=(selectedAirport||"—")+" · CHARTS";
+  host.replaceChildren();
+  if(!selectedAirport)return;
+  const seq=airportChartSequence();
+  for(const [category,label] of [["STAR","STAR"],["SID","SID"],["Airport","AIRPORT"],["Approach","APP"]]){
+    const items=seq.filter(c=>(c.category||"Other")===category);
+    if(!items.length)continue;
+    const title=document.createElement("div");
+    title.className="jp-drawer-category";
+    title.textContent=label+" ("+items.length+")";
+    host.appendChild(title);
+    for(const c of items){
+      const row=document.createElement("button");
+      row.type="button";
+      row.className="jp-drawer-chart"+(selectedChart&&Number(c.page)===Number(selectedChart.page)?" is-current":"");
+      row.textContent=(c.chart_number?c.chart_number+" · ":"")+displayChartName(c);
+      row.setAttribute("aria-current",row.classList.contains("is-current")?"page":"false");
+      row.onclick=()=>{
+        setFullscreenChartDrawer(false);
+        if(!selectedChart||Number(selectedChart.page)!==Number(c.page))selectChart(c,{keepTreeClosed:true});
+      };
+      host.appendChild(row);
+    }
+  }
+}
+function setFullscreenChartDrawer(open){
+  ensureFullscreenChartDrawer();
+  jpChartDrawerOpen=!!open&&document.body.classList.contains("viewer-fullscreen")&&!!selectedChart;
+  document.body.classList.toggle("jp-chart-drawer-open",jpChartDrawerOpen);
+  const menu=document.getElementById("jpChartMenuBtn");
+  menu.setAttribute("aria-expanded",String(jpChartDrawerOpen));
+  if(jpChartDrawerOpen){
+    refreshFullscreenChartDrawer();
+    document.getElementById("jpChartDrawerList").scrollTop=0;
+  }
+}
+ensureFullscreenChartDrawer();
+let jpFullscreenRefitTimer=0;
+function scheduleFullscreenRefit(delay=240){
+  clearTimeout(jpFullscreenRefitTimer);
+  jpFullscreenRefitTimer=setTimeout(()=>{jpFullscreenRefitTimer=0;refitSelectedChartForLayout()},delay);
 }
 
 async function enterViewerFullscreen(){
@@ -1619,16 +1715,18 @@ async function enterViewerFullscreen(){
   const root=document.documentElement;
   const request=root.requestFullscreen||root.webkitRequestFullscreen;
   if(request){try{await request.call(root)}catch(e){}}
-  setTimeout(()=>refitSelectedChartForLayout(),180);
+  // A short deferred refit leaves the double-tap window uninterrupted.
+  scheduleFullscreenRefit(400);
 }
 async function exitViewerFullscreen(exitNative=true){
+  setFullscreenChartDrawer(false);
   document.body.classList.remove("viewer-fullscreen");
   if(exitNative){
     const active=document.fullscreenElement||document.webkitFullscreenElement;
     const exit=document.exitFullscreen||document.webkitExitFullscreen;
     if(active&&exit){try{await exit.call(document)}catch(e){}}
   }
-  setTimeout(()=>refitSelectedChartForLayout(),180);
+  scheduleFullscreenRefit(240);
 }
 $("#fullscreenBtn").addEventListener("click",enterViewerFullscreen);
 $("#fullscreenExitBtn").addEventListener("click",()=>exitViewerFullscreen(true));

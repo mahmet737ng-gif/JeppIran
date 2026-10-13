@@ -8,11 +8,14 @@ test('iPad single chart tap toggles fullscreen without breaking double-tap or ge
   const js=read('web/app.js'),html=read('web/index.html'),css=read('web/styles.css');
   assert.match(js,/singleTapTimer=setTimeout\(/);
   assert.match(js,/chartZoom>1\.2\?1:2/);
-  assert.match(js,/document\.body\.classList\.contains\("viewer-fullscreen"\)\?exitViewerFullscreen\(\):enterViewerFullscreen\(\)/);
+  // Owner update: immediate entry on the first tap; second tap still zooms.
+  assert.match(js,/enterViewerFullscreen\(\)/);
+  assert.match(js,/exitViewerFullscreen\(\)/);
   assert.match(js,/pinched=true/);
-  assert.match(js,/tinyPanStop\(\)/);
-  assert.match(js,/Math\.min\(2\.5,sample\.dx\*0\.36\)/);
-  assert.match(js,/\(now-t0\)\/90/);
+  assert.match(js,/stage\.style\.touchAction="none"/);
+  assert.match(js,/chartPanX=panStart\.panX\+dx/);
+  assert.match(js,/stageEl\.scrollTop=panStart\.scrollTop-dy/);
+  assert.match(js,/No delayed scrolling\/fling after finger release/);
   assert.match(css,/#chartsView\.chart-open \.viewer-toolbar\{[\s\S]*?z-index:85/);
   assert.match(html,/id="fullscreenExitBtn"/);
 });
