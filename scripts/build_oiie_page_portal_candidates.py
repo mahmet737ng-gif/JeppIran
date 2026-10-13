@@ -36,7 +36,7 @@ def scan(src,cutoff=4):
                 target=project("ADC",g)
                 if not(84<target[0]<525 and 83<target[1]<782):
                     continue
-                dist,near=min(((math.dist(target,q),ref,which,q)
+                dist,near,which,q=min(((math.dist(target,q),ref,which,q)
                     for ref,which,q in adc),key=lambda x:x[0])
                 if dist>cutoff:continue
                 candidates.append({"fromPage":int(page),"fromRegion":area,
