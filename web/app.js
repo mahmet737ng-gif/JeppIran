@@ -1027,6 +1027,14 @@ function refreshPositionStatus(){
   }
   const acc=Number.isFinite(lastPosition.accuracy)?(" • ±"+Math.round(lastPosition.accuracy)+" m"):"";
   const code=activePositionSource==="gps"?"GPS":activePositionSource==="fsx"?"FSX":"XPLANE";
+  const region=model.regions?resolveGeoRegion(model,Number(lastPosition.lat),Number(lastPosition.lon)):null;
+  if(region&&region.region!=="CARGO_APRON_2"){
+    // Newly reconstructed V2621 printed-grid airport regions have not yet
+    // received an independent AIP/flight accuracy check. Show explicit QA.
+    setPositionStatus("warning",code+" GEOREF QA"+acc,
+      "PDF printed-grid regional model for simulator QA only; independent positioning validation pending.");
+    return;
+  }
   setPositionStatus("live",code+" LIVE"+acc,"Position is live and inside this chart.");
 }
 
