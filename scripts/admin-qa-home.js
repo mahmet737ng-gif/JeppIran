@@ -190,8 +190,9 @@
     }
   });
   syncTile();
-  if(role && roleSelect){
-    roleSelect.value=role;
+  // Anonymous QA visitors start in Demo; no Admin UI appears until test sign-in.
+  if(roleSelect){
+    roleSelect.value=role||"demo";
     roleSelect.dispatchEvent(new Event("change",{bubbles:true}));
   }
   if(location.hash==="#admin-qa" && isAdmin()) queueMicrotask(()=>showDashboard(false));
