@@ -55,10 +55,18 @@ async function waitServer(){
   assert.equal(await page.locator("polyline.taxi-oiie-physical-runway-axis-simulator-qa").count(),0,
     "Blocked stand-route must remove previous runway QA overlay");
   assert.match(await page.locator("#taxiQaStatus").innerText(),/NOT a source-reviewed|NOT.*route/);
+  await page.locator("#taxiQaInput").fill("ST301");
+  await page.locator("#taxiQaGo").click();
+  assert.match(await page.locator("#taxiQaFullMessage").innerText(),/INS coordinates in 20-9D conflict/);
+  assert.equal(await page.locator("polyline.taxi-oiie-physical-runway-axis-simulator-qa").count(),0);
+  await page.locator("#taxiQaInput").fill("ST400");
+  await page.locator("#taxiQaGo").click();
+  assert.match(await page.locator("#taxiQaFullMessage").innerText(),/label-grid position/);
+  assert.match(await page.locator("#taxiQaFullMessage").innerText(),/NOT a stand nose/);
   await page.locator("#taxiQaInput").fill("R1");
   await page.locator("#taxiQaGo").click();
   assert.equal(await page.locator("polyline.taxi-oiie-physical-runway-axis-simulator-qa").count(),0);
-  console.log("PASS real Chrome: 11L↔29R and 11R→29L source-ground axes; ST100→RWY and R1 gates fail closed");
+  console.log("PASS Chrome: 11L↔29R and 11R→29L; ST301 INS anomaly, ST400 label georeg, and unreviewed runway gates remain blocked");
  }finally{
   if(browser)await browser.close();
   server.kill("SIGTERM");
