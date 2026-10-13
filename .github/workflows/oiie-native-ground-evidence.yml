@@ -8,6 +8,7 @@ on:
       - "scripts/build_oiie_stand_coordinates_qa.py"
       - "scripts/build_oiie_stand_label_georeg.py"
       - "scripts/build_oiie_page_portal_candidates.py"
+      - "scripts/build_oiie_real_source_ink_graph.py"
       - "web/taxi-oiie-stages456.js"
       - "web/tests/taxi-oiie-runway-axes.test.cjs"
       - ".github/workflows/oiie-native-ground-evidence.yml"
@@ -23,7 +24,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install native PDF vector parser
-        run: python -m pip install --disable-pip-version-check pymupdf==1.26.5
+        run: python -m pip install --disable-pip-version-check pymupdf==1.26.5 shapely==2.1.2 networkx==3.5
       - name: Download matching V2621 Imam airport chart PDF
         run: |
           python - <<'PY'
@@ -41,6 +42,25 @@ jobs:
           PY
       - name: Extract page-specific original vector geometry
         run: python scripts/build_oiie_pdf_ground_evidence.py --pdf /tmp/OIIE.pdf --output /tmp/oiie-v2621-native-evidence.json
+      - name: Build original Jeppesen parking linework graph and test all 103 stand markers
+        run: |
+          python scripts/build_oiie_real_source_ink_graph.py \
+            --pdf /tmp/OIIE.pdf \
+            --vectors /tmp/oiie-v2621-native-evidence.json \
+            --out /tmp/oiie-v2621-real-ink-graph.json
+      - name: Reject confusing ink intersections with physical taxi clearances
+        run: |
+          python - <<'PY'
+          import json
+          d=json.load(open("/tmp/oiie-v2621-real-ink-graph.json"))
+          assert d['sourceMatchedStandCount']==103
+          assert d['regions']['CARGO']['directedInkConnected']==420
+          assert d['regions']['SALAM']['directedInkConnected']==380
+          assert d['regions']['PASSENGER']['directedInkConnected']==3660
+          assert d['approvedPhysicalTaxiRoutes']==0 and d['routeable']==False
+          assert all(not s['lineConnectionIsTaxiwayApproved'] for region in d['regions'].values() for s in region['standMarkers'])
+          print("PASS: 103 real source markers, 4,460 intra-apron source-ink directed paths; no unapproved taxi routing")
+          PY
       - name: Generate PDF seam candidates between independent OIIE regions
         run: python scripts/build_oiie_page_portal_candidates.py --source /tmp/oiie-v2621-native-evidence.json --output /tmp/oiie-v2621-portal-candidates.json
       - name: Require unreviewed portal candidates to remain non-routeable
@@ -114,6 +134,7 @@ jobs:
           name: OIIE-V2621-native-geometry-review
           path: |
             /tmp/oiie-v2621-native-evidence.json
+            /tmp/oiie-v2621-real-ink-graph.json
             /tmp/oiie-v2621-portal-candidates.json
             /tmp/oiie-v2621-runway-axes.json
             /tmp/oiie-v2621-stand-coordinate-audit.json
