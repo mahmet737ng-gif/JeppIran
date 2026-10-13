@@ -1,0 +1,28 @@
+name: OIIE Stage 4-6 Source And Route QA
+on:
+  push:
+    paths:
+      - 'web/taxi-oiie-stages456.js'
+      - 'web/data/taxi-surveys/OIIE-stages456-approved-v2621.json'
+      - 'web/tests/taxi-oiie-stages456.test.cjs'
+      - 'web/tests/taxi-oiie-stage1to3-source.test.cjs'
+      - 'web/taxi-mode.js'
+      - '.github/workflows/oiie-stages456-qa.yml'
+  workflow_dispatch:
+jobs:
+  reviewed-graph-safety:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Validate source and stages 1-3 invariants
+        run: node web/tests/taxi-oiie-stage1to3-source.test.cjs
+      - name: Validate four region georefs, runway gate blocking and two-way QA
+        run: node web/tests/taxi-oiie-stages456.test.cjs
+      - name: Syntax and routing safety
+        run: |
+          node --check web/taxi-oiie-stages456.js
+          node --check web/taxi-mode.js
