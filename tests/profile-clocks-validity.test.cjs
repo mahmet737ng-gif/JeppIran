@@ -108,7 +108,8 @@ test("compact validity indicator changes to red overdue state and recovers on cy
 test("airport profile renders inclusive terminal cycle validity dates, Home remains unchanged",()=>{
   const current=build("2026-10-13T12:00:00Z");
   const display=current.terminalValidityIndicator();
-  assert.match(display.profileMarkup,/VALID FROM <b>09 Oct 2026<\/b>/);\n  assert.match(display.profileMarkup,/VALID TO <b>22 Oct 2026<\/b>/);
+  assert.match(display.profileMarkup,/VALID FROM <b>09 Oct 2026<\/b>/);
+  assert.match(display.profileMarkup,/VALID TO <b>22 Oct 2026<\/b>/);
   assert.doesNotMatch(display.markup,/VALID FROM|VALID TO/,"Home must not gain a date range");
   const expired=build("2026-10-23T00:00:00Z");
   assert.equal(expired.terminalValidityIndicator().state,"expired");
