@@ -995,7 +995,7 @@ function imamInventoryGo(typed){
       message("OIIE STAND TO STAND · One or both stands are not found in the published cycle. No artificial route drawn.",true);
     }else{
       message("OIIE ST"+standPair[1]+" → ST"+standPair[2]+
-        " · BOTH PUBLISHED STANDS FOUND on page "+start.page+" / "+finish.page+
+        " · ROUTING UNAVAILABLE — BOTH PUBLISHED STANDS FOUND on page "+start.page+" / "+finish.page+
         ". The exact physical apron leads and cross-page taxi junctions remain unapproved."+
         " ROUTING UNAVAILABLE, previous chart route preserved. NOT FOR ACTUAL NAVIGATION.",true);
     }
