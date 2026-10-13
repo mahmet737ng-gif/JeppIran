@@ -2,9 +2,11 @@ name: Verify Admin Web QA Preview
 
 on:
   push:
-    branches: [feature/admin-web-qa-live]
+    branches: [feature/admin-web-qa-live, feature/admin-home-dashboard-qa]
     paths:
       - 'scripts/admin-test-controls.js'
+      - 'scripts/admin-qa-home.js'
+      - 'scripts/admin-qa-home.css'
       - 'scripts/build_web_admin_test.py'
       - 'tests/profile-clocks-validity.test.cjs'
       - 'tests/admin-qa-preview.test.cjs'
@@ -25,6 +27,7 @@ jobs:
       - name: Validate scripts and tests
         run: |
           node --check scripts/admin-test-controls.js
+          node --check scripts/admin-qa-home.js
           python3 -m py_compile scripts/build_web_admin_test.py
           node --test tests/admin-qa-preview.test.cjs
           node --test tests/profile-clocks-validity.test.cjs
