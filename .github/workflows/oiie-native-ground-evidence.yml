@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - "scripts/build_oiie_pdf_ground_evidence.py"
+      - "scripts/build_oiie_runway_axes.py"
       - ".github/workflows/oiie-native-ground-evidence.yml"
 permissions:
   contents: read
@@ -35,6 +36,19 @@ jobs:
           PY
       - name: Extract page-specific original vector geometry
         run: python scripts/build_oiie_pdf_ground_evidence.py --pdf /tmp/OIIE.pdf --output /tmp/oiie-v2621-native-evidence.json
+      - name: Verify original OIIE runway polygon axes against published lengths
+        run: python scripts/build_oiie_runway_axes.py --pdf /tmp/OIIE.pdf --output /tmp/oiie-v2621-runway-axes.json
+      - name: Assert only the two runway axes pass QA
+        run: |
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/oiie-v2621-runway-axes.json'))
+          assert [r['physicalId'] for r in d['runways']]==['11L_29R','11R_29L']
+          assert all(r['physicalRunwayAxisVerified'] and r['relativeLengthErrorPct']<1 for r in d['runways'])
+          assert d['approvedStandRunwayRoutes']==0 and d['approvedRunwayGates']==0
+          assert not d['safeForNavigation'] and not d['holdShortPositionSurveyed']
+          print('PASS two PDF-native, dimensional-reviewed runway axes; no false taxi entries')
+          PY
       - name: Reject false automatically approved centerlines and runway gates
         run: |
           python - <<'PY'
@@ -50,5 +64,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         with:
           name: OIIE-V2621-native-geometry-review
-          path: /tmp/oiie-v2621-native-evidence.json
+          path: |
+            /tmp/oiie-v2621-native-evidence.json
+            /tmp/oiie-v2621-runway-axes.json
           retention-days: 14
