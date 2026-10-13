@@ -318,8 +318,8 @@
         <label><input type="radio" name="appearanceTheme" value="dark"><span>Dark Mode</span></label>
       </fieldset>
       <section class="offline-settings-section" aria-labelledby="offlinePackTitle">
-        <h4 id="offlinePackTitle">Offline access</h4>
-        <p>Save the app, airport charts and local data on this device. Internet is required once for the download; live weather still needs a connection.</p>
+        <h4 id="offlinePackTitle">Offline access · automatic updates</h4>
+        <p>All app files and airport charts are saved on this device automatically when online. On each launch, refresh, reconnect and every five minutes while open, only changed files are downloaded. Go Offline manually verifies your saved copy. Live weather still needs internet.</p>
         <div class="offline-settings-buttons">
           <button id="goOfflineBtn" type="button">Go Offline</button>
           <button id="stopOfflineBtn" type="button" hidden>Stop</button>
@@ -380,7 +380,7 @@
   })();
   </script>
   <script src="./app.js?v=2621-aircraft-marker-locked-r1" defer></script>
-  <script src="./offline-manager.js?v=2621-go-offline-r1" defer></script>
+  <script src="./offline-manager.js?v=2621-auto-sync-r2" defer></script>
   <script src="./cdfa-margin-overlay.js?v=2621-cdfa-ipad-column-fit-r3" defer></script>
   <script src="./cdfa-chart-panel.js?v=2621-cdfa-inpage-white-margin-r1" defer></script>
   <script src="./airport-adc-banners.js?v=2621-adc-template2-r1" defer></script>

@@ -124,6 +124,7 @@ jobs:
         run: |
           node --check web/offline-manager.js
           node --check web/service-worker.js
+          node --test tests/offline-auto-sync.test.cjs
 
       - name: Generate complete on-device offline package
         run: python3 scripts/build_offline_manifest.py

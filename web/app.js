@@ -1034,7 +1034,21 @@ async function getPdfBytes(url,save=true){
   if(chartCacheSupported()){
     try{
       cache=await window.caches.open("jeppiran-chart-pdfs-v2621-printclean-3");
-      res=await cache.match(url);
+      const info=manifest?.airports?.[selectedAirport];
+      if(window.JeppIranOffline?.getPdfResponse){
+        res=await window.JeppIranOffline.getPdfResponse(url,info?.sha256);
+      }
+      // Pre-auto-sync installs may have legacy PDFs. Check their published SHA
+      // before using them so an older chart is never mistaken for the new cycle.
+      if(!res){
+        const oldPdf=await cache.match(url);
+        if(oldPdf&&info?.sha256&&window.crypto?.subtle){
+          const bytes=await oldPdf.clone().arrayBuffer();
+          const digest=await crypto.subtle.digest("SHA-256",bytes);
+          const hex=Array.from(new Uint8Array(digest),b=>b.toString(16).padStart(2,"0")).join("");
+          if(hex===info.sha256.toLowerCase())res=oldPdf;
+        }else if(oldPdf&&!info?.sha256){res=oldPdf;}
+      }
     }catch(_){
       cache=null;
     }
