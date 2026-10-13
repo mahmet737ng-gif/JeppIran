@@ -105,6 +105,22 @@ test("compact validity indicator changes to red overdue state and recovers on cy
   assert.match(css,/#homeView \.home-terminal-validity\[data-state="expired"\]/);
   assert.match(css,/#chartsView \.profile-terminal-validity\[data-state="expired"\]/);
 });
+test("airport profile renders inclusive terminal cycle validity dates, Home remains unchanged",()=>{
+  const current=build("2026-10-13T12:00:00Z");
+  const display=current.terminalValidityIndicator();
+  assert.match(display.profileMarkup,/Cycle period: 09 Oct 2026 – 22 Oct 2026/);
+  assert.doesNotMatch(display.markup,/Cycle period:/,"Home must not gain a date range");
+  const expired=build("2026-10-23T00:00:00Z");
+  assert.equal(expired.terminalValidityIndicator().state,"expired");
+  assert.match(expired.terminalValidityIndicator().profileMarkup,/Cycle period: 09 Oct 2026 – 22 Oct 2026/);
+  const updated=build("2026-10-23T00:00:00Z",{version:"V2622",cycle:"2622"});
+  assert.match(updated.terminalValidityIndicator().profileMarkup,/Cycle period: 23 Oct 2026 – 05 Nov 2026/);
+  const unknown=build("2027-02-01T00:00:00Z",{version:"V2704",cycle:"2704"});
+  assert.match(unknown.terminalValidityIndicator().profileMarkup,/Cycle period unavailable/);
+  assert.match(app,/id==="profileTerminalValidity"\?status\.profileMarkup:status\.markup/);
+  assert.match(css,/#chartsView \.profile-terminal-validity \.terminal-validity-range/);
+  assert.match(css,/:root\.light #chartsView \.profile-terminal-validity \.terminal-validity-range/);
+});
 test("manifest synchronization remains mandatory before Pages deployment",()=>{
   const action=fs.readFileSync(path.join(root,".github/workflows/deploy-ipad-web.yml"),"utf8");
   assert.match(action,/cp app\/src\/main\/assets\/enroute-manifest\.json web\/data\/enroute-manifest\.json/);
