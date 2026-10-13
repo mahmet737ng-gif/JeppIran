@@ -7,6 +7,7 @@ on:
     paths:
       - 'web/**'
       - 'tests/offline-auto-sync.test.cjs'
+      - 'tests/profile-clocks-validity.test.cjs'
       - 'scripts/build_offline_manifest.py'
       - 'scripts/build_airport_profiles.py'
       - 'scripts/build_airport_runways.py'
