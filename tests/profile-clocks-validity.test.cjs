@@ -131,7 +131,7 @@ test("updated profile JS/CSS have matching cache-busting URLs in HTML and servic
     assert.ok(sw.includes(url),"SW shell must cache fresh "+suffix);
   }
   assert.match(app,/role="status" aria-live="polite">'\+terminalValidityIndicator\(\)\.profileMarkup/);
-  assert.match(sw,/CACHE="jeppiran-pwa-2621-profile-validity-fromto-r2"/);
+  assert.match(sw,/const CACHE="jeppiran-pwa-[a-z0-9-]+"/); // cache revision is independent of profile revision
 });
 test("manifest synchronization remains mandatory before Pages deployment",()=>{
   const action=fs.readFileSync(path.join(root,".github/workflows/deploy-ipad-web.yml"),"utf8");
