@@ -19,5 +19,5 @@ assert.match(app,/taxi\.graph=network;taxi\.genericEngine=engine;taxi\.oiieSurve
 assert.match(app,/Until the exhaustive V4 gate succeeds/);
 assert.match(index,/taxi-mode\.js\?v=2621-taxi-docked-r11/);
 assert.match(sw,/taxi-mode\.js\?v=2621-taxi-docked-r11/);
-assert.match(sw,/const CACHE="jeppiran-pwa-2621-taxi-subbar-persistent-r11"/);
+assert.match(sw,/const CACHE="jeppiran-pwa-2621-taxi-subbar-persistent-r12"/);
 console.log("PASS V4 OIIE browser entry: 100%-only graph unlock, legacy survey fail-closed, fresh offline cache");
