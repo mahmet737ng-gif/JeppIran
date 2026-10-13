@@ -73,7 +73,7 @@ test("live UTC and local clocks and visibility alerts are confined to profile",(
   assert.match(app,/id="profileLocalTime"/);
   assert.match(app,/id="profileValidityRows"/);
   assert.match(app,/setInterval\(utcDisplay,1000\)/);
-  assert.match(app,/\$\$\("\.profile-utc"\)\.forEach/);
+  assert.match(app,/document\.querySelectorAll\("\.profile-utc"\)\.forEach/);
   assert.match(css,/#chartsView \.profile-utc-clock/);
   assert.match(css,/\.profile-validity-entry\[data-state="expired"\]/);
   assert.match(css,/:root\.light #chartsView \.profile-validity-entry/);
