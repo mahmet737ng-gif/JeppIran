@@ -164,8 +164,48 @@ function evaluate(opts={}){
   ...graph.checks,issues:graph.issues,certified:graph.certified},
  routeable:graph.partialRouteable,approvedGraph:graph};
 }
+
+/* Native PDF runway-axis QA, independent of unapproved stand access gates.
+ * A runway-axis line IS NOT permission to enter a runway or turn around.
+ * Only the two full, printed original black runway polygons can qualify.
+ */
+function reviewRunwayAxes(data){
+ const fail=reason=>({ok:false,reason,axes:[],runwayOnlyPairs:0});
+ if(!data||data.airport!=="OIIE"||String(data.cycle)!=="2621"||
+    data.originalSourceSha256!==SOURCE||data.qa!=="RUNWAY_AXIS_SOURCE_POLYGON_AND_PUBLISHED_DIMENSIONS_PASSED"||
+    data.safeForNavigation!==false||data.approvedStandRunwayRoutes!==0||
+    data.approvedRunwayGates!==0||data.holdShortPositionSurveyed!==false||
+    !Array.isArray(data.runways)||data.runways.length!==2)
+   return fail("Runway PDF source, quality state or entry-gate guard mismatch");
+ const ids=[41,457],result=[];
+ for(let i=0;i<2;i++){
+   const r=data.runways[i],expected=RUNWAYS[i];
+   if(r.physicalId!==expected.physicalId||r.drawingId!==ids[i]||
+      r.page!==380||r.physicalRunwayAxisVerified!==true||
+      r.axisSourceReviewed!==true||r.runwayEndLabelsVerified!==true||
+      r.entryOrExitTaxiGatesApproved!==false||
+      r.requiresExplicitRunwayClearance!==true||
+      r.allowed180DegreeTurns!=="RUNWAY_END_ONLY"||
+      r.publishedLengthM!==expected.publishedLengthM||
+      !Array.isArray(r.ends)||r.ends.join("/")!==expected.ends.join("/")||
+      !Array.isArray(r.axisPdf)||r.axisPdf.length!==2||!r.axisPdf.every(isPoint)||
+      !r.axisPdf.every(p=>regionAt(380,p)?.id==="ADC")||
+      !Number.isFinite(r.runwayLengthFromGridM)||
+      Math.abs(r.runwayLengthFromGridM-r.publishedLengthM)>r.publishedLengthM*.01||
+      !Number.isFinite(r.relativeLengthErrorPct)||r.relativeLengthErrorPct>=1||
+      ![r.widthNearM,r.widthFarM].every(n=>Number.isFinite(n)&&n>35&&n<55))
+       return fail("Runway axis source polygon or published dimension QA failed: "+r?.physicalId);
+   result.push({physicalId:r.physicalId,ends:r.ends,sourceDrawingId:r.drawingId,
+      page:380,points:r.axisPdf,lengthM:r.runwayLengthFromGridM,
+      requiresExplicitRunwayClearance:true,runwayOnly:true});
+ }
+ return {ok:true,axes:result,runwayOnlyPairs:result.length*2,
+  routeableForStand:false,routeableForRunwayOnly:true,
+  notes:"SIMULATOR QA ONLY. No hold-short or apron-to-runway entry is approved."};
+}
+
 const api={version:"2621.4-6.1",sourceSha256:SOURCE,regions:REGIONS,runways:RUNWAYS,regionAt,
- fromGeo,toGeo,register,graphQA,evaluate};
+ fromGeo,toGeo,register,graphQA,evaluate,reviewRunwayAxes};
 root.JEPPIRAN_OIIE_STAGES456=api;
 if(typeof module!=="undefined"&&module.exports)module.exports=api;
 })(typeof window!=="undefined"?window:globalThis);
