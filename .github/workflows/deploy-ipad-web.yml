@@ -150,6 +150,9 @@ jobs:
           python3 scripts/build_oiie_stand_coordinates_qa.py \
             --pdf web/charts/OIIE.pdf \
             --output web/data/taxi-surveys/OIIE-stand-coordinate-audit-v2621.json
+          python3 scripts/build_oiie_stand_label_georeg.py \
+            --table web/data/taxi-surveys/OIIE-stand-coordinate-audit-v2621.json \
+            --output web/data/taxi-surveys/OIIE-stand-label-registration-v2621.json
           python3 - <<'PY'
           import json
           from pathlib import Path
@@ -168,6 +171,10 @@ jobs:
           table=json.loads(Path('web/data/taxi-surveys/OIIE-stand-coordinate-audit-v2621.json').read_text())
           assert table['entryCount']==49 and not table['suitableForStandNoseRouting']
           assert sum(i['code']=='PRINTED_CARGO_LONGITUDE_CONFLICTS_WITH_20_9C_GRID' for i in table['issues'])==4
+          labels=json.loads(Path('web/data/taxi-surveys/OIIE-stand-label-registration-v2621.json').read_text())
+          assert labels['count']==103 and labels['approvedStandRoutes']==0
+          assert set(['ST301','ST302','ST303','ST321']).issubset(labels['suspectPublishedINSStandIds'])
+          assert all(not e['sourcePointIsParkingNose'] and not e['routeable'] for e in labels['positions'])
           print('PASS native source evidence generated (NO unreviewed route promotion)')
           PY
 
