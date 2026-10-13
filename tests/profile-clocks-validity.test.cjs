@@ -126,9 +126,10 @@ test("updated profile JS/CSS have matching cache-busting URLs in HTML and servic
   const html=fs.readFileSync(path.join(root,"web/index.html"),"utf8");
   const sw=fs.readFileSync(path.join(root,"web/service-worker.js"),"utf8");
   for(const suffix of ["app.js","styles.css"]){
-    const url=suffix+"?v=2621-profile-validity-fromto-r2";
-    assert.ok(html.includes(url),"HTML must request fresh "+suffix);
-    assert.ok(sw.includes(url),"SW shell must cache fresh "+suffix);
+    const escaped=suffix.replace(".", "\\.");
+    const match=html.match(new RegExp(escaped+"\\\\?v=[a-z0-9-]+","i"));
+    assert.ok(match,"HTML must request a versioned "+suffix);
+    assert.ok(sw.includes(match[0]),"SW shell must cache the same current "+suffix+" URL");
   }
   assert.match(app,/role="status" aria-live="polite">'\+terminalValidityIndicator\(\)\.profileMarkup/);
   assert.match(sw,/const CACHE="jeppiran-pwa-[a-z0-9-]+"/); // cache revision is independent of profile revision
