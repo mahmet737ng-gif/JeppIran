@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Publish an isolated admin-QA *preview* at /admin-test/ (no privileged backend)."""
+"""Publish an isolated admin-QA *preview* at /admin-console/ (no privileged backend)."""
 import importlib.util
 import json
 import pathlib
@@ -8,7 +8,7 @@ import shutil
 import tempfile
 
 ROOT = pathlib.Path("web")
-PREVIEW = ROOT / "admin-test"
+PREVIEW = ROOT / "admin-console"
 assert (ROOT / "offline-assets.json").is_file(), "Build production manifest first"
 assert (ROOT / "charts").is_dir(), "Build downloadable charts first"
 
@@ -21,12 +21,13 @@ def change(path, old, new):
 
 
 with tempfile.TemporaryDirectory(prefix="jeppiran-admin-preview-") as tempdir:
-    draft = pathlib.Path(tempdir) / "admin-test"
-    shutil.copytree(ROOT, draft, ignore=shutil.ignore_patterns("admin-test"))
+    draft = pathlib.Path(tempdir) / "admin-console"
+    shutil.copytree(ROOT, draft, ignore=shutil.ignore_patterns("admin-test","admin-console"))
     index = draft / "index.html"
+    assert PREVIEW.name == "admin-console", "Admin QA must not use stale service-worker scope"
     change(index, "</head>", '<script>window.JEPPIRAN_TEST_ADMIN = true;</script>\n'+
            '<link rel="stylesheet" href="./admin-qa-home.css?v=2">\n</head>')
-    change(index, "</body>", '<script src="./admin-test-controls.js?v=2" defer></script>\n'+
+    change(index, "</body>", '<script src="./admin-console-controls.js?v=2" defer></script>\n'+
            '<script src="./admin-qa-home.js?v=2" defer></script>\n</body>')
     change(index, "<title>JeppIran", "<title>ADMIN TEST · JeppIran")
 
@@ -57,11 +58,11 @@ with tempfile.TemporaryDirectory(prefix="jeppiran-admin-preview-") as tempdir:
             source = source.replace('key.startsWith("jeppiran-pwa-")', 'key.startsWith("jeppiran-test-pwa-")')
             source = source.replace(
                 '"./offline-assets.json",',
-                '"./offline-assets.json","./admin-test-controls.js",',
+                '"./offline-assets.json","./admin-console-controls.js",',
             )
         path.write_text(source, encoding="utf-8")
-    qa = pathlib.Path("scripts/admin-test-controls.js").read_text(encoding="utf-8")
-    (draft / "admin-test-controls.js").write_text(qa, encoding="utf-8")
+    qa = pathlib.Path("scripts/admin-console-controls.js").read_text(encoding="utf-8")
+    (draft / "admin-console-controls.js").write_text(qa, encoding="utf-8")
     for asset in ("admin-qa-home.js", "admin-qa-home.css"):
         shutil.copy2(pathlib.Path("scripts") / asset, draft / asset)
     # Recreate checksums after changing the preview files; do not alter live manifest.
@@ -75,11 +76,11 @@ with tempfile.TemporaryDirectory(prefix="jeppiran-admin-preview-") as tempdir:
                           encoding="utf-8")
     assert manifest["pdfs"] and all(
         any(x["url"] == "./"+name for x in manifest["assets"])
-        for name in ("admin-test-controls.js", "admin-qa-home.js", "admin-qa-home.css")
+        for name in ("admin-console-controls.js", "admin-qa-home.js", "admin-qa-home.css")
     )
     assert manifest["totalBytes"] > 1_000_000
     if PREVIEW.exists():
         shutil.rmtree(PREVIEW)
     shutil.copytree(draft, PREVIEW)
-    print("JEPPIRAN admin QA preview ready at /admin-test/:",
+    print("JEPPIRAN admin QA preview ready at /admin-console/:",
           len(manifest["assets"]), "assets and", len(manifest["pdfs"]), "PDFs")
