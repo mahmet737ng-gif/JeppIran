@@ -72,7 +72,7 @@ function makeBrowser(){
     return body===undefined?new Response("not found",{status:404}):new Response(body,{status:200});
   }
   const sandbox={window,document,navigator,caches:memory,crypto:webcrypto,fetch,Response,
-    Request,DOMException,AbortController,URL,TextEncoder,location:BASE,isSecureContext:true,
+    Request,DOMException,AbortController,URL,TextEncoder,location:{href:BASE},isSecureContext:true,
     setInterval:()=>{},Date,console};
   const script=fs.readFileSync("web/offline-manager.js","utf8");
   vm.runInNewContext(script,sandbox,{filename:"offline-manager.js"});
