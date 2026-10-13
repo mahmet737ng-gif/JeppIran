@@ -80,7 +80,8 @@
   tiles.appendChild(tile);
   app.appendChild(adminView);
   document.body.appendChild(dialog);
-  topActions.prepend(signInButton);
+  // Home deliberately hides the global topbar; keep QA sign-in visible outside it.
+  document.body.appendChild(signInButton);
   const dashboardContent=byId("qaDashboardContent");
   dashboardContent.appendChild(legacyPanel);
   legacyPanel.setAttribute("role","region");

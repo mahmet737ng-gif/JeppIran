@@ -142,3 +142,20 @@
   #adminQaView #jpAdminTestPanel .qa-metrics small{font-size:9px}
   #homeView .home-tiles #adminQaHomeBtn{min-height:92px;padding:9px 10px}
 }
+
+/* QA sign-in is independent of the Home-hidden production topbar. */
+#qaAccountButton{
+  display:block!important;
+  position:fixed!important;
+  right:max(12px,env(safe-area-inset-right))!important;
+  top:max(14px,env(safe-area-inset-top))!important;
+  z-index:2147482997!important;
+  padding:9px 14px!important;
+  max-width:min(165px,42vw)!important;
+  border:1px solid #57d0ee!important;
+  border-radius:9px!important;
+  background:rgba(6,29,49,.91)!important;
+  color:#f2fbff!important;
+  box-shadow:0 5px 20px #0008!important;
+}
+body.viewer-fullscreen #qaAccountButton{display:none!important}
