@@ -51,7 +51,7 @@ with tempfile.TemporaryDirectory(prefix="jeppiran-admin-preview-") as tempdir:
         if path.name == "app.js":
             old_registration = 'if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")){'
             phone_guarded_registration = (
-                'if(new URLSearchParams(location.search).get("platform")!=="android-phone"&&\\n'
+                'if(new URLSearchParams(location.search).get("platform")!=="android-phone"&&' + chr(10) +
                 '   "serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")){'
             )
             # Preview must NEVER register the production service worker.
