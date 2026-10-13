@@ -202,3 +202,20 @@ html.jp-android-phone {
 @media (prefers-reduced-motion: reduce) {
   html.jp-android-phone * { scroll-behavior: auto !important; }
 }
+
+/* In fullscreen, these rules override the normal phone two-row grid. */
+@media(max-width:749px){
+  html.jp-android-phone body.viewer-fullscreen #chartsView.charts-layout.active,
+  html.jp-android-phone body.viewer-fullscreen #chartsView.charts-layout.active.chart-open{
+    display:block!important;position:fixed!important;
+    inset:0!important;height:100dvh!important;width:100vw!important;
+    grid-template-columns:none!important;grid-template-rows:none!important;
+  }
+  html.jp-android-phone body.viewer-fullscreen #chartsView .viewer-pane{
+    display:flex!important;height:100dvh!important;min-height:0!important;
+  }
+  html.jp-android-phone body.viewer-fullscreen #chartsView .viewer-toolbar,
+  html.jp-android-phone body.viewer-fullscreen #chartsView .airport-pane{
+    display:none!important;
+  }
+}
