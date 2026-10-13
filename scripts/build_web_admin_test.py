@@ -49,10 +49,19 @@ with tempfile.TemporaryDirectory(prefix="jeppiran-admin-preview-") as tempdir:
         ]:
             source = source.replace(before, after)
         if path.name == "app.js":
-            previous = 'if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")){'
-            if previous not in source:
+            old_registration = 'if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")){'
+            phone_guarded_registration = (
+                'if(new URLSearchParams(location.search).get("platform")!=="android-phone"&&\\n'
+                '   "serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")){'
+            )
+            # Preview must NEVER register the production service worker.
+            # Accept both old and phone-guarded source forms.
+            if phone_guarded_registration in source:
+                source = source.replace(phone_guarded_registration, 'if(false&&"serviceWorker" in navigator){')
+            elif old_registration in source:
+                source = source.replace(old_registration, 'if(false&&"serviceWorker" in navigator){')
+            else:
                 raise RuntimeError("Admin QA service-worker registration source changed")
-            source = source.replace(previous, 'if(false&&"serviceWorker" in navigator){')
         if path.name == "service-worker.js":
             source = source.replace('const CACHE="jeppiran-pwa-', 'const CACHE="jeppiran-test-pwa-')
             source = source.replace('key.startsWith("jeppiran-pwa-")', 'key.startsWith("jeppiran-test-pwa-")')
