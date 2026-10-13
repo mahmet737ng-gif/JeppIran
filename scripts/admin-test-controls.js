@@ -2,7 +2,7 @@
    No privileged server API exists here; all users are synthetic QA records. */
 (function(){
   "use strict";
-  if(window.JEPPIRAN_TEST_ADMIN!==true||!location.pathname.includes("/admin-test/"))return;
+  if(window.JEPPIRAN_TEST_ADMIN!==true||!location.pathname.includes("/admin-console/"))return;
   const STORE="jeppiran-admin-qa-users-v2",ROLE="jeppiran-admin-qa-view-v2";
   function future(days){const d=new Date();d.setDate(d.getDate()+days);return d.toISOString().slice(0,10)}
   function seeds(){return [

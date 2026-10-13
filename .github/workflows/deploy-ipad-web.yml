@@ -157,12 +157,12 @@ jobs:
       - name: Build isolated Admin QA test website
         run: |
           python3 scripts/build_web_admin_test.py
-          node --check web/admin-test/admin-test-controls.js
-          node --check web/admin-test/admin-qa-home.js
+          node --check web/admin-console/admin-test-controls.js
+          node --check web/admin-console/admin-qa-home.js
           node --test tests/admin-qa-preview.test.cjs
-          node --check web/admin-test/app.js
-          node --check web/admin-test/offline-manager.js
-          node --check web/admin-test/service-worker.js
+          node --check web/admin-console/app.js
+          node --check web/admin-console/offline-manager.js
+          node --check web/admin-console/service-worker.js
           python3 - <<'PY'
           import json
           from pathlib import Path

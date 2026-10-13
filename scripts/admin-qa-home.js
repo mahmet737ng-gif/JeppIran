@@ -1,10 +1,10 @@
 /* JEPPIRAN ADMIN HOME QA
- * Works ONLY in /admin-test/, preserves production Home, and REUSES existing
+ * Works ONLY in /admin-console/, preserves production Home, and REUSES existing
  * local QA subscription controls. This is NOT real admin authentication.
  */
 (function(){
   "use strict";
-  if(window.JEPPIRAN_TEST_ADMIN!==true || !location.pathname.includes("/admin-test/"))return;
+  if(window.JEPPIRAN_TEST_ADMIN!==true || !location.pathname.includes("/admin-console/"))return;
 
   const byId=id=>document.getElementById(id);
   const legacyButton=byId("jpAdminTestBtn");

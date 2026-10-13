@@ -1,4 +1,4 @@
-/* Browser-level QA for isolated /admin-test/ home dashboard.
+/* Browser-level QA for isolated /admin-console/ home dashboard.
  * Uses the existing Chrome + Playwright installed by Pages CI.
  */
 const {chromium}=require("playwright");
@@ -28,7 +28,7 @@ async function run(){
   try {
     const context=await browser.newContext({viewport:{width:1180,height:850},serviceWorkers:"block"});
     const page=await context.newPage();
-    await page.goto("http://127.0.0.1:"+port+"/admin-test/",{waitUntil:"domcontentloaded",timeout:60000});
+    await page.goto("http://127.0.0.1:"+port+"/admin-console/",{waitUntil:"domcontentloaded",timeout:60000});
     await page.locator("#qaAccountButton").waitFor({timeout:45000});
     assert.equal(await page.locator("#adminQaHomeBtn").isVisible(),false,"Guest must NOT see Admin Home card");
     await page.locator("#qaAccountButton").click();
