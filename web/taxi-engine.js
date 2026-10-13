@@ -136,7 +136,7 @@ function parse(raw,net){
     const id=normalizeStand(t);
     return net.stands[id]&&/^(?:ST|STAND|P)?[A-Z0-9]+$/.test(t)?id:null;
   };
-  let startStand=null,startRunway=null,destination=null,via=[];
+  let startStand=null,startRunway=null,startTaxiway=null,destination=null,via=[];
   if(tokens.length===1){
     const id=stand(tokens[0]);
     if(id)return {startStand:null,destination:{kind:"stand",id},via:[]};
@@ -149,6 +149,15 @@ function parse(raw,net){
     // Published runway designator at command START means start at its
     // verified HOLD-SHORT node. It does NOT authorize entering a runway.
     startRunway=runwayToken(tokens.shift());
+  }
+  // Explicit named TWY -> stand/runway starts at the SOURCE-DEFINED taxiway
+  // terminalNode, not an arbitrary closest crossing or its printed label.
+  const namedOrigin=upper(tokens[0]);
+  const targetToken=tokens.at(-1);
+  const hasStandOrRunwayGoal=Boolean(stand(targetToken)||runwayToken(targetToken));
+  if(!startStand&&!startRunway&&tokens.length>1&&hasStandOrRunwayGoal&&
+     net.taxiways?.[namedOrigin]?.terminalNode){
+    startTaxiway=namedOrigin;tokens.shift();
   }
   const final=tokens.at(-1),destStand=final&&stand(final);
   if(destStand){
@@ -168,7 +177,7 @@ function parse(raw,net){
     upper(e.label||e.taxiway)===t&&e.kind==="runway")))
     return {error:"Unknown explicit runway-use segment: "+
       via.find(t=>/^BT/.test(t))};
-  return {startStand,startRunway,destination,via};
+  return {startStand,startRunway,startTaxiway,destination,via};
 }
 function create(data){
   const checked=validate(data);
@@ -219,6 +228,8 @@ function create(data){
     const waypoints=cmd.via||[];
     const from=cmd.startStand?destinationNode({kind:"stand",id:cmd.startStand}):
       cmd.startRunway?destinationNode({kind:"runway",id:cmd.startRunway}):
+      cmd.startTaxiway&&taxiways[cmd.startTaxiway]?.terminalNode?
+        {id:taxiways[cmd.startTaxiway].terminalNode}:
       opt.startNode&&nodes[opt.startNode]?{id:opt.startNode}:
       nearest(opt.position,opt.maxSnapMeters??65);
     if(!from||from.error)return {error:from?.error||"No mapped start within 65 m; select an explicit stand or valid simulator position"};
