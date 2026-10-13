@@ -35,6 +35,13 @@ async function waitServer(){
   });
   await page.locator("#chartTaxiBtn").click({timeout:20000});
   await page.locator("#taxiQaInput").waitFor({state:"visible",timeout:10000});
+  assert.equal(await page.locator("#taxiQaToolsBtn").count(),0,"TOOLS dropdown must be removed");
+  assert.equal(await page.locator("#taxiQaPanel").evaluate(el=>
+    el.previousElementSibling?.classList.contains("viewer-toolbar")),true,
+    "TAXI must be the second toolbar directly below the primary viewer toolbar");
+  for(const id of ["#taxiQaGo","#taxiQaStartQuick","#taxiQaClearQuick","#taxiQaEnd"])
+    assert.equal(await page.locator(id).isVisible(),true,id+" should be immediately accessible");
+
   await page.waitForFunction(()=>
     document.querySelector("#taxiQaStatus")?.textContent?.includes("OIIE Stage 4"),
     null,{timeout:25000});
@@ -44,6 +51,12 @@ async function waitServer(){
     state:"attached",timeout:10000});
   assert.match(await page.locator("#taxiQaStatus").innerText(),/OIIE RWY 11L/);
   assert.equal(await page.locator("polyline.taxi-oiie-physical-runway-axis-simulator-qa").count(),1);
+  await page.locator("#chartTaxiBtn").click();
+  assert.equal(await page.locator("#taxiQaPanel").isVisible(),false,"TAXI must toggle OFF");
+  assert.equal(await page.locator("polyline.taxi-oiie-physical-runway-axis-simulator-qa").count(),1,
+    "Closing sub-toolbar must not erase the runway-only chart path");
+  await page.locator("#chartTaxiBtn").click();
+  assert.equal(await page.locator("#taxiQaPanel").isVisible(),true,"TAXI must toggle ON");
   await page.locator("#taxiQaInput").fill("29R 11L");
   await page.locator("#taxiQaGo").click();
   assert.match(await page.locator("#taxiQaStatus").innerText(),/RWY 29R/);
@@ -52,8 +65,16 @@ async function waitServer(){
   assert.match(await page.locator("#taxiQaStatus").innerText(),/RWY 11R/);
   await page.locator("#taxiQaInput").fill("ST100 29R");
   await page.locator("#taxiQaGo").click();
+  assert.equal(await page.locator("polyline.taxi-oiie-physical-runway-axis-simulator-qa").count(),1,
+    "Rejected stand-to-runway request must leave the previous approved path visible");
+  await page.locator("#taxiQaInput").fill("ST204 ST314");
+  await page.locator("#taxiQaGo").click();
+  assert.equal(await page.locator("polyline.taxi-oiie-physical-runway-axis-simulator-qa").count(),1,
+    "Unverified Salam-to-Cargo path must not replace the existing plotted route");
+  await page.locator("#taxiQaClearQuick").click();
   assert.equal(await page.locator("polyline.taxi-oiie-physical-runway-axis-simulator-qa").count(),0,
-    "Blocked stand-route must remove previous runway QA overlay");
+    "CLEAR removes the previously plotted path without hiding the sub-toolbar");
+  assert.equal(await page.locator("#taxiQaPanel").isVisible(),true);
   assert.match(await page.locator("#taxiQaStatus").innerText(),/NOT a source-reviewed|NOT.*route/);
   await page.locator("#taxiQaInput").fill("ST301");
   await page.locator("#taxiQaGo").click();
@@ -66,7 +87,13 @@ async function waitServer(){
   await page.locator("#taxiQaInput").fill("R1");
   await page.locator("#taxiQaGo").click();
   assert.equal(await page.locator("polyline.taxi-oiie-physical-runway-axis-simulator-qa").count(),0);
-  console.log("PASS Chrome: 11L↔29R and 11R→29L; ST301 INS anomaly, ST400 label georeg, and unreviewed runway gates remain blocked");
+  await page.locator("#taxiQaInput").fill("11L 29R");
+  await page.locator("#taxiQaGo").click();
+  assert.equal(await page.locator("polyline.taxi-oiie-physical-runway-axis-simulator-qa").count(),1);
+  await page.locator("#taxiQaEnd").click();
+  assert.equal(await page.locator("#taxiQaPanel").isVisible(),false);
+  assert.equal(await page.locator("polyline.taxi-oiie-physical-runway-axis-simulator-qa").count(),0);
+  console.log("PASS Chrome: responsive second-toolbar, TAXI toggle keeps route, CLEAR/END delete route, and 11L↔29R/11R↔29L source geometry remains gated");
  }finally{
   if(browser)await browser.close();
   server.kill("SIGTERM");
