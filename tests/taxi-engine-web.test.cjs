@@ -53,7 +53,7 @@ vm.runInContext(script,ctx);
  assert.equal(el("taxiQaRoutePreview").hidden,true,"No route miniature for reusable engine");
  el("taxiQaInput").value="ST101 J BT13R H 13L";
  qa.go();
- assert.equal(qa.taxi.route,null,"Unsafe projected runway links must not activate by default");
+ assert(qa.taxi.route?.genericRoute&&!qa.taxi.route.edges.some(e=>e.kind==="runway"),"Rejected unsafe runway clearance must not replace the previous source-verified route");
  el("taxiQaInput").value="QA ST101 J BT13R H 13L";
  qa.go();
  assert(qa.taxi.route?.genericRoute,"Explicit QA preview must be possible");
