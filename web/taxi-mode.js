@@ -461,6 +461,71 @@ async function fetchGraph(icao){
     // hold lines have been fully traced. Previous projected OIAW.json routes
     // MUST NEVER be presented as mapped taxi centreline geometry.
     if(icao==="OIIE"){
+      // V4: A fully source-reviewed taxi network ALWAYS takes precedence over
+      // legacy OIIE source-label lookup, but only after the LIVE browser also
+      // exhaustively checks every published stand x runway hold x 2 directions.
+      // A 5%-complete published JSON must never unlock even one fake taxi route.
+      try{
+        const answer=await Promise.all([
+          fetch("./data/taxi-networks/OIIE.json?v=2621-complete-v4",{cache:"no-store"}),
+          fetch("./data/taxi-surveys/OIIE.json?v=2621-source-v4",{cache:"no-store"})
+        ]);
+        if(answer[0].ok&&answer[1].ok){
+          const [network,survey]=await Promise.all(answer.map(r=>r.json()));
+          const names=survey.stands.map(st=>String(st.id).toUpperCase());
+          const ends=survey.runwayPolygons.flatMap(r=>r.ends);
+          const factory=window.JEPPIRAN_TAXI_ENGINE;
+          if(network.enabled===true&&
+             network.source?.reviewStatus==="SIM_QA_REVIEWED"&&
+             network.source?.sha256===survey.source?.sha256&&
+             String(network.cycle)===String(manifest?.cycle)&&
+             network.airport==="OIIE"&&survey.airport==="OIIE"&&
+             names.length===new Set(names).size&&
+             ends.length===new Set(ends).size&&
+             factory?.create){
+            const engine=factory.create(network);
+            let passed=0,failed=false;
+            for(const stand of names){
+              if(!network.stands?.[stand]){failed=true;break}
+              const standNode=network.stands[stand]?.node||network.stands[stand];
+              for(const end of ends){
+                const hold=network.runways?.[end];
+                if(!hold?.goalNode||hold.goalKind!=="hold"){failed=true;break}
+                const out=engine.plan("ST"+stand+" RWY "+end);
+                const back=engine.plan("ST"+stand,{startNode:hold.goalNode});
+                const safe=val=>val?.route?.edges?.length>0&&
+                  val.route.edges.every(e=>e.source&&
+                    (e.quality==="mapped"||e.quality==="qa")&&e.kind!=="runway");
+                if(!safe(out)||!safe(back)||
+                   out.route.path[0]!==standNode||
+                   out.route.path.at(-1)!==hold.goalNode||
+                   back.route.path[0]!==hold.goalNode||
+                   back.route.path.at(-1)!==standNode){
+                  failed=true;break;
+                }
+                passed+=2;
+              }
+              if(failed)break;
+            }
+            if(!failed&&passed===names.length*ends.length*2){
+              if(taxi.airport!==icao)return null;
+              taxi.graph=network;taxi.genericEngine=engine;taxi.oiieSurvey=null;
+              fillGenericTaxiDestinations(engine);
+              $("taxiQaStands").textContent="STANDS ("+names.length+")";
+              $("taxiQaInput").placeholder="ST100 RWY 11L · ST301 RWY 29R · ST400 A J 11R";
+              message("OIIE V4 READY FOR SIMULATOR TAXI CHECK · "+
+                names.length+" stands × "+ends.length+" runway ends × 2 directions = "+
+                passed+" source-connected routes passed. Send a clearance to GO. "+
+                "NOT FOR ACTUAL NAVIGATION.");
+              draw();return network;
+            }
+          }
+        }
+      }catch(error){
+        console.warn("OIIE V4 full routing graph gated; retain safe source review:",error);
+      }
+      // Until the exhaustive V4 gate succeeds, existing source lookup
+      // remains available but no arbitrary stand/runway link is invented.
       const [sr,qr,rr,pr,vr,ar,ir,lr,cr]=await Promise.all([
         fetch("./data/taxi-surveys/OIIE.json?v=2621-oiie-v3-source-r1",{cache:"no-store"}),
         fetch("./data/taxi-surveys/OIIE-workflow-2621.json?v=2621-oiie-v3-qa-r1",{cache:"no-store"}),
