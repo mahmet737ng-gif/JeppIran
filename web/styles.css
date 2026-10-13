@@ -1446,6 +1446,7 @@ body.viewer-fullscreen .fullscreen-cdfa:not([hidden]){display:flex}
 :root.light #chartsView .profile-weather-text{color:#214461}
 :root.light #chartsView .profile-notam-details{color:#365b78}
 :root.light #chartsView .profile-notam-details summary{color:#087cbb}
+:root.light #chartsView .profile-notam-details summary:hover{text-decoration:underline}
 :root.light #chartsView .profile-notam-details p{color:#4e708b}
 :root.light #chartsView .profile-quick button{
   color:#174361;
