@@ -60,6 +60,15 @@ class MainActivity :
             }
         }
 
+    private var newHomeLaunched = false
+
+    private fun openNewHome() {
+        if (newHomeLaunched || isFinishing) return
+        newHomeLaunched = true
+        startActivity(Intent(this, MobileWebActivity::class.java))
+        finish()
+    }
+
     private fun currentVersionCode(): Long {
 
         val info =
@@ -306,6 +315,7 @@ class MainActivity :
                 dialog.dismiss()
 
                 requestUpdateNotificationPermissionIfNeeded()
+                openNewHome()
             }
         }
 
@@ -371,6 +381,11 @@ class MainActivity :
         setContentView(
             R.layout.activity_main
         )
+
+        // The old native home is retained only for non-visual compatibility.
+        // Never display it while the legal notice is handled and the approved
+        // current web home is launched.
+        findViewById<android.view.View>(R.id.main).visibility = android.view.View.INVISIBLE
 
         // Responsive three-column landscape / two-column portrait Home.
         findViewById<android.widget.GridLayout>(R.id.homeGrid).columnCount =
@@ -575,6 +590,10 @@ class MainActivity :
                     }
                 }
             }
+
+        // After required startup notices, land on the approved new Home UI.
+        // Do not briefly expose the obsolete native tile-based Home.
+        if (!usageNoticeShown) openNewHome()
     }
     override fun onPause() {
         getSharedPreferences(
