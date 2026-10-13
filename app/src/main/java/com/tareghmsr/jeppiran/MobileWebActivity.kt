@@ -12,6 +12,8 @@ import android.webkit.GeolocationPermissions
 import android.webkit.WebChromeClient
 import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
+import java.io.ByteArrayInputStream
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -130,6 +132,26 @@ class MobileWebActivity : AppCompatActivity() {
         setContentView(root)
 
         browser.webViewClient = object : WebViewClient() {
+            override fun shouldInterceptRequest(
+                view: WebView?,
+                request: WebResourceRequest?
+            ): WebResourceResponse? {
+                // The hosted iPad app auto-downloads ALL airport PDFs for offline use.
+                // Disable only this bulk downloader inside the Android phone preview.
+                // Keep the approved iPad website unchanged.
+                val uri = request?.url
+                if (uri?.host == appHost &&
+                    uri.path.orEmpty().endsWith("/offline-manager.js")
+                ) {
+                    return WebResourceResponse(
+                        "application/javascript",
+                        "UTF-8",
+                        ByteArrayInputStream("/* Online-only Android preview */".toByteArray())
+                    )
+                }
+                return null
+            }
+
             override fun shouldOverrideUrlLoading(
                 view: WebView?,
                 request: WebResourceRequest?
