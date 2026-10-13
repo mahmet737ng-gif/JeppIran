@@ -173,6 +173,12 @@ jobs:
           export JEPPIRAN_CHROME_BIN="$(command -v google-chrome)"
           node scripts/verify_profile_validity_browser.cjs
 
+      - name: Verify OIIE runway-only routes and locked-out stand gates in real Chrome
+        run: |
+          export NODE_PATH="$RUNNER_TEMP/jeppiran-browser-qa/node_modules"
+          export JEPPIRAN_CHROME_BIN="$(command -v google-chrome)"
+          node scripts/verify_oiie_runway_axes_browser.cjs
+
       - name: Validate offline PWA scripts
         run: |
           node --check web/offline-manager.js
