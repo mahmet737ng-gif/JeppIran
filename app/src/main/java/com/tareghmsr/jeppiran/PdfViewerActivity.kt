@@ -1902,8 +1902,9 @@ private val locationPermissionLauncher =
                 gravity =
                     Gravity.CENTER_VERTICAL
 
+                // Leave space for the always-visible top-left hamburger.
                 setPadding(
-                    12.dp,
+                    68.dp,
                     0,
                     10.dp,
                     0
