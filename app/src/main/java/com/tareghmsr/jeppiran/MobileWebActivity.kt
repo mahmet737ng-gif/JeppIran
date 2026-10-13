@@ -26,19 +26,25 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
-import org.json.JSONObject
+import androidx.webkit.WebViewAssetLoader
 
 /**
- * Online-only Android phone rendering of the same JEPPIRAN web UI used on iPad.
- * This is a QA entry point, NOT a subscription security boundary.
- *
- * Do not enable paid chart access until server-side authentication, private
- * encrypted chart storage, and license checks replace public PDF URLs.
+ * Fully local Android chart UI. All UI, metadata, and airport PDFs are bundled
+ * INSIDE the signed APK and served from WebViewAssetLoader (not browser cache).
+ * The separately deployed JEPPIRAN website continues to use GitHub Pages.
+ * Network requests are only for optional live external services like weather.
  */
 class MobileWebActivity : AppCompatActivity() {
-    private val appHost = "mahmet737ng-gif.github.io"
-    private val appPath = "/JeppIran/"
-    private val appUrl = "https://$appHost$appPath?platform=android-phone&native_revision=2621-charts-content-r1"
+    private val appHost = "appassets.androidplatform.net"
+    private val appPath = "/assets/jeppiran-web/"
+    private val appUrl = "https://$appHost${appPath}index.html?platform=android-phone"
+
+    private val assetLoader by lazy {
+        WebViewAssetLoader.Builder()
+            .setDomain(appHost)
+            .addPathHandler("/assets/", WebViewAssetLoader.AssetsPathHandler(this))
+            .build()
+    }
 
     private lateinit var browser: WebView
     private lateinit var progress: ProgressBar
@@ -104,7 +110,7 @@ class MobileWebActivity : AppCompatActivity() {
             )
         )
         errorMessage = TextView(this).apply {
-            text = "Could not load JEPPIRAN. Check your internet connection. Tap to retry."
+            text = "Local JEPPIRAN files are missing or unavailable. Install a complete APK. Tap to retry."
             textSize = 16f
             setTextColor(Color.WHITE)
             setBackgroundColor(Color.rgb(5, 19, 33))
@@ -137,20 +143,15 @@ class MobileWebActivity : AppCompatActivity() {
                 view: WebView?,
                 request: WebResourceRequest?
             ): WebResourceResponse? {
-                // The hosted iPad app auto-downloads ALL airport PDFs for offline use.
-                // Disable only this bulk downloader inside the Android phone preview.
-                // Keep the approved iPad website unchanged.
-                val uri = request?.url
-                if (uri?.host == appHost &&
-                    uri.path.orEmpty().endsWith("/offline-manager.js")
-                ) {
-                    return WebResourceResponse(
-                        "application/javascript",
-                        "UTF-8",
-                        ByteArrayInputStream("/* Online-only Android preview */".toByteArray())
+                val uri = request?.url ?: return null
+                if (uri.host != appHost) return null // Optional live weather, etc.
+                // Fail closed: NEVER fetch an absent Android asset from a website.
+                return assetLoader.shouldInterceptRequest(uri)
+                    ?: WebResourceResponse(
+                        "text/plain", "UTF-8", 404, "Not Found",
+                        mapOf("Cache-Control" to "no-store"),
+                        ByteArrayInputStream(ByteArray(0))
                     )
-                }
-                return null
             }
 
             override fun shouldOverrideUrlLoading(
@@ -169,10 +170,8 @@ class MobileWebActivity : AppCompatActivity() {
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 progress.visibility = View.GONE
-                if (url != null && Uri.parse(url).host == appHost) {
-                    applyPhoneLayout()
-                    discardStalePhoneServiceWorkers()
-                }
+                // Android skin is linked in the local HTML before rendering.
+                // No site load, browser cache or service worker is involved.
             }
 
             override fun onReceivedError(
@@ -223,55 +222,9 @@ class MobileWebActivity : AppCompatActivity() {
                 }
             }
         }
-        // Android chart UI is online-only: discard stale WebView HTTP cache
-        // rather than mixing old HTML and current airport metadata.
-        browser.clearCache(true)
-        if (savedInstanceState == null) browser.loadUrl(appUrl)
-        else browser.restoreState(savedInstanceState)
-    }
-
-    private fun discardStalePhoneServiceWorkers() {
-        // Dedicated online-only Android WebView storage. A prior installed
-        // JEPPIRAN PWA worker may keep obsolete HTML/JS after an APK upgrade.
-        // Do not affect Safari/iPad service workers or native chart assets.
-        val script = """
-            (async () => {
-              const marker = 'jeppiran-android-chart-cache-reset-r1';
-              try {
-                if (sessionStorage.getItem(marker) === 'done') return;
-                sessionStorage.setItem(marker, 'done');
-                const regs = 'serviceWorker' in navigator
-                    ? await navigator.serviceWorker.getRegistrations() : [];
-                await Promise.all(regs.map(reg => reg.unregister()));
-                if ('caches' in window) {
-                  const keys = await caches.keys();
-                  await Promise.all(keys.filter(key => key.startsWith('jeppiran-'))
-                    .map(key => caches.delete(key)));
-                }
-                if (regs.length) location.reload();
-              } catch(error) {
-                console.warn('JEPPIRAN Android shell refresh', error);
-              }
-            })();
-        """.trimIndent()
-        browser.evaluateJavascript(script, null)
-    }
-
-    private fun applyPhoneLayout() {
-        val css = assets.open("phone-layout.css").bufferedReader().use { it.readText() }
-        val script = """
-            (() => {
-                document.documentElement.classList.add('jp-android-phone');
-                let sheet = document.getElementById('jp-android-phone-css');
-                if (!sheet) {
-                    sheet = document.createElement('style');
-                    sheet.id = 'jp-android-phone-css';
-                    document.head.appendChild(sheet);
-                }
-                sheet.textContent = ${JSONObject.quote(css)};
-            })();
-        """.trimIndent()
-        browser.evaluateJavascript(script, null)
+        // Always start from installed APK assets; never restore a prior
+        // session pointing to the now-retired hosted website.
+        browser.loadUrl(appUrl)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
