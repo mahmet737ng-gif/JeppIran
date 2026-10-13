@@ -1682,7 +1682,9 @@ function openTaxiDiagram(){
     dialog("TAXI","Airport diagram not available for "+selectedAirport+".");
     return;
   }
-  if(Number(selectedChart?.page)!==Number(diagram.page))selectChart(diagram);
+  // The TAXI button toggles the docked second toolbar. Never change an
+  // already open Parking/Docking chart just to show or hide this toolbar.
+  if(!selectedChart)selectChart(diagram);
   if(window.JEPPIRAN_TAXI?.open)window.JEPPIRAN_TAXI.open();
   else document.querySelector('script[src*="taxi-mode.js"]')?.addEventListener("load",()=>{
     if(selectedAirport===airport)window.JEPPIRAN_TAXI?.open?.();
