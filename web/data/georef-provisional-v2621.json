@@ -6076,6 +6076,102 @@
         "officialAipIndependentCheck": 0,
         "airac2621MatchConfirmed": false
       }
+    },
+    {
+      "page": 428,
+      "airport": "OIII",
+      "name": "VR 1A, VR 1B",
+      "chartKey": "OIII|SID|10-3H|VR 1A, VR 1B",
+      "sourceFingerprint": "377544ffc93c5fb03fe29b35623fd11ed8a58382caf217e4cff0315a7222ce46",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 7.56,
+        "top": 19.56,
+        "right": 602.16,
+        "bottom": 782.16
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 35.5,
+          "lon": 51,
+          "x": 332.52,
+          "y": 722.4,
+          "source": "printed_graticule_tick"
+        },
+        {
+          "lat": 35.5,
+          "lon": 51.5,
+          "x": 332.52,
+          "y": 355.32,
+          "source": "printed_graticule_tick"
+        },
+        {
+          "lat": 35.66666667,
+          "lon": 51,
+          "x": 182.64,
+          "y": 722.4,
+          "source": "printed_graticule_tick"
+        },
+        {
+          "lat": 35.66666667,
+          "lon": 51.5,
+          "x": 182.64,
+          "y": 355.32,
+          "source": "printed_graticule_tick"
+        },
+        {
+          "lat": 35.83333333,
+          "lon": 51,
+          "x": 32.4,
+          "y": 722.4,
+          "source": "printed_graticule_tick"
+        },
+        {
+          "lat": 35.83333333,
+          "lon": 51.5,
+          "x": 32.4,
+          "y": 355.32,
+          "source": "printed_graticule_tick"
+        },
+        {
+          "lat": 35.33333333,
+          "lon": 51,
+          "x": 481.92,
+          "y": 722.4,
+          "source": "printed_graticule_tick"
+        },
+        {
+          "lat": 35.33333333,
+          "lon": 51.5,
+          "x": 481.92,
+          "y": 355.32,
+          "source": "printed_graticule_tick"
+        },
+        {
+          "x": 155.2,
+          "y": 514.1,
+          "lat": 35.69697222222222,
+          "lon": 51.28377777777778,
+          "source": "official_AIP_TRN_symbol_crosscheck"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "method": "aip_and_printed_grid_10m_test_only",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "gridMaxResidualPdfPoints": 0.228153,
+        "controlPointCount": 9,
+        "measuredAxisValueCounts": {
+          "latitude": 4,
+          "longitude": 2
+        },
+        "note": "10-minute latitude graticule ticks cross-checked against the plotted TRN symbol using official AIP coordinates; experimental test layer only."
+      }
     }
   ]
 }
