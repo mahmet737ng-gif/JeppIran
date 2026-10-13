@@ -142,7 +142,7 @@ jobs:
 
       - name: Extract source-backed OIIE runway and apron geometry candidates
         run: |
-          python3 -m pip install --disable-pip-version-check pymupdf==1.26.5 shapely==2.1.2 networkx==3.5
+          python3 -m pip install --disable-pip-version-check pymupdf==1.26.5 shapely==2.1.2 networkx==3.5 scikit-image==0.25.2 scipy==1.16.2
           python3 scripts/build_oiie_pdf_ground_evidence.py \
             --pdf web/charts/OIIE.pdf \
             --output web/data/taxi-surveys/OIIE-native-vectors-v2621.json
@@ -153,6 +153,9 @@ jobs:
             --pdf web/charts/OIIE.pdf \
             --vectors web/data/taxi-surveys/OIIE-native-vectors-v2621.json \
             --out web/data/taxi-surveys/OIIE-source-ink-graph-v2621.json
+          python3 scripts/build_oiie_adc_pavement_islands.py \
+            --pdf web/charts/OIIE.pdf \
+            --out web/data/taxi-surveys/OIIE-adc-pavement-islands-v2621.json
           python3 scripts/build_oiie_runway_axes.py \
             --pdf web/charts/OIIE.pdf \
             --output web/data/taxi-surveys/OIIE-runway-axes-v2621.json
@@ -177,6 +180,10 @@ jobs:
           assert ink['regions']['SALAM']['directedInkConnected']==380
           assert ink['regions']['PASSENGER']['directedInkConnected']==3660
           assert ink['approvedPhysicalTaxiRoutes']==0 and ink['routeable']==False
+          islands=json.loads(Path("web/data/taxi-surveys/OIIE-adc-pavement-islands-v2621.json").read_text())
+          assert islands['distinctApronIslandIds']['PASSENGER']==islands['distinctApronIslandIds']['CARGO']
+          assert islands['distinctApronIslandIds']['SALAM']!=islands['distinctApronIslandIds']['CARGO']
+          assert islands['approvedCrossRunwayLinks']==0 and islands['publishedRunwayCrossingPermissionRequired']
           assert not data['allowNavigation']
           seam=json.loads(Path("web/data/taxi-surveys/OIIE-page-portal-candidates-v2621.json").read_text())
           assert seam["approvedPhysicalPortals"]==0 and not seam["allowAutomaticTaxiRouting"]
