@@ -144,6 +144,9 @@ jobs:
           python3 scripts/build_oiie_pdf_ground_evidence.py \
             --pdf web/charts/OIIE.pdf \
             --output web/data/taxi-surveys/OIIE-native-vectors-v2621.json
+          python3 scripts/build_oiie_runway_axes.py \
+            --pdf web/charts/OIIE.pdf \
+            --output web/data/taxi-surveys/OIIE-runway-axes-v2621.json
           python3 - <<'PY'
           import json
           from pathlib import Path
@@ -154,6 +157,11 @@ jobs:
           assert set(data['pages']['383']['regions'])=={'CARGO','SALAM'}
           assert data['verifiedTaxiEdges']==data['verifiedRunwayGates']==0
           assert not data['allowNavigation']
+          axis=json.loads(Path('web/data/taxi-surveys/OIIE-runway-axes-v2621.json').read_text())
+          assert [r['physicalId'] for r in axis['runways']]==['11L_29R','11R_29L']
+          assert all(r['physicalRunwayAxisVerified'] and r['relativeLengthErrorPct']<1 for r in axis['runways'])
+          assert axis['approvedStandRunwayRoutes']==axis['approvedRunwayGates']==0
+          assert not axis['safeForNavigation']
           print('PASS native source evidence generated (NO unreviewed route promotion)')
           PY
 
