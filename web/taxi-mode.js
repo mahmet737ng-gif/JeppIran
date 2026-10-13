@@ -1050,6 +1050,7 @@ function updateAirportControls(){
     "Mashhad: ST109 Q BT31L D · ST109 B BT31L D · ST113 RAMP · ST109":
     selectedAirport==="OIAW"?"OIAW ADC: ST2 A B · ST4 A B · source PDF vectors":
     selectedAirport==="OIII"?"Mehrabad ADC: ST100 / ST507 / A4 / B6 · labels only":
+    selectedAirport==="OIIE"?"Imam ADC QA: ST100 / ST301 / ST201 / A / R1 · source labels only":
     "LTFM example: A4 A A7 B B8A · Hold: /B8A · 34L2A format";
 }
 // AUTO requires an actual start (simulator/device/SET START) or an explicit
