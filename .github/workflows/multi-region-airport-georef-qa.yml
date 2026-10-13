@@ -1,0 +1,22 @@
+name: Multi-region Airport Georeference QA
+on:
+  push:
+    paths:
+      - "web/app.js"
+      - "web/data/airport-region-georef-v2621.json"
+      - "web/data/chart-georef.json"
+      - "app/src/main/assets/chart-georef.json"
+      - "web/tests/multi-region-airport-georef.test.cjs"
+      - ".github/workflows/multi-region-airport-georef-qa.yml"
+  workflow_dispatch:
+jobs:
+  georef-regression:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - name: Check original V2621 georeference restoration and independent airport regions
+        run: node web/tests/multi-region-airport-georef.test.cjs
