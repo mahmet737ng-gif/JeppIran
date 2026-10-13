@@ -1,0 +1,48 @@
+name: Android phone parity preview QA
+
+on:
+  push:
+    branches: ['feature/android-phone-subscription']
+    paths:
+      - 'app/**'
+      - 'web/data/taxi-networks/**'
+      - '.github/workflows/android-phone-preview-qa.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  android-preview:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          lfs: true
+          fetch-depth: 1
+      - uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools'
+      - name: Install Android SDK
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
+      - uses: gradle/actions/setup-gradle@v4
+      - name: Verify shared web viewer and locked UI
+        run: |
+          node --check web/app.js
+          node --test tests/ipad-chart-ui-locked-v2621.test.cjs
+          node --test tests/cdfa-ui-locked-v2621.test.cjs
+      - name: Compile and unit-test phone preview
+        env:
+          JEPPIRAN_PHONE_QA: 'true'
+        run: gradle testDebugUnitTest assembleDebug --stacktrace
+      - uses: actions/upload-artifact@v4
+        with:
+          name: android-phone-parity-qa-separate-install
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error

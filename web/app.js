@@ -1488,6 +1488,11 @@ function selectChart(c,options={}){
   refreshPositionStatus();
   $("#viewerChart").textContent=(c.chart_number?c.chart_number+" • ":"")+displayChartName(c);
   showChartMetar(true,true);
+  // On phones, choosing a procedure opens the chart immediately, rather
+  // than leaving a tiny chart next to a permanent procedure column.
+  if(window.matchMedia("(max-width: 749px)").matches){
+    enterViewerFullscreen();
+  }
   renderSelectedPdf(c).catch(e=>{
     $("#pdfStage").innerHTML='<div class="empty-state"><img src="./app-icon.png" alt=""><b>Chart unavailable</b><span>'+escapeHtml(e.message)+'</span></div>';
   });

@@ -419,15 +419,20 @@ class MainActivity :
             R.id.versionText
         ).text = AppVersion.name(this)
 
+        // Android phone parity QA: long-press Charts to preview the exact web UI.
+        // Normal tap still opens the stable native chart screen until encrypted
+        // chart packages and server-side subscription enforcement are deployed.
+        findViewById<android.view.View>(R.id.cardCharts).setOnLongClickListener {
+            startActivity(Intent(this, MobileWebActivity::class.java))
+            true
+        }
+
         findViewById<android.view.View>(
             R.id.cardCharts
         ).setOnClickListener {
 
             startActivity(
-                Intent(
-                    this,
-                    AirportChartsActivity::class.java
-                )
+                Intent(this, MobileWebActivity::class.java)
             )
         }
 

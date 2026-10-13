@@ -2,6 +2,8 @@ plugins {
     id("com.android.application")
 }
 
+val isPhonePreview = System.getenv("JEPPIRAN_PHONE_QA") == "true"
+
 val ciVersionCode =
     System.getenv("JEPPIRAN_VERSION_CODE")
         ?.toIntOrNull()
@@ -39,11 +41,11 @@ android {
     compileSdk = 36
 
     defaultConfig {
-        applicationId = "com.tareghmsr.jeppiran"
+        applicationId = if (isPhonePreview) "com.tareghmsr.jeppiran.phoneqa" else "com.tareghmsr.jeppiran"
         minSdk = 24
         targetSdk = 36
         versionCode = ciVersionCode
-        versionName = ciVersionName
+        versionName = if (isPhonePreview) "V2621-phone-qa" else ciVersionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

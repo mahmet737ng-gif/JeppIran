@@ -1,0 +1,221 @@
+/*
+ * JEPPIRAN Android phone-only responsive layer.
+ * Applied at runtime ONLY inside the Android preview WebView.
+ * No modifications to approved iPad/Safari layouts, imagery, chart controls,
+ * TAXI or CDFA renderers; this file changes layout and touch targets only.
+ */
+html.jp-android-phone {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+@media (max-width: 749px) {
+  html.jp-android-phone .topbar {
+    height: 60px;
+    min-height: 60px;
+    padding: 6px 12px;
+    gap: 8px;
+  }
+  html.jp-android-phone .topbar .brand { gap: 8px; min-width: 0; }
+  html.jp-android-phone .topbar .brand img {
+    width: 38px; height: 38px; border-radius: 9px;
+  }
+  html.jp-android-phone .topbar .brand strong { font-size: 15px; }
+  html.jp-android-phone .topbar .brand small {
+    font-size: 10px; white-space: nowrap;
+  }
+  html.jp-android-phone .topbar .top-actions {
+    gap: 6px; flex-shrink: 0;
+  }
+  html.jp-android-phone .topbar .icon-btn {
+    min-height: 42px; min-width: 42px; padding: 7px 9px;
+  }
+  html.jp-android-phone .view {
+    min-height: calc(100dvh - 60px);
+  }
+
+  html.jp-android-phone #homeView .flight-home-inner {
+    width: 100%; max-width: 100%; min-width: 0;
+    padding-inline: clamp(10px, 3vw, 20px);
+  }
+  html.jp-android-phone #homeView .flight-home-horizon {
+    min-width: 0;
+  }
+  html.jp-android-phone #homeView .home-tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px; padding: 11px 0 0;
+  }
+  html.jp-android-phone #homeView .home-card {
+    min-width: 0; min-height: 102px; padding: 12px 6px;
+    gap: 5px; border-radius: 11px;
+  }
+  html.jp-android-phone #homeView .home-card .card-icon {
+    font-size: 29px; height: 35px; width: 44px;
+  }
+  html.jp-android-phone #homeView .home-card b {
+    font-size: clamp(14px, 3.8vw, 18px);
+  }
+  html.jp-android-phone #homeView .home-card small {
+    font-size: 11px; overflow-wrap: anywhere;
+  }
+  html.jp-android-phone .home-footer {
+    flex-wrap: wrap; font-size: 10px;
+  }
+  html.jp-android-phone .home-sim-link {
+    min-height: 44px; padding: 8px 4px;
+  }
+
+  /*
+   * Override the forced wide desktop columns from the shared web stylesheet.
+   * Airport picker stays scrollable above the chart; the chart never shrinks
+   * into an unusable 2-column phone layout.
+   */
+  html.jp-android-phone #chartsView.charts-layout.active,
+  html.jp-android-phone #chartsView.charts-layout.active.chart-open {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-rows: minmax(148px, 24dvh) minmax(0, 1fr) !important;
+    height: calc(100dvh - 60px) !important;
+    min-height: 0 !important;
+    overflow: hidden !important;
+  }
+  html.jp-android-phone #chartsView .airport-pane {
+    min-width: 0; min-height: 0;
+    max-height: none; overflow: hidden;
+    border-right: 0 !important;
+    border-bottom: 1px solid var(--stroke) !important;
+  }
+  html.jp-android-phone #chartsView .airport-pane .pane-head {
+    min-height: 43px; max-height: 47px; padding: 5px 10px;
+    align-items: center;
+  }
+  html.jp-android-phone #chartsView .pane-head h2 {
+    width: auto; order: initial; font-size: 17px; margin: 0;
+  }
+  html.jp-android-phone #chartsView .back-btn {
+    min-height: 40px; min-width: 48px;
+    font-size: 13px;
+  }
+  html.jp-android-phone #chartsView #airportSearch {
+    height: 42px; font-size: 16px;
+    margin: 2px 10px 5px;
+  }
+  html.jp-android-phone #chartsView .airport-filters {
+    padding: 2px 10px 5px;
+  }
+  html.jp-android-phone #chartsView .airport-filter {
+    min-height: 40px; font-size: 13px;
+  }
+  html.jp-android-phone #chartsView .airport-list {
+    display: block; overflow-y: auto;
+    min-height: 0; flex: 1;
+    overscroll-behavior: contain;
+  }
+  html.jp-android-phone #chartsView .airport-item {
+    min-height: 48px; padding: 10px 12px;
+  }
+  html.jp-android-phone #chartsView .viewer-pane {
+    min-width: 0; min-height: 0;
+    height: 100%; overflow: hidden;
+  }
+  html.jp-android-phone #chartsView .viewer-toolbar {
+    height: auto; min-height: 96px; max-height: 116px;
+    display: flex; flex-direction: column;
+    align-items: stretch; gap: 3px;
+    padding: 5px 6px 6px;
+    flex-shrink: 0;
+  }
+  html.jp-android-phone #chartsView .viewer-title {
+    flex: 0 0 auto; font-size: 12px;
+  }
+  html.jp-android-phone #chartsView .viewer-title strong {
+    font-size: 13px;
+  }
+  html.jp-android-phone #chartsView .viewer-actions {
+    display: flex; flex-wrap: nowrap; gap: 5px;
+    flex: 0 0 auto; width: 100%; max-width: 100%;
+    overflow-x: auto; overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x;
+    scrollbar-width: thin;
+    padding-bottom: 3px;
+  }
+  html.jp-android-phone #chartsView .viewer-actions .raster-btn {
+    min-width: 44px; min-height: 44px; flex-shrink: 0;
+    padding: 5px 7px; font-size: 12px;
+  }
+  html.jp-android-phone #chartsView .viewer-actions .raster-only {
+    width: 44px;
+  }
+  html.jp-android-phone #chartsView .viewer-actions .toolbar-art {
+    width: 31px;
+  }
+  html.jp-android-phone #chartsView .viewer-actions .toolbar-label {
+    font-size: 10px;
+  }
+  html.jp-android-phone #chartsView #jpCdfaWorkspace {
+    flex: 1; min-height: 0; min-width: 0;
+  }
+  html.jp-android-phone #chartsView #pdfStage {
+    min-height: 0; min-width: 0;
+  }
+  html.jp-android-phone #chartsView .taxi-qa-panel {
+    max-width: calc(100vw - 14px);
+  }
+
+  /* Online only for now: no downloadable chart pack action in phone preview. */
+  html.jp-android-phone #offlinePdfBtn,
+  html.jp-android-phone #goOfflineBtn,
+  html.jp-android-phone #stopOfflineBtn {
+    display: none !important;
+  }
+  html.jp-android-phone input,
+  html.jp-android-phone textarea,
+  html.jp-android-phone select {
+    font-size: max(16px, 1em);
+  }
+}
+
+@media (max-width: 749px) and (orientation: landscape) {
+  html.jp-android-phone #chartsView.charts-layout.active,
+  html.jp-android-phone #chartsView.charts-layout.active.chart-open {
+    grid-template-columns: minmax(160px, 26%) minmax(0, 1fr) !important;
+    grid-template-rows: minmax(0, 1fr) !important;
+  }
+  html.jp-android-phone #chartsView .airport-pane {
+    border-right: 1px solid var(--stroke) !important;
+    border-bottom: 0 !important;
+  }
+  html.jp-android-phone #chartsView .viewer-toolbar {
+    min-height: 76px; max-height: 94px;
+  }
+  html.jp-android-phone #homeView .home-tiles {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 359px) {
+  html.jp-android-phone #homeView .home-card b { font-size: 13px; }
+  html.jp-android-phone .topbar .brand small { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.jp-android-phone * { scroll-behavior: auto !important; }
+}
+
+/* In fullscreen, these rules override the normal phone two-row grid. */
+@media(max-width:749px){
+  html.jp-android-phone body.viewer-fullscreen #chartsView.charts-layout.active,
+  html.jp-android-phone body.viewer-fullscreen #chartsView.charts-layout.active.chart-open{
+    display:block!important;position:fixed!important;
+    inset:0!important;height:100dvh!important;width:100vw!important;
+    grid-template-columns:none!important;grid-template-rows:none!important;
+  }
+  html.jp-android-phone body.viewer-fullscreen #chartsView .viewer-pane{
+    display:flex!important;height:100dvh!important;min-height:0!important;
+  }
+  html.jp-android-phone body.viewer-fullscreen #chartsView .viewer-toolbar,
+  html.jp-android-phone body.viewer-fullscreen #chartsView .airport-pane{
+    display:none!important;
+  }
+}
