@@ -289,7 +289,7 @@ const AIRPORTS={
 };
 
 let airportMetadata={}, airportRunwayMetadata={};
-let charts=[], manifest=null, selectedAirport="", selectedChart=null, expanded=new Set();
+let charts=[], manifest=null, enrouteValidityManifest=null, selectedAirport="", selectedChart=null, expanded=new Set();
 let airportTreeExpanded=false;
 let chartZoom=1, chartPanX=0, chartPanY=0;
 // Dual Layer Ops marker: chart follow is a viewer-only feature; no simulator transport changes.
@@ -428,15 +428,16 @@ async function loadLtfmGridGeorefs(m){
 }
 async function loadData(){
   try{
-    const [m,c,g,profiles,runways,chartNameData]=await Promise.all([
+    const [m,c,g,profiles,runways,chartNameData,enrouteInfo]=await Promise.all([
       fetch(RAW_ROOT+"charts-manifest.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error("manifest");return r.json()}),
       fetch(RAW_ROOT+"charts-current.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error("charts");return r.json()}),
       fetch(RAW_ROOT+"chart-georef.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null),
       fetch(RAW_ROOT+"airport-profiles.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null),
       fetch(RAW_ROOT+"airport-runways.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null),
-      fetch(RAW_ROOT+"chart-display-names-v2621.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null)
+      fetch(RAW_ROOT+"chart-display-names-v2621.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null),
+      fetch(RAW_ROOT+"enroute-manifest.json",{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(()=>null)
     ]);
-    manifest=m; charts=Array.isArray(c)?c:(c.charts||[]);
+    manifest=m; enrouteValidityManifest=enrouteInfo&&enrouteInfo.schema===1?enrouteInfo:null; charts=Array.isArray(c)?c:(c.charts||[]);
     // Display-only title mapping; the original chart records remain untouched.
     chartDisplayNamesByPage=(chartNameData&&chartNameData.cycle==="2621"&&chartNameData.pages&&
       charts.some(c=>c.airport==="OIKR"&&Number(c.page)===541))
@@ -453,6 +454,7 @@ async function loadData(){
     await loadPublishedExperimentalGeorefs(m);
     renderAirports();
     if(!selectedAirport && charts.some(c=>c.airport==="OIII"))selectAirport("OIII");
+    else if(selectedAirport&&!selectedChart)renderAirportProfile(selectedAirport);
     if($("#homeCycle"))$("#homeCycle").textContent=(m.version||VERSION);
     refreshPositionStatus();
     $("#updateSubtitle").textContent=(m.version||VERSION)+" data • "+Object.keys(m.airports||{}).length+" airports";
@@ -479,12 +481,100 @@ const AIRPORT_FAV_KEY="jeppiran-airport-favorites";
 function getAirportFavorites(){return readJsonStorage(AIRPORT_FAV_KEY,[])||[]}
 function setAirportFavorite(icao){const s=new Set(getAirportFavorites());s.has(icao)?s.delete(icao):s.add(icao);localStorage.setItem(AIRPORT_FAV_KEY,JSON.stringify([...s]));renderAirports($("#airportSearch").value);}
 function profileEsc(v){return escapeHtml(String(v===undefined||v===null?"—":v))}
-function utcDisplay(){
-  const el=$("#homeUtc");
-  if(el)el.textContent=new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit",timeZone:"UTC",hour12:false})+"Z UTC";
-  $$(".profile-utc").forEach(e=>e.textContent=new Date().toLocaleTimeString("en-GB",{hour:"2-digit",minute:"2-digit",timeZone:"UTC",hour12:false})+"Z");
+/* Display-only airport clock: ICAO/state-specific IANA zones with DST handled by Intl.
+   If the ICAO is outside these verified regions, show unavailable (never device local). */
+function airportLocalZone(icao){
+  const code=String(icao||"").toUpperCase();
+  if(code==="OOMS")return "Asia/Muscat";
+  if(code.startsWith("OI"))return "Asia/Tehran";
+  if(code.startsWith("LT"))return "Europe/Istanbul";
+  if(code.startsWith("OM"))return "Asia/Dubai";
+  if(code.startsWith("OO"))return "Asia/Muscat";
+  if(code.startsWith("OP"))return "Asia/Karachi";
+  if(code.startsWith("OR"))return "Asia/Baghdad";
+  if(code.startsWith("OT"))return "Asia/Qatar";
+  if(code.startsWith("UD"))return "Asia/Yerevan";
+  if(code.startsWith("UG"))return "Asia/Tbilisi";
+  return null;
 }
-utcDisplay();setInterval(utcDisplay,30000);
+function airportClockTime(now,icao){
+  const zone=airportLocalZone(icao);
+  if(!zone)return "Time zone unavailable";
+  try{
+    const fmt=new Intl.DateTimeFormat("en-GB",{
+      timeZone:zone,hour:"2-digit",minute:"2-digit",second:"2-digit",
+      hourCycle:"h23",timeZoneName:"shortOffset"
+    });
+    const parts=fmt.formatToParts(now);
+    const time=["hour","minute","second"].map(type=>parts.find(p=>p.type===type)?.value||"--").join(":");
+    const offset=(parts.find(p=>p.type==="timeZoneName")?.value||"").replace(/^GMT/,"UTC");
+    return time+(offset?" "+offset:" ("+zone+")");
+  }catch(_){return "Time zone unavailable";}
+}
+/* Terminal cycle schedule is Jeppesen Digital Terminal Charts' 2026
+   bi-weekly ISSUE calendar, not an effective/expiry date for every chart.
+   Cycle 2621: 09 Oct 2026; 2622: 23 Oct 2026. 2027+ requires new calendar. */
+function terminalRevisionWindow(source){
+  const cycle=String(source?.cycle||source?.version||"").replace(/^V/i,"");
+  if(!/^26(0[1-9]|1\d|2[0-6])$/.test(cycle))return null;
+  const ordinal=Number(cycle.slice(2));
+  const start=Date.UTC(2026,0,2)+(ordinal-1)*14*86400000;
+  return {cycle,from:new Date(start),until:new Date(start+14*86400000)};
+}
+function parseUtcCycleDate(value){
+  if(typeof value!=="string"||!(/^\d{4}-\d{2}-\d{2}$/.test(value)))return null;
+  const date=new Date(value+"T00:00:00Z");
+  return Number.isFinite(date.getTime())&&date.toISOString().slice(0,10)===value?date:null;
+}
+function utcCycleDate(date){
+  return date.toLocaleDateString("en-GB",{timeZone:"UTC",day:"2-digit",month:"short",year:"numeric"});
+}
+function profileValidityMarkup(){
+  const now=Date.now(),term=terminalRevisionWindow(manifest);
+  const tExpired=!!term&&now>=term.until.getTime();
+  const termState=term?(tExpired?"expired":"current"):"unknown";
+  const termStatus=term?(tExpired?"UPDATE OVERDUE":"CYCLE CURRENT"):"DATES UNAVAILABLE";
+  const termDates=term?"Issued "+utcCycleDate(term.from)+" · Next issue "+utcCycleDate(term.until):"No verified issue schedule for this cycle";
+  const termWarning=tExpired?
+    '<div class="profile-validity-warning" role="alert">New terminal chart cycle due since '+profileEsc(utcCycleDate(term.until))+'. Update charts and verify individual effective dates.</div>':
+    '<small class="profile-validity-footnote">Cycle issue schedule; individual chart effective dates may differ.</small>';
+  const e=enrouteValidityManifest;
+  const eFrom=parseUtcCycleDate(e?.effective_from),eUntil=parseUtcCycleDate(e?.effective_to);
+  const filesReady=!!(e?.published&&Array.isArray(e.files)&&e.files.length);
+  const enrouteExpired=!!eUntil&&now>=eUntil.getTime();
+  const enrouteState=enrouteExpired?"expired":filesReady&&eUntil?"current":"unknown";
+  const enrouteStatus=enrouteExpired?"UPDATE OVERDUE":filesReady&&eUntil?"CYCLE CURRENT":"NOT VERIFIED";
+  const enrouteDates=eFrom&&eUntil?
+    utcCycleDate(eFrom)+" – "+utcCycleDate(eUntil)+" (end exclusive)":
+    "No verified Enroute cycle dates";
+  const enrouteWarning=enrouteExpired?
+    '<div class="profile-validity-warning" role="alert">Enroute cycle window ended '+profileEsc(utcCycleDate(eUntil))+'. '+(filesReady?'Check for a newer chart revision.':'No published Enroute chart package is installed.')+'</div>':
+    !filesReady?'<small class="profile-validity-footnote">Enroute charts not published/installed; currency cannot be confirmed.</small>':
+    '<small class="profile-validity-footnote">Per-chart revisions must be checked against the Jeppesen Enroute currency list.</small>';
+  return '<div class="profile-validity-entry" data-validity="terminal" data-state="'+termState+'">'+
+      '<div class="profile-validity-heading"><strong>TERMINAL CHARTS · '+profileEsc(term?.cycle||manifest?.cycle||"—")+'</strong><span class="profile-validity-state">'+termStatus+'</span></div>'+
+      '<div class="profile-validity-dates">'+profileEsc(termDates)+'</div>'+termWarning+'</div>'+
+    '<div class="profile-validity-entry" data-validity="enroute" data-state="'+enrouteState+'">'+
+      '<div class="profile-validity-heading"><strong>ENROUTE · '+profileEsc(e?.cycle||"—")+'</strong><span class="profile-validity-state">'+enrouteStatus+'</span></div>'+
+      '<div class="profile-validity-dates">'+profileEsc(enrouteDates)+'</div>'+enrouteWarning+'</div>';
+}
+let lastValidityCheckMinute=-1;
+function utcDisplay(){
+  const now=new Date();
+  const brief=new Intl.DateTimeFormat("en-GB",{hour:"2-digit",minute:"2-digit",timeZone:"UTC",hourCycle:"h23"}).format(now);
+  const full=new Intl.DateTimeFormat("en-GB",{hour:"2-digit",minute:"2-digit",second:"2-digit",timeZone:"UTC",hourCycle:"h23"}).format(now);
+  const el=$("#homeUtc");if(el)el.textContent=brief+"Z UTC";
+  $(".profile-utc").forEach(e=>e.textContent=brief+"Z");
+  const headerClock=$("#profileUtcClock");if(headerClock)headerClock.textContent=full+" UTC";
+  const airportClock=$("#profileLocalTime");if(airportClock)airportClock.textContent=airportClockTime(now,selectedAirport);
+  const minute=Math.floor(now.getTime()/60000);
+  if(minute!==lastValidityCheckMinute){
+    lastValidityCheckMinute=minute;
+    const validity=$("#profileValidityRows");
+    if(validity){const updated=profileValidityMarkup();if(updated!==validity.innerHTML)validity.innerHTML=updated;}
+  }
+}
+utcDisplay();setInterval(utcDisplay,1000);
 if($("#enrouteHomeBtn"))$("#enrouteHomeBtn").addEventListener("click",()=>dialog("Enroute","The Enroute tile viewer is not included in this web build yet. Existing Android Enroute data is unchanged."));
 if($("#settingsHomeBtn"))$("#settingsHomeBtn").addEventListener("click",()=>{
   const settings=$("#appearanceSettingsDialog");
@@ -657,7 +747,7 @@ function renderAirportProfile(icao){
       '<span><b>'+profileEsc(surface)+'</b><small>ADC '+adcHeading+'</small></span></button>';
     }).join(""):'<div class="profile-empty">Runway data unavailable; consult current ADC/AIP.</div>';
   root.innerHTML='<div class="profile-shell">'+
-    '<div class="profile-heading"><div><div class="profile-code-row"><strong class="profile-icao">'+profileEsc(icao)+'</strong><span class="profile-chip">'+profileEsc(d.iata||"—")+'</span><button type="button" class="profile-chip" id="profileFavBtn" aria-label="Favorite airport">'+(fav.has(icao)?"★":"☆")+'</button></div><h2>'+profileEsc(name)+'</h2><p>'+profileEsc(meta[1])+(meta[1]&&country?', ':'')+profileEsc(country)+'</p></div><div class="profile-elev">Elevation: '+(Number.isFinite(d.elevation)?d.elevation.toLocaleString()+' ft':'—')+'<br>⌖ '+formattedCoord+'<br><span class="profile-utc"></span> UTC</div></div>'+
+    '<div class="profile-heading"><div><div class="profile-code-row"><strong class="profile-icao">'+profileEsc(icao)+'</strong><span class="profile-chip">'+profileEsc(d.iata||"—")+'</span><button type="button" class="profile-chip" id="profileFavBtn" aria-label="Favorite airport">'+(fav.has(icao)?"★":"☆")+'</button></div><h2>'+profileEsc(name)+'</h2><p>'+profileEsc(meta[1])+(meta[1]&&country?', ':'')+profileEsc(country)+'</p></div><div class="profile-elev">Elevation: '+(Number.isFinite(d.elevation)?d.elevation.toLocaleString()+' ft':'—')+'<br>⌖ '+formattedCoord+'<br><strong id="profileUtcClock" class="profile-utc-clock" aria-live="off">--:--:-- UTC</strong></div></div>'+
     '<nav class="profile-tabs" aria-label="Airport profile">'+["Overview"].map(t=>'<button type="button" class="profile-tab'+(profileTab===t?" active":"")+'" data-profile-tab="'+t+'">'+t+'</button>').join("")+'</nav>'+
     '<div class="profile-cols"><div class="profile-col">'+
       '<section class="profile-card" id="profileWeather"><header><span>METAR • '+profileEsc(icao)+'</span><small id="profileMetarAge">'+(raw?"Last received / cached":"Loading live METAR…")+'</small></header>'+
@@ -672,7 +762,8 @@ function renderAirportProfile(icao){
       '<div class="wind-compass">'+runwayCompassMarkup(rw,wx)+'</div>'+
       '<div class="wind-data"><div><span>Runway HDG (ADC)</span><b>'+(rw?(Number.isFinite(rw.headingAdc)?Math.round(rw.headingAdc)+"°":"—"):"—")+'</b></div><div><span>METAR wind direction</span><b>'+(comp?comp.direction+"° / "+comp.speed+" kt":"—")+'</b></div><div><span class="'+(comp?(comp.headRaw>=0?"wind-status-head":Number(comp.head)>=3&&Number(comp.head)<=5?"wind-status-tail-warning":Number(comp.head)>5?"wind-status-tail-danger":"wind-status-neutral"):"wind-status-neutral")+'">↑ '+(comp?comp.headName:"Headwind")+'</span><b class="'+(comp?(comp.headRaw>=0?"wind-status-head":Number(comp.head)>=3&&Number(comp.head)<=5?"wind-status-tail-warning":Number(comp.head)>5?"wind-status-tail-danger":"wind-status-neutral"):"wind-status-neutral")+'">'+(comp?comp.head+" kt":"—")+'</b></div><div><span class="wind-cross">→ Crosswind</span><b class="wind-cross">'+(comp?comp.cross+" kt "+comp.crossName:"—")+'</b></div></div></section>'+
       '<section class="profile-card" id="profileInfo"><header>ADDITIONAL INFORMATION</header>'+
-      [['ICAO',icao],['IATA',d.iata||"—"],['Field elevation',Number.isFinite(d.elevation)?d.elevation.toLocaleString()+" ft":"—"],['Coordinates',Number.isFinite(d.lat)?d.lat.toFixed(4)+"N, "+d.lon.toFixed(4)+"E":"—"],['UTC time','<span class="profile-utc"></span>']].map(([k,v])=>'<div class="profile-info-row"><span>'+k+'</span><b>'+v+'</b></div>').join("")+'</section>'+
+      [['ICAO',icao],['IATA',d.iata||"—"],['Field elevation',Number.isFinite(d.elevation)?d.elevation.toLocaleString()+" ft":"—"],['Coordinates',Number.isFinite(d.lat)?d.lat.toFixed(4)+"N, "+d.lon.toFixed(4)+"E":"—"],['Local time','<span id="profileLocalTime" aria-live="off">--:--:--</span>']].map(([k,v])=>'<div class="profile-info-row"><span>'+k+'</span><b>'+v+'</b></div>').join("")+'</section>'+
+      '<section class="profile-card" id="profileValidity"><header>CHART DATA VALIDITY</header><div id="profileValidityRows">'+profileValidityMarkup()+'</div></section>'+
 
     '</div></div></div>';
   root.querySelector("#profileFavBtn").onclick=()=>{setAirportFavorite(icao);renderAirportProfile(icao)};
