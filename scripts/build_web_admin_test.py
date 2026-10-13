@@ -3,6 +3,7 @@
 import importlib.util
 import json
 import pathlib
+import re
 import shutil
 import tempfile
 
@@ -26,6 +27,13 @@ with tempfile.TemporaryDirectory(prefix="jeppiran-admin-preview-") as tempdir:
     change(index, "</head>", '<script>window.JEPPIRAN_TEST_ADMIN = true;</script>\n</head>')
     change(index, "</body>", '<script src="./admin-test-controls.js" defer></script>\n</body>')
     change(index, "<title>JeppIran", "<title>ADMIN TEST · JeppIran")
+
+    # Admin QA is intentionally ONLINE-ONLY: do not sync PDFs to browser storage.
+    html = index.read_text(encoding="utf-8")
+    html, removed = re.subn(r'<script src="\./offline-manager\.js\?[^"]+" defer></script>', '', html, count=1)
+    if removed != 1:
+        raise RuntimeError("Admin preview offline-manager script was not found")
+    index.write_text(html, encoding="utf-8")
     change(draft / "manifest.webmanifest", '"name": "JeppIran"', '"name": "JeppIran · Admin QA Preview"')
     change(draft / "manifest.webmanifest", '"short_name": "JeppIran"', '"short_name": "JeppIran TEST"')
     for path in (draft / "service-worker.js", draft / "offline-manager.js", draft / "app.js"):
@@ -37,6 +45,11 @@ with tempfile.TemporaryDirectory(prefix="jeppiran-admin-preview-") as tempdir:
             ("jeppiran-chart-pdfs-v2621-printclean-3", "jeppiran-test-chart-pdfs-v2621-printclean-3"),
         ]:
             source = source.replace(before, after)
+        if path.name == "app.js":
+            previous = 'if("serviceWorker" in navigator&&(location.protocol==="https:"||location.hostname==="localhost")){'
+            if previous not in source:
+                raise RuntimeError("Admin QA service-worker registration source changed")
+            source = source.replace(previous, 'if(false&&"serviceWorker" in navigator){')
         if path.name == "service-worker.js":
             source = source.replace('const CACHE="jeppiran-pwa-', 'const CACHE="jeppiran-test-pwa-')
             source = source.replace('key.startsWith("jeppiran-pwa-")', 'key.startsWith("jeppiran-test-pwa-")')
