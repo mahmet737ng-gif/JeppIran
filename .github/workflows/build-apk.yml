@@ -12,10 +12,11 @@ on:
     # pending run, even with cancel-in-progress: false).
     paths:
       - 'app/**'
-      # The Android project renders the hosted PWA; general web changes are
-      # deployed independently and do not require rebuilding the Android APK.
-      # Only the shared taxi network JSON is bundled as a native asset.
-      - 'web/data/taxi-networks/**'
+      # Android bundles a LOCAL copy of the approved UI, chart data and PDFs.
+      # A Web source change must be shipped inside the next APK, independently
+      # of the GitHub Pages deployment (there is no runtime hosted fallback).
+      - 'web/**'
+      - 'scripts/build_android_local_web.py'
       - '.github/workflows/build-apk.yml'
       - 'build.gradle.kts'
       - 'settings.gradle.kts'
@@ -495,6 +496,16 @@ jobs:
 
           gh release upload "$RELEASE_TAG"             app/src/main/assets/chart-georef.json             --clobber
 
+      - name: Bundle complete offline JEPPIRAN Android application
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 scripts/build_android_local_web.py
+          python3 scripts/build_android_local_web.py --verify-only
+          # Regression guard: Android must never launch hosted GitHub Pages.
+          ! grep -q 'mahmet737ng-gif.github.io' app/src/main/java/com/tareghmsr/jeppiran/MobileWebActivity.kt
+          grep -q 'WebViewAssetLoader' app/src/main/java/com/tareghmsr/jeppiran/MobileWebActivity.kt
+
       - name: Test and build signed APK
         run: gradle testDebugUnitTest assembleDebug --stacktrace
 
@@ -559,4 +570,4 @@ jobs:
             --apk "$JEPPIRAN_APK_PATH" \
             --version-code "$JEPPIRAN_VERSION_CODE" \
             --version-name "$JEPPIRAN_VERSION_NAME" \
-            --limit 20
+            --limit 3
