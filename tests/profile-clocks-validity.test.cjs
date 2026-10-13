@@ -108,18 +108,29 @@ test("compact validity indicator changes to red overdue state and recovers on cy
 test("airport profile renders inclusive terminal cycle validity dates, Home remains unchanged",()=>{
   const current=build("2026-10-13T12:00:00Z");
   const display=current.terminalValidityIndicator();
-  assert.match(display.profileMarkup,/Cycle period: 09 Oct 2026 – 22 Oct 2026/);
-  assert.doesNotMatch(display.markup,/Cycle period:/,"Home must not gain a date range");
+  assert.match(display.profileMarkup,/VALID FROM <b>09 Oct 2026<\/b>/);\n  assert.match(display.profileMarkup,/VALID TO <b>22 Oct 2026<\/b>/);
+  assert.doesNotMatch(display.markup,/VALID FROM|VALID TO/,"Home must not gain a date range");
   const expired=build("2026-10-23T00:00:00Z");
   assert.equal(expired.terminalValidityIndicator().state,"expired");
-  assert.match(expired.terminalValidityIndicator().profileMarkup,/Cycle period: 09 Oct 2026 – 22 Oct 2026/);
+  assert.match(expired.terminalValidityIndicator().profileMarkup,/VALID FROM <b>09 Oct 2026<\/b>[\s\S]*VALID TO <b>22 Oct 2026<\/b>/);
   const updated=build("2026-10-23T00:00:00Z",{version:"V2622",cycle:"2622"});
-  assert.match(updated.terminalValidityIndicator().profileMarkup,/Cycle period: 23 Oct 2026 – 05 Nov 2026/);
+  assert.match(updated.terminalValidityIndicator().profileMarkup,/VALID FROM <b>23 Oct 2026<\/b>[\s\S]*VALID TO <b>05 Nov 2026<\/b>/);
   const unknown=build("2027-02-01T00:00:00Z",{version:"V2704",cycle:"2704"});
-  assert.match(unknown.terminalValidityIndicator().profileMarkup,/Cycle period unavailable/);
+  assert.match(unknown.terminalValidityIndicator().profileMarkup,/VALID FROM <b>UNAVAILABLE<\/b>[\s\S]*VALID TO <b>UNAVAILABLE<\/b>/);
   assert.match(app,/id==="profileTerminalValidity"\?status\.profileMarkup:status\.markup/);
-  assert.match(css,/#chartsView \.profile-terminal-validity \.terminal-validity-range/);
-  assert.match(css,/:root\.light #chartsView \.profile-terminal-validity \.terminal-validity-range/);
+  assert.match(css,/#chartsView \.profile-terminal-validity \.terminal-validity-dates/);
+  assert.match(css,/:root\.light #chartsView \.profile-terminal-validity \.terminal-validity-dates/);
+});
+test("updated profile JS/CSS have matching cache-busting URLs in HTML and service worker",()=>{
+  const html=fs.readFileSync(path.join(root,"web/index.html"),"utf8");
+  const sw=fs.readFileSync(path.join(root,"web/service-worker.js"),"utf8");
+  for(const suffix of ["app.js","styles.css"]){
+    const url=suffix+"?v=2621-profile-validity-fromto-r2";
+    assert.ok(html.includes(url),"HTML must request fresh "+suffix);
+    assert.ok(sw.includes(url),"SW shell must cache fresh "+suffix);
+  }
+  assert.match(app,/role="status" aria-live="polite">'\+terminalValidityIndicator\(\)\.profileMarkup/);
+  assert.match(sw,/CACHE="jeppiran-pwa-2621-profile-validity-fromto-r2"/);
 });
 test("manifest synchronization remains mandatory before Pages deployment",()=>{
   const action=fs.readFileSync(path.join(root,".github/workflows/deploy-ipad-web.yml"),"utf8");
