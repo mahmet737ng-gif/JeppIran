@@ -15,7 +15,20 @@ function audit100({inventory,graph,sourceSha256}={}){
  const no=(reason)=>({airport:inventory?.airport||graph?.airport||null,
   state:"NOT_READY",percent:0,readyForSimulatorTest:false,
   failures:[reason],cases:[],totals:{expected:0,passed:0,failed:0},reasons:{SOURCE:1}});
- if(!inventory||!graph)return no("SOURCE: Airport inventory or reviewed ground graph missing");
+ if(!inventory)return no("SOURCE: Airport inventory missing");
+ if(!graph){
+  const stands=(inventory.stands||[]).length;
+  const ends=(inventory.runwayPolygons||[]).reduce((sum,r)=>sum+(r.ends||[]).length,0);
+  const expected=stands*ends*2;
+  return {airport:inventory.airport,cycle:String(inventory.cycle),
+    state:"NOT_READY",percent:0,readyForSimulatorTest:false,
+    totals:{stands,taxiways:(inventory.taxiways||[]).length,
+      runwayEnds:ends,expected,executed:0,passed:0,failed:expected},
+    failureCount:1,reasons:{NO_PHYSICAL_GRAPH:1},
+    failures:["NO_PHYSICAL_GRAPH · No complete source-reviewed taxiway, stand-lead, hold-short and page-portal network exists."],
+    cases:[],simulatorCheckPending:false,flightOperationalApproval:false,
+    note:"All "+expected+" mandatory source-reviewed stand↔runway directional tests remain blocked. SOURCE PDF graphics and georegistration are not sufficient."};
+ }
  const icao=U(inventory.airport);
  if(!/^[A-Z]{4}$/.test(icao)||icao!==U(graph.airport))
   return no("SOURCE: Airport code mismatch");
