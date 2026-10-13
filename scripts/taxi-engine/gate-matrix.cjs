@@ -23,10 +23,13 @@ function assess(inv,graph){
  const verified=E.validate(graph);
  if(!verified.ok)return refuse("GRAPH_VALIDATION_FAILED: "+verified.errors.join("; "));
  const router=E.create(graph),cases=[],failures=[];
- const test=(kind,from,to,command,opt)=>{
+ const test=(kind,from,to,command,opt,originNode,targetNode)=>{
   const result=router.plan(command,opt||{}),route=result.route;
   const reason=!route?(result.error||"no route"):
    !route.edges?.length?"no physical segments":
+   !originNode||!targetNode?"missing reviewed source endpoint":
+   route.path?.[0]!==originNode||route.path?.at(-1)!==targetNode?
+     "path endpoints do not match requested named stand/taxiway/runway":
    route.edges.some(e=>e.kind==="runway")?"implicit runway crossing":
    route.edges.some(e=>!e.source||!["mapped","qa"].includes(e.quality))?
     "unapproved source edge":null;
@@ -35,21 +38,34 @@ function assess(inv,graph){
   if(reason&&failures.length<120)failures.push(kind+" "+from+" → "+to+": "+reason);
  };
  for(const s of stands)for(const r of runways){
-  test("standRunway","ST"+s,"RWY"+r,"ST"+s+" RWY"+r);
-  test("standRunway","RWY"+r,"ST"+s,"RWY"+r+" ST"+s);
+  test("standRunway","ST"+s,"RWY"+r,"ST"+s+" RWY"+r,{},
+    typeof graph.stands[s]==="string"?graph.stands[s]:graph.stands[s]?.node,
+    graph.runways?.[r]?.goalNode);
+  test("standRunway","RWY"+r,"ST"+s,"RWY"+r+" ST"+s,{},
+    graph.runways?.[r]?.goalNode,
+    typeof graph.stands[s]==="string"?graph.stands[s]:graph.stands[s]?.node);
  }
  for(const a of stands)for(const b of stands)if(a!==b)
-  test("standStand","ST"+a,"ST"+b,"ST"+a+" ST"+b);
+  test("standStand","ST"+a,"ST"+b,"ST"+a+" ST"+b,{},
+    typeof graph.stands[a]==="string"?graph.stands[a]:graph.stands[a]?.node,
+    typeof graph.stands[b]==="string"?graph.stands[b]:graph.stands[b]?.node);
  for(const tw of taxis)for(const s of stands){
-  test("taxiStand",tw,"ST"+s,tw+" ST"+s);
-  test("taxiStand","ST"+s,tw,"ST"+s+" "+tw);
+  test("taxiStand",tw,"ST"+s,tw+" ST"+s,{},
+    graph.taxiways?.[tw]?.terminalNode,
+    typeof graph.stands[s]==="string"?graph.stands[s]:graph.stands[s]?.node);
+  test("taxiStand","ST"+s,tw,"ST"+s+" "+tw,{},
+    typeof graph.stands[s]==="string"?graph.stands[s]:graph.stands[s]?.node,
+    graph.taxiways?.[tw]?.terminalNode);
  }
  for(const tw of taxis)for(const r of runways){
-  test("taxiRunway",tw,"RWY"+r,tw+" RWY"+r);
-  test("taxiRunway","RWY"+r,tw,r+" "+tw);
+  test("taxiRunway",tw,"RWY"+r,tw+" RWY"+r,{},
+    graph.taxiways?.[tw]?.terminalNode,graph.runways?.[r]?.goalNode);
+  test("taxiRunway","RWY"+r,tw,r+" "+tw,{},
+    graph.runways?.[r]?.goalNode,graph.taxiways?.[tw]?.terminalNode);
  }
  for(const a of taxis)for(const b of taxis)if(a!==b)
-  test("taxiTaxi",a,b,b,{startNode:graph.taxiways?.[a]?.terminalNode});
+  test("taxiTaxi",a,b,a+" "+b,{startNode:graph.taxiways?.[a]?.terminalNode},
+    graph.taxiways?.[a]?.terminalNode,graph.taxiways?.[b]?.terminalNode);
  const passed=cases.filter(c=>c.ok).length;
  return {airport:inv.airport,cycle:inv.cycle,expected:totals,executed:cases.length,
   passed,failed:totals.total-passed,ready:passed===totals.total&&cases.length===totals.total,
