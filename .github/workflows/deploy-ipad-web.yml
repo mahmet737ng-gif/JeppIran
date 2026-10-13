@@ -9,6 +9,8 @@ on:
       - 'tests/offline-auto-sync.test.cjs'
       - 'tests/profile-clocks-validity.test.cjs'
       - 'scripts/build_offline_manifest.py'
+      - 'scripts/build_web_admin_test.py'
+      - 'scripts/admin-test-controls.js'
       - 'scripts/build_airport_profiles.py'
       - 'scripts/build_airport_runways.py'
       - 'app/src/main/assets/charts-current.json'
@@ -147,6 +149,29 @@ jobs:
 
       - name: Verify offline package before publication
         run: python3 scripts/build_offline_manifest.py --check
+
+      - name: Build isolated Admin QA test website
+        run: |
+          python3 scripts/build_web_admin_test.py
+          node --check web/admin-test/admin-test-controls.js
+          node --check web/admin-test/app.js
+          node --check web/admin-test/offline-manager.js
+          node --check web/admin-test/service-worker.js
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          from urllib.parse import unquote
+          d=Path("web/admin-test")
+          m=json.loads((d/"offline-assets.json").read_text())
+          assert m["pdfs"] and len(m["pdfs"]) >= 70
+          assert all((d/unquote(x["url"][2:])).exists() for x in m["assets"]+m["pdfs"] if x["url"] != "./")
+          assert 'JEPPIRAN_TEST_ADMIN = true' in (d/"index.html").read_text()
+          assert 'admin-test-controls.js' in (d/"index.html").read_text()
+          assert 'key.startsWith("jeppiran-test-pwa-")' in (d/"service-worker.js").read_text()
+          assert 'key.startsWith("jeppiran-pwa-")' in Path("web/service-worker.js").read_text()
+          assert 'jeppiran-test-offline-meta-v2' in (d/"offline-manager.js").read_text()
+          print("Admin QA preview is isolated, includes all charts, and passes smoke checks.")
+          PY
 
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
