@@ -144,6 +144,9 @@ jobs:
           python3 scripts/build_oiie_pdf_ground_evidence.py \
             --pdf web/charts/OIIE.pdf \
             --output web/data/taxi-surveys/OIIE-native-vectors-v2621.json
+          python3 scripts/build_oiie_page_portal_candidates.py \
+            --source web/data/taxi-surveys/OIIE-native-vectors-v2621.json \
+            --output web/data/taxi-surveys/OIIE-page-portal-candidates-v2621.json
           python3 scripts/build_oiie_runway_axes.py \
             --pdf web/charts/OIIE.pdf \
             --output web/data/taxi-surveys/OIIE-runway-axes-v2621.json
@@ -163,6 +166,9 @@ jobs:
           assert set(data['pages']['383']['regions'])=={'CARGO','SALAM'}
           assert data['verifiedTaxiEdges']==data['verifiedRunwayGates']==0
           assert not data['allowNavigation']
+          seam=json.loads(Path("web/data/taxi-surveys/OIIE-page-portal-candidates-v2621.json").read_text())
+          assert seam["approvedPhysicalPortals"]==0 and not seam["allowAutomaticTaxiRouting"]
+          assert seam["candidateCount"]>0
           axis=json.loads(Path('web/data/taxi-surveys/OIIE-runway-axes-v2621.json').read_text())
           assert [r['physicalId'] for r in axis['runways']]==['11L_29R','11R_29L']
           assert all(r['physicalRunwayAxisVerified'] and r['relativeLengthErrorPct']<1 for r in axis['runways'])
