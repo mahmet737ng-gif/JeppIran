@@ -140,6 +140,22 @@ async function waitServer(){
   assert.equal(await page.locator("polyline.taxi-oiie-source-drawn-curve-qa-not-cleared").count(),0);
   await page.locator("#taxiQaEnd").click();
   assert.equal(await page.locator("#taxiQaPanel").isVisible(),false);
+  await page.locator("#chartTaxiBtn").click();
+  await page.locator("#taxiQaInput").fill("ST100 ST102");
+  await page.locator("#taxiQaGo").click();
+  await page.locator("polyline.taxi-oiie-source-drawn-curve-qa-not-cleared").waitFor({state:"attached",timeout:12000});
+  assert.equal(await page.evaluate(()=>Number(selectedChart?.page)),382);
+  assert.match(await page.locator("#taxiQaStatus").innerText(),/PASSENGER/);
+  await page.locator("#taxiQaInput").fill("ST403 ST405");
+  await page.locator("#taxiQaGo").click();
+  assert.equal(await page.locator("polyline.taxi-oiie-source-drawn-curve-qa-not-cleared").count(),1,
+    "Unresolved Passenger stand connections must not replace a valid printed curve preview");
+  assert.match(await page.locator("#taxiQaStatus").innerText(),/ROUTING UNAVAILABLE/);
+  await page.locator("#taxiQaClearQuick").click();
+  assert.equal(await page.locator("polyline.taxi-oiie-source-drawn-curve-qa-not-cleared").count(),0);
+  await page.locator("#taxiQaEnd").click();
+  assert.equal(await page.locator("#taxiQaPanel").isVisible(),false);
+  console.log("PASS Chrome OIIE: Passenger 3422 source-curved preview candidates on page382 and unreviewed 403/405/407 fail closed.");
   console.log("PASS Chrome OIIE: 800 original Cargo/Salam same-apron SIM QA candidates, chart383, persistent overlay, cross-runway blocked, CLEAR/END lifecycle.");
   console.log("PASS Chrome: responsive second-toolbar, TAXI toggle keeps route, CLEAR/END delete route, and 11L↔29R/11R↔29L source geometry remains gated");
  }finally{
