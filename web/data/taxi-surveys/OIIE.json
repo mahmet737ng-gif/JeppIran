@@ -39,7 +39,27 @@
       "page": 383,
       "chart": "20-9C",
       "kind": "PARKING",
-      "title": "Cargo Apron 2 and Salam Apron 3"
+      "title": "Cargo Apron 2 and Salam Apron 3",
+      "independentRegions": [
+        {
+          "id": "CARGO_APRON_2",
+          "standSeries": [
+            "301-321"
+          ],
+          "georefId": "CARGO_APRON_2",
+          "transform": "INDEPENDENT_WGS84",
+          "connectivity": "NOT_YET_REGISTERED_WITH_ADC"
+        },
+        {
+          "id": "SALAM_APRON_3",
+          "standSeries": [
+            "201-208 including L/R variants"
+          ],
+          "georefId": "SALAM_APRON_3",
+          "transform": "INDEPENDENT_WGS84",
+          "connectivity": "NOT_YET_REGISTERED_WITH_ADC"
+        }
+      ]
     },
     {
       "page": 384,
@@ -1348,7 +1368,8 @@
     "runwayGatesVerified": false,
     "pageRegistrationVerified": false,
     "routeable": false,
-    "requiresAdditionalAIPBriefing": true
+    "requiresAdditionalAIPBriefing": true,
+    "georefLayout": "PDF page 383 has two independent spatial coordinate systems; use region-specific projection and never merge raw PDF coordinates into ground-route topology."
   },
   "caveat": "Stand labels sourced from page 382/383 PDF text; page 384 rounded INS stand coordinate table contains printed longitude values requiring verification before any WGS84 use. Lengths/areas/stands are not a verified route graph."
 }
