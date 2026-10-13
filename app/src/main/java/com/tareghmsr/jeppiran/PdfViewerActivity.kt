@@ -2851,90 +2851,18 @@ private val locationPermissionLauncher =
         }
 
 
-        val landscapeDevice =
-            resources.configuration.orientation ==
-                Configuration.ORIENTATION_LANDSCAPE
-
-
-        val treeLeft =
-            if (
-                landscapeDevice &&
-                ::chartTreePanel.isInitialized &&
-                chartTreePanel.visibility ==
-                    View.VISIBLE
-            ) {
-
-                270.dp
-
-            } else {
-
-                0
-            }
-
-
-        val treeBottom =
-            if (
-                !landscapeDevice &&
-                ::chartTreePanel.isInitialized &&
-                chartTreePanel.visibility ==
-                    View.VISIBLE
-            ) {
-
-                245.dp
-
-            } else {
-
-                0
-            }
-
-
+        // Full-height left chart drawer is an overlay, not part of PDF geometry.
+        // Never shrink the chart or alter pan/scale when bookmarks open.
         chartView.setContentInsets(
-            insetLeft +
-                treeLeft,
-            topInset,
-            insetRight,
-            insetBottom +
-                treeBottom
+            insetLeft, topInset, insetRight, insetBottom
         )
-
-
-        if (
-            ::chartTreePanel.isInitialized
-        ) {
-
-            val params =
-                chartTreePanel.layoutParams
-                    as FrameLayout.LayoutParams
-
-
-            if (
-                landscapeDevice
-            ) {
-
-                params.topMargin =
-                    topInset
-
-                params.bottomMargin =
-                    insetBottom
-
-                params.leftMargin =
-                    insetLeft
-
-            } else {
-
-                params.bottomMargin =
-                    insetBottom
-
-                params.leftMargin =
-                    insetLeft
-
-                params.rightMargin =
-                    insetRight
-            }
-
-
-            chartTreePanel.layoutParams =
-                params
+        if (::chartTreePanel.isInitialized) {
+            val params = chartTreePanel.layoutParams as FrameLayout.LayoutParams
+            params.topMargin = insetTop
+            params.bottomMargin = 0
+            params.leftMargin = insetLeft
+            params.rightMargin = 0
+            chartTreePanel.layoutParams = params
         }
     }
 
