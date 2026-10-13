@@ -147,6 +147,9 @@ jobs:
           python3 scripts/build_oiie_runway_axes.py \
             --pdf web/charts/OIIE.pdf \
             --output web/data/taxi-surveys/OIIE-runway-axes-v2621.json
+          python3 scripts/build_oiie_stand_coordinates_qa.py \
+            --pdf web/charts/OIIE.pdf \
+            --output web/data/taxi-surveys/OIIE-stand-coordinate-audit-v2621.json
           python3 - <<'PY'
           import json
           from pathlib import Path
@@ -162,6 +165,9 @@ jobs:
           assert all(r['physicalRunwayAxisVerified'] and r['relativeLengthErrorPct']<1 for r in axis['runways'])
           assert axis['approvedStandRunwayRoutes']==axis['approvedRunwayGates']==0
           assert not axis['safeForNavigation']
+          table=json.loads(Path('web/data/taxi-surveys/OIIE-stand-coordinate-audit-v2621.json').read_text())
+          assert table['entryCount']==49 and not table['suitableForStandNoseRouting']
+          assert sum(i['code']=='PRINTED_CARGO_LONGITUDE_CONFLICTS_WITH_20_9C_GRID' for i in table['issues'])==4
           print('PASS native source evidence generated (NO unreviewed route promotion)')
           PY
 
