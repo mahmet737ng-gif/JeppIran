@@ -1,0 +1,127 @@
+/*
+ * JEPPIRAN Fullscreen Airport Chart Drawer V2621 (owner-requested).
+ * Does not alter approved iPad Home assets, chart toolbar art, CDFA, TAXI,
+ * aircraft marker, PDF calculations or the themes.
+ */
+#jpChartMenuBtn, #jpChartDrawerBackdrop, #jpChartDrawer {
+  display:none;
+}
+body.viewer-fullscreen #jpChartMenuBtn {
+  position:fixed;
+  z-index:10032;
+  top:max(10px,env(safe-area-inset-top));
+  left:max(10px,env(safe-area-inset-left));
+  display:grid;place-items:center;
+  width:48px;height:48px;
+  min-width:48px;min-height:48px;
+  padding:0;
+  border:1px solid rgba(117,209,241,.66);
+  border-radius:12px;
+  background:rgba(4,25,45,.76);
+  color:#f3faff;
+  font:900 26px/1 system-ui,sans-serif;
+  box-shadow:0 3px 12px rgba(0,0,0,.35);
+  touch-action:manipulation;
+  -webkit-tap-highlight-color:transparent;
+  backdrop-filter:blur(9px);
+  -webkit-backdrop-filter:blur(9px);
+}
+body.viewer-fullscreen.jp-chart-drawer-open #jpChartMenuBtn {
+  background:rgba(4,50,81,.92);border-color:#3dd8ff;
+}
+body.viewer-fullscreen.jp-chart-drawer-open #jpChartDrawerBackdrop {
+  position:fixed;inset:0;
+  z-index:10020;
+  display:block;width:100%;height:100%;
+  border:0;padding:0;margin:0;
+  background:rgba(0,0,0,.26);
+  touch-action:manipulation;
+}
+body.viewer-fullscreen.jp-chart-drawer-open #jpChartDrawer {
+  position:fixed;
+  display:flex;
+  flex-direction:column;
+  top:0;bottom:0;
+  left:0;
+  z-index:10025;
+  width:min(320px,84vw);
+  height:100dvh;
+  max-height:100dvh;
+  min-width:0;
+  color:#f0faff;
+  background:rgba(5,22,40,.78);
+  border-right:1px solid rgba(91,194,245,.43);
+  box-shadow:12px 0 35px rgba(0,0,0,.35);
+  backdrop-filter:blur(13px);
+  -webkit-backdrop-filter:blur(13px);
+  overscroll-behavior:contain;
+}
+#jpChartDrawer .jp-chart-drawer-heading {
+  flex:none;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  min-height:65px;
+  padding:max(10px,env(safe-area-inset-top)) 11px 9px 66px;
+  border-bottom:1px solid rgba(112,204,248,.32);
+  font:800 14px system-ui,sans-serif;
+  letter-spacing:.025em;
+}
+#jpChartDrawerClose {
+  width:44px;height:44px;
+  border:1px solid rgba(123,205,241,.37);
+  border-radius:9px;
+  font:600 26px/1 system-ui,sans-serif;
+  color:white;background:rgba(7,41,67,.7);
+  touch-action:manipulation;
+}
+#jpChartDrawerList {
+  flex:1;
+  min-height:0;
+  overflow-y:auto;
+  overflow-x:hidden;
+  overscroll-behavior:contain;
+  -webkit-overflow-scrolling:touch;
+  touch-action:pan-y;
+  padding:8px max(8px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) 8px;
+  scrollbar-width:thin;
+  scrollbar-color:rgba(77,178,227,.6) transparent;
+}
+.jp-drawer-category {
+  position:sticky;top:0;z-index:1;
+  padding:12px 9px 9px;margin-top:6px;
+  background:rgba(5,28,49,.93);
+  color:#7dd6ff;font:900 12px/1.3 system-ui,sans-serif;
+  letter-spacing:.09em;
+  border-bottom:1px solid rgba(59,158,212,.24);
+}
+.jp-drawer-chart {
+  display:block;
+  width:100%;
+  min-height:48px;
+  text-align:left;
+  margin:4px 0;
+  padding:11px 12px;
+  border:1px solid rgba(97,165,203,.3);
+  border-radius:8px;
+  background:rgba(5,45,74,.48);
+  color:#eaf7ff;
+  font:650 13px/1.45 system-ui,sans-serif;
+  overflow-wrap:anywhere;
+  touch-action:manipulation;
+}
+.jp-drawer-chart.is-current {
+  color:#fff;
+  background:rgba(15,105,170,.78);
+  border-color:#45cfff;
+  box-shadow:inset 3px 0 0 #48ddff;
+}
+#jpChartMenuBtn:focus-visible,
+#jpChartDrawerClose:focus-visible,
+.jp-drawer-chart:focus-visible {
+  outline:2px solid #7de9ff;outline-offset:2px;
+}
+@media (max-width:480px) {
+  body.viewer-fullscreen.jp-chart-drawer-open #jpChartDrawer {width:min(300px,86vw)}
+}
