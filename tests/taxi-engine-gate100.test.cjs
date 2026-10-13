@@ -18,6 +18,36 @@ healthy.source={...healthy.source,sha256:sha,reviewStatus:"SIM_QA_REVIEWED"};
 healthy.runways["13L"].goalKind="hold";
 healthy.runways["31R"].goalNode="H1";
 healthy.runways["31R"].goalKind="hold";
+// Synthetic fixture: four DISTINCT original-source-reviewed runway hold points,
+// two published physical runway axes, and four explicit runway-only BT indices.
+const attachments=[
+ ["13R","J1",36.000002,59.000301],
+ ["31L","J1",36.000003,59.000302],
+ ["13L","H1",36.000004,59.000801],
+ ["31R","H1",36.000005,59.000802]
+];
+for(let i=0;i<attachments.length;i++){
+ const [end,entry,lat,lon]=attachments[i],node="H_"+end;
+ healthy.nodes[node]={lat,lon};
+ healthy.edges.push({from:entry,to:node,label:"HOLD"+end,
+  kind:"connector",quality:"mapped",
+  source:{provider:"Synthetic",document:"TEST-1",feature:"holding-"+end}});
+ healthy.runways[end].goalNode=node;
+ healthy.runways[end].goalKind="hold";
+ healthy.runways[end].holdShortReviewed=true;
+ healthy.runways[end].holdSource={verified:true,page:380,sourceDrawingIds:[10+i]};
+}
+healthy.nodes.RW3={lat:36.001,lon:59.0004};
+healthy.nodes.RW4={lat:36.001,lon:59.0006};
+for(const [end,from,to,physical] of [
+ ["31L","RW1","RW0","13R/31L"],
+ ["13L","RW3","RW4","13L/31R"],
+ ["31R","RW4","RW3","13L/31R"]
+]){
+ healthy.edges.push({from,to,label:"BT"+end,kind:"runway",
+   quality:"mapped",physicalRunway:physical,
+   source:{provider:"Synthetic",document:"TEST-1",feature:"runway-"+end}});
+}
 const good=audit100({inventory,graph:healthy});
 assert.equal(good.readyForSimulatorTest,true,JSON.stringify({fail:good.failures.slice(0,12)}));
 assert.equal(good.percent,100);
