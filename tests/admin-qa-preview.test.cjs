@@ -11,7 +11,7 @@ test('admin QA is a separate public test path and never claims production privil
   assert.match(qa,/LOCAL QA · NOT REAL ADMIN ACCESS/);
   assert.match(qa,/No actual PDF encryption|NOT real admin|not actual PDF encryption|public test tools|no privileged server API/i);
   assert.match(qa,/window.JEPPIRAN_TEST_ADMIN!==true/);
-  assert.match(qa,/location.pathname.includes\("\/admin-test\/"\)/);
+  assert.match(qa,/location.pathname.includes\("\/admin-console\/"\)/);
 });
 test('admin QA controls cover subscription management in browser only',()=>{
   for(const id of ['qaRole','qaAdd','qaRenew','qaSave','qaDelete','qaPlan','qaEnabled','qaExpiry']){
