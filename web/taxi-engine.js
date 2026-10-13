@@ -57,13 +57,22 @@ function validate(data){
     }
     const label=upper(e.label||e.taxiway);
     if(!label||!VALID_ID.test(label))errors.push(prefix+" lacks an approved label");
-    if(!["taxiway","apron","stand","runway","connector"].includes(e.kind))
+    if(!["taxiway","apron","stand","runway","connector","crossing"].includes(e.kind))
       errors.push(prefix+" has unknown kind");
     if(!["mapped","qa","projected","blocked"].includes(e.quality))
       errors.push(prefix+" must declare mapped/qa/projected/blocked quality");
-    if(e.kind==="runway"&&(!e.physicalRunway||
+    if(["runway","crossing"].includes(e.kind)&&(!e.physicalRunway||
       !Object.values(runways).some(r=>r?.physicalId===e.physicalRunway)))
-      errors.push(prefix+" runway edge has no named physical runway");
+      errors.push(prefix+" runway use/crossing edge has no named physical runway");
+    if(e.kind==="crossing"){
+      const h=e.reviewedHoldShorts;
+      if(e.requiresClearance!==true||e.crossingReviewed!==true||
+         !Array.isArray(h)||h.length!==2||h[0]===h[1]||
+         !h.every(id=>!!nodes[id])||
+         e.from!==h[0]||e.to!==h[1]||
+         !e.source?.provider||!e.source?.document||!e.source?.feature)
+        errors.push(prefix+" runway crossing needs original source, two DIFFERENT hold-short nodes and explicit clearance gating");
+    }
     if(e.kind!=="runway"&&/^BT[0-9]/.test(label))
       errors.push(prefix+" BT edge must be runway kind");
     const pts=Array.isArray(e.geometry)?e.geometry:[nodes[e.from],nodes[e.to]];
@@ -192,6 +201,8 @@ function create(data){
     let length=0;for(let k=1;k<pts.length;k++)length+=distance(pts[k-1],pts[k]);
     const forward={edgeIndex:i,from:e.from,to:e.to,label:upper(e.label||e.taxiway),
       kind:e.kind,quality:e.quality,physicalRunway:e.physicalRunway||null,
+      requiresClearance:e.kind==="crossing"&&e.requiresClearance===true,
+      reviewedHoldShorts:e.kind==="crossing"?e.reviewedHoldShorts||[]:[],
       source:e.source||data.source,geometry:pts,length};
     const add=d=>{if(!adj.has(d.from))adj.set(d.from,[]);adj.get(d.from).push(d)};
     add(forward);
@@ -260,6 +271,9 @@ function create(data){
         if(e.quality==="projected"&&!opt.allowProjectedQA)continue;
         let phase=cur.phase;
         if(!waypoints.length){
+          // Dedicated, SOURCE-REVIEWED crossings may be part of a
+          // stand-to-stand route. A crossing is NOT an ATC clearance:
+          // the rendered route must explicitly stop/warn at its hold-short.
           if(e.kind==="runway")continue;
         }else{
           const current=waypoints[phase-1],next=waypoints[phase];
@@ -299,15 +313,22 @@ function create(data){
       terminalKind:goal?.kind||"taxiway-end",
       edges:directed.map(e=>({from:e.from,to:e.to,label:e.label,kind:e.kind,
         quality:e.quality,physicalRunway:e.physicalRunway,
+        requiresClearance:e.requiresClearance,
+        reviewedHoldShorts:e.reviewedHoldShorts,
         geometry:e.geometry,source:e.source,lengthMetres:e.length})),
       explicitRunway:directed.some(e=>e.kind==="runway"),
+      requiresRunwayCrossingClearance:directed.some(e=>e.kind==="crossing"),
+      runwayCrossings:directed.filter(e=>e.kind==="crossing").map(e=>({
+        runway:e.physicalRunway,holdShortBefore:e.from,holdShortAfter:e.to,
+        clearanceRequired:true})),
       simQa:true},parsed:cmd};
   }
   function linework(route){
     if(!route?.edges)return [];
     const lines=[];
     for(const e of route.edges){
-      const style=e.quality==="projected"?"dashed-amber":"solid-magenta";
+      const style=e.kind==="crossing"?"dashed-amber":
+        e.quality==="projected"?"dashed-amber":"solid-magenta";
       let current=lines.at(-1);
       if(current&&current.style===style&&current.label===e.label&&
         distance(current.coordinates.at(-1),e.geometry[0])<.5){
