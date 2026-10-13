@@ -9,6 +9,7 @@ on:
       - 'tests/offline-auto-sync.test.cjs'
       - 'tests/profile-clocks-validity.test.cjs'
       - 'scripts/build_offline_manifest.py'
+      - 'scripts/build_oiie_*.py'
       - 'scripts/build_web_admin_test.py'
       - 'scripts/admin-test-controls.js'
       - 'scripts/admin-qa-home.js'
