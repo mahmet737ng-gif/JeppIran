@@ -913,45 +913,58 @@ function projectGeo(model,lat,lon){
  * source georeferences, in particular OIIE Cargo and OIII ADC.
  */
 async function loadIndependentAirportRegionGeorefs(m){
+  // Page 383 has two independent PDF-to-WGS84 regions: Cargo and Salam.
+  // OIII page 432 has a large parking plan and a separately scaled Apron 5
+  // inset. These airport models MUST load independently: Cargo failing must
+  // never erase OIII parking, or vice versa.
   try{
-    const response=await fetch("./data/airport-region-georef-v2621.json?v=oiie-o3-multiregion-r1",{cache:"no-store"});
+    const response=await fetch("./data/airport-region-georef-v2621.json?v=oiie-o3-multiregion-r2",{cache:"no-store"});
     if(!response.ok)throw Error("region georef HTTP "+response.status);
     const payload=await response.json();
     if(payload.schemaVersion!==1||payload.type!=="MULTI_REGION_GEOREFERENCE"||
       payload.source?.sha256!==m.source_sha256||
       String(payload.source?.cycle)!==String(m.cycle)||payload.source.pdfPageCount!==1654)
       throw Error("Region source/cycle mismatch");
-    const salam=payload.regions.find(r=>r.id==="SALAM_APRON_3"&&r.airport==="OIIE"&&r.page===383);
-    const o3Main=payload.regions.find(r=>r.id==="OIII_PARKING_MAIN"&&r.airport==="OIII"&&r.page===432);
-    const o3Inset=payload.regions.find(r=>r.id==="OIII_APRON_5_INSET"&&r.airport==="OIII"&&r.page===432);
-    if(!salam||!o3Main||!o3Inset||payload.regions.length!==3)
-      throw Error("All three source-grid regions required");
-    const originalCargo=georefByPage.get(383);
-    if(!originalCargo||originalCargo.excluded?.length<1||
-      originalCargo.page!==383||originalCargo.width!==612||originalCargo.height!==792)
-      throw Error("Approved OIIE Cargo georeference missing; refuse replacement");
-    const salModel=makeGeoModel(salam),mainModel=makeGeoModel(o3Main),insetModel=makeGeoModel(o3Inset);
-    if(!salModel||!mainModel||!insetModel)throw Error("Printed grid control points failed affine validation");
-    if(georefByPage.has(432))throw Error("Original OIII parking model exists: never overwrite it");
-    const cargoMask=originalCargo.excluded[0];
-    if(!geoBoundsContains(cargoMask,salModel.bounds.left,salModel.bounds.top)||
-       !geoBoundsContains(cargoMask,salModel.bounds.right,salModel.bounds.bottom))
-      throw Error("Salam crop must coincide with existing Cargo exclusion mask");
-    // The page's outer width/height remain PDF points, and the first model
-    // remains the original accepted one (Cargo) for other existing consumers.
-    georefByPage.set(383,{...originalCargo,regions:[
-      {id:"CARGO_APRON_2",model:originalCargo},
-      {id:"SALAM_APRON_3",model:salModel}
-    ]});
-    georefByPage.set(432,{...mainModel,regions:[
-      {id:"OIII_APRON_5_INSET",model:insetModel},
-      {id:"OIII_PARKING_MAIN",model:mainModel}
-    ]});
-    console.info("JEPPIRAN: OIIE 383 Cargo+Salam, OIII 432 Main+Apron5 region models loaded for simulator QA.");
-  }catch(e){
-    console.warn("Independent multi-region airport georefs skipped safely:",e);
-  }
+    const get=(id,airport,page)=>payload.regions?.find(r=>r.id===id&&r.airport===airport&&r.page===page);
+    const cargo=georefByPage.get(383);
+    const salam=get("SALAM_APRON_3","OIIE",383);
+    if(cargo&&cargo.excluded?.length&&cargo.page===383&&
+       cargo.width===612&&cargo.height===792&&salam){
+      const salModel=makeGeoModel(salam),mask=cargo.excluded[0];
+      if(salModel&&geoBoundsContains(mask,salModel.bounds.left,salModel.bounds.top)&&
+         geoBoundsContains(mask,salModel.bounds.right,salModel.bounds.bottom)){
+        // Cargo is the existing approved model, never overwrite its source
+        // transform. resolveGeoRegion chooses Cargo or Salam in geographic
+        // space, then checks the region's PDF crop boundaries.
+        georefByPage.set(383,{...cargo,regions:[
+          {id:"CARGO_APRON_2",model:cargo},
+          {id:"SALAM_APRON_3",model:salModel}
+        ]});
+      }else console.warn("OIIE Salam geo control points or independent crop invalid");
+    }else console.warn("OIIE approved Cargo model or Salam dataset unavailable; retained existing chart georef");
+
+    // Crucial: this is a separate gate, never dependent on OIIE being valid.
+    const main=get("OIII_PARKING_MAIN","OIII",432),
+      inset=get("OIII_APRON_5_INSET","OIII",432);
+    if(main&&inset){
+      const mainModel=makeGeoModel(main),insetModel=makeGeoModel(inset),
+        existing=georefByPage.get(432);
+      if(mainModel&&insetModel){
+        if(existing&&!Array.isArray(existing.regions)){
+          // Keep a previously approved single-page model instead of silently
+          // replacing it with this additional source-grid reconstruction.
+          console.info("OIII parking pre-existing georef preserved");
+        }else{
+          georefByPage.set(432,{...mainModel,regions:[
+            {id:"OIII_APRON_5_INSET",model:insetModel},
+            {id:"OIII_PARKING_MAIN",model:mainModel}
+          ]});
+        }
+      }else console.warn("OIII parking grid points invalid; no guessed transform loaded");
+    }else console.warn("OIII parking georeference region data unavailable");
+  }catch(e){console.warn("Airport multi-region georefs failed; existing models preserved:",e)}
 }
+
 function buildGeorefIndex(root){
   const map=new Map();
   if(!root||root.version!==2||root.coordinateSystem!=="WGS84"||root.coordinateSpace!=="pdf_points"||root.origin!=="top_left")return map;
