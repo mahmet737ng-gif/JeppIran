@@ -1356,3 +1356,129 @@ body.viewer-fullscreen .fullscreen-cdfa:not([hidden]){display:flex}
 #offlinePackCount{display:block;font-size:11px;opacity:.75}
 #offlinePackStatus{font-size:12px;overflow-wrap:anywhere}
 
+/* JEPPIRAN airport PROFILE — dedicated Light appearance (2026-10-13).
+   Matches the existing navy radial composition with an ice-blue daylight palette.
+   Scope is deliberately limited to the profile, never the Home artwork, charts,
+   PDF inversion, taxi views, aircraft marker or simulator. Dark mode is untouched. */
+:root.light #chartsView .airport-profile{
+  color-scheme:light;
+  --jp-profile-text:#16344e;
+  --jp-profile-muted:#53738c;
+  --jp-profile-line:#b4d2e7;
+  --jp-profile-blue:#096fae;
+  --jp-profile-card:#ffffff;
+  color:var(--jp-profile-text);
+  background:radial-gradient(ellipse at 70% 2%,#d9ecfb 0%,#f5faff 53%,#e5f1fa 100%);
+}
+:root.light #chartsView .profile-no-selection{color:var(--jp-profile-muted)}
+:root.light #chartsView .profile-no-selection h2,
+:root.light #chartsView .profile-icao,
+:root.light #chartsView .profile-heading h2{color:#103650}
+:root.light #chartsView .profile-heading p{color:#137eb4}
+:root.light #chartsView .profile-elev{color:#40647e}
+:root.light #chartsView .profile-chip{
+  color:#176d9f;
+  background:#f5fbff;
+  border-color:#a5cbe5;
+}
+:root.light #chartsView .profile-chip:hover{background:#e0f1ff;border-color:#4a9ed3}
+:root.light #chartsView .profile-tabs{
+  background:#e6f2fc;
+  border-color:#b4d2e7;
+}
+:root.light #chartsView .profile-tab{color:#345c78}
+:root.light #chartsView .profile-tab.active{
+  color:#fff;
+  background:linear-gradient(135deg,#0873cb,#0697e4);
+  box-shadow:0 3px 11px #0b79c329;
+}
+:root.light #chartsView .profile-card{
+  color:var(--jp-profile-text);
+  border-color:var(--jp-profile-line);
+  background:linear-gradient(145deg,#ffffff 0%,#f6fbff 58%,#edf6fe 100%);
+  box-shadow:0 3px 14px #1e628b10;
+}
+:root.light #chartsView .profile-card>header{color:var(--jp-profile-blue)}
+:root.light #chartsView .profile-card>header small{color:var(--jp-profile-muted)}
+:root.light #chartsView .profile-card .metar-raw{color:#1c3b56}
+:root.light #chartsView .weather-brief strong{color:#143951}
+:root.light #chartsView .weather-brief small{color:#50728c}
+:root.light #chartsView .weather-facts{
+  border-left-color:#bbd5e8;
+  color:#315a77;
+}
+:root.light #chartsView .rwy-row{
+  color:#21435f;
+  border-color:#c5dcec;
+  background:linear-gradient(100deg,#fafdff,#eaf5fd);
+}
+:root.light #chartsView .rwy-row b{color:#123951}
+:root.light #chartsView .rwy-row small{color:#557994}
+:root.light #chartsView .rwy-row.active{
+  color:#143f61;
+  background:linear-gradient(98deg,#d8edff,#f0f9ff);
+  border-color:#148fdb;
+  box-shadow:inset 3px 0 0 #138bd3,0 1px 9px #2b95d022;
+}
+:root.light #chartsView .rwy-row:hover{border-color:#65b5e3}
+:root.light #chartsView .wind-compass{color:#244a67}
+:root.light #chartsView .runway-bearing-compass strong{color:#173d5c}
+:root.light #chartsView .runway-bearing-compass small,
+:root.light #chartsView .runway-bearing-unavailable{color:#547894}
+:root.light #chartsView .wind-compass .rwy-visual,
+:root.light #chartsView .wind-compass .rwy-visual span{
+  background:#e5f1fa;
+  color:#214964;
+}
+:root.light #chartsView .wind-compass .rwy-visual{border-color:#397ea7}
+:root.light #chartsView .wind-compass .rwy-visual:before{border-top-color:#397ea7}
+:root.light #chartsView .wind-direction-arrow path{stroke:#ab6d06}
+:root.light #chartsView .wind-data{color:#254866}
+:root.light #chartsView .wind-data div{border-top-color:#c4dceb}
+:root.light #chartsView .wind-status-head{color:#147647!important}
+:root.light #chartsView .wind-status-tail-warning{color:#a86808!important}
+:root.light #chartsView .wind-status-tail-danger{color:#bd3848!important}
+:root.light #chartsView .wind-status-neutral{color:#567187!important}
+:root.light #chartsView .wind-cross{color:#9e6404}
+:root.light #chartsView .profile-info-row{border-top-color:#c4dceb}
+:root.light #chartsView .profile-info-row span{color:#4b6d87}
+:root.light #chartsView .profile-info-row b{color:#183e5a}
+:root.light #chartsView .profile-weather-text{color:#214461}
+:root.light #chartsView .profile-notam-details{color:#365b78}
+:root.light #chartsView .profile-notam-details summary{color:#087cbb}
+:root.light #chartsView .profile-notam-details p{color:#4e708b}
+:root.light #chartsView .profile-quick button{
+  color:#174361;
+  border-color:#b1d2e9;
+  background:linear-gradient(160deg,#fff,#eaf5fe);
+}
+:root.light #chartsView .profile-quick button span{color:#1886bd}
+:root.light #chartsView .profile-proc-tabs button{
+  background:#f5fbff;
+  border-color:#b2d1e5;
+  color:#214c69;
+}
+:root.light #chartsView .profile-proc-tabs button.active{
+  color:#fff;
+  background:#127dcd;
+  border-color:#1679ba;
+}
+:root.light #chartsView .profile-proc-list button{
+  color:#194666;
+  border-bottom-color:#c5ddeb;
+}
+:root.light #chartsView .profile-proc-list button:hover{color:#0879b4}
+:root.light #chartsView .profile-proc-list small,
+:root.light #chartsView .profile-empty{color:#547891}
+:root.light #chartsView .profile-alert{
+  color:#426580;
+  border-color:#bfd7ea;
+  background:#f1f9ff;
+}
+:root.light #chartsView .profile-chip:focus-visible,
+:root.light #chartsView .profile-tab:focus-visible,
+:root.light #chartsView .rwy-row:focus-visible,
+:root.light #chartsView .profile-proc-tabs button:focus-visible{
+  outline:2px solid #087fca;
+  outline-offset:2px;
+}
