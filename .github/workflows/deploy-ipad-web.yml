@@ -12,6 +12,7 @@ on:
       - 'scripts/build_airport_runways.py'
       - 'app/src/main/assets/charts-current.json'
       - 'app/src/main/assets/charts-manifest.json'
+      - 'app/src/main/assets/enroute-manifest.json'
       - 'app/src/main/assets/chart-georef.json'
       - 'app/src/main/res/drawable-nodpi/airport_card_*.webp'
       - '.github/workflows/deploy-ipad-web.yml'
@@ -44,6 +45,11 @@ jobs:
       - name: Enforce owner-locked iPad chart gestures and appearance
         run: node --test tests/ipad-chart-ui-locked-v2621.test.cjs
 
+      - name: Verify airport UTC/local clocks and terminal/enroute currency safeguards
+        run: |
+          node --check web/app.js
+          node --test tests/profile-clocks-validity.test.cjs
+
       - name: Enforce owner-locked aircraft marker and constant screen size
         run: node --test tests/aircraft-marker-locked.test.cjs
 
@@ -65,6 +71,7 @@ jobs:
           mkdir -p web/data web/airport-images web/charts web/vendor
           cp app/src/main/assets/charts-current.json web/data/charts-current.json
           cp app/src/main/assets/charts-manifest.json web/data/charts-manifest.json
+          cp app/src/main/assets/enroute-manifest.json web/data/enroute-manifest.json
           cp app/src/main/assets/chart-georef.json web/data/chart-georef.json
           python3 scripts/build_airport_profiles.py --output web/data/airport-profiles.json
           python3 scripts/build_airport_runways.py --output web/data/airport-runways.json
