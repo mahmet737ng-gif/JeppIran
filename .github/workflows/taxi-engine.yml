@@ -12,6 +12,7 @@ on:
       - 'tests/taxi-engine-onboarding.test.cjs'
       - 'tests/taxi-engine-web.test.cjs'
       - 'tests/taxi-engine-gate100.test.cjs'
+      - 'tests/taxi-engine-destinations.test.cjs'
       - 'tests/taxi-engine-oiie-v4-release.test.cjs'
       - 'tests/fixtures/taxi-engine/**'
       - '.github/workflows/taxi-engine.yml'
@@ -26,6 +27,7 @@ on:
       - 'tests/taxi-engine-onboarding.test.cjs'
       - 'tests/taxi-engine-web.test.cjs'
       - 'tests/taxi-engine-gate100.test.cjs'
+      - 'tests/taxi-engine-destinations.test.cjs'
       - 'tests/taxi-engine-oiie-v4-release.test.cjs'
       - '.github/workflows/taxi-engine.yml'
 permissions:
@@ -56,6 +58,7 @@ jobs:
           node tests/taxi-engine-onboarding.test.cjs
           node tests/taxi-engine-web.test.cjs
           node tests/taxi-engine-gate100.test.cjs
+          node tests/taxi-engine-destinations.test.cjs
           node tests/taxi-engine-oiie-v4-release.test.cjs
       - name: Preserve existing OIMM route regression
         run: |
