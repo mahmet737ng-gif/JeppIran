@@ -138,6 +138,25 @@ jobs:
           print(f"Bundled {downloaded} airport PDFs ({total_bytes / 1048576:.1f} MiB).")
           PY
 
+      - name: Extract source-backed OIIE runway and apron geometry candidates
+        run: |
+          python3 -m pip install --disable-pip-version-check pymupdf==1.26.5
+          python3 scripts/build_oiie_pdf_ground_evidence.py \
+            --pdf web/charts/OIIE.pdf \
+            --output web/data/taxi-surveys/OIIE-native-vectors-v2621.json
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          p=Path('web/data/taxi-surveys/OIIE-native-vectors-v2621.json')
+          data=json.loads(p.read_text())
+          assert data['airport']=='OIIE' and data['cycle']=='2621'
+          assert len(data['pages'])==3
+          assert set(data['pages']['383']['regions'])=={'CARGO','SALAM'}
+          assert data['verifiedTaxiEdges']==data['verifiedRunwayGates']==0
+          assert not data['allowNavigation']
+          print('PASS native source evidence generated (NO unreviewed route promotion)')
+          PY
+
       - name: Verify visible airport chart validity in real Chrome
         run: |
           export NODE_PATH="$RUNNER_TEMP/jeppiran-browser-qa/node_modules"
