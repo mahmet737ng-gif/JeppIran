@@ -5,6 +5,7 @@ on:
     paths:
       - "scripts/build_oiie_pdf_ground_evidence.py"
       - "scripts/build_oiie_runway_axes.py"
+      - "scripts/build_oiie_stand_coordinates_qa.py"
       - "web/taxi-oiie-stages456.js"
       - "web/tests/taxi-oiie-runway-axes.test.cjs"
       - ".github/workflows/oiie-native-ground-evidence.yml"
@@ -53,6 +54,19 @@ jobs:
           assert not d['safeForNavigation'] and not d['holdShortPositionSurveyed']
           print('PASS two PDF-native, dimensional-reviewed runway axes; no false taxi entries')
           PY
+      - name: Parse published OIIE stand coordinate groups and flag Cargo conflicts
+        run: python scripts/build_oiie_stand_coordinates_qa.py --pdf /tmp/OIIE.pdf --output /tmp/oiie-v2621-stand-coordinate-audit.json
+      - name: Verify printed table remains separate from individual stand nose routing
+        run: |
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/oiie-v2621-stand-coordinate-audit.json'))
+          assert d["entryCount"]==49 and d["suitableForStandNoseRouting"] is False
+          assert d["autoCorrectCargoTypographicValues"] is False
+          assert sum(i["code"]=="PRINTED_CARGO_LONGITUDE_CONFLICTS_WITH_20_9C_GRID" for i in d["issues"])==4
+          assert all(e["unverifiedStandNose"] for e in d["entries"])
+          print("PASS: source-rounded stand coordinate groups do not become routeable nodes")
+          PY
       - name: Reject false automatically approved centerlines and runway gates
         run: |
           python - <<'PY'
@@ -71,4 +85,5 @@ jobs:
           path: |
             /tmp/oiie-v2621-native-evidence.json
             /tmp/oiie-v2621-runway-axes.json
+            /tmp/oiie-v2621-stand-coordinate-audit.json
           retention-days: 14
