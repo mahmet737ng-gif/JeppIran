@@ -1,0 +1,54 @@
+name: OIIE Native Ground Geometry Extraction QA
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "scripts/build_oiie_pdf_ground_evidence.py"
+      - ".github/workflows/oiie-native-ground-evidence.yml"
+permissions:
+  contents: read
+jobs:
+  source-extraction:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install native PDF vector parser
+        run: python -m pip install --disable-pip-version-check pymupdf==1.26.5
+      - name: Download matching V2621 Imam airport chart PDF
+        run: |
+          python - <<'PY'
+          import hashlib,json,pathlib,urllib.request
+          m=json.loads(pathlib.Path("app/src/main/assets/charts-manifest.json").read_text())
+          assert str(m["cycle"])=="2621"
+          info=m["airports"]["OIIE"]
+          u=info["url"]
+          req=urllib.request.Request(u,headers={"User-Agent":"JEPPIRAN-OIIE-Source-QA"})
+          with urllib.request.urlopen(req,timeout=120) as r:
+              b=r.read()
+          assert hashlib.sha256(b).hexdigest()==info["sha256"],"OIIE PDF source hash mismatch"
+          pathlib.Path("/tmp/OIIE.pdf").write_bytes(b)
+          print("Verified V2621 airport PDF",len(b),"bytes")
+          PY
+      - name: Extract page-specific original vector geometry
+        run: python scripts/build_oiie_pdf_ground_evidence.py --pdf /tmp/OIIE.pdf --output /tmp/oiie-v2621-native-evidence.json
+      - name: Reject false automatically approved centerlines and runway gates
+        run: |
+          python - <<'PY'
+          import json
+          s=json.load(open('/tmp/oiie-v2621-native-evidence.json'))
+          assert s['airport']=='OIIE' and s['cycle']=='2621'
+          assert len(s['pages'])==3 and all(s['pages'][p]['candidateVectorStrokes']>100 for p in ('380','382','383'))
+          assert set(s['pages']['383']['regions'])=={'CARGO','SALAM'}
+          assert s['verifiedTaxiEdges']==s['verifiedRunwayGates']==0
+          assert not s['allowNavigation'] and not s['allowAutomaticRoutePromotion']
+          print("PASS source-native extraction: 3 pages, four independent regions, 0 unsafely approved routes")
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: OIIE-V2621-native-geometry-review
+          path: /tmp/oiie-v2621-native-evidence.json
+          retention-days: 14
