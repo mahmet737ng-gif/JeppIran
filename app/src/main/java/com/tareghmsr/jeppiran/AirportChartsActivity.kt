@@ -2573,8 +2573,10 @@ class AirportChartsActivity :
         )
     }
 
+    // Phone chart selection opens the real full-screen, georeferenced viewer.
+    // Never route through the obsolete inline preview + narrow airport rail.
     private fun openChart(chart: ChartRepository.ChartInfo) {
-        showChartInline(chart)
+        openChartAdvanced(chart)
     }
 
     private fun openChartAdvanced(
