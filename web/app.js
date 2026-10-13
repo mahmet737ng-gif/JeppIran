@@ -456,6 +456,7 @@ async function loadData(){
     if(!selectedAirport && charts.some(c=>c.airport==="OIII"))selectAirport("OIII");
     else if(selectedAirport&&!selectedChart)renderAirportProfile(selectedAirport);
     if($("#homeCycle"))$("#homeCycle").textContent=(m.version||VERSION);
+    updateTerminalValidityDisplay();
     refreshPositionStatus();
     $("#updateSubtitle").textContent=(m.version||VERSION)+" data • "+Object.keys(m.airports||{}).length+" airports";
   }catch(e){
@@ -529,6 +530,40 @@ function parseUtcCycleDate(value){
 function utcCycleDate(date){
   return date.toLocaleDateString("en-GB",{timeZone:"UTC",day:"2-digit",month:"short",year:"numeric"});
 }
+/* Compact terminal currency indicator used by Home and each airport header.
+   A chart cycle issue date is not a substitute for an individual chart's effective date. */
+function terminalValidityIndicator(){
+  const cycle=terminalRevisionWindow(manifest);
+  if(!cycle)return {
+    state:"unknown",
+    markup:'<span class="terminal-validity-label">TERMINAL CHARTS</span>'+
+      '<strong class="terminal-validity-status">DATES UNAVAILABLE</strong>'+
+      '<small class="terminal-validity-note">Verify the installed chart cycle</small>'
+  };
+  const now=Date.now();
+  const expired=now>=cycle.until.getTime();
+  const pending=now<cycle.from.getTime();
+  const state=expired?"expired":pending?"unknown":"current";
+  const label=expired?"UPDATE OVERDUE":pending?"NOT YET EFFECTIVE":"CYCLE CURRENT";
+  const note=expired?"New cycle due "+utcCycleDate(cycle.until)+" — update charts":
+    pending?"Scheduled issue "+utcCycleDate(cycle.from):
+    "Next issue "+utcCycleDate(cycle.until);
+  return {
+    state,
+    markup:'<span class="terminal-validity-label">TERMINAL CHARTS</span>'+
+      '<strong class="terminal-validity-status">'+label+'</strong>'+
+      '<small class="terminal-validity-note">'+profileEsc(note)+'</small>'
+  };
+}
+function updateTerminalValidityDisplay(){
+  const status=terminalValidityIndicator();
+  for(const id of ["homeTerminalValidity","profileTerminalValidity"]){
+    const el=document.getElementById(id);
+    if(!el)continue;
+    if(el.dataset.state!==status.state)el.dataset.state=status.state;
+    if(el.innerHTML!==status.markup)el.innerHTML=status.markup;
+  }
+}
 function profileValidityMarkup(){
   const now=Date.now(),term=terminalRevisionWindow(manifest);
   const tExpired=!!term&&now>=term.until.getTime();
@@ -570,8 +605,7 @@ function utcDisplay(){
   const minute=Math.floor(now.getTime()/60000);
   if(minute!==lastValidityCheckMinute){
     lastValidityCheckMinute=minute;
-    const validity=$("#profileValidityRows");
-    if(validity){const updated=profileValidityMarkup();if(updated!==validity.innerHTML)validity.innerHTML=updated;}
+    updateTerminalValidityDisplay();
   }
 }
 utcDisplay();setInterval(utcDisplay,1000);
@@ -747,7 +781,7 @@ function renderAirportProfile(icao){
       '<span><b>'+profileEsc(surface)+'</b><small>ADC '+adcHeading+'</small></span></button>';
     }).join(""):'<div class="profile-empty">Runway data unavailable; consult current ADC/AIP.</div>';
   root.innerHTML='<div class="profile-shell">'+
-    '<div class="profile-heading"><div><div class="profile-code-row"><strong class="profile-icao">'+profileEsc(icao)+'</strong><span class="profile-chip">'+profileEsc(d.iata||"—")+'</span><button type="button" class="profile-chip" id="profileFavBtn" aria-label="Favorite airport">'+(fav.has(icao)?"★":"☆")+'</button></div><h2>'+profileEsc(name)+'</h2><p>'+profileEsc(meta[1])+(meta[1]&&country?', ':'')+profileEsc(country)+'</p></div><div class="profile-elev">Elevation: '+(Number.isFinite(d.elevation)?d.elevation.toLocaleString()+' ft':'—')+'<br>⌖ '+formattedCoord+'<br><strong id="profileUtcClock" class="profile-utc-clock" aria-live="off">--:--:-- UTC</strong></div></div>'+
+    '<div class="profile-heading"><div><div class="profile-code-row"><strong class="profile-icao">'+profileEsc(icao)+'</strong><span class="profile-chip">'+profileEsc(d.iata||"—")+'</span><button type="button" class="profile-chip" id="profileFavBtn" aria-label="Favorite airport">'+(fav.has(icao)?"★":"☆")+'</button></div><h2>'+profileEsc(name)+'</h2><p>'+profileEsc(meta[1])+(meta[1]&&country?', ':'')+profileEsc(country)+'</p></div><div class="profile-elev">Elevation: '+(Number.isFinite(d.elevation)?d.elevation.toLocaleString()+' ft':'—')+'<br>⌖ '+formattedCoord+'<br><strong id="profileUtcClock" class="profile-utc-clock" aria-live="off">--:--:-- UTC</strong><div id="profileTerminalValidity" class="terminal-validity profile-terminal-validity" data-state="unknown" role="status" aria-live="polite">TERMINAL CHARTS · Checking cycle…</div></div></div>'+
     '<nav class="profile-tabs" aria-label="Airport profile">'+["Overview"].map(t=>'<button type="button" class="profile-tab'+(profileTab===t?" active":"")+'" data-profile-tab="'+t+'">'+t+'</button>').join("")+'</nav>'+
     '<div class="profile-cols"><div class="profile-col">'+
       '<section class="profile-card" id="profileWeather"><header><span>METAR • '+profileEsc(icao)+'</span><small id="profileMetarAge">'+(raw?"Last received / cached":"Loading live METAR…")+'</small></header>'+
@@ -763,9 +797,9 @@ function renderAirportProfile(icao){
       '<div class="wind-data"><div><span>Runway HDG (ADC)</span><b>'+(rw?(Number.isFinite(rw.headingAdc)?Math.round(rw.headingAdc)+"°":"—"):"—")+'</b></div><div><span>METAR wind direction</span><b>'+(comp?comp.direction+"° / "+comp.speed+" kt":"—")+'</b></div><div><span class="'+(comp?(comp.headRaw>=0?"wind-status-head":Number(comp.head)>=3&&Number(comp.head)<=5?"wind-status-tail-warning":Number(comp.head)>5?"wind-status-tail-danger":"wind-status-neutral"):"wind-status-neutral")+'">↑ '+(comp?comp.headName:"Headwind")+'</span><b class="'+(comp?(comp.headRaw>=0?"wind-status-head":Number(comp.head)>=3&&Number(comp.head)<=5?"wind-status-tail-warning":Number(comp.head)>5?"wind-status-tail-danger":"wind-status-neutral"):"wind-status-neutral")+'">'+(comp?comp.head+" kt":"—")+'</b></div><div><span class="wind-cross">→ Crosswind</span><b class="wind-cross">'+(comp?comp.cross+" kt "+comp.crossName:"—")+'</b></div></div></section>'+
       '<section class="profile-card" id="profileInfo"><header>ADDITIONAL INFORMATION</header>'+
       [['ICAO',icao],['IATA',d.iata||"—"],['Field elevation',Number.isFinite(d.elevation)?d.elevation.toLocaleString()+" ft":"—"],['Coordinates',Number.isFinite(d.lat)?d.lat.toFixed(4)+"N, "+d.lon.toFixed(4)+"E":"—"],['Local time','<span id="profileLocalTime" aria-live="off">--:--:--</span>']].map(([k,v])=>'<div class="profile-info-row"><span>'+k+'</span><b>'+v+'</b></div>').join("")+'</section>'+
-      '<section class="profile-card" id="profileValidity"><header>CHART DATA VALIDITY</header><div id="profileValidityRows">'+profileValidityMarkup()+'</div></section>'+
 
     '</div></div></div>';
+  updateTerminalValidityDisplay();
   root.querySelector("#profileFavBtn").onclick=()=>{setAirportFavorite(icao);renderAirportProfile(icao)};
   root.querySelectorAll("[data-runway]").forEach(b=>b.onclick=()=>{window.jeppiranSelectedRunway=b.dataset.runway;renderAirportProfile(icao)});
   utcDisplay();
