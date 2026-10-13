@@ -6172,6 +6172,514 @@
         },
         "note": "10-minute latitude graticule ticks cross-checked against the plotted TRN symbol using official AIP coordinates; experimental test layer only."
       }
+    },
+    {
+      "page": 420,
+      "airport": "OIII",
+      "name": "DAXIL 1A, DAXIL 1B, DHN 3A, DHN 3B, DHN 2C",
+      "chartKey": "OIII|SID|10-3|DAXIL 1A, DAXIL 1B, DHN 3A, DHN 3B, DHN 2C",
+      "sourceFingerprint": "86e011edd67520115a02f6340068080e08541c9a9a0b3e2e2b52939d4830326a",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 612,
+        "bottom": 792
+      },
+      "excludedBounds": [
+        {
+          "left": 314,
+          "top": 50,
+          "right": 405,
+          "bottom": 140
+        },
+        {
+          "left": 428,
+          "top": 670,
+          "right": 531,
+          "bottom": 782
+        }
+      ],
+      "points": [
+        {
+          "lat": 35.333333333333336,
+          "lon": 51,
+          "x": 405.8489115512747,
+          "y": 603.9600219726562,
+          "source": "Derived orthogonal conformal grid intersection"
+        },
+        {
+          "lat": 35.333333333333336,
+          "lon": 51.5,
+          "x": 405.8489115512747,
+          "y": 376.79998779296875,
+          "source": "Derived orthogonal conformal grid intersection"
+        },
+        {
+          "lat": 35.333333333333336,
+          "lon": 52,
+          "x": 405.8489115512747,
+          "y": 149.6400146484375,
+          "source": "Derived orthogonal conformal grid intersection"
+        },
+        {
+          "lat": 35.5,
+          "lon": 51,
+          "x": 312.8399963378906,
+          "y": 603.9600219726562,
+          "source": "Printed grid 35-30 / 51-00"
+        },
+        {
+          "lat": 35.5,
+          "lon": 51.5,
+          "x": 312.8399963378906,
+          "y": 376.79998779296875,
+          "source": "Printed grid 35-30 / 51-30"
+        },
+        {
+          "lat": 35.5,
+          "lon": 52,
+          "x": 312.8399963378906,
+          "y": 149.6400146484375,
+          "source": "Printed grid 35-30 / 52-00"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "gridMaxResidualPdfPoints": 0.00002,
+        "controlPointCount": 6,
+        "method": "single_axis_plus_conformal_scale",
+        "measuredAxisValueCounts": {
+          "latitude": 1,
+          "longitude": 3
+        },
+        "notToScaleTextPresentElsewhereOnPage": true,
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "excludedNotToScaleRegions": [
+          {
+            "left": 314,
+            "top": 50,
+            "right": 405,
+            "bottom": 140
+          },
+          {
+            "left": 428,
+            "top": 670,
+            "right": 531,
+            "bottom": 782
+          }
+        ]
+      }
+    },
+    {
+      "page": 422,
+      "airport": "OIII",
+      "name": "ELUSI 1A, ELUSI 1B, ELUSI 1C, ELUSI 1D",
+      "chartKey": "OIII|SID|10-3B|ELUSI 1A, ELUSI 1B, ELUSI 1C, ELUSI 1D",
+      "sourceFingerprint": "34ffed294be4704b7042cff66f7d284e017000891ec605ef36979f8a678b2ff0",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 612,
+        "bottom": 792
+      },
+      "excludedBounds": [
+        {
+          "left": 280,
+          "top": 610,
+          "right": 410,
+          "bottom": 655
+        }
+      ],
+      "points": [
+        {
+          "lat": 35.333333333333336,
+          "lon": 51,
+          "x": 136.0800018310547,
+          "y": 592.6610178843175,
+          "source": "Derived orthogonal conformal grid intersection"
+        },
+        {
+          "lat": 35.333333333333336,
+          "lon": 51.5,
+          "x": 439.0799865722656,
+          "y": 592.6610178843175,
+          "source": "Derived orthogonal conformal grid intersection"
+        },
+        {
+          "lat": 35.5,
+          "lon": 51,
+          "x": 136.0800018310547,
+          "y": 468.6000061035156,
+          "source": "Printed grid 35-30 / 51-00"
+        },
+        {
+          "lat": 35.5,
+          "lon": 51.5,
+          "x": 439.0799865722656,
+          "y": 468.6000061035156,
+          "source": "Printed grid 35-30 / 51-30"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "gridMaxResidualPdfPoints": 0,
+        "controlPointCount": 4,
+        "method": "single_axis_plus_conformal_scale",
+        "measuredAxisValueCounts": {
+          "latitude": 1,
+          "longitude": 2
+        },
+        "notToScaleTextPresentElsewhereOnPage": true,
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "excludedNotToScaleRegions": [
+          {
+            "left": 280,
+            "top": 610,
+            "right": 410,
+            "bottom": 655
+          }
+        ]
+      }
+    },
+    {
+      "page": 424,
+      "airport": "OIII",
+      "name": "PAROT 3A, PAROT 3B, PAROT 4C, PAVET 2A, PAVET 2B, PAVET 3C",
+      "chartKey": "OIII|SID|10-3D|PAROT 3A, PAROT 3B, PAROT 4C, PAVET 2A, PAVET 2B, PAVET 3C",
+      "sourceFingerprint": "cd56ecaded2a654f5645bc318fec44ef393b33dd74154567c73b33d1f953285e",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 612,
+        "bottom": 792
+      },
+      "excludedBounds": [
+        {
+          "left": 290,
+          "top": 680,
+          "right": 420,
+          "bottom": 782
+        },
+        {
+          "left": 90,
+          "top": 630,
+          "right": 175,
+          "bottom": 730
+        }
+      ],
+      "points": [
+        {
+          "lat": 35.333333333333336,
+          "lon": 51,
+          "x": 526.9662437721256,
+          "y": 545.6400146484375,
+          "source": "Derived orthogonal conformal grid intersection"
+        },
+        {
+          "lat": 35.333333333333336,
+          "lon": 51.5,
+          "x": 526.9662437721256,
+          "y": 243.3599853515625,
+          "source": "Derived orthogonal conformal grid intersection"
+        },
+        {
+          "lat": 35.5,
+          "lon": 51,
+          "x": 403.20001220703125,
+          "y": 545.6400146484375,
+          "source": "Printed grid 35-30 / 51-00"
+        },
+        {
+          "lat": 35.5,
+          "lon": 51.5,
+          "x": 403.20001220703125,
+          "y": 243.3599853515625,
+          "source": "Printed grid 35-30 / 51-30"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "gridMaxResidualPdfPoints": 0,
+        "controlPointCount": 4,
+        "method": "single_axis_plus_conformal_scale",
+        "measuredAxisValueCounts": {
+          "latitude": 1,
+          "longitude": 2
+        },
+        "notToScaleTextPresentElsewhereOnPage": true,
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "excludedNotToScaleRegions": [
+          {
+            "left": 290,
+            "top": 680,
+            "right": 420,
+            "bottom": 782
+          },
+          {
+            "left": 90,
+            "top": 630,
+            "right": 175,
+            "bottom": 730
+          }
+        ]
+      }
+    },
+    {
+      "page": 425,
+      "airport": "OIII",
+      "name": "PAXID 3A, PAXID 3B",
+      "chartKey": "OIII|SID|10-3E|PAXID 3A, PAXID 3B",
+      "sourceFingerprint": "366ee22bc4265c9dc4f0ff983b8d274880eb22cab5e6e9b129a2965cff03adc2",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 612,
+        "bottom": 792
+      },
+      "excludedBounds": [
+        {
+          "left": 90,
+          "top": 650,
+          "right": 155,
+          "bottom": 745
+        }
+      ],
+      "points": [
+        {
+          "lat": 35.5,
+          "lon": 50.5,
+          "x": 468.8399963378906,
+          "y": 772.3200073242188,
+          "source": "Printed grid 35-30 / 50-30"
+        },
+        {
+          "lat": 35.5,
+          "lon": 51,
+          "x": 468.8399963378906,
+          "y": 469.20001220703125,
+          "source": "Printed grid 35-30 / 51-00"
+        },
+        {
+          "lat": 35.5,
+          "lon": 51.5,
+          "x": 468.8399963378906,
+          "y": 166.20001220703125,
+          "source": "Printed grid 35-30 / 51-30"
+        },
+        {
+          "lat": 36,
+          "lon": 50.5,
+          "x": 96.95989990234375,
+          "y": 772.3200073242188,
+          "source": "Printed grid 36-00 / 50-30"
+        },
+        {
+          "lat": 36,
+          "lon": 51,
+          "x": 96.95989990234375,
+          "y": 469.20001220703125,
+          "source": "Printed grid 36-00 / 51-00"
+        },
+        {
+          "lat": 36,
+          "lon": 51.5,
+          "x": 96.95989990234375,
+          "y": 166.20001220703125,
+          "source": "Printed grid 36-00 / 51-30"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "gridMaxResidualPdfPoints": 0.039998,
+        "controlPointCount": 6,
+        "method": "paired_printed_graticule_vector_ticks",
+        "measuredAxisValueCounts": {
+          "latitude": 2,
+          "longitude": 3
+        },
+        "notToScaleTextPresentElsewhereOnPage": true,
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "excludedNotToScaleRegions": [
+          {
+            "left": 90,
+            "top": 650,
+            "right": 155,
+            "bottom": 745
+          }
+        ]
+      }
+    },
+    {
+      "page": 426,
+      "airport": "OIII",
+      "name": "OBRIX 2A, OBRIX 2B, OBRIX 2C, RUS 2A, RUS 2B",
+      "chartKey": "OIII|SID|10-3F|OBRIX 2A, OBRIX 2B, OBRIX 2C, RUS 2A, RUS 2B",
+      "sourceFingerprint": "735f229cbcb3bfa99d2b7b1b8cba6a41d607cb134a56b221d4f512bbce2a760a",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 612,
+        "bottom": 792
+      },
+      "excludedBounds": [
+        {
+          "left": 470,
+          "top": 200,
+          "right": 531,
+          "bottom": 300
+        }
+      ],
+      "points": [
+        {
+          "lat": 35.333333333333336,
+          "lon": 51,
+          "x": 584.1901356778782,
+          "y": 592.5599975585938,
+          "source": "Derived orthogonal conformal grid intersection"
+        },
+        {
+          "lat": 35.333333333333336,
+          "lon": 51.5,
+          "x": 584.1901356778782,
+          "y": 289.44000244140625,
+          "source": "Derived orthogonal conformal grid intersection"
+        },
+        {
+          "lat": 35.5,
+          "lon": 51,
+          "x": 460.0799865722656,
+          "y": 592.5599975585938,
+          "source": "Printed grid 35-30 / 51-00"
+        },
+        {
+          "lat": 35.5,
+          "lon": 51.5,
+          "x": 460.0799865722656,
+          "y": 289.44000244140625,
+          "source": "Printed grid 35-30 / 51-30"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "gridMaxResidualPdfPoints": 0,
+        "controlPointCount": 4,
+        "method": "single_axis_plus_conformal_scale",
+        "measuredAxisValueCounts": {
+          "latitude": 1,
+          "longitude": 2
+        },
+        "notToScaleTextPresentElsewhereOnPage": true,
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "excludedNotToScaleRegions": [
+          {
+            "left": 470,
+            "top": 200,
+            "right": 531,
+            "bottom": 300
+          }
+        ]
+      }
+    },
+    {
+      "page": 427,
+      "airport": "OIII",
+      "name": "SAV 2A, SAV 2B, SAV 3C",
+      "chartKey": "OIII|SID|10-3G|SAV 2A, SAV 2B, SAV 3C",
+      "sourceFingerprint": "1f25b8c04c6e225918371fbc19ad2a8438a0211d4102b5b9bc8f8018c7226b3c",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 612,
+        "bottom": 792
+      },
+      "excludedBounds": [
+        {
+          "left": 365,
+          "top": 680,
+          "right": 430,
+          "bottom": 775
+        }
+      ],
+      "points": [
+        {
+          "lat": 35.5,
+          "lon": 51,
+          "x": 439.0799865722656,
+          "y": 706.5599975585938,
+          "source": "Printed grid 35-30 / 51-00"
+        },
+        {
+          "lat": 35.5,
+          "lon": 51.5,
+          "x": 439.0799865722656,
+          "y": 253.08001708984375,
+          "source": "Printed grid 35-30 / 51-30"
+        },
+        {
+          "lat": 35.666666666666664,
+          "lon": 51,
+          "x": 253.40609867639068,
+          "y": 706.5599975585938,
+          "source": "Derived orthogonal conformal grid intersection"
+        },
+        {
+          "lat": 35.666666666666664,
+          "lon": 51.5,
+          "x": 253.40609867639068,
+          "y": 253.08001708984375,
+          "source": "Derived orthogonal conformal grid intersection"
+        }
+      ],
+      "maxResidualPdfPoints": 1.5,
+      "validation": {
+        "gridMaxResidualPdfPoints": 0,
+        "controlPointCount": 4,
+        "method": "single_axis_plus_conformal_scale",
+        "measuredAxisValueCounts": {
+          "latitude": 1,
+          "longitude": 2
+        },
+        "notToScaleTextPresentElsewhereOnPage": true,
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "excludedNotToScaleRegions": [
+          {
+            "left": 365,
+            "top": 680,
+            "right": 430,
+            "bottom": 775
+          }
+        ]
+      }
     }
   ]
 }
