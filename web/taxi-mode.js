@@ -1047,10 +1047,9 @@ function view(){
   const panel=document.createElement("section");
   panel.id="taxiQaPanel";panel.className="taxi-qa-panel";panel.hidden=true;
   panel.innerHTML='<div class="taxi-qa-title"><strong>TAXI <small>QA TEST</small></strong>'+
-    '<span id="taxiQaAirport"></span><span class="taxi-qa-build">R27</span><button id="taxiQaToolsBtn" type="button" aria-expanded="false" aria-controls="taxiQaButtons">TOOLS ▾</button>'+
-    '<button id="taxiQaClose" type="button" aria-label="Close taxi panel">×</button></div>'+
+    '<span id="taxiQaAirport"></span><span class="taxi-qa-build">GROUND ROUTE · SIM QA</span></div>'+
     '<label for="taxiQaInput">Stand STD3 T5 N2 · Hold /N2 · Procedure 34L2A</label>'+
-    '<div class="taxi-qa-entry"><input id="taxiQaInput" autocomplete="off" spellcheck="false" placeholder="Stand / taxiways / procedure"><button id="taxiQaGo" type="button">GO</button></div>'+
+    '<div class="taxi-qa-entry"><input id="taxiQaInput" autocomplete="off" spellcheck="false" placeholder="ST204 ST314 · ST314 · 11L · ST204 A B H 11L"><button id="taxiQaGo" type="button">GO</button><button id="taxiQaStartQuick" type="button" title="Choose current start on chart">SET START</button><button id="taxiQaClearQuick" type="button">CLEAR</button><button id="taxiQaEnd" type="button">END TAXI</button></div>'+
     '<div id="taxiQaAutoRow" class="taxi-qa-entry" hidden><select id="taxiQaAutoDestination" aria-label="Select stand or runway hold" style="min-width:0;width:100%;background:#112c45;color:#e6f7ff;border:1px solid #467c9a;border-radius:10px;padding:10px;font-size:14px"></select></div>'+
     '<div id="taxiQaRoutePreview" class="taxi-route-preview" hidden aria-label="Mapped taxiway segment preview"></div>'+
     '<div id="taxiQaGuidance" hidden style="margin:3px 0;padding:8px 12px;border-radius:10px;background:#15374c;color:#c9f9f9;font-size:12px;font-weight:700"></div>'+
@@ -1070,16 +1069,16 @@ function view(){
     '<small>Do not taxi using nearest-line estimates. Official geometry and pushback clearance required.</small></section>'+
     '<div id="taxiQaStandMap" hidden aria-label="Geographic reference-only stand map"></div>'+
     '<small class="taxi-qa-warning">SIMULATOR QA ONLY · NOT FOR ACTUAL NAVIGATION</small>';
-  document.querySelector("#chartsView .viewer-pane")?.appendChild(panel);
-  $("taxiQaClose").onclick=()=>toggle(false);
-  const setToolsOpen=open=>{
-    panel.classList.toggle("tools-expanded",!!open);
-    const btn=$("taxiQaToolsBtn");
-    btn.setAttribute("aria-expanded",String(!!open));
-    btn.textContent=open?"TOOLS ▴":"TOOLS ▾";
-  };
-  $("taxiQaToolsBtn").onclick=()=>setToolsOpen(!panel.classList.contains("tools-expanded"));
+  // Second toolbar is a sibling directly BELOW the original chart toolbar.
+  // Never position it as a floating panel over the Jeppesen PDF.
+  document.querySelector("#chartsView .viewer-toolbar")?.after(panel);
   $("taxiQaGo").onclick=go;
+  $("taxiQaStartQuick").onclick=()=> $("taxiQaStart").click();
+  $("taxiQaClearQuick").onclick=()=> $("taxiQaClear").click();
+  $("taxiQaEnd").onclick=()=>{
+    $("taxiQaClear").click();
+    toggle(false);
+  };
   $("taxiQaAutoDestination").addEventListener("change",()=>{
     const value=$("taxiQaAutoDestination").value;
     if(value)$("taxiQaInput").value=value;
@@ -1172,7 +1171,9 @@ function view(){
     const p=currentManual();p.points.pop();p.holds=p.holds.filter(i=>i<p.points.length);draw();
   };
   $("taxiQaClear").onclick=()=>{
-    taxi.auto=null;taxi.route=null;taxi.manual.delete(Number(selectedChart?.page));taxi.trace=false;taxi.testStart=null;taxi.startSelect=false;
+    taxi.auto=null;taxi.route=null;taxi.genericMonitor=null;
+    taxi.oiieApprovedRoute=null;taxi.oiieRunwayTrace=null;taxi.oiieSelected='';
+    taxi.manual.clear();taxi.trace=false;taxi.testStart=null;taxi.startSelect=false;
     $("taxiQaStart").classList.remove("on");$("taxiQaStart").setAttribute("aria-pressed","false");
     $("taxiQaTrace").classList.remove("on");draw();message("Cleared.");
   };
@@ -1181,20 +1182,28 @@ function view(){
 function toggle(on){
   view();taxi.active=on;
   $("taxiQaPanel").hidden=!on;
-  if(!on){taxi.goTicket++;taxi.trace=false;taxi.startSelect=false;$("taxiQaTrace").classList.remove("on");$("taxiQaStart").classList.remove("on")}
+  if(!on){
+    taxi.goTicket++;taxi.trace=false;taxi.startSelect=false;
+    $("taxiQaTrace").classList.remove("on");$("taxiQaStart").classList.remove("on");
+    // Hiding the TAXI sub-toolbar does not cancel a plotted ground route.
+  }
   if(on){
     $("taxiQaAirport").textContent=selectedAirport;
     updateAirportControls();
     if(taxi.airport!==selectedAirport){taxi.airport=selectedAirport;taxi.route=null;taxi.auto=null;taxi.testStart=null;loadGraph(selectedAirport);loadStandReference(selectedAirport);loadNetworkAudit(selectedAirport);loadStandGroups(selectedAirport);}
     $("taxiQaInput").focus();
   }
+  $("chartTaxiBtn")?.setAttribute("aria-pressed",String(!!on));
   renderNetworkAudit();renderStandGroupPanel();draw();
 }
 function openTaxi(){
   if(!selectedAirport)return;
+  if(taxi.active){toggle(false);return}
   const c=overview();
   if(!c){dialog("TAXI","No ADC chart for "+selectedAirport);return}
-  if(!isAdc(selectedChart))selectChart(c);
+  // Preserve the current airport chart: opening a route toolbar must NOT
+  // navigate away from a Parking/Docking page. ADC is a separate button.
+  if(!selectedChart)selectChart(c);
   toggle(true);
 }
 function nearest(graph,pos,firstTaxiway=null){
@@ -1920,7 +1929,12 @@ function draw(){
   renderRoutePreview();
   const layer=$("chartTransformLayer"),canvas=$("pdfCanvas");if(!layer||!canvas)return;
   layer.querySelector(".taxi-qa-overlay")?.remove();
-  if(!taxi.active)return;
+  // A route belongs to its airport and stays painted after TAXI is hidden.
+  // END TAXI and CLEAR are the only normal route removal commands.
+  const persistent=taxi.airport===selectedAirport&&Boolean(
+    taxi.route||taxi.oiieApprovedRoute||taxi.oiieRunwayTrace||
+    taxi.auto?.route||taxi.manual?.get(Number(selectedChart?.page))?.points?.length);
+  if(!taxi.active&&!persistent)return;
   // An OIAW QA preview may use a SCREENSHOT-DERIVED chart transform
   // solely for its dashed amber taxi layer. Never promote it into
   // georefByPage (aircraft positioning, GPS and other charts must not use it).
@@ -2334,7 +2348,9 @@ function previewStandSourceRoute(id,entry,qaRoute){
   draw();
   return true;
 }
-window.JEPPIRAN_TAXI={open:openTaxi,parse,openAdc,draw,routeDeviationMeters,previewStandCandidate,previewStandSourceRoute};
+window.JEPPIRAN_TAXI={open:openTaxi,hide:()=>toggle(false),isOpen:()=>taxi.active,
+  clear:()=> $("taxiQaClear")?.click(),end:()=> $("taxiQaEnd")?.click(),
+  parse,openAdc,draw,routeDeviationMeters,previewStandCandidate,previewStandSourceRoute};
 window.addEventListener("jeppiran-chart-rendered",()=>{draw();chartHint()});
 function monitorOimmAuto(e){
   chartHint();
