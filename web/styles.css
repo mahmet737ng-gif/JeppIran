@@ -1613,6 +1613,14 @@ body.viewer-fullscreen .fullscreen-cdfa:not([hidden]){display:flex}
   white-space:normal;
   line-height:1.4;
 }
+#chartsView .profile-terminal-validity .terminal-validity-range{
+  flex:0 0 100%;
+  display:block;
+  font-size:12px;
+  font-weight:850;
+  letter-spacing:.01em;
+  color:#e2f3ff;
+}
 #chartsView .profile-terminal-validity .terminal-validity-status{color:#6ff3b9}
 #chartsView .profile-terminal-validity .terminal-validity-note{flex-basis:100%;color:#a9cfe6}
 #chartsView .profile-terminal-validity[data-state="unknown"] .terminal-validity-status{color:#efc576}
@@ -1625,6 +1633,7 @@ body.viewer-fullscreen .fullscreen-cdfa:not([hidden]){display:flex}
 }
 #chartsView .profile-terminal-validity[data-state="expired"] .terminal-validity-status,
 #chartsView .profile-terminal-validity[data-state="expired"] .terminal-validity-note{color:#ffd0da}
+#chartsView .profile-terminal-validity[data-state="expired"] .terminal-validity-range{color:#ffdee5}
 :root.light #homeView .home-terminal-validity{
   color:#17435c;
   text-shadow:none;
@@ -1642,6 +1651,7 @@ body.viewer-fullscreen .fullscreen-cdfa:not([hidden]){display:flex}
   color:#28516e;
   border-top-color:#aecfe3;
 }
+:root.light #chartsView .profile-terminal-validity .terminal-validity-range{color:#194d72}
 :root.light #chartsView .profile-terminal-validity .terminal-validity-status{color:#167047}
 :root.light #chartsView .profile-terminal-validity .terminal-validity-note{color:#486e85}
 :root.light #chartsView .profile-terminal-validity[data-state="unknown"] .terminal-validity-status{color:#955e08}
@@ -1652,6 +1662,7 @@ body.viewer-fullscreen .fullscreen-cdfa:not([hidden]){display:flex}
 }
 :root.light #chartsView .profile-terminal-validity[data-state="expired"] .terminal-validity-status,
 :root.light #chartsView .profile-terminal-validity[data-state="expired"] .terminal-validity-note{color:#a91d38}
+:root.light #chartsView .profile-terminal-validity[data-state="expired"] .terminal-validity-range{color:#a91d38}
 @media(max-width:690px){
   #homeView .home-capsules{
     grid-template-columns:minmax(0,1fr) minmax(0,1fr);
