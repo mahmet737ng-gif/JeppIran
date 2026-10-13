@@ -16,6 +16,8 @@ on:
     branches: [main]
     paths:
       - 'scripts/taxi-engine/gate100.cjs'
+      - 'scripts/taxi-engine/gate-matrix.cjs'
+      - 'tests/taxi-engine-matrix.test.cjs'
       - 'scripts/taxi-engine/extract-sources.py'
       - 'tests/taxi-engine-gate100.test.cjs'
       - 'docs/JEPPIRAN_AIRPORT_TAXI_ENGINE_V4_ONE_COMMAND.md'
@@ -78,6 +80,12 @@ jobs:
         run: |
           node scripts/taxi-engine/gate100.cjs "$TARGET_AIRPORT" \
             --report "$RUNNER_TEMP/airport-evidence/$TARGET_AIRPORT-gate100.json"
+      - name: Verify exhaustive stand/stand, stand/runway and taxiway route matrix
+        id: matrix
+        continue-on-error: true
+        run: |
+          node scripts/taxi-engine/gate-matrix.cjs "$TARGET_AIRPORT" \
+            --report "$RUNNER_TEMP/airport-evidence/$TARGET_AIRPORT-full-matrix.json"
       - name: Save complete forensic evidence for QA correction and resume
         if: always()
         uses: actions/upload-artifact@v4
@@ -87,8 +95,8 @@ jobs:
           retention-days: 30
       - name: Final source-verified release gate — NEVER announce partial as complete
         run: |
-          if [ "${{ steps.gate.outcome }}" != "success" ]; then
-            echo "::error::Airport NOT READY. The mandatory stand x runway x two-direction test set is NOT 100% PASS. No taxi routing release permitted."
+          if [ "${{ steps.gate.outcome }}" != "success" ] || [ "${{ steps.matrix.outcome }}" != "success" ]; then
+            echo "::error::Airport NOT READY. The full stand/stand, stand/runway and taxiway directional matrix is not 100% PASS. No route publication."
             exit 1
           fi
           echo "GRAPH QA 100% PASS: ready for post-deploy real browser + simulator taxi QA."
