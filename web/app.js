@@ -564,7 +564,7 @@ function utcDisplay(){
   const brief=new Intl.DateTimeFormat("en-GB",{hour:"2-digit",minute:"2-digit",timeZone:"UTC",hourCycle:"h23"}).format(now);
   const full=new Intl.DateTimeFormat("en-GB",{hour:"2-digit",minute:"2-digit",second:"2-digit",timeZone:"UTC",hourCycle:"h23"}).format(now);
   const el=$("#homeUtc");if(el)el.textContent=brief+"Z UTC";
-  $(".profile-utc").forEach(e=>e.textContent=brief+"Z");
+  document.querySelectorAll(".profile-utc").forEach(e=>e.textContent=brief+"Z");
   const headerClock=$("#profileUtcClock");if(headerClock)headerClock.textContent=full+" UTC";
   const airportClock=$("#profileLocalTime");if(airportClock)airportClock.textContent=airportClockTime(now,selectedAirport);
   const minute=Math.floor(now.getTime()/60000);
