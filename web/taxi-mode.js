@@ -752,7 +752,29 @@ function imamInventoryGo(typed){
   const token=name(typed).replace(/\s+/g,"");
   const data=taxi.oiieSurvey,review=taxi.oiieReview;
   if(!data||!review)return;
-  taxi.route=null;taxi.auto=null;taxi.oiieSelected='';
+  taxi.route=null;taxi.auto=null;taxi.oiieSelected='';taxi.oiieApprovedRoute=null;
+  // No guessed OIIE graph: permit ONLY pairs pre-certified in both directions
+  // by the exact V2621 Stage 4-6 source-reviewed route ledger.
+  const routePattern=name(typed).match(/^(ST\d{1,4})\s+(?:RWY\s*)?(11L|29R|11R|29L)$/);
+  const reversePattern=name(typed).match(/^(?:RWY\s*)?(11L|29R|11R|29L)\s+(ST\d{1,4})$/);
+  if(routePattern||reversePattern){
+    const st=routePattern?routePattern[1]:reversePattern[2];
+    const end=routePattern?routePattern[2]:reversePattern[1];
+    const graph=taxi.oiieStages?.approvedGraph;
+    const pair=graph?.certified?.find(p=>p.from===st&&
+      graph.nodes.find(n=>n.id===p.to)?.label===end);
+    if(!pair){
+      draw();message("OIIE "+st+" ↔ RWY "+end+
+        " is NOT a source-reviewed two-way taxi route. No line will be invented.",true);
+      return;
+    }
+    taxi.oiieSelected=st;taxi.oiieApprovedRoute={...pair,
+      outbound:routePattern?pair.outbound:pair.return,runwayEnd:end};
+    draw();message("OIIE · validated simulator-QA route "+st+" ↔ "+end+
+      " · "+taxi.oiieApprovedRoute.outbound.join(" → ")+
+      " · NOT FOR ACTUAL NAVIGATION.",true);
+    return;
+  }
   const stand=token.replace(/^STAND/,"ST").replace(/^ST/,"");
   const st=review.stands.find(v=>v.id==="ST"+stand);
   if(st){
@@ -1787,6 +1809,23 @@ function draw(){
       }));
   }
   if(oiieLayer){
+    // Source-reviewed centerline polyline ONLY; never draw a direct
+    // line from a stand label to a guessed runway/another PDF page.
+    if(taxi.oiieApprovedRoute&&taxi.oiieStages?.routeable){
+      const tested=taxi.oiieStages.approvedGraph;
+      for(const id of taxi.oiieApprovedRoute.outbound){
+        const edge=tested.edges.find(e=>e.id===id);
+        if(!edge||edge.kind==="page-portal"||!Array.isArray(edge.points))continue;
+        const node=tested.nodes.find(n=>n.id===edge.from);
+        if(Number(node?.page)!==Number(selectedChart?.page))continue;
+        svg.appendChild(s("polyline",{
+          points:edge.points.map(p=>p.join(",")).join(" "),
+          fill:"none",stroke:"rgba(226,0,154,.80)","stroke-width":2.1,
+          "stroke-linecap":"round","stroke-linejoin":"round",
+          "class":"taxi-oiie-verified-only-route"
+        }));
+      }
+    }
     // Native printed-label reference marks ONLY. Do not connect markers
     // or label pointers: source-stroke touching is not verified ground topology.
     const page=Number(selectedChart?.page);
