@@ -65,6 +65,8 @@ async function waitForServer(){
       cards:document.querySelectorAll("#airportProfile .profile-card").length,
       tabs:document.querySelectorAll("#profileProcedures [data-proc-cat]").length,
       profileHeight:profile.getBoundingClientRect().height,
+      toolbarDisplay:getComputedStyle(document.querySelector("#chartsView .viewer-toolbar")).display,
+      workspaceDisplay:getComputedStyle(document.querySelector("#jpCdfaWorkspace")).display,
       procedureHeight:rect.height,
       procedureWidth:rect.width,
       profileScrollHeight:profile.scrollHeight
@@ -73,6 +75,10 @@ async function waitForServer(){
   assert.ok(geometry.airports>2,"phone must display multiple airports: "+JSON.stringify(geometry));
   assert.ok(geometry.cards>=5,"phone profile missing visible data panels: "+JSON.stringify(geometry));
   assert.equal(geometry.tabs,4,"STAR/SID/AIRPORT/APP category controls are mandatory");
+  assert.ok(geometry.profileHeight>=380,
+    "Android phone airport profile is clipped by inactive chart UI: "+JSON.stringify(geometry));
+  assert.equal(geometry.toolbarDisplay,"none","inactive chart toolbar must be hidden on phone");
+  assert.equal(geometry.workspaceDisplay,"none","inactive PDF workspace must be hidden on phone");
   assert.ok(geometry.procedureHeight>80&&geometry.procedureWidth>220,
     "procedure panel has collapsed on phone: "+JSON.stringify(geometry));
   await page.locator('#profileProcedures [data-proc-cat="SID"]').click();
