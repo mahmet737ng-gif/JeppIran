@@ -1,0 +1,177 @@
+/* JEPPIRAN TAXI second-toolbar V4 — scoped; preserves the locked primary chart toolbar. */
+#chartsView.chart-open .viewer-pane > #taxiQaPanel,
+#chartsView .viewer-pane > #taxiQaPanel{
+  position:relative!important;
+  inset:auto!important;
+  top:auto!important;
+  right:auto!important;
+  left:auto!important;
+  width:100%!important;
+  max-width:none!important;
+  height:auto!important;
+  min-height:0!important;
+  max-height:min(40vh,218px)!important;
+  box-sizing:border-box;
+  flex:0 0 auto;
+  z-index:82;
+  overflow-x:hidden;
+  overflow-y:auto;
+  margin:0;
+  padding:7px 11px!important;
+  border:0!important;
+  border-bottom:1px solid #3a647d!important;
+  border-radius:0!important;
+  box-shadow:0 4px 12px rgba(0,0,0,.25)!important;
+  background:linear-gradient(90deg,rgba(7,24,39,.985),rgba(11,34,53,.985))!important;
+  color:#ecf8ff;
+  backdrop-filter:none;
+  font:12px/1.3 system-ui,Arial,sans-serif;
+}
+#chartsView #taxiQaPanel[hidden]{display:none!important}
+#chartsView #taxiQaPanel .taxi-qa-title{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  justify-content:flex-start;
+  margin:0 0 5px;
+}
+#chartsView #taxiQaPanel .taxi-qa-title strong{
+  font:850 12px/1.2 system-ui,sans-serif;
+  letter-spacing:.05em;
+}
+#chartsView #taxiQaPanel #taxiQaAirport{margin:0;color:#7ad6fb}
+#chartsView #taxiQaPanel .taxi-qa-build{
+  font-size:9px;
+  border:0;
+  padding:0;
+  color:#89adc6;
+}
+#chartsView #taxiQaPanel > label,
+#chartsView #taxiQaPanel > .taxi-route-preview,
+#chartsView #taxiQaPanel > .taxi-qa-warning,
+#chartsView #taxiQaPanel > .taxi-qa-buttons,
+#chartsView #taxiQaPanel > .taxi-audit-panel,
+#chartsView #taxiQaPanel > .taxi-ins-groups,
+#chartsView #taxiQaPanel > #taxiQaStandMap,
+#chartsView #taxiQaPanel > #taxiQaAutoRow,
+#chartsView #taxiQaPanel > #taxiQaGuidance {
+  display:none!important;
+}
+#chartsView #taxiQaPanel .taxi-qa-entry{
+  display:flex;
+  flex-wrap:nowrap;
+  gap:6px;
+  align-items:stretch;
+  margin:0;
+}
+#chartsView #taxiQaPanel .taxi-qa-entry input{
+  width:100%;
+  flex:1 1 280px;
+  min-width:70px;
+  height:36px;
+  box-sizing:border-box;
+  background:#07192a;
+  border:1px solid #3c728f;
+  border-radius:7px;
+  color:#fff;
+  font:600 12px/1.1 system-ui,Arial,sans-serif;
+  padding:8px 10px;
+}
+#chartsView #taxiQaPanel .taxi-qa-entry > button{
+  display:inline-flex;
+  flex:0 0 auto;
+  align-items:center;
+  justify-content:center;
+  white-space:nowrap;
+  min-width:unset;
+  height:36px;
+  margin:0;
+  padding:0 12px;
+  background:#12334e;
+  color:#d9f1ff;
+  border:1px solid #507f9b;
+  border-radius:7px;
+  font:800 11px/1 system-ui,sans-serif;
+}
+#chartsView #taxiQaPanel #taxiQaGo{
+  min-width:54px;
+  background:#ca0aa9;
+  border-color:#ec5fd3;
+  color:white;
+}
+#chartsView #taxiQaPanel #taxiQaEnd{
+  border-color:#a85e69;
+  background:#48303b;
+  color:#ffe0e5;
+}
+#chartsView #taxiQaPanel #taxiQaClearQuick{
+  border-color:#7a7d96;
+}
+#chartsView #taxiQaPanel .taxi-status-details{
+  margin:5px 0 0;
+  padding:3px 7px;
+  font-size:10px;
+  border-radius:5px;
+}
+#chartsView #taxiQaPanel #taxiQaStatus{
+  display:block;
+  padding:4px 8px;
+  margin:5px 0 0;
+  border:0;
+  min-height:0;
+  border-radius:5px;
+  font:500 10px/1.25 system-ui,sans-serif;
+  background:#153047;
+  color:#bad9ed;
+  white-space:normal;
+  max-height:37px;
+  overflow:hidden;
+}
+#chartsView #taxiQaPanel #taxiQaStatus.warning{
+  color:#ffe2b1;background:#513b22;
+}
+#chartsView #chartTaxiBtn[aria-pressed="true"]{
+  border-color:#eb40c4;
+  box-shadow:inset 0 0 0 1px rgba(236,64,196,.45);
+}
+:root.light #chartsView .viewer-pane > #taxiQaPanel{
+  background:linear-gradient(90deg,#e8f1f8,#dce9f5)!important;
+  color:#132f45;
+  border-bottom-color:#91b6d1!important;
+}
+:root.light #chartsView #taxiQaPanel .taxi-qa-entry input{
+  background:#fff;color:#14304a;
+  border-color:#9fbcd0;
+}
+:root.light #chartsView #taxiQaPanel .taxi-qa-entry > button{
+  background:#e5f0f8;color:#123b55;border-color:#9bb9d2;
+}
+:root.light #chartsView #taxiQaPanel #taxiQaGo{
+  background:#b219a1;color:white;border-color:#a30b94;
+}
+:root.light #chartsView #taxiQaPanel #taxiQaEnd{
+  background:#f9e9eb;color:#7b2537;border-color:#df9ca9;
+}
+:root.light #chartsView #taxiQaPanel #taxiQaStatus{
+  background:#d6e7f3;color:#31546b;
+}
+@media(max-width:720px){
+  #chartsView .viewer-pane > #taxiQaPanel{
+    padding:6px 7px!important;
+    max-height:38vh!important;
+  }
+  #chartsView #taxiQaPanel .taxi-qa-build{display:none}
+  #chartsView #taxiQaPanel .taxi-qa-entry{
+    flex-wrap:wrap;
+  }
+  #chartsView #taxiQaPanel .taxi-qa-entry input{
+    flex-basis:100%;
+    height:35px;
+  }
+  #chartsView #taxiQaPanel .taxi-qa-entry > button{
+    flex:1 1 auto;
+    padding:0 8px;
+    height:32px;
+    font-size:10px;
+  }
+}
