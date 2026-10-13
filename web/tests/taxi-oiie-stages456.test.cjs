@@ -33,15 +33,16 @@ const nodes=[
  {id:"HOLD_A",kind:"hold-short",page:380,region:"ADC",point:[312,502],sourceDrawingIds:[121],reviewed:true},
  {id:"R11L",kind:"runway",label:"11L",page:380,region:"ADC",point:[321,480],sourceDrawingIds:[122],reviewed:true}];
 const edges=[
- {id:"LEAD",from:"ST100",to:"HOLD_A",kind:"stand-lead",reviewed:true,bidirectional:true,sourceDrawingIds:[123]},
+ {id:"LEAD",from:"ST100",to:"HOLD_A",kind:"stand-lead",reviewed:true,bidirectional:true,sourceDrawingIds:[123],points:[[292,530],[312,502]]},
  {id:"ACCESS",from:"HOLD_A",to:"R11L",kind:"runway-connector",gateId:"GATE1",
-  reviewed:true,bidirectional:true,sourceDrawingIds:[124]}];
+  reviewed:true,bidirectional:true,sourceDrawingIds:[124],points:[[312,502],[321,480]]}];
 const gates=[{id:"GATE1",physicalRunway:"11L_29R",runwayEnd:"11L",holdNode:"HOLD_A",
  runwayNode:"R11L",connectorEdgeIds:["ACCESS"],reviewed:true,holdShortReviewed:true,holdShortDrawingIds:[125]}];
 const graph={nodes,edges,gates};
 assert.equal(api.evaluate({...base,graph}).routeable,true,"synthetic reviewed sample ONLY tests route logic");
 assert.equal(api.evaluate({...base,graph}).phase6.bidirectionalPairs,1);
 assert.equal(api.evaluate({...base,graph:{nodes,edges,gates:[]}}).routeable,false);
+assert.equal(api.evaluate({...base,graph:{nodes,edges:[{...edges[0],points:[[292,530],[350,420]]},edges[1]],gates}}).routeable,false);
 assert.equal(api.evaluate({...base,graph:{nodes,edges:[...edges.slice(0,1),{...edges[1],sourceDrawingIds:[]}],gates}}).routeable,false);
 assert.equal(api.evaluate({...base,graph:{nodes,edges:[{...edges[0],bidirectional:false},edges[1]],gates}}).routeable,false,
  "one-way clearance cannot pass the bidirectional release test");
