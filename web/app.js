@@ -539,7 +539,7 @@ function terminalValidityIndicator(){
       '<strong class="terminal-validity-status">DATES UNAVAILABLE</strong>';
     const note='<small class="terminal-validity-note">Verify the installed chart cycle</small>';
     return {state:"unknown",markup:heading+note,
-      profileMarkup:heading+'<span class="terminal-validity-range">Cycle period unavailable</span>'+note};
+      profileMarkup:heading+'<div class="terminal-validity-dates"><span class="terminal-date-start">VALID FROM <b>UNAVAILABLE</b></span><span class="terminal-date-end">VALID TO <b>UNAVAILABLE</b></span></div>'+note};
   }
   const now=Date.now();
   const expired=now>=cycle.until.getTime();
@@ -552,14 +552,17 @@ function terminalValidityIndicator(){
   // Show the inclusive calendar-day range in airport profiles only.
   // The next cycle is issued at 00:00 UTC on cycle.until (end exclusive).
   const lastDay=new Date(cycle.until.getTime()-86400000);
-  const range='Cycle period: '+utcCycleDate(cycle.from)+' – '+utcCycleDate(lastDay);
+  const period='<div class="terminal-validity-dates">'+
+    '<span class="terminal-date-start">VALID FROM <b>'+profileEsc(utcCycleDate(cycle.from))+'</b></span>'+
+    '<span class="terminal-date-end">VALID TO <b>'+profileEsc(utcCycleDate(lastDay))+'</b></span>'+
+    '</div>';
   const heading='<b class="terminal-validity-label">TERMINAL CHARTS</b>'+
     '<strong class="terminal-validity-status">'+label+'</strong>';
   const noteMarkup='<small class="terminal-validity-note">'+profileEsc(note)+'</small>';
   return {
     state,
     markup:heading+noteMarkup,
-    profileMarkup:heading+'<span class="terminal-validity-range">'+profileEsc(range)+'</span>'+noteMarkup
+    profileMarkup:heading+period+noteMarkup
   };
 }
 function updateTerminalValidityDisplay(){
@@ -789,7 +792,7 @@ function renderAirportProfile(icao){
       '<span><b>'+profileEsc(surface)+'</b><small>ADC '+adcHeading+'</small></span></button>';
     }).join(""):'<div class="profile-empty">Runway data unavailable; consult current ADC/AIP.</div>';
   root.innerHTML='<div class="profile-shell">'+
-    '<div class="profile-heading"><div><div class="profile-code-row"><strong class="profile-icao">'+profileEsc(icao)+'</strong><span class="profile-chip">'+profileEsc(d.iata||"—")+'</span><button type="button" class="profile-chip" id="profileFavBtn" aria-label="Favorite airport">'+(fav.has(icao)?"★":"☆")+'</button></div><h2>'+profileEsc(name)+'</h2><p>'+profileEsc(meta[1])+(meta[1]&&country?', ':'')+profileEsc(country)+'</p></div><div class="profile-elev">Elevation: '+(Number.isFinite(d.elevation)?d.elevation.toLocaleString()+' ft':'—')+'<br>⌖ '+formattedCoord+'<br><strong id="profileUtcClock" class="profile-utc-clock" aria-live="off">--:--:-- UTC</strong><div id="profileTerminalValidity" class="terminal-validity profile-terminal-validity" data-state="unknown" role="status" aria-live="polite">TERMINAL CHARTS · Checking cycle…</div></div></div>'+
+    '<div class="profile-heading"><div><div class="profile-code-row"><strong class="profile-icao">'+profileEsc(icao)+'</strong><span class="profile-chip">'+profileEsc(d.iata||"—")+'</span><button type="button" class="profile-chip" id="profileFavBtn" aria-label="Favorite airport">'+(fav.has(icao)?"★":"☆")+'</button></div><h2>'+profileEsc(name)+'</h2><p>'+profileEsc(meta[1])+(meta[1]&&country?', ':'')+profileEsc(country)+'</p></div><div class="profile-elev">Elevation: '+(Number.isFinite(d.elevation)?d.elevation.toLocaleString()+' ft':'—')+'<br>⌖ '+formattedCoord+'<br><strong id="profileUtcClock" class="profile-utc-clock" aria-live="off">--:--:-- UTC</strong><div id="profileTerminalValidity" class="terminal-validity profile-terminal-validity" data-state="unknown" role="status" aria-live="polite">'+terminalValidityIndicator().profileMarkup+'</div></div></div>'+
     '<nav class="profile-tabs" aria-label="Airport profile">'+["Overview"].map(t=>'<button type="button" class="profile-tab'+(profileTab===t?" active":"")+'" data-profile-tab="'+t+'">'+t+'</button>').join("")+'</nav>'+
     '<div class="profile-cols"><div class="profile-col">'+
       '<section class="profile-card" id="profileWeather"><header><span>METAR • '+profileEsc(icao)+'</span><small id="profileMetarAge">'+(raw?"Last received / cached":"Loading live METAR…")+'</small></header>'+
