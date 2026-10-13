@@ -2,7 +2,7 @@ name: Verify Admin Web QA Preview
 
 on:
   push:
-    branches: [feature/admin-web-qa-live, feature/admin-home-dashboard-qa, fix/admin-console-clean-origin]
+    branches: [feature/admin-web-qa-live, feature/admin-home-dashboard-qa, fix/admin-console-clean-origin, fix/admin-console-builder-control-filename]
     paths:
       - 'scripts/admin-test-controls.js'
       - 'scripts/admin-qa-home.js'
