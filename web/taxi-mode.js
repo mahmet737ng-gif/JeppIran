@@ -919,6 +919,31 @@ function imamInventoryGo(typed){
       " · NOT FOR ACTUAL NAVIGATION.",true);
     return;
   }
+  // Recognize complete pilot requests even before the physical route graph
+  // is approved; distinguish unavailable topology from a syntax error.
+  const standPair=name(typed).match(/^(?:ST|STAND\s*)([0-9]{1,4}[LR]?)\s+(?:ST|STAND\s*)([0-9]{1,4}[LR]?)$/);
+  if(standPair){
+    const start=review.stands.find(v=>v.id==="ST"+standPair[1]);
+    const finish=review.stands.find(v=>v.id==="ST"+standPair[2]);
+    draw();
+    if(!start||!finish){
+      message("OIIE STAND TO STAND · One or both stands are not found in the published cycle. No artificial route drawn.",true);
+    }else{
+      message("OIIE ST"+standPair[1]+" → ST"+standPair[2]+
+        " · BOTH PUBLISHED STANDS FOUND on page "+start.page+" / "+finish.page+
+        ". The exact physical apron leads and cross-page taxi junctions remain unapproved."+
+        " ROUTING UNAVAILABLE, previous chart route preserved. NOT FOR ACTUAL NAVIGATION.",true);
+    }
+    return;
+  }
+  const runwayDestination=name(typed).match(/^(?:RWY\s*)?(11L|29R|11R|29L)$/);
+  if(runwayDestination){
+    const end=runwayDestination[1];
+    draw();message("OIIE CURRENT POSITION → RWY "+end+
+      " · published runway recognized. No verified HOLD SHORT and stand-to-runway taxi centerline graph exists yet."+
+      " No straight-line route may be drawn. Previous route retained.",true);
+    return;
+  }
   const stand=token.replace(/^STAND/,"ST").replace(/^ST/,"");
   const st=review.stands.find(v=>v.id==="ST"+stand);
   if(st){
