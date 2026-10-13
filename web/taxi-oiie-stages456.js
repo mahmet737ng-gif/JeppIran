@@ -26,7 +26,9 @@ const U=x=>String(x||"").trim().toUpperCase();
 const isPoint=p=>Array.isArray(p)&&p.length===2&&p.every(Number.isFinite);
 const inBox=(p,b,tol=0)=>p[0]>=b[0]-tol&&p[0]<=b[2]+tol&&p[1]>=b[1]-tol&&p[1]<=b[3]+tol;
 const dist=(a,b)=>Math.hypot(a[0]-b[0],a[1]-b[1]);
-const validSourceIds=a=>Array.isArray(a)&&a.length>0&&a.every(n=>Number.isInteger(n)&&n>=0);
+const DRAWINGS={380:1478,382:361,383:461};
+const validSourceIds=(a,page)=>Array.isArray(a)&&a.length>0&&
+ a.every(n=>Number.isInteger(n)&&n>=0&&(!page||n<DRAWINGS[page]));
 function fromGeo(r,lat,lon){
  if(!Number.isFinite(lat)||!Number.isFinite(lon))return null;
  const lm=(lat-35)*60,om=(lon-51)*60;
@@ -59,7 +61,7 @@ function graphQA(nodes,edges,gates){
  const refuse=(code,id)=>errors.push({code,id});
  for(const n of nodes||[]){
   if(!n?.id||okNodes.has(n.id)||n.reviewed!==true||!isPoint(n.point)||
-    !validSourceIds(n.sourceDrawingIds)){refuse("UNVERIFIED_NODE",n?.id);continue}
+    !validSourceIds(n.sourceDrawingIds,n.page)){refuse("UNVERIFIED_NODE",n?.id);continue}
   const r=regionAt(n.page,n.point);
   if(!r||r.id!==n.region){refuse("NODE_REGION",n.id);continue}
   if(!["stand","taxiway","hold-short","runway"].includes(n.kind)){refuse("NODE_KIND",n.id);continue}
@@ -71,7 +73,7 @@ function graphQA(nodes,edges,gates){
   const published=RUNWAYS.find(r=>r.physicalId===U(g.physicalRunway)&&r.ends.includes(U(g.runwayEnd)));
   if(g.reviewed!==true||!g.id||!published||!hold||hold.kind!=="hold-short"||
      !runway||runway.kind!=="runway"||U(runway.label)!==U(g.runwayEnd)||
-     !g.holdShortReviewed||!validSourceIds(g.holdShortDrawingIds)||
+     !g.holdShortReviewed||!validSourceIds(g.holdShortDrawingIds,hold.page)||
      !Array.isArray(g.connectorEdgeIds)||!g.connectorEdgeIds.length||
      !g.connectorEdgeIds.every(id=>byId.get(id)?.reviewed===true)){
     refuse("RUNWAY_GATE_NOT_APPROVED",g?.id);continue;
@@ -80,10 +82,16 @@ function graphQA(nodes,edges,gates){
  }
  for(const e of edges||[]){
   const a=okNodes.get(e.from),b=okNodes.get(e.to);
-  if(!e.id||e.reviewed!==true||!a||!b||!validSourceIds(e.sourceDrawingIds)||
+  if(!e.id||e.reviewed!==true||!a||!b||!validSourceIds(e.sourceDrawingIds,a?.page)||
     !["taxi","stand-lead","runway-axis","runway-connector","page-portal"].includes(e.kind)){
    refuse("EDGE_UNREVIEWED_OR_MISSING_SOURCE",e?.id);continue;
   }
+  if(e.kind!=="page-portal"&&
+    (!Array.isArray(e.points)||e.points.length<2||e.points.some(p=>!isPoint(p))||
+     dist(e.points[0],a.point)>.8||dist(e.points.at(-1),b.point)>.8||
+     e.points.some(p=>!inBox(p,regionAt(a.page,a.point).bounds,2)))){
+    refuse("EDGE_GEOMETRY_UNVERIFIED",e.id);continue;
+   }
   if(e.kind==="page-portal"){
    const r=register(a.page,a.point,b.page,b.region);
    if(a.page===b.page||!r.ok||dist(r.point,b.point)>5||
