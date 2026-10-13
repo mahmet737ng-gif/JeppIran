@@ -454,22 +454,23 @@ function message(s,warning=false){
 const OIAW_QA_REVISION="2621-oiaw-inset-registration-r3";
 async function fetchGraph(icao){
   taxi.graph=null;taxi.genericEngine=null;taxi.genericMonitor=null;
-  taxi.survey=null;taxi.surveyEngine=null;taxi.surveyVector=null;taxi.o3Survey=null;taxi.o3Workflow=null;taxi.o3Selected='';taxi.oiieSurvey=null;taxi.oiieStatus=null;taxi.oiieReview=null;taxi.oiieSelected='';taxi.oiieStages=null;taxi.oiieApprovedRoute=null;taxi.oiieNativeReview=null;
+  taxi.survey=null;taxi.surveyEngine=null;taxi.surveyVector=null;taxi.o3Survey=null;taxi.o3Workflow=null;taxi.o3Selected='';taxi.oiieSurvey=null;taxi.oiieStatus=null;taxi.oiieReview=null;taxi.oiieSelected='';taxi.oiieStages=null;taxi.oiieApprovedRoute=null;taxi.oiieNativeReview=null;taxi.oiieRunwayOnly=null;taxi.oiieRunwayTrace=null;
   message("Checking verified ground network for "+icao+"…");
   try{
     // The ADC inventory is the sole OIAW source until source PDF curves and
     // hold lines have been fully traced. Previous projected OIAW.json routes
     // MUST NEVER be presented as mapped taxi centreline geometry.
     if(icao==="OIIE"){
-      const [sr,qr,rr,pr,vr]=await Promise.all([
+      const [sr,qr,rr,pr,vr,ar]=await Promise.all([
         fetch("./data/taxi-surveys/OIIE.json?v=2621-oiie-v3-source-r1",{cache:"no-store"}),
         fetch("./data/taxi-surveys/OIIE-workflow-2621.json?v=2621-oiie-v3-qa-r1",{cache:"no-store"}),
         fetch("./data/taxi-surveys/OIIE-3step-source-review-2621.json?v=2621-oiie-native-3step-r1",{cache:"no-store"}),
         fetch("./data/taxi-surveys/OIIE-stages456-approved-v2621.json?v=2621-oiie-stage456-r2",{cache:"no-store"}),
-        fetch("./data/taxi-surveys/OIIE-native-vectors-v2621.json?v=2621-oiie-native-source-r1",{cache:"no-store"})
+        fetch("./data/taxi-surveys/OIIE-native-vectors-v2621.json?v=2621-oiie-native-source-r1",{cache:"no-store"}),
+        fetch("./data/taxi-surveys/OIIE-runway-axes-v2621.json?v=2621-oiie-source-runways-r1",{cache:"no-store"})
       ]);
-      if(!sr.ok||!qr.ok||!rr.ok||!pr.ok||!vr.ok)throw Error("OIIE PDF evidence or gated QA source files unavailable");
-      const [info,report,review,partialGraph,native]=await Promise.all([sr.json(),qr.json(),rr.json(),pr.json(),vr.json()]);
+      if(!sr.ok||!qr.ok||!rr.ok||!pr.ok||!vr.ok||!ar.ok)throw Error("OIIE PDF evidence or gated QA source files unavailable");
+      const [info,report,review,partialGraph,native,runwayAxes]=await Promise.all([sr.json(),qr.json(),rr.json(),pr.json(),vr.json(),ar.json()]);
       if(native.airport!==icao||String(native.cycle)!=="2621"||
         native.parentSourceSha256!==manifest?.source_sha256||
         native.verifiedTaxiEdges!==0||native.verifiedRunwayGates!==0||
@@ -499,6 +500,9 @@ async function fetchGraph(icao){
       const stageEngine=window.JEPPIRAN_OIIE_STAGES456;
       const stages=stageEngine?.evaluate({airport:icao,cycle:info.cycle,
         sourceSha256:info.source.sha256,graph:partialGraph});
+      const runwayQA=stageEngine?.reviewRunwayAxes(runwayAxes);
+      if(!runwayQA?.ok||runwayAxes.airportPdfSha256!==native.inputPdfSha256)
+        throw Error("OIIE actual runway axes PDF fingerprint or physical dimensions are unverified");
       if(!stages?.ok||partialGraph.airport!==icao||
         String(partialGraph.cycle)!==String(info.cycle)||
         partialGraph.sourceSha256!==info.source.sha256)
@@ -506,13 +510,15 @@ async function fetchGraph(icao){
       if(taxi.airport!==icao)return null;
       taxi.oiieSurvey=info;taxi.oiieStatus=report;taxi.oiieReview=review;taxi.oiieSelected='';
       taxi.oiieStages=stages;taxi.oiieApprovedRoute=null;taxi.oiieNativeReview=native;
+      taxi.oiieRunwayOnly=runwayQA;taxi.oiieRunwayTrace=null;
       $("taxiQaInput").placeholder="ST100 / ST301 / ST201 / A / R1 (source lookup only)";
       $("taxiQaStands").textContent="STANDS ("+info.stands.length+")";
       message("OIIE Stage 4 · "+stages.phase4.regions.length+
         " registered chart regions, "+
         [380,382,383].reduce((n,p)=>n+native.pages[p].candidateVectorStrokes,0)+
         " native long-stroke candidates extracted and available for source QA. "+
-        "Stage 5 · "+stages.phase5.approvedGates+" reviewed runway/hold-short gates. "+
+        "Stage 5 · "+runwayQA.axes.length+" original-PDF runway axes verified, "+
+        stages.phase5.approvedGates+" runway-entry/hold-short gates reviewed. "+
         "Stage 6 · "+stages.phase6.bidirectionalPairs+
         " two-way source-backed stand-to-runway pairs. "+
         (stages.routeable?"Only certified pairs can display a route.":
@@ -762,7 +768,28 @@ function imamInventoryGo(typed){
   const token=name(typed).replace(/\s+/g,"");
   const data=taxi.oiieSurvey,review=taxi.oiieReview;
   if(!data||!review)return;
-  taxi.route=null;taxi.auto=null;taxi.oiieSelected='';taxi.oiieApprovedRoute=null;
+  taxi.route=null;taxi.auto=null;taxi.oiieSelected='';taxi.oiieApprovedRoute=null;taxi.oiieRunwayTrace=null;
+  // Runway-only geometry is sourced from the two original full-length
+  // Jeppesen filled polygons and individually dimensional-checked against
+  // published lengths. Never interpret this as permission to enter a runway.
+  const runwayOnly=name(typed).match(/^(?:RWY\s*)?(11L|29R|11R|29L)\s+(?:RWY\s*)?(11L|29R|11R|29L)$/);
+  if(runwayOnly){
+    const a=runwayOnly[1],b=runwayOnly[2];
+    const axis=taxi.oiieRunwayOnly?.axes?.find(x=>
+      x.ends.includes(a)&&x.ends.includes(b)&&a!==b);
+    if(!axis){
+      draw();message("OIIE · runway pair "+a+" → "+b+
+        " is not one verified physical runway. No runway crossing or link can be inferred.",true);
+      return;
+    }
+    taxi.oiieRunwayTrace={...axis,points:axis.ends[0]===a?axis.points:[...axis.points].reverse(),
+      from:a,to:b};
+    draw();message("OIIE RWY "+a+" → "+b+
+      " · original 20-9 runway polygon axis · "+
+      Math.round(axis.lengthM)+" m. SIMULATOR QA ONLY · REQUIRES EXPLICIT ATC RUNWAY CLEARANCE."+
+      " No runway hold-short point or apron entry is approved.",true);
+    return;
+  }
   // No guessed OIIE graph: permit ONLY pairs pre-certified in both directions
   // by the exact V2621 Stage 4-6 source-reviewed route ledger.
   const routePattern=name(typed).match(/^(ST\d{1,4})\s+(?:RWY\s*)?(11L|29R|11R|29L)$/);
@@ -1099,7 +1126,7 @@ function updateAirportControls(){
     "Mashhad: ST109 Q BT31L D · ST109 B BT31L D · ST113 RAMP · ST109":
     selectedAirport==="OIAW"?"OIAW ADC: ST2 A B · ST4 A B · source PDF vectors":
     selectedAirport==="OIII"?"Mehrabad ADC: ST100 / ST507 / A4 / B6 · labels only":
-    selectedAirport==="OIIE"?"Imam ADC QA: ST100 / ST301 / ST201 / A / R1 · source labels only":
+    selectedAirport==="OIIE"?"Imam ADC QA: 11L 29R · 11R 29L (runway-only) · ST100 · A · R1":
     "LTFM example: A4 A A7 B B8A · Hold: /B8A · 34L2A format";
 }
 // AUTO requires an actual start (simulator/device/SET START) or an explicit
@@ -1826,6 +1853,14 @@ function draw(){
       }));
   }
   if(oiieLayer){
+    if(taxi.oiieRunwayTrace?.runwayOnly&&Number(selectedChart?.page)===380){
+      svg.appendChild(s("polyline",{
+        points:taxi.oiieRunwayTrace.points.map(p=>p.join(",")).join(" "),
+        fill:"none",stroke:"rgba(222,0,158,.88)",
+        "stroke-width":2.25,"stroke-linecap":"round",
+        "class":"taxi-oiie-physical-runway-axis-simulator-qa"
+      }));
+    }
     // Source-reviewed centerline polyline ONLY; never draw a direct
     // line from a stand label to a guessed runway/another PDF page.
     if(taxi.oiieApprovedRoute&&taxi.oiieStages?.routeable){
