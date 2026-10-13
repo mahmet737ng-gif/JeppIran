@@ -62,7 +62,7 @@ async function waitServer(){
   await page.locator("#taxiQaInput").fill("ST400");
   await page.locator("#taxiQaGo").click();
   assert.match((await page.locator("#taxiQaStatus").innerText())+" "+(await page.locator("#taxiQaFullMessage").innerText()),/label-grid position/);
-  assert.match((await page.locator("#taxiQaStatus").innerText())+" "+(await page.locator("#taxiQaFullMessage").innerText()),/NOT a stand nose/);
+  assert.match(await page.locator("#taxiQaStatus").innerText(),/printed stand LABEL/);
   await page.locator("#taxiQaInput").fill("R1");
   await page.locator("#taxiQaGo").click();
   assert.equal(await page.locator("polyline.taxi-oiie-physical-runway-axis-simulator-qa").count(),0);
