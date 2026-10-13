@@ -454,14 +454,14 @@ function message(s,warning=false){
 const OIAW_QA_REVISION="2621-oiaw-inset-registration-r3";
 async function fetchGraph(icao){
   taxi.graph=null;taxi.genericEngine=null;taxi.genericMonitor=null;
-  taxi.survey=null;taxi.surveyEngine=null;taxi.surveyVector=null;taxi.o3Survey=null;taxi.o3Workflow=null;taxi.o3Selected='';taxi.oiieSurvey=null;taxi.oiieStatus=null;taxi.oiieReview=null;taxi.oiieSelected='';taxi.oiieStages=null;taxi.oiieApprovedRoute=null;taxi.oiieNativeReview=null;taxi.oiieRunwayOnly=null;taxi.oiieRunwayTrace=null;taxi.oiieStandGeo=null;taxi.oiieInsAudit=null;
+  taxi.survey=null;taxi.surveyEngine=null;taxi.surveyVector=null;taxi.o3Survey=null;taxi.o3Workflow=null;taxi.o3Selected='';taxi.oiieSurvey=null;taxi.oiieStatus=null;taxi.oiieReview=null;taxi.oiieSelected='';taxi.oiieStages=null;taxi.oiieApprovedRoute=null;taxi.oiieNativeReview=null;taxi.oiieRunwayOnly=null;taxi.oiieRunwayTrace=null;taxi.oiieStandGeo=null;taxi.oiieInsAudit=null;taxi.oiiePortalReview=null;
   message("Checking verified ground network for "+icao+"…");
   try{
     // The ADC inventory is the sole OIAW source until source PDF curves and
     // hold lines have been fully traced. Previous projected OIAW.json routes
     // MUST NEVER be presented as mapped taxi centreline geometry.
     if(icao==="OIIE"){
-      const [sr,qr,rr,pr,vr,ar,ir,lr]=await Promise.all([
+      const [sr,qr,rr,pr,vr,ar,ir,lr,cr]=await Promise.all([
         fetch("./data/taxi-surveys/OIIE.json?v=2621-oiie-v3-source-r1",{cache:"no-store"}),
         fetch("./data/taxi-surveys/OIIE-workflow-2621.json?v=2621-oiie-v3-qa-r1",{cache:"no-store"}),
         fetch("./data/taxi-surveys/OIIE-3step-source-review-2621.json?v=2621-oiie-native-3step-r1",{cache:"no-store"}),
@@ -469,10 +469,11 @@ async function fetchGraph(icao){
         fetch("./data/taxi-surveys/OIIE-native-vectors-v2621.json?v=2621-oiie-native-source-r1",{cache:"no-store"}),
         fetch("./data/taxi-surveys/OIIE-runway-axes-v2621.json?v=2621-oiie-source-runways-r1",{cache:"no-store"}),
         fetch("./data/taxi-surveys/OIIE-stand-coordinate-audit-v2621.json?v=2621-oiie-ins-source-r1",{cache:"no-store"}),
-        fetch("./data/taxi-surveys/OIIE-stand-label-registration-v2621.json?v=2621-oiie-stand-labels-r1",{cache:"no-store"})
+        fetch("./data/taxi-surveys/OIIE-stand-label-registration-v2621.json?v=2621-oiie-stand-labels-r1",{cache:"no-store"}),
+        fetch("./data/taxi-surveys/OIIE-page-portal-candidates-v2621.json?v=2621-oiie-page-seams-r1",{cache:"no-store"})
       ]);
-      if(!sr.ok||!qr.ok||!rr.ok||!pr.ok||!vr.ok||!ar.ok||!ir.ok||!lr.ok)throw Error("OIIE PDF evidence or gated QA source files unavailable");
-      const [info,report,review,partialGraph,native,runwayAxes,insAudit,standGeo]=await Promise.all([sr.json(),qr.json(),rr.json(),pr.json(),vr.json(),ar.json(),ir.json(),lr.json()]);
+      if(!sr.ok||!qr.ok||!rr.ok||!pr.ok||!vr.ok||!ar.ok||!ir.ok||!lr.ok||!cr.ok)throw Error("OIIE PDF evidence or gated QA source files unavailable");
+      const [info,report,review,partialGraph,native,runwayAxes,insAudit,standGeo,portalReview]=await Promise.all([sr.json(),qr.json(),rr.json(),pr.json(),vr.json(),ar.json(),ir.json(),lr.json(),cr.json()]);
       if(native.airport!==icao||String(native.cycle)!=="2621"||
         native.parentSourceSha256!==manifest?.source_sha256||
         native.verifiedTaxiEdges!==0||native.verifiedRunwayGates!==0||
@@ -505,6 +506,11 @@ async function fetchGraph(icao){
       const runwayQA=stageEngine?.reviewRunwayAxes(runwayAxes);
       if(!runwayQA?.ok||runwayAxes.airportPdfSha256!==native.inputPdfSha256)
         throw Error("OIIE actual runway axes PDF fingerprint or physical dimensions are unverified");
+      if(portalReview.airport!=="OIIE"||portalReview.cycle!=="2621"||
+        portalReview.sourcePdfSha256!==native.inputPdfSha256||
+        portalReview.candidateCount<=0||portalReview.approvedPhysicalPortals!==0||
+        portalReview.allowAutomaticTaxiRouting!==false)
+        throw Error("OIIE cross-page portal source QA failed");
       if(insAudit.airport!=="OIIE"||insAudit.entryCount!==49||
         insAudit.sourcePdfSha256!==native.inputPdfSha256||
         insAudit.suitableForStandNoseRouting!==false||
@@ -521,11 +527,12 @@ async function fetchGraph(icao){
       if(taxi.airport!==icao)return null;
       taxi.oiieSurvey=info;taxi.oiieStatus=report;taxi.oiieReview=review;taxi.oiieSelected='';
       taxi.oiieStages=stages;taxi.oiieApprovedRoute=null;taxi.oiieNativeReview=native;
-      taxi.oiieRunwayOnly=runwayQA;taxi.oiieRunwayTrace=null;taxi.oiieStandGeo=standGeo;taxi.oiieInsAudit=insAudit;
+      taxi.oiieRunwayOnly=runwayQA;taxi.oiieRunwayTrace=null;taxi.oiieStandGeo=standGeo;taxi.oiieInsAudit=insAudit;taxi.oiiePortalReview=portalReview;
       $("taxiQaInput").placeholder="ST100 / ST301 / ST201 / A / R1 (source lookup only)";
       $("taxiQaStands").textContent="STANDS ("+info.stands.length+")";
       message("OIIE Stage 4 · "+stages.phase4.regions.length+
-        " registered chart regions, "+
+        " registered chart regions and "+portalReview.candidateCount+
+        " unreviewed cross-page endpoint contacts, "+
         [380,382,383].reduce((n,p)=>n+native.pages[p].candidateVectorStrokes,0)+
         " native long-stroke candidates extracted and available for source QA, "+
         standGeo.count+" grid-registered stand labels and "+
