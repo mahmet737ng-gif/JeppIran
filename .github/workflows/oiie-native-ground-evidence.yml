@@ -6,6 +6,7 @@ on:
       - "scripts/build_oiie_pdf_ground_evidence.py"
       - "scripts/build_oiie_runway_axes.py"
       - "scripts/build_oiie_stand_coordinates_qa.py"
+      - "scripts/build_oiie_stand_label_georeg.py"
       - "web/taxi-oiie-stages456.js"
       - "web/tests/taxi-oiie-runway-axes.test.cjs"
       - ".github/workflows/oiie-native-ground-evidence.yml"
@@ -56,6 +57,22 @@ jobs:
           PY
       - name: Parse published OIIE stand coordinate groups and flag Cargo conflicts
         run: python scripts/build_oiie_stand_coordinates_qa.py --pdf /tmp/OIIE.pdf --output /tmp/oiie-v2621-stand-coordinate-audit.json
+      - name: Cross-reference all 103 original chart stand labels to regional grids
+        run: |
+          python scripts/build_oiie_stand_label_georeg.py \
+            --table /tmp/oiie-v2621-stand-coordinate-audit.json \
+            --output /tmp/oiie-v2621-stand-label-registration.json
+      - name: Check chart label georeg does not imply actual stand nose position
+        run: |
+          python - <<'PY'
+          import json
+          d=json.load(open('/tmp/oiie-v2621-stand-label-registration.json'))
+          assert d['count']==103 and len(d['positions'])==103
+          assert d['reviewedStandLeadCount']==d['approvedStandRoutes']==0
+          assert set(['ST301','ST302','ST303','ST321']).issubset(d['suspectPublishedINSStandIds'])
+          assert all(not x['sourcePointIsParkingNose'] and not x['routeable'] for x in d['positions'])
+          print("PASS: original 103 stand labels georeferenced without inferred stand leads")
+          PY
       - name: Verify printed table remains separate from individual stand nose routing
         run: |
           python - <<'PY'
@@ -86,4 +103,5 @@ jobs:
             /tmp/oiie-v2621-native-evidence.json
             /tmp/oiie-v2621-runway-axes.json
             /tmp/oiie-v2621-stand-coordinate-audit.json
+            /tmp/oiie-v2621-stand-label-registration.json
           retention-days: 14
