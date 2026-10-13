@@ -872,7 +872,8 @@ function imamInventoryGo(typed){
   const token=name(typed).replace(/\s+/g,"");
   const data=taxi.oiieSurvey,review=taxi.oiieReview;
   if(!data||!review)return;
-  taxi.route=null;taxi.auto=null;taxi.oiieSelected='';taxi.oiieApprovedRoute=null;taxi.oiieRunwayTrace=null;
+  // Invalid requests and single-source label lookups must not erase a
+  // previously plotted route. Only a newly accepted route replaces it.
   // Runway-only geometry is sourced from the two original full-length
   // Jeppesen filled polygons and individually dimensional-checked against
   // published lengths. Never interpret this as permission to enter a runway.
@@ -886,6 +887,7 @@ function imamInventoryGo(typed){
         " is not one verified physical runway. No runway crossing or link can be inferred.",true);
       return;
     }
+    taxi.route=null;taxi.auto=null;taxi.oiieApprovedRoute=null;
     taxi.oiieRunwayTrace={...axis,points:axis.ends[0]===a?axis.points:[...axis.points].reverse(),
       from:a,to:b};
     draw();message("OIIE RWY "+a+" → "+b+
@@ -909,6 +911,7 @@ function imamInventoryGo(typed){
         " is NOT a source-reviewed two-way taxi route. No line will be invented.",true);
       return;
     }
+    taxi.route=null;taxi.auto=null;taxi.oiieRunwayTrace=null;
     taxi.oiieSelected=st;taxi.oiieApprovedRoute={...pair,
       outbound:routePattern?pair.outbound:pair.return,runwayEnd:end};
     draw();message("OIIE · validated simulator-QA route "+st+" ↔ "+end+
@@ -1015,11 +1018,12 @@ function genericGo(typed){
     position:taxi.testStart||lastPosition,
     allowProjectedQA,maxSnapMeters:65
   });
-  taxi.route=null;taxi.auto=null;taxi.genericMonitor=null;
   if(!result.route){
-    draw();message("TAXI ENGINE · "+result.error+" · NO ROUTE FABRICATED.",true);
+    draw();message("TAXI ENGINE · "+result.error+
+      " · PREVIOUS VERIFIED ROUTE RETAINED. NO ROUTE FABRICATED.",true);
     return;
   }
+  taxi.route=null;taxi.auto=null;taxi.genericMonitor=null;
   const route=result.route;
   taxi.route={...route,airport:taxi.airport,graph:taxi.graph,
     genericRoute:true,genericLinework:engine.linework(route),
@@ -1171,6 +1175,7 @@ function view(){
     const p=currentManual();p.points.pop();p.holds=p.holds.filter(i=>i<p.points.length);draw();
   };
   $("taxiQaClear").onclick=()=>{
+    window.JEPPIRAN_PUBLISHED_TAXI?.clear?.();
     taxi.auto=null;taxi.route=null;taxi.genericMonitor=null;
     taxi.oiieApprovedRoute=null;taxi.oiieRunwayTrace=null;taxi.oiieSelected='';
     taxi.manual.clear();taxi.trace=false;taxi.testStart=null;taxi.startSelect=false;
@@ -1428,7 +1433,8 @@ function go(options={}){
     publisher.go(typed,taxi.airport);
     return;
   }
-  publisher?.clear();
+  // Do not clear the previously accepted route on every new GO attempt.
+  // A rejected clearance must leave the plotted line until CLEAR or END TAXI.
   if(taxi.oiieSurvey){imamInventoryGo(typed);return}
   if(taxi.o3Survey){mehrabadInventoryGo(typed);return}
   if(taxi.surveyEngine){surveyGo(typed);return}
