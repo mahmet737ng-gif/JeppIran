@@ -1677,3 +1677,41 @@ body.viewer-fullscreen .fullscreen-cdfa:not([hidden]){display:flex}
     text-align:left;
   }
 }
+
+/* V2621 profile UTC date-range hotfix: clearly visible FROM/TO immediately below clock. */
+#chartsView .profile-terminal-validity .terminal-validity-dates{
+  display:grid;
+  grid-template-columns:1fr;
+  flex-basis:100%;
+  width:100%;
+  gap:3px;
+  padding:5px 0 3px;
+  text-align:inherit;
+  font-size:12px;
+  line-height:1.6;
+  letter-spacing:.02em;
+}
+#chartsView .profile-terminal-validity .terminal-validity-dates span{
+  display:flex;
+  align-items:baseline;
+  justify-content:flex-end;
+  gap:9px;
+  color:#b7d7ec;
+  white-space:normal;
+  font-variant-numeric:tabular-nums;
+}
+#chartsView .profile-terminal-validity .terminal-validity-dates b{
+  font-weight:900;
+  font-size:14px;
+  color:#f4fbff;
+  white-space:nowrap;
+}
+:root.light #chartsView .profile-terminal-validity .terminal-validity-dates span{color:#426981}
+:root.light #chartsView .profile-terminal-validity .terminal-validity-dates b{color:#0c466a}
+#chartsView .profile-terminal-validity[data-state="expired"] .terminal-validity-dates span,
+#chartsView .profile-terminal-validity[data-state="expired"] .terminal-validity-dates b{color:#ffe1e7}
+:root.light #chartsView .profile-terminal-validity[data-state="expired"] .terminal-validity-dates span,
+:root.light #chartsView .profile-terminal-validity[data-state="expired"] .terminal-validity-dates b{color:#a91d38}
+@media(max-width:690px){
+ #chartsView .profile-terminal-validity .terminal-validity-dates span{justify-content:flex-start;flex-wrap:wrap}
+}
