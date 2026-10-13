@@ -12,6 +12,26 @@ assert.equal(empty.phase4.regions.length,4);
 assert.equal(empty.phase5.approvedGates,0);
 assert.equal(empty.phase6.bidirectionalPairs,0);
 assert.equal(api.evaluate({...base,cycle:"2622"}).routeable,false);
+/* Independent measurements of real native PDF printed-graticule labels.
+ * Source: SHA256 of V2621, pages 380/382/383 (not round-trip self-checks).
+ * Values refer to label box centers in top-left PDF points.
+ */
+for(const [id,axis,minute,measured,tolerance] of [
+ ["ADC","x",25,305.94,1],
+ ["ADC","y",9,438.66,1],
+ ["PASSENGER","x",24.7,300.90,2],
+ ["PASSENGER","y",9.2,326.16,1],
+ ["CARGO","x",24.3,301.98,3.2],
+ ["CARGO","y",10.5,469.69,2],
+ ["SALAM","x",25.9,429.18,3.2],
+ ["SALAM","y",7.5,602.65,2]
+]){
+ const r=api.regions.find(x=>x.id===id);
+ const fit=r[axis];
+ assert.ok(Math.abs(fit[0]*minute+fit[1]-measured)<=tolerance,
+  id+" "+axis+" published graticule calibration drift");
+}
+
 for(const r of api.regions){
  const lat=35+(r.lat[0]+r.lat[1])/120;
  const lon=51+(r.lon[0]+r.lon[1])/120;
