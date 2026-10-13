@@ -76,6 +76,14 @@ async function waitServer(){
     "CLEAR removes the previously plotted path without hiding the sub-toolbar");
   assert.equal(await page.locator("#taxiQaPanel").isVisible(),true);
   assert.match(await page.locator("#taxiQaStatus").innerText(),/Cleared/);
+  await page.locator("#taxiQaInput").fill("ST204 ST314");
+  await page.locator("#taxiQaGo").click();
+  assert.match((await page.locator("#taxiQaStatus").innerText())+" "+(await page.locator("#taxiQaFullMessage").innerText()),/BOTH PUBLISHED STANDS FOUND/);
+  assert.equal(await page.locator("polyline.taxi-oiie-physical-runway-axis-simulator-qa").count(),0);
+  await page.locator("#taxiQaInput").fill("11L");
+  await page.locator("#taxiQaGo").click();
+  assert.match((await page.locator("#taxiQaStatus").innerText())+" "+(await page.locator("#taxiQaFullMessage").innerText()),/CURRENT POSITION/);
+  assert.equal(await page.locator("polyline.taxi-oiie-physical-runway-axis-simulator-qa").count(),0);
   await page.locator("#taxiQaInput").fill("ST301");
   await page.locator("#taxiQaGo").click();
   assert.match((await page.locator("#taxiQaStatus").innerText())+" "+(await page.locator("#taxiQaFullMessage").innerText()),/INS coordinates in 20-9D conflict/);
