@@ -13,6 +13,7 @@ on:
       - 'scripts/admin-test-controls.js'
       - 'scripts/admin-qa-home.js'
       - 'scripts/admin-qa-home.css'
+      - 'scripts/verify_admin_home_browser.cjs'
       - 'tests/admin-qa-preview.test.cjs'
       - 'scripts/build_airport_profiles.py'
       - 'scripts/build_airport_runways.py'
@@ -180,6 +181,12 @@ jobs:
           assert 'jeppiran-test-offline-meta-v2' in (d/"offline-manager.js").read_text()
           print("Admin QA preview is isolated, includes all charts, and passes smoke checks.")
           PY
+
+      - name: Verify Admin dashboard with real Chrome
+        run: |
+          export NODE_PATH="$RUNNER_TEMP/jeppiran-browser-qa/node_modules"
+          export JEPPIRAN_CHROME_BIN="$(command -v google-chrome)"
+          node scripts/verify_admin_home_browser.cjs
 
       - name: Upload site
         uses: actions/upload-pages-artifact@v3
