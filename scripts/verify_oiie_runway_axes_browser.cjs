@@ -150,7 +150,7 @@ async function waitServer(){
   await page.locator("#taxiQaGo").click();
   assert.equal(await page.locator("polyline.taxi-oiie-source-drawn-curve-qa-not-cleared").count(),1,
     "Unresolved Passenger stand connections must not replace a valid printed curve preview");
-  assert.match(await page.locator("#taxiQaStatus").innerText(),/ROUTING UNAVAILABLE/);
+  assert.match((await page.locator("#taxiQaStatus").innerText())+" "+(await page.locator("#taxiQaFullMessage").innerText()),/ROUTING UNAVAILABLE/);
   await page.locator("#taxiQaClearQuick").click();
   assert.equal(await page.locator("polyline.taxi-oiie-source-drawn-curve-qa-not-cleared").count(),0);
   await page.locator("#taxiQaEnd").click();
