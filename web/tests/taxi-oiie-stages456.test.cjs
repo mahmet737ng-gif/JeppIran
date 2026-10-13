@@ -50,7 +50,7 @@ const shortcut=api.evaluate({...base,graph:{nodes,edges:[{...edges[0],to:"R11L"}
 assert.equal(shortcut.routeable,false);
 assert.ok(shortcut.phase6.issues.some(e=>["RUNWAY_SHORTCUT_BLOCKED","EDGE_GEOMETRY_UNVERIFIED"].includes(e.code)));
 const fakeCross=api.evaluate({...base,graph:{nodes:[...nodes.slice(0,1),{...nodes[1],page:382,region:"PASSENGER",point:[300,310]}],
- edges:[{...edges[0]}],gates:[]}});
+ edges:[{...edges[0],points:[[292,530],[300,310]]}],gates:[]}});
 assert.equal(fakeCross.routeable,false);
 assert.ok(fakeCross.phase6.issues.some(e=>e.code==="ILLEGAL_CROSS_PAGE_EDGE"));
 console.log("PASS OIIE stages 4-6: 4 source-grid regions, inverse mapping, Cargo/Salam isolation, gated two-way positive/negative tests, no live OIIE routes");
