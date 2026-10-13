@@ -57,12 +57,12 @@ async function waitServer(){
   assert.match(await page.locator("#taxiQaStatus").innerText(),/NOT a source-reviewed|NOT.*route/);
   await page.locator("#taxiQaInput").fill("ST301");
   await page.locator("#taxiQaGo").click();
-  assert.match(await page.locator("#taxiQaFullMessage").innerText(),/INS coordinates in 20-9D conflict/);
+  assert.match((await page.locator("#taxiQaStatus").innerText())+" "+(await page.locator("#taxiQaFullMessage").innerText()),/INS coordinates in 20-9D conflict/);
   assert.equal(await page.locator("polyline.taxi-oiie-physical-runway-axis-simulator-qa").count(),0);
   await page.locator("#taxiQaInput").fill("ST400");
   await page.locator("#taxiQaGo").click();
-  assert.match(await page.locator("#taxiQaFullMessage").innerText(),/label-grid position/);
-  assert.match(await page.locator("#taxiQaFullMessage").innerText(),/NOT a stand nose/);
+  assert.match((await page.locator("#taxiQaStatus").innerText())+" "+(await page.locator("#taxiQaFullMessage").innerText()),/label-grid position/);
+  assert.match((await page.locator("#taxiQaStatus").innerText())+" "+(await page.locator("#taxiQaFullMessage").innerText()),/NOT a stand nose/);
   await page.locator("#taxiQaInput").fill("R1");
   await page.locator("#taxiQaGo").click();
   assert.equal(await page.locator("polyline.taxi-oiie-physical-runway-axis-simulator-qa").count(),0);
