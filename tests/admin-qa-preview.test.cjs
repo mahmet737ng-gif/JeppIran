@@ -54,3 +54,10 @@ test('only test preview gains the new Admin JS/CSS and previous service worker r
   assert.match(builder,/shutil\.copy2\(pathlib\.Path\("scripts"\) \/ asset, draft \/ asset\)/);
   assert.match(builder,/if\(false&&"serviceWorker" in navigator\)/);
 });
+
+test('clean Admin Console builder retains the actual local controls filename',()=>{
+  assert.match(builder,/pathlib\.Path\("scripts\/admin-test-controls\.js"\)/);
+  assert.doesNotMatch(builder,/admin-console-controls\.js/);
+  assert.ok(fs.existsSync('scripts/admin-test-controls.js'));
+  assert.match(builder,/draft \/ "admin-test-controls\.js"/);
+});
