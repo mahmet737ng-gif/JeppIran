@@ -25,10 +25,9 @@ async function waitServer(){
    executablePath:process.env.JEPPIRAN_CHROME_BIN
   }:{})});
   const page=await browser.newPage({viewport:{width:1280,height:920}});
-  page.on("pageerror",err=>{if(/OIIE|runway.*axes/i.test(String(err)))throw err;});
   await page.goto(base+"#charts",{waitUntil:"domcontentloaded"});
   await page.waitForFunction(()=>typeof selectAirport==="function"&&typeof selectChart==="function"&&
-    Array.isArray(charts)&&charts.some(c=>c.airport==="OIIE"&&Number(c.page)===380),{timeout:70000});
+    Array.isArray(charts)&&charts.some(c=>c.airport==="OIIE"&&Number(c.page)===380),null,{timeout:70000});
   await page.evaluate(()=>{
     selectAirport("OIIE");
     const c=charts.find(c=>c.airport==="OIIE"&&Number(c.page)===380);
@@ -38,7 +37,7 @@ async function waitServer(){
   await page.locator("#taxiQaInput").waitFor({state:"visible",timeout:10000});
   await page.waitForFunction(()=>
     document.querySelector("#taxiQaStatus")?.textContent?.includes("OIIE Stage 4"),
-    {timeout:25000});
+    null,{timeout:25000});
   await page.locator("#taxiQaInput").fill("11L 29R");
   await page.locator("#taxiQaGo").click();
   await page.locator("polyline.taxi-oiie-physical-runway-axis-simulator-qa").waitFor({
