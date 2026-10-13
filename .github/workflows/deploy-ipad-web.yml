@@ -167,11 +167,12 @@ jobs:
           import json
           from pathlib import Path
           from urllib.parse import unquote
-          d=Path("web/admin-test")
+          d=Path("web/admin-console")
           m=json.loads((d/"offline-assets.json").read_text())
           assert m["pdfs"] and len(m["pdfs"]) >= 70
           assert all((d/unquote(x["url"][2:])).exists() for x in m["assets"]+m["pdfs"] if x["url"] != "./")
           assert 'JEPPIRAN_TEST_ADMIN = true' in (d/"index.html").read_text()
+          assert d.name=="admin-console"
           assert 'admin-test-controls.js' in (d/"index.html").read_text()
           assert 'admin-qa-home.js?v=2' in (d/"index.html").read_text()
           assert 'admin-qa-home.css?v=2' in (d/"index.html").read_text()
