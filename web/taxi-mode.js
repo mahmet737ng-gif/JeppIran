@@ -492,6 +492,16 @@ async function fetchGraph(icao){
               e.kind==="runway"&&e.physicalRunway===r.physicalId&&
               ["mapped","qa"].includes(e.quality)&&e.source);
           });
+          const taxiCount=survey.taxiways?.length||0,standCount=names.length,runwayCount=ends.length;
+          const completeExpected=standCount*runwayCount*2+
+            standCount*(standCount-1)+taxiCount*standCount*2+
+            taxiCount*runwayCount*2+taxiCount*(taxiCount-1);
+          const matrix=network.qa?.fullMatrix;
+          const matrixEvidence=matrix?.verified===true&&
+            matrix.expected===completeExpected&&matrix.passed===completeExpected&&
+            matrix.failed===0&&
+            matrix.sourceSha256===survey.source?.sha256&&
+            matrix.graphSha256===network.graphSha256;
           const factory=window.JEPPIRAN_TAXI_ENGINE;
           if(network.enabled===true&&
              network.source?.reviewStatus==="SIM_QA_REVIEWED"&&
@@ -500,7 +510,7 @@ async function fetchGraph(icao){
              network.airport==="OIIE"&&survey.airport==="OIIE"&&
              names.length===new Set(names).size&&
              ends.length===new Set(ends).size&&
-             gateEvidence&&factory?.create){
+             gateEvidence&&matrixEvidence&&factory?.create){
             const engine=factory.create(network);
             let passed=0,failed=false;
             for(const stand of names){
@@ -533,7 +543,8 @@ async function fetchGraph(icao){
               $("taxiQaInput").placeholder="ST100 RWY 11L · ST301 RWY 29R · ST400 A J 11R";
               message("OIIE V4 READY FOR SIMULATOR TAXI CHECK · "+
                 names.length+" stands × "+ends.length+" runway ends × 2 directions = "+
-                passed+" source-connected routes passed. Send a clearance to GO. "+
+                passed+" stand/runway routes + "+completeExpected+
+                " total point-to-point directions QA PASSED. Send a clearance to GO. "+
                 "NOT FOR ACTUAL NAVIGATION.");
               draw();return network;
             }
