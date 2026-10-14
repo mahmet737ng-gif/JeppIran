@@ -87,7 +87,7 @@ jobs:
         assert len(current)==len(base['charts'])+len(new), 'Nonadditive mutation'
         if new:
           base['charts']=[current[p] for p in sorted(current)]
-          merged=json.dumps(base,indent=2,ensure_ascii=False)+'\\n'
+          merged=json.dumps(base,indent=2,ensure_ascii=False)+'\n'
           web.write_text(merged)
           android.write_text(merged)
         assert {int(c['page']):c for c in json.loads(android.read_text())['charts'] if c['airport']=='OIII'}==before_o_android
@@ -103,7 +103,7 @@ jobs:
             'new':0,'removed':0,'modified':0},
           'approvedFor':'JEPPIRAN simulator moving-map flight test only, not actual navigation',
           'note':'Existing OIII models and all region files retained byte-for-byte; no page or chart outside selected 31 was modified.'}
-        Path('docs/georeferencing/V2621_OTHER_AIRPORTS_EXCLUDING_OIII_RELEASE.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\\n')
+        Path('docs/georeferencing/V2621_OTHER_AIRPORTS_EXCLUDING_OIII_RELEASE.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\n')
         print('SIMULATOR GEOREF RELEASE READY:',new,'OIII PRESERVED:',len(before_o),'UNRESOLVED:',audit['notYetRecoverablePages'])
         PY
           git add web/data/chart-georef.json app/src/main/assets/chart-georef.json docs/georeferencing/V2621_OTHER_AIRPORTS_EXCLUDING_OIII_RELEASE.json
