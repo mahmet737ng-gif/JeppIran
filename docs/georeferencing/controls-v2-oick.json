@@ -1,8 +1,250 @@
 {
-  "schema": 1,
+  "schema": 2,
   "airport": "OICK",
   "cycle": "V2621",
   "sourceSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
-  "note": "No unverified point pairs inserted. Supply original PDF measured symbol positions and independently sourced WGS84 fixes before proposing regional landmarks.",
-  "charts": []
+  "provenance": "PDF vector tick positions measured from original Iran2621.pdf; independent KRD DVOR/DME WGS84 coordinate from Iran AIP ENR 4.1. QA only.",
+  "charts": [
+    {
+      "page": 218,
+      "regions": [
+        {
+          "mode": "source_grid",
+          "id": "main_rotated",
+          "bounds": {
+            "left": 90.6,
+            "top": 146,
+            "right": 531.96,
+            "bottom": 780
+          },
+          "latitudeTicks": [
+            {
+              "label": "33-30",
+              "pageAxis": "x",
+              "pixel": 253.2
+            }
+          ],
+          "longitudeTicks": [
+            {
+              "label": "48-00",
+              "pageAxis": "y",
+              "pixel": 763.8
+            },
+            {
+              "label": "48-30",
+              "pageAxis": "y",
+              "pixel": 530.76
+            },
+            {
+              "label": "49-00",
+              "pageAxis": "y",
+              "pixel": 297.84
+            }
+          ],
+          "derivedLatitudeStep": -0.1,
+          "independent": [
+            {
+              "id": "KRD_DVOR_DME",
+              "lat": 33.434194444444444,
+              "lon": 48.29186111111111,
+              "coordinateSource": "Iran AIP ENR 4.1, KRD DVOR/DME 113.750 MHz, 332603.1N 0481730.7E",
+              "sourceSymbolRect": {
+                "left": 275.16,
+                "top": 613.44,
+                "right": 303.84,
+                "bottom": 642.12
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "page": 219,
+      "regions": [
+        {
+          "mode": "source_grid",
+          "id": "main_rotated",
+          "bounds": {
+            "left": 90.6,
+            "top": 157,
+            "right": 531.96,
+            "bottom": 780
+          },
+          "latitudeTicks": [
+            {
+              "label": "33-30",
+              "pageAxis": "x",
+              "pixel": 294.36
+            }
+          ],
+          "longitudeTicks": [
+            {
+              "label": "48-00",
+              "pageAxis": "y",
+              "pixel": 660.84
+            },
+            {
+              "label": "48-30",
+              "pageAxis": "y",
+              "pixel": 427.8
+            },
+            {
+              "label": "49-00",
+              "pageAxis": "y",
+              "pixel": 194.76
+            }
+          ],
+          "derivedLatitudeStep": -0.1,
+          "independent": [
+            {
+              "id": "KRD_DVOR_DME",
+              "lat": 33.434194444444444,
+              "lon": 48.29186111111111,
+              "coordinateSource": "Iran AIP ENR 4.1, KRD DVOR/DME 113.750 MHz, 332603.1N 0481730.7E",
+              "sourceSymbolRect": {
+                "left": 316.32,
+                "top": 510.6,
+                "right": 345,
+                "bottom": 539.28
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "page": 221,
+      "regions": [
+        {
+          "mode": "source_grid",
+          "id": "main_adc",
+          "bounds": {
+            "left": 85.32,
+            "top": 87.48,
+            "right": 531.96,
+            "bottom": 471.12
+          },
+          "excludedBounds": [
+            {
+              "left": 85.32,
+              "top": 315.12,
+              "right": 304.8,
+              "bottom": 471.12
+            }
+          ],
+          "latitudeTicks": [
+            {
+              "label": "33-27",
+              "pageAxis": "y",
+              "pixel": 106.32
+            },
+            {
+              "label": "33-26",
+              "pageAxis": "y",
+              "pixel": 293.88
+            }
+          ],
+          "longitudeTicks": [
+            {
+              "label": "48-16",
+              "pageAxis": "x",
+              "pixel": 159.24
+            },
+            {
+              "label": "48-17",
+              "pageAxis": "x",
+              "pixel": 316.56
+            },
+            {
+              "label": "48-18",
+              "pageAxis": "x",
+              "pixel": 473.76
+            }
+          ]
+        },
+        {
+          "mode": "source_grid",
+          "id": "parking_apron_inset",
+          "bounds": {
+            "left": 85.32,
+            "top": 315.12,
+            "right": 304.8,
+            "bottom": 471.12
+          },
+          "latitudeTicks": [
+            {
+              "label": "33-26.3",
+              "pageAxis": "y",
+              "pixel": 325.2
+            },
+            {
+              "label": "33-26.2",
+              "pageAxis": "y",
+              "pixel": 430.8
+            }
+          ],
+          "longitudeTicks": [
+            {
+              "label": "48-17.1",
+              "pageAxis": "x",
+              "pixel": 147.72
+            },
+            {
+              "label": "48-17.2",
+              "pageAxis": "x",
+              "pixel": 236.4
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "page": 223,
+      "regions": [
+        {
+          "mode": "source_grid",
+          "id": "main_ils_29",
+          "bounds": {
+            "left": 90.6,
+            "top": 191,
+            "right": 531.96,
+            "bottom": 514.2
+          },
+          "excludedBounds": [
+            {
+              "left": 463.44,
+              "top": 326,
+              "right": 531.96,
+              "bottom": 430
+            }
+          ],
+          "latitudeTicks": [
+            {
+              "label": "33-30",
+              "pageAxis": "y",
+              "pixel": 235.2
+            },
+            {
+              "label": "33-20",
+              "pageAxis": "y",
+              "pixel": 420.72
+            }
+          ],
+          "longitudeTicks": [
+            {
+              "label": "48-20",
+              "pageAxis": "x",
+              "pixel": 222.6
+            },
+            {
+              "label": "48-30",
+              "pageAxis": "x",
+              "pixel": 378.24
+            }
+          ]
+        }
+      ]
+    }
+  ]
 }

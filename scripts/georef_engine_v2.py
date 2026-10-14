@@ -11,6 +11,7 @@ from pathlib import Path
 import fitz
 import numpy as np
 from extract_chart_georef import extract, page_fingerprint
+from georef_engine_v2_grids import grid_region
 
 EXPECTED_SOURCE="d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6"
 EARTH=111319.49079327358
@@ -103,9 +104,12 @@ def grid_candidate(page,record,anchor):
     except Exception as exc:
         return {"status":"needs_independent_controls","reason":str(exc)[:300]}
 
-def fit_regions(page,rows):
+def fit_regions(page,rows,chart):
     output=[]; registered=[]
     for item in rows:
+        if item.get("mode")=="source_grid":
+            output.append(grid_region(page,chart,item))
+            continue
         region=item["region"]
         valid_bounds(region,page.rect.width,page.rect.height)
         for prev in registered:
@@ -162,9 +166,9 @@ def run(pdf,index_file,georef_file,registry_file,airport="OICK"):
             entry["sourceScan"]=scan(page)
             if page_number in registrations:
                 try:
-                    entry["landmarkRegions"]=fit_regions(page,registrations[page_number])
+                    entry["landmarkRegions"]=fit_regions(page,registrations[page_number],row)
                     if entry["landmarkRegions"]:
-                        entry["status"]="landmark_region_candidate_manual_review"
+                        entry["status"]="v2_regional_grid_candidate_manual_review"
                 except Exception as exc:
                     entry["landmarkError"]=str(exc)
         result["results"].append(entry)
