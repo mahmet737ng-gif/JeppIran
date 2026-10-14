@@ -2034,11 +2034,15 @@ body.viewer-fullscreen.jp-chart-drawer-open #jpHomeBtn{opacity:0;pointer-events:
   order:0;width:auto;flex:0 0 auto;margin:0;padding:0;box-sizing:border-box;
 }
 #chartsView #chartsBackBtn.jp-charts-back{
+  /* Not a legacy .back-btn: Android must NOT hide this new HOME control. */
   position:static;inset:auto;order:1;z-index:2;display:inline-flex;
   align-items:center;justify-content:center;gap:5px;flex:0 0 auto;
   min-height:28px;padding:5px 8px;border:1px solid #275d7f;
   border-radius:7px;background:#092138;color:#c4e8ff;
   font:700 10px/1.2 system-ui,sans-serif;white-space:nowrap;cursor:pointer;
+}
+:root.light #chartsView #chartsBackBtn.jp-charts-back{
+  background:#f4faff;color:#14608e;border-color:#8bbdd9;
 }
 #chartsView #chartsBackBtn svg,#chartsView #chartsBackMobileBtn svg{
   width:14px;height:14px;flex:none;

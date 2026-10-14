@@ -8,6 +8,8 @@ test('Charts title is inset with HOME immediately beside it; mobile return remai
   const html=read('web/index.html');
   assert.match(html,/<h2>Charts<\/h2><button id="chartsBackBtn"[^>]*aria-label="Go to JEPPIRAN Home"[^>]*>[\s\S]*?<span>HOME<\/span><\/button>/);
   assert.doesNotMatch(html,/id="chartsBackBtn"[^>]*>← Back/);
+  assert.doesNotMatch(html,/id="chartsBackBtn" class="back-btn/);
+  assert.match(html,/id="chartsBackBtn" class="jp-charts-back"/);
   assert.match(html,/id="chartsBackMobileBtn"/);
   for(const id of ['airportPickerBtn','prevChartBtn','nextChartBtn','chartTaxiBtn','fullscreenBtn','fullscreenExitBtn'])assert.ok(html.includes('id="'+id+'"'),id);
 });
@@ -28,7 +30,7 @@ test('HOME is hidden on Charts and fullscreen without affecting owner-locked ges
   assert.match(css,/body\.viewer-fullscreen #jpHomeBtn\.jp-home-shortcut,\s*body\.viewer-fullscreen #chartsView #chartsBackBtn\{display:none!important\}/);
   assert.match(css,/#chartsView\.chart-open #chartsBackMobileBtn,\s*body\.viewer-fullscreen #chartsBackMobileBtn\{display:none!important\}/);
   assert.match(read('web/fullscreen-chart-drawer.css'),/body\.viewer-fullscreen #jpChartMenuBtn/);
-  assert.match(read('web/service-worker.js'),/jeppiran-pwa-2621-header-home-r1/);
+  assert.match(read('web/service-worker.js'),/jeppiran-pwa-2621-header-home-r2/);
 });
 
 test('airport chart categories remain in the sidebar and NEVER occupy profile Overview',()=>{
