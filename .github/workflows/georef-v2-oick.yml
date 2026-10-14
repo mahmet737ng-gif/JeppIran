@@ -30,6 +30,34 @@ jobs:
         run: cmp web/data/chart-georef.json app/src/main/assets/chart-georef.json
       - name: Run original V2621 source OICK diagnosis
         run: python scripts/georef_engine_v2.py --airport OICK --output review-assets/georef-v2-oick-qa.json
+      - name: Render four OICK source charts for PDF-vector review
+        run: |
+          python - <<'PY'
+          import json, re
+          from pathlib import Path
+          import fitz
+          doc=fitz.open("Iran2621.pdf")
+          target=Path("review-assets/oick-v2-source-pages")
+          target.mkdir(parents=True,exist_ok=True)
+          for pn in (218,219,221,223):
+              p=doc[pn-1]
+              image=p.get_pixmap(matrix=fitz.Matrix(2.5,2.5),alpha=False)
+              image.save(str(target/("OICK-"+str(pn)+".png")))
+              words=p.get_text("words")
+              grid=[{"label":w[4],"rect":[round(float(x),2) for x in w[:4]]} for w in words if re.fullmatch(r"[0-9]{2,3}-[0-9]{2}(?:\.[0-9]+)?",w[4])]
+              keys=[{"label":w[4],"rect":[round(float(x),2) for x in w[:4]]} for w in words if any(x in w[4].upper() for x in ("VOR","KHD","NOTSA","ARP","THR","DME","NDB","RWY","NOT"))]
+              payload={"page":pn,"width":p.rect.width,"height":p.rect.height,"grid":grid,"keyWords":keys,
+                      "notToScaleRects":[list(map(float,r)) for r in p.search_for("NOT TO SCALE")]}
+              (target/("OICK-"+str(pn)+".json")).write_text(json.dumps(payload,indent=2))
+              print("OICK_PDF_SOURCE",json.dumps({"page":pn,"graticuleLabels":len(grid),"landmarkMentions":len(keys),
+                    "notToScaleLabels":len(payload["notToScaleRects"])}))
+          PY
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: jeppiran-v2-oick-source-pages
+          path: review-assets/oick-v2-source-pages/
+          if-no-files-found: warn
       - name: Verify source data did not change
         run: git diff --exit-code -- web/data/chart-georef.json app/src/main/assets/chart-georef.json
       - uses: actions/upload-artifact@v4
