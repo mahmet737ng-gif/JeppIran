@@ -1956,3 +1956,9 @@ body.viewer-fullscreen.jp-chart-drawer-open #jpChartDrawer{
 :root.light .jp-update-view .jp-update-panel h3{color:#126ea4}
 :root.light .jp-update-view .jp-update-header p,:root.light .jp-update-view .jp-update-panel p{color:#416581}
 :root.light .jp-update-view select{color:#214663;background:#eff8ff;border-color:#a9cee6}
+
+/* Drawer close lives inside the airport overlay; the profile toggle is covered when open. */
+.jp-airport-picker-close{display:none}
+@media(max-width:749px){
+ #chartsView .jp-airport-picker-close{display:grid;place-items:center;margin-left:auto;width:42px;height:42px;min-width:42px;border:1px solid #205879;border-radius:9px;background:#0b304d;color:#e3f4ff;font-size:28px;line-height:1}
+}
