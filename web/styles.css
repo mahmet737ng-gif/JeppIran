@@ -1962,3 +1962,37 @@ body.viewer-fullscreen.jp-chart-drawer-open #jpChartDrawer{
 @media(max-width:749px){
  #chartsView .jp-airport-picker-close{display:grid;place-items:center;margin-left:auto;width:42px;height:42px;min-width:42px;border:1px solid #205879;border-radius:9px;background:#0b304d;color:#e3f4ff;font-size:28px;line-height:1}
 }
+
+
+/* JEPPIRAN PDF paging: live, reversible two-page swipe. These are temporary
+   bitmap previews of the already installed/current airport's PDF, not URLs. */
+.jp-chart-swipe-shield{
+  position:fixed;overflow:hidden;pointer-events:none;touch-action:none;
+  z-index:190;background:#31363b;contain:layout paint;
+}
+.jp-chart-swipe-track{
+  position:absolute;inset:0;will-change:transform;
+  transform:translate3d(0,0,0);
+}
+.jp-chart-swipe-panel{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  overflow:hidden;background:#31363b;isolation:isolate;
+}
+.jp-chart-swipe-paper{
+  position:absolute;left:50%;transform:translateX(-50%);
+  width:max-content;max-width:none;will-change:transform;
+}
+.jp-chart-swipe-paper canvas{display:block;max-width:none;background:white}
+body.chart-inverted .jp-chart-swipe-paper canvas{filter:invert(1)}
+.jp-chart-swipe-loading{
+  position:absolute;top:36%;left:50%;transform:translateX(-50%);
+  display:block;padding:10px 15px;max-width:85%;
+  border:1px solid #28739e;border-radius:10px;
+  font-size:14px;font-weight:700;color:#d7eefd;background:#0b2746f0;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+#chartsView .airport-list,#jpChartDrawerList,
+#chartsView .airport-profile,#chartsView .profile-proc-list{
+  scroll-behavior:auto;overflow-anchor:none;
+  -webkit-overflow-scrolling:touch;overscroll-behavior:contain;
+}
