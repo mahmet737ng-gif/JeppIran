@@ -235,6 +235,7 @@ object ChartGeoreferenceStore {
         loaded = false
         chartDataVersion = ""
         references.clear()
+        OiciRouteOnlyFlightQa.reset()
     }
 
     @Synchronized
@@ -488,7 +489,16 @@ object ChartGeoreferenceStore {
     ): RenderedAircraftPosition? {
         load(context)
         if (dataVersion != chartDataVersion) return null
-        val ref = references[page] ?: return null
+        val ref = references[page]
+        if (ref == null) {
+            // Flight-QA-only fallback for schematic OICI 207/209.
+            // Never overwrite or substitute an existing published calibration.
+            return OiciRouteOnlyFlightQa.renderedPoint(
+                context, page, latitude, longitude, headingDegrees, dataVersion,
+                pdfWidth, pdfHeight, fullBitmapWidth, fullBitmapHeight,
+                cropLeft, cropTop, bitmapWidth, bitmapHeight
+            )
+        }
         return ref.renderedPosition(latitude, longitude, headingDegrees, pdfWidth, pdfHeight,
             fullBitmapWidth, fullBitmapHeight, cropLeft, cropTop, bitmapWidth, bitmapHeight)
     }
