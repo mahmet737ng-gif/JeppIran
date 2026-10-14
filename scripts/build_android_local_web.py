@@ -38,6 +38,7 @@ def sha256(path):
 
 
 def download(url, destination, expected_size=None, expected_sha=None):
+    """Bundle only manifest-verified bytes; resilient to intermittent release HTTP 500."""
     if urlparse(url).scheme != "https":
         raise RuntimeError("Only HTTPS downloads allowed: " + url)
     destination.parent.mkdir(parents=True, exist_ok=True)
@@ -45,27 +46,39 @@ def download(url, destination, expected_size=None, expected_sha=None):
         expected_sha is None or sha256(destination) == expected_sha.lower()
     ):
         return
-    last = None
-    for attempt in range(1, 5):
-        temp = destination.with_suffix(destination.suffix + ".partial")
-        try:
-            req = urllib.request.Request(url, headers={"User-Agent": "JEPPIRAN-Android-Local-Bundle/1.0"})
-            with urllib.request.urlopen(req, timeout=120) as response, temp.open("wb") as out:
-                shutil.copyfileobj(response, out, length=1024 * 1024)
-            if temp.stat().st_size < 1024:
-                raise RuntimeError("Download too small")
-            if expected_size is not None and temp.stat().st_size != expected_size:
-                raise RuntimeError("Size mismatch: " + destination.name)
-            if expected_sha is not None and sha256(temp) != expected_sha.lower():
-                raise RuntimeError("SHA-256 mismatch: " + destination.name)
-            temp.replace(destination)
-            return
-        except Exception as exc:
-            last = exc
-            temp.unlink(missing_ok=True)
-            time.sleep(attempt * 2)
-    raise RuntimeError(f"Could not download {destination.name}: {last}")
-
+    candidates = [url]
+    # All production airport PDFs are also packaged in the deployed GitHub
+    # Pages release. This source is independent of the GitHub Releases CDN.
+    # Never accept fallback data unless manifest byte count AND SHA-256 match.
+    if (destination.suffix.lower() == ".pdf"
+            and "/releases/download/" in url
+            and destination.name == Path(urlparse(url).path).name):
+        candidates.append("https://mahmet737ng-gif.github.io/JeppIran/charts/" + destination.name)
+    failures = []
+    for source in candidates:
+        for attempt in range(1, 5):
+            temp = destination.with_suffix(destination.suffix + ".partial")
+            try:
+                req = urllib.request.Request(
+                    source, headers={"User-Agent": "JEPPIRAN-Android-Local-Bundle/1.1"})
+                with urllib.request.urlopen(req, timeout=120) as response, temp.open("wb") as out:
+                    shutil.copyfileobj(response, out, length=1024 * 1024)
+                if temp.stat().st_size < 1024:
+                    raise RuntimeError("Download too small")
+                if expected_size is not None and temp.stat().st_size != expected_size:
+                    raise RuntimeError("Size mismatch: " + destination.name)
+                if expected_sha is not None and sha256(temp) != expected_sha.lower():
+                    raise RuntimeError("SHA-256 mismatch: " + destination.name)
+                temp.replace(destination)
+                if source != url:
+                    print("Manifest-verified chart downloaded via backup CDN:", destination.name, flush=True)
+                return
+            except Exception as exc:
+                failures.append(str(exc))
+                temp.unlink(missing_ok=True)
+                time.sleep(attempt * 2)
+    raise RuntimeError("Could not download " + destination.name + " from release or Pages: " +
+                       " | ".join(failures[-3:]))
 
 def main():
     parser = argparse.ArgumentParser()
