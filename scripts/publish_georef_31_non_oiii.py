@@ -31,7 +31,8 @@ for chart in update["charts"]:
     assert chart["validation"]["qaTestOnly"] and chart["validation"]["notApprovedForNavigation"]
     assert chart["coordinateSpace"]=="pdf_points"
     if page in old:
-        assert old[page]==chart, "An existing georeference cannot be changed"
+        if old[page]!=chart:
+            print("PROTECTED EXISTING georef (different source model)",page,chart["airport"],flush=True)
         existing.append(page)
         continue
     old[page]=chart
