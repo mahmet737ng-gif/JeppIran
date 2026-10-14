@@ -86,7 +86,7 @@ def source_vector_model(page,p,row,anchor,fp):
   if measured[0]['pixelAxis']=='x' and singleton['pixelAxis']=='y':derived_sign=measured_sign
   assert singleton['pixelAxis']!=measured[0]['pixelAxis']
   candidates=[]
-  for step in (10/60,5/60,2/60,1/60,.5/60,.25/60):
+  for step in ((.5/60,.25/60) if p==342 else ((5/60,2/60,1/60,.5/60) if p in (387,389) else (10/60,5/60,2/60,1/60,.5/60,.25/60))):
    for direction in [-1,1]:
     q=singleton['pdfPoint']+direction*derived_sign*dscale*step
     if 12<=q<=(page.rect.width-12 if singleton['pixelAxis']=='x' else page.rect.height-12):
@@ -204,7 +204,7 @@ def main():
    statuses.append({'page':p,'status':'unresolved','reason':'No existing stable airport anchor'})
    continue
   try:
-   if p in ROTATED_SINGLETON or p==459:
+   if p in ROTATED_SINGLETON or p in (387,389,459):
     c=source_vector_model(page,p,row,source_anchor,fp)
    else:
     c=extract(page,p,row,source_anchor,fp)
