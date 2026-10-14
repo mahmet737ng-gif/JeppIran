@@ -16,7 +16,7 @@ test('Back safely returns directly home, never leaves the offline origin',()=>{
   assert.match(js,/await exitViewerFullscreen\(true\)/);
   assert.match(js,/\["chartsBackBtn","chartsBackMobileBtn"\]/);
   assert.match(js,/route\("home"\)/);
-  assert.ok(js.includes('$("[data-route]").forEach'), 'route controls must use the $ NodeList selector');
+  assert.ok(js.includes('$$("[data-route]").forEach'), 'route controls must use the $$ NodeList selector');
   const fn=js.slice(js.indexOf('async function returnToJeppiranHome'),js.indexOf('["chartsBackBtn","chartsBackMobileBtn"].forEach'));
   assert.doesNotMatch(fn,/history\.back\(/);
 });
