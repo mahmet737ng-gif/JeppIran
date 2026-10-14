@@ -5,30 +5,65 @@ on:
     paths: ['.github/workflows/georef-remaining-31-no-oiii.yml']
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
+  actions: write
+concurrency:
+  group: jeppiran-v2621-31-non-oiii-release
+  cancel-in-progress: false
 jobs:
-  inspect:
+  publish:
     runs-on: ubuntu-24.04
-    timeout-minutes: 35
+    timeout-minutes: 40
     steps:
       - uses: actions/checkout@v5
         with:
           lfs: true
+          fetch-depth: 1
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - run: python -m pip install -r scripts/requirements-georef.txt
-      - name: Extract source-PDF geometry without modifying any airport
+      - name: Recompute source grids with per-page geometric QA, excluding Mehrabad
+        run: python scripts/calibrate_31_without_oiii.py
+      - name: Preserve all existing charts and add only source-verified pages
+        id: publish
+        shell: bash
         run: |
-          python scripts/diagnose_georef_31_without_oiii.py
-          python scripts/diagnose_inset_geometry_31.py
-          python scripts/diagnose_31_dash_tracks.py
-          python scripts/calibrate_31_without_oiii.py
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git checkout -B qa-georef-31-non-oiii origin/main
+            python scripts/publish_georef_31_non_oiii.py
+            git add web/data/chart-georef.json app/src/main/assets/chart-georef.json docs/georeferencing/V2621_31_NON_OIII_PUBLICATION.json
+            if git diff --cached --quiet; then
+              echo 'UNCHANGED=1' >> "$GITHUB_OUTPUT"
+              echo 'No new verified models; existing published data unchanged.'
+              exit 0
+            fi
+            git commit -m 'release(georef): source-checked 31-chart non-OIII batch, Mehrabad frozen'
+            if git push origin HEAD:main; then
+              echo 'PUSHED=1' >> "$GITHUB_OUTPUT"
+              echo 'GEORREFERENCING SOURCE ASSETS PUBLISHED.'
+              exit 0
+            fi
+            echo "Concurrent main update; retrying source-locked additive merge: $attempt"
+          done
+          exit 1
+      - name: Dispatch web and native Android release
+        if: steps.publish.outputs.PUSHED == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run deploy-ipad-web.yml --ref main
+          gh workflow run build-apk.yml --ref main
+          echo 'Web deployment and native APK build explicitly dispatched.'
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: V2621-31-source-axis-diagnostics
+          name: V2621-31-no-Mehrabad-extraction-QA
           path: |
-            georef31-diagnostic.json
             /tmp/non-oiii-31-candidates.json
             /tmp/non-oiii-31-qareport.json
+          if-no-files-found: ignore
