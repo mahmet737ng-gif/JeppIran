@@ -1,4 +1,5 @@
 name: Build JeppIran APK
+# V2621 additive non-OIII georeferencing publish: native/offline asset rebuild only; Mehrabad chart model data is frozen.
 
 on:
   workflow_dispatch:
