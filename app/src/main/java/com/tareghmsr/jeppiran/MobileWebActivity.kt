@@ -159,6 +159,15 @@ class MobileWebActivity : AppCompatActivity() {
                 request: WebResourceRequest?
             ): Boolean {
                 val url = request?.url ?: return true
+                // The APK Update card uses this private, non-network route.
+                // Keep the signed native updater instead of the obsolete
+                // web-only "Chart data" popup.
+                if (request.isForMainFrame &&
+                    url.scheme == "jeppiran" && url.host == "updates"
+                ) {
+                    startActivity(Intent(this@MobileWebActivity, UpdateActivity::class.java))
+                    return true
+                }
                 if (url.scheme == "https" &&
                     url.host == appHost && url.path.orEmpty().startsWith(appPath)
                 ) return false
