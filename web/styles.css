@@ -1853,3 +1853,73 @@ body.viewer-fullscreen.jp-chart-drawer-open #jpChartDrawer{
     grid-column:2!important;grid-row:1!important;
   }
 }
+
+
+/* 2026-10 mobile Charts bugfix: airport selector is an optional drawer.
+   The portrait profile/chart owns the whole page, never a 24dvh sliver.
+   Tablet/iPad designs, backgrounds and chart tools are unchanged. */
+.jp-airport-picker-toggle{display:none}
+@media(max-width:749px){
+  #chartsView.charts-layout.active,
+  #chartsView.charts-layout.active.chart-open,
+  html.jp-android-phone #chartsView.charts-layout.active,
+  html.jp-android-phone #chartsView.charts-layout.active.chart-open{
+    display:grid!important;
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-rows:minmax(0,1fr)!important;
+    height:100dvh!important;min-height:0!important;
+    overflow:hidden!important
+  }
+  #chartsView.charts-layout.active .viewer-pane,
+  html.jp-android-phone #chartsView.charts-layout.active .viewer-pane{
+    grid-column:1!important;grid-row:1!important;
+    min-width:0!important;min-height:0!important;height:100%!important;
+    display:flex!important;flex-direction:column!important;overflow:hidden!important;
+  }
+  #chartsView.charts-layout.active .airport-pane,
+  html.jp-android-phone #chartsView.charts-layout.active .airport-pane{
+    position:fixed!important;top:0!important;bottom:0!important;left:0!important;
+    width:min(350px,88vw)!important;height:100dvh!important;max-height:100dvh!important;
+    grid-column:auto!important;grid-row:auto!important;
+    z-index:1650!important;
+    display:flex!important;flex-direction:column!important;
+    overflow:hidden!important;visibility:hidden!important;
+    transform:translate3d(-103%,0,0)!important;
+    transition:transform .17s ease,visibility .17s;
+    box-shadow:7px 0 26px rgba(0,0,0,.45);
+  }
+  #chartsView.jp-airport-picker-open .airport-pane,
+  html.jp-android-phone #chartsView.jp-airport-picker-open .airport-pane{
+    visibility:visible!important;transform:translate3d(0,0,0)!important;
+  }
+  #chartsView .airport-pane .airport-list{flex:1;min-height:0;overflow-y:auto!important}
+  #chartsView .jp-airport-picker-toggle{
+    display:flex!important;flex:0 0 45px!important;align-items:center;
+    justify-content:space-between;gap:9px;padding:8px 15px;
+    border:0;border-bottom:1px solid #205077;background:#061d34;color:#cfe9fa;
+    font-weight:750;letter-spacing:.04em;text-align:left;cursor:pointer;
+  }
+  #chartsView .jp-airport-picker-toggle span{margin-left:auto;color:#42c5ff}
+  #chartsView.chart-open .jp-airport-picker-toggle,
+  body.viewer-fullscreen #chartsView .jp-airport-picker-toggle{display:none!important}
+  #chartsView:not(.chart-open) .airport-profile,
+  html.jp-android-phone #chartsView:not(.chart-open) .airport-profile{
+    height:auto!important;max-height:none!important;min-height:0!important;
+    flex:1 1 auto!important;overflow-y:auto!important;
+    -webkit-overflow-scrolling:touch;touch-action:pan-y;
+  }
+  #chartsView.chart-open .viewer-toolbar,
+  html.jp-android-phone #chartsView.chart-open .viewer-toolbar{
+    flex-shrink:0!important;max-height:115px;
+  }
+  #chartsView.chart-open #jpCdfaWorkspace{flex:1 1 auto!important;min-height:0!important}
+}
+@media(max-width:749px) and (orientation:landscape){
+  #chartsView.charts-layout.active,
+  #chartsView.charts-layout.active.chart-open,
+  html.jp-android-phone #chartsView.charts-layout.active,
+  html.jp-android-phone #chartsView.charts-layout.active.chart-open{
+    grid-template-columns:minmax(0,1fr)!important;
+    grid-template-rows:minmax(0,1fr)!important;
+  }
+}
