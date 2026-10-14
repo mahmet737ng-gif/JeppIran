@@ -11,7 +11,7 @@ test('Charts title is inset with HOME immediately beside it; mobile return remai
   assert.match(html,/id="chartsBackMobileBtn"/);
   for(const id of ['airportPickerBtn','prevChartBtn','nextChartBtn','chartTaxiBtn','fullscreenBtn','fullscreenExitBtn'])assert.ok(html.includes('id="'+id+'"'),id);
 });
-test('Back safely returns directly home, never leaves the offline origin',()=>{
+test('HOME safely returns directly home, never leaves the offline origin',()=>{
   const js=read('web/app.js');
   assert.match(js,/async function returnToJeppiranHome\(\)/);
   assert.match(js,/await exitViewerFullscreen\(true\)/);
@@ -25,8 +25,8 @@ test('HOME is hidden on Charts and fullscreen without affecting owner-locked ges
   const html=read('web/index.html'),js=read('web/app.js'),css=read('web/styles.css');
   const guard='homeButton.hidden=el.id==="homeView"||el.id==="chartsView";';
   assert.ok(html.includes(guard));assert.ok(js.includes(guard));
-  assert.match(css,/body\.viewer-fullscreen #jpHomeBtn\.jp-home-shortcut\{display:none!important\}/);
-  assert.match(css,/#chartsView\.chart-open #chartsBackMobileBtn,body\.viewer-fullscreen #chartsBackMobileBtn\{display:none!important\}/);
+  assert.match(css,/body\.viewer-fullscreen #jpHomeBtn\.jp-home-shortcut,\s*body\.viewer-fullscreen #chartsView #chartsBackBtn\{display:none!important\}/);
+  assert.match(css,/#chartsView\.chart-open #chartsBackMobileBtn,\s*body\.viewer-fullscreen #chartsBackMobileBtn\{display:none!important\}/);
   assert.match(read('web/fullscreen-chart-drawer.css'),/body\.viewer-fullscreen #jpChartMenuBtn/);
   assert.match(read('web/service-worker.js'),/jeppiran-pwa-2621-header-home-r1/);
 });
