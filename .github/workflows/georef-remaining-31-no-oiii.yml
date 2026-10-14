@@ -25,7 +25,9 @@ jobs:
           python-version: '3.12'
       - run: python -m pip install -r scripts/requirements-georef.txt
       - name: Recompute source grids with per-page geometric QA, excluding Mehrabad
-        run: python scripts/calibrate_31_without_oiii.py
+        run: |
+          python scripts/diagnose_nav_anchors_15.py
+          python scripts/calibrate_31_without_oiii.py
       - name: Preserve all existing charts and add only source-verified pages
         id: publish
         shell: bash
