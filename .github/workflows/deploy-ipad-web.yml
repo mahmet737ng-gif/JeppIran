@@ -24,6 +24,8 @@ on:
       - 'app/src/main/assets/charts-manifest.json'
       - 'app/src/main/assets/enroute-manifest.json'
       - 'app/src/main/assets/chart-georef.json'
+      - 'app/src/main/assets/chart-changes.json'
+      - 'app/src/main/assets/changed-airports.json'
       - 'app/src/main/res/drawable-nodpi/airport_card_*.webp'
       - '.github/workflows/deploy-ipad-web.yml'
 
@@ -85,6 +87,8 @@ jobs:
           cp app/src/main/assets/charts-manifest.json web/data/charts-manifest.json
           cp app/src/main/assets/enroute-manifest.json web/data/enroute-manifest.json
           cp app/src/main/assets/chart-georef.json web/data/chart-georef.json
+          cp app/src/main/assets/chart-changes.json web/data/chart-changes.json
+          cp app/src/main/assets/changed-airports.json web/data/changed-airports.json
           python3 scripts/build_airport_profiles.py --output web/data/airport-profiles.json
           python3 scripts/build_airport_runways.py --output web/data/airport-runways.json
           cp app/src/main/res/drawable-nodpi/airport_card_*.webp web/airport-images/
