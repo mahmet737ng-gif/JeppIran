@@ -331,3 +331,14 @@ html.jp-android-phone {
 @media(max-width:749px){
  #chartsView .jp-airport-picker-close{display:grid;place-items:center;margin-left:auto;width:42px;height:42px;min-width:42px;border:1px solid #205879;border-radius:9px;background:#0b304d;color:#e3f4ff;font-size:28px;line-height:1}
 }
+
+
+/* The Android system edge Back gesture replaces obsolete on-screen Back and
+   Prev/Next arrow buttons. Double-tap, pinch, Fullscreen X stay functional. */
+html.jp-android-phone #chartsView .back-btn,
+html.jp-android-phone #chartsView #prevChartBtn,
+html.jp-android-phone #chartsView #nextChartBtn,
+html.jp-android-phone #chartsView .viewer-nav-group,
+html.jp-android-phone .floating-back,
+html.jp-android-phone #androidBackBtn,
+html.jp-android-phone #backBtn{display:none!important}
