@@ -64,6 +64,93 @@ jobs:
             --audit /tmp/third-georef-audit.json \
             --disable-independent-check
 
+      - name: Validate boxed NOT TO SCALE regions without extrapolating into insets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,re,sys
+          from pathlib import Path
+          import fitz
+          sys.path.insert(0,'scripts')
+          from extract_chart_georef import extract,page_fingerprint
+          doc=fitz.open('Iran2621.pdf')
+          path=Path('/tmp/third-georef-extracted.json')
+          audit_path=Path('/tmp/third-georef-audit.json')
+          src=json.loads(path.read_text())
+          audit=json.loads(audit_path.read_text())
+          rows={int(r['page']):r for r in json.loads(Path('/tmp/third-georef-index.json').read_text())}
+          provisional={int(c['page']):c for c in json.loads(Path('web/data/georef-provisional-v2621.json').read_text())['charts']}
+          original={int(c['page']) for c in src['charts']}
+          recovered=[]
+          still=[]
+          reasons={}
+          for item in audit['excludedCharts']:
+            p=int(item['page'])
+            if item['status']!='review_required_not_to_scale' or p in original:
+              still.append(item)
+              continue
+            page=doc[p-1]
+            fp=page_fingerprint(page)
+            # Printed ARP coordinates are never used as invented point locations.
+            match=re.search(r'Lat/Long:\s*N(\d+)°\s*([\d.]+).*?E(\d+)°\s*([\d.]+)',doc[next(i for i,r in enumerate(doc) if i+1 in rows and rows[i+1]['airport']==item['airport'])].get_text())
+            if not match:
+              reasons[p]='Missing printed airport anchor'
+              still.append(item)
+              continue
+            anchor={'sourcePage':p,'lat':int(match[1])+float(match[2])/60,'lon':int(match[3])+float(match[4])/60}
+            try:
+              c=extract(page,p,rows[p],anchor,fp)
+              # Require every literal NOT TO SCALE marking to be enclosed
+              # by a small visible vector box separate from the calibrated ticks.
+              labels=page.search_for('NOT TO SCALE')
+              if not labels: raise ValueError('NOT TO SCALE text not locatable')
+              possible=[]
+              for shape in page.get_drawings():
+                for kind,*args in shape.get('items',[]):
+                  if kind!='re': continue
+                  area=fitz.Rect(args[0])
+                  if area.width<18 or area.height<10 or area.get_area()>page.rect.get_area()*.30:continue
+                  possible.append(area)
+              prev=provisional.get(p)
+              if prev and prev.get('sourceFingerprint')==fp:
+                for box in prev.get('excludedBounds',[]):
+                  b=fitz.Rect(box['left'],box['top'],box['right'],box['bottom'])
+                  # A preexisting polygon is only trusted if its perimeter
+                  # closely matches an actual rectangle in the current PDF.
+                  if any(max(abs(b.x0-a.x0),abs(b.y0-a.y0),abs(b.x1-a.x1),abs(b.y1-a.y1))<3 for a in possible):
+                    possible.append(b)
+              masks=[]
+              for label in labels:
+                matching=[b for b in possible if b.contains(label) and
+                  all(not b.contains(fitz.Point(t['x'],t['y'])) for t in c['points'])]
+                if not matching: raise ValueError('NTS text not isolated in a separate measured vector box')
+                box=min(matching,key=lambda b:b.get_area())
+                if not any(max(abs(v.x0-box.x0),abs(v.y0-box.y0),abs(v.x1-box.x1),abs(v.y1-box.y1))<1 for v in masks):masks.append(box)
+              assert len(masks)>0
+              c['excludedBounds']=[dict(left=float(b.x0),top=float(b.y0),right=float(b.x1),bottom=float(b.y1)) for b in masks]
+              c['validation']['reviewDecision']='measured_plan_boxed_NTS_only'
+              c['validation']['notToScaleRegionsMasked']=len(masks)
+              c['validation']['qaTestOnly']=True
+              c['validation']['notApprovedForNavigation']=True
+              src['charts'].append(c)
+              recovered.append(p)
+            except (ValueError,AssertionError,StopIteration) as exc:
+              reasons[p]=str(exc)
+              still.append(item)
+          src['charts'].sort(key=lambda c:int(c['page']))
+          audit['excludedCharts']=still
+          audit['calibratedPageCount']=len(src['charts'])
+          audit['newlyExtractedPageCount']+=len(recovered)
+          for airport in audit['airports']:
+            airport['calibratedPages']=sorted([c['page'] for c in src['charts'] if c['airport']==airport['icao']])
+            airport['otherExcludedPages']=[c['page'] for c in still if c['airport']==airport['icao'] and c['status']!='not_to_scale']
+            airport['notToScalePages']=[c['page'] for c in still if c['airport']==airport['icao'] and c['status']=='not_to_scale']
+          path.write_text(json.dumps(src,indent=2))
+          audit_path.write_text(json.dumps(audit,indent=2))
+          print('Independently boxed NTS map views:',recovered,'rejected:',reasons)
+          PY
+
       - name: Verify page fingerprints, physical orientation and measured source ticks
         shell: bash
         run: |
@@ -95,7 +182,12 @@ jobs:
             if p in already: continue  # DO NOT modify previously accepted models
             page=doc[p-1]
             # Mixed-scale pages require separate verified crops, not entire-sheet transforms.
-            assert 'NOT TO SCALE' not in page.get_text(), f'Unreviewed mixed-scale page {p}'
+            if 'NOT TO SCALE' in page.get_text():
+              assert c['validation'].get('reviewDecision')=='measured_plan_boxed_NTS_only', f'Unreviewed NTS page {p}'
+              assert c['excludedBounds'] and all(
+                any(fitz.Rect(b['left'],b['top'],b['right'],b['bottom']).contains(v) for b in c['excludedBounds'])
+                for v in page.search_for('NOT TO SCALE')
+              ), f'NTS chart region not fully masked {p}'
             assert abs(c['width']-page.rect.width)<.01 and abs(c['height']-page.rect.height)<.01
             assert len(c['points'])>=4 and all(c['bounds']['left']<=v['x']<=c['bounds']['right'] and c['bounds']['top']<=v['y']<=c['bounds']['bottom'] for v in c['points'])
             print_ticks=np.array(segments(page),dtype=float)
