@@ -1,0 +1,38 @@
+name: V2621 non-Mehrabad georeference recovery
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/v2621-non-mehrabad-georef.yml']
+permissions:
+  contents: write
+concurrency:
+  group: v2621-other-airports-georef
+  cancel-in-progress: false
+jobs:
+  source-triage:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        lfs: true
+        fetch-depth: 1
+    - uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+    - run: python -m pip install -r scripts/requirements-georef.txt
+    - name: Derive source controls, exclude Mehrabad
+      run: python scripts/recover_v2621_other_airports.py
+    - uses: actions/upload-artifact@v4
+      with:
+        name: v2621-other-airports-31-georef-controls-qa
+        path: review-assets/v2621-other-airports-extraction/triage.json
+    - name: Persist source-geometric diagnostics on separate audit branch
+      run: |
+        git config user.name 'github-actions[bot]'
+        git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+        git checkout -B audit/v2621-other-airports-georef
+        git add review-assets/v2621-other-airports-extraction/triage.json
+        git commit -m 'QA: source-derived chart control diagnostics (no OIII)'
+        git push --force-with-lease origin HEAD:refs/heads/audit/v2621-other-airports-georef
