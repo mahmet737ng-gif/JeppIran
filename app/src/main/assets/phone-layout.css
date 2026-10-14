@@ -325,3 +325,9 @@ html.jp-android-phone {
     grid-template-rows:minmax(0,1fr)!important;
   }
 }
+
+/* Drawer close lives inside the airport overlay; the profile toggle is covered when open. */
+.jp-airport-picker-close{display:none}
+@media(max-width:749px){
+ #chartsView .jp-airport-picker-close{display:grid;place-items:center;margin-left:auto;width:42px;height:42px;min-width:42px;border:1px solid #205879;border-radius:9px;background:#0b304d;color:#e3f4ff;font-size:28px;line-height:1}
+}
