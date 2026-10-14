@@ -81,14 +81,22 @@ async function waitForServer(){
   assert.equal(geometry.workspaceDisplay,"none","inactive PDF workspace must be hidden on phone");
   assert.equal(await page.locator("#airportPickerBtn").isVisible(),true,
     "phone Charts must provide the airport drawer button");
-  assert.equal(await page.locator("#chartsView .airport-pane").isVisible(),false,
-    "airport list must not cover the chosen airport's chart/profile");
+  await page.waitForTimeout(230); // wait for initial responsive drawer transition
+  const closed=await page.evaluate(()=>{
+    const node=document.querySelector("#chartsView .airport-pane");
+    const r=node.getBoundingClientRect();
+    return {right:r.right,visibility:getComputedStyle(node).visibility,transform:getComputedStyle(node).transform};
+  });
+  assert.ok(closed.right<=8||closed.visibility==="hidden",
+    "airport list must not cover the chosen airport's chart/profile: "+JSON.stringify(closed));
   await page.locator("#airportPickerBtn").click();
-  assert.equal(await page.locator("#chartsView .airport-pane").isVisible(),true,
-    "airport drawer can be opened to switch airports");
+  await page.waitForTimeout(220);
+  const opened=await page.evaluate(()=>document.querySelector("#chartsView .airport-pane").getBoundingClientRect().right);
+  assert.ok(opened>=200,"airport drawer can be opened to switch airports: "+opened);
   await page.locator("#airportPickerBtn").click();
-  assert.equal(await page.locator("#chartsView .airport-pane").isVisible(),false,
-    "airport drawer can be closed");
+  await page.waitForTimeout(220);
+  const closedAgain=await page.evaluate(()=>document.querySelector("#chartsView .airport-pane").getBoundingClientRect().right);
+  assert.ok(closedAgain<=8,"airport drawer can be closed: "+closedAgain);
   assert.ok(geometry.procedureHeight>80&&geometry.procedureWidth>220,
     "procedure panel has collapsed on phone: "+JSON.stringify(geometry));
   await page.locator('#profileProcedures [data-proc-cat="SID"]').click();
