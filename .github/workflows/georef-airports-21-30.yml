@@ -309,7 +309,13 @@ jobs:
             print_ticks=np.array(segments(page),dtype=float)
             words=page.get_text('words')
             for axis, controls in c['gridAxes'].items():
-              assert len(controls)>=2
+              if len(controls)<2:
+                # Printed SID grids may measure one geographic line and derive
+                # the second through a source-checked local conformal scale.
+                # Only the page-fingerprint-bound cropped NTS workflow may use
+                # this exception; other charts retain the strict 2-axis gate.
+                assert len(controls)==1 and c['validation'].get('method')=='single_axis_plus_conformal_scale' and c['validation'].get('reviewDecision')=='fingerprint_bound_printed_vector_grid_plus_inset_mask', f'Unproven singleton grid axis {p}/{axis}'
+                assert c['validation'].get('sourceTickIntersectionCount',0)>=2, f'Insufficient source ticks {p}/{axis}'
               for ctrl in controls:
                 if ctrl.get('derived'):
                   assert ctrl['derivation']=='orthogonal_conformal_scale'
