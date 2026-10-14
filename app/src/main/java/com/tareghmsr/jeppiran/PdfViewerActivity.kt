@@ -3029,6 +3029,9 @@ private val locationPermissionLauncher =
 
         val isOimmIlsExperimental =
             currentIcao == "OIMM" && currentChartGlobalPage() in 605..607
+        val isOiciRouteOnlyQa =
+            currentIcao == "OICI" && currentChartGlobalPage() in setOf(207, 209) &&
+                repository.getDataVersion() == "V2621"
 
         titleText.text =
             currentIcao +
@@ -3036,7 +3039,9 @@ private val locationPermissionLauncher =
                 chartTitle.ifBlank {
                     "Chart"
                 } +
-                if (isOimmIlsExperimental) {
+                if (isOiciRouteOnlyQa) {
+                    " ⚠ ROUTE-ONLY GEOREF QA"
+                } else if (isOimmIlsExperimental) {
                     " ⚠ GEOREF · AIP QA PENDING"
                 } else {
                     ""
@@ -3044,7 +3049,9 @@ private val locationPermissionLauncher =
 
 
         pageText.text =
-            if (isOimmIlsExperimental) {
+            if (isOiciRouteOnlyQa) {
+                "NOT TO SCALE · ILM–ALTET ROUTE FLIGHT QA ONLY · NOT FOR ACTUAL NAVIGATION"
+            } else if (isOimmIlsExperimental) {
                 "INDEPENDENT AIP QA PENDING — NOT FOR ACTUAL NAVIGATION"
             } else {
                 ""
