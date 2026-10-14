@@ -37,7 +37,85 @@ jobs:
       run: |
         git config user.name 'github-actions[bot]'
         git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+
         git checkout -B audit/v2621-other-airports-georef
         git add review-assets/v2621-other-airports-extraction/triage.json
-        git commit -m 'QA: source-derived chart control diagnostics (no OIII)'
-        git push --force-with-lease origin HEAD:refs/heads/audit/v2621-other-airports-georef
+        if git diff --cached --quiet; then
+          echo 'No changed source diagnostics'
+        else
+          git commit -m 'QA: source-derived chart control diagnostics (no OIII)'
+          git push --force origin HEAD:refs/heads/audit/v2621-other-airports-georef || true
+        fi
+
+    - name: Publish ONLY newly calibrated non-Mehrabad charts on current production HEAD
+      shell: bash
+      run: |
+        set -euo pipefail
+        git config user.name 'github-actions[bot]'
+        git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+        for attempt in 1 2 3 4 5; do
+          git fetch origin main
+          git checkout -B v2621-other-airports-release origin/main
+          python - <<'PY'
+        from pathlib import Path
+        import hashlib,json
+        incoming=json.loads(Path('/tmp/v2621-non-oiii-approved-georef.json').read_text())
+        audit=json.loads(Path('/tmp/v2621-non-oiii-geo-results.json').read_text())
+        web=Path('web/data/chart-georef.json')
+        android=Path('app/src/main/assets/chart-georef.json')
+        base=json.loads(web.read_text())
+        base_android=json.loads(android.read_text())
+        assert base['source']==incoming['source']==base_android['source'], 'Unexpected data cycle'
+        assert base['source']['sha256']=='d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6'
+        before_o={int(c['page']):c for c in base['charts'] if c['airport']=='OIII'}
+        before_o_android={int(c['page']):c for c in base_android['charts'] if c['airport']=='OIII'}
+        assert before_o==before_o_android and len(before_o)>0
+        protected_region='web/data/airport-region-georef-v2621.json'
+        assert Path(protected_region).is_file()
+        before_region=hashlib.sha256(Path(protected_region).read_bytes()).hexdigest()
+        current={int(c['page']):c for c in base['charts']}
+        incoming_pages={int(c['page']):c for c in incoming['charts']}
+        assert all(x['airport']!='OIII' for x in incoming_pages.values())
+        assert all(x['validation']['qaTestOnly'] for x in incoming_pages.values())
+        assert all(x['validation']['notApprovedForNavigation'] for x in incoming_pages.values())
+        new=[]
+        for page,c in sorted(incoming_pages.items()):
+          if page in current:continue
+          current[page]=c
+          new.append(page)
+        assert {p:c for p,c in current.items() if c['airport']=='OIII'}==before_o, 'OIII modified!'
+        assert len(current)==len(base['charts'])+len(new), 'Nonadditive mutation'
+        if new:
+          base['charts']=[current[p] for p in sorted(current)]
+          merged=json.dumps(base,indent=2,ensure_ascii=False)+'\\n'
+          web.write_text(merged)
+          android.write_text(merged)
+        assert {int(c['page']):c for c in json.loads(android.read_text())['charts'] if c['airport']=='OIII'}==before_o_android
+        assert hashlib.sha256(Path(protected_region).read_bytes()).hexdigest()==before_region
+        report={'cycle':'V2621','sourceSha256':base['source']['sha256'],
+          'requestedForGeoReview':audit['requestedSourcePages'],
+          'previouslyExcludedWholeSheetNotToScale':audit['excludedFullSheetNotToScalePages'],
+          'sourceVerifiedCandidates':audit['proposedValidated'],
+          'newlyReleased':len(new),'releasedPages':new,
+          'alreadyPresentUnchanged':sorted(set(incoming_pages)-set(new)),
+          'remainingWithoutNewCalibration':audit['notYetRecoverablePages'],
+          'mehrabadOIII':{'georeferenceRecordsPreservedExactly':len(before_o),
+            'new':0,'removed':0,'modified':0},
+          'approvedFor':'JEPPIRAN simulator moving-map flight test only, not actual navigation',
+          'note':'Existing OIII models and all region files retained byte-for-byte; no page or chart outside selected 31 was modified.'}
+        Path('docs/georeferencing/V2621_OTHER_AIRPORTS_EXCLUDING_OIII_RELEASE.json').write_text(json.dumps(report,ensure_ascii=False,indent=2)+'\\n')
+        print('SIMULATOR GEOREF RELEASE READY:',new,'OIII PRESERVED:',len(before_o),'UNRESOLVED:',audit['notYetRecoverablePages'])
+        PY
+          git add web/data/chart-georef.json app/src/main/assets/chart-georef.json docs/georeferencing/V2621_OTHER_AIRPORTS_EXCLUDING_OIII_RELEASE.json
+          if git diff --cached --quiet; then
+            echo 'No new reference to publish, all existing chart records preserved.'
+            exit 0
+          fi
+          git commit -m 'release(georef): non-Mehrabad V2621 source-verified chart updates'
+          if git push origin HEAD:main; then
+            echo 'Web and local Android chart data committed, Mehrabad untouched.'
+            exit 0
+          fi
+          echo "Concurrent GitHub update; retrying safe additive merge ($attempt)"
+        done
+        exit 1
