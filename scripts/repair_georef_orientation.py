@@ -59,12 +59,77 @@ def rebuild_points(chart):
     chart["points"] = points
 
 
+def restore_source_verified_derived_axis(chart):
+    """Restore a derived axis metadata row from source-verified control points.
+
+    Four V2621 SID main-plan calibrations use one printed axis together with
+    a measured orthogonal grid. Their already checked point set has a
+    non-zero, orientation-correct geographic span. Restore its *metadata*
+    only, leaving the georeferencing transform and exclusion masks unchanged.
+    Never synthesize a missing axis on unreviewed charts.
+    """
+    if chart.get("validation", {}).get("reviewDecision") != (
+        "fingerprint_bound_printed_vector_grid_plus_inset_mask"
+    ):
+        return False
+
+    points = chart.get("points") or []
+    axes = chart["gridAxes"]
+    repaired = False
+    for axis_name, degree_key in (("latitude", "lat"), ("longitude", "lon")):
+        controls = axes[axis_name]
+        if len(controls) != 1:
+            continue
+        measured = controls[0]
+        if measured.get("derived"):
+            raise ValueError(f"Page {chart.get('page')}: no measured {axis_name} grid")
+
+        pix_key = measured["pixelAxis"]
+        measured_degree = float(measured["degrees"])
+        candidates = [
+            point for point in points
+            if abs(float(point[degree_key]) - measured_degree) > 1e-9
+        ]
+        if not candidates:
+            raise ValueError(f"Page {chart.get('page')}: missing {axis_name} geographic span")
+
+        # Keep exactly the same page-space coordinates already independently
+        # tested against printed grid ticks, not a fresh or invented projection.
+        ref = candidates[0]
+        target_degree = float(ref[degree_key])
+        pdf_pixel = float(ref[pix_key])
+        if not all(
+            abs(float(p[pix_key]) - pdf_pixel) < .001
+            for p in candidates
+            if abs(float(p[degree_key]) - target_degree) < 1e-9
+        ):
+            raise ValueError(f"Page {chart.get('page')}: inconsistent {axis_name} points")
+
+        derived = dict(measured)
+        derived.update(
+            degrees=target_degree,
+            pdfPoint=pdf_pixel,
+            label=None,
+            labelBounds=None,
+            tickSegment=None,
+            derived=True,
+            derivation="orthogonal_conformal_scale",
+        )
+        axes[axis_name] = sorted([measured, derived], key=lambda x: x["degrees"])
+        repaired = True
+
+    if repaired and orientation_determinant(chart) >= 0:
+        raise ValueError(f"Page {chart.get('page')}: reconstructed axis is mirrored")
+    return repaired
+
+
 def repair(chart):
     if chart.get("validation", {}).get("method") != "single_axis_plus_conformal_scale":
         return False
 
+    restored_metadata = restore_source_verified_derived_axis(chart)
     if orientation_determinant(chart) < 0:
-        return False
+        return restored_metadata
 
     derived_axes = [
         name
@@ -145,7 +210,7 @@ def main():
 
     print(
         json.dumps({
-            "repairedMirroredCharts": len(repaired),
+            "repairedOrRestoredChartMetadata": len(repaired),
             "pages": repaired,
         })
     )
