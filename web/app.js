@@ -606,7 +606,9 @@ $("#updateCheckBtn").addEventListener("click",refreshWebUpdates);
 $("#updateRefreshBtn").addEventListener("click",async()=>{
   updateText("updateAppStatus","Checking web app files…");
   try{await navigator.serviceWorker?.getRegistration()?.then(r=>r?.update())}catch(_){}
-  window.location.reload();
+  // Explicit user-triggered refresh only (never a forced mid-chart reload).
+  const next=new URL(location.href);next.searchParams.set('app-check',String(Date.now()));next.hash='#update';
+  window.location.assign(next.href);
 });
 // Compact airport picker for phones: one full-height scrollable profile,
 // not a 24dvh picker permanently stacked on top of the chart.
