@@ -570,7 +570,7 @@ async function refreshWebUpdates(){
       select.innerHTML='<option value="">Select an airport</option>';
       for(const icao of codes){
         const option=document.createElement("option");
-        option.value=icao;option.textContent=icao+" · "+(airportName(icao)||icao);
+        option.value=icao;option.textContent=icao+" · "+((AIRPORTS[icao]||[])[0]||icao);
         select.appendChild(option);
       }
       select.value=codes.includes(selectedAirport)?selectedAirport:(codes[0]||"");
@@ -815,6 +815,7 @@ function renderAirports(filter=""){
 $("#airportSearch").addEventListener("input",e=>renderAirports(e.target.value));
 function selectAirport(icao){
   selectedAirport=icao;selectedChart=null;airportTreeExpanded=true;profileProcedureTab="Airport";profileTab="Overview";
+  closeAirportPicker();
   window.jeppiranSelectedRunway=icao==="OIAA"?"32L":"";
   expanded=new Set();
   $("#chartsView").classList.remove("chart-open");
@@ -936,7 +937,13 @@ function renderAirportProfile(icao){
   const cityName=(meta[1]||"").toLowerCase().replace(/\b\w/g,m=>m.toUpperCase());
   // Every airport must expose its actual STAR/SID/AIRPORT/APP procedures
   // directly on the profile, even on narrow Android/WebView screens.
-  const airportProcedures=charts.filter(c=>c.airport===icao);
+  const airportProcedures=charts.filter(c=>c.airport===icao).filter((c,i,items)=>{
+    // Multiple identically named airport information sheets must not make
+    // the mobile procedure chooser appear to contain duplicates.
+    const title=displayChartName(c).trim().toUpperCase();
+    if(c.category!=="Airport"||title!=="AIRPORT INFORMATION")return true;
+    return items.findIndex(x=>x.category==="Airport"&&displayChartName(x).trim().toUpperCase()===title)===i;
+  });
   const procedureGroups=[["STAR","STAR"],["SID","SID"],["Airport","AIRPORT"],["Approach","APP"]];
   const chosenGroup=procedureGroups.some(([key])=>key===profileProcedureTab)?profileProcedureTab:"Airport";
   const activeProcedures=airportProcedures.filter(c=>c.category===chosenGroup)
