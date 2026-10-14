@@ -79,6 +79,16 @@ async function waitForServer(){
     "Android phone airport profile is clipped by inactive chart UI: "+JSON.stringify(geometry));
   assert.equal(geometry.toolbarDisplay,"none","inactive chart toolbar must be hidden on phone");
   assert.equal(geometry.workspaceDisplay,"none","inactive PDF workspace must be hidden on phone");
+  assert.equal(await page.locator("#airportPickerBtn").isVisible(),true,
+    "phone Charts must provide the airport drawer button");
+  assert.equal(await page.locator("#chartsView .airport-pane").isVisible(),false,
+    "airport list must not cover the chosen airport's chart/profile");
+  await page.locator("#airportPickerBtn").click();
+  assert.equal(await page.locator("#chartsView .airport-pane").isVisible(),true,
+    "airport drawer can be opened to switch airports");
+  await page.locator("#airportPickerBtn").click();
+  assert.equal(await page.locator("#chartsView .airport-pane").isVisible(),false,
+    "airport drawer can be closed");
   assert.ok(geometry.procedureHeight>80&&geometry.procedureWidth>220,
     "procedure panel has collapsed on phone: "+JSON.stringify(geometry));
   await page.locator('#profileProcedures [data-proc-cat="SID"]').click();
@@ -96,6 +106,19 @@ async function waitForServer(){
   assert.ok(await page.locator("#homeTerminalValidity").isVisible(),"Home status still visible");
   assert.equal(await page.locator("#homeTerminalValidity .terminal-validity-dates").count(),0,
    "Home must not gain detailed validity dates");
+
+  // Real Update route must not show the obsolete "Chart data" popup.
+  await page.locator("#updateCard").click();
+  await page.locator("#updateView.active").waitFor({state:"visible",timeout:5000});
+  await page.waitForFunction(()=>document.querySelectorAll("#updateAirportSelect option").length>3,
+    {timeout:25000});
+  assert.ok(await page.locator("#updateAirportDetails .jp-update-change").count()>0,
+    "published airport revision rows must be visible in Update");
+  assert.match(await page.locator("#updateCycleStatus").innerText(),/Published: V2621/,
+    "web updates must display the actual cycle, separate from APK version");
+  assert.equal(await page.locator("#messageDialog").isVisible(),false,
+    "update must not show the old chart-data popup");
+  console.log("PASS web Update page: published cycle, 78-airport change log, no obsolete popup.");
 
   // Light theme must render both labels legibly without adding a profile card.
   await page.evaluate(()=>{
