@@ -67,26 +67,26 @@ async function waitForServer(){
   const phoneCss=require("node:fs").readFileSync(
     path.join(root,"app/src/main/assets/phone-layout.css"),"utf8");
   await page.addStyleTag({content:phoneCss});
-  await page.locator("#profileProcedures").waitFor({state:"visible",timeout:18000});
+  await page.locator("#profileWeather").waitFor({state:"visible",timeout:18000});
+  assert.equal(await page.locator("#profileProcedures").count(),0,"airport profile must not contain a duplicated chart list");
   const geometry=await page.evaluate(()=>{
     const profile=document.getElementById("airportProfile");
-    const procedures=document.getElementById("profileProcedures");
-    const rect=procedures.getBoundingClientRect();
+    const chartTree=document.querySelector("#chartsView .airport-inline-tree");
     return {
       airports:document.querySelectorAll("#airportList .airport-item").length,
       cards:document.querySelectorAll("#airportProfile .profile-card").length,
-      tabs:document.querySelectorAll("#profileProcedures [data-proc-cat]").length,
+      tabs:document.querySelectorAll("#chartsView .airport-inline-tree .tree-group-head").length,
       profileHeight:profile.getBoundingClientRect().height,
       toolbarDisplay:getComputedStyle(document.querySelector("#chartsView .viewer-toolbar")).display,
       workspaceDisplay:getComputedStyle(document.querySelector("#jpCdfaWorkspace")).display,
-      procedureHeight:rect.height,
-      procedureWidth:rect.width,
+      chartTreePresent:!!chartTree,
       profileScrollHeight:profile.scrollHeight
     };
   });
   assert.ok(geometry.airports>2,"phone must display multiple airports: "+JSON.stringify(geometry));
   assert.ok(geometry.cards>=5,"phone profile missing visible data panels: "+JSON.stringify(geometry));
-  assert.equal(geometry.tabs,4,"STAR/SID/AIRPORT/APP category controls are mandatory");
+  assert.equal(geometry.tabs,4,"STAR/SID/AIRPORT/APP remain available only in the airport sidebar");
+  assert.ok(geometry.chartTreePresent,"selected airport must have a sidebar procedure tree");
   assert.ok(geometry.profileHeight>=380,
     "Android phone airport profile is clipped by inactive chart UI: "+JSON.stringify(geometry));
   assert.equal(geometry.toolbarDisplay,"none","inactive chart toolbar must be hidden on phone");
@@ -109,11 +109,12 @@ async function waitForServer(){
   await page.waitForTimeout(220);
   const closedAgain=await page.evaluate(()=>document.querySelector("#chartsView .airport-pane").getBoundingClientRect().right);
   assert.ok(closedAgain<=8,"airport drawer can be closed: "+closedAgain);
-  assert.ok(geometry.procedureHeight>80&&geometry.procedureWidth>220,
-    "procedure panel has collapsed on phone: "+JSON.stringify(geometry));
-  await page.locator('#profileProcedures [data-proc-cat="SID"]').click();
-  assert.ok(await page.locator('#profileProcedures [data-proc-page]').count()>0,
-    "SID charts not rendered for OIII");
+  await page.locator("#airportPickerBtn").click();
+  await page.locator("#chartsView .airport-inline-tree .tree-group-head")
+    .filter({hasText:/SID \(/}).first().click();
+  assert.ok(await page.locator("#chartsView .airport-inline-tree .tree-item").count()>0,
+    "SID charts must be accessible from the airport drawer, not duplicated in the profile");
+  await page.locator("#airportPickerCloseBtn").click();
   console.log("PASS Android phone chart body and procedures",JSON.stringify(geometry));
   await page.setViewportSize({width:1440,height:900});
   await page.evaluate(()=>document.documentElement.classList.remove("jp-android-phone"));

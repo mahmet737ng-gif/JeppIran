@@ -29,3 +29,13 @@ test('HOME is hidden on Charts and fullscreen without affecting owner-locked ges
   assert.match(read('web/fullscreen-chart-drawer.css'),/body\.viewer-fullscreen #jpChartMenuBtn/);
   assert.match(read('web/service-worker.js'),/jeppiran-pwa-2621-chart-back-r1/);
 });
+
+test('airport chart categories remain in the sidebar and NEVER occupy profile Overview',()=>{
+  const js=read('web/app.js');
+  assert.doesNotMatch(js,/id="profileProcedures"/);
+  assert.doesNotMatch(js,/procedureMarkup\s*\+/);
+  assert.match(js,/renderTreeInto\(tree\)/);
+  assert.match(js,/\["STAR","SID","Airport","Approach"\]\.forEach/);
+  assert.match(js,/class="profile-heading"/);
+  assert.match(js,/id="profileWeather"/);
+});

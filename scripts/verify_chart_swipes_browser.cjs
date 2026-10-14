@@ -20,7 +20,7 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   const page=await browser.newPage({viewport:{width:1100,height:830}});
   page.on("pageerror",err=>console.error("Browser page error:",err.message));
   await page.goto(base+"#charts",{waitUntil:"domcontentloaded"});
-  await page.locator("#profileProcedures [data-proc-page]").first().waitFor({timeout:85000});
+  await page.locator("#airportList .airport-item.selected").first().waitFor({timeout:85000});
   await page.evaluate(()=>{
    const airport=charts.filter(c=>c.airport==="OIII").sort((a,b)=>(a.pdf_page||0)-(b.pdf_page||0));
    if(airport.length<3)throw Error("Missing OIII chart samples");
