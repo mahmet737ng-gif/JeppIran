@@ -2539,4 +2539,5 @@ if(new URLSearchParams(location.search).get("platform")!=="android-phone"&&
   navigator.serviceWorker.register("./service-worker.js",{updateViaCache:"none"}).catch(()=>{});
 }
 loadData();
-const start=(location.hash||"#home").slice(1); const initial=["home","charts","wx","simulator"].includes(start)?start:"home"; renderRoute(initial); if(!location.hash)history.replaceState({route:initial},"","#"+initial);
+const start=(location.hash||"#home").slice(1); const initial=["home","charts","wx","simulator","update"].includes(start)?start:"home"; renderRoute(initial); if(!location.hash)history.replaceState({route:initial},"","#"+initial);
+if(initial==="update")refreshWebUpdates();
