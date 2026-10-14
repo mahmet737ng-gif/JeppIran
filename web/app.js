@@ -518,11 +518,111 @@ async function loadData(){
     }
   }
 }
-$("#updateCard").addEventListener("click",async()=>{
-  $("#updateSubtitle").textContent="Checking…";
-  await loadData();
-  dialog("Chart data",manifest?("Current web data: "+(manifest.version||VERSION)+". Airport PDFs are loaded on demand."):"Unable to check updates.");
+// Android is a fully local APK with its own signed native update manager.
+// Never mistake the current bundled AIRAC cycle for the APK version.
+let publishedChartChanges=null;
+const updateBtn=$("#updateCard");
+updateBtn.addEventListener("click",()=>{
+  if(document.querySelector('meta[name="jeppiran-runtime"][content="android-local-apk"]')){
+    // The Android WebView intercepts this non-network scheme and launches
+    // UpdateActivity. A missing handler must not fall back to GitHub Pages.
+    window.location.href="jeppiran://updates";
+    return;
+  }
+  route("update");
+  refreshWebUpdates();
 });
+function updateText(id,text){const node=document.getElementById(id);if(node)node.textContent=text}
+async function refreshWebUpdates(){
+  const installed=manifest?.version||"Unknown";
+  updateText("updateCycleStatus","Installed web charts: "+installed+". Checking current published data…");
+  updateText("updateCycleDates","Terminal validity comes from the published cycle.");
+  updateText("updateChangesStatus","Loading published chart changes…");
+  try{
+    const [mResponse,changesResponse,enrouteResponse]=await Promise.all([
+      fetch("./data/charts-manifest.json?check="+Date.now(),{cache:"no-store"}),
+      fetch("./data/chart-changes.json?check="+Date.now(),{cache:"no-store"}),
+      fetch("./data/enroute-manifest.json?check="+Date.now(),{cache:"no-store"})
+    ]);
+    if(!mResponse.ok)throw Error("Latest chart manifest HTTP "+mResponse.status);
+    const latest=await mResponse.json();
+    const current=latest.version||latest.cycle||"Unknown";
+    const equal=current===installed;
+    updateText("updateCycleStatus",
+      "Installed web charts: "+installed+" · Published: "+current+
+      (equal?" · UP TO DATE":" · A NEW CYCLE IS AVAILABLE"));
+    updateText("updateCycleDates",
+      latest.effective_from&&latest.effective_to
+      ?"Validity: "+latest.effective_from+" → "+latest.effective_to
+      :"Cycle date range is not provided in the source manifest. Check the validity indicator above.");
+    if(enrouteResponse.ok){
+      const enroute=await enrouteResponse.json();
+      updateText("updateEnrouteStatus",enroute.published&&enroute.files?.length
+        ?"Published Enroute cycle "+enroute.cycle+" · "+enroute.files.length+" files"
+        :"Enroute data package is not yet published; no update is available.");
+    }else updateText("updateEnrouteStatus","Unable to verify Enroute data.");
+    if(changesResponse.ok){
+      publishedChartChanges=await changesResponse.json();
+      const airports=publishedChartChanges.airports||{};
+      const codes=Object.keys(airports).sort();
+      updateText("updateChangesStatus",codes.length+" airports in the published "+(publishedChartChanges.chartDataVersion||current)+" change record.");
+      const select=$("#updateAirportSelect");
+      select.innerHTML='<option value="">Select an airport</option>';
+      for(const icao of codes){
+        const option=document.createElement("option");
+        option.value=icao;option.textContent=icao+" · "+(airportName(icao)||icao);
+        select.appendChild(option);
+      }
+      select.value=codes.includes(selectedAirport)?selectedAirport:(codes[0]||"");
+      renderUpdateAirportChanges();
+    }else{
+      updateText("updateChangesStatus","Published per-airport changes are unavailable.");
+      $("#updateAirportDetails").replaceChildren();
+    }
+  }catch(e){
+    updateText("updateCycleStatus","Unable to check for new charts. The installed cycle "+installed+" is unchanged.");
+    updateText("updateCycleDates",e.message||"Network unavailable");
+    updateText("updateChangesStatus","Cannot check published changes while offline. Local charts remain available.");
+  }
+}
+function renderUpdateAirportChanges(){
+  const icao=$("#updateAirportSelect").value;
+  const root=$("#updateAirportDetails");root.replaceChildren();
+  const rows=publishedChartChanges?.airports?.[icao]?.summary||[];
+  if(!rows.length){root.textContent="No published change entries for this airport.";return}
+  const head=document.createElement("div");head.className="jp-update-changes-head";
+  head.textContent=icao+" · "+rows.length+" published entries";
+  root.appendChild(head);
+  for(const row of rows){
+    const item=document.createElement("div");item.className="jp-update-change";
+    const kind=document.createElement("b");kind.textContent=row.action||"CHANGE";
+    const text=document.createElement("span");
+    text.textContent=(row.index?row.index+" · ":"")+(row.procedure||"Unnamed chart");
+    item.append(kind,text);root.appendChild(item);
+  }
+}
+$("#updateAirportSelect").addEventListener("change",renderUpdateAirportChanges);
+$("#updateCheckBtn").addEventListener("click",refreshWebUpdates);
+$("#updateRefreshBtn").addEventListener("click",async()=>{
+  updateText("updateAppStatus","Checking web app files…");
+  try{await navigator.serviceWorker?.getRegistration()?.then(r=>r?.update())}catch(_){}
+  window.location.reload();
+});
+// Compact airport picker for phones: one full-height scrollable profile,
+// not a 24dvh picker permanently stacked on top of the chart.
+const airportPickerBtn=$("#airportPickerBtn");
+function closeAirportPicker(){
+  $("#chartsView").classList.remove("jp-airport-picker-open");
+  airportPickerBtn.setAttribute("aria-expanded","false");
+  const tag=$("#airportPickerIcao");
+  if(tag)tag.textContent=selectedAirport||"";
+}
+airportPickerBtn.addEventListener("click",()=>{
+  const open=$("#chartsView").classList.toggle("jp-airport-picker-open");
+  airportPickerBtn.setAttribute("aria-expanded",String(open));
+  if(open)$("#airportSearch").focus();
+});
+
 
 
 /* Approved JeppIran airport profile — display-only; live data is never faked. */
