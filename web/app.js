@@ -365,7 +365,7 @@ async function returnToJeppiranHome(){
   }
 }
 ["chartsBackBtn","chartsBackMobileBtn"].forEach(id=>{const b=$("#"+id);if(b)b.addEventListener("click",()=>{void returnToJeppiranHome()})});
-$("[data-route]").forEach(b=>b.addEventListener("click",e=>{
+$$("[data-route]").forEach(b=>b.addEventListener("click",e=>{
   e.preventDefault();
   const target=b.dataset.route;
   // Keep navigation inside the current JEPPIRAN origin. In Local FSX mode,
