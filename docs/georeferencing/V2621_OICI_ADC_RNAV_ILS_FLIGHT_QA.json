@@ -1,0 +1,157 @@
+{
+  "cycle": "V2621",
+  "pdfSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+  "scope": "OICI Ilam ADC RNAV STAR RNAV SID ILS simulator flight test only",
+  "pages": [
+    208,
+    210,
+    211,
+    212,
+    213,
+    214
+  ],
+  "previousCount": 801,
+  "currentCount": 807,
+  "previousReferencesIdentical": true,
+  "mehrabadUnmodified": true,
+  "oiciVorApproaches215and216Preserved": true,
+  "simulatorOnly": true,
+  "notForActualNavigation": true,
+  "ownerFlightTestPending": true,
+  "sourceGcpAndIndependentLandmarkChecks": [
+    {
+      "pdfPage": 208,
+      "chartKey": "OICI|STAR|10-2|ALTET 1Q",
+      "sourceGridResidualPdfPoints": 0.0,
+      "sourceGridAxes": {
+        "latitude": 1,
+        "longitude": 2
+      },
+      "sourceGcpCount": 4,
+      "orientation": -1035586.795,
+      "namedLandmark": "ALTET",
+      "landmarkCoordinateSource": "FlightPlanDatabase G202 ALTET",
+      "landmarkProjectedPdf": [
+        275.1,
+        131.23
+      ],
+      "closestNamedLabelPdfPoints": 29.42,
+      "notToScaleRects": 0,
+      "excludedBounds": []
+    },
+    {
+      "pdfPage": 210,
+      "chartKey": "OICI|SID|10-3|ALTET 1C, ALTET 1D",
+      "sourceGridResidualPdfPoints": 0.0,
+      "sourceGridAxes": {
+        "latitude": 1,
+        "longitude": 2
+      },
+      "sourceGcpCount": 4,
+      "orientation": -459785.464,
+      "namedLandmark": "ALTET",
+      "landmarkCoordinateSource": "FlightPlanDatabase G202 ALTET",
+      "landmarkProjectedPdf": [
+        281.82,
+        153.29
+      ],
+      "closestNamedLabelPdfPoints": 30.36,
+      "notToScaleRects": 0,
+      "excludedBounds": []
+    },
+    {
+      "pdfPage": 211,
+      "chartKey": "OICI|AIRPORT|10-9|AIRPORT DIAGRAM CHART (ADC)",
+      "sourceGridResidualPdfPoints": 0.08,
+      "sourceGridAxes": {
+        "latitude": 2,
+        "longitude": 3
+      },
+      "sourceGcpCount": 6,
+      "orientation": -106117516.8,
+      "namedLandmark": "ARP",
+      "landmarkCoordinateSource": "Source Jeppesen OICI printed ARP rounded to 0.1 minute",
+      "landmarkProjectedPdf": [
+        300.21,
+        264.06
+      ],
+      "closestNamedLabelPdfPoints": 7.27,
+      "notToScaleRects": 0,
+      "excludedBounds": []
+    },
+    {
+      "pdfPage": 212,
+      "chartKey": "OICI|APPROACH|11-1|ILS Z RWY 32",
+      "sourceGridResidualPdfPoints": 0.2,
+      "sourceGridAxes": {
+        "latitude": 3,
+        "longitude": 5
+      },
+      "sourceGcpCount": 15,
+      "orientation": -459596.333,
+      "namedLandmark": "ILM",
+      "landmarkCoordinateSource": "Iran AIP ENR 4.1 ILM VOR/DME",
+      "landmarkProjectedPdf": [
+        265.01,
+        264.53
+      ],
+      "closestNamedLabelPdfPoints": 64.62,
+      "notToScaleRects": 1,
+      "excludedBounds": [
+        {
+          "left": 145,
+          "top": 168.24,
+          "right": 260,
+          "bottom": 230.88
+        }
+      ]
+    },
+    {
+      "pdfPage": 213,
+      "chartKey": "OICI|APPROACH|11-1|ILS Z RWY 32",
+      "sourceGridResidualPdfPoints": 0.129244,
+      "sourceGridAxes": {
+        "latitude": 3,
+        "longitude": 5
+      },
+      "sourceGcpCount": 15,
+      "orientation": -459756.285,
+      "namedLandmark": "ARP",
+      "landmarkCoordinateSource": "Source Jeppesen OICI printed ARP rounded to 0.1 minute",
+      "landmarkProjectedPdf": [
+        262.09,
+        270.66
+      ],
+      "closestNamedLabelPdfPoints": 260.61,
+      "notToScaleRects": 0,
+      "excludedBounds": []
+    },
+    {
+      "pdfPage": 214,
+      "chartKey": "OICI|APPROACH|11-2|ILS Y RWY 32",
+      "sourceGridResidualPdfPoints": 0.2,
+      "sourceGridAxes": {
+        "latitude": 3,
+        "longitude": 5
+      },
+      "sourceGcpCount": 15,
+      "orientation": -459596.333,
+      "namedLandmark": "ILM",
+      "landmarkCoordinateSource": "Iran AIP ENR 4.1 ILM VOR/DME",
+      "landmarkProjectedPdf": [
+        265.01,
+        264.53
+      ],
+      "closestNamedLabelPdfPoints": 71.24,
+      "notToScaleRects": 1,
+      "excludedBounds": [
+        {
+          "left": 145,
+          "top": 168.24,
+          "right": 260,
+          "bottom": 230.88
+        }
+      ]
+    }
+  ]
+}

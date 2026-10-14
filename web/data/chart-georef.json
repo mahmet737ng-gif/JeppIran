@@ -20314,6 +20314,1087 @@
       }
     },
     {
+      "page": 208,
+      "airport": "OICI",
+      "name": "ALTET 1Q",
+      "chartKey": "OICI|STAR|10-2|ALTET 1Q",
+      "sourceFingerprint": "6304c36cc50db539a6e562a22c7e6b22f60217b88e2b1e09f19d36d8418f401b",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.48,
+        "top": 51.12,
+        "right": 530.52,
+        "bottom": 780.36
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 33.333333333333336,
+          "lon": 46.5,
+          "x": 500.7328430813458,
+          "y": 608.0399780273438,
+          "source": "Derived orthogonal conformal grid intersection"
+        },
+        {
+          "lat": 33.333333333333336,
+          "lon": 47,
+          "x": 500.7328430813458,
+          "y": 143.4000244140625,
+          "source": "Derived orthogonal conformal grid intersection"
+        },
+        {
+          "lat": 33.5,
+          "lon": 46.5,
+          "x": 315,
+          "y": 608.0399780273438,
+          "source": "Printed grid 33-30 / 46-30"
+        },
+        {
+          "lat": 33.5,
+          "lon": 47,
+          "x": 315,
+          "y": 143.4000244140625,
+          "source": "Printed grid 33-30 / 47-00"
+        }
+      ],
+      "gridAxes": {
+        "latitude": [
+          {
+            "label": null,
+            "degrees": 33.333333333333336,
+            "pdfPoint": 500.7328430813458,
+            "pixelAxis": "x",
+            "labelBounds": null,
+            "tickSegment": null,
+            "derived": true,
+            "derivation": "orthogonal_conformal_scale"
+          },
+          {
+            "label": "33-30",
+            "degrees": 33.5,
+            "pdfPoint": 315,
+            "pixelAxis": "x",
+            "labelBounds": [
+              312.2532,
+              758.8151,
+              321.0122,
+              775.2
+            ],
+            "tickSegment": [
+              315,
+              780.36,
+              315,
+              776.64
+            ]
+          }
+        ],
+        "longitude": [
+          {
+            "label": "46-30",
+            "degrees": 46.5,
+            "pdfPoint": 608.0399780273438,
+            "pixelAxis": "y",
+            "labelBounds": [
+              519.9732,
+              599.4551,
+              528.7322,
+              615.84
+            ],
+            "tickSegment": [
+              530.52,
+              608.04,
+              526.8,
+              608.04
+            ]
+          },
+          {
+            "label": "47-00",
+            "degrees": 47,
+            "pdfPoint": 143.4000244140625,
+            "pixelAxis": "y",
+            "labelBounds": [
+              519.9732,
+              135.1752,
+              528.7322,
+              151.56
+            ],
+            "tickSegment": [
+              530.52,
+              143.4,
+              526.8,
+              143.4
+            ]
+          }
+        ]
+      },
+      "airportAnchor": {
+        "sourcePage": 206,
+        "lat": 33.585,
+        "lon": 46.405
+      },
+      "maxResidualPdfPoints": 0.75,
+      "validation": {
+        "gridMaxResidualPdfPoints": 0,
+        "controlPointCount": 4,
+        "method": "single_axis_plus_conformal_scale",
+        "measuredAxisValueCounts": {
+          "latitude": 1,
+          "longitude": 2
+        },
+        "notToScaleTextPresentElsewhereOnPage": false,
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "visualReview": true,
+        "flightTestOnly": true,
+        "ownerFlightTestPending": true,
+        "independentNamedLandmarkChecked": true
+      }
+    },
+    {
+      "page": 210,
+      "airport": "OICI",
+      "name": "ALTET 1C, ALTET 1D",
+      "chartKey": "OICI|SID|10-3|ALTET 1C, ALTET 1D",
+      "sourceFingerprint": "17880ed1f4ff589182dfe4102246d61967b749c9c80f5a9351361257f7ca29a0",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "right": 612,
+        "bottom": 792
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 33.333333333333336,
+          "lon": 46.5,
+          "x": 432.1579342895117,
+          "y": 471,
+          "source": "Derived orthogonal conformal grid intersection"
+        },
+        {
+          "lat": 33.333333333333336,
+          "lon": 47,
+          "x": 432.1579342895117,
+          "y": 161.4000244140625,
+          "source": "Derived orthogonal conformal grid intersection"
+        },
+        {
+          "lat": 33.5,
+          "lon": 46.5,
+          "x": 308.3999938964844,
+          "y": 471,
+          "source": "Printed grid 33-30 / 46-30"
+        },
+        {
+          "lat": 33.5,
+          "lon": 47,
+          "x": 308.3999938964844,
+          "y": 161.4000244140625,
+          "source": "Printed grid 33-30 / 47-00"
+        }
+      ],
+      "gridAxes": {
+        "latitude": [
+          {
+            "label": null,
+            "degrees": 33.333333333333336,
+            "pdfPoint": 432.1579342895117,
+            "pixelAxis": "x",
+            "labelBounds": null,
+            "tickSegment": null,
+            "derived": true,
+            "derivation": "orthogonal_conformal_scale"
+          },
+          {
+            "label": "33-30",
+            "degrees": 33.5,
+            "pdfPoint": 308.3999938964844,
+            "pixelAxis": "x",
+            "labelBounds": [
+              305.5332,
+              758.8151,
+              314.2922,
+              775.2
+            ],
+            "tickSegment": [
+              308.4,
+              780.24,
+              308.4,
+              776.52
+            ]
+          }
+        ],
+        "longitude": [
+          {
+            "label": "46-30",
+            "degrees": 46.5,
+            "pdfPoint": 471,
+            "pixelAxis": "y",
+            "labelBounds": [
+              519.9732,
+              462.6551,
+              528.7322,
+              479.04
+            ],
+            "tickSegment": [
+              530.52,
+              471,
+              526.8,
+              471
+            ]
+          },
+          {
+            "label": "47-00",
+            "degrees": 47,
+            "pdfPoint": 161.4000244140625,
+            "pixelAxis": "y",
+            "labelBounds": [
+              385.5732,
+              153.1752,
+              394.3322,
+              169.56
+            ],
+            "tickSegment": [
+              396,
+              161.4,
+              392.28,
+              161.4
+            ]
+          }
+        ]
+      },
+      "airportAnchor": {
+        "sourcePage": 206,
+        "lat": 33.585,
+        "lon": 46.405
+      },
+      "maxResidualPdfPoints": 0.75,
+      "validation": {
+        "gridMaxResidualPdfPoints": 0,
+        "controlPointCount": 4,
+        "method": "single_axis_plus_conformal_scale",
+        "measuredAxisValueCounts": {
+          "latitude": 1,
+          "longitude": 2
+        },
+        "notToScaleTextPresentElsewhereOnPage": false,
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "visualReview": true,
+        "flightTestOnly": true,
+        "ownerFlightTestPending": true,
+        "independentNamedLandmarkChecked": true
+      }
+    },
+    {
+      "page": 211,
+      "airport": "OICI",
+      "name": "Airport Diagram Chart (ADC)",
+      "chartKey": "OICI|AIRPORT|10-9|AIRPORT DIAGRAM CHART (ADC)",
+      "sourceFingerprint": "89cf8ae5fd0b4bcd6ba69f9bd9d1bf42fe2ff00fd98668ff312641384a4ebe76",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 85.44,
+        "top": 83.52,
+        "right": 526.2,
+        "bottom": 465.6
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 33.583333333333336,
+          "lon": 46.38333333333333,
+          "x": 96.12,
+          "y": 282.84,
+          "source": "Printed grid 33-35 / 46-23"
+        },
+        {
+          "lat": 33.583333333333336,
+          "lon": 46.4,
+          "x": 253.2,
+          "y": 282.84,
+          "source": "Printed grid 33-35 / 46-24"
+        },
+        {
+          "lat": 33.583333333333336,
+          "lon": 46.416666666666664,
+          "x": 410.04,
+          "y": 282.84,
+          "source": "Printed grid 33-35 / 46-25"
+        },
+        {
+          "lat": 33.6,
+          "lon": 46.38333333333333,
+          "x": 96.12,
+          "y": 95.04,
+          "source": "Printed grid 33-36 / 46-23"
+        },
+        {
+          "lat": 33.6,
+          "lon": 46.4,
+          "x": 253.2,
+          "y": 95.04,
+          "source": "Printed grid 33-36 / 46-24"
+        },
+        {
+          "lat": 33.6,
+          "lon": 46.416666666666664,
+          "x": 410.04,
+          "y": 95.04,
+          "source": "Printed grid 33-36 / 46-25"
+        }
+      ],
+      "gridAxes": {
+        "latitude": [
+          {
+            "label": "33-35",
+            "degrees": 33.583333333333336,
+            "pdfPoint": 282.84,
+            "pixelAxis": "y",
+            "labelBounds": null,
+            "tickSegment": null
+          },
+          {
+            "label": "33-36",
+            "degrees": 33.6,
+            "pdfPoint": 95.04,
+            "pixelAxis": "y",
+            "labelBounds": null,
+            "tickSegment": null
+          }
+        ],
+        "longitude": [
+          {
+            "label": "46-23",
+            "degrees": 46.38333333333333,
+            "pdfPoint": 96.12,
+            "pixelAxis": "x",
+            "labelBounds": null,
+            "tickSegment": null
+          },
+          {
+            "label": "46-24",
+            "degrees": 46.4,
+            "pdfPoint": 253.2,
+            "pixelAxis": "x",
+            "labelBounds": null,
+            "tickSegment": null
+          },
+          {
+            "label": "46-25",
+            "degrees": 46.416666666666664,
+            "pdfPoint": 410.04,
+            "pixelAxis": "x",
+            "labelBounds": null,
+            "tickSegment": null
+          }
+        ]
+      },
+      "maxResidualPdfPoints": 0.75,
+      "validation": {
+        "gridMaxResidualPdfPoints": 0,
+        "controlPointCount": 6,
+        "method": "paired_printed_graticule_vector_ticks",
+        "measuredAxisValueCounts": {
+          "latitude": 2,
+          "longitude": 3
+        },
+        "notToScaleTextPresentElsewhereOnPage": false,
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "visualReview": true,
+        "majorMinuteTicksOnly": true,
+        "flightTestOnly": true,
+        "ownerFlightTestPending": true,
+        "independentNamedLandmarkChecked": true
+      }
+    },
+    {
+      "page": 212,
+      "airport": "OICI",
+      "name": "ILS Z RWY 32",
+      "chartKey": "OICI|APPROACH|11-1|ILS Z RWY 32",
+      "sourceFingerprint": "2fe340c87df194cb112fd9b61b3321d5d9f4845b70e319ed4dc1626aa74c6ede",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.84,
+        "top": 168.24,
+        "right": 531.6,
+        "bottom": 503.28
+      },
+      "excludedBounds": [
+        {
+          "left": 145,
+          "top": 168.24,
+          "right": 260,
+          "bottom": 230.88
+        }
+      ],
+      "points": [
+        {
+          "lat": 33.333333333333336,
+          "lon": 46.166666666666664,
+          "x": 110.64,
+          "y": 445.92,
+          "source": "Printed grid 33-20 / 46-10"
+        },
+        {
+          "lat": 33.333333333333336,
+          "lon": 46.333333333333336,
+          "x": 214.08,
+          "y": 445.92,
+          "source": "Printed grid 33-20 / 46-20"
+        },
+        {
+          "lat": 33.333333333333336,
+          "lon": 46.5,
+          "x": 317.52,
+          "y": 445.92,
+          "source": "Printed grid 33-20 / 46-30"
+        },
+        {
+          "lat": 33.333333333333336,
+          "lon": 46.666666666666664,
+          "x": 420.96,
+          "y": 445.92,
+          "source": "Printed grid 33-20 / 46-40"
+        },
+        {
+          "lat": 33.333333333333336,
+          "lon": 46.833333333333336,
+          "x": 524.4,
+          "y": 445.92,
+          "source": "Printed grid 33-20 / 46-50"
+        },
+        {
+          "lat": 33.5,
+          "lon": 46.166666666666664,
+          "x": 110.64,
+          "y": 322.8,
+          "source": "Printed grid 33-30 / 46-10"
+        },
+        {
+          "lat": 33.5,
+          "lon": 46.333333333333336,
+          "x": 214.08,
+          "y": 322.8,
+          "source": "Printed grid 33-30 / 46-20"
+        },
+        {
+          "lat": 33.5,
+          "lon": 46.5,
+          "x": 317.52,
+          "y": 322.8,
+          "source": "Printed grid 33-30 / 46-30"
+        },
+        {
+          "lat": 33.5,
+          "lon": 46.666666666666664,
+          "x": 420.96,
+          "y": 322.8,
+          "source": "Printed grid 33-30 / 46-40"
+        },
+        {
+          "lat": 33.5,
+          "lon": 46.833333333333336,
+          "x": 524.4,
+          "y": 322.8,
+          "source": "Printed grid 33-30 / 46-50"
+        },
+        {
+          "lat": 33.666666666666664,
+          "lon": 46.166666666666664,
+          "x": 110.64,
+          "y": 199.08,
+          "source": "Printed grid 33-40 / 46-10"
+        },
+        {
+          "lat": 33.666666666666664,
+          "lon": 46.333333333333336,
+          "x": 214.08,
+          "y": 199.08,
+          "source": "Printed grid 33-40 / 46-20"
+        },
+        {
+          "lat": 33.666666666666664,
+          "lon": 46.5,
+          "x": 317.52,
+          "y": 199.08,
+          "source": "Printed grid 33-40 / 46-30"
+        },
+        {
+          "lat": 33.666666666666664,
+          "lon": 46.666666666666664,
+          "x": 420.96,
+          "y": 199.08,
+          "source": "Printed grid 33-40 / 46-40"
+        },
+        {
+          "lat": 33.666666666666664,
+          "lon": 46.833333333333336,
+          "x": 524.4,
+          "y": 199.08,
+          "source": "Printed grid 33-40 / 46-50"
+        }
+      ],
+      "gridAxes": {
+        "latitude": [
+          {
+            "label": "33-20",
+            "degrees": 33.333333333333336,
+            "pdfPoint": 445.92,
+            "pixelAxis": "y",
+            "labelBounds": null,
+            "tickSegment": null
+          },
+          {
+            "label": "33-30",
+            "degrees": 33.5,
+            "pdfPoint": 322.8,
+            "pixelAxis": "y",
+            "labelBounds": null,
+            "tickSegment": null
+          },
+          {
+            "label": "33-40",
+            "degrees": 33.666666666666664,
+            "pdfPoint": 199.08,
+            "pixelAxis": "y",
+            "labelBounds": null,
+            "tickSegment": null
+          }
+        ],
+        "longitude": [
+          {
+            "label": "46-10",
+            "degrees": 46.166666666666664,
+            "pdfPoint": 110.64,
+            "pixelAxis": "x",
+            "labelBounds": null,
+            "tickSegment": null
+          },
+          {
+            "label": "46-20",
+            "degrees": 46.333333333333336,
+            "pdfPoint": 214.08,
+            "pixelAxis": "x",
+            "labelBounds": null,
+            "tickSegment": null
+          },
+          {
+            "label": "46-30",
+            "degrees": 46.5,
+            "pdfPoint": 317.52,
+            "pixelAxis": "x",
+            "labelBounds": null,
+            "tickSegment": null
+          },
+          {
+            "label": "46-40",
+            "degrees": 46.666666666666664,
+            "pdfPoint": 420.96,
+            "pixelAxis": "x",
+            "labelBounds": null,
+            "tickSegment": null
+          },
+          {
+            "label": "46-50",
+            "degrees": 46.833333333333336,
+            "pdfPoint": 524.4,
+            "pixelAxis": "x",
+            "labelBounds": null,
+            "tickSegment": null
+          }
+        ]
+      },
+      "maxResidualPdfPoints": 0.75,
+      "validation": {
+        "gridMaxResidualPdfPoints": 0,
+        "controlPointCount": 15,
+        "method": "paired_printed_graticule_vector_ticks",
+        "measuredAxisValueCounts": {
+          "latitude": 3,
+          "longitude": 5
+        },
+        "notToScaleTextPresentElsewhereOnPage": true,
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "visualReview": true,
+        "majorMinuteTicksOnly": true,
+        "partialNotToScaleMasks": [
+          {
+            "reason": "Localized missed-approach or holding depiction labelled NOT TO SCALE",
+            "bounds": {
+              "left": 145,
+              "top": 168.24,
+              "right": 260,
+              "bottom": 230.88
+            }
+          }
+        ],
+        "flightTestOnly": true,
+        "ownerFlightTestPending": true,
+        "independentNamedLandmarkChecked": true
+      }
+    },
+    {
+      "page": 213,
+      "airport": "OICI",
+      "name": "ILS Z RWY 32",
+      "chartKey": "OICI|APPROACH|11-1|ILS Z RWY 32",
+      "sourceFingerprint": "c64af20c15d053ebfc9b2054cabfb0245e31950b49f5324f4bf192fe98b3f10b",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.48,
+        "top": 178.92,
+        "right": 531.6,
+        "bottom": 501.84
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 33.333333333333336,
+          "lon": 46.166666666666664,
+          "x": 114.12,
+          "y": 456.96,
+          "source": "Printed grid 33-20 / 46-10"
+        },
+        {
+          "lat": 33.333333333333336,
+          "lon": 46.333333333333336,
+          "x": 217.56,
+          "y": 456.96,
+          "source": "Printed grid 33-20 / 46-20"
+        },
+        {
+          "lat": 33.333333333333336,
+          "lon": 46.5,
+          "x": 321.12,
+          "y": 456.96,
+          "source": "Printed grid 33-20 / 46-30"
+        },
+        {
+          "lat": 33.333333333333336,
+          "lon": 46.666666666666664,
+          "x": 424.56,
+          "y": 456.96,
+          "source": "Printed grid 33-20 / 46-40"
+        },
+        {
+          "lat": 33.333333333333336,
+          "lon": 46.833333333333336,
+          "x": 528,
+          "y": 456.96,
+          "source": "Printed grid 33-20 / 46-50"
+        },
+        {
+          "lat": 33.5,
+          "lon": 46.166666666666664,
+          "x": 114.12,
+          "y": 333.72,
+          "source": "Printed grid 33-30 / 46-10"
+        },
+        {
+          "lat": 33.5,
+          "lon": 46.333333333333336,
+          "x": 217.56,
+          "y": 333.72,
+          "source": "Printed grid 33-30 / 46-20"
+        },
+        {
+          "lat": 33.5,
+          "lon": 46.5,
+          "x": 321.12,
+          "y": 333.72,
+          "source": "Printed grid 33-30 / 46-30"
+        },
+        {
+          "lat": 33.5,
+          "lon": 46.666666666666664,
+          "x": 424.56,
+          "y": 333.72,
+          "source": "Printed grid 33-30 / 46-40"
+        },
+        {
+          "lat": 33.5,
+          "lon": 46.833333333333336,
+          "x": 528,
+          "y": 333.72,
+          "source": "Printed grid 33-30 / 46-50"
+        },
+        {
+          "lat": 33.666666666666664,
+          "lon": 46.166666666666664,
+          "x": 114.12,
+          "y": 210.12,
+          "source": "Printed grid 33-40 / 46-10"
+        },
+        {
+          "lat": 33.666666666666664,
+          "lon": 46.333333333333336,
+          "x": 217.56,
+          "y": 210.12,
+          "source": "Printed grid 33-40 / 46-20"
+        },
+        {
+          "lat": 33.666666666666664,
+          "lon": 46.5,
+          "x": 321.12,
+          "y": 210.12,
+          "source": "Printed grid 33-40 / 46-30"
+        },
+        {
+          "lat": 33.666666666666664,
+          "lon": 46.666666666666664,
+          "x": 424.56,
+          "y": 210.12,
+          "source": "Printed grid 33-40 / 46-40"
+        },
+        {
+          "lat": 33.666666666666664,
+          "lon": 46.833333333333336,
+          "x": 528,
+          "y": 210.12,
+          "source": "Printed grid 33-40 / 46-50"
+        }
+      ],
+      "gridAxes": {
+        "latitude": [
+          {
+            "label": "33-20",
+            "degrees": 33.333333333333336,
+            "pdfPoint": 456.96,
+            "pixelAxis": "y",
+            "labelBounds": null,
+            "tickSegment": null
+          },
+          {
+            "label": "33-30",
+            "degrees": 33.5,
+            "pdfPoint": 333.72,
+            "pixelAxis": "y",
+            "labelBounds": null,
+            "tickSegment": null
+          },
+          {
+            "label": "33-40",
+            "degrees": 33.666666666666664,
+            "pdfPoint": 210.12,
+            "pixelAxis": "y",
+            "labelBounds": null,
+            "tickSegment": null
+          }
+        ],
+        "longitude": [
+          {
+            "label": "46-10",
+            "degrees": 46.166666666666664,
+            "pdfPoint": 114.12,
+            "pixelAxis": "x",
+            "labelBounds": null,
+            "tickSegment": null
+          },
+          {
+            "label": "46-20",
+            "degrees": 46.333333333333336,
+            "pdfPoint": 217.56,
+            "pixelAxis": "x",
+            "labelBounds": null,
+            "tickSegment": null
+          },
+          {
+            "label": "46-30",
+            "degrees": 46.5,
+            "pdfPoint": 321.12,
+            "pixelAxis": "x",
+            "labelBounds": null,
+            "tickSegment": null
+          },
+          {
+            "label": "46-40",
+            "degrees": 46.666666666666664,
+            "pdfPoint": 424.56,
+            "pixelAxis": "x",
+            "labelBounds": null,
+            "tickSegment": null
+          },
+          {
+            "label": "46-50",
+            "degrees": 46.833333333333336,
+            "pdfPoint": 528,
+            "pixelAxis": "x",
+            "labelBounds": null,
+            "tickSegment": null
+          }
+        ]
+      },
+      "maxResidualPdfPoints": 0.75,
+      "validation": {
+        "gridMaxResidualPdfPoints": 0,
+        "controlPointCount": 15,
+        "method": "paired_printed_graticule_vector_ticks",
+        "measuredAxisValueCounts": {
+          "latitude": 3,
+          "longitude": 5
+        },
+        "notToScaleTextPresentElsewhereOnPage": false,
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "visualReview": true,
+        "majorMinuteTicksOnly": true,
+        "flightTestOnly": true,
+        "ownerFlightTestPending": true,
+        "independentNamedLandmarkChecked": true
+      }
+    },
+    {
+      "page": 214,
+      "airport": "OICI",
+      "name": "ILS Y RWY 32",
+      "chartKey": "OICI|APPROACH|11-2|ILS Y RWY 32",
+      "sourceFingerprint": "34de0af5acb64bcc082fa7bd088e8e972384bdd110413963b5f24bc7a0226a91",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90.84,
+        "top": 168.24,
+        "right": 531.6,
+        "bottom": 503.28
+      },
+      "excludedBounds": [
+        {
+          "left": 145,
+          "top": 168.24,
+          "right": 260,
+          "bottom": 230.88
+        }
+      ],
+      "points": [
+        {
+          "lat": 33.333333333333336,
+          "lon": 46.166666666666664,
+          "x": 110.64,
+          "y": 445.92,
+          "source": "Printed grid 33-20 / 46-10"
+        },
+        {
+          "lat": 33.333333333333336,
+          "lon": 46.333333333333336,
+          "x": 214.08,
+          "y": 445.92,
+          "source": "Printed grid 33-20 / 46-20"
+        },
+        {
+          "lat": 33.333333333333336,
+          "lon": 46.5,
+          "x": 317.52,
+          "y": 445.92,
+          "source": "Printed grid 33-20 / 46-30"
+        },
+        {
+          "lat": 33.333333333333336,
+          "lon": 46.666666666666664,
+          "x": 420.96,
+          "y": 445.92,
+          "source": "Printed grid 33-20 / 46-40"
+        },
+        {
+          "lat": 33.333333333333336,
+          "lon": 46.833333333333336,
+          "x": 524.4,
+          "y": 445.92,
+          "source": "Printed grid 33-20 / 46-50"
+        },
+        {
+          "lat": 33.5,
+          "lon": 46.166666666666664,
+          "x": 110.64,
+          "y": 322.8,
+          "source": "Printed grid 33-30 / 46-10"
+        },
+        {
+          "lat": 33.5,
+          "lon": 46.333333333333336,
+          "x": 214.08,
+          "y": 322.8,
+          "source": "Printed grid 33-30 / 46-20"
+        },
+        {
+          "lat": 33.5,
+          "lon": 46.5,
+          "x": 317.52,
+          "y": 322.8,
+          "source": "Printed grid 33-30 / 46-30"
+        },
+        {
+          "lat": 33.5,
+          "lon": 46.666666666666664,
+          "x": 420.96,
+          "y": 322.8,
+          "source": "Printed grid 33-30 / 46-40"
+        },
+        {
+          "lat": 33.5,
+          "lon": 46.833333333333336,
+          "x": 524.4,
+          "y": 322.8,
+          "source": "Printed grid 33-30 / 46-50"
+        },
+        {
+          "lat": 33.666666666666664,
+          "lon": 46.166666666666664,
+          "x": 110.64,
+          "y": 199.08,
+          "source": "Printed grid 33-40 / 46-10"
+        },
+        {
+          "lat": 33.666666666666664,
+          "lon": 46.333333333333336,
+          "x": 214.08,
+          "y": 199.08,
+          "source": "Printed grid 33-40 / 46-20"
+        },
+        {
+          "lat": 33.666666666666664,
+          "lon": 46.5,
+          "x": 317.52,
+          "y": 199.08,
+          "source": "Printed grid 33-40 / 46-30"
+        },
+        {
+          "lat": 33.666666666666664,
+          "lon": 46.666666666666664,
+          "x": 420.96,
+          "y": 199.08,
+          "source": "Printed grid 33-40 / 46-40"
+        },
+        {
+          "lat": 33.666666666666664,
+          "lon": 46.833333333333336,
+          "x": 524.4,
+          "y": 199.08,
+          "source": "Printed grid 33-40 / 46-50"
+        }
+      ],
+      "gridAxes": {
+        "latitude": [
+          {
+            "label": "33-20",
+            "degrees": 33.333333333333336,
+            "pdfPoint": 445.92,
+            "pixelAxis": "y",
+            "labelBounds": null,
+            "tickSegment": null
+          },
+          {
+            "label": "33-30",
+            "degrees": 33.5,
+            "pdfPoint": 322.8,
+            "pixelAxis": "y",
+            "labelBounds": null,
+            "tickSegment": null
+          },
+          {
+            "label": "33-40",
+            "degrees": 33.666666666666664,
+            "pdfPoint": 199.08,
+            "pixelAxis": "y",
+            "labelBounds": null,
+            "tickSegment": null
+          }
+        ],
+        "longitude": [
+          {
+            "label": "46-10",
+            "degrees": 46.166666666666664,
+            "pdfPoint": 110.64,
+            "pixelAxis": "x",
+            "labelBounds": null,
+            "tickSegment": null
+          },
+          {
+            "label": "46-20",
+            "degrees": 46.333333333333336,
+            "pdfPoint": 214.08,
+            "pixelAxis": "x",
+            "labelBounds": null,
+            "tickSegment": null
+          },
+          {
+            "label": "46-30",
+            "degrees": 46.5,
+            "pdfPoint": 317.52,
+            "pixelAxis": "x",
+            "labelBounds": null,
+            "tickSegment": null
+          },
+          {
+            "label": "46-40",
+            "degrees": 46.666666666666664,
+            "pdfPoint": 420.96,
+            "pixelAxis": "x",
+            "labelBounds": null,
+            "tickSegment": null
+          },
+          {
+            "label": "46-50",
+            "degrees": 46.833333333333336,
+            "pdfPoint": 524.4,
+            "pixelAxis": "x",
+            "labelBounds": null,
+            "tickSegment": null
+          }
+        ]
+      },
+      "maxResidualPdfPoints": 0.75,
+      "validation": {
+        "gridMaxResidualPdfPoints": 0,
+        "controlPointCount": 15,
+        "method": "paired_printed_graticule_vector_ticks",
+        "measuredAxisValueCounts": {
+          "latitude": 3,
+          "longitude": 5
+        },
+        "notToScaleTextPresentElsewhereOnPage": true,
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "visualReview": true,
+        "majorMinuteTicksOnly": true,
+        "partialNotToScaleMasks": [
+          {
+            "reason": "Localized missed-approach or holding depiction labelled NOT TO SCALE",
+            "bounds": {
+              "left": 145,
+              "top": 168.24,
+              "right": 260,
+              "bottom": 230.88
+            }
+          }
+        ],
+        "flightTestOnly": true,
+        "ownerFlightTestPending": true,
+        "independentNamedLandmarkChecked": true
+      }
+    },
+    {
       "page": 215,
       "airport": "OICI",
       "name": "VOR A",
