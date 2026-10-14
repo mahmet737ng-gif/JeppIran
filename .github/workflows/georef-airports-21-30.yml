@@ -299,7 +299,7 @@ jobs:
             page=doc[p-1]
             # Mixed-scale pages require separate verified crops, not entire-sheet transforms.
             if 'NOT TO SCALE' in page.get_text():
-              assert c['validation'].get('reviewDecision')=='measured_plan_boxed_NTS_only', f'Unreviewed NTS page {p}'
+              assert c['validation'].get('reviewDecision') in ('measured_plan_boxed_NTS_only','fingerprint_bound_printed_vector_grid_plus_inset_mask'), f'Unreviewed NTS page {p}'
               assert c['excludedBounds'] and all(
                 any(fitz.Rect(b['left'],b['top'],b['right'],b['bottom']).contains(v) for b in c['excludedBounds'])
                 for v in page.search_for('NOT TO SCALE')
