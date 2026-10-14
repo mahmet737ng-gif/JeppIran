@@ -22,6 +22,7 @@ jobs:
         run: |
           python scripts/diagnose_georef_31_without_oiii.py
           python scripts/diagnose_inset_geometry_31.py
+          python scripts/diagnose_31_dash_tracks.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
