@@ -1,0 +1,196 @@
+name: V2621 georeference airports 21-30
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/georef-airports-21-30.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: jeppiran-v2621-georef-21-30
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          lfs: true
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install vector PDF georeference dependencies
+        run: python -m pip install -r scripts/requirements-georef.txt
+
+      - name: Source-lock and select exactly ten airports
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          airports = 'OIGG OIHH OIHR OIIE OIII OIKB OIIP OIKJ OIKK OIKM'.split()
+          manifest=json.loads(Path('web/data/charts-manifest.json').read_text())
+          rows=json.loads(Path('web/data/charts-current.json').read_text())
+          pdf=Path('Iran2621.pdf')
+          digest=hashlib.sha256(pdf.read_bytes()).hexdigest()
+          assert manifest['version']=='V2621' and manifest['source_sha256']==digest, 'Incorrect AIRAC/PDF'
+          assert manifest['pages']==1654 and pdf.stat().st_size>1000000, 'LFS PDF was not downloaded'
+          subset=[r for r in rows if r['airport'] in airports]
+          assert len(subset)==216 and len(set(int(x['page']) for x in subset))==216, 'Third batch page identities changed'
+          assert list(dict.fromkeys(r['airport'] for r in subset))==airports, 'Airport sequence changed'
+          Path('/tmp/third-georef-index.json').write_text(json.dumps(subset))
+          Path('/tmp/third-georef-pages.txt').write_text(','.join(str(x['page']) for x in subset))
+          print('Source PDF SHA256:',digest,'airport charts:',len(subset))
+          PY
+
+      - name: Derive real PDF graticule transforms without replacing accepted source records
+        shell: bash
+        run: |
+          set -euo pipefail
+          python scripts/extract_chart_georef.py \
+            --pdf Iran2621.pdf \
+            --index /tmp/third-georef-index.json \
+            --manifest web/data/charts-manifest.json \
+            --pages "$(cat /tmp/third-georef-pages.txt)" \
+            --previous-georef web/data/chart-georef.json \
+            --output /tmp/third-georef-extracted.json \
+            --audit /tmp/third-georef-audit.json \
+            --disable-independent-check
+
+      - name: Verify page fingerprints, physical orientation and measured source ticks
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,math,sys
+          from pathlib import Path
+          import fitz,numpy as np
+          sys.path.insert(0,'scripts')
+          from extract_chart_georef import page_fingerprint,segments,decimal_grid,chart_key
+          raw=json.loads(Path('/tmp/third-georef-extracted.json').read_text())
+          audit=json.loads(Path('/tmp/third-georef-audit.json').read_text())
+          index={int(c['page']):c for c in json.loads(Path('/tmp/third-georef-index.json').read_text())}
+          base=json.loads(Path('web/data/chart-georef.json').read_text())
+          doc=fitz.open('Iran2621.pdf')
+          assert raw['source']==base['source'], 'Source mismatch with installed georeferencing'
+          charts=raw['charts']
+          excluded=audit['excludedCharts']
+          assert len(charts)+len(excluded)==len(index)==216
+          assert {c['page'] for c in charts}.isdisjoint({c['page'] for c in excluded})
+          assert {c['page'] for c in charts}|{c['page'] for c in excluded}==set(index)
+          already={int(c['page']):c for c in base['charts']}
+          approved=[]
+          for c in charts:
+            p=int(c['page'])
+            assert c['airport']==index[p]['airport'] and c['chartKey']==chart_key(index[p])
+            assert c['sourceFingerprint']==page_fingerprint(doc[p-1])
+            assert c['coordinateSpace']=='pdf_points' and c['origin']=='top_left'
+            if p in already: continue  # DO NOT modify previously accepted models
+            page=doc[p-1]
+            # Mixed-scale pages require separate verified crops, not entire-sheet transforms.
+            assert 'NOT TO SCALE' not in page.get_text(), f'Unreviewed mixed-scale page {p}'
+            assert abs(c['width']-page.rect.width)<.01 and abs(c['height']-page.rect.height)<.01
+            assert len(c['points'])>=4 and all(c['bounds']['left']<=v['x']<=c['bounds']['right'] and c['bounds']['top']<=v['y']<=c['bounds']['bottom'] for v in c['points'])
+            print_ticks=np.array(segments(page),dtype=float)
+            words=page.get_text('words')
+            for axis, controls in c['gridAxes'].items():
+              assert len(controls)>=2
+              for ctrl in controls:
+                if ctrl.get('derived'):
+                  assert ctrl['derivation']=='orthogonal_conformal_scale'
+                  continue
+                assert abs(decimal_grid(ctrl['label'])-ctrl['degrees'])<1e-7
+                assert any(w[4]==ctrl['label'] and max(abs(float(a)-float(b)) for a,b in zip(w[:4],ctrl['labelBounds']))<.002 for w in words)
+                assert np.min(np.max(np.abs(print_ticks-np.array(ctrl['tickSegment'])),axis=1))<.002
+            ll=np.array([[x['lon'],x['lat']] for x in c['points']])
+            xy=np.array([[x['x'],x['y']] for x in c['points']])
+            m=ll.mean(axis=0)
+            design=np.column_stack([ll-m,np.ones(len(ll))])
+            coef,_,rank,_=np.linalg.lstsq(design,xy,rcond=None)
+            residual=np.max(np.linalg.norm(design@coef-xy,axis=1))
+            assert rank==3 and float(residual)<=c['maxResidualPdfPoints']+.00001
+            assert coef[0,0]*coef[1,1]-coef[0,1]*coef[1,0]<0, f'Mirrored transform {p}'
+            approved.append(p)
+          Path('/tmp/third-approved-pages.json').write_text(json.dumps(approved))
+          print(json.dumps({'calibratedInSource':len(charts),'alreadyPresent':len(charts)-len(approved),'newlySourceVerified':len(approved),'stillExcluded':len(excluded),'newPages':approved}))
+          PY
+
+      - name: Publish additive source-verified georefs to both web and native Android
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          # Always merge onto the LATEST production head: other independent tasks
+          # frequently publish while this expensive PDF inspection is running.
+          for attempt in 1 2 3 4; do
+            git fetch origin main
+            git checkout -B georef-airports-21-30-publish origin/main
+            python - <<'PY'
+          import json,hashlib
+          from pathlib import Path
+          target='OIGG OIHH OIHR OIIE OIII OIKB OIIP OIKJ OIKK OIKM'.split()
+          root=Path('web/data')
+          base_path=root/'chart-georef.json'
+          base=json.loads(base_path.read_text())
+          extracted=json.loads(Path('/tmp/third-georef-extracted.json').read_text())
+          approved=set(json.loads(Path('/tmp/third-approved-pages.json').read_text()))
+          manifest=json.loads((root/'charts-manifest.json').read_text())
+          assert base['source']==extracted['source']
+          assert manifest['source_sha256']==base['source']['sha256'] and manifest['version']=='V2621'
+          old={int(c['page']):c for c in base['charts']}
+          count=len(old)
+          published=[]
+          for item in extracted['charts']:
+            p=int(item['page'])
+            if p not in approved or p in old: continue
+            if item['airport'] not in target: raise ValueError('Unexpected airport')
+            old[p]=item
+            published.append(p)
+          assert len(old)>=count and all(int(x['page']) in old for x in base['charts'])
+          if published:
+            base['charts']=[old[p] for p in sorted(old)]
+            output=json.dumps(base,indent=2,ensure_ascii=False)+'\n'
+            base_path.write_text(output)
+            Path('app/src/main/assets/chart-georef.json').write_text(output)
+          audit=json.loads(Path('/tmp/third-georef-audit.json').read_text())
+          report={'source':extracted['source'],'batch':'airports_21_30',
+              'airportOrder':target,'sourcePages':216,'sourceCalibrated':len(extracted['charts']),
+              'newlyPublished':len(published),'publishedPages':published,
+              'alreadyPresentOrProtected':len(extracted['charts'])-len(published),
+              'excluded':audit['excludedCharts'],
+              'note':'Only source-locked, independently rechecked printed-vector grid models are added. Unverified NOT TO SCALE/inset, graticule-free, and ambiguous pages remain inactive. Not for actual navigation.'}
+          Path('docs/georeferencing').mkdir(parents=True,exist_ok=True)
+          Path('docs/georeferencing/V2621_AIRPORTS_21_30_REPORT.json').write_text(json.dumps(report,indent=2,ensure_ascii=False)+'\n')
+          print('NEW SOURCE-VERIFIED GEOREFS COMMITTED FOR WEB AND ANDROID:',published)
+          PY
+            git add web/data/chart-georef.json app/src/main/assets/chart-georef.json docs/georeferencing/V2621_AIRPORTS_21_30_REPORT.json
+            if git diff --cached --quiet; then
+              echo 'No new verified records, preexisting data protected.'
+              exit 0
+            fi
+            git commit -m 'Publish source-verified V2621 georeferences for airports 21-30'
+            if git push origin HEAD:main; then
+              echo 'Production web and native asset sources published.'
+              exit 0
+            fi
+            echo "Concurrent release advanced main; retrying additive merge ($attempt)."
+          done
+          exit 1
+
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: v2621-georef-airports-21-30-QA
+          path: |
+            /tmp/third-georef-extracted.json
+            /tmp/third-georef-audit.json
+            /tmp/third-approved-pages.json
+          if-no-files-found: ignore
