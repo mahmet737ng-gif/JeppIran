@@ -1,0 +1,334 @@
+{
+  "sourceSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+  "MehrabadGeorefsFrozen": true,
+  "note": "Independent source-view geometry only. This is not a flight accuracy certificate. Unverified controls are not added to moving map.",
+  "pageResults": [
+    {
+      "page": 307,
+      "sourcePdfSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+      "geometricFit": {
+        "a": -0.000133,
+        "b": -0.010067,
+        "metresPerPdfPoint": 99.321112,
+        "baselineMetres": 55640.611533,
+        "pixelDistance": 560.209309
+      },
+      "fix": "KOBUB",
+      "vor": "RST",
+      "gridCheck": [
+        {
+          "axis": "longitude",
+          "sourceLabel": "50-00",
+          "pixelAxis": "y",
+          "sourceTickPdf": 324.600006,
+          "errorPdf": 7.139,
+          "errorMetres": 709.0
+        },
+        {
+          "axis": "longitude",
+          "sourceLabel": "49-30",
+          "pixelAxis": "y",
+          "sourceTickPdf": 768.0,
+          "errorPdf": 9.328,
+          "errorMetres": 926.5
+        }
+      ],
+      "controls": {
+        "navaidSite": [
+          37.32633333333333,
+          49.615833333333335,
+          "Iran AIP RST VOR"
+        ],
+        "namedFix": [
+          37.10416666666667,
+          50.178888888888885,
+          "OpenNav IR/KOBUB"
+        ]
+      },
+      "acceptedForPublish": false,
+      "reason": "independent_grid_exceeds_100m"
+    },
+    {
+      "page": 308,
+      "sourcePdfSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+      "geometricFit": {
+        "a": -0.000132,
+        "b": -0.010067,
+        "metresPerPdfPoint": 99.3261,
+        "baselineMetres": 55640.611533,
+        "pixelDistance": 560.181176
+      },
+      "fix": "KOBUB",
+      "vor": "RST",
+      "gridCheck": [
+        {
+          "axis": "longitude",
+          "sourceLabel": "50-00",
+          "pixelAxis": "y",
+          "sourceTickPdf": 324.359985,
+          "errorPdf": 7.275,
+          "errorMetres": 722.6
+        },
+        {
+          "axis": "longitude",
+          "sourceLabel": "49-30",
+          "pixelAxis": "y",
+          "sourceTickPdf": 767.760071,
+          "errorPdf": 9.443,
+          "errorMetres": 938.0
+        }
+      ],
+      "controls": {
+        "navaidSite": [
+          37.32633333333333,
+          49.615833333333335,
+          "Iran AIP RST VOR"
+        ],
+        "namedFix": [
+          37.10416666666667,
+          50.178888888888885,
+          "OpenNav IR/KOBUB"
+        ]
+      },
+      "acceptedForPublish": false,
+      "reason": "independent_grid_exceeds_100m"
+    },
+    {
+      "page": 323,
+      "sourcePdfSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+      "geometricFit": {
+        "a": 0.010068,
+        "b": 0.000158,
+        "metresPerPdfPoint": 99.311949,
+        "baselineMetres": 55724.660058,
+        "pixelDistance": 561.107307
+      },
+      "fix": "MODIL",
+      "vor": "RST",
+      "gridCheck": [
+        {
+          "axis": "latitude",
+          "sourceLabel": "37-30",
+          "pixelAxis": "y",
+          "sourceTickPdf": 491.279999,
+          "errorPdf": 0.66,
+          "errorMetres": 65.6
+        },
+        {
+          "axis": "longitude",
+          "sourceLabel": "49-30",
+          "pixelAxis": "x",
+          "sourceTickPdf": 276.600006,
+          "errorPdf": 9.694,
+          "errorMetres": 962.7
+        }
+      ],
+      "controls": {
+        "navaidSite": [
+          37.32633333333333,
+          49.615833333333335,
+          "Iran AIP RST VOR"
+        ],
+        "namedFix": [
+          37.82361111111111,
+          49.68805555555555,
+          "OpenNav IR/MODIL"
+        ]
+      },
+      "acceptedForPublish": false,
+      "reason": "independent_grid_exceeds_100m"
+    },
+    {
+      "page": 376,
+      "sourcePdfSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+      "acceptedForPublish": false,
+      "reason": "additional_independent_vector_control_or_named_fix_coordinates_required"
+    },
+    {
+      "page": 386,
+      "sourcePdfSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+      "acceptedForPublish": false,
+      "reason": "additional_independent_vector_control_or_named_fix_coordinates_required"
+    },
+    {
+      "page": 388,
+      "sourcePdfSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+      "acceptedForPublish": false,
+      "reason": "additional_independent_vector_control_or_named_fix_coordinates_required"
+    },
+    {
+      "page": 446,
+      "sourcePdfSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+      "control": {
+        "BND": [
+          27.197055555555554,
+          56.36675,
+          "Iran AIP BND VOR"
+        ],
+        "BNDsourcePix": [
+          151.3800048828125,
+          638.3399963378906
+        ],
+        "nominalNm": 25,
+        "arcEvidence": [
+          {
+            "rect": [
+              91.125,
+              345.0,
+              452.760009765625,
+              721.60498046875
+            ],
+            "samples": 93,
+            "radiusPdfMean": 297.4053351484644,
+            "radiusPdfStd": 4.7562118528622905,
+            "radiusRange": [
+              291.6747248258842,
+              305.354715868311
+            ]
+          }
+        ]
+      },
+      "acceptedForPublish": false,
+      "reason": "radius_and_threshold_cross_checks_not_yet_confirmed"
+    },
+    {
+      "page": 456,
+      "sourcePdfSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+      "control": {
+        "BND": [
+          27.197055555555554,
+          56.36675,
+          "Iran AIP BND VOR"
+        ],
+        "BNDsourcePix": [
+          269.6999969482422,
+          574.739990234375
+        ],
+        "nominalNm": 25,
+        "arcEvidence": [
+          {
+            "rect": [
+              90.83999633789062,
+              281.1600036621094,
+              531.0,
+              437.8949890136719
+            ],
+            "samples": 62,
+            "radiusPdfMean": 294.79772823805786,
+            "radiusPdfStd": 2.575116769874551,
+            "radiusRange": [
+              291.87539157444075,
+              300.6484387261325
+            ]
+          }
+        ]
+      },
+      "OIKPfit": {
+        "a": 0.007231,
+        "b": -0.000638,
+        "metresPerPdfPoint": 137.759175,
+        "baselineMetres": 19711.014467,
+        "pixelDistance": 143.083134
+      },
+      "ringExpectedPdf": 336.094,
+      "ringDeviationMetres": 5688.9,
+      "acceptedForPublish": false,
+      "reason": "radius_and_threshold_cross_checks_not_yet_confirmed"
+    },
+    {
+      "page": 457,
+      "sourcePdfSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+      "control": {
+        "BND": [
+          27.197055555555554,
+          56.36675,
+          "Iran AIP BND VOR"
+        ],
+        "BNDsourcePix": [
+          269.6999969482422,
+          574.739990234375
+        ],
+        "nominalNm": 25,
+        "arcEvidence": [
+          {
+            "rect": [
+              91.11750030517578,
+              267.1199951171875,
+              531.0750122070312,
+              431.9179992675781
+            ],
+            "samples": 62,
+            "radiusPdfMean": 306.68162786778055,
+            "radiusPdfStd": 5.136812126358173,
+            "radiusRange": [
+              297.85066678665004,
+              314.2511271099592
+            ]
+          }
+        ]
+      },
+      "OIKPfit": {
+        "a": 0.007231,
+        "b": -0.000638,
+        "metresPerPdfPoint": 137.759175,
+        "baselineMetres": 19711.014467,
+        "pixelDistance": 143.083134
+      },
+      "ringExpectedPdf": 336.094,
+      "ringDeviationMetres": 4051.8,
+      "acceptedForPublish": false,
+      "reason": "radius_and_threshold_cross_checks_not_yet_confirmed"
+    },
+    {
+      "page": 497,
+      "sourcePdfSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+      "geometricFit": {
+        "a": 0.010907,
+        "b": -0.000428,
+        "metresPerPdfPoint": 91.612177,
+        "baselineMetres": 52301.964964,
+        "pixelDistance": 570.906259
+      },
+      "fix": "ALGUV",
+      "vor": "KER",
+      "gridCheck": [
+        {
+          "axis": "latitude",
+          "sourceLabel": "30-30",
+          "pixelAxis": "y",
+          "sourceTickPdf": 399.720001,
+          "errorPdf": 11.053,
+          "errorMetres": 1012.6
+        },
+        {
+          "axis": "longitude",
+          "sourceLabel": "57-00",
+          "pixelAxis": "x",
+          "sourceTickPdf": 468.480011,
+          "errorPdf": 12.673,
+          "errorMetres": 1161.0
+        }
+      ],
+      "controls": {
+        "navaidSite": [
+          30.282805555555555,
+          56.94230555555555,
+          "Iran AIP KER VOR"
+        ],
+        "namedFix": [
+          30.751944444444444,
+          56.971944444444446,
+          "OpenNav IR/ALGUV"
+        ]
+      },
+      "acceptedForPublish": false,
+      "reason": "independent_grid_exceeds_100m"
+    },
+    {
+      "page": 502,
+      "sourcePdfSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+      "acceptedForPublish": false,
+      "reason": "additional_independent_vector_control_or_named_fix_coordinates_required"
+    }
+  ]
+}
