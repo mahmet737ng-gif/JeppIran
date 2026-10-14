@@ -2712,6 +2712,25 @@ if(new URLSearchParams(location.search).get("platform")!=="android-phone"&&
   // Let the browser activate waiting updates at the next natural reopen.
   navigator.serviceWorker.register("./service-worker.js",{updateViaCache:"none"}).catch(()=>{});
 }
+// Called by the Android system Back *gesture*; no floating Back button.
+// Prefer moving up one in-app level rather than leaving the offline APK.
+window.jeppiranAndroidBack=function(){
+  const chartsView=$("#chartsView");
+  if(chartsView?.classList.contains("active")){
+    if(jpChartDrawerOpen){setFullscreenChartDrawer(false);return true}
+    if(chartsView.classList.contains("jp-airport-picker-open")){closeAirportPicker();return true}
+    if(selectedChart){
+      cancelChartSwipe();
+      if(document.body.classList.contains("viewer-fullscreen"))exitViewerFullscreen(true);
+      selectAirport(selectedAirport);
+      return true;
+    }
+    route("home");
+    return true;
+  }
+  if(!$("#homeView").classList.contains("active")){route("home");return true}
+  return false;
+};
 loadData();
 const start=(location.hash||"#home").slice(1); const initial=["home","charts","wx","simulator","update"].includes(start)?start:"home"; renderRoute(initial); if(!location.hash)history.replaceState({route:initial},"","#"+initial);
 if(initial==="update")refreshWebUpdates();
