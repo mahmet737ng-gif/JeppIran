@@ -1,0 +1,753 @@
+[
+  {
+    "page": 307,
+    "airport": "OIGG",
+    "status": "scaled_graticule_main",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "a40a3de145df915dd71dcec063477726c6eb31adb0284b12e426f1c6794a81b9",
+    "result": "needs-independent-controls",
+    "reason": "No measured latitude/longitude grid could be resolved"
+  },
+  {
+    "page": 308,
+    "airport": "OIGG",
+    "status": "scaled_graticule_main",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "ceb66c6a644da4d000d9d23a4121c73be70542a54f0e3e0037537b716a921b81",
+    "result": "needs-independent-controls",
+    "reason": "No measured latitude/longitude grid could be resolved"
+  },
+  {
+    "page": 309,
+    "airport": "OIGG",
+    "status": "scaled_graticule_main",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "89b869c487c4d42829059481072351b053e90a621a4fa10bc81fdf449b9d7e80",
+    "measuredAxes": {
+      "latitude": 1,
+      "longitude": 2
+    },
+    "originalError": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
+    "solver": "corrected_rotated_conformal_or_local_grid",
+    "candidate": {
+      "method": "single_axis_plus_conformal_scale",
+      "residual": 0.0,
+      "gridAxisLengths": {
+        "latitude": 2,
+        "longitude": 2
+      },
+      "bbox": {
+        "left": 0.0,
+        "top": 0.0,
+        "right": 612.0,
+        "bottom": 792.0
+      },
+      "printedControls": 3
+    },
+    "result": "source-geometry-candidate"
+  },
+  {
+    "page": 310,
+    "airport": "OIGG",
+    "status": "scaled_graticule_main",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "d196c84fa29814229408e82f46fbe042ce58889b17fe5451604b79aff5b53704",
+    "measuredAxes": {
+      "latitude": 1,
+      "longitude": 2
+    },
+    "originalError": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
+    "solver": "corrected_rotated_conformal_or_local_grid",
+    "candidate": {
+      "method": "single_axis_plus_conformal_scale",
+      "residual": 0.0,
+      "gridAxisLengths": {
+        "latitude": 2,
+        "longitude": 2
+      },
+      "bbox": {
+        "left": 0.0,
+        "top": 0.0,
+        "right": 612.0,
+        "bottom": 792.0
+      },
+      "printedControls": 3
+    },
+    "result": "source-geometry-candidate"
+  },
+  {
+    "page": 313,
+    "airport": "OIGG",
+    "status": "scaled_graticule_main",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "8e94f16fabbbcc18ffc3eb0816a4744479bdbca139ecd34abfd92aa5736a79c4",
+    "measuredAxes": {
+      "latitude": 1,
+      "longitude": 3
+    },
+    "originalError": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
+    "solver": "corrected_rotated_conformal_or_local_grid",
+    "candidate": {
+      "method": "single_axis_plus_conformal_scale",
+      "residual": 0.0,
+      "gridAxisLengths": {
+        "latitude": 2,
+        "longitude": 3
+      },
+      "bbox": {
+        "left": 0.0,
+        "top": 0.0,
+        "right": 612.0,
+        "bottom": 792.0
+      },
+      "printedControls": 4
+    },
+    "result": "source-geometry-candidate"
+  },
+  {
+    "page": 323,
+    "airport": "OIGG",
+    "status": "scaled_graticule_main",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "ccc4d83bdb36b857ac20af6ae1e961dc7cff220d9ae01e5b7a9ce4325e1de59d",
+    "result": "needs-independent-controls",
+    "reason": "No measured latitude/longitude grid could be resolved"
+  },
+  {
+    "page": 342,
+    "airport": "OIHH",
+    "status": "multi_region_airport_layout",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "0d9150b3fb1c6294a8bdfd8359e4e3e1e189dadd1cbaa38e6bc2c533b5cd7510",
+    "measuredAxes": {
+      "latitude": 1,
+      "longitude": 2
+    },
+    "originalError": "Conformal scale derivation falls outside the plan view",
+    "solver": "corrected_rotated_conformal_or_local_grid",
+    "candidate": {
+      "method": "single_axis_plus_conformal_scale",
+      "residual": 0.0,
+      "gridAxisLengths": {
+        "latitude": 2,
+        "longitude": 2
+      },
+      "bbox": {
+        "left": 85.44,
+        "top": 83.52,
+        "right": 526.2,
+        "bottom": 454.8
+      },
+      "printedControls": 3
+    },
+    "result": "source-geometry-candidate"
+  },
+  {
+    "page": 365,
+    "airport": "OIIE",
+    "status": "scaled_main_with_not_to_scale_insets",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "9b443ed03a9cf7412ffa25a88a9f01f0873010b0455a409bbf2d292215ee1da2",
+    "measuredAxes": {
+      "latitude": 2,
+      "longitude": 4
+    },
+    "solver": "original",
+    "candidate": {
+      "method": "paired_printed_graticule_vector_ticks",
+      "residual": 0.035999,
+      "gridAxisLengths": {
+        "latitude": 2,
+        "longitude": 4
+      },
+      "bbox": {
+        "left": 0.0,
+        "top": 0.0,
+        "right": 612.0,
+        "bottom": 792.0
+      },
+      "printedControls": null
+    },
+    "result": "source-geometry-candidate",
+    "nearbyDashedPaths": [],
+    "printedNtsRects": [
+      [
+        333.1,
+        714.5,
+        343.5,
+        773.5
+      ],
+      [
+        408.3,
+        58.2,
+        418.7,
+        117.2
+      ]
+    ]
+  },
+  {
+    "page": 366,
+    "airport": "OIIE",
+    "status": "scaled_graticule_main",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "2cf8fae56ea29158e20cfaa2a342a56ba6edf6f453e8626d2ede56872c7d887e",
+    "measuredAxes": {
+      "latitude": 1,
+      "longitude": 4
+    },
+    "originalError": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
+    "solver": "corrected_rotated_conformal_or_local_grid",
+    "candidate": {
+      "method": "single_axis_plus_conformal_scale",
+      "residual": 0.156018,
+      "gridAxisLengths": {
+        "latitude": 2,
+        "longitude": 4
+      },
+      "bbox": {
+        "left": 0.0,
+        "top": 0.0,
+        "right": 612.0,
+        "bottom": 792.0
+      },
+      "printedControls": 5
+    },
+    "result": "source-geometry-candidate"
+  },
+  {
+    "page": 369,
+    "airport": "OIIE",
+    "status": "scaled_main_with_not_to_scale_insets",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "bad198e98d4c388d3d0a3a442544c833936ba51dfa7a496ea9bdcaffdc6f87cf",
+    "measuredAxes": {
+      "latitude": 1,
+      "longitude": 2
+    },
+    "solver": "original",
+    "candidate": {
+      "method": "single_axis_plus_conformal_scale",
+      "residual": 0.0,
+      "gridAxisLengths": {
+        "latitude": 2,
+        "longitude": 2
+      },
+      "bbox": {
+        "left": 0.0,
+        "top": 0.0,
+        "right": 612.0,
+        "bottom": 792.0
+      },
+      "printedControls": null
+    },
+    "result": "source-geometry-candidate",
+    "nearbyDashedPaths": [],
+    "printedNtsRects": [
+      [
+        99.5,
+        373.3,
+        157.0,
+        383.5
+      ]
+    ]
+  },
+  {
+    "page": 371,
+    "airport": "OIIE",
+    "status": "scaled_graticule_main",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "c7488dfaa110502d9a911d0db4931e37e65eceabf2585e965b26f3ad29f52c90",
+    "measuredAxes": {
+      "latitude": 1,
+      "longitude": 4
+    },
+    "originalError": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
+    "solver": "corrected_rotated_conformal_or_local_grid",
+    "candidate": {
+      "method": "single_axis_plus_conformal_scale",
+      "residual": 0.084039,
+      "gridAxisLengths": {
+        "latitude": 2,
+        "longitude": 4
+      },
+      "bbox": {
+        "left": 0.0,
+        "top": 0.0,
+        "right": 612.0,
+        "bottom": 792.0
+      },
+      "printedControls": 5
+    },
+    "result": "source-geometry-candidate"
+  },
+  {
+    "page": 376,
+    "airport": "OIIE",
+    "status": "scaled_graticule_main",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "fc0a0285d01f39872f68bae9fddf39cb6703f8c8c1d1776125de2c188d873c9b",
+    "result": "needs-independent-controls",
+    "reason": "No measured latitude/longitude grid could be resolved"
+  },
+  {
+    "page": 379,
+    "airport": "OIIE",
+    "status": "scaled_main_with_not_to_scale_insets",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "40db6dbfb7cd766dbf6e17c1f016de61d601fb129be5e4447962875eceb68998",
+    "measuredAxes": {
+      "latitude": 4,
+      "longitude": 6
+    },
+    "solver": "original",
+    "candidate": {
+      "method": "paired_printed_graticule_vector_ticks",
+      "residual": 1.387262,
+      "gridAxisLengths": {
+        "latitude": 4,
+        "longitude": 6
+      },
+      "bbox": {
+        "left": 0.0,
+        "top": 0.0,
+        "right": 612.0,
+        "bottom": 792.0
+      },
+      "printedControls": null
+    },
+    "result": "source-geometry-candidate",
+    "nearbyDashedPaths": [],
+    "printedNtsRects": [
+      [
+        108.3,
+        562.1,
+        115.2,
+        601.4
+      ]
+    ]
+  },
+  {
+    "page": 386,
+    "airport": "OIIE",
+    "status": "scaled_main_with_not_to_scale_insets",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "17c4902191d2ee254d3c378ed23c75e973d1da66377d99b86c24742bfe81adeb",
+    "result": "needs-independent-controls",
+    "reason": "No measured latitude/longitude grid could be resolved",
+    "nearbyDashedPaths": [],
+    "printedNtsRects": [
+      [
+        478.6,
+        384.8,
+        527.7,
+        391.2
+      ],
+      [
+        95.2,
+        388.4,
+        144.3,
+        394.8
+      ]
+    ]
+  },
+  {
+    "page": 387,
+    "airport": "OIIE",
+    "status": "scaled_main_with_not_to_scale_insets",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "49ef0abf6d67460b1e9ffd4a358e1ec53a116af7eea47a6ffef3ac63a312f409",
+    "measuredAxes": {
+      "latitude": 1,
+      "longitude": 2
+    },
+    "solver": "original",
+    "candidate": {
+      "method": "single_axis_plus_conformal_scale",
+      "residual": 0.0,
+      "gridAxisLengths": {
+        "latitude": 2,
+        "longitude": 2
+      },
+      "bbox": {
+        "left": 0.0,
+        "top": 0.0,
+        "right": 612.0,
+        "bottom": 792.0
+      },
+      "printedControls": null
+    },
+    "result": "source-geometry-candidate",
+    "nearbyDashedPaths": [],
+    "printedNtsRects": [
+      [
+        478.6,
+        422.1,
+        527.7,
+        428.5
+      ]
+    ]
+  },
+  {
+    "page": 388,
+    "airport": "OIIE",
+    "status": "scaled_main_with_not_to_scale_insets",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "4185dfa21c0adf26e52ac08439bf4507bf16fd7014d89ab8cea08d9b23d95e23",
+    "result": "needs-independent-controls",
+    "reason": "No measured latitude/longitude grid could be resolved",
+    "nearbyDashedPaths": [],
+    "printedNtsRects": [
+      [
+        478.9,
+        384.9,
+        526.0,
+        391.0
+      ],
+      [
+        95.6,
+        388.5,
+        142.7,
+        394.6
+      ]
+    ]
+  },
+  {
+    "page": 389,
+    "airport": "OIIE",
+    "status": "scaled_main_with_not_to_scale_insets",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "43d807200a0ec930449c9676cbb4a8b4289af4d5e1453b0f130df0774b148ac1",
+    "measuredAxes": {
+      "latitude": 1,
+      "longitude": 2
+    },
+    "solver": "original",
+    "candidate": {
+      "method": "single_axis_plus_conformal_scale",
+      "residual": 0.0,
+      "gridAxisLengths": {
+        "latitude": 2,
+        "longitude": 2
+      },
+      "bbox": {
+        "left": 0.0,
+        "top": 0.0,
+        "right": 612.0,
+        "bottom": 792.0
+      },
+      "printedControls": null
+    },
+    "result": "source-geometry-candidate",
+    "nearbyDashedPaths": [],
+    "printedNtsRects": [
+      [
+        478.6,
+        422.1,
+        527.7,
+        428.5
+      ]
+    ]
+  },
+  {
+    "page": 444,
+    "airport": "OIKB",
+    "status": "scaled_main_with_not_to_scale_insets",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "413aae1768691e41032471897a5effded6d0dabc34474826ddd77caf770e5c98",
+    "measuredAxes": {
+      "latitude": 2,
+      "longitude": 1
+    },
+    "solver": "original",
+    "candidate": {
+      "method": "single_axis_plus_conformal_scale",
+      "residual": 0.0,
+      "gridAxisLengths": {
+        "latitude": 2,
+        "longitude": 2
+      },
+      "bbox": {
+        "left": 90.96,
+        "top": 172.68,
+        "right": 531.0,
+        "bottom": 721.68
+      },
+      "printedControls": null
+    },
+    "result": "source-geometry-candidate",
+    "nearbyDashedPaths": [],
+    "printedNtsRects": [
+      [
+        136.0,
+        216.4,
+        193.5,
+        226.6
+      ]
+    ]
+  },
+  {
+    "page": 446,
+    "airport": "OIKB",
+    "status": "scaled_main_with_not_to_scale_insets",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "3d2366e7914dd761a4ed30c0db6f5451b186f4a791f031fcfa97bc64aa71eb95",
+    "result": "needs-independent-controls",
+    "reason": "No measured latitude/longitude grid could be resolved",
+    "nearbyDashedPaths": [],
+    "printedNtsRects": [
+      [
+        126.6,
+        261.8,
+        186.2,
+        272.4
+      ],
+      [
+        466.8,
+        481.2,
+        526.4,
+        491.7
+      ]
+    ]
+  },
+  {
+    "page": 448,
+    "airport": "OIKB",
+    "status": "scaled_main_with_not_to_scale_insets",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "0fb66f27a19963a353ef2956f4d46b380eba79911a4d40aaad792df7290d8f2d",
+    "measuredAxes": {
+      "latitude": 2,
+      "longitude": 2
+    },
+    "solver": "original",
+    "candidate": {
+      "method": "paired_printed_graticule_vector_ticks",
+      "residual": 0.0,
+      "gridAxisLengths": {
+        "latitude": 2,
+        "longitude": 2
+      },
+      "bbox": {
+        "left": 0.0,
+        "top": 0.0,
+        "right": 612.0,
+        "bottom": 792.0
+      },
+      "printedControls": null
+    },
+    "result": "source-geometry-candidate",
+    "nearbyDashedPaths": [],
+    "printedNtsRects": [
+      [
+        143.1,
+        711.7,
+        153.5,
+        770.8
+      ]
+    ]
+  },
+  {
+    "page": 454,
+    "airport": "OIKB",
+    "status": "scaled_main_with_not_to_scale_insets",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "1c95f10a38df099b2b75d91e7b3636aee8dd781ceb225c65ee3c4c7e16467e9f",
+    "measuredAxes": {
+      "latitude": 1,
+      "longitude": 2
+    },
+    "originalError": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
+    "solver": "corrected_rotated_conformal_or_local_grid",
+    "candidate": {
+      "method": "single_axis_plus_conformal_scale",
+      "residual": 0.0,
+      "gridAxisLengths": {
+        "latitude": 2,
+        "longitude": 2
+      },
+      "bbox": {
+        "left": 0.0,
+        "top": 0.0,
+        "right": 612.0,
+        "bottom": 792.0
+      },
+      "printedControls": 3
+    },
+    "result": "source-geometry-candidate",
+    "nearbyDashedPaths": [],
+    "printedNtsRects": [
+      [
+        146.1,
+        675.1,
+        156.3,
+        733.1
+      ]
+    ]
+  },
+  {
+    "page": 455,
+    "airport": "OIKB",
+    "status": "scaled_main_with_not_to_scale_insets",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "9193cf5de2bf19109b8881ab5578dbc6a51ff83e1eb3bd2ec333afaf5106b350",
+    "measuredAxes": {
+      "latitude": 1,
+      "longitude": 2
+    },
+    "originalError": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
+    "solver": "corrected_rotated_conformal_or_local_grid",
+    "candidate": {
+      "method": "single_axis_plus_conformal_scale",
+      "residual": 0.0,
+      "gridAxisLengths": {
+        "latitude": 2,
+        "longitude": 2
+      },
+      "bbox": {
+        "left": 0.0,
+        "top": 0.0,
+        "right": 612.0,
+        "bottom": 792.0
+      },
+      "printedControls": 3
+    },
+    "result": "source-geometry-candidate",
+    "nearbyDashedPaths": [],
+    "printedNtsRects": [
+      [
+        147.3,
+        674.5,
+        157.6,
+        733.1
+      ]
+    ]
+  },
+  {
+    "page": 456,
+    "airport": "OIKB",
+    "status": "scaled_main_with_not_to_scale_insets",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "a1f7f5158bfbbc5189c49bbc8c7621975784082518ea812274b4b8c530245eec",
+    "result": "needs-independent-controls",
+    "reason": "No measured latitude/longitude grid could be resolved",
+    "nearbyDashedPaths": [],
+    "printedNtsRects": [
+      [
+        329.3,
+        194.2,
+        387.8,
+        204.5
+      ]
+    ]
+  },
+  {
+    "page": 457,
+    "airport": "OIKB",
+    "status": "scaled_main_with_not_to_scale_insets",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "61bd2a0329b449c5cf719062e9cfe8cb8731329440e16f988fad2b07dc94f66b",
+    "result": "needs-independent-controls",
+    "reason": "No measured latitude/longitude grid could be resolved",
+    "nearbyDashedPaths": [],
+    "printedNtsRects": [
+      [
+        329.4,
+        194.2,
+        388.4,
+        204.7
+      ]
+    ]
+  },
+  {
+    "page": 459,
+    "airport": "OIKB",
+    "status": "multi_region_airport_layout",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "e56ae57743db6a4e7f116195521523fcdc5a95c8c4cf7d319759ab31aa57995e",
+    "measuredAxes": {
+      "latitude": 4,
+      "longitude": 4
+    },
+    "originalError": "Invalid affine fit: rank 3, residual 1.828",
+    "solver": "corrected_rotated_conformal_or_local_grid",
+    "candidate": {
+      "method": "paired_printed_graticule_vector_ticks",
+      "residual": 1.827778,
+      "gridAxisLengths": {
+        "latitude": 4,
+        "longitude": 4
+      },
+      "bbox": {
+        "left": 0.0,
+        "top": 0.0,
+        "right": 612.0,
+        "bottom": 792.0
+      },
+      "printedControls": 8
+    },
+    "result": "source-geometry-candidate"
+  },
+  {
+    "page": 497,
+    "airport": "OIKK",
+    "status": "scaled_graticule_main",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "4c43a5cb20a054c2650bdeb9f63148b5a725201e080c9f1498d495ba084ee826",
+    "result": "needs-independent-controls",
+    "reason": "No measured latitude/longitude grid could be resolved"
+  },
+  {
+    "page": 498,
+    "airport": "OIKK",
+    "status": "scaled_graticule_main",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "91ba542add46b020d911eb3dcf4760c0d2fb3e3e2eefcf06b4b496013874d9d8",
+    "result": "needs-independent-controls",
+    "reason": "No measured latitude/longitude grid could be resolved"
+  },
+  {
+    "page": 499,
+    "airport": "OIKK",
+    "status": "scaled_graticule_main",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "91890839e9d5c5d4e8d38715792fbd05c64f64edbce70e10c039ebdd0191ed24",
+    "result": "needs-independent-controls",
+    "reason": "No measured latitude/longitude grid could be resolved"
+  },
+  {
+    "page": 500,
+    "airport": "OIKK",
+    "status": "scaled_graticule_main",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "d221104a772d92ae229300011f766b905a470c4112e8ed8bf866344d0776f0ad",
+    "result": "needs-independent-controls",
+    "reason": "No measured latitude/longitude grid could be resolved"
+  },
+  {
+    "page": 501,
+    "airport": "OIKK",
+    "status": "scaled_main_with_not_to_scale_insets",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "10cd9abede744181fdfabdf955639859da06c44bd43efb059e7353bee0bd3d4e",
+    "result": "needs-independent-controls",
+    "reason": "No measured latitude/longitude grid could be resolved",
+    "nearbyDashedPaths": [],
+    "printedNtsRects": [
+      [
+        93.2,
+        331.0,
+        152.3,
+        341.5
+      ]
+    ]
+  },
+  {
+    "page": 502,
+    "airport": "OIKK",
+    "status": "scaled_graticule_main",
+    "hadExistingRecord": false,
+    "sourceFingerprint": "d0664c2494e7431c9379a4b9b9ad226ff8c79f47e789456f28baecf2add07f06",
+    "result": "needs-independent-controls",
+    "reason": "No measured latitude/longitude grid could be resolved"
+  }
+]

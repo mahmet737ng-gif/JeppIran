@@ -1,0 +1,4868 @@
+[
+  {
+    "page": 307,
+    "airport": "OIGG",
+    "name": "KOBUB 1N, KOBUB 1P",
+    "visualStatus": "scaled_graticule_main",
+    "alreadyActive": false,
+    "sourceFingerprint": "a40a3de145df915dd71dcec063477726c6eb31adb0284b12e426f1c6794a81b9",
+    "anchor": {
+      "sourcePage": 305,
+      "lat": 37.32333333333333,
+      "lon": 49.61833333333333
+    },
+    "gridLabels": [
+      "49-30",
+      "50-00"
+    ],
+    "labels": [
+      {
+        "value": "49-30",
+        "center": [
+          477.3127136230469,
+          767.7276611328125
+        ],
+        "bounds": [
+          472.93,
+          759.54,
+          481.69,
+          775.92
+        ]
+      },
+      {
+        "value": "50-00",
+        "center": [
+          524.5927124023438,
+          327.3275451660156
+        ],
+        "bounds": [
+          520.21,
+          319.14,
+          528.97,
+          335.52
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [],
+    "rawGridError": "No measured latitude/longitude grid could be resolved",
+    "lineCount": 1642,
+    "extractError": "No measured latitude/longitude grid could be resolved"
+  },
+  {
+    "page": 308,
+    "airport": "OIGG",
+    "name": "KOBUB 1Q",
+    "visualStatus": "scaled_graticule_main",
+    "alreadyActive": false,
+    "sourceFingerprint": "ceb66c6a644da4d000d9d23a4121c73be70542a54f0e3e0037537b716a921b81",
+    "anchor": {
+      "sourcePage": 305,
+      "lat": 37.32333333333333,
+      "lon": 49.61833333333333
+    },
+    "gridLabels": [
+      "49-30",
+      "50-00"
+    ],
+    "labels": [
+      {
+        "value": "49-30",
+        "center": [
+          488.96649169921875,
+          767.9261169433594
+        ],
+        "bounds": [
+          484.65,
+          759.93,
+          493.29,
+          775.92
+        ]
+      },
+      {
+        "value": "50-00",
+        "center": [
+          524.6065063476562,
+          327.52601623535156
+        ],
+        "bounds": [
+          520.29,
+          319.53,
+          528.93,
+          335.52
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [],
+    "rawGridError": "No measured latitude/longitude grid could be resolved",
+    "lineCount": 1649,
+    "extractError": "No measured latitude/longitude grid could be resolved"
+  },
+  {
+    "page": 309,
+    "airport": "OIGG",
+    "name": "DEDLA 1N, DEDLA 1P, RARTA 1N, RARTA 1P",
+    "visualStatus": "scaled_graticule_main",
+    "alreadyActive": false,
+    "sourceFingerprint": "89b869c487c4d42829059481072351b053e90a621a4fa10bc81fdf449b9d7e80",
+    "anchor": {
+      "sourcePage": 305,
+      "lat": 37.32333333333333,
+      "lon": 49.61833333333333
+    },
+    "gridLabels": [
+      "37-00",
+      "49-30",
+      "50-00"
+    ],
+    "labels": [
+      {
+        "value": "37-00",
+        "center": [
+          397.34588623046875,
+          771.8928527832031
+        ],
+        "bounds": [
+          393.81,
+          765.35,
+          400.89,
+          778.44
+        ]
+      },
+      {
+        "value": "49-30",
+        "center": [
+          528.0259094238281,
+          626.2128601074219
+        ],
+        "bounds": [
+          524.49,
+          619.67,
+          531.57,
+          632.76
+        ]
+      },
+      {
+        "value": "50-00",
+        "center": [
+          597.0259094238281,
+          266.5728759765625
+        ],
+        "bounds": [
+          593.49,
+          260.03,
+          600.57,
+          273.12
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [],
+    "rawGridAxes": {
+      "latitude": [
+        {
+          "label": "37-00",
+          "degrees": 37.0,
+          "pdfPoint": 396.0,
+          "pixelAxis": "x",
+          "labelBounds": [
+            393.8062,
+            765.3457,
+            400.8855,
+            778.44
+          ],
+          "tickSegment": [
+            396.0,
+            782.4,
+            396.0,
+            779.28
+          ]
+        }
+      ],
+      "longitude": [
+        {
+          "label": "49-30",
+          "degrees": 49.5,
+          "pdfPoint": 626.280029296875,
+          "pixelAxis": "y",
+          "labelBounds": [
+            524.4863,
+            619.6657,
+            531.5656,
+            632.76
+          ],
+          "tickSegment": [
+            533.16,
+            626.28,
+            530.04,
+            626.28
+          ]
+        },
+        {
+          "label": "50-00",
+          "degrees": 50.0,
+          "pdfPoint": 266.4000244140625,
+          "pixelAxis": "y",
+          "labelBounds": [
+            593.4863,
+            260.0258,
+            600.5656,
+            273.12
+          ],
+          "tickSegment": [
+            601.8,
+            266.4,
+            599.04,
+            266.4
+          ]
+        }
+      ]
+    },
+    "rawGridBounds": {
+      "left": 0.0,
+      "top": 0.0,
+      "right": 612.0,
+      "bottom": 792.0
+    },
+    "lineCount": 3098,
+    "extractError": "Printed grid has an inconsistent scale, angle, or mirrored orientation"
+  },
+  {
+    "page": 310,
+    "airport": "OIGG",
+    "name": "DEDLA 1Q, RARTA 1Q",
+    "visualStatus": "scaled_graticule_main",
+    "alreadyActive": false,
+    "sourceFingerprint": "d196c84fa29814229408e82f46fbe042ce58889b17fe5451604b79aff5b53704",
+    "anchor": {
+      "sourcePage": 305,
+      "lat": 37.32333333333333,
+      "lon": 49.61833333333333
+    },
+    "gridLabels": [
+      "37-00",
+      "49-30",
+      "50-00"
+    ],
+    "labels": [
+      {
+        "value": "37-00",
+        "center": [
+          397.34588623046875,
+          771.8928527832031
+        ],
+        "bounds": [
+          393.81,
+          765.35,
+          400.89,
+          778.44
+        ]
+      },
+      {
+        "value": "49-30",
+        "center": [
+          549.5058898925781,
+          626.2128601074219
+        ],
+        "bounds": [
+          545.97,
+          619.67,
+          553.05,
+          632.76
+        ]
+      },
+      {
+        "value": "50-00",
+        "center": [
+          597.0259094238281,
+          266.5728759765625
+        ],
+        "bounds": [
+          593.49,
+          260.03,
+          600.57,
+          273.12
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [],
+    "rawGridAxes": {
+      "latitude": [
+        {
+          "label": "37-00",
+          "degrees": 37.0,
+          "pdfPoint": 396.0,
+          "pixelAxis": "x",
+          "labelBounds": [
+            393.8062,
+            765.3457,
+            400.8855,
+            778.44
+          ],
+          "tickSegment": [
+            396.0,
+            782.4,
+            396.0,
+            779.28
+          ]
+        }
+      ],
+      "longitude": [
+        {
+          "label": "49-30",
+          "degrees": 49.5,
+          "pdfPoint": 626.280029296875,
+          "pixelAxis": "y",
+          "labelBounds": [
+            545.9662,
+            619.6657,
+            553.0455,
+            632.76
+          ],
+          "tickSegment": [
+            554.52,
+            626.28,
+            551.4,
+            626.28
+          ]
+        },
+        {
+          "label": "50-00",
+          "degrees": 50.0,
+          "pdfPoint": 266.4000244140625,
+          "pixelAxis": "y",
+          "labelBounds": [
+            593.4863,
+            260.0258,
+            600.5656,
+            273.12
+          ],
+          "tickSegment": [
+            601.8,
+            266.4,
+            599.04,
+            266.4
+          ]
+        }
+      ]
+    },
+    "rawGridBounds": {
+      "left": 0.0,
+      "top": 0.0,
+      "right": 612.0,
+      "bottom": 792.0
+    },
+    "lineCount": 3185,
+    "extractError": "Printed grid has an inconsistent scale, angle, or mirrored orientation"
+  },
+  {
+    "page": 313,
+    "airport": "OIGG",
+    "name": "RALGO 1N, RALGO 1P",
+    "visualStatus": "scaled_graticule_main",
+    "alreadyActive": false,
+    "sourceFingerprint": "8e94f16fabbbcc18ffc3eb0816a4744479bdbca139ecd34abfd92aa5736a79c4",
+    "anchor": {
+      "sourcePage": 305,
+      "lat": 37.32333333333333,
+      "lon": 49.61833333333333
+    },
+    "gridLabels": [
+      "37-30",
+      "49-00",
+      "49-30",
+      "50-00"
+    ],
+    "labels": [
+      {
+        "value": "37-30",
+        "center": [
+          206.11270904541016,
+          767.007568359375
+        ],
+        "bounds": [
+          201.73,
+          758.82,
+          210.49,
+          775.2
+        ]
+      },
+      {
+        "value": "49-00",
+        "center": [
+          478.3927001953125,
+          703.767578125
+        ],
+        "bounds": [
+          474.01,
+          695.58,
+          482.77,
+          711.96
+        ]
+      },
+      {
+        "value": "49-30",
+        "center": [
+          525.312744140625,
+          408.3275451660156
+        ],
+        "bounds": [
+          520.93,
+          400.14,
+          529.69,
+          416.52
+        ]
+      },
+      {
+        "value": "50-00",
+        "center": [
+          525.312744140625,
+          112.76761627197266
+        ],
+        "bounds": [
+          520.93,
+          104.58,
+          529.69,
+          120.96
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [],
+    "rawGridAxes": {
+      "latitude": [
+        {
+          "label": "37-30",
+          "degrees": 37.5,
+          "pdfPoint": 204.60000610351562,
+          "pixelAxis": "x",
+          "labelBounds": [
+            201.7332,
+            758.8151,
+            210.4922,
+            775.2
+          ],
+          "tickSegment": [
+            204.6,
+            780.24,
+            204.6,
+            776.52
+          ]
+        }
+      ],
+      "longitude": [
+        {
+          "label": "49-00",
+          "degrees": 49.0,
+          "pdfPoint": 704.1600341796875,
+          "pixelAxis": "y",
+          "labelBounds": [
+            474.0132,
+            695.5751,
+            482.7722,
+            711.96
+          ],
+          "tickSegment": [
+            484.44,
+            704.16,
+            480.72,
+            704.16
+          ]
+        },
+        {
+          "label": "49-30",
+          "degrees": 49.5,
+          "pdfPoint": 408.4800109863281,
+          "pixelAxis": "y",
+          "labelBounds": [
+            520.9332,
+            400.1351,
+            529.6923,
+            416.52
+          ],
+          "tickSegment": [
+            531.12,
+            408.48,
+            527.64,
+            408.48
+          ]
+        },
+        {
+          "label": "50-00",
+          "degrees": 50.0,
+          "pdfPoint": 112.79998779296875,
+          "pixelAxis": "y",
+          "labelBounds": [
+            520.9332,
+            104.5752,
+            529.6923,
+            120.96
+          ],
+          "tickSegment": [
+            531.12,
+            112.8,
+            527.64,
+            112.8
+          ]
+        }
+      ]
+    },
+    "rawGridBounds": {
+      "left": 0.0,
+      "top": 0.0,
+      "right": 612.0,
+      "bottom": 792.0
+    },
+    "lineCount": 2118,
+    "extractError": "Printed grid has an inconsistent scale, angle, or mirrored orientation"
+  },
+  {
+    "page": 323,
+    "airport": "OIGG",
+    "name": "MODIL 1A, MODIL 1B",
+    "visualStatus": "scaled_graticule_main",
+    "alreadyActive": false,
+    "sourceFingerprint": "ccc4d83bdb36b857ac20af6ae1e961dc7cff220d9ae01e5b7a9ce4325e1de59d",
+    "anchor": {
+      "sourcePage": 305,
+      "lat": 37.32333333333333,
+      "lon": 49.61833333333333
+    },
+    "gridLabels": [
+      "37-30",
+      "49-30"
+    ],
+    "labels": [
+      {
+        "value": "37-30",
+        "center": [
+          104.35396957397461,
+          492.806396484375
+        ],
+        "bounds": [
+          96.36,
+          488.49,
+          112.35,
+          497.13
+        ]
+      },
+      {
+        "value": "49-30",
+        "center": [
+          276.43397521972656,
+          738.4464111328125
+        ],
+        "bounds": [
+          268.44,
+          734.13,
+          284.43,
+          742.77
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [],
+    "rawGridError": "No measured latitude/longitude grid could be resolved",
+    "lineCount": 788,
+    "extractError": "No measured latitude/longitude grid could be resolved"
+  },
+  {
+    "page": 342,
+    "airport": "OIHH",
+    "name": "Airport Diagram Chart (ADC)",
+    "visualStatus": "multi_region_airport_layout",
+    "alreadyActive": false,
+    "sourceFingerprint": "0d9150b3fb1c6294a8bdfd8359e4e3e1e189dadd1cbaa38e6bc2c533b5cd7510",
+    "anchor": {
+      "sourcePage": 336,
+      "lat": 34.87,
+      "lon": 48.55
+    },
+    "gridLabels": [
+      "34-52",
+      "48-32.2",
+      "48-32.5",
+      "34-52.2",
+      "48-32.4",
+      "48-32.3",
+      "34-52.1",
+      "34-52.3",
+      "48-33",
+      "48-34"
+    ],
+    "labels": [
+      {
+        "value": "34-52",
+        "center": [
+          104.34045791625977,
+          434.9387969970703
+        ],
+        "bounds": [
+          96.12,
+          430.5,
+          112.56,
+          439.38
+        ]
+      },
+      {
+        "value": "48-32.2",
+        "center": [
+          105.35879516601562,
+          447.77879333496094
+        ],
+        "bounds": [
+          94.32,
+          443.34,
+          116.4,
+          452.22
+        ]
+      },
+      {
+        "value": "48-32.5",
+        "center": [
+          170.87002563476562,
+          441.41880798339844
+        ],
+        "bounds": [
+          159.84,
+          436.98,
+          181.9,
+          445.86
+        ]
+      },
+      {
+        "value": "34-52.2",
+        "center": [
+          107.15889739990234,
+          371.2187957763672
+        ],
+        "bounds": [
+          96.12,
+          366.78,
+          118.2,
+          375.66
+        ]
+      },
+      {
+        "value": "48-32.4",
+        "center": [
+          158.030029296875,
+          447.77879333496094
+        ],
+        "bounds": [
+          147.0,
+          443.34,
+          169.06,
+          452.22
+        ]
+      },
+      {
+        "value": "48-32.3",
+        "center": [
+          131.75003051757812,
+          447.77879333496094
+        ],
+        "bounds": [
+          120.72,
+          443.34,
+          142.78,
+          452.22
+        ]
+      },
+      {
+        "value": "34-52",
+        "center": [
+          193.9804458618164,
+          429.89881896972656
+        ],
+        "bounds": [
+          185.76,
+          425.46,
+          202.2,
+          434.34
+        ]
+      },
+      {
+        "value": "48-32.2",
+        "center": [
+          112.07889556884766,
+          333.65879821777344
+        ],
+        "bounds": [
+          101.04,
+          329.22,
+          123.12,
+          338.1
+        ]
+      },
+      {
+        "value": "48-32.5",
+        "center": [
+          190.79002380371094,
+          333.65879821777344
+        ],
+        "bounds": [
+          179.76,
+          329.22,
+          201.82,
+          338.1
+        ]
+      },
+      {
+        "value": "48-32.4",
+        "center": [
+          164.63003540039062,
+          333.65879821777344
+        ],
+        "bounds": [
+          153.6,
+          329.22,
+          175.66,
+          338.1
+        ]
+      },
+      {
+        "value": "48-32.3",
+        "center": [
+          138.35003280639648,
+          333.65879821777344
+        ],
+        "bounds": [
+          127.32,
+          329.22,
+          149.38,
+          338.1
+        ]
+      },
+      {
+        "value": "34-52.1",
+        "center": [
+          191.63003540039062,
+          398.9387969970703
+        ],
+        "bounds": [
+          180.6,
+          394.5,
+          202.66,
+          403.38
+        ]
+      },
+      {
+        "value": "34-52.2",
+        "center": [
+          191.27890014648438,
+          375.89881896972656
+        ],
+        "bounds": [
+          180.24,
+          371.46,
+          202.32,
+          380.34
+        ]
+      },
+      {
+        "value": "34-52.3",
+        "center": [
+          185.030029296875,
+          340.9788055419922
+        ],
+        "bounds": [
+          174.0,
+          336.54,
+          196.06,
+          345.42
+        ]
+      },
+      {
+        "value": "34-52.3",
+        "center": [
+          107.15003204345703,
+          340.9788055419922
+        ],
+        "bounds": [
+          96.12,
+          336.54,
+          118.18,
+          345.42
+        ]
+      },
+      {
+        "value": "34-52",
+        "center": [
+          102.78045272827148,
+          275.4587860107422
+        ],
+        "bounds": [
+          94.56,
+          271.02,
+          111.0,
+          279.9
+        ]
+      },
+      {
+        "value": "34-52",
+        "center": [
+          506.3404541015625,
+          272.0988006591797
+        ],
+        "bounds": [
+          498.12,
+          267.66,
+          514.56,
+          276.54
+        ]
+      },
+      {
+        "value": "48-33",
+        "center": [
+          224.81159210205078,
+          444.0587921142578
+        ],
+        "bounds": [
+          216.6,
+          439.62,
+          233.02,
+          448.5
+        ]
+      },
+      {
+        "value": "48-33",
+        "center": [
+          218.21158599853516,
+          99.77880096435547
+        ],
+        "bounds": [
+          210.0,
+          95.34,
+          226.42,
+          104.22
+        ]
+      },
+      {
+        "value": "48-34",
+        "center": [
+          373.25160217285156,
+          441.53880310058594
+        ],
+        "bounds": [
+          365.04,
+          437.1,
+          381.46,
+          445.98
+        ]
+      },
+      {
+        "value": "48-34",
+        "center": [
+          373.25160217285156,
+          99.77880096435547
+        ],
+        "bounds": [
+          365.04,
+          95.34,
+          381.46,
+          104.22
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [],
+    "rawGridAxes": {
+      "latitude": [
+        {
+          "label": "34-52",
+          "degrees": 34.86666666666667,
+          "pdfPoint": 270.47998046875,
+          "pixelAxis": "y",
+          "labelBounds": [
+            94.56,
+            271.0188,
+            111.0009,
+            279.8987
+          ],
+          "tickSegment": [
+            85.44,
+            270.48,
+            94.68,
+            270.48
+          ]
+        }
+      ],
+      "longitude": [
+        {
+          "label": "48-33",
+          "degrees": 48.55,
+          "pdfPoint": 217.8000030517578,
+          "pixelAxis": "x",
+          "labelBounds": [
+            210.0,
+            95.3389,
+            226.4232,
+            104.2188
+          ],
+          "tickSegment": [
+            217.8,
+            83.52,
+            217.8,
+            92.76
+          ]
+        },
+        {
+          "label": "48-34",
+          "degrees": 48.56666666666667,
+          "pdfPoint": 372.7200012207031,
+          "pixelAxis": "x",
+          "labelBounds": [
+            365.04,
+            437.0988,
+            381.4632,
+            445.9788
+          ],
+          "tickSegment": [
+            372.72,
+            454.8,
+            372.72,
+            445.56
+          ]
+        }
+      ]
+    },
+    "rawGridBounds": {
+      "left": 85.44,
+      "top": 83.52,
+      "right": 526.2,
+      "bottom": 454.8
+    },
+    "lineCount": 1182,
+    "extractError": "Conformal scale derivation falls outside the plan view"
+  },
+  {
+    "page": 365,
+    "airport": "OIIE",
+    "name": "MIVAK 3R, MUXOR 1V, NAGMO 2R, NAGMO 1V",
+    "visualStatus": "scaled_main_with_not_to_scale_insets",
+    "alreadyActive": false,
+    "sourceFingerprint": "9b443ed03a9cf7412ffa25a88a9f01f0873010b0455a409bbf2d292215ee1da2",
+    "anchor": {
+      "sourcePage": 359,
+      "lat": 35.416666666666664,
+      "lon": 51.151666666666664
+    },
+    "gridLabels": [
+      "35-30",
+      "36-00",
+      "50-30",
+      "51-00",
+      "51-30",
+      "52-00"
+    ],
+    "labels": [
+      {
+        "value": "35-30",
+        "center": [
+          363.7926940917969,
+          766.767578125
+        ],
+        "bounds": [
+          359.41,
+          758.58,
+          368.17,
+          774.96
+        ]
+      },
+      {
+        "value": "36-00",
+        "center": [
+          140.59272003173828,
+          766.8875732421875
+        ],
+        "bounds": [
+          136.21,
+          758.7,
+          144.97,
+          775.08
+        ]
+      },
+      {
+        "value": "50-30",
+        "center": [
+          464.1127014160156,
+          741.4475708007812
+        ],
+        "bounds": [
+          459.73,
+          733.26,
+          468.49,
+          749.64
+        ]
+      },
+      {
+        "value": "51-00",
+        "center": [
+          463.6327209472656,
+          559.767578125
+        ],
+        "bounds": [
+          459.25,
+          551.58,
+          468.01,
+          567.96
+        ]
+      },
+      {
+        "value": "51-30",
+        "center": [
+          525.4327392578125,
+          377.9675598144531
+        ],
+        "bounds": [
+          521.05,
+          369.78,
+          529.81,
+          386.16
+        ]
+      },
+      {
+        "value": "52-00",
+        "center": [
+          433.6327209472656,
+          196.4075698852539
+        ],
+        "bounds": [
+          429.25,
+          188.22,
+          438.01,
+          204.6
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [
+      [
+        333.06,
+        714.48,
+        343.5,
+        773.52
+      ],
+      [
+        408.3,
+        58.2,
+        418.74,
+        117.24
+      ]
+    ],
+    "rawGridAxes": {
+      "latitude": [
+        {
+          "label": "35-30",
+          "degrees": 35.5,
+          "pdfPoint": 362.0400085449219,
+          "pixelAxis": "x",
+          "labelBounds": [
+            359.4132,
+            758.5751,
+            368.1722,
+            774.96
+          ],
+          "tickSegment": [
+            362.04,
+            780.0,
+            362.04,
+            776.28
+          ]
+        },
+        {
+          "label": "36-00",
+          "degrees": 36.0,
+          "pdfPoint": 139.0800018310547,
+          "pixelAxis": "x",
+          "labelBounds": [
+            136.2132,
+            758.6951,
+            144.9722,
+            775.08
+          ],
+          "tickSegment": [
+            139.08,
+            780.24,
+            139.08,
+            776.52
+          ]
+        }
+      ],
+      "longitude": [
+        {
+          "label": "50-30",
+          "degrees": 50.5,
+          "pdfPoint": 741.719970703125,
+          "pixelAxis": "y",
+          "labelBounds": [
+            459.7332,
+            733.2551,
+            468.4922,
+            749.64
+          ],
+          "tickSegment": [
+            470.04,
+            741.72,
+            466.56,
+            741.72
+          ]
+        },
+        {
+          "label": "51-00",
+          "degrees": 51.0,
+          "pdfPoint": 559.9199829101562,
+          "pixelAxis": "y",
+          "labelBounds": [
+            459.2532,
+            551.5751,
+            468.0122,
+            567.96
+          ],
+          "tickSegment": [
+            469.8,
+            559.92,
+            466.08,
+            559.92
+          ]
+        },
+        {
+          "label": "51-30",
+          "degrees": 51.5,
+          "pdfPoint": 378.239990234375,
+          "pixelAxis": "y",
+          "labelBounds": [
+            521.0532,
+            369.7751,
+            529.8123,
+            386.16
+          ],
+          "tickSegment": [
+            531.48,
+            378.24,
+            527.76,
+            378.24
+          ]
+        },
+        {
+          "label": "52-00",
+          "degrees": 52.0,
+          "pdfPoint": 196.44000244140625,
+          "pixelAxis": "y",
+          "labelBounds": [
+            429.2532,
+            188.2152,
+            438.0122,
+            204.6
+          ],
+          "tickSegment": [
+            439.8,
+            196.44,
+            436.08,
+            196.44
+          ]
+        }
+      ]
+    },
+    "rawGridBounds": {
+      "left": 0.0,
+      "top": 0.0,
+      "right": 612.0,
+      "bottom": 792.0
+    },
+    "lineCount": 16597,
+    "extracted": {
+      "bounds": {
+        "left": 0.0,
+        "top": 0.0,
+        "right": 612.0,
+        "bottom": 792.0
+      },
+      "gridAxes": {
+        "latitude": [
+          {
+            "label": "35-30",
+            "degrees": 35.5,
+            "pdfPoint": 362.0400085449219,
+            "pixelAxis": "x",
+            "labelBounds": [
+              359.4132,
+              758.5751,
+              368.1722,
+              774.96
+            ],
+            "tickSegment": [
+              362.04,
+              780.0,
+              362.04,
+              776.28
+            ]
+          },
+          {
+            "label": "36-00",
+            "degrees": 36.0,
+            "pdfPoint": 139.0800018310547,
+            "pixelAxis": "x",
+            "labelBounds": [
+              136.2132,
+              758.6951,
+              144.9722,
+              775.08
+            ],
+            "tickSegment": [
+              139.08,
+              780.24,
+              139.08,
+              776.52
+            ]
+          }
+        ],
+        "longitude": [
+          {
+            "label": "50-30",
+            "degrees": 50.5,
+            "pdfPoint": 741.719970703125,
+            "pixelAxis": "y",
+            "labelBounds": [
+              459.7332,
+              733.2551,
+              468.4922,
+              749.64
+            ],
+            "tickSegment": [
+              470.04,
+              741.72,
+              466.56,
+              741.72
+            ]
+          },
+          {
+            "label": "51-00",
+            "degrees": 51.0,
+            "pdfPoint": 559.9199829101562,
+            "pixelAxis": "y",
+            "labelBounds": [
+              459.2532,
+              551.5751,
+              468.0122,
+              567.96
+            ],
+            "tickSegment": [
+              469.8,
+              559.92,
+              466.08,
+              559.92
+            ]
+          },
+          {
+            "label": "51-30",
+            "degrees": 51.5,
+            "pdfPoint": 378.239990234375,
+            "pixelAxis": "y",
+            "labelBounds": [
+              521.0532,
+              369.7751,
+              529.8123,
+              386.16
+            ],
+            "tickSegment": [
+              531.48,
+              378.24,
+              527.76,
+              378.24
+            ]
+          },
+          {
+            "label": "52-00",
+            "degrees": 52.0,
+            "pdfPoint": 196.44000244140625,
+            "pixelAxis": "y",
+            "labelBounds": [
+              429.2532,
+              188.2152,
+              438.0122,
+              204.6
+            ],
+            "tickSegment": [
+              439.8,
+              196.44,
+              436.08,
+              196.44
+            ]
+          }
+        ]
+      },
+      "pointCount": 8,
+      "maxResidual": 0.035999,
+      "validation": {
+        "gridMaxResidualPdfPoints": 0.035999,
+        "controlPointCount": 8,
+        "method": "paired_printed_graticule_vector_ticks",
+        "measuredAxisValueCounts": {
+          "latitude": 2,
+          "longitude": 4
+        },
+        "notToScaleTextPresentElsewhereOnPage": true
+      },
+      "excludedBounds": []
+    }
+  },
+  {
+    "page": 366,
+    "airport": "OIIE",
+    "name": "PAVET 2R, PAXID 2R, RUS 1V",
+    "visualStatus": "scaled_graticule_main",
+    "alreadyActive": false,
+    "sourceFingerprint": "2cf8fae56ea29158e20cfaa2a342a56ba6edf6f453e8626d2ede56872c7d887e",
+    "anchor": {
+      "sourcePage": 359,
+      "lat": 35.416666666666664,
+      "lon": 51.151666666666664
+    },
+    "gridLabels": [
+      "35-30",
+      "36-00",
+      "50-00",
+      "50-30",
+      "51-00",
+      "51-30"
+    ],
+    "labels": [
+      {
+        "value": "35-30",
+        "center": [
+          429.5058898925781,
+          771.2928466796875
+        ],
+        "bounds": [
+          425.97,
+          764.75,
+          433.05,
+          777.84
+        ]
+      },
+      {
+        "value": "36-00",
+        "center": [
+          203.66587829589844,
+          771.2928466796875
+        ],
+        "bounds": [
+          200.13,
+          764.75,
+          207.21,
+          777.84
+        ]
+      },
+      {
+        "value": "50-00",
+        "center": [
+          556.7059020996094,
+          688.0128479003906
+        ],
+        "bounds": [
+          553.17,
+          681.47,
+          560.25,
+          694.56
+        ]
+      },
+      {
+        "value": "50-30",
+        "center": [
+          556.7059020996094,
+          503.69285583496094
+        ],
+        "bounds": [
+          553.17,
+          497.15,
+          560.25,
+          510.24
+        ]
+      },
+      {
+        "value": "51-00",
+        "center": [
+          596.9058532714844,
+          322.2528533935547
+        ],
+        "bounds": [
+          593.37,
+          315.71,
+          600.45,
+          328.8
+        ]
+      },
+      {
+        "value": "51-30",
+        "center": [
+          596.9058532714844,
+          135.29290771484375
+        ],
+        "bounds": [
+          593.37,
+          128.75,
+          600.45,
+          141.84
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [],
+    "rawGridAxes": {
+      "latitude": [
+        {
+          "label": "36-00",
+          "degrees": 36.0,
+          "pdfPoint": 202.32000732421875,
+          "pixelAxis": "x",
+          "labelBounds": [
+            200.1262,
+            764.7457,
+            207.2055,
+            777.84
+          ],
+          "tickSegment": [
+            202.32,
+            781.92,
+            202.32,
+            779.16
+          ]
+        }
+      ],
+      "longitude": [
+        {
+          "label": "50-00",
+          "degrees": 50.0,
+          "pdfPoint": 687.719970703125,
+          "pixelAxis": "y",
+          "labelBounds": [
+            553.1663,
+            681.4657,
+            560.2455,
+            694.56
+          ],
+          "tickSegment": [
+            562.44,
+            687.72,
+            558.72,
+            687.72
+          ]
+        },
+        {
+          "label": "50-30",
+          "degrees": 50.5,
+          "pdfPoint": 503.8800048828125,
+          "pixelAxis": "y",
+          "labelBounds": [
+            553.1663,
+            497.1457,
+            560.2455,
+            510.24
+          ],
+          "tickSegment": [
+            561.84,
+            503.88,
+            558.72,
+            503.88
+          ]
+        },
+        {
+          "label": "51-00",
+          "degrees": 51.0,
+          "pdfPoint": 319.67999267578125,
+          "pixelAxis": "y",
+          "labelBounds": [
+            593.3662,
+            315.7057,
+            600.4455,
+            328.8
+          ],
+          "tickSegment": [
+            602.04,
+            319.68,
+            598.92,
+            319.68
+          ]
+        },
+        {
+          "label": "51-30",
+          "degrees": 51.5,
+          "pdfPoint": 135.3599853515625,
+          "pixelAxis": "y",
+          "labelBounds": [
+            593.3662,
+            128.7458,
+            600.4455,
+            141.84
+          ],
+          "tickSegment": [
+            602.04,
+            135.36,
+            598.92,
+            135.36
+          ]
+        }
+      ]
+    },
+    "rawGridBounds": {
+      "left": 0.0,
+      "top": 0.0,
+      "right": 612.0,
+      "bottom": 792.0
+    },
+    "lineCount": 26404,
+    "extractError": "Printed grid has an inconsistent scale, angle, or mirrored orientation"
+  },
+  {
+    "page": 369,
+    "airport": "OIIE",
+    "name": "BOXAM 2X, MIVAK 2X",
+    "visualStatus": "scaled_main_with_not_to_scale_insets",
+    "alreadyActive": false,
+    "sourceFingerprint": "bad198e98d4c388d3d0a3a442544c833936ba51dfa7a496ea9bdcaffdc6f87cf",
+    "anchor": {
+      "sourcePage": 359,
+      "lat": 35.416666666666664,
+      "lon": 51.151666666666664
+    },
+    "gridLabels": [
+      "35-00",
+      "51-00",
+      "51-30"
+    ],
+    "labels": [
+      {
+        "value": "35-00",
+        "center": [
+          105.5539665222168,
+          550.8864135742188
+        ],
+        "bounds": [
+          97.56,
+          546.57,
+          113.55,
+          555.21
+        ]
+      },
+      {
+        "value": "51-00",
+        "center": [
+          204.43397521972656,
+          734.4863891601562
+        ],
+        "bounds": [
+          196.44,
+          730.17,
+          212.43,
+          738.81
+        ]
+      },
+      {
+        "value": "51-30",
+        "center": [
+          386.1139678955078,
+          734.4863891601562
+        ],
+        "bounds": [
+          378.12,
+          730.17,
+          394.11,
+          738.81
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [
+      [
+        99.48,
+        373.29,
+        157.01,
+        383.49
+      ]
+    ],
+    "rawGridAxes": {
+      "latitude": [
+        {
+          "label": "35-00",
+          "degrees": 35.0,
+          "pdfPoint": 549.3599853515625,
+          "pixelAxis": "y",
+          "labelBounds": [
+            97.56,
+            546.5665,
+            113.5479,
+            555.2064
+          ],
+          "tickSegment": [
+            92.28,
+            549.36,
+            96.12,
+            549.36
+          ]
+        }
+      ],
+      "longitude": [
+        {
+          "label": "51-00",
+          "degrees": 51.0,
+          "pdfPoint": 204.60000610351562,
+          "pixelAxis": "x",
+          "labelBounds": [
+            196.44,
+            730.1664,
+            212.4279,
+            738.8063
+          ],
+          "tickSegment": [
+            204.6,
+            740.76,
+            204.6,
+            736.92
+          ]
+        },
+        {
+          "label": "51-30",
+          "degrees": 51.5,
+          "pdfPoint": 386.0400085449219,
+          "pixelAxis": "x",
+          "labelBounds": [
+            378.12,
+            730.1664,
+            394.1079,
+            738.8063
+          ],
+          "tickSegment": [
+            386.04,
+            740.76,
+            386.04,
+            736.92
+          ]
+        }
+      ]
+    },
+    "rawGridBounds": {
+      "left": 0.0,
+      "top": 0.0,
+      "right": 612.0,
+      "bottom": 792.0
+    },
+    "lineCount": 13341,
+    "extracted": {
+      "bounds": {
+        "left": 0.0,
+        "top": 0.0,
+        "right": 612.0,
+        "bottom": 792.0
+      },
+      "gridAxes": {
+        "latitude": [
+          {
+            "label": null,
+            "degrees": 34.833333333333336,
+            "pdfPoint": 623.1924334733243,
+            "pixelAxis": "y",
+            "labelBounds": null,
+            "tickSegment": null,
+            "derived": true,
+            "derivation": "orthogonal_conformal_scale"
+          },
+          {
+            "label": "35-00",
+            "degrees": 35.0,
+            "pdfPoint": 549.3599853515625,
+            "pixelAxis": "y",
+            "labelBounds": [
+              97.56,
+              546.5665,
+              113.5479,
+              555.2064
+            ],
+            "tickSegment": [
+              92.28,
+              549.36,
+              96.12,
+              549.36
+            ]
+          }
+        ],
+        "longitude": [
+          {
+            "label": "51-00",
+            "degrees": 51.0,
+            "pdfPoint": 204.60000610351562,
+            "pixelAxis": "x",
+            "labelBounds": [
+              196.44,
+              730.1664,
+              212.4279,
+              738.8063
+            ],
+            "tickSegment": [
+              204.6,
+              740.76,
+              204.6,
+              736.92
+            ]
+          },
+          {
+            "label": "51-30",
+            "degrees": 51.5,
+            "pdfPoint": 386.0400085449219,
+            "pixelAxis": "x",
+            "labelBounds": [
+              378.12,
+              730.1664,
+              394.1079,
+              738.8063
+            ],
+            "tickSegment": [
+              386.04,
+              740.76,
+              386.04,
+              736.92
+            ]
+          }
+        ]
+      },
+      "pointCount": 4,
+      "maxResidual": 0.0,
+      "validation": {
+        "gridMaxResidualPdfPoints": 0.0,
+        "controlPointCount": 4,
+        "method": "single_axis_plus_conformal_scale",
+        "measuredAxisValueCounts": {
+          "latitude": 1,
+          "longitude": 2
+        },
+        "notToScaleTextPresentElsewhereOnPage": true
+      },
+      "excludedBounds": []
+    }
+  },
+  {
+    "page": 371,
+    "airport": "OIIE",
+    "name": "DHN 1E, DHN 1F, KAZ 2C, KAZ 1D",
+    "visualStatus": "scaled_graticule_main",
+    "alreadyActive": false,
+    "sourceFingerprint": "c7488dfaa110502d9a911d0db4931e37e65eceabf2585e965b26f3ad29f52c90",
+    "anchor": {
+      "sourcePage": 359,
+      "lat": 35.416666666666664,
+      "lon": 51.151666666666664
+    },
+    "gridLabels": [
+      "35-00",
+      "35-30",
+      "51-00",
+      "51-30",
+      "52-00",
+      "52-30"
+    ],
+    "labels": [
+      {
+        "value": "35-00",
+        "center": [
+          469.272705078125,
+          326.7275695800781
+        ],
+        "bounds": [
+          464.89,
+          318.54,
+          473.65,
+          334.92
+        ]
+      },
+      {
+        "value": "35-30",
+        "center": [
+          248.35271453857422,
+          766.767578125
+        ],
+        "bounds": [
+          243.97,
+          758.58,
+          252.73,
+          774.96
+        ]
+      },
+      {
+        "value": "51-00",
+        "center": [
+          380.59271240234375,
+          711.4475708007812
+        ],
+        "bounds": [
+          376.21,
+          703.26,
+          384.97,
+          719.64
+        ]
+      },
+      {
+        "value": "51-30",
+        "center": [
+          463.03271484375,
+          529.4075317382812
+        ],
+        "bounds": [
+          458.65,
+          521.22,
+          467.41,
+          537.6
+        ]
+      },
+      {
+        "value": "52-00",
+        "center": [
+          462.4327087402344,
+          348.0875549316406
+        ],
+        "bounds": [
+          458.05,
+          339.9,
+          466.81,
+          356.28
+        ]
+      },
+      {
+        "value": "52-30",
+        "center": [
+          524.2327270507812,
+          166.2875747680664
+        ],
+        "bounds": [
+          519.85,
+          158.1,
+          528.61,
+          174.48
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [],
+    "rawGridAxes": {
+      "latitude": [
+        {
+          "label": "35-30",
+          "degrees": 35.5,
+          "pdfPoint": 248.39999389648438,
+          "pixelAxis": "x",
+          "labelBounds": [
+            243.9732,
+            758.5751,
+            252.7322,
+            774.96
+          ],
+          "tickSegment": [
+            248.4,
+            758.16,
+            248.4,
+            760.2
+          ]
+        }
+      ],
+      "longitude": [
+        {
+          "label": "51-00",
+          "degrees": 51.0,
+          "pdfPoint": 711.5999755859375,
+          "pixelAxis": "y",
+          "labelBounds": [
+            376.2132,
+            703.2551,
+            384.9722,
+            719.64
+          ],
+          "tickSegment": [
+            386.76,
+            711.6,
+            383.04,
+            711.6
+          ]
+        },
+        {
+          "label": "51-30",
+          "degrees": 51.5,
+          "pdfPoint": 530.0400390625,
+          "pixelAxis": "y",
+          "labelBounds": [
+            458.6532,
+            521.2151,
+            467.4122,
+            537.6
+          ],
+          "tickSegment": [
+            468.96,
+            530.04,
+            465.24,
+            530.04
+          ]
+        },
+        {
+          "label": "52-00",
+          "degrees": 52.0,
+          "pdfPoint": 348.239990234375,
+          "pixelAxis": "y",
+          "labelBounds": [
+            458.0532,
+            339.8951,
+            466.8122,
+            356.28
+          ],
+          "tickSegment": [
+            468.48,
+            348.24,
+            464.76,
+            348.24
+          ]
+        },
+        {
+          "label": "52-30",
+          "degrees": 52.5,
+          "pdfPoint": 166.55999755859375,
+          "pixelAxis": "y",
+          "labelBounds": [
+            519.8532,
+            158.0952,
+            528.6122,
+            174.48
+          ],
+          "tickSegment": [
+            530.28,
+            166.56,
+            526.56,
+            166.56
+          ]
+        }
+      ]
+    },
+    "rawGridBounds": {
+      "left": 0.0,
+      "top": 0.0,
+      "right": 612.0,
+      "bottom": 792.0
+    },
+    "lineCount": 17066,
+    "extractError": "Printed grid has an inconsistent scale, angle, or mirrored orientation"
+  },
+  {
+    "page": 376,
+    "airport": "OIIE",
+    "name": "RUS 4C, RUS 4D",
+    "visualStatus": "scaled_graticule_main",
+    "alreadyActive": false,
+    "sourceFingerprint": "fc0a0285d01f39872f68bae9fddf39cb6703f8c8c1d1776125de2c188d873c9b",
+    "anchor": {
+      "sourcePage": 359,
+      "lat": 35.416666666666664,
+      "lon": 51.151666666666664
+    },
+    "gridLabels": [
+      "35-30",
+      "51-00"
+    ],
+    "labels": [
+      {
+        "value": "35-30",
+        "center": [
+          104.23396682739258,
+          380.24639892578125
+        ],
+        "bounds": [
+          96.24,
+          375.93,
+          112.23,
+          384.57
+        ]
+      },
+      {
+        "value": "51-00",
+        "center": [
+          238.51397705078125,
+          716.1264038085938
+        ],
+        "bounds": [
+          230.52,
+          711.81,
+          246.51,
+          720.45
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [],
+    "rawGridError": "No measured latitude/longitude grid could be resolved",
+    "lineCount": 4206,
+    "extractError": "No measured latitude/longitude grid could be resolved"
+  },
+  {
+    "page": 379,
+    "airport": "OIIE",
+    "name": "OIIE/IKA 1 MAY 20 20-3H",
+    "visualStatus": "scaled_main_with_not_to_scale_insets",
+    "alreadyActive": false,
+    "sourceFingerprint": "40db6dbfb7cd766dbf6e17c1f016de61d601fb129be5e4447962875eceb68998",
+    "anchor": {
+      "sourcePage": 359,
+      "lat": 35.416666666666664,
+      "lon": 51.151666666666664
+    },
+    "gridLabels": [
+      "34-30",
+      "35-00",
+      "35-30",
+      "36-00",
+      "50-00",
+      "50-30",
+      "51-00",
+      "51-30",
+      "52-00",
+      "52-30"
+    ],
+    "labels": [
+      {
+        "value": "34-30",
+        "center": [
+          542.5914611816406,
+          509.7918701171875
+        ],
+        "bounds": [
+          539.77,
+          504.66,
+          545.41,
+          514.92
+        ]
+      },
+      {
+        "value": "35-00",
+        "center": [
+          401.3514709472656,
+          775.9518127441406
+        ],
+        "bounds": [
+          398.53,
+          770.82,
+          404.17,
+          781.08
+        ]
+      },
+      {
+        "value": "35-30",
+        "center": [
+          256.75147247314453,
+          775.7118225097656
+        ],
+        "bounds": [
+          253.93,
+          770.58,
+          259.57,
+          780.84
+        ]
+      },
+      {
+        "value": "36-00",
+        "center": [
+          111.19147109985352,
+          775.7118225097656
+        ],
+        "bounds": [
+          108.37,
+          770.58,
+          114.01,
+          780.84
+        ]
+      },
+      {
+        "value": "50-00",
+        "center": [
+          515.1114807128906,
+          679.4718017578125
+        ],
+        "bounds": [
+          512.29,
+          674.34,
+          517.93,
+          684.6
+        ]
+      },
+      {
+        "value": "50-30",
+        "center": [
+          515.3514709472656,
+          560.9117736816406
+        ],
+        "bounds": [
+          512.53,
+          555.78,
+          518.17,
+          566.04
+        ]
+      },
+      {
+        "value": "51-00",
+        "center": [
+          540.1914978027344,
+          442.11183166503906
+        ],
+        "bounds": [
+          537.37,
+          436.98,
+          543.01,
+          447.24
+        ]
+      },
+      {
+        "value": "51-30",
+        "center": [
+          540.4314880371094,
+          323.5518341064453
+        ],
+        "bounds": [
+          537.61,
+          318.42,
+          543.25,
+          328.68
+        ]
+      },
+      {
+        "value": "52-00",
+        "center": [
+          540.4314880371094,
+          204.8126678466797
+        ],
+        "bounds": [
+          537.61,
+          199.63,
+          543.25,
+          210.0
+        ]
+      },
+      {
+        "value": "52-30",
+        "center": [
+          540.6714782714844,
+          86.25266647338867
+        ],
+        "bounds": [
+          537.85,
+          81.07,
+          543.49,
+          91.44
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [
+      [
+        108.28,
+        562.05,
+        115.24,
+        601.44
+      ]
+    ],
+    "rawGridAxes": {
+      "latitude": [
+        {
+          "label": "34-30",
+          "degrees": 34.5,
+          "pdfPoint": 544.0800170898438,
+          "pixelAxis": "x",
+          "labelBounds": [
+            539.7718,
+            504.6637,
+            545.4111,
+            514.92
+          ],
+          "tickSegment": [
+            544.08,
+            518.16,
+            544.08,
+            515.88
+          ]
+        },
+        {
+          "label": "35-00",
+          "degrees": 35.0,
+          "pdfPoint": 400.20001220703125,
+          "pixelAxis": "x",
+          "labelBounds": [
+            398.5318,
+            770.8236,
+            404.1711,
+            781.08
+          ],
+          "tickSegment": [
+            400.2,
+            784.32,
+            400.2,
+            782.04
+          ]
+        },
+        {
+          "label": "35-30",
+          "degrees": 35.5,
+          "pdfPoint": 256.9200134277344,
+          "pixelAxis": "x",
+          "labelBounds": [
+            253.9318,
+            770.5836,
+            259.5711,
+            780.84
+          ],
+          "tickSegment": [
+            256.92,
+            775.2,
+            256.92,
+            773.4
+          ]
+        },
+        {
+          "label": "36-00",
+          "degrees": 36.0,
+          "pdfPoint": 110.04000091552734,
+          "pixelAxis": "x",
+          "labelBounds": [
+            108.3718,
+            770.5836,
+            114.0111,
+            780.84
+          ],
+          "tickSegment": [
+            110.04,
+            784.08,
+            110.04,
+            781.56
+          ]
+        }
+      ],
+      "longitude": [
+        {
+          "label": "50-00",
+          "degrees": 50.0,
+          "pdfPoint": 679.4400024414062,
+          "pixelAxis": "y",
+          "labelBounds": [
+            512.2918,
+            674.3436,
+            517.9312,
+            684.6
+          ],
+          "tickSegment": [
+            519.0,
+            679.44,
+            516.48,
+            679.44
+          ]
+        },
+        {
+          "label": "50-30",
+          "degrees": 50.5,
+          "pdfPoint": 560.6400146484375,
+          "pixelAxis": "y",
+          "labelBounds": [
+            512.5318,
+            555.7836,
+            518.1711,
+            566.04
+          ],
+          "tickSegment": [
+            519.24,
+            560.64,
+            516.72,
+            560.64
+          ]
+        },
+        {
+          "label": "51-00",
+          "degrees": 51.0,
+          "pdfPoint": 442.0799865722656,
+          "pixelAxis": "y",
+          "labelBounds": [
+            537.3718,
+            436.9837,
+            543.0112,
+            447.24
+          ],
+          "tickSegment": [
+            544.08,
+            442.08,
+            541.56,
+            442.08
+          ]
+        },
+        {
+          "label": "51-30",
+          "degrees": 51.5,
+          "pdfPoint": 323.5199890136719,
+          "pixelAxis": "y",
+          "labelBounds": [
+            537.6118,
+            318.4237,
+            543.2512,
+            328.68
+          ],
+          "tickSegment": [
+            544.32,
+            323.52,
+            541.8,
+            323.52
+          ]
+        },
+        {
+          "label": "52-00",
+          "degrees": 52.0,
+          "pdfPoint": 204.719970703125,
+          "pixelAxis": "y",
+          "labelBounds": [
+            537.6118,
+            199.6253,
+            543.2512,
+            210.0
+          ],
+          "tickSegment": [
+            544.32,
+            204.72,
+            542.04,
+            204.72
+          ]
+        },
+        {
+          "label": "52-30",
+          "degrees": 52.5,
+          "pdfPoint": 85.91998291015625,
+          "pixelAxis": "y",
+          "labelBounds": [
+            537.8518,
+            81.0653,
+            543.4911,
+            91.44
+          ],
+          "tickSegment": [
+            544.56,
+            85.92,
+            542.04,
+            85.92
+          ]
+        }
+      ]
+    },
+    "rawGridBounds": {
+      "left": 0.0,
+      "top": 0.0,
+      "right": 612.0,
+      "bottom": 792.0
+    },
+    "lineCount": 44309,
+    "extracted": {
+      "bounds": {
+        "left": 0.0,
+        "top": 0.0,
+        "right": 612.0,
+        "bottom": 792.0
+      },
+      "gridAxes": {
+        "latitude": [
+          {
+            "label": "34-30",
+            "degrees": 34.5,
+            "pdfPoint": 544.0800170898438,
+            "pixelAxis": "x",
+            "labelBounds": [
+              539.7718,
+              504.6637,
+              545.4111,
+              514.92
+            ],
+            "tickSegment": [
+              544.08,
+              518.16,
+              544.08,
+              515.88
+            ]
+          },
+          {
+            "label": "35-00",
+            "degrees": 35.0,
+            "pdfPoint": 400.20001220703125,
+            "pixelAxis": "x",
+            "labelBounds": [
+              398.5318,
+              770.8236,
+              404.1711,
+              781.08
+            ],
+            "tickSegment": [
+              400.2,
+              784.32,
+              400.2,
+              782.04
+            ]
+          },
+          {
+            "label": "35-30",
+            "degrees": 35.5,
+            "pdfPoint": 256.9200134277344,
+            "pixelAxis": "x",
+            "labelBounds": [
+              253.9318,
+              770.5836,
+              259.5711,
+              780.84
+            ],
+            "tickSegment": [
+              256.92,
+              775.2,
+              256.92,
+              773.4
+            ]
+          },
+          {
+            "label": "36-00",
+            "degrees": 36.0,
+            "pdfPoint": 110.04000091552734,
+            "pixelAxis": "x",
+            "labelBounds": [
+              108.3718,
+              770.5836,
+              114.0111,
+              780.84
+            ],
+            "tickSegment": [
+              110.04,
+              784.08,
+              110.04,
+              781.56
+            ]
+          }
+        ],
+        "longitude": [
+          {
+            "label": "50-00",
+            "degrees": 50.0,
+            "pdfPoint": 679.4400024414062,
+            "pixelAxis": "y",
+            "labelBounds": [
+              512.2918,
+              674.3436,
+              517.9312,
+              684.6
+            ],
+            "tickSegment": [
+              519.0,
+              679.44,
+              516.48,
+              679.44
+            ]
+          },
+          {
+            "label": "50-30",
+            "degrees": 50.5,
+            "pdfPoint": 560.6400146484375,
+            "pixelAxis": "y",
+            "labelBounds": [
+              512.5318,
+              555.7836,
+              518.1711,
+              566.04
+            ],
+            "tickSegment": [
+              519.24,
+              560.64,
+              516.72,
+              560.64
+            ]
+          },
+          {
+            "label": "51-00",
+            "degrees": 51.0,
+            "pdfPoint": 442.0799865722656,
+            "pixelAxis": "y",
+            "labelBounds": [
+              537.3718,
+              436.9837,
+              543.0112,
+              447.24
+            ],
+            "tickSegment": [
+              544.08,
+              442.08,
+              541.56,
+              442.08
+            ]
+          },
+          {
+            "label": "51-30",
+            "degrees": 51.5,
+            "pdfPoint": 323.5199890136719,
+            "pixelAxis": "y",
+            "labelBounds": [
+              537.6118,
+              318.4237,
+              543.2512,
+              328.68
+            ],
+            "tickSegment": [
+              544.32,
+              323.52,
+              541.8,
+              323.52
+            ]
+          },
+          {
+            "label": "52-00",
+            "degrees": 52.0,
+            "pdfPoint": 204.719970703125,
+            "pixelAxis": "y",
+            "labelBounds": [
+              537.6118,
+              199.6253,
+              543.2512,
+              210.0
+            ],
+            "tickSegment": [
+              544.32,
+              204.72,
+              542.04,
+              204.72
+            ]
+          },
+          {
+            "label": "52-30",
+            "degrees": 52.5,
+            "pdfPoint": 85.91998291015625,
+            "pixelAxis": "y",
+            "labelBounds": [
+              537.8518,
+              81.0653,
+              543.4911,
+              91.44
+            ],
+            "tickSegment": [
+              544.56,
+              85.92,
+              542.04,
+              85.92
+            ]
+          }
+        ]
+      },
+      "pointCount": 24,
+      "maxResidual": 1.387262,
+      "validation": {
+        "gridMaxResidualPdfPoints": 1.387262,
+        "controlPointCount": 24,
+        "method": "paired_printed_graticule_vector_ticks",
+        "measuredAxisValueCounts": {
+          "latitude": 4,
+          "longitude": 6
+        },
+        "notToScaleTextPresentElsewhereOnPage": true
+      },
+      "excludedBounds": []
+    }
+  },
+  {
+    "page": 386,
+    "airport": "OIIE",
+    "name": "LOC RWY 29R",
+    "visualStatus": "scaled_main_with_not_to_scale_insets",
+    "alreadyActive": false,
+    "sourceFingerprint": "17c4902191d2ee254d3c378ed23c75e973d1da66377d99b86c24742bfe81adeb",
+    "anchor": {
+      "sourcePage": 359,
+      "lat": 35.416666666666664,
+      "lon": 51.151666666666664
+    },
+    "gridLabels": [
+      "51-10",
+      "51-20",
+      "51-30"
+    ],
+    "labels": [
+      {
+        "value": "51-10",
+        "center": [
+          225.81079864501953,
+          473.56500244140625
+        ],
+        "bounds": [
+          217.56,
+          469.07,
+          234.06,
+          478.07
+        ]
+      },
+      {
+        "value": "51-20",
+        "center": [
+          377.3708190917969,
+          473.56500244140625
+        ],
+        "bounds": [
+          369.12,
+          469.07,
+          385.62,
+          478.07
+        ]
+      },
+      {
+        "value": "51-30",
+        "center": [
+          521.7307434082031,
+          496.0050048828125
+        ],
+        "bounds": [
+          513.48,
+          491.51,
+          529.98,
+          500.51
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [
+      [
+        478.56,
+        384.79,
+        527.72,
+        391.15
+      ],
+      [
+        95.16,
+        388.39,
+        144.32,
+        394.75
+      ]
+    ],
+    "rawGridError": "No measured latitude/longitude grid could be resolved",
+    "lineCount": 5864,
+    "extractError": "No measured latitude/longitude grid could be resolved"
+  },
+  {
+    "page": 387,
+    "airport": "OIIE",
+    "name": "ILS RWY 29R (TEMPORARY PLATE)",
+    "visualStatus": "scaled_main_with_not_to_scale_insets",
+    "alreadyActive": false,
+    "sourceFingerprint": "49ef0abf6d67460b1e9ffd4a358e1ec53a116af7eea47a6ffef3ac63a312f409",
+    "anchor": {
+      "sourcePage": 359,
+      "lat": 35.416666666666664,
+      "lon": 51.151666666666664
+    },
+    "gridLabels": [
+      "35-20",
+      "35-30",
+      "51-10",
+      "51-20",
+      "51-30"
+    ],
+    "labels": [
+      {
+        "value": "35-20",
+        "center": [
+          105.45078659057617,
+          387.885009765625
+        ],
+        "bounds": [
+          97.2,
+          383.39,
+          113.7,
+          392.39
+        ]
+      },
+      {
+        "value": "35-30",
+        "center": [
+          105.4507827758789,
+          202.36502075195312
+        ],
+        "bounds": [
+          97.2,
+          197.87,
+          113.7,
+          206.87
+        ]
+      },
+      {
+        "value": "51-10",
+        "center": [
+          225.69080352783203,
+          384.1650085449219
+        ],
+        "bounds": [
+          217.44,
+          379.67,
+          233.94,
+          388.67
+        ]
+      },
+      {
+        "value": "51-20",
+        "center": [
+          377.3708190917969,
+          473.68499755859375
+        ],
+        "bounds": [
+          369.12,
+          469.18,
+          385.62,
+          478.18
+        ]
+      },
+      {
+        "value": "51-30",
+        "center": [
+          522.4507751464844,
+          473.68499755859375
+        ],
+        "bounds": [
+          514.2,
+          469.18,
+          530.7,
+          478.18
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [
+      [
+        478.56,
+        422.11,
+        527.72,
+        428.47
+      ]
+    ],
+    "rawGridAxes": {
+      "latitude": [
+        {
+          "label": "35-30",
+          "degrees": 35.5,
+          "pdfPoint": 200.8800048828125,
+          "pixelAxis": "y",
+          "labelBounds": [
+            97.2,
+            197.865,
+            113.7016,
+            206.865
+          ],
+          "tickSegment": [
+            90.6,
+            200.88,
+            94.44,
+            200.88
+          ]
+        }
+      ],
+      "longitude": [
+        {
+          "label": "51-10",
+          "degrees": 51.166666666666664,
+          "pdfPoint": 225.24000549316406,
+          "pixelAxis": "x",
+          "labelBounds": [
+            217.44,
+            379.665,
+            233.9416,
+            388.665
+          ],
+          "tickSegment": [
+            225.24,
+            390.48,
+            225.24,
+            386.64
+          ]
+        },
+        {
+          "label": "51-20",
+          "degrees": 51.333333333333336,
+          "pdfPoint": 376.9200134277344,
+          "pixelAxis": "x",
+          "labelBounds": [
+            369.12,
+            469.185,
+            385.6216,
+            478.185
+          ],
+          "tickSegment": [
+            376.92,
+            479.88,
+            376.92,
+            476.04
+          ]
+        }
+      ]
+    },
+    "rawGridBounds": {
+      "left": 0.0,
+      "top": 0.0,
+      "right": 612.0,
+      "bottom": 792.0
+    },
+    "lineCount": 4830,
+    "extracted": {
+      "bounds": {
+        "left": 0.0,
+        "top": 0.0,
+        "right": 612.0,
+        "bottom": 792.0
+      },
+      "gridAxes": {
+        "latitude": [
+          {
+            "label": null,
+            "degrees": 35.333333333333336,
+            "pdfPoint": 387.1926405156579,
+            "pixelAxis": "y",
+            "labelBounds": null,
+            "tickSegment": null,
+            "derived": true,
+            "derivation": "orthogonal_conformal_scale"
+          },
+          {
+            "label": "35-30",
+            "degrees": 35.5,
+            "pdfPoint": 200.8800048828125,
+            "pixelAxis": "y",
+            "labelBounds": [
+              97.2,
+              197.865,
+              113.7016,
+              206.865
+            ],
+            "tickSegment": [
+              90.6,
+              200.88,
+              94.44,
+              200.88
+            ]
+          }
+        ],
+        "longitude": [
+          {
+            "label": "51-10",
+            "degrees": 51.166666666666664,
+            "pdfPoint": 225.24000549316406,
+            "pixelAxis": "x",
+            "labelBounds": [
+              217.44,
+              379.665,
+              233.9416,
+              388.665
+            ],
+            "tickSegment": [
+              225.24,
+              390.48,
+              225.24,
+              386.64
+            ]
+          },
+          {
+            "label": "51-20",
+            "degrees": 51.333333333333336,
+            "pdfPoint": 376.9200134277344,
+            "pixelAxis": "x",
+            "labelBounds": [
+              369.12,
+              469.185,
+              385.6216,
+              478.185
+            ],
+            "tickSegment": [
+              376.92,
+              479.88,
+              376.92,
+              476.04
+            ]
+          }
+        ]
+      },
+      "pointCount": 4,
+      "maxResidual": 0.0,
+      "validation": {
+        "gridMaxResidualPdfPoints": 0.0,
+        "controlPointCount": 4,
+        "method": "single_axis_plus_conformal_scale",
+        "measuredAxisValueCounts": {
+          "latitude": 1,
+          "longitude": 2
+        },
+        "notToScaleTextPresentElsewhereOnPage": true
+      },
+      "excludedBounds": []
+    }
+  },
+  {
+    "page": 388,
+    "airport": "OIIE",
+    "name": "ILS RWY 29R",
+    "visualStatus": "scaled_main_with_not_to_scale_insets",
+    "alreadyActive": false,
+    "sourceFingerprint": "4185dfa21c0adf26e52ac08439bf4507bf16fd7014d89ab8cea08d9b23d95e23",
+    "anchor": {
+      "sourcePage": 359,
+      "lat": 35.416666666666664,
+      "lon": 51.151666666666664
+    },
+    "gridLabels": [
+      "51-10",
+      "51-20",
+      "51-30"
+    ],
+    "labels": [
+      {
+        "value": "51-10",
+        "center": [
+          224.83396911621094,
+          496.88641357421875
+        ],
+        "bounds": [
+          216.84,
+          492.57,
+          232.83,
+          501.21
+        ]
+      },
+      {
+        "value": "51-20",
+        "center": [
+          376.0339813232422,
+          496.88641357421875
+        ],
+        "bounds": [
+          368.04,
+          492.57,
+          384.03,
+          501.21
+        ]
+      },
+      {
+        "value": "51-30",
+        "center": [
+          520.7539672851562,
+          496.88641357421875
+        ],
+        "bounds": [
+          512.76,
+          492.57,
+          528.75,
+          501.21
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [
+      [
+        478.92,
+        384.86,
+        526.02,
+        390.98
+      ],
+      [
+        95.64,
+        388.46,
+        142.74,
+        394.58
+      ]
+    ],
+    "rawGridError": "No measured latitude/longitude grid could be resolved",
+    "lineCount": 5715,
+    "extractError": "No measured latitude/longitude grid could be resolved"
+  },
+  {
+    "page": 389,
+    "airport": "OIIE",
+    "name": "CAT II ILS RWY 29R (TEMPORARY PLATE)",
+    "visualStatus": "scaled_main_with_not_to_scale_insets",
+    "alreadyActive": false,
+    "sourceFingerprint": "43d807200a0ec930449c9676cbb4a8b4289af4d5e1453b0f130df0774b148ac1",
+    "anchor": {
+      "sourcePage": 359,
+      "lat": 35.416666666666664,
+      "lon": 51.151666666666664
+    },
+    "gridLabels": [
+      "35-20",
+      "35-30",
+      "51-10",
+      "51-20",
+      "51-30"
+    ],
+    "labels": [
+      {
+        "value": "35-20",
+        "center": [
+          105.45078659057617,
+          387.885009765625
+        ],
+        "bounds": [
+          97.2,
+          383.39,
+          113.7,
+          392.39
+        ]
+      },
+      {
+        "value": "35-30",
+        "center": [
+          105.4507827758789,
+          202.36502075195312
+        ],
+        "bounds": [
+          97.2,
+          197.87,
+          113.7,
+          206.87
+        ]
+      },
+      {
+        "value": "51-10",
+        "center": [
+          225.69080352783203,
+          384.1650085449219
+        ],
+        "bounds": [
+          217.44,
+          379.67,
+          233.94,
+          388.67
+        ]
+      },
+      {
+        "value": "51-20",
+        "center": [
+          377.3708190917969,
+          473.68499755859375
+        ],
+        "bounds": [
+          369.12,
+          469.18,
+          385.62,
+          478.18
+        ]
+      },
+      {
+        "value": "51-30",
+        "center": [
+          522.4507751464844,
+          473.68499755859375
+        ],
+        "bounds": [
+          514.2,
+          469.18,
+          530.7,
+          478.18
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [
+      [
+        478.56,
+        422.11,
+        527.72,
+        428.47
+      ]
+    ],
+    "rawGridAxes": {
+      "latitude": [
+        {
+          "label": "35-30",
+          "degrees": 35.5,
+          "pdfPoint": 200.8800048828125,
+          "pixelAxis": "y",
+          "labelBounds": [
+            97.2,
+            197.865,
+            113.7016,
+            206.865
+          ],
+          "tickSegment": [
+            90.6,
+            200.88,
+            94.44,
+            200.88
+          ]
+        }
+      ],
+      "longitude": [
+        {
+          "label": "51-10",
+          "degrees": 51.166666666666664,
+          "pdfPoint": 225.24000549316406,
+          "pixelAxis": "x",
+          "labelBounds": [
+            217.44,
+            379.665,
+            233.9416,
+            388.665
+          ],
+          "tickSegment": [
+            225.24,
+            390.48,
+            225.24,
+            386.64
+          ]
+        },
+        {
+          "label": "51-20",
+          "degrees": 51.333333333333336,
+          "pdfPoint": 376.9200134277344,
+          "pixelAxis": "x",
+          "labelBounds": [
+            369.12,
+            469.185,
+            385.6216,
+            478.185
+          ],
+          "tickSegment": [
+            376.92,
+            479.88,
+            376.92,
+            476.04
+          ]
+        }
+      ]
+    },
+    "rawGridBounds": {
+      "left": 0.0,
+      "top": 0.0,
+      "right": 612.0,
+      "bottom": 792.0
+    },
+    "lineCount": 4797,
+    "extracted": {
+      "bounds": {
+        "left": 0.0,
+        "top": 0.0,
+        "right": 612.0,
+        "bottom": 792.0
+      },
+      "gridAxes": {
+        "latitude": [
+          {
+            "label": null,
+            "degrees": 35.333333333333336,
+            "pdfPoint": 387.1926405156579,
+            "pixelAxis": "y",
+            "labelBounds": null,
+            "tickSegment": null,
+            "derived": true,
+            "derivation": "orthogonal_conformal_scale"
+          },
+          {
+            "label": "35-30",
+            "degrees": 35.5,
+            "pdfPoint": 200.8800048828125,
+            "pixelAxis": "y",
+            "labelBounds": [
+              97.2,
+              197.865,
+              113.7016,
+              206.865
+            ],
+            "tickSegment": [
+              90.6,
+              200.88,
+              94.44,
+              200.88
+            ]
+          }
+        ],
+        "longitude": [
+          {
+            "label": "51-10",
+            "degrees": 51.166666666666664,
+            "pdfPoint": 225.24000549316406,
+            "pixelAxis": "x",
+            "labelBounds": [
+              217.44,
+              379.665,
+              233.9416,
+              388.665
+            ],
+            "tickSegment": [
+              225.24,
+              390.48,
+              225.24,
+              386.64
+            ]
+          },
+          {
+            "label": "51-20",
+            "degrees": 51.333333333333336,
+            "pdfPoint": 376.9200134277344,
+            "pixelAxis": "x",
+            "labelBounds": [
+              369.12,
+              469.185,
+              385.6216,
+              478.185
+            ],
+            "tickSegment": [
+              376.92,
+              479.88,
+              376.92,
+              476.04
+            ]
+          }
+        ]
+      },
+      "pointCount": 4,
+      "maxResidual": 0.0,
+      "validation": {
+        "gridMaxResidualPdfPoints": 0.0,
+        "controlPointCount": 4,
+        "method": "single_axis_plus_conformal_scale",
+        "measuredAxisValueCounts": {
+          "latitude": 1,
+          "longitude": 2
+        },
+        "notToScaleTextPresentElsewhereOnPage": true
+      },
+      "excludedBounds": []
+    }
+  },
+  {
+    "page": 444,
+    "airport": "OIKB",
+    "name": "ASMUK 1P, ASMUK 1S, ASMUK 1X",
+    "visualStatus": "scaled_main_with_not_to_scale_insets",
+    "alreadyActive": false,
+    "sourceFingerprint": "413aae1768691e41032471897a5effded6d0dabc34474826ddd77caf770e5c98",
+    "anchor": {
+      "sourcePage": 441,
+      "lat": 27.218333333333334,
+      "lon": 56.37833333333333
+    },
+    "gridLabels": [
+      "27-00",
+      "27-30",
+      "56-30"
+    ],
+    "labels": [
+      {
+        "value": "27-00",
+        "center": [
+          103.99396896362305,
+          696.806396484375
+        ],
+        "bounds": [
+          96.0,
+          692.49,
+          111.99,
+          701.13
+        ]
+      },
+      {
+        "value": "27-30",
+        "center": [
+          103.99396896362305,
+          326.9664001464844
+        ],
+        "bounds": [
+          96.0,
+          322.65,
+          111.99,
+          331.29
+        ]
+      },
+      {
+        "value": "56-30",
+        "center": [
+          385.3939666748047,
+          715.4064331054688
+        ],
+        "bounds": [
+          377.4,
+          711.09,
+          393.39,
+          719.73
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [
+      [
+        135.96,
+        216.45,
+        193.49,
+        226.65
+      ]
+    ],
+    "rawGridAxes": {
+      "latitude": [
+        {
+          "label": "27-00",
+          "degrees": 27.0,
+          "pdfPoint": 695.0401000976562,
+          "pixelAxis": "y",
+          "labelBounds": [
+            96.0,
+            692.4865,
+            111.9879,
+            701.1263
+          ],
+          "tickSegment": [
+            90.9599,
+            695.0401,
+            94.56,
+            695.0401
+          ]
+        },
+        {
+          "label": "27-30",
+          "degrees": 27.5,
+          "pdfPoint": 325.44000244140625,
+          "pixelAxis": "y",
+          "labelBounds": [
+            96.0,
+            322.6465,
+            111.9879,
+            331.2863
+          ],
+          "tickSegment": [
+            90.72,
+            325.44,
+            94.56,
+            325.44
+          ]
+        }
+      ],
+      "longitude": [
+        {
+          "label": "56-30",
+          "degrees": 56.5,
+          "pdfPoint": 385.32000732421875,
+          "pixelAxis": "x",
+          "labelBounds": [
+            377.4,
+            711.0865,
+            393.3879,
+            719.7264
+          ],
+          "tickSegment": [
+            385.32,
+            721.6801,
+            385.32,
+            717.84
+          ]
+        }
+      ]
+    },
+    "rawGridBounds": {
+      "left": 90.96,
+      "top": 172.68,
+      "right": 531.0,
+      "bottom": 721.68
+    },
+    "lineCount": 6286,
+    "extracted": {
+      "bounds": {
+        "left": 90.96,
+        "top": 172.68,
+        "right": 531.0,
+        "bottom": 721.68
+      },
+      "gridAxes": {
+        "latitude": [
+          {
+            "label": "27-00",
+            "degrees": 27.0,
+            "pdfPoint": 695.0401000976562,
+            "pixelAxis": "y",
+            "labelBounds": [
+              96.0,
+              692.4865,
+              111.9879,
+              701.1263
+            ],
+            "tickSegment": [
+              90.9599,
+              695.0401,
+              94.56,
+              695.0401
+            ]
+          },
+          {
+            "label": "27-30",
+            "degrees": 27.5,
+            "pdfPoint": 325.44000244140625,
+            "pixelAxis": "y",
+            "labelBounds": [
+              96.0,
+              322.6465,
+              111.9879,
+              331.2863
+            ],
+            "tickSegment": [
+              90.72,
+              325.44,
+              94.56,
+              325.44
+            ]
+          }
+        ],
+        "longitude": [
+          {
+            "label": "56-30",
+            "degrees": 56.5,
+            "pdfPoint": 385.32000732421875,
+            "pixelAxis": "x",
+            "labelBounds": [
+              377.4,
+              711.0865,
+              393.3879,
+              719.7264
+            ],
+            "tickSegment": [
+              385.32,
+              721.6801,
+              385.32,
+              717.84
+            ]
+          },
+          {
+            "label": null,
+            "degrees": 56.666666666666664,
+            "pdfPoint": 494.87810851700993,
+            "pixelAxis": "x",
+            "labelBounds": null,
+            "tickSegment": null,
+            "derived": true,
+            "derivation": "orthogonal_conformal_scale"
+          }
+        ]
+      },
+      "pointCount": 4,
+      "maxResidual": 0.0,
+      "validation": {
+        "gridMaxResidualPdfPoints": 0.0,
+        "controlPointCount": 4,
+        "method": "single_axis_plus_conformal_scale",
+        "measuredAxisValueCounts": {
+          "latitude": 2,
+          "longitude": 1
+        },
+        "notToScaleTextPresentElsewhereOnPage": true
+      },
+      "excludedBounds": []
+    }
+  },
+  {
+    "page": 446,
+    "airport": "OIKB",
+    "name": "DAVEP 1X, TAVNO 1P, TAVNO 1X",
+    "visualStatus": "scaled_main_with_not_to_scale_insets",
+    "alreadyActive": false,
+    "sourceFingerprint": "3d2366e7914dd761a4ed30c0db6f5451b186f4a791f031fcfa97bc64aa71eb95",
+    "anchor": {
+      "sourcePage": 441,
+      "lat": 27.218333333333334,
+      "lon": 56.37833333333333
+    },
+    "gridLabels": [
+      "27-30",
+      "56-30"
+    ],
+    "labels": [
+      {
+        "value": "27-30",
+        "center": [
+          104.45602035522461,
+          430.9788055419922
+        ],
+        "bounds": [
+          96.24,
+          426.54,
+          112.67,
+          435.42
+        ]
+      },
+      {
+        "value": "56-30",
+        "center": [
+          232.25157928466797,
+          715.3788452148438
+        ],
+        "bounds": [
+          224.04,
+          710.94,
+          240.46,
+          719.82
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [
+      [
+        126.6,
+        261.83,
+        186.2,
+        272.39
+      ],
+      [
+        466.8,
+        481.19,
+        526.4,
+        491.75
+      ]
+    ],
+    "rawGridError": "No measured latitude/longitude grid could be resolved",
+    "lineCount": 5162,
+    "extractError": "No measured latitude/longitude grid could be resolved"
+  },
+  {
+    "page": 448,
+    "airport": "OIKB",
+    "name": "MOBON 1P, MOBON 1S, MOBON 1X",
+    "visualStatus": "scaled_main_with_not_to_scale_insets",
+    "alreadyActive": false,
+    "sourceFingerprint": "0fb66f27a19963a353ef2956f4d46b380eba79911a4d40aaad792df7290d8f2d",
+    "anchor": {
+      "sourcePage": 441,
+      "lat": 27.218333333333334,
+      "lon": 56.37833333333333
+    },
+    "gridLabels": [
+      "27-00",
+      "27-30",
+      "56-00",
+      "56-30"
+    ],
+    "labels": [
+      {
+        "value": "27-00",
+        "center": [
+          505.5126953125,
+          767.007568359375
+        ],
+        "bounds": [
+          501.13,
+          758.82,
+          509.89,
+          775.2
+        ]
+      },
+      {
+        "value": "27-30",
+        "center": [
+          135.3127212524414,
+          684.8075561523438
+        ],
+        "bounds": [
+          130.93,
+          676.62,
+          139.69,
+          693.0
+        ]
+      },
+      {
+        "value": "56-00",
+        "center": [
+          524.7127075195312,
+          609.9275512695312
+        ],
+        "bounds": [
+          520.33,
+          601.74,
+          529.09,
+          618.12
+        ]
+      },
+      {
+        "value": "56-30",
+        "center": [
+          447.7926940917969,
+          278.9675750732422
+        ],
+        "bounds": [
+          443.41,
+          270.78,
+          452.17,
+          287.16
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [
+      [
+        143.1,
+        711.72,
+        153.54,
+        770.76
+      ]
+    ],
+    "rawGridAxes": {
+      "latitude": [
+        {
+          "label": "27-00",
+          "degrees": 27.0,
+          "pdfPoint": 505.32000732421875,
+          "pixelAxis": "x",
+          "labelBounds": [
+            501.1332,
+            758.8151,
+            509.8922,
+            775.2
+          ],
+          "tickSegment": [
+            505.32,
+            753.12,
+            505.32,
+            750.36
+          ]
+        },
+        {
+          "label": "27-30",
+          "degrees": 27.5,
+          "pdfPoint": 133.8000030517578,
+          "pixelAxis": "x",
+          "labelBounds": [
+            130.9332,
+            676.6151,
+            139.6922,
+            693.0
+          ],
+          "tickSegment": [
+            133.8,
+            698.16,
+            133.8,
+            694.44
+          ]
+        }
+      ],
+      "longitude": [
+        {
+          "label": "56-00",
+          "degrees": 56.0,
+          "pdfPoint": 609.9600219726562,
+          "pixelAxis": "y",
+          "labelBounds": [
+            520.3332,
+            601.7351,
+            529.0922,
+            618.12
+          ],
+          "tickSegment": [
+            530.88,
+            609.96,
+            527.16,
+            609.96
+          ]
+        },
+        {
+          "label": "56-30",
+          "degrees": 56.5,
+          "pdfPoint": 279.0,
+          "pixelAxis": "y",
+          "labelBounds": [
+            443.4132,
+            270.7751,
+            452.1722,
+            287.16
+          ],
+          "tickSegment": [
+            453.84,
+            279.0,
+            450.12,
+            279.0
+          ]
+        }
+      ]
+    },
+    "rawGridBounds": {
+      "left": 0.0,
+      "top": 0.0,
+      "right": 612.0,
+      "bottom": 792.0
+    },
+    "lineCount": 11429,
+    "extracted": {
+      "bounds": {
+        "left": 0.0,
+        "top": 0.0,
+        "right": 612.0,
+        "bottom": 792.0
+      },
+      "gridAxes": {
+        "latitude": [
+          {
+            "label": "27-00",
+            "degrees": 27.0,
+            "pdfPoint": 505.32000732421875,
+            "pixelAxis": "x",
+            "labelBounds": [
+              501.1332,
+              758.8151,
+              509.8922,
+              775.2
+            ],
+            "tickSegment": [
+              505.32,
+              753.12,
+              505.32,
+              750.36
+            ]
+          },
+          {
+            "label": "27-30",
+            "degrees": 27.5,
+            "pdfPoint": 133.8000030517578,
+            "pixelAxis": "x",
+            "labelBounds": [
+              130.9332,
+              676.6151,
+              139.6922,
+              693.0
+            ],
+            "tickSegment": [
+              133.8,
+              698.16,
+              133.8,
+              694.44
+            ]
+          }
+        ],
+        "longitude": [
+          {
+            "label": "56-00",
+            "degrees": 56.0,
+            "pdfPoint": 609.9600219726562,
+            "pixelAxis": "y",
+            "labelBounds": [
+              520.3332,
+              601.7351,
+              529.0922,
+              618.12
+            ],
+            "tickSegment": [
+              530.88,
+              609.96,
+              527.16,
+              609.96
+            ]
+          },
+          {
+            "label": "56-30",
+            "degrees": 56.5,
+            "pdfPoint": 279.0,
+            "pixelAxis": "y",
+            "labelBounds": [
+              443.4132,
+              270.7751,
+              452.1722,
+              287.16
+            ],
+            "tickSegment": [
+              453.84,
+              279.0,
+              450.12,
+              279.0
+            ]
+          }
+        ]
+      },
+      "pointCount": 4,
+      "maxResidual": 0.0,
+      "validation": {
+        "gridMaxResidualPdfPoints": 0.0,
+        "controlPointCount": 4,
+        "method": "paired_printed_graticule_vector_ticks",
+        "measuredAxisValueCounts": {
+          "latitude": 2,
+          "longitude": 2
+        },
+        "notToScaleTextPresentElsewhereOnPage": true
+      },
+      "excludedBounds": []
+    }
+  },
+  {
+    "page": 454,
+    "airport": "OIKB",
+    "name": "MOBON 1A, MOBON 1B, MOBON 1D",
+    "visualStatus": "scaled_main_with_not_to_scale_insets",
+    "alreadyActive": false,
+    "sourceFingerprint": "1c95f10a38df099b2b75d91e7b3636aee8dd781ceb225c65ee3c4c7e16467e9f",
+    "anchor": {
+      "sourcePage": 441,
+      "lat": 27.218333333333334,
+      "lon": 56.37833333333333
+    },
+    "gridLabels": [
+      "27-30",
+      "56-00",
+      "56-30"
+    ],
+    "labels": [
+      {
+        "value": "27-30",
+        "center": [
+          198.19271087646484,
+          767.007568359375
+        ],
+        "bounds": [
+          193.81,
+          758.82,
+          202.57,
+          775.2
+        ]
+      },
+      {
+        "value": "56-00",
+        "center": [
+          419.3526916503906,
+          473.3675537109375
+        ],
+        "bounds": [
+          414.97,
+          465.18,
+          423.73,
+          481.56
+        ]
+      },
+      {
+        "value": "56-30",
+        "center": [
+          523.6327514648438,
+          143.12760162353516
+        ],
+        "bounds": [
+          519.25,
+          134.94,
+          528.01,
+          151.32
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [
+      [
+        146.13,
+        675.1,
+        156.33,
+        733.08
+      ]
+    ],
+    "rawGridAxes": {
+      "latitude": [
+        {
+          "label": "27-30",
+          "degrees": 27.5,
+          "pdfPoint": 196.55999755859375,
+          "pixelAxis": "x",
+          "labelBounds": [
+            193.8132,
+            758.8151,
+            202.5722,
+            775.2
+          ],
+          "tickSegment": [
+            196.56,
+            780.24,
+            196.56,
+            776.4
+          ]
+        }
+      ],
+      "longitude": [
+        {
+          "label": "56-00",
+          "degrees": 56.0,
+          "pdfPoint": 473.760009765625,
+          "pixelAxis": "y",
+          "labelBounds": [
+            414.9732,
+            465.1751,
+            423.7322,
+            481.56
+          ],
+          "tickSegment": [
+            424.8,
+            473.76,
+            420.96,
+            473.76
+          ]
+        },
+        {
+          "label": "56-30",
+          "degrees": 56.5,
+          "pdfPoint": 143.280029296875,
+          "pixelAxis": "y",
+          "labelBounds": [
+            519.2532,
+            134.9352,
+            528.0123,
+            151.32
+          ],
+          "tickSegment": [
+            529.68,
+            143.28,
+            526.08,
+            143.28
+          ]
+        }
+      ]
+    },
+    "rawGridBounds": {
+      "left": 0.0,
+      "top": 0.0,
+      "right": 612.0,
+      "bottom": 792.0
+    },
+    "lineCount": 8816,
+    "extractError": "Printed grid has an inconsistent scale, angle, or mirrored orientation"
+  },
+  {
+    "page": 455,
+    "airport": "OIKB",
+    "name": "MOBON 1E, MOBON 1F, MOBON 1H",
+    "visualStatus": "scaled_main_with_not_to_scale_insets",
+    "alreadyActive": false,
+    "sourceFingerprint": "9193cf5de2bf19109b8881ab5578dbc6a51ff83e1eb3bd2ec333afaf5106b350",
+    "anchor": {
+      "sourcePage": 441,
+      "lat": 27.218333333333334,
+      "lon": 56.37833333333333
+    },
+    "gridLabels": [
+      "27-30",
+      "56-00",
+      "56-30"
+    ],
+    "labels": [
+      {
+        "value": "27-30",
+        "center": [
+          199.4989242553711,
+          766.9839782714844
+        ],
+        "bounds": [
+          195.06,
+          758.77,
+          203.94,
+          775.2
+        ]
+      },
+      {
+        "value": "56-00",
+        "center": [
+          392.2189025878906,
+          473.46839904785156
+        ],
+        "bounds": [
+          387.78,
+          465.26,
+          396.66,
+          481.68
+        ]
+      },
+      {
+        "value": "56-30",
+        "center": [
+          524.9389343261719,
+          142.9884033203125
+        ],
+        "bounds": [
+          520.5,
+          134.78,
+          529.38,
+          151.2
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [
+      [
+        147.25,
+        674.53,
+        157.57,
+        733.08
+      ]
+    ],
+    "rawGridAxes": {
+      "latitude": [
+        {
+          "label": "27-30",
+          "degrees": 27.5,
+          "pdfPoint": 197.8800048828125,
+          "pixelAxis": "x",
+          "labelBounds": [
+            195.0594,
+            758.7679,
+            203.9384,
+            775.2
+          ],
+          "tickSegment": [
+            197.88,
+            780.24,
+            197.88,
+            776.64
+          ]
+        }
+      ],
+      "longitude": [
+        {
+          "label": "56-00",
+          "degrees": 56.0,
+          "pdfPoint": 473.760009765625,
+          "pixelAxis": "y",
+          "labelBounds": [
+            387.7794,
+            465.2568,
+            396.6584,
+            481.68
+          ],
+          "tickSegment": [
+            398.04,
+            473.76,
+            394.44,
+            473.76
+          ]
+        },
+        {
+          "label": "56-30",
+          "degrees": 56.5,
+          "pdfPoint": 143.03997802734375,
+          "pixelAxis": "y",
+          "labelBounds": [
+            520.4995,
+            134.7768,
+            529.3784,
+            151.2
+          ],
+          "tickSegment": [
+            531.0,
+            143.04,
+            527.4,
+            143.04
+          ]
+        }
+      ]
+    },
+    "rawGridBounds": {
+      "left": 0.0,
+      "top": 0.0,
+      "right": 612.0,
+      "bottom": 792.0
+    },
+    "lineCount": 7814,
+    "extractError": "Printed grid has an inconsistent scale, angle, or mirrored orientation"
+  },
+  {
+    "page": 456,
+    "airport": "OIKB",
+    "name": "TAVNO 1B, TAVNO 1C, TAVNO 1D",
+    "visualStatus": "scaled_main_with_not_to_scale_insets",
+    "alreadyActive": false,
+    "sourceFingerprint": "a1f7f5158bfbbc5189c49bbc8c7621975784082518ea812274b4b8c530245eec",
+    "anchor": {
+      "sourcePage": 441,
+      "lat": 27.218333333333334,
+      "lon": 56.37833333333333
+    },
+    "gridLabels": [
+      "27-30",
+      "56-30"
+    ],
+    "labels": [
+      {
+        "value": "27-30",
+        "center": [
+          104.19242858886719,
+          367.63262939453125
+        ],
+        "bounds": [
+          96.0,
+          363.25,
+          112.38,
+          372.01
+        ]
+      },
+      {
+        "value": "56-30",
+        "center": [
+          350.55242919921875,
+          609.4326171875
+        ],
+        "bounds": [
+          342.36,
+          605.05,
+          358.74,
+          613.81
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [
+      [
+        329.28,
+        194.17,
+        387.83,
+        204.49
+      ]
+    ],
+    "rawGridError": "No measured latitude/longitude grid could be resolved",
+    "lineCount": 4685,
+    "extractError": "No measured latitude/longitude grid could be resolved"
+  },
+  {
+    "page": 457,
+    "airport": "OIKB",
+    "name": "TAVNO 1F, TAVNO 1G, TAVNO 1H",
+    "visualStatus": "scaled_main_with_not_to_scale_insets",
+    "alreadyActive": false,
+    "sourceFingerprint": "61bd2a0329b449c5cf719062e9cfe8cb8731329440e16f988fad2b07dc94f66b",
+    "anchor": {
+      "sourcePage": 441,
+      "lat": 27.218333333333334,
+      "lon": 56.37833333333333
+    },
+    "gridLabels": [
+      "27-30",
+      "56-30"
+    ],
+    "labels": [
+      {
+        "value": "27-30",
+        "center": [
+          104.23396682739258,
+          367.5263977050781
+        ],
+        "bounds": [
+          96.24,
+          363.21,
+          112.23,
+          371.85
+        ]
+      },
+      {
+        "value": "56-30",
+        "center": [
+          350.2339630126953,
+          609.56640625
+        ],
+        "bounds": [
+          342.24,
+          605.25,
+          358.23,
+          613.89
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [
+      [
+        329.4,
+        194.22,
+        388.44,
+        204.66
+      ]
+    ],
+    "rawGridError": "No measured latitude/longitude grid could be resolved",
+    "lineCount": 4792,
+    "extractError": "No measured latitude/longitude grid could be resolved"
+  },
+  {
+    "page": 459,
+    "airport": "OIKB",
+    "name": "PARKING STANDS & COORDS",
+    "visualStatus": "multi_region_airport_layout",
+    "alreadyActive": false,
+    "sourceFingerprint": "e56ae57743db6a4e7f116195521523fcdc5a95c8c4cf7d319759ab31aa57995e",
+    "anchor": {
+      "sourcePage": 441,
+      "lat": 27.218333333333334,
+      "lon": 56.37833333333333
+    },
+    "gridLabels": [
+      "27-12.7",
+      "27-12.6",
+      "27-12.4",
+      "27-12.3",
+      "27-12.5",
+      "56-22",
+      "56-22.1",
+      "56-22.2",
+      "56-22.3"
+    ],
+    "labels": [
+      {
+        "value": "27-12.7",
+        "center": [
+          105.11446380615234,
+          110.57878875732422
+        ],
+        "bounds": [
+          94.08,
+          106.14,
+          116.15,
+          115.02
+        ]
+      },
+      {
+        "value": "27-12.6",
+        "center": [
+          105.11446380615234,
+          250.37883758544922
+        ],
+        "bounds": [
+          94.08,
+          245.94,
+          116.15,
+          254.82
+        ]
+      },
+      {
+        "value": "27-12.4",
+        "center": [
+          105.11446380615234,
+          531.1788330078125
+        ],
+        "bounds": [
+          94.08,
+          526.74,
+          116.15,
+          535.62
+        ]
+      },
+      {
+        "value": "27-12.3",
+        "center": [
+          100.31446075439453,
+          653.2188110351562
+        ],
+        "bounds": [
+          89.28,
+          648.78,
+          111.35,
+          657.66
+        ]
+      },
+      {
+        "value": "27-12.5",
+        "center": [
+          105.11446380615234,
+          389.3387908935547
+        ],
+        "bounds": [
+          94.08,
+          384.9,
+          116.15,
+          393.78
+        ]
+      },
+      {
+        "value": "27-12.7",
+        "center": [
+          507.2344665527344,
+          110.57878875732422
+        ],
+        "bounds": [
+          496.2,
+          106.14,
+          518.27,
+          115.02
+        ]
+      },
+      {
+        "value": "27-12.6",
+        "center": [
+          507.2344665527344,
+          250.37883758544922
+        ],
+        "bounds": [
+          496.2,
+          245.94,
+          518.27,
+          254.82
+        ]
+      },
+      {
+        "value": "27-12.5",
+        "center": [
+          507.2344665527344,
+          389.3387908935547
+        ],
+        "bounds": [
+          496.2,
+          384.9,
+          518.27,
+          393.78
+        ]
+      },
+      {
+        "value": "27-12.4",
+        "center": [
+          505.19447326660156,
+          531.1788330078125
+        ],
+        "bounds": [
+          494.16,
+          526.74,
+          516.23,
+          535.62
+        ]
+      },
+      {
+        "value": "27-12.3",
+        "center": [
+          510.95448303222656,
+          661.018798828125
+        ],
+        "bounds": [
+          499.92,
+          656.58,
+          521.99,
+          665.46
+        ]
+      },
+      {
+        "value": "56-22",
+        "center": [
+          106.7448844909668,
+          68.45879364013672
+        ],
+        "bounds": [
+          98.52,
+          64.02,
+          114.97,
+          72.9
+        ]
+      },
+      {
+        "value": "56-22.1",
+        "center": [
+          232.5544662475586,
+          65.57878684997559
+        ],
+        "bounds": [
+          221.52,
+          61.14,
+          243.59,
+          70.02
+        ]
+      },
+      {
+        "value": "56-22.2",
+        "center": [
+          381.7233428955078,
+          62.938833236694336
+        ],
+        "bounds": [
+          370.68,
+          58.5,
+          392.77,
+          67.38
+        ]
+      },
+      {
+        "value": "56-22.3",
+        "center": [
+          479.9944763183594,
+          65.57878684997559
+        ],
+        "bounds": [
+          468.96,
+          61.14,
+          491.03,
+          70.02
+        ]
+      },
+      {
+        "value": "56-22",
+        "center": [
+          106.7448844909668,
+          662.0988159179688
+        ],
+        "bounds": [
+          98.52,
+          657.66,
+          114.97,
+          666.54
+        ]
+      },
+      {
+        "value": "56-22.1",
+        "center": [
+          227.27446746826172,
+          664.9788208007812
+        ],
+        "bounds": [
+          216.24,
+          660.54,
+          238.31,
+          669.42
+        ]
+      },
+      {
+        "value": "56-22.2",
+        "center": [
+          358.56333923339844,
+          664.4988403320312
+        ],
+        "bounds": [
+          347.52,
+          660.06,
+          369.61,
+          668.94
+        ]
+      },
+      {
+        "value": "56-22.3",
+        "center": [
+          472.67449951171875,
+          664.9788208007812
+        ],
+        "bounds": [
+          461.64,
+          660.54,
+          483.71,
+          669.42
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [],
+    "rawGridAxes": {
+      "latitude": [
+        {
+          "label": "27-12.4",
+          "degrees": 27.206666666666667,
+          "pdfPoint": 529.6799926757812,
+          "pixelAxis": "y",
+          "labelBounds": [
+            94.08,
+            526.7389,
+            116.1489,
+            535.6188
+          ],
+          "tickSegment": [
+            85.44,
+            529.68,
+            90.12,
+            529.68
+          ]
+        },
+        {
+          "label": "27-12.5",
+          "degrees": 27.208333333333332,
+          "pdfPoint": 388.32000732421875,
+          "pixelAxis": "y",
+          "labelBounds": [
+            94.08,
+            384.8988,
+            116.1489,
+            393.7787
+          ],
+          "tickSegment": [
+            85.44,
+            388.32,
+            92.04,
+            388.32
+          ]
+        },
+        {
+          "label": "27-12.6",
+          "degrees": 27.21,
+          "pdfPoint": 248.760009765625,
+          "pixelAxis": "y",
+          "labelBounds": [
+            94.08,
+            245.9389,
+            116.1489,
+            254.8188
+          ],
+          "tickSegment": [
+            85.44,
+            248.76,
+            90.12,
+            248.76
+          ]
+        },
+        {
+          "label": "27-12.7",
+          "degrees": 27.211666666666666,
+          "pdfPoint": 109.20001220703125,
+          "pixelAxis": "y",
+          "labelBounds": [
+            94.08,
+            106.1388,
+            116.1489,
+            115.0187
+          ],
+          "tickSegment": [
+            85.44,
+            109.2,
+            90.12,
+            109.2
+          ]
+        }
+      ],
+      "longitude": [
+        {
+          "label": "56-22",
+          "degrees": 56.36666666666667,
+          "pdfPoint": 106.31999969482422,
+          "pixelAxis": "x",
+          "labelBounds": [
+            98.52,
+            64.0188,
+            114.9698,
+            72.8987
+          ],
+          "tickSegment": [
+            106.32,
+            54.24,
+            106.32,
+            63.12
+          ]
+        },
+        {
+          "label": "56-22.1",
+          "degrees": 56.36833333333333,
+          "pdfPoint": 232.55999755859375,
+          "pixelAxis": "x",
+          "labelBounds": [
+            221.52,
+            61.1388,
+            243.5889,
+            70.0187
+          ],
+          "tickSegment": [
+            232.56,
+            59.28,
+            232.56,
+            54.36
+          ]
+        },
+        {
+          "label": "56-22.2",
+          "degrees": 56.37,
+          "pdfPoint": 358.79998779296875,
+          "pixelAxis": "x",
+          "labelBounds": [
+            347.52,
+            660.0589,
+            369.6067,
+            668.9388
+          ],
+          "tickSegment": [
+            358.8,
+            667.92,
+            358.8,
+            672.84
+          ]
+        },
+        {
+          "label": "56-22.3",
+          "degrees": 56.37166666666667,
+          "pdfPoint": 480.8399963378906,
+          "pixelAxis": "x",
+          "labelBounds": [
+            468.96,
+            61.1388,
+            491.029,
+            70.0187
+          ],
+          "tickSegment": [
+            480.84,
+            59.28,
+            480.84,
+            54.36
+          ]
+        }
+      ]
+    },
+    "rawGridBounds": {
+      "left": 0.0,
+      "top": 0.0,
+      "right": 612.0,
+      "bottom": 792.0
+    },
+    "lineCount": 1138,
+    "extractError": "Invalid affine fit: rank 3, residual 1.828"
+  },
+  {
+    "page": 497,
+    "airport": "OIKK",
+    "name": "ALGUV 1D, ALGUV 1E, ALGUV 2F, ALGUV 1G",
+    "visualStatus": "scaled_graticule_main",
+    "alreadyActive": false,
+    "sourceFingerprint": "4c43a5cb20a054c2650bdeb9f63148b5a725201e080c9f1498d495ba084ee826",
+    "anchor": {
+      "sourcePage": 492,
+      "lat": 30.275,
+      "lon": 56.95166666666667
+    },
+    "gridLabels": [
+      "30-30",
+      "57-00"
+    ],
+    "labels": [
+      {
+        "value": "30-30",
+        "center": [
+          331.3939666748047,
+          401.24639892578125
+        ],
+        "bounds": [
+          323.4,
+          396.93,
+          339.39,
+          405.57
+        ]
+      },
+      {
+        "value": "57-00",
+        "center": [
+          468.55397033691406,
+          775.8864135742188
+        ],
+        "bounds": [
+          460.56,
+          771.57,
+          476.55,
+          780.21
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [],
+    "rawGridError": "No measured latitude/longitude grid could be resolved",
+    "lineCount": 1127,
+    "extractError": "No measured latitude/longitude grid could be resolved"
+  },
+  {
+    "page": 498,
+    "airport": "OIKK",
+    "name": "ALKES 2C, ALKES 1D",
+    "visualStatus": "scaled_graticule_main",
+    "alreadyActive": false,
+    "sourceFingerprint": "91ba542add46b020d911eb3dcf4760c0d2fb3e3e2eefcf06b4b496013874d9d8",
+    "anchor": {
+      "sourcePage": 492,
+      "lat": 30.275,
+      "lon": 56.95166666666667
+    },
+    "gridLabels": [
+      "57-00",
+      "57-30"
+    ],
+    "labels": [
+      {
+        "value": "57-00",
+        "center": [
+          467.1264953613281,
+          576.4060363769531
+        ],
+        "bounds": [
+          462.81,
+          568.41,
+          471.45,
+          584.4
+        ]
+      },
+      {
+        "value": "57-30",
+        "center": [
+          437.72650146484375,
+          93.88605880737305
+        ],
+        "bounds": [
+          433.41,
+          85.89,
+          442.05,
+          101.88
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [],
+    "rawGridError": "No measured latitude/longitude grid could be resolved",
+    "lineCount": 1141,
+    "extractError": "No measured latitude/longitude grid could be resolved"
+  },
+  {
+    "page": 499,
+    "airport": "OIKK",
+    "name": "ALKUL 2D, ALKUL 1E",
+    "visualStatus": "scaled_graticule_main",
+    "alreadyActive": false,
+    "sourceFingerprint": "91890839e9d5c5d4e8d38715792fbd05c64f64edbce70e10c039ebdd0191ed24",
+    "anchor": {
+      "sourcePage": 492,
+      "lat": 30.275,
+      "lon": 56.95166666666667
+    },
+    "gridLabels": [
+      "30-00",
+      "57-00"
+    ],
+    "labels": [
+      {
+        "value": "30-00",
+        "center": [
+          103.15397262573242,
+          539.1264038085938
+        ],
+        "bounds": [
+          95.16,
+          534.81,
+          111.15,
+          543.45
+        ]
+      },
+      {
+        "value": "57-00",
+        "center": [
+          275.1139678955078,
+          653.9664306640625
+        ],
+        "bounds": [
+          267.12,
+          649.65,
+          283.11,
+          658.29
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [],
+    "rawGridError": "No measured latitude/longitude grid could be resolved",
+    "lineCount": 1061,
+    "extractError": "No measured latitude/longitude grid could be resolved"
+  },
+  {
+    "page": 500,
+    "airport": "OIKK",
+    "name": "ALMEK 2C, ALMEK 1F",
+    "visualStatus": "scaled_graticule_main",
+    "alreadyActive": false,
+    "sourceFingerprint": "d221104a772d92ae229300011f766b905a470c4112e8ed8bf866344d0776f0ad",
+    "anchor": {
+      "sourcePage": 492,
+      "lat": 30.275,
+      "lon": 56.95166666666667
+    },
+    "gridLabels": [
+      "30-00",
+      "57-00"
+    ],
+    "labels": [
+      {
+        "value": "30-00",
+        "center": [
+          103.15397262573242,
+          531.56640625
+        ],
+        "bounds": [
+          95.16,
+          527.25,
+          111.15,
+          535.89
+        ]
+      },
+      {
+        "value": "57-00",
+        "center": [
+          435.9139862060547,
+          609.56640625
+        ],
+        "bounds": [
+          427.92,
+          605.25,
+          443.91,
+          613.89
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [],
+    "rawGridError": "No measured latitude/longitude grid could be resolved",
+    "lineCount": 980,
+    "extractError": "No measured latitude/longitude grid could be resolved"
+  },
+  {
+    "page": 501,
+    "airport": "OIKK",
+    "name": "ALMOB 1D, ALMOB 1E, ALMOB 2F",
+    "visualStatus": "scaled_main_with_not_to_scale_insets",
+    "alreadyActive": false,
+    "sourceFingerprint": "10cd9abede744181fdfabdf955639859da06c44bd43efb059e7353bee0bd3d4e",
+    "anchor": {
+      "sourcePage": 492,
+      "lat": 30.275,
+      "lon": 56.95166666666667
+    },
+    "gridLabels": [
+      "30-30",
+      "56-50"
+    ],
+    "labels": [
+      {
+        "value": "30-30",
+        "center": [
+          169.51397705078125,
+          317.8464050292969
+        ],
+        "bounds": [
+          161.52,
+          313.53,
+          177.51,
+          322.17
+        ]
+      },
+      {
+        "value": "56-50",
+        "center": [
+          368.47398376464844,
+          668.9664306640625
+        ],
+        "bounds": [
+          360.48,
+          664.65,
+          376.47,
+          673.29
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [
+      [
+        93.24,
+        331.02,
+        152.28,
+        341.46
+      ]
+    ],
+    "rawGridError": "No measured latitude/longitude grid could be resolved",
+    "lineCount": 1190,
+    "extractError": "No measured latitude/longitude grid could be resolved"
+  },
+  {
+    "page": 502,
+    "airport": "OIKK",
+    "name": "GETIS 2C, GETIS 1E",
+    "visualStatus": "scaled_graticule_main",
+    "alreadyActive": false,
+    "sourceFingerprint": "d0664c2494e7431c9379a4b9b9ad226ff8c79f47e789456f28baecf2add07f06",
+    "anchor": {
+      "sourcePage": 492,
+      "lat": 30.275,
+      "lon": 56.95166666666667
+    },
+    "gridLabels": [
+      "56-30",
+      "57-00"
+    ],
+    "labels": [
+      {
+        "value": "56-30",
+        "center": [
+          524.9527587890625,
+          619.6475524902344
+        ],
+        "bounds": [
+          520.57,
+          611.46,
+          529.33,
+          627.84
+        ]
+      },
+      {
+        "value": "57-00",
+        "center": [
+          458.95269775390625,
+          137.36759185791016
+        ],
+        "bounds": [
+          454.57,
+          129.18,
+          463.33,
+          145.56
+        ]
+      }
+    ],
+    "notToScaleTextBoxes": [],
+    "rawGridError": "No measured latitude/longitude grid could be resolved",
+    "lineCount": 1057,
+    "extractError": "No measured latitude/longitude grid could be resolved"
+  }
+]
