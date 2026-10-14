@@ -177,6 +177,96 @@ jobs:
           print('Independently boxed NTS map views:',recovered,'rejected:',reasons)
           PY
 
+      - name: Recover source-locked and grid-verified inset-safe OIII SID transforms
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json,math,sys
+          from pathlib import Path
+          import fitz,numpy as np
+          sys.path.insert(0,'scripts')
+          from extract_chart_georef import grid_axes,page_fingerprint,chart_key,decimal_grid
+          doc=fitz.open('Iran2621.pdf')
+          root_path=Path('/tmp/third-georef-extracted.json')
+          audit_path=Path('/tmp/third-georef-audit.json')
+          raw=json.loads(root_path.read_text())
+          audit=json.loads(audit_path.read_text())
+          rows={int(x['page']):x for x in json.loads(Path('/tmp/third-georef-index.json').read_text())}
+          old={int(x['page']) for x in raw['charts']}
+          provisional={int(c['page']):c for c in json.loads(Path('web/data/georef-provisional-v2621.json').read_text())['charts']}
+          accepted=[]
+          rejected={}
+          # These four separate chart-region masks are pinned to the canonical
+          # original PDF fingerprints. Never generalize from their page numbers
+          # to a new AIRAC cycle. They remain simulator-test-only.
+          for n in (420,424,426,427):
+            if n in old:continue
+            c=provisional.get(n)
+            page=doc[n-1]
+            try:
+              assert c and c['sourceFingerprint']==page_fingerprint(page)
+              assert c['airport']=='OIII' and c['chartKey']==chart_key(rows[n])
+              assert c['validation']['qaTestOnly'] and c['validation']['notApprovedForNavigation']
+              assert c['coordinateSpace']=='pdf_points' and c['origin']=='top_left'
+              assert page.rect.width==c['width'] and page.rect.height==c['height']
+              anchor={'lat':35.6892,'lon':51.3134}
+              axes,_,_,_=grid_axes(page,anchor)
+              # Every grid-marked source control has to be a real matching
+              # printed vector-tick intersection, not text-centre estimation.
+              observed=0
+              for pt in c['points']:
+                desc=pt.get('source','')
+                if not desc.startswith('Printed grid '):continue
+                lat_label,lon_label=desc[len('Printed grid '):].split(' / ')
+                lat=next(a for a in axes['latitude'] if a['label']==lat_label)
+                lon=next(a for a in axes['longitude'] if a['label']==lon_label)
+                assert abs(pt['lat']-decimal_grid(lat_label))<1e-8
+                assert abs(pt['lon']-decimal_grid(lon_label))<1e-8
+                coord={'x':None,'y':None}
+                coord[lat['pixelAxis']]=lat['pdfPoint']
+                coord[lon['pixelAxis']]=lon['pdfPoint']
+                assert abs(pt['x']-coord['x'])<.8 and abs(pt['y']-coord['y'])<.8
+                observed+=1
+              assert observed>=2, 'Insufficient independently paired ticks'
+              values=np.array([[t['lon'],t['lat']] for t in c['points']])
+              coords=np.array([[t['x'],t['y']] for t in c['points']])
+              mean=values.mean(axis=0)
+              design=np.column_stack([values-mean,np.ones(len(values))])
+              coef,_,rank,_=np.linalg.lstsq(design,coords,rcond=None)
+              residual=float(np.max(np.linalg.norm(design@coef-coords,axis=1)))
+              east,north=coef[0],coef[1]
+              det=east[0]*north[1]-east[1]*north[0]
+              scale=abs(np.linalg.norm(east)/np.linalg.norm(north)/np.cos(np.deg2rad(mean[1]))-1)
+              angle=abs(np.dot(east,north))/(np.linalg.norm(east)*np.linalg.norm(north))
+              assert rank==3 and det<0 and scale<.03 and angle<.03
+              assert residual<=.75 and abs(residual-c['validation']['gridMaxResidualPdfPoints'])<.0001
+              labels=page.search_for('NOT TO SCALE')
+              masks=[fitz.Rect(b['left'],b['top'],b['right'],b['bottom']) for b in c['excludedBounds']]
+              assert labels and masks and all(any(box.contains(label) for box in masks) for label in labels)
+              assert all(box in page.rect for box in masks)
+              assert all(not any(b.contains(fitz.Point(t['x'],t['y'])) for b in masks) for t in c['points'])
+              c['gridAxes']=axes
+              c['validation']['reviewDecision']='fingerprint_bound_printed_vector_grid_plus_inset_mask'
+              c['validation']['sourceTickIntersectionCount']=observed
+              raw['charts'].append(c)
+              accepted.append(n)
+            except (ValueError,AssertionError,KeyError,StopIteration,TypeError,IndexError) as err:
+              rejected[n]=str(err)
+          raw['charts'].sort(key=lambda x:int(x['page']))
+          if accepted:
+            audit['excludedCharts']=[x for x in audit['excludedCharts'] if int(x['page']) not in accepted]
+            audit['calibratedPageCount']=len(raw['charts'])
+            audit['newlyExtractedPageCount']+=len(accepted)
+            for airport in audit['airports']:
+              airport['calibratedPages']=sorted([x['page'] for x in raw['charts'] if x['airport']==airport['icao']])
+              airport['otherExcludedPages']=[x['page'] for x in audit['excludedCharts'] if x['airport']==airport['icao'] and x['status']!='not_to_scale']
+              airport['notToScalePages']=[x['page'] for x in audit['excludedCharts'] if x['airport']==airport['icao'] and x['status']=='not_to_scale']
+            root_path.write_text(json.dumps(raw,indent=2))
+            audit_path.write_text(json.dumps(audit,indent=2))
+          print('Extra V2621 source-tick verified OIII SID pages:',accepted,'rejected:',rejected)
+          PY
+
       - name: Verify page fingerprints, physical orientation and measured source ticks
         shell: bash
         run: |
