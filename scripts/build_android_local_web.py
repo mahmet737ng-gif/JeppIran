@@ -90,7 +90,8 @@ def main():
         (OUTPUT / "data").mkdir(exist_ok=True)
         for name in ("charts-current.json", "charts-manifest.json",
                      "enroute-manifest.json", "chart-georef.json",
-                     "airport-runways.json"):
+                     "airport-runways.json", "chart-changes.json",
+                     "changed-airports.json"):
             shutil.copy2(NATIVE / name, OUTPUT / "data" / name)
         subprocess.run(["python3", "scripts/build_airport_profiles.py",
                         "--output", str(OUTPUT / "data/airport-profiles.json")],
