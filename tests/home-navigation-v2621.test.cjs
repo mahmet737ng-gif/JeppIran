@@ -16,7 +16,7 @@ test('Back safely returns directly home, never leaves the offline origin',()=>{
   assert.match(js,/await exitViewerFullscreen\(true\)/);
   assert.match(js,/\["chartsBackBtn","chartsBackMobileBtn"\]/);
   assert.match(js,/route\("home"\)/);
-  const fn=js.slice(js.indexOf('async function returnToJeppiranHome'),js.indexOf('$$("[data-route]")'));
+  const fn=js.slice(js.indexOf('async function returnToJeppiranHome'),js.indexOf('["chartsBackBtn","chartsBackMobileBtn"].forEach'));
   assert.doesNotMatch(fn,/history\.back\(/);
 });
 test('HOME is hidden on Charts and fullscreen without affecting owner-locked gestures',()=>{
