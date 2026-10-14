@@ -313,3 +313,6 @@ jobs:
         uses: actions/deploy-pages@v4
         with:
           artifact_name: jeppiran-pages-${{ github.run_id }}-${{ github.run_attempt }}
+          # Github Pages sometimes stays in updating_pages >10m despite
+          # successful package upload; avoid the action's 600000ms default abort.
+          timeout: 1200000
