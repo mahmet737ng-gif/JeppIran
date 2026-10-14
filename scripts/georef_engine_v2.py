@@ -55,7 +55,7 @@ def fit_landmark_region(controls,region,excludes,page=None,tolerance=1.5):
     A=[]; z=[]
     for c in train:
         e,n=calc_en(c,lat0,lon0)
-        A.extend(([1,0,e,n],[0,1,n,-e]))
+        A.extend(([1,0,e,n],[0,1,-n,e]))
         z.extend((c["x"],c["y"]))
     coefficients,_,rank,_=np.linalg.lstsq(np.array(A,float),np.array(z,float),rcond=None)
     if rank!=4: raise ValueError("Degenerate landmark baseline")
