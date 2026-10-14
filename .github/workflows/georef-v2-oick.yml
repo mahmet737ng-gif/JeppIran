@@ -1,0 +1,40 @@
+name: JEPPIRAN V2 OICK Georeferencing QA
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+      - 'feature/georef-v2-*'
+    paths:
+      - scripts/georef_engine_v2.py
+      - tests/test_georef_engine_v2.py
+      - docs/georeferencing/controls-v2-oick.json
+      - .github/workflows/georef-v2-oick.yml
+permissions:
+  contents: read
+jobs:
+  oick-v2:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          lfs: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r scripts/requirements-georef.txt
+      - name: Verify V2 algorithm, residual tests, and masks
+        run: python -m unittest discover -s tests -p test_georef_engine_v2.py -v
+      - name: Verify protected chart reference parity
+        run: cmp web/data/chart-georef.json app/src/main/assets/chart-georef.json
+      - name: Run original V2621 source OICK diagnosis
+        run: python scripts/georef_engine_v2.py --airport OICK --output review-assets/georef-v2-oick-qa.json
+      - name: Verify source data did not change
+        run: git diff --exit-code -- web/data/chart-georef.json app/src/main/assets/chart-georef.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: jeppiran-v2-oick-qa-report
+          path: review-assets/georef-v2-oick-qa.json
+          if-no-files-found: warn

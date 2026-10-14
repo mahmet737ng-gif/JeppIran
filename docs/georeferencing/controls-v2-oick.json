@@ -1,0 +1,8 @@
+{
+  "schema": 1,
+  "airport": "OICK",
+  "cycle": "V2621",
+  "sourceSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+  "note": "No unverified point pairs inserted. Supply original PDF measured symbol positions and independently sourced WGS84 fixes before proposing regional landmarks.",
+  "charts": []
+}
