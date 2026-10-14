@@ -39,6 +39,10 @@ jobs:
           doc=fitz.open("Iran2621.pdf")
           target=Path("review-assets/oick-v2-source-pages")
           target.mkdir(parents=True,exist_ok=True)
+          subset=fitz.open()
+          for selected in (218,219,221,223):
+              subset.insert_pdf(doc,from_page=selected-1,to_page=selected-1)
+          subset.save(str(target/"OICK-original-vector-source-pages.pdf"))
           for pn in (218,219,221,223):
               p=doc[pn-1]
               image=p.get_pixmap(matrix=fitz.Matrix(2.5,2.5),alpha=False)
