@@ -19,6 +19,7 @@ import fitz
 import numpy as np
 
 from flexible_graticule import match_unframed_axes
+from georef_preservation import protect_migration
 
 GRID = re.compile(r"(\d{2,3})-(\d{2}(?:\.\d+)?)$")
 
@@ -573,6 +574,12 @@ def main():
                        'NOT TO SCALE pages are excluded, including mixed charts pending region review.',
                        'A small fitting residual is not a navigation accuracy certification.',
                        'Re-extract and review after replacing the PDF or chart index.']}
+    # No extraction may silently erase an approved chart mapping. For new PDF
+    # cycles, a source-specific immutable archive is mandatory before replacing.
+    published = Path(args.output)
+    if published.name == 'chart-georef.json' and published.exists():
+        protect_migration(published.read_text(encoding='utf-8'),
+                          json.dumps(root, ensure_ascii=False))
     for path, data in [(Path(args.output), root), (Path(args.audit), audit)]:
         atomic_json(path, data)
     print(json.dumps({'charts': len(charts), 'airports': len(airports),
