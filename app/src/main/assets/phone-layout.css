@@ -333,12 +333,9 @@ html.jp-android-phone {
 }
 
 
-/* The Android system edge Back gesture replaces obsolete on-screen Back and
-   Prev/Next arrow buttons. Double-tap, pinch, Fullscreen X stay functional. */
-html.jp-android-phone #chartsView .back-btn,
-html.jp-android-phone #chartsView #prevChartBtn,
-html.jp-android-phone #chartsView #nextChartBtn,
-html.jp-android-phone #chartsView .viewer-nav-group,
+/* Android's system Back gesture replaces the obsolete floating screen Back.
+   The user-approved chart Prev/Next toolbar controls are preserved. */
+html.jp-android-phone .back-btn,
 html.jp-android-phone .floating-back,
 html.jp-android-phone #androidBackBtn,
 html.jp-android-phone #backBtn{display:none!important}
