@@ -71,6 +71,7 @@ function showPublishedExperimentalGeorefNotice(){
   if(!stage)return;
   stage.querySelector("#provisionalGeorefWarning")?.remove();
   const page=Number(selectedChart?.page);
+  if(selectedChart?.airport==="OIII" && georefByPage.has(page))return;
   if(!experimentalEligibleGeoModels.has(page))return;
   const enabled=experimentalGeorefPages.has(page);
   const panel=document.createElement("div");
@@ -1192,7 +1193,7 @@ function setPositionStatus(state,text,detail=""){
   const btn=$("#positionStatusBtn");
   if(!btn)return;
   if(state==="off"||state==="waiting"||state==="error")text="POS OFF";
-  if(selectedChart && experimentalGeorefPages.has(Number(selectedChart.page))){
+  if(selectedChart && selectedChart.airport!=="OIII" && experimentalGeorefPages.has(Number(selectedChart.page))){
     state="warning";text=(text||"GPS")+" · GEOREF";
     detail="GEOREFERENCE · INDEPENDENT AIP QA PENDING · NOT FOR NAVIGATION. "+(detail||"");
   }
@@ -1235,7 +1236,7 @@ function refreshPositionStatus(){
   const acc=Number.isFinite(lastPosition.accuracy)?(" • ±"+Math.round(lastPosition.accuracy)+" m"):"";
   const code=activePositionSource==="gps"?"GPS":activePositionSource==="fsx"?"FSX":"XPLANE";
   const region=model.regions?resolveGeoRegion(model,Number(lastPosition.lat),Number(lastPosition.lon)):null;
-  if(region&&region.region!=="CARGO_APRON_2"){
+  if(region&&region.region!=="CARGO_APRON_2"&&selectedChart?.airport!=="OIII"){
     // Newly reconstructed V2621 printed-grid airport regions have not yet
     // received an independent AIP/flight accuracy check. Show explicit QA.
     setPositionStatus("warning",code+" GEOREF QA"+acc,
