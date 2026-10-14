@@ -23,8 +23,12 @@ jobs:
           python scripts/diagnose_georef_31_without_oiii.py
           python scripts/diagnose_inset_geometry_31.py
           python scripts/diagnose_31_dash_tracks.py
+          python scripts/calibrate_31_without_oiii.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: V2621-31-source-axis-diagnostics
-          path: georef31-diagnostic.json
+          path: |
+            georef31-diagnostic.json
+            /tmp/non-oiii-31-candidates.json
+            /tmp/non-oiii-31-qareport.json
