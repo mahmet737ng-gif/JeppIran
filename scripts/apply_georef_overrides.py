@@ -4,6 +4,7 @@ import json
 import os
 import tempfile
 from pathlib import Path
+from georef_preservation import verify_additive,chart_index
 
 
 def atomic_json(path: Path, data):
@@ -44,10 +45,9 @@ def main():
     if override.get("sourceSha256") != source.get("sha256"):
         raise ValueError("Georeference override source PDF mismatch")
 
-    charts = {
-        int(item["page"]): item
-        for item in base.get("charts", [])
-    }
+    chart_index(base, 'existing approved georeferences')
+    original = json.loads(json.dumps(base))
+    charts = {int(item['page']): item for item in base['charts']}
 
     applied = []
     seen = set()
@@ -64,6 +64,10 @@ def main():
         if len(item.get("points") or []) < 4:
             raise ValueError(f"Insufficient override control points on page {page}")
 
+        if page in charts:
+            if charts[page] != item:
+                raise ValueError(f'IMMUTABLE georeference page {page}: existing model cannot be overridden')
+            continue
         charts[page] = item
         applied.append(page)
 
@@ -71,6 +75,7 @@ def main():
         charts[page]
         for page in sorted(charts)
     ]
+    verify_additive(original, base)
     atomic_json(base_path, base)
 
     print(json.dumps({
