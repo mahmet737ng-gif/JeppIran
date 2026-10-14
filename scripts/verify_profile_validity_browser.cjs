@@ -93,7 +93,7 @@ async function waitForServer(){
   await page.waitForTimeout(220);
   const opened=await page.evaluate(()=>document.querySelector("#chartsView .airport-pane").getBoundingClientRect().right);
   assert.ok(opened>=200,"airport drawer can be opened to switch airports: "+opened);
-  await page.locator("#airportPickerBtn").click();
+  await page.locator("#airportPickerCloseBtn").click();
   await page.waitForTimeout(220);
   const closedAgain=await page.evaluate(()=>document.querySelector("#chartsView .airport-pane").getBoundingClientRect().right);
   assert.ok(closedAgain<=8,"airport drawer can be closed: "+closedAgain);
