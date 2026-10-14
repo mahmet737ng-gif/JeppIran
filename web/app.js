@@ -624,6 +624,7 @@ function closeAirportPicker(){
   const tag=$("#airportPickerIcao");
   if(tag)tag.textContent=selectedAirport||"";
 }
+$("#airportPickerCloseBtn").addEventListener("click",closeAirportPicker);
 airportPickerBtn.addEventListener("click",()=>{
   const open=$("#chartsView").classList.toggle("jp-airport-picker-open");
   airportPickerBtn.setAttribute("aria-expanded",String(open));
