@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['.github/workflows/v2621-non-mehrabad-georef.yml']
+    paths: ['.github/workflows/v2621-non-mehrabad-georef.yml', 'scripts/publish_v2621_non_mehrabad_georefs.py']
 permissions:
   contents: write
 concurrency:
