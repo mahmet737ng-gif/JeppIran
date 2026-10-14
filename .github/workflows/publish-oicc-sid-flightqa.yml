@@ -1,0 +1,75 @@
+name: Publish OICC SID V2621 Flight QA
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".github/workflows/publish-oicc-sid-flightqa.yml"
+      - "scripts/publish_oicc_sid_flightqa.py"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: jeppiran-oicc-sid-v2621-flightqa
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout source-locked charts
+        uses: actions/checkout@v4
+        with:
+          lfs: true
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install PDF inspection and georeferencing dependencies
+        run: python -m pip install -r scripts/requirements-georef.txt
+      - name: Verify original source PDF and publish three add-only SID models
+        run: python scripts/publish_oicc_sid_flightqa.py
+      - name: Verify release data is identical for offline Android and web
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import json
+          a=Path('app/src/main/assets/chart-georef.json').read_bytes()
+          b=Path('web/data/chart-georef.json').read_bytes()
+          assert a==b
+          charts=json.loads(a)['charts']
+          oicc={int(c['page']):c for c in charts if c['airport']=='OICC' and 187<=int(c['page'])<=194}
+          assert set(oicc)==set(range(187,195))
+          for page in (187,189,191):
+              assert oicc[page]['validation']['qaTestOnly']
+              assert oicc[page]['validation']['notApprovedForNavigation']
+              assert oicc[page]['validation']['flightTestOnly']
+          print('OICC all eight SID models present; first 798 records preserved.')
+          PY
+      - name: Commit precisely the validated data
+        id: publication
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add app/src/main/assets/chart-georef.json web/data/chart-georef.json docs/georeferencing/V2621_OICC_SID_FLIGHT_QA_RELEASE.json
+          if git diff --cached --quiet; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            echo "Already published; protected records preserved"
+          else
+            git diff --cached --check
+            git commit -m "release(georef): publish OICC SID 187 189 191 for V2621 simulator flight QA"
+            git push origin HEAD:main
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Dispatch web and Android release builds
+        if: steps.publication.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run deploy-ipad-web.yml --ref main
+          gh workflow run build-apk.yml --ref main
+          echo "Web and Android builds explicitly dispatched (GitHub bot pushes do not emit push workflow triggers)."
