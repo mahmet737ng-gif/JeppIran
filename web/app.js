@@ -327,6 +327,8 @@ function renderRoute(name){
   $$(".view").forEach(v=>v.classList.remove("active"));
   document.body.classList.remove("viewer-fullscreen");
   const el=$("#"+name+"View")||$("#homeView"); el.classList.add("active");
+  const homeButton=$("#jpHomeBtn");
+  if(homeButton)homeButton.hidden=el.id==="homeView";
   if(name==="charts"&&selectedChart)showChartMetar(true,true);
   // When the app is being served by the FSX Local Web bridge, entering the
   // simulator page must always restore FSX as the active source instead of
@@ -343,11 +345,31 @@ function route(name,replace=false){
     history[fn]({route:name},"",hash);
   }
 }
+// An explicit Home action must escape native fullscreen before changing
+// views. Do not use history.back(): Android Local Assets and offline FSX may
+// otherwise leave this origin. The selected airport/chart remains resumable.
+async function returnToJeppiranHome(){
+  try{
+    if(document.body.classList.contains("viewer-fullscreen")){
+      await exitViewerFullscreen(true);
+    }else if(document.fullscreenElement||document.webkitFullscreenElement){
+      const exit=document.exitFullscreen||document.webkitExitFullscreen;
+      if(exit)await exit.call(document);
+    }
+  }catch(_){
+    document.body.classList.remove("viewer-fullscreen");
+  }finally{
+    if(typeof cancelChartSwipe==="function")cancelChartSwipe();
+    if(typeof setFullscreenChartDrawer==="function"&&jpChartDrawerOpen)setFullscreenChartDrawer(false);
+    route("home");
+  }
+}
 $$("[data-route]").forEach(b=>b.addEventListener("click",e=>{
   e.preventDefault();
   const target=b.dataset.route;
   // Keep navigation inside the current JEPPIRAN origin. In Local FSX mode,
   // history.back() can return to the public GitHub app and drop the live bridge.
+  if(target==="home"){void returnToJeppiranHome();return}
   route(target);
 }));
 window.addEventListener("popstate",()=>renderRoute((location.hash||"#home").slice(1)));
