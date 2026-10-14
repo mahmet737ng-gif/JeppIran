@@ -1,4 +1,5 @@
 name: V2621 georeference 31 pages (Mehrabad frozen)
+# QA rule: preserve all existing source georeferences rather than replacing them.
 on:
   push:
     branches: [main]
