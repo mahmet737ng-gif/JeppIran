@@ -10,6 +10,7 @@ on:
       - 'tests/offline-auto-sync.test.cjs'
       - 'tests/profile-clocks-validity.test.cjs'
       - 'scripts/verify_profile_validity_browser.cjs'
+      - 'scripts/verify_chart_swipes_browser.cjs'
       - 'scripts/build_offline_manifest.py'
       - 'scripts/build_oiie_*.py'
       - 'scripts/verify_oiie_runway_axes_browser.cjs'
@@ -238,6 +239,12 @@ jobs:
           export NODE_PATH="$RUNNER_TEMP/jeppiran-browser-qa/node_modules"
           export JEPPIRAN_CHROME_BIN="$(command -v google-chrome)"
           node scripts/verify_profile_validity_browser.cjs
+
+      - name: Verify reversible chart swipes and live finger-follow transition in real Chrome
+        run: |
+          export NODE_PATH="$RUNNER_TEMP/jeppiran-browser-qa/node_modules"
+          export JEPPIRAN_CHROME_BIN="$(command -v google-chrome)"
+          node scripts/verify_chart_swipes_browser.cjs
 
       - name: Verify OIIE runway-only routes and locked-out stand gates in real Chrome
         run: |
