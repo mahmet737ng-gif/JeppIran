@@ -71,10 +71,11 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   await page.evaluate(()=>document.documentElement.classList.add("jp-android-phone"));
   await page.addStyleTag({content:require("node:fs").readFileSync(
     require("node:path").join("app","src","main","assets","phone-layout.css"),"utf8")});
-  assert.equal(await page.locator("#prevChartBtn").isVisible(),false,
-    "Android previous-chart Back button must be hidden");
-  assert.equal(await page.locator("#nextChartBtn").isVisible(),false,
-    "Android next-chart button must be replaced by swipe");
+  assert.equal(await page.locator("#chartsView .back-btn").count(),0,
+    "Android must not show an obsolete screen Back control");
+  assert.equal(await page.locator("#prevChartBtn").count(),1,
+    "Keep the approved chart Prev/Next toolbar even when gestures are supported");
+  assert.equal(await page.locator("#nextChartBtn").count(),1);
   await page.evaluate(()=>document.body.classList.add("viewer-fullscreen"));
   const movedBack=await page.evaluate(()=>window.jeppiranAndroidBack());
   assert.equal(movedBack,true,"Android Back gesture should exit chart to airport profile");
@@ -87,7 +88,7 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   assert.equal(await page.evaluate(()=>window.jeppiranAndroidBack()),true,
     "Second Android Back gesture should return to Home");
   assert.equal(await page.locator("#homeView.active").isVisible(),true);
-  console.log("PASS Android screen-edge Back: chart → profile → Home; no visible Back arrows.");
+  console.log("PASS Android screen-edge Back: chart → profile → Home; no obsolete screen Back.");
 
  }finally{if(browser)await browser.close();child.kill("SIGTERM");}
 })().catch(e=>{console.error(e);process.exitCode=1});
