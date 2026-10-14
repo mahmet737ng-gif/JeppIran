@@ -1671,6 +1671,7 @@ function cancelChartSwipe(){
   state.done=true;state.shield.remove();activeChartSlide=null;
 }
 function navigateChart(delta){
+  if(activeChartSlide?.done)return;
   if(!selectedChart||!selectedAirport)return;
   const seq=airportChartSequence();
   const idx=seq.findIndex(c=>Number(c.page)===Number(selectedChart.page));
@@ -1774,6 +1775,7 @@ function setupChartGestures(){
   // Chart follows actual finger displacement at 1:1 in both axes.
   stage.style.touchAction="none";
   let tailFrame=0, singleTapTimer=0, recentMove=null, pinched=false;
+  let slideGesture=null;
   function cancelTail(){if(tailFrame)cancelAnimationFrame(tailFrame);tailFrame=0;}
   function chartHit(target){
     if(!(target instanceof Element))return false;
@@ -1824,6 +1826,7 @@ function setupChartGestures(){
       panStart={x:e.clientX,y:e.clientY,panX:chartPanX,panY:chartPanY,scrollTop:stage.scrollTop};
       swipeStart={x:e.clientX,y:e.clientY,time:Date.now()};
     }else if(chartPointers.size===2){
+      if(slideGesture){finishChartSwipe(slideGesture,true);slideGesture=null}
       pinched=true;
       clearTimeout(singleTapTimer);singleTapTimer=0;lastTapAt=0;
       const pts=[...chartPointers.values()];
@@ -1845,6 +1848,18 @@ function setupChartGestures(){
     }
     if(chartPointers.size===1&&panStart){
       const dx=e.clientX-panStart.x,dy=e.clientY-panStart.y;
+      // Exactly follow current displacement; fast swipes move fast, and
+      // reversing the finger visibly reverses the two-page preview.
+      if(chartZoom<=1.001&&swipeStart&&!pinched){
+        if(!slideGesture&&Math.abs(dx)>14&&Math.abs(dx)>Math.abs(dy)*1.3){
+          slideGesture=beginChartSwipe(dx<0?1:-1);
+          if(slideGesture){clearTimeout(singleTapTimer);singleTapTimer=0;lastTapAt=0;}
+        }
+        if(slideGesture){
+          updateChartSwipe(slideGesture,dx,e.clientX,performance.now());
+          return;
+        }
+      }
       const stageEl=$("#pdfStage"),layerEl=$("#chartTransformLayer");
       const canVerticalPan=!!(stageEl&&layerEl&&layerEl.offsetHeight*chartZoom>stageEl.clientHeight+1);
       recentMove={x:e.clientX,y:e.clientY,dx:e.clientX-(recentMove?.x??e.clientX),dy:e.clientY-(recentMove?.y??e.clientY),time:performance.now()};
@@ -1863,10 +1878,16 @@ function setupChartGestures(){
     if(chartPointers.size===0){
       const dx=start?e.clientX-start.x:0,dy=start?e.clientY-start.y:0;
       const travel=Math.hypot(dx,dy),dt=start?Date.now()-start.time:Infinity;
-      if(!canceled&&!pinched&&start&&chartZoom<=1.001&&dt<700&&Math.abs(dx)>80&&Math.abs(dx)>Math.abs(dy)*1.35){
-        clearTimeout(singleTapTimer);singleTapTimer=0;lastTapAt=0;
-        dx<0?navigateChart(1):navigateChart(-1);
-      }else if(!canceled&&!pinched&&start&&dt<380&&travel<12){
+      if(slideGesture){
+        // The NEXT chart is committed only on release. Returning the finger
+        // to the origin (or moving inward) animates back to THIS chart.
+        finishChartSwipe(slideGesture,canceled);
+        slideGesture=null;
+        panStart=null;swipeStart=null;pinchStartDistance=0;
+        recentMove=null;pinched=false;
+        return;
+      }
+      if(!canceled&&!pinched&&start&&dt<380&&travel<12){
         const now=Date.now();
         if(now-lastTapAt<315&&lastTapPoint&&Math.hypot(lastTapPoint.x-e.clientX,lastTapPoint.y-e.clientY)<36){
           clearTimeout(singleTapTimer);singleTapTimer=0;lastTapAt=0;lastTapPoint=null;
