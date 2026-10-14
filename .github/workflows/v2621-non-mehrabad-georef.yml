@@ -24,10 +24,15 @@ jobs:
     - run: python -m pip install -r scripts/requirements-georef.txt
     - name: Derive source controls, exclude Mehrabad
       run: python scripts/recover_v2621_other_airports.py
+    - name: Reconstruct proven geographic plans and guard all Mehrabad records
+      run: python scripts/publish_v2621_non_mehrabad_georefs.py
     - uses: actions/upload-artifact@v4
       with:
         name: v2621-other-airports-31-georef-controls-qa
-        path: review-assets/v2621-other-airports-extraction/triage.json
+        path: |
+          review-assets/v2621-other-airports-extraction/triage.json
+          /tmp/v2621-non-oiii-approved-georef.json
+          /tmp/v2621-non-oiii-geo-results.json
     - name: Persist source-geometric diagnostics on separate audit branch
       run: |
         git config user.name 'github-actions[bot]'
