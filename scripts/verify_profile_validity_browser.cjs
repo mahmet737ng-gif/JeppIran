@@ -28,10 +28,22 @@ async function waitForServer(){
    executablePath:process.env.JEPPIRAN_CHROME_BIN
   }:{})});
   const page=await browser.newPage({viewport:{width:1440,height:900}});
+  page.on("pageerror",error=>console.error("PROFILE QA JS ERROR:",error.message,error.stack||""));
+  page.on("requestfailed",request=>console.error("PROFILE QA REQUEST FAILED:",request.url(),request.failure()?.errorText||""));
   await page.goto(base+"#charts",{waitUntil:"domcontentloaded"});
+  await page.waitForTimeout(2500);
+  console.log("PROFILE QA STARTUP:",JSON.stringify(await page.evaluate(()=>({
+    hash:location.hash,activeViews:[...document.querySelectorAll(".view.active")].map(e=>e.id),
+    selectorCount:document.querySelectorAll("#profileTerminalValidity .terminal-date-start b").length,
+    profilePreview:document.getElementById("airportProfile")?.innerText.slice(0,500),
+    chartCount:document.querySelectorAll("#airportList .airport-item").length,
+    ready:window.JEPPIRAN_NAV_READY,
+    scripts:[...document.scripts].filter(s=>s.src&&s.src.includes("app.js")).map(s=>s.src)
+  }))));
+
   const from=page.locator("#profileTerminalValidity .terminal-date-start b");
   const to=page.locator("#profileTerminalValidity .terminal-date-end b");
-  await from.waitFor({state:"visible",timeout:85000});
+  await from.waitFor({state:"visible",timeout:18000});
   await to.waitFor({state:"visible",timeout:10000});
   assert.equal((await from.innerText()).trim(),"09 Oct 2026","visible starting date in OIII");
   assert.equal((await to.innerText()).trim(),"22 Oct 2026","visible final date in OIII");
