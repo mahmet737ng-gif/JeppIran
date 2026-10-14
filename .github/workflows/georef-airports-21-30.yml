@@ -136,7 +136,16 @@ jobs:
               src['charts'].append(c)
               recovered.append(p)
             except (ValueError,AssertionError,StopIteration) as exc:
-              reasons[p]=str(exc)
+              near=page.search_for('NOT TO SCALE')
+              prev=provisional.get(p)
+              reasons[p]={'error':str(exc),
+                 'notToScaleTextRects':[[round(v,1) for v in rect] for rect in near],
+                 'provisionalMasks':prev.get('excludedBounds',[]) if prev else [],
+                 'sourceRects':[
+                   [round(x,1) for x in fitz.Rect(args[0])]
+                   for shape in page.get_drawings() for kind,*args in shape.get('items',[])
+                   if kind=='re' and fitz.Rect(args[0]).get_area() < page.rect.get_area()*.4
+                 ][:25]}
               still.append(item)
           src['charts'].sort(key=lambda c:int(c['page']))
           audit['excludedCharts']=still
