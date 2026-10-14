@@ -148,7 +148,7 @@ def main():
   c2['validation']['flightTestOnly']=True
   c2['validation']['ownerFlightTestPending']=True
   c2['validation']['independentNamedLandmarkChecked']=True
-  marker='    {\n      "page": '+str(number+1)+','
+  marker='    {\n      "page": 215,'
   assert changed.count(marker)==1,(number,'stable sorted insertion point absent')
   insertion='\n'.join('    '+line for line in json.dumps(c2,ensure_ascii=False,indent=2).splitlines())
   changed=changed.replace(marker,insertion+',\n'+marker,1)
