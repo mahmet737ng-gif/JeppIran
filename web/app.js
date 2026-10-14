@@ -11,6 +11,9 @@ function displayChartName(c){
  * Stable chart-georef.json remains unchanged; every experimental model is explicitly TEST ONLY.
  */
 let experimentalGeorefPages=new Set();
+// Separate from approved affine models: two OICI NOT TO SCALE route-centerline QA maps.
+let oiciRouteQaPages=new Set();
+let oiciRouteModule=null;
 let experimentalEligibleGeoModels=new Map();
 let experimentalOimmPreviousModels=new Map();
 const EXPERIMENTAL_OIMM_ILS_PAGES=new Set([605,606,607]);
@@ -544,7 +547,8 @@ async function loadData(){
           ["othh-flight",()=>loadOthhFlightApprovedGeorefs(m)],
           ["othh-extra",()=>loadOthhFlightExtraGeorefs(m)],
           ["ltfm",()=>loadLtfmGridGeorefs(m)],
-          ["published",()=>loadPublishedExperimentalGeorefs(m)]
+          ["published",()=>loadPublishedExperimentalGeorefs(m)],
+          ["oici-route-flight-qa",()=>loadOiciRouteOnlyFlightQa(m)]
         ]){
           try{await task()}catch(error){console.warn("Optional georeference "+label+" failed",error)}
         }
@@ -1112,6 +1116,7 @@ function resolveGeoRegion(model,lat,lon){
     {model,point:p,region:null}:null;
 }
 function projectGeo(model,lat,lon){
+  if(model?.routeOnly)return oiciRouteModule?.projectOiciRoute(model,lat,lon)||null;
   return resolveGeoRegion(model,lat,lon)?.point||null;
 }
 /* JEPPIRAN V2621 two independent maps printed on the same PDF page.
@@ -1171,6 +1176,31 @@ async function loadIndependentAirportRegionGeorefs(m){
   }catch(e){console.warn("Airport multi-region georefs failed; existing models preserved:",e)}
 }
 
+// Fail closed unless exact AIRAC, PDF SHA, index chart keys and schematic
+// QA metadata match. NEVER overwrite any approved chart georeference.
+async function loadOiciRouteOnlyFlightQa(m){
+  oiciRouteQaPages.clear();
+  try{
+    const [response,mod]=await Promise.all([
+      fetch("./data/oici-route-only-v2621.json?v=2621-oici-route-flightqa-r1",{cache:"no-store"}),
+      import("./oici-route-only-v2621.mjs?v=2621-oici-route-flightqa-r1")
+    ]);
+    if(!response.ok)throw Error("OICI route-only flight QA HTTP "+response.status);
+    const data=await response.json();
+    if(!mod.validateOiciRoutes(data,m,charts))throw Error("OICI route-only dataset / cycle / chart identity mismatch");
+    if(manifest!==m)return;
+    const models=[];
+    for(const item of data.charts){
+      if(georefByPage.has(item.page))throw Error("OICI approved reference already exists: "+item.page);
+      const model=mod.buildOiciRouteModel(item);
+      if(!model)throw Error("OICI nonaffine model rejected: "+item.page);
+      models.push([item.page,model]);
+    }
+    oiciRouteModule=mod;
+    for(const [page,model] of models){georefByPage.set(page,model);oiciRouteQaPages.add(page)}
+    console.info("JEPPIRAN OICI route-only simulator QA enabled", [...oiciRouteQaPages]);
+  }catch(e){console.warn("OICI route-only georeferencing disabled:",e)}
+}
 function buildGeorefIndex(root){
   const map=new Map();
   if(!root||root.version!==2||root.coordinateSystem!=="WGS84"||root.coordinateSpace!=="pdf_points"||root.origin!=="top_left")return map;
@@ -1187,6 +1217,7 @@ function hideAircraftMarker(){
 }
 function renderedGeoHeading(model,lat,heading,canvas){
   if(!Number.isFinite(heading))return 0;
+  if(model?.routeOnly)return oiciRouteModule?.headingOiciRoute(model,lat,Number(lastPosition?.lon),heading,canvas.clientWidth,canvas.clientHeight)||0;
   if(Array.isArray(model?.regions)){
     const active=resolveGeoRegion(model,Number(lastPosition?.lat),Number(lastPosition?.lon));
     if(!active)return 0;
@@ -1203,6 +1234,10 @@ function renderedGeoHeading(model,lat,heading,canvas){
 function setPositionStatus(state,text,detail=""){
   const btn=$("#positionStatusBtn");
   if(!btn)return;
+  if(selectedChart && oiciRouteQaPages.has(Number(selectedChart.page))){
+    state="warning";text=(text||"GPS")+" · ROUTE QA";
+    detail="NOT TO SCALE. Route-centerline simulator flight QA only. Not for actual navigation. "+(detail||"");
+  }
   if(state==="off"||state==="waiting"||state==="error")text="POS OFF";
   if(selectedChart && selectedChart.airport!=="OIII" && experimentalGeorefPages.has(Number(selectedChart.page))){
     state="warning";text=(text||"GPS")+" · GEOREF";
