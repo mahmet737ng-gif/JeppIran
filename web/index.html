@@ -87,6 +87,7 @@
       </aside>
 
       <section class="viewer-pane">
+        <button id="airportPickerBtn" class="jp-airport-picker-toggle" type="button" aria-controls="airportList" aria-expanded="false">☰ &nbsp; AIRPORTS <span id="airportPickerIcao"></span></button>
         <div id="airportProfile" class="airport-profile" aria-live="polite">
           <div class="profile-no-selection"><span>✈</span><h2>Select an airport</h2><p>Choose an airport on the left to view its profile and procedures.</p></div>
         </div>
@@ -132,6 +133,30 @@
           <aside id="jpCdfaSide" class="jp-cdfa-side" hidden aria-label="CDFA data in the blank chart margin"></aside>
         </div>
       </section>
+    </main>
+
+    <main id="updateView" class="view jp-update-view">
+      <div class="jp-update-shell">
+        <header class="jp-update-header"><h2>UPDATES</h2><p>App and chart data are checked separately. Installed Android charts are managed by the native updater.</p></header>
+        <section class="jp-update-panel"><h3>TERMINAL CHARTS</h3>
+          <p id="updateCycleStatus" role="status">Checking installed chart cycle…</p>
+          <p id="updateCycleDates"></p>
+          <button id="updateCheckBtn" class="jp-update-action" type="button">CHECK LATEST DATA</button>
+        </section>
+        <section class="jp-update-panel"><h3>ENROUTE DATA</h3>
+          <p id="updateEnrouteStatus">Checking Enroute availability…</p>
+        </section>
+        <section class="jp-update-panel"><h3>APPLICATION</h3>
+          <p id="updateAppStatus">The website receives its own updates. Android APK updates are installed within the Android application.</p>
+          <button id="updateRefreshBtn" class="jp-update-action" type="button">REFRESH WEB APP</button>
+        </section>
+        <section class="jp-update-panel"><h3>CHART CHANGES BY AIRPORT</h3>
+          <p id="updateChangesStatus">Open the Update page to load the published change record.</p>
+          <label for="updateAirportSelect">Airport</label>
+          <select id="updateAirportSelect" aria-label="Airport with published changes"><option value="">Select an airport</option></select>
+          <div id="updateAirportDetails" class="jp-update-changes" aria-live="polite"></div>
+        </section>
+      </div>
     </main>
 
     <main id="simulatorView" class="view">
