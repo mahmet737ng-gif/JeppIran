@@ -19,7 +19,9 @@ jobs:
           python-version: '3.12'
       - run: python -m pip install -r scripts/requirements-georef.txt
       - name: Extract source-PDF geometry without modifying any airport
-        run: python scripts/diagnose_georef_31_without_oiii.py
+        run: |
+          python scripts/diagnose_georef_31_without_oiii.py
+          python scripts/diagnose_inset_geometry_31.py
       - uses: actions/upload-artifact@v4
         if: always()
         with:
