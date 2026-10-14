@@ -190,10 +190,10 @@ jobs:
           test -s "$SOURCE_PDF"
           echo "Preparing source-specific chart data from $SOURCE_PDF"
 
-          # Repair legacy single-axis records before packaging. This is
-          # idempotent and leaves already-correct georeferences unchanged.
-          python scripts/repair_georef_orientation.py \
-            app/src/main/assets/chart-georef.json
+          # OWNER LOCK: Build is read-only for every published georeference.
+          # Do not repair or regenerate accepted geometry in the packaging job.
+          # Any correction must be reviewed and published as its own source-locked
+          # additive record, never by rewriting an original model.
 
           # The old OIAW override is bound to v18 / 2620 PDF bytes.
           # Only apply it if BOTH the version and source PDF checksum match.
@@ -266,8 +266,8 @@ jobs:
               "$RUNNER_TEMP/oiii-georef-supplement.json"
           fi
 
-          python scripts/repair_georef_excluded_bounds.py \
-            app/src/main/assets/chart-georef.json
+          # OWNER LOCK: never auto-remove old excludedBounds in a build.
+          # Guard below checks every original point, mask and source fingerprint.
 
           python scripts/build_approach_briefings.py \
             --pdf "$SOURCE_PDF" \
