@@ -8,7 +8,7 @@ test('original Charts layout keeps just a Back control in its own header and mob
   const html=read('web/index.html');
   assert.match(html,/id="chartsBackBtn"[^>]*class="back-btn jp-charts-back"/);
   assert.match(html,/id="chartsBackMobileBtn"/);
-  for(const id of ['airportPickerBtn','prevChartBtn','nextChartBtn','chartTaxiBtn','fullscreenBtn','jpChartMenuBtn'])assert.ok(html.includes('id="'+id+'"'),id);
+  for(const id of ['airportPickerBtn','prevChartBtn','nextChartBtn','chartTaxiBtn','fullscreenBtn','fullscreenExitBtn'])assert.ok(html.includes('id="'+id+'"'),id);
 });
 test('Back safely returns directly home, never leaves the offline origin',()=>{
   const js=read('web/app.js');
