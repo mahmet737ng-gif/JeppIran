@@ -1,0 +1,113 @@
+{
+  "schemaVersion": 1,
+  "type": "ROUTE_ONLY_NON_AFFINE_GEOREFERENCE",
+  "cycle": "V2621",
+  "source": {
+    "file": "Iran2621.pdf",
+    "sha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+    "pageCount": 1654
+  },
+  "safeForActualNavigation": false,
+  "activeInChartViewer": false,
+  "reviewStatus": "SIMULATOR_QA_CANDIDATE_ROUTE_ONLY",
+  "warning": "Both source pages say NOT TO SCALE. These coordinates provide only piecewise geodesic route-centerline mapping and must NOT be interpreted as a whole-chart affine/geographic calibration.",
+  "earthModel": "WGS84",
+  "sourceControl": {
+    "ILM": {
+      "lat": 33.57841666666667,
+      "lon": 46.415388888888884,
+      "source": "Iran AIP ENR 4.1 ILM VOR/DME"
+    },
+    "ALTET": {
+      "lat": 33.5358,
+      "lon": 47.0131,
+      "source": "FlightPlanDatabase G202 ALTET; independent AIP check pending"
+    },
+    "D18_ILM": {
+      "lat": 33.55326004042021,
+      "lon": 46.77315167933163,
+      "source": "18 NM along WGS84 ILM to ALTET geodesic"
+    }
+  },
+  "ilmToAltet": {
+    "distanceNm": 30.07838286002782,
+    "trueInitialBearingDeg": 94.70237573399477,
+    "printedILMRadialMagneticDeg": 91
+  },
+  "charts": [
+    {
+      "page": 207,
+      "airport": "OICI",
+      "chartKey": "OICI|STAR|10-2|ALTET 1N, ALTET 1P",
+      "sourceFingerprint": "6d05daca31ad3af2ab113d4754cd78241663dc3ad1b544cc87521111723e5f92",
+      "pdfSize": [
+        612,
+        792
+      ],
+      "validRouteOnly": "ALTET through D18.0 to ILM; holding racetrack excluded",
+      "crossTrackDisplayGateNm": 0.5,
+      "anchors": [
+        {
+          "id": "ILM",
+          "nmFromILM": 0,
+          "x": 141.06,
+          "y": 415.62
+        },
+        {
+          "id": "D18_ILM",
+          "nmFromILM": 18,
+          "x": 365.16,
+          "y": 431.4
+        },
+        {
+          "id": "ALTET",
+          "nmFromILM": 30.07838286002782,
+          "x": 484.56,
+          "y": 439.08
+        }
+      ],
+      "piecewiseScalesPdfPointsPerNm": [
+        12.480827,
+        9.905858
+      ],
+      "validation": "SCHEMATIC; NO GENERAL AFFINE TRANSFORM"
+    },
+    {
+      "page": 209,
+      "airport": "OICI",
+      "chartKey": "OICI|SID|10-3|ALTET 1A, ALTET 1B",
+      "sourceFingerprint": "79d21c557c53c2a1fc6b2600122356469037f3f48693d12208db5ff0b69c0bdc",
+      "pdfSize": [
+        612,
+        792
+      ],
+      "validRouteOnly": "ILM to ALTET final leg only; departure R320/R155 and turn loops excluded",
+      "crossTrackDisplayGateNm": 0.5,
+      "anchors": [
+        {
+          "id": "ILM",
+          "nmFromILM": 0,
+          "x": 254.82,
+          "y": 390.66
+        },
+        {
+          "id": "ALTET",
+          "nmFromILM": 30.07838286002782,
+          "x": 513.84,
+          "y": 408.24
+        }
+      ],
+      "piecewiseScalesPdfPointsPerNm": [
+        8.631312
+      ],
+      "validation": "SCHEMATIC; NO GENERAL AFFINE TRANSFORM"
+    }
+  ],
+  "qa": {
+    "page207LegScaleDiscontinuityPercent": 25.994,
+    "hasMeasuredTrueGraticule": false,
+    "originalChartGeoreferencesOverwritten": 0,
+    "sourcePdfShaVerified": true,
+    "protectedRecordsUnchanged": true
+  }
+}
