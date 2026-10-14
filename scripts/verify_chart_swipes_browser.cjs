@@ -1,0 +1,69 @@
+// End-to-end interactive chart swipe regression in real Chromium.
+// The release must not publish if a reversed swipe changes the chart.
+const {chromium}=require("playwright");
+const {spawn}=require("node:child_process");
+const assert=require("node:assert/strict");
+const port=38331,base="http://127.0.0.1:"+port+"/";
+const child=spawn("python3",["-m","http.server",String(port),"--bind","127.0.0.1","--directory","web"],{stdio:"ignore"});
+const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+(async()=>{
+ let browser;
+ try{
+  for(let i=0;i<60;i++){
+   try{if((await fetch(base)).ok)break}catch(_){}
+   if(i===59)throw Error("Local QA server unavailable");
+   await sleep(200);
+  }
+  browser=await chromium.launch({headless:true,...(process.env.JEPPIRAN_CHROME_BIN?{
+   executablePath:process.env.JEPPIRAN_CHROME_BIN
+  }:{})});
+  const page=await browser.newPage({viewport:{width:1100,height:830}});
+  page.on("pageerror",err=>console.error("Browser page error:",err.message));
+  await page.goto(base+"#charts",{waitUntil:"domcontentloaded"});
+  await page.locator("#profileProcedures [data-proc-page]").first().waitFor({timeout:85000});
+  await page.evaluate(()=>{
+   const airport=charts.filter(c=>c.airport==="OIII").sort((a,b)=>(a.pdf_page||0)-(b.pdf_page||0));
+   if(airport.length<3)throw Error("Missing OIII chart samples");
+   selectChart(airport[1],{keepTreeClosed:true});
+  });
+  await page.waitForFunction(()=>{
+   const canvas=document.getElementById("pdfCanvas");
+   return canvas&&canvas.width>150&&canvas.height>150;
+  },null,{timeout:60000});
+  const first=await page.locator("#viewerChart").innerText();
+  await page.waitForFunction(()=>chartSlidePreviews.size>0,null,{timeout:25000});
+  await page.evaluate(()=>{
+   const state=beginChartSwipe(1);
+   if(!state)throw Error("No adjacent chart swipe");
+  });
+  await page.waitForFunction(()=>activeChartSlide?.ready,null,{timeout:25000});
+  const drag=await page.evaluate(()=>{
+   const state=activeChartSlide;
+   updateChartSwipe(state,-state.width*.63,100,100);
+   const moved=state.track.style.transform;
+   updateChartSwipe(state,-state.width*.02,290,145);
+   const reversed=state.track.style.transform;
+   finishChartSwipe(state,false);
+   return {moved,reversed};
+  });
+  assert.notEqual(drag.moved,drag.reversed,"preview must follow the reversing finger");
+  await page.waitForFunction(()=>activeChartSlide===null,null,{timeout:3000});
+  const afterCancel=await page.locator("#viewerChart").innerText();
+  assert.equal(afterCancel,first,"reversing swipe back must retain the current chart");
+  await page.evaluate(()=>{
+   const state=beginChartSwipe(1);
+   if(!state)throw Error("Second chart swipe unavailable");
+  });
+  await page.waitForFunction(()=>activeChartSlide?.ready,null,{timeout:15000});
+  await page.evaluate(()=>{
+   const state=activeChartSlide;
+   updateChartSwipe(state,-state.width*.65,100,100);
+   finishChartSwipe(state,false);
+  });
+  await page.waitForFunction(()=>activeChartSlide===null,null,{timeout:3000});
+  await page.waitForFunction(first=>document.getElementById("viewerChart").textContent!==first,first,{timeout:16000});
+  const second=await page.locator("#viewerChart").innerText();
+  assert.notEqual(second,first,"a completed swipe must select the adjacent PDF");
+  console.log("PASS PDF transition follows finger, reverses without navigating, commits next chart only on release.");
+ }finally{if(browser)await browser.close();child.kill("SIGTERM");}
+})().catch(e=>{console.error(e);process.exitCode=1});
