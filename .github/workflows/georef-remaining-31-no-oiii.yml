@@ -27,6 +27,7 @@ jobs:
       - name: Recompute source grids with per-page geometric QA, excluding Mehrabad
         run: |
           python scripts/diagnose_nav_anchors_15.py
+          python scripts/test_georef_sparse_aip_controls.py
           python scripts/calibrate_31_without_oiii.py
       - name: Preserve all existing charts and add only source-verified pages
         id: publish
