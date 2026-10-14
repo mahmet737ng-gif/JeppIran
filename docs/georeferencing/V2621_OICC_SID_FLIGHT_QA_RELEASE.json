@@ -1,0 +1,56 @@
+{
+  "sourcePdf": "Iran2621.pdf",
+  "airac": "V2621",
+  "sourceSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+  "airport": "OICC",
+  "category": "SID",
+  "scope": "simulator moving-map flight test only; NOT for actual navigation",
+  "requestedPages": [
+    187,
+    189,
+    191
+  ],
+  "newlyAddedPages": [
+    187,
+    189,
+    191
+  ],
+  "activeBefore": 798,
+  "activeAfter": 801,
+  "allPreviousRecordsPreserved": true,
+  "mehrabadUnmodified": true,
+  "webAndroidAssetsIdentical": true,
+  "independentFlightTest": "pending",
+  "pages": [
+    {
+      "pdfPage": 187,
+      "chartNumber": "10-3",
+      "name": "ASRIL 2A, ASRIL 1B",
+      "fingerprint": "f5f63c6a94560f33b507246207ef6cd57858df719ad40d2cefe3f8aa17ee050e",
+      "controlPoints": 4,
+      "gridFitResidualPdfPoints": 3.2155493553843715e-13,
+      "method": "single_axis_plus_conformal_scale",
+      "flightTestOnly": true
+    },
+    {
+      "pdfPage": 189,
+      "chartNumber": "10-3B",
+      "name": "BUBAV 2A, BUBAV 1B",
+      "fingerprint": "eb4d42e4195640e2e967bb541cbdce47dedd71afde6b9ae923ab5cd12f6b785b",
+      "controlPoints": 4,
+      "gridFitResidualPdfPoints": 2.5421149729252077e-13,
+      "method": "single_axis_plus_conformal_scale",
+      "flightTestOnly": true
+    },
+    {
+      "pdfPage": 191,
+      "chartNumber": "10-3D",
+      "name": "ASRIL 2E, ASRIL 1G",
+      "fingerprint": "83d47f2a190283b36620bb3aee18bddcc1f0bb1dcbf6a2f5815f3108896305cc",
+      "controlPoints": 4,
+      "gridFitResidualPdfPoints": 2.8421709430404007e-13,
+      "method": "single_axis_plus_conformal_scale",
+      "flightTestOnly": true
+    }
+  ]
+}
