@@ -1,6 +1,6 @@
 /* V2621 multi-region PDF airport georef regression.
  * Execute: node web/tests/multi-region-airport-georef.test.cjs
- * All original 776 approved records must remain byte-identical to Android.
+ * All current approved source records must stay identical in Web and Android.
  */
 "use strict";
 const assert=require("node:assert/strict");
@@ -12,7 +12,8 @@ assert.equal(crypto.createHash("sha256").update(web).digest("hex"),
              crypto.createHash("sha256").update(android).digest("hex"),
              "Production source chart models must be restored without alteration");
 const original=JSON.parse(web),data=require("../data/airport-region-georef-v2621.json");
-assert.equal(original.charts.length,776);
+assert.ok(original.charts.length>=776,"Additive source georeferences must not shrink the baseline");
+assert.equal(original.charts.filter(c=>c.airport==="OIII").length,29,"Mehrabad georeferencing record count frozen");
 assert.equal(data.regions.length,3);
 assert.equal(original.source.sha256,data.source.sha256);
 const app=fs.readFileSync(path.join(root,"app.js"),"utf8");
@@ -25,7 +26,7 @@ assert.ok(Object.values(models).every(Boolean),"Every PDF grid affine passes QA"
 const oldCargo=api.makeGeoModel(original.charts.find(c=>c.page===383));
 assert.ok(oldCargo&&oldCargo.excluded.length===1);
 assert.equal(original.charts.some(c=>c.page===432),false,
-  "OIII parking was missing from the 776 original source records");
+  "OIII parking remains an independent region overlay without modifying original charts");
 const o2={...oldCargo,regions:[
  {id:"CARGO_APRON_2",model:oldCargo},
  {id:"SALAM_APRON_3",model:models.SALAM_APRON_3}]};
@@ -44,4 +45,4 @@ check(o3,35+41.85/60,51+17.95/60,"OIII_APRON_5_INSET");
 check(o3,35.5,51.2,null);
 assert.ok(app.includes("await loadIndependentAirportRegionGeorefs(m)"));
 assert.ok(app.includes("resolveGeoRegion(model,Number(lastPosition?.lat),Number(lastPosition?.lon))"));
-console.log("PASS OIIE Cargo/Salam & OIII main/Apron5 independent georef; original 776 assets untouched");
+console.log("PASS OIIE Cargo/Salam & OIII main/Apron5 independent georef; source Web/Android assets identical; 29 OIII records preserved");
