@@ -65,5 +65,29 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   const second=await page.locator("#viewerChart").innerText();
   assert.notEqual(second,first,"a completed swipe must select the adjacent PDF");
   console.log("PASS PDF transition follows finger, reverses without navigating, commits next chart only on release.");
+  // Simulate Android's bundled phone CSS. No on-screen Back arrow: the OS
+  // edge gesture delegates to window.jeppiranAndroidBack() instead.
+  await page.setViewportSize({width:390,height:844});
+  await page.evaluate(()=>document.documentElement.classList.add("jp-android-phone"));
+  await page.addStyleTag({content:require("node:fs").readFileSync(
+    require("node:path").join("app","src","main","assets","phone-layout.css"),"utf8")});
+  assert.equal(await page.locator("#prevChartBtn").isVisible(),false,
+    "Android previous-chart Back button must be hidden");
+  assert.equal(await page.locator("#nextChartBtn").isVisible(),false,
+    "Android next-chart button must be replaced by swipe");
+  await page.evaluate(()=>document.body.classList.add("viewer-fullscreen"));
+  const movedBack=await page.evaluate(()=>window.jeppiranAndroidBack());
+  assert.equal(movedBack,true,"Android Back gesture should exit chart to airport profile");
+  const backState=await page.evaluate(()=>({
+    open:document.getElementById("chartsView").classList.contains("chart-open"),
+    full:document.body.classList.contains("viewer-fullscreen")
+  }));
+  assert.equal(backState.open,false,"Back gesture must return to the airport profile");
+  assert.equal(backState.full,false,"Back gesture must exit full-screen");
+  assert.equal(await page.evaluate(()=>window.jeppiranAndroidBack()),true,
+    "Second Android Back gesture should return to Home");
+  assert.equal(await page.locator("#homeView.active").isVisible(),true);
+  console.log("PASS Android screen-edge Back: chart → profile → Home; no visible Back arrows.");
+
  }finally{if(browser)await browser.close();child.kill("SIGTERM");}
 })().catch(e=>{console.error(e);process.exitCode=1});
