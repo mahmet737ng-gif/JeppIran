@@ -242,7 +242,21 @@ class MobileWebActivity : AppCompatActivity() {
     }
 
     override fun onBackPressed() {
-        if (browser.canGoBack()) browser.goBack() else super.onBackPressed()
+        // Android's navigation-bar/edge Back gesture replaces any old on-screen
+        // Back arrow. Let JEPPIRAN close chart -> profile -> Home in order.
+        // Never navigate back into the obsolete hosted website.
+        if (!::browser.isInitialized) {
+            super.onBackPressed()
+            return
+        }
+        browser.evaluateJavascript(
+            "(function(){return window.jeppiranAndroidBack ? window.jeppiranAndroidBack() : false})()"
+        ) { result ->
+            if (result != "true" && !isFinishing && !isDestroyed) {
+                // At Home the OS gesture closes the Android activity.
+                super.onBackPressed()
+            }
+        }
     }
 
     override fun onDestroy() {
