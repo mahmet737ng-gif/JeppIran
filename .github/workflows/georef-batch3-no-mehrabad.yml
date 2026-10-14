@@ -1,0 +1,44 @@
+name: Source-verified georef QA for airports 21-30 except Mehrabad
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/georef-batch3-no-mehrabad.yml', 'scripts/georef_batch3_no_mehrabad.py']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: georef-batch3-no-mehrabad
+  cancel-in-progress: false
+jobs:
+  source-diagnostics:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          lfs: true
+          fetch-depth: 1
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r scripts/requirements-georef.txt
+      - name: Inspect 31 visually eligible chart plans against source PDF
+        run: python scripts/georef_batch3_no_mehrabad.py
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: non-mehrabad-chart-georef-diagnostics
+          path: /tmp/batch3-non-oIII-diagnostics.json
+          if-no-files-found: ignore
+      - name: Publish diagnostic results to audit branch (NOT production geo assets)
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git switch -C audit/v2621-non-mehrabad-georef-diagnostics
+          mkdir -p docs/georeferencing
+          cp /tmp/batch3-non-oIII-diagnostics.json docs/georeferencing/V2621_BATCH3_NON_OIII_DIAGNOSTICS.json
+          git add docs/georeferencing/V2621_BATCH3_NON_OIII_DIAGNOSTICS.json
+          git commit -m 'QA: source-verified candidate diagnostics without modifying Mehrabad'
+          git push -f origin HEAD:refs/heads/audit/v2621-non-mehrabad-georef-diagnostics
