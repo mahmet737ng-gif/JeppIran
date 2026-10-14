@@ -1,6 +1,7 @@
 package com.tareghmsr.jeppiran
 
 import android.content.Context
+import org.json.JSONArray
 import org.json.JSONObject
 import kotlin.math.abs
 import kotlin.math.atan2
@@ -43,7 +44,8 @@ data class GeoReference(
     val bounds: GeoReferenceBounds,
     val points: List<GeoReferencePoint>,
     val maxResidualPdfPoints: Double = 0.75,
-    val excludedBounds: List<GeoReferenceBounds> = emptyList()
+    val excludedBounds: List<GeoReferenceBounds> = emptyList(),
+    val strictBounds: Boolean = false
 ) {
     private companion object {
         const val OUTER_EDGE_TOLERANCE_PDF_POINTS = 6.0
@@ -82,7 +84,7 @@ data class GeoReference(
             bounds.contains(
                 it.first,
                 it.second,
-                OUTER_EDGE_TOLERANCE_PDF_POINTS
+                if (strictBounds) 0.0 else OUTER_EDGE_TOLERANCE_PDF_POINTS
             ) &&
                 excludedBounds.none { area ->
                     area.contains(it.first, it.second)
@@ -203,6 +205,14 @@ data class GeoReference(
 
 object ChartGeoreferenceStore {
     private const val ASSET = "chart-georef.json"
+    private const val OICK_V2_ASSET = "oick-georef-v2621.json"
+    private val OICK_V2_PAGES = setOf(218, 219, 221, 223)
+    private val OICK_V2_FINGERPRINTS = mapOf(
+        218 to "905dd0af368680fd64950a907c2762c3a85593b3a99b4ed52dfca422386dbe65",
+        219 to "d7b00ce24d2af0cad929a278b99a8665952653d3d148c83b30fb7324d2de72e4",
+        221 to "62d21472672bd39956e07c4b231dddeb15979c80788cc3ff2c056a60872ecf0a",
+        223 to "b1ba40365debbabd2cc1fedc6638d5b3a669aefdaa0c4bf22a0faa003f1964f9"
+    )
     // Experimental-only V2621 OIMM ILS Z/Y/X. The base JSON stays unchanged.
     private const val OIMM_ILS_ASSET = "chart-georef-oimm-ils-experimental.json"
     private const val OIMM_ILS_SOURCE_SHA = "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6"
@@ -229,12 +239,14 @@ object ChartGeoreferenceStore {
     @Volatile private var loaded = false
     private var chartDataVersion = ""
     private val references = mutableMapOf<Int, GeoReference>()
+    private val oickV2Regions = mutableMapOf<Int, List<GeoReference>>()
 
     @Synchronized
     fun reset() {
         loaded = false
         chartDataVersion = ""
         references.clear()
+        oickV2Regions.clear()
         OiciRouteOnlyFlightQa.reset()
     }
 
@@ -286,6 +298,7 @@ object ChartGeoreferenceStore {
 
             chartDataVersion = selected.chartDataVersion
             references.putAll(selected.references)
+            loadPublishedOickV2(context, selected)
             if (selected.chartDataVersion == "V2621" &&
                 selected.sourceSha256 == OIMM_ILS_SOURCE_SHA
             ) {
@@ -366,6 +379,70 @@ object ChartGeoreferenceStore {
             references.clear()
         } finally {
             loaded = true
+        }
+    }
+
+    /** Exact V2621 OICK simulator test references: preserve every previously accepted map. */
+    private fun loadPublishedOickV2(context: Context, selected: ParsedGeoreferences) {
+        if (selected.chartDataVersion != "V2621" ||
+            selected.sourceSha256 != OIMM_ILS_SOURCE_SHA ||
+            OICK_V2_PAGES.any { references.containsKey(it) }) return
+        val staged = mutableMapOf<Int, List<GeoReference>>()
+        try {
+            val raw = context.assets.open(OICK_V2_ASSET).bufferedReader().use { it.readText() }
+            val data = JSONObject(raw)
+            if (data.optInt("schemaVersion") != 1 ||
+                data.optString("type") != "OICK_V2621_GEOREFERENCE_REGIONS" ||
+                data.optString("cycle") != "V2621" ||
+                data.optString("sourceSha256") != selected.sourceSha256 ||
+                data.optInt("pdfPageCount") != 1654 ||
+                data.optBoolean("safeForActualNavigation", true)) return
+            val pages = data.optJSONArray("pages") ?: return
+            if (pages.length() != OICK_V2_PAGES.size) return
+            for (i in 0 until pages.length()) {
+                val item = pages.optJSONObject(i) ?: return
+                val page = item.optInt("page", -1)
+                if (page !in OICK_V2_PAGES || page in staged ||
+                    item.optString("airport") != "OICK" ||
+                    item.optString("sourceFingerprint") != OICK_V2_FINGERPRINTS[page]) return
+                val chartKey = item.optString("chartKey")
+                if (!chartKey.startsWith("OICK|")) return
+                val parts = item.optJSONArray("regions") ?: return
+                if (parts.length() != (if (page == 221) 2 else 1)) return
+                val ids = mutableSetOf<String>()
+                val result = mutableListOf<GeoReference>()
+                for (j in 0 until parts.length()) {
+                    val entry = parts.optJSONObject(j) ?: return
+                    val id = entry.optString("id")
+                    val model = entry.optJSONObject("model") ?: return
+                    val qa = model.optJSONObject("validation") ?: return
+                    if (id.isBlank() || !ids.add(id) ||
+                        model.optInt("page") != page ||
+                        model.optString("airport") != "OICK" ||
+                        model.optString("chartKey") != chartKey ||
+                        model.optString("sourceFingerprint") != OICK_V2_FINGERPRINTS[page] ||
+                        qa.optString("v2Region") != id ||
+                        !qa.optBoolean("qaTestOnly") ||
+                        !qa.optBoolean("notApprovedForNavigation")) return
+                    val one = JSONObject().put("version", 2)
+                        .put("coordinateSystem", "WGS84")
+                        .put("coordinateSpace", "pdf_points")
+                        .put("origin", "top_left")
+                        .put("source", JSONObject()
+                            .put("chartDataVersion", selected.chartDataVersion)
+                            .put("sha256", selected.sourceSha256))
+                        .put("charts", JSONArray().put(model))
+                    val parsed = parse(one.toString())?.references?.get(page) ?: return
+                    result.add(parsed.copy(strictBounds = true))
+                }
+                if (page == 221 && (ids != setOf("parking_apron_inset", "main_adc") ||
+                    result.none { it.excludedBounds.isNotEmpty() })) return
+                staged[page] = result
+            }
+            if (staged.keys != OICK_V2_PAGES) return
+            oickV2Regions.putAll(staged)
+        } catch (_: Exception) {
+            oickV2Regions.clear()
         }
     }
 
@@ -489,6 +566,17 @@ object ChartGeoreferenceStore {
     ): RenderedAircraftPosition? {
         load(context)
         if (dataVersion != chartDataVersion) return null
+        // Two independent ADC transforms: first the separate parking inset,
+        // then the masked main airport map. No extrapolation across either crop.
+        oickV2Regions[page]?.let { regions ->
+            for (region in regions) {
+                val projected = region.renderedPosition(latitude, longitude, headingDegrees,
+                    pdfWidth, pdfHeight, fullBitmapWidth, fullBitmapHeight,
+                    cropLeft, cropTop, bitmapWidth, bitmapHeight)
+                if (projected != null) return projected
+            }
+            return null
+        }
         val ref = references[page]
         if (ref == null) {
             // Flight-QA-only fallback for schematic OICI 207/209.

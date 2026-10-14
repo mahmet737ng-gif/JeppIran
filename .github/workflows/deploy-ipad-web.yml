@@ -95,6 +95,9 @@ jobs:
           test -n "$JEPPIRAN_CHROME_BIN"
           node scripts/verify_aircraft_marker_browser.cjs
 
+      - name: Verify additive OICK V2 source georeferencing
+        run: node --test web/tests/oick-v2-georef.test.cjs
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:

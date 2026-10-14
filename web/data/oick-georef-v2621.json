@@ -1,0 +1,459 @@
+{
+  "schemaVersion": 1,
+  "type": "OICK_V2621_GEOREFERENCE_REGIONS",
+  "cycle": "V2621",
+  "sourceSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+  "pdfPageCount": 1654,
+  "coordinateSystem": "WGS84",
+  "coordinateSpace": "pdf_points",
+  "safeForActualNavigation": false,
+  "review": "Source vector grid + independent KRD VOR; SIMULATOR QA ONLY",
+  "pages": [
+    {
+      "page": 218,
+      "airport": "OICK",
+      "chartKey": "OICK|STAR|10-2|NOTSA 1N",
+      "sourceFingerprint": "905dd0af368680fd64950a907c2762c3a85593b3a99b4ed52dfca422386dbe65",
+      "regions": [
+        {
+          "id": "main_rotated",
+          "model": {
+            "page": 218,
+            "airport": "OICK",
+            "name": "NOTSA 1N",
+            "chartKey": "OICK|STAR|10-2|NOTSA 1N",
+            "sourceFingerprint": "905dd0af368680fd64950a907c2762c3a85593b3a99b4ed52dfca422386dbe65",
+            "coordinateSpace": "pdf_points",
+            "origin": "top_left",
+            "width": 612,
+            "height": 792,
+            "bounds": {
+              "left": 90.6,
+              "top": 146,
+              "right": 531.96,
+              "bottom": 780
+            },
+            "excludedBounds": [],
+            "points": [
+              {
+                "lat": 33.5,
+                "lon": 48,
+                "x": 253.20000000000073,
+                "y": 763.7799999999988,
+                "source": "Original V2621 PDF printed vector graticules (verified V2)"
+              },
+              {
+                "lat": 33.5,
+                "lon": 48.5,
+                "x": 253.20000000000073,
+                "y": 530.7999999999993,
+                "source": "Original V2621 PDF printed vector graticules (verified V2)"
+              },
+              {
+                "lat": 33.5,
+                "lon": 49,
+                "x": 253.20000000000073,
+                "y": 297.8199999999997,
+                "source": "Original V2621 PDF printed vector graticules (verified V2)"
+              },
+              {
+                "lat": 33.4,
+                "lon": 48,
+                "x": 309.0781535396454,
+                "y": 763.7799999999988,
+                "source": "Original V2621 PDF printed vector graticules (verified V2)"
+              },
+              {
+                "lat": 33.4,
+                "lon": 48.5,
+                "x": 309.0781535396454,
+                "y": 530.7999999999993,
+                "source": "Original V2621 PDF printed vector graticules (verified V2)"
+              },
+              {
+                "lat": 33.4,
+                "lon": 49,
+                "x": 309.0781535396454,
+                "y": 297.8199999999997,
+                "source": "Original V2621 PDF printed vector graticules (verified V2)"
+              }
+            ],
+            "maxResidualPdfPoints": 0.75,
+            "validation": {
+              "method": "single_axis_plus_conformal_scale",
+              "controlPointCount": 6,
+              "measuredSourceTickResidualPdfPoints": 0.04,
+              "gridMaxResidualPdfPoints": 0,
+              "independentChecks": [
+                {
+                  "id": "KRD_DVOR_DME",
+                  "lat": 33.434194444444444,
+                  "lon": 48.29186111111111,
+                  "source": "Iran AIP ENR 4.1, KRD DVOR/DME 113.750 MHz, 332603.1N 0481730.7E",
+                  "referencePdfCenter": [
+                    289.5,
+                    627.78
+                  ],
+                  "residualMaxPdfPoints": 0.47095
+                }
+              ],
+              "qaTestOnly": true,
+              "notApprovedForNavigation": true,
+              "v2Region": "main_rotated"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "page": 219,
+      "airport": "OICK",
+      "chartKey": "OICK|STAR|10-2A|NOTSA 1P, NOTSA 1Q",
+      "sourceFingerprint": "d7b00ce24d2af0cad929a278b99a8665952653d3d148c83b30fb7324d2de72e4",
+      "regions": [
+        {
+          "id": "main_rotated",
+          "model": {
+            "page": 219,
+            "airport": "OICK",
+            "name": "NOTSA 1P, NOTSA 1Q",
+            "chartKey": "OICK|STAR|10-2A|NOTSA 1P, NOTSA 1Q",
+            "sourceFingerprint": "d7b00ce24d2af0cad929a278b99a8665952653d3d148c83b30fb7324d2de72e4",
+            "coordinateSpace": "pdf_points",
+            "origin": "top_left",
+            "width": 612,
+            "height": 792,
+            "bounds": {
+              "left": 90.6,
+              "top": 157,
+              "right": 531.96,
+              "bottom": 780
+            },
+            "excludedBounds": [],
+            "points": [
+              {
+                "lat": 33.5,
+                "lon": 48,
+                "x": 294.3600000000006,
+                "y": 660.8399999999965,
+                "source": "Original V2621 PDF printed vector graticules (verified V2)"
+              },
+              {
+                "lat": 33.5,
+                "lon": 48.5,
+                "x": 294.3600000000006,
+                "y": 427.7999999999993,
+                "source": "Original V2621 PDF printed vector graticules (verified V2)"
+              },
+              {
+                "lat": 33.5,
+                "lon": 49,
+                "x": 294.3600000000006,
+                "y": 194.7599999999984,
+                "source": "Original V2621 PDF printed vector graticules (verified V2)"
+              },
+              {
+                "lat": 33.4,
+                "lon": 48,
+                "x": 350.25254399896585,
+                "y": 660.8399999999965,
+                "source": "Original V2621 PDF printed vector graticules (verified V2)"
+              },
+              {
+                "lat": 33.4,
+                "lon": 48.5,
+                "x": 350.25254399896585,
+                "y": 427.7999999999993,
+                "source": "Original V2621 PDF printed vector graticules (verified V2)"
+              },
+              {
+                "lat": 33.4,
+                "lon": 49,
+                "x": 350.25254399896585,
+                "y": 194.7599999999984,
+                "source": "Original V2621 PDF printed vector graticules (verified V2)"
+              }
+            ],
+            "maxResidualPdfPoints": 0.75,
+            "validation": {
+              "method": "single_axis_plus_conformal_scale",
+              "controlPointCount": 6,
+              "measuredSourceTickResidualPdfPoints": 0,
+              "gridMaxResidualPdfPoints": 0,
+              "independentChecks": [
+                {
+                  "id": "KRD_DVOR_DME",
+                  "lat": 33.434194444444444,
+                  "lon": 48.29186111111111,
+                  "source": "Iran AIP ENR 4.1, KRD DVOR/DME 113.750 MHz, 332603.1N 0481730.7E",
+                  "referencePdfCenter": [
+                    330.65999999999997,
+                    524.94
+                  ],
+                  "residualMaxPdfPoints": 0.49784
+                }
+              ],
+              "qaTestOnly": true,
+              "notApprovedForNavigation": true,
+              "v2Region": "main_rotated"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "page": 221,
+      "airport": "OICK",
+      "chartKey": "OICK|AIRPORT|10-9|AIRPORT DIAGRAM CHART (ADC)",
+      "sourceFingerprint": "62d21472672bd39956e07c4b231dddeb15979c80788cc3ff2c056a60872ecf0a",
+      "regions": [
+        {
+          "id": "parking_apron_inset",
+          "model": {
+            "page": 221,
+            "airport": "OICK",
+            "name": "AIRPORT DIAGRAM CHART (ADC)",
+            "chartKey": "OICK|AIRPORT|10-9|AIRPORT DIAGRAM CHART (ADC)",
+            "sourceFingerprint": "62d21472672bd39956e07c4b231dddeb15979c80788cc3ff2c056a60872ecf0a",
+            "coordinateSpace": "pdf_points",
+            "origin": "top_left",
+            "width": 612,
+            "height": 792,
+            "bounds": {
+              "left": 85.32,
+              "top": 315.12,
+              "right": 304.8,
+              "bottom": 471.12
+            },
+            "excludedBounds": [],
+            "points": [
+              {
+                "lat": 33.43833333333333,
+                "lon": 48.285,
+                "x": 147.7200000002049,
+                "y": 325.1999999997206,
+                "source": "Original V2621 PDF printed vector graticules (verified V2)"
+              },
+              {
+                "lat": 33.43833333333333,
+                "lon": 48.28666666666667,
+                "x": 236.39999999990687,
+                "y": 325.1999999997206,
+                "source": "Original V2621 PDF printed vector graticules (verified V2)"
+              },
+              {
+                "lat": 33.43666666666667,
+                "lon": 48.285,
+                "x": 147.7200000002049,
+                "y": 430.79999999981374,
+                "source": "Original V2621 PDF printed vector graticules (verified V2)"
+              },
+              {
+                "lat": 33.43666666666667,
+                "lon": 48.28666666666667,
+                "x": 236.39999999990687,
+                "y": 430.79999999981374,
+                "source": "Original V2621 PDF printed vector graticules (verified V2)"
+              }
+            ],
+            "maxResidualPdfPoints": 1.5,
+            "validation": {
+              "method": "paired_printed_graticule_vector_ticks",
+              "controlPointCount": 4,
+              "measuredSourceTickResidualPdfPoints": 0,
+              "gridMaxResidualPdfPoints": 0,
+              "independentChecks": [],
+              "qaTestOnly": true,
+              "notApprovedForNavigation": true,
+              "v2Region": "parking_apron_inset"
+            }
+          }
+        },
+        {
+          "id": "main_adc",
+          "model": {
+            "page": 221,
+            "airport": "OICK",
+            "name": "AIRPORT DIAGRAM CHART (ADC)",
+            "chartKey": "OICK|AIRPORT|10-9|AIRPORT DIAGRAM CHART (ADC)",
+            "sourceFingerprint": "62d21472672bd39956e07c4b231dddeb15979c80788cc3ff2c056a60872ecf0a",
+            "coordinateSpace": "pdf_points",
+            "origin": "top_left",
+            "width": 612,
+            "height": 792,
+            "bounds": {
+              "left": 85.32,
+              "top": 87.48,
+              "right": 531.96,
+              "bottom": 471.12
+            },
+            "excludedBounds": [
+              {
+                "left": 85.32,
+                "top": 315.12,
+                "right": 304.8,
+                "bottom": 471.12
+              }
+            ],
+            "points": [
+              {
+                "lat": 33.45,
+                "lon": 48.266666666666666,
+                "x": 159.2600000000093,
+                "y": 106.31999999994878,
+                "source": "Original V2621 PDF printed vector graticules (verified V2)"
+              },
+              {
+                "lat": 33.45,
+                "lon": 48.28333333333333,
+                "x": 316.5200000000186,
+                "y": 106.31999999994878,
+                "source": "Original V2621 PDF printed vector graticules (verified V2)"
+              },
+              {
+                "lat": 33.45,
+                "lon": 48.3,
+                "x": 473.78000000002794,
+                "y": 106.31999999994878,
+                "source": "Original V2621 PDF printed vector graticules (verified V2)"
+              },
+              {
+                "lat": 33.43333333333333,
+                "lon": 48.266666666666666,
+                "x": 159.2600000000093,
+                "y": 293.87999999994645,
+                "source": "Original V2621 PDF printed vector graticules (verified V2)"
+              },
+              {
+                "lat": 33.43333333333333,
+                "lon": 48.28333333333333,
+                "x": 316.5200000000186,
+                "y": 293.87999999994645,
+                "source": "Original V2621 PDF printed vector graticules (verified V2)"
+              },
+              {
+                "lat": 33.43333333333333,
+                "lon": 48.3,
+                "x": 473.78000000002794,
+                "y": 293.87999999994645,
+                "source": "Original V2621 PDF printed vector graticules (verified V2)"
+              }
+            ],
+            "maxResidualPdfPoints": 1.5,
+            "validation": {
+              "method": "paired_printed_graticule_vector_ticks",
+              "controlPointCount": 6,
+              "measuredSourceTickResidualPdfPoints": 0.04,
+              "gridMaxResidualPdfPoints": 0,
+              "independentChecks": [
+                {
+                  "id": "KRD_DVOR_DME",
+                  "lat": 33.434194444444444,
+                  "lon": 48.29186111111111,
+                  "source": "Iran AIP ENR 4.1, KRD DVOR/DME 113.750 MHz, 332603.1N 0481730.7E",
+                  "referencePdfCenter": [
+                    397.26,
+                    284.1
+                  ],
+                  "residualMaxPdfPoints": 0.28945
+                }
+              ],
+              "qaTestOnly": true,
+              "notApprovedForNavigation": true,
+              "v2Region": "main_adc"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "page": 223,
+      "airport": "OICK",
+      "chartKey": "OICK|APPROACH|11-1|APPROACH 11-1",
+      "sourceFingerprint": "b1ba40365debbabd2cc1fedc6638d5b3a669aefdaa0c4bf22a0faa003f1964f9",
+      "regions": [
+        {
+          "id": "main_ils_29",
+          "model": {
+            "page": 223,
+            "airport": "OICK",
+            "name": "APPROACH 11-1",
+            "chartKey": "OICK|APPROACH|11-1|APPROACH 11-1",
+            "sourceFingerprint": "b1ba40365debbabd2cc1fedc6638d5b3a669aefdaa0c4bf22a0faa003f1964f9",
+            "coordinateSpace": "pdf_points",
+            "origin": "top_left",
+            "width": 612,
+            "height": 792,
+            "bounds": {
+              "left": 90.6,
+              "top": 191,
+              "right": 531.96,
+              "bottom": 514.2
+            },
+            "excludedBounds": [
+              {
+                "left": 463.44,
+                "top": 326,
+                "right": 531.96,
+                "bottom": 430
+              }
+            ],
+            "points": [
+              {
+                "lat": 33.5,
+                "lon": 48.333333333333336,
+                "x": 222.59999999999854,
+                "y": 235.20000000000437,
+                "source": "Original V2621 PDF printed vector graticules (verified V2)"
+              },
+              {
+                "lat": 33.5,
+                "lon": 48.5,
+                "x": 378.23999999999796,
+                "y": 235.20000000000437,
+                "source": "Original V2621 PDF printed vector graticules (verified V2)"
+              },
+              {
+                "lat": 33.333333333333336,
+                "lon": 48.333333333333336,
+                "x": 222.59999999999854,
+                "y": 420.72000000000116,
+                "source": "Original V2621 PDF printed vector graticules (verified V2)"
+              },
+              {
+                "lat": 33.333333333333336,
+                "lon": 48.5,
+                "x": 378.23999999999796,
+                "y": 420.72000000000116,
+                "source": "Original V2621 PDF printed vector graticules (verified V2)"
+              }
+            ],
+            "maxResidualPdfPoints": 1.5,
+            "validation": {
+              "method": "paired_printed_graticule_vector_ticks",
+              "controlPointCount": 4,
+              "measuredSourceTickResidualPdfPoints": 0,
+              "gridMaxResidualPdfPoints": 0,
+              "independentChecks": [
+                {
+                  "id": "KRD_DVOR_DME",
+                  "lat": 33.434194444444444,
+                  "lon": 48.29186111111111,
+                  "source": "Iran AIP ENR 4.1, KRD DVOR/DME 113.750 MHz, 332603.1N 0481730.7E",
+                  "referencePdfCenter": [
+                    183.9,
+                    308.34000000000003
+                  ],
+                  "residualMaxPdfPoints": 0.11311
+                }
+              ],
+              "qaTestOnly": true,
+              "notApprovedForNavigation": true,
+              "v2Region": "main_ils_29"
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -64,6 +64,9 @@ jobs:
           python3 -m unittest discover -s tests -p 'test_georef_preservation.py'
           python3 scripts/georef_preservation.py --baseline-ref HEAD^
 
+      - name: Verify additive OICK V2 source georeferencing
+        run: node --test web/tests/oick-v2-georef.test.cjs
+
       - name: Set up JDK 17
         uses: actions/setup-java@v5
         with:

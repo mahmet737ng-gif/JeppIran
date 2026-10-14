@@ -541,6 +541,7 @@ async function loadData(){
         updateTerminalValidityDisplay();
         for(const [label,task] of [
           ["region",()=>loadIndependentAirportRegionGeorefs(m)],
+          ["oick-v2",()=>loadPublishedOickV2Georefs(m)],
           ["adc",()=>enableAdcQaIfRequested(m)],
           ["birjand",()=>enableBirjandAdcQaIfRequested(m)],
           ["doha",()=>enableDohaAdcQaIfRequested(m)],
@@ -1123,6 +1124,52 @@ function projectGeo(model,lat,lon){
  * Additive overlay: never mutate/copy/rewrite the 776 protected original
  * source georeferences, in particular OIIE Cargo and OIII ADC.
  */
+// OICK V2621 source-calibrated simulator georeferencing; additive, fail-closed.
+async function loadPublishedOickV2Georefs(m){
+  try{
+    const res=await fetch("./data/oick-georef-v2621.json?v=oick-v2-20261015",{cache:"no-store"});
+    if(!res.ok)throw Error("OICK V2 data HTTP "+res.status);
+    const d=await res.json();
+    const identities=new Map([
+      [218,"905dd0af368680fd64950a907c2762c3a85593b3a99b4ed52dfca422386dbe65"],
+      [219,"d7b00ce24d2af0cad929a278b99a8665952653d3d148c83b30fb7324d2de72e4"],
+      [221,"62d21472672bd39956e07c4b231dddeb15979c80788cc3ff2c056a60872ecf0a"],
+      [223,"b1ba40365debbabd2cc1fedc6638d5b3a669aefdaa0c4bf22a0faa003f1964f9"]
+    ]);
+    if(d.schemaVersion!==1||d.type!=="OICK_V2621_GEOREFERENCE_REGIONS"||
+       d.cycle!=="V2621"||d.sourceSha256!==m.source_sha256||d.pdfPageCount!==1654||
+       d.safeForActualNavigation!==false||!Array.isArray(d.pages)||d.pages.length!==4)
+      throw Error("OICK source/cycle mismatch");
+    const staged=new Map();
+    for(const row of d.pages){
+      const page=Number(row.page),chart=charts.find(c=>c.airport==="OICK"&&Number(c.page)===page);
+      const key=chart?["OICK",String(chart.category).toUpperCase(),String(chart.chart_number).toUpperCase(),String(chart.name).toUpperCase()].join("|"):"";
+      if(!identities.has(page)||staged.has(page)||georefByPage.has(page)||row.airport!=="OICK"||
+         row.sourceFingerprint!==identities.get(page)||row.chartKey!==key||
+         !Array.isArray(row.regions)||row.regions.length!==(page===221?2:1))
+        throw Error("OICK V2 chart identity/immutability check failed "+page);
+      const regional=[];
+      for(const entry of row.regions){
+        const item=entry?.model,validation=item?.validation;
+        if(!entry.id||item?.page!==page||item?.airport!=="OICK"||
+           item?.chartKey!==key||item?.sourceFingerprint!==identities.get(page)||
+           validation?.v2Region!==entry.id||validation?.qaTestOnly!==true||
+           validation?.notApprovedForNavigation!==true)
+          throw Error("OICK V2 source region not approved for QA "+page);
+        const model=makeGeoModel(item);
+        if(!model)throw Error("OICK V2 bad calibration "+page+"/"+entry.id);
+        regional.push({id:entry.id,model});
+      }
+      if(page===221&&(regional[0].id!=="parking_apron_inset"||
+         !regional.some(r=>r.id==="main_adc"&&r.model.excluded.length)))
+        throw Error("OICK ADC requires independently calibrated parking and masked main chart");
+      staged.set(page,regional.length===1?regional[0].model:{...regional[0].model,regions:regional});
+    }
+    if(manifest!==m||staged.size!==4||[...staged.keys()].some(page=>georefByPage.has(page)))return;
+    for(const [page,model] of staged)georefByPage.set(page,model);
+    console.info("OICK V2 simulator georeferencing active (not for actual navigation)",[...staged.keys()]);
+  }catch(error){console.warn("OICK V2 georefs skipped; prior maps untouched",error)}
+}
 async function loadIndependentAirportRegionGeorefs(m){
   // Page 383 has two independent PDF-to-WGS84 regions: Cargo and Salam.
   // OIII page 432 has a large parking plan and a separately scaled Apron 5
@@ -1242,6 +1289,11 @@ function setPositionStatus(state,text,detail=""){
   if(selectedChart && selectedChart.airport!=="OIII" && experimentalGeorefPages.has(Number(selectedChart.page))){
     state="warning";text=(text||"GPS")+" · GEOREF";
     detail="GEOREFERENCE · INDEPENDENT AIP QA PENDING · NOT FOR NAVIGATION. "+(detail||"");
+  }
+  if(selectedChart?.airport==="OICK"&&[218,219,221,223].includes(Number(selectedChart.page))&&
+     !["off","waiting","error"].includes(state)){
+    state="warning";text=(text||"GPS")+" · GEO QA";
+    detail="V2621 OICK SIMULATOR GEOREFERENCE QA ONLY · NOT FOR ACTUAL NAVIGATION. "+(detail||"");
   }
   btn.dataset.state=state||"off";
   btn.title=detail?(text+" · "+detail):(text||"Position status");
