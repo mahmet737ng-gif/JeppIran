@@ -362,12 +362,27 @@ jobs:
                       )
 
               axes = item.get("gridAxes") or {}
-              east = axis_vector(axes["longitude"])
-              north = axis_vector(axes["latitude"])
-              determinant = (
-                  east[0] * north[1] -
-                  east[1] * north[0]
-              )
+              if len(axes["longitude"]) >= 2 and len(axes["latitude"]) >= 2:
+                  east = axis_vector(axes["longitude"])
+                  north = axis_vector(axes["latitude"])
+                  determinant = east[0] * north[1] - east[1] * north[0]
+              else:
+                  # Four *unchanged* OIII records from the previous release
+                  # have a single printed latitude tick and a derived second
+                  # geographic control. Derive orientation from all 4+ source
+                  # GCPs, not from the single-tick grid axis.
+                  assert page in {420, 424, 426, 427}
+                  assert method == "single_axis_plus_conformal_scale"
+                  assert item["validation"].get("qaTestOnly") is True
+                  p_geo = np.array([[p["lon"], p["lat"], 1] for p in points])
+                  p_xy = np.array([[p["x"], p["y"]] for p in points])
+                  fitted, _, rank, _ = np.linalg.lstsq(p_geo, p_xy, rcond=None)
+                  assert rank == 3, f"Degenerate published chart {page}"
+                  residual = np.max(np.linalg.norm(p_geo @ fitted - p_xy, axis=1))
+                  assert residual <= item["maxResidualPdfPoints"], (
+                      f"Published control-point residual changed on {page}"
+                  )
+                  determinant = fitted[0, 0] * fitted[1, 1] - fitted[0, 1] * fitted[1, 0]
               assert determinant < 0, (
                   f"Mirrored moving-map georeference on page {page}"
               )
