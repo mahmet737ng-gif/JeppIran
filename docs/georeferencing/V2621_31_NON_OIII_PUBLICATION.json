@@ -1,0 +1,119 @@
+{
+  "source": {
+    "file": "Iran2621.pdf",
+    "sha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+    "pageCount": 1654,
+    "chartDataVersion": "V2621",
+    "cycle": "2621"
+  },
+  "scope": "visual_review_31_except_OIII",
+  "requestedPages": 31,
+  "newlyPublishedCount": 0,
+  "newlyPublishedPages": [],
+  "alreadyPresentCount": 16,
+  "alreadyPresentPages": [
+    309,
+    310,
+    313,
+    342,
+    365,
+    366,
+    369,
+    371,
+    379,
+    387,
+    389,
+    444,
+    448,
+    454,
+    455,
+    459
+  ],
+  "rejectedCount": 15,
+  "rejectedPages": [
+    {
+      "page": 307,
+      "airport": "OIGG",
+      "reason": "No measured latitude/longitude grid could be resolved"
+    },
+    {
+      "page": 308,
+      "airport": "OIGG",
+      "reason": "No measured latitude/longitude grid could be resolved"
+    },
+    {
+      "page": 323,
+      "airport": "OIGG",
+      "reason": "No measured latitude/longitude grid could be resolved"
+    },
+    {
+      "page": 376,
+      "airport": "OIIE",
+      "reason": "No measured latitude/longitude grid could be resolved"
+    },
+    {
+      "page": 386,
+      "airport": "OIIE",
+      "reason": "No measured latitude/longitude grid could be resolved"
+    },
+    {
+      "page": 388,
+      "airport": "OIIE",
+      "reason": "No measured latitude/longitude grid could be resolved"
+    },
+    {
+      "page": 446,
+      "airport": "OIKB",
+      "reason": "No measured latitude/longitude grid could be resolved"
+    },
+    {
+      "page": 456,
+      "airport": "OIKB",
+      "reason": "No measured latitude/longitude grid could be resolved"
+    },
+    {
+      "page": 457,
+      "airport": "OIKB",
+      "reason": "No measured latitude/longitude grid could be resolved"
+    },
+    {
+      "page": 497,
+      "airport": "OIKK",
+      "reason": "No measured latitude/longitude grid could be resolved"
+    },
+    {
+      "page": 498,
+      "airport": "OIKK",
+      "reason": "No measured latitude/longitude grid could be resolved"
+    },
+    {
+      "page": 499,
+      "airport": "OIKK",
+      "reason": "No measured latitude/longitude grid could be resolved"
+    },
+    {
+      "page": 500,
+      "airport": "OIKK",
+      "reason": "No measured latitude/longitude grid could be resolved"
+    },
+    {
+      "page": 501,
+      "airport": "OIKK",
+      "reason": "No measured latitude/longitude grid could be resolved"
+    },
+    {
+      "page": 502,
+      "airport": "OIKK",
+      "reason": "No measured latitude/longitude grid could be resolved"
+    }
+  ],
+  "Mehrabad_OIII": {
+    "frozen": true,
+    "beforeSHA256": "e90dc2299357a305cca229778ef514ea43eba9e7dd89b02c18bf4ae81849420e",
+    "afterSHA256": "e90dc2299357a305cca229778ef514ea43eba9e7dd89b02c18bf4ae81849420e",
+    "recordCount": 29,
+    "modified": false
+  },
+  "webAndAndroidAssetsIdentical": true,
+  "note": "Source-specific graticule QA and boxed-inset masks. Simulator test candidates only; not certified for actual navigation."
+}
