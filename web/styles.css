@@ -1895,8 +1895,8 @@ body.viewer-fullscreen.jp-chart-drawer-open #jpChartDrawer{
     transition:transform .17s ease,visibility .17s;
     box-shadow:7px 0 26px rgba(0,0,0,.45);
   }
-  #chartsView.jp-airport-picker-open .airport-pane,
-  html.jp-android-phone #chartsView.jp-airport-picker-open .airport-pane{
+  #chartsView.charts-layout.active.jp-airport-picker-open .airport-pane,
+  html.jp-android-phone #chartsView.charts-layout.active.jp-airport-picker-open .airport-pane{
     visibility:visible!important;transform:translate3d(0,0,0)!important;
   }
   #chartsView .airport-pane .airport-list{flex:1;min-height:0;overflow-y:auto!important}
