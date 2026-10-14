@@ -522,14 +522,15 @@ async function loadData(){
 // Never mistake the current bundled AIRAC cycle for the APK version.
 let publishedChartChanges=null;
 const updateBtn=$("#updateCard");
+const isAndroidLocal=()=>!!document.querySelector('meta[name="jeppiran-runtime"][content="android-local-apk"]');
 updateBtn.addEventListener("click",()=>{
-  if(document.querySelector('meta[name="jeppiran-runtime"][content="android-local-apk"]')){
-    // The Android WebView intercepts this non-network scheme and launches
-    // UpdateActivity. A missing handler must not fall back to GitHub Pages.
-    window.location.href="jeppiran://updates";
-    return;
-  }
   route("update");
+  $("#updateNativeBtn").hidden=!isAndroidLocal();
+  $("#updateRefreshBtn").hidden=isAndroidLocal();
+  $("#updateCheckBtn").textContent=isAndroidLocal()?"CHECK ANDROID UPDATES":"CHECK LATEST DATA";
+  updateText("updateAppStatus",isAndroidLocal()
+    ?"This APK opens independently of the website. Use the signed Android updater to install a new app/chart package."
+    :"The web version is served independently from GitHub Pages.");
   refreshWebUpdates();
 });
 function updateText(id,text){const node=document.getElementById(id);if(node)node.textContent=text}
@@ -539,18 +540,21 @@ async function refreshWebUpdates(){
   updateText("updateCycleDates","Terminal validity comes from the published cycle.");
   updateText("updateChangesStatus","Loading published chart changes…");
   try{
+    const native=isAndroidLocal();
     const [mResponse,changesResponse,enrouteResponse]=await Promise.all([
-      fetch("./data/charts-manifest.json?check="+Date.now(),{cache:"no-store"}),
-      fetch("./data/chart-changes.json?check="+Date.now(),{cache:"no-store"}),
-      fetch("./data/enroute-manifest.json?check="+Date.now(),{cache:"no-store"})
+      native?Promise.resolve(null):fetch("./data/charts-manifest.json?check="+Date.now(),{cache:"no-store"}),
+      fetch("./data/chart-changes.json?check="+Date.now(),{cache:native?"default":"no-store"}),
+      fetch("./data/enroute-manifest.json?check="+Date.now(),{cache:native?"default":"no-store"})
     ]);
-    if(!mResponse.ok)throw Error("Latest chart manifest HTTP "+mResponse.status);
-    const latest=await mResponse.json();
+    if(!native&&!mResponse.ok)throw Error("Latest chart manifest HTTP "+mResponse.status);
+    const latest=native?manifest:await mResponse.json();
+    if(!latest)throw Error("Installed chart index unavailable");
     const current=latest.version||latest.cycle||"Unknown";
     const equal=current===installed;
-    updateText("updateCycleStatus",
-      "Installed web charts: "+installed+" · Published: "+current+
-      (equal?" · UP TO DATE":" · A NEW CYCLE IS AVAILABLE"));
+    updateText("updateCycleStatus",native
+      ?"Installed locally: "+installed+" · All airport PDF files are bundled in the APK. Check Android updates for a newer chart cycle."
+      :"Installed web charts: "+installed+" · Published: "+current+
+        (equal?" · UP TO DATE":" · A NEW CYCLE IS AVAILABLE"));
     updateText("updateCycleDates",
       latest.effective_from&&latest.effective_to
       ?"Validity: "+latest.effective_from+" → "+latest.effective_to
@@ -602,7 +606,8 @@ function renderUpdateAirportChanges(){
   }
 }
 $("#updateAirportSelect").addEventListener("change",renderUpdateAirportChanges);
-$("#updateCheckBtn").addEventListener("click",refreshWebUpdates);
+$("#updateNativeBtn").addEventListener("click",()=>{window.location.href="jeppiran://updates"});
+$("#updateCheckBtn").addEventListener("click",()=>{if(isAndroidLocal())window.location.href="jeppiran://updates";else refreshWebUpdates()});
 $("#updateRefreshBtn").addEventListener("click",async()=>{
   updateText("updateAppStatus","Checking web app files…");
   try{await navigator.serviceWorker?.getRegistration()?.then(r=>r?.update())}catch(_){}
