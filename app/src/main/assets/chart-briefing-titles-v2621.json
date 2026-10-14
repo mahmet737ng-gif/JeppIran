@@ -1,0 +1,383 @@
+{
+  "cycle": "2621",
+  "source": "2621.pdf; JEPPIRAN high-resolution visual review of 466 AIRPORT charts (74 actual briefing charts plus one 10-9A correction)",
+  "displayOnly": true,
+  "notice": "UI display labels only. Never mutate chart IDs, canonical chart names/keys, PDF indices, bookmarks, georeferences, or simulator links.",
+  "pages": {
+    "87": {
+      "icao": "OIBK",
+      "chart_number": "10-1P",
+      "name": "Brief: General, Arrival, Departure 1"
+    },
+    "88": {
+      "icao": "OIBK",
+      "chart_number": "10-1P1",
+      "name": "Brief: Departure 2"
+    },
+    "89": {
+      "icao": "OIBK",
+      "chart_number": "10-1P2",
+      "name": "Brief: Departure 3"
+    },
+    "247": {
+      "icao": "OIFM",
+      "chart_number": "10-1P",
+      "name": "Brief: General"
+    },
+    "361": {
+      "icao": "OIIE",
+      "chart_number": "20-1P",
+      "name": "Brief: General, Arrival"
+    },
+    "362": {
+      "icao": "OIIE",
+      "chart_number": "20-1P1",
+      "name": "Brief: Departure 1"
+    },
+    "363": {
+      "icao": "OIIE",
+      "chart_number": "20-1P2",
+      "name": "Brief: Departure 2"
+    },
+    "396": {
+      "icao": "OIII",
+      "chart_number": "10-1P",
+      "name": "Brief: General 1"
+    },
+    "397": {
+      "icao": "OIII",
+      "chart_number": "10-1P1",
+      "name": "Brief: General 2"
+    },
+    "398": {
+      "icao": "OIII",
+      "chart_number": "10-1P2",
+      "name": "Brief: General 3, Arrival 1"
+    },
+    "399": {
+      "icao": "OIII",
+      "chart_number": "10-1P3",
+      "name": "Brief: Arrival 2"
+    },
+    "400": {
+      "icao": "OIII",
+      "chart_number": "10-1P4",
+      "name": "Brief: Departure 1"
+    },
+    "401": {
+      "icao": "OIII",
+      "chart_number": "10-1P5",
+      "name": "Brief: Departure 2"
+    },
+    "402": {
+      "icao": "OIII",
+      "chart_number": "10-1P6",
+      "name": "Brief: Departure 3"
+    },
+    "403": {
+      "icao": "OIII",
+      "chart_number": "10-1P7",
+      "name": "Brief: Departure 4"
+    },
+    "404": {
+      "icao": "OIII",
+      "chart_number": "10-1P8",
+      "name": "Brief: Departure 5"
+    },
+    "405": {
+      "icao": "OIII",
+      "chart_number": "10-1P9",
+      "name": "Brief: Departure 6"
+    },
+    "406": {
+      "icao": "OIII",
+      "chart_number": "10-1P10",
+      "name": "Brief: Departure 7"
+    },
+    "431": {
+      "icao": "OIII",
+      "chart_number": "10-9A",
+      "name": "Additional Runway Information / Hot Spots"
+    },
+    "443": {
+      "icao": "OIKB",
+      "chart_number": "10-1P",
+      "name": "Brief: General, Departure"
+    },
+    "574": {
+      "icao": "OIMM",
+      "chart_number": "10-1P",
+      "name": "Brief: General, Arrival"
+    },
+    "575": {
+      "icao": "OIMM",
+      "chart_number": "10-1P1",
+      "name": "Brief: Departure"
+    },
+    "720": {
+      "icao": "OISS",
+      "chart_number": "10-1P",
+      "name": "Brief: General, Arrival, Departure 1"
+    },
+    "721": {
+      "icao": "OISS",
+      "chart_number": "10-1P1",
+      "name": "Brief: Departure 2"
+    },
+    "1038": {
+      "icao": "OOMS",
+      "chart_number": "10-1P",
+      "name": "Brief: General, Arrival 1"
+    },
+    "1039": {
+      "icao": "OOMS",
+      "chart_number": "10-1P1",
+      "name": "Brief: Arrival 2, Departure"
+    },
+    "1072": {
+      "icao": "LTAC",
+      "chart_number": "10-1P",
+      "name": "Brief: General 1"
+    },
+    "1073": {
+      "icao": "LTAC",
+      "chart_number": "10-1P1",
+      "name": "Brief: General 2"
+    },
+    "1074": {
+      "icao": "LTAC",
+      "chart_number": "10-1P2",
+      "name": "Brief: General 3"
+    },
+    "1075": {
+      "icao": "LTAC",
+      "chart_number": "10-1P3",
+      "name": "Brief: General 4"
+    },
+    "1076": {
+      "icao": "LTAC",
+      "chart_number": "10-1P4",
+      "name": "Brief: Arrival 1"
+    },
+    "1077": {
+      "icao": "LTAC",
+      "chart_number": "10-1P5",
+      "name": "Brief: Arrival 2, Departure 1"
+    },
+    "1078": {
+      "icao": "LTAC",
+      "chart_number": "10-1P6",
+      "name": "Brief: Departure 2"
+    },
+    "1166": {
+      "icao": "LTFM",
+      "chart_number": "30-1P",
+      "name": "Brief: General 1"
+    },
+    "1167": {
+      "icao": "LTFM",
+      "chart_number": "30-1P1",
+      "name": "Brief: General 2"
+    },
+    "1168": {
+      "icao": "LTFM",
+      "chart_number": "30-1P2",
+      "name": "Brief: General 3"
+    },
+    "1169": {
+      "icao": "LTFM",
+      "chart_number": "30-1P3",
+      "name": "Brief: General 4"
+    },
+    "1170": {
+      "icao": "LTFM",
+      "chart_number": "30-1P4",
+      "name": "Brief: General 5, Arrival 1"
+    },
+    "1171": {
+      "icao": "LTFM",
+      "chart_number": "30-1P5",
+      "name": "Brief: Arrival 2, Departure 1"
+    },
+    "1172": {
+      "icao": "LTFM",
+      "chart_number": "30-1P6",
+      "name": "Brief: Departure 2"
+    },
+    "1173": {
+      "icao": "LTFM",
+      "chart_number": "30-1P7",
+      "name": "Brief: Departure 3"
+    },
+    "1359": {
+      "icao": "UGTB",
+      "chart_number": "10-1P",
+      "name": "Brief: General"
+    },
+    "1360": {
+      "icao": "UGTB",
+      "chart_number": "10-1P1",
+      "name": "Brief: Arrival, Departure"
+    },
+    "1384": {
+      "icao": "UGSB",
+      "chart_number": "10-1P",
+      "name": "Brief: General, Arrival, Departure"
+    },
+    "1397": {
+      "icao": "OMDB",
+      "chart_number": "10-1P",
+      "name": "Brief: General 1"
+    },
+    "1398": {
+      "icao": "OMDB",
+      "chart_number": "10-1P1",
+      "name": "Brief: General 2"
+    },
+    "1399": {
+      "icao": "OMDB",
+      "chart_number": "10-1P2",
+      "name": "Brief: General 3"
+    },
+    "1400": {
+      "icao": "OMDB",
+      "chart_number": "10-1P3",
+      "name": "Brief: General 4"
+    },
+    "1401": {
+      "icao": "OMDB",
+      "chart_number": "10-1P4",
+      "name": "Brief: General 5, Arrival 1"
+    },
+    "1402": {
+      "icao": "OMDB",
+      "chart_number": "10-1P5",
+      "name": "Brief: Arrival 2"
+    },
+    "1403": {
+      "icao": "OMDB",
+      "chart_number": "10-1P6",
+      "name": "Brief: Arrival 3"
+    },
+    "1404": {
+      "icao": "OMDB",
+      "chart_number": "10-1P7",
+      "name": "Brief: Arrival 4"
+    },
+    "1405": {
+      "icao": "OMDB",
+      "chart_number": "10-1P8",
+      "name": "Brief: Departure 1"
+    },
+    "1406": {
+      "icao": "OMDB",
+      "chart_number": "10-1P9",
+      "name": "Brief: Departure 2"
+    },
+    "1407": {
+      "icao": "OMDB",
+      "chart_number": "10-1P10",
+      "name": "Brief: Departure 3"
+    },
+    "1453": {
+      "icao": "OMDW",
+      "chart_number": "20-1P",
+      "name": "Brief: General 1"
+    },
+    "1454": {
+      "icao": "OMDW",
+      "chart_number": "20-1P1",
+      "name": "Brief: General 2"
+    },
+    "1455": {
+      "icao": "OMDW",
+      "chart_number": "20-1P2",
+      "name": "Brief: General 3"
+    },
+    "1456": {
+      "icao": "OMDW",
+      "chart_number": "20-1P3",
+      "name": "Brief: General 4"
+    },
+    "1457": {
+      "icao": "OMDW",
+      "chart_number": "20-1P4",
+      "name": "Brief: Arrival 1"
+    },
+    "1458": {
+      "icao": "OMDW",
+      "chart_number": "20-1P5",
+      "name": "Brief: Arrival 2, Departure 1"
+    },
+    "1459": {
+      "icao": "OMDW",
+      "chart_number": "20-1P6",
+      "name": "Brief: Departure 2"
+    },
+    "1491": {
+      "icao": "OTHH",
+      "chart_number": "20-1P",
+      "name": "Brief: General 1"
+    },
+    "1492": {
+      "icao": "OTHH",
+      "chart_number": "20-1P1",
+      "name": "Brief: General 2"
+    },
+    "1493": {
+      "icao": "OTHH",
+      "chart_number": "20-1P2",
+      "name": "Brief: General 3"
+    },
+    "1494": {
+      "icao": "OTHH",
+      "chart_number": "20-1P3",
+      "name": "Brief: General 4"
+    },
+    "1495": {
+      "icao": "OTHH",
+      "chart_number": "20-1P4",
+      "name": "Brief: General 5"
+    },
+    "1496": {
+      "icao": "OTHH",
+      "chart_number": "20-1P5",
+      "name": "Brief: General 6, Arrival 1"
+    },
+    "1497": {
+      "icao": "OTHH",
+      "chart_number": "20-1P6",
+      "name": "Brief: Arrival 2"
+    },
+    "1498": {
+      "icao": "OTHH",
+      "chart_number": "20-1P7",
+      "name": "Brief: Departure 1"
+    },
+    "1499": {
+      "icao": "OTHH",
+      "chart_number": "20-1P8",
+      "name": "Brief: Departure 2"
+    },
+    "1500": {
+      "icao": "OTHH",
+      "chart_number": "20-1P9",
+      "name": "Brief: Departure 3"
+    },
+    "1601": {
+      "icao": "OPIS",
+      "chart_number": "20-1P",
+      "name": "Brief: General, Arrival 1"
+    },
+    "1602": {
+      "icao": "OPIS",
+      "chart_number": "20-1P1",
+      "name": "Brief: Arrival 2"
+    },
+    "1603": {
+      "icao": "OPIS",
+      "chart_number": "20-1P2",
+      "name": "Brief: Departure"
+    }
+  }
+}

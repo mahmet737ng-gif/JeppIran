@@ -476,19 +476,37 @@ async function loadData(){
     Promise.resolve().then(async()=>{
       try{
         const urls=["chart-georef.json","airport-profiles.json","airport-runways.json",
-          "chart-display-names-v2621.json","enroute-manifest.json"];
+          "chart-display-names-v2621.json","chart-briefing-titles-v2621.json","enroute-manifest.json"];
         const optional=await Promise.all(urls.map(name=>
           fetch(RAW_ROOT+name,{cache:"no-store"}).then(r=>r.ok?r.json():null).catch(error=>{
             console.warn("Optional airport asset unavailable:",name,error);return null;
           })
         ));
         if(manifest!==m)return;
-        const [g,profiles,runways,chartNameData,enrouteInfo]=optional;
+        const [g,profiles,runways,chartNameData,briefTitleData,enrouteInfo]=optional;
         georefByPage=buildGeorefIndex(g);
         enrouteValidityManifest=enrouteInfo&&enrouteInfo.schema===1?enrouteInfo:null;
         chartDisplayNamesByPage=(chartNameData&&chartNameData.cycle==="2621"&&chartNameData.pages&&
           charts.some(c=>c.airport==="OIKR"&&Number(c.page)===541))
           ?chartNameData.pages:Object.create(null);
+        // Apply reviewed V2621 airport briefing labels to the UI only.
+        // Check the source chart identity before using any title override.
+        if(briefTitleData?.cycle==="2621" && briefTitleData.displayOnly===true && briefTitleData.pages){
+          const byPage=new Map(charts.map(c=>[String(Number(c.page)),c]));
+          for(const [page,review] of Object.entries(briefTitleData.pages)){
+            const c=byPage.get(page);
+            if(c?.category==="Airport" && c.name.startsWith("AIRPORT BRIEFING") &&
+              c.airport===review.icao && c.chart_number===review.chart_number &&
+              typeof review.name==="string" && review.name.trim()){
+              chartDisplayNamesByPage[page]=review.name;
+            }
+          }
+        }
+        if(selectedChart){
+          const label=$("#viewerChart");
+          if(label)label.textContent=(selectedChart.chart_number?selectedChart.chart_number+" • ":"")+displayChartName(selectedChart);
+          if(jpChartDrawerOpen)refreshFullscreenChartDrawer();
+        }
         airportMetadata=profiles&&profiles.airports&&profiles.cycle===m.version?profiles.airports:{};
         airportRunwayMetadata=runways&&runways.airports&&runways.cycle===m.version?runways.airports:{};
         renderAirports($("#airportSearch").value);

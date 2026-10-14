@@ -493,9 +493,8 @@ class ChartRepository(
         FALLBACK_RELEASE_TAG
 
 
-    // Same-cycle downloaded chart metadata can outlive an APK upgrade.
-    // Only the four explicitly source-reviewed V2621 titles are overlaid.
-    // Future AIRAC cycles and all simulator configuration remain untouched.
+    // Source-reviewed V2621 title overlays are UI-only. Stable chart IDs,
+    // downloaded PDF pages, georeferences and future cycles remain unchanged.
     private val hasReviewed2621Bundle: Boolean by lazy {
         runCatching {
             context.assets.open(MANIFEST_FILE).bufferedReader().use { reader ->
@@ -504,14 +503,40 @@ class ChartRepository(
         }.getOrDefault(false)
     }
 
+    private val briefingTitles2621: JSONObject by lazy {
+        runCatching {
+            context.assets.open("chart-briefing-titles-v2621.json").bufferedReader().use { reader ->
+                val data = JSONObject(reader.readText())
+                if (data.optString("cycle") == "2621" && data.optBoolean("displayOnly")) {
+                    data.optJSONObject("pages") ?: JSONObject()
+                } else {
+                    JSONObject()
+                }
+            }
+        }.getOrDefault(JSONObject())
+    }
+
     private fun visuallyReviewed2621Title(
         page: Int, icao: String, number: String, category: String, old: String
     ): String {
         val active = ChartUpdateStore.activeVersion(context)
-        if (!hasReviewed2621Bundle || (active.isNotBlank() && active != "V2621") ||
-            category != "Approach"
-        ) return old
+        if (!hasReviewed2621Bundle || (active.isNotBlank() && active != "V2621")) return old
 
+        // Only rename an AIRPORT title when source page, ICAO, and chart
+        // number match the visual audit; keep the canonical data unchanged.
+        if (category == "Airport" && old.startsWith("AIRPORT BRIEFING", ignoreCase = true)) {
+            val reviewed = briefingTitles2621.optJSONObject(page.toString())
+            if (reviewed != null &&
+                reviewed.optString("icao") == icao &&
+                reviewed.optString("chart_number") == number
+            ) {
+                val title = reviewed.optString("name")
+                if (title.isNotBlank()) return title
+            }
+        }
+
+        // Keep the four existing, independently reviewed approach overlays.
+        if (category != "Approach") return old
         return when {
             page == 10 && icao == "OIAA" && number == "11-1" &&
                 old in setOf("ILS Z OR LOC Z RWY 32L", "ILS Z RWY 32L") -> "ILS Z RWY 32L"
