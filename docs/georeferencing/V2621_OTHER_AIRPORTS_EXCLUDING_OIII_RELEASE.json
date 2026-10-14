@@ -1,0 +1,52 @@
+{
+  "cycle": "V2621",
+  "sourceSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+  "requestedForGeoReview": 31,
+  "previouslyExcludedWholeSheetNotToScale": 20,
+  "sourceVerifiedCandidates": 13,
+  "newlyReleased": 13,
+  "releasedPages": [
+    309,
+    310,
+    313,
+    365,
+    366,
+    369,
+    371,
+    379,
+    444,
+    448,
+    454,
+    455,
+    459
+  ],
+  "alreadyPresentUnchanged": [],
+  "remainingWithoutNewCalibration": [
+    307,
+    308,
+    323,
+    342,
+    376,
+    386,
+    387,
+    388,
+    389,
+    446,
+    456,
+    457,
+    497,
+    498,
+    499,
+    500,
+    501,
+    502
+  ],
+  "mehrabadOIII": {
+    "georeferenceRecordsPreservedExactly": 29,
+    "new": 0,
+    "removed": 0,
+    "modified": 0
+  },
+  "approvedFor": "JEPPIRAN simulator moving-map flight test only, not actual navigation",
+  "note": "Existing OIII models and all region files retained byte-for-byte; no page or chart outside selected 31 was modified."
+}
