@@ -12,6 +12,8 @@ on:
       - 'scripts/verify_profile_validity_browser.cjs'
       - 'scripts/verify_chart_swipes_browser.cjs'
       - 'scripts/build_offline_manifest.py'
+      - 'scripts/georef_preservation.py'
+      - 'tests/test_georef_preservation.py'
       - 'scripts/build_oiie_*.py'
       - 'scripts/verify_oiie_runway_axes_browser.cjs'
       - 'scripts/build_web_admin_test.py'
@@ -51,6 +53,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v5
+        with:
+          fetch-depth: 2
+
+      - name: Block Web publication if ANY approved georeference disappeared or changed
+        run: |
+          python3 -m unittest discover -s tests -p 'test_georef_preservation.py'
+          python3 scripts/georef_preservation.py --baseline-ref HEAD^
 
       - name: Validate LTFM TAXI connector topology (simulator QA)
         run: node scripts/test_ltfm_unnamed_connectors.cjs
