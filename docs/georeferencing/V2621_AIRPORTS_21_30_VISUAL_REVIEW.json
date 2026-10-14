@@ -1,0 +1,1526 @@
+{
+  "schemaVersion": 1,
+  "chartCycle": "V2621",
+  "sourcePdf": "Iran2621.pdf",
+  "sourceSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+  "input": "docs/georeferencing/V2621_AIRPORTS_21_30_REPORT.json",
+  "sourceWorkflow": "https://github.com/mahmet737ng-gif/JeppIran/actions/runs/38497826692",
+  "screenshotArtifact": "jeppiran-v2621-batch3-53-large-format-page-review",
+  "sourceLargeImageBranch": "audit/v2621-airports-21-30-large-visual",
+  "renderZoom": 2.5,
+  "pagesVisuallyInspected": 53,
+  "informationalNoGraticulePagesExcludedFromScope": 43,
+  "classifications": {
+    "scaled_graticule_main": 15,
+    "whole_sheet_not_to_scale": 20,
+    "multi_region_airport_layout": 3,
+    "scaled_main_with_not_to_scale_insets": 15
+  },
+  "methodology": "Each of the 53 source PDF pages was rendered as a 1530x1980 JPEG and visually examined to determine whether NOT TO SCALE refers to whole sheet (under North arrow), or to an independently dashed boxed inset, and whether a real geographic graticule remains in the main plan. This is a visual screening, NOT an independent spatial calibration.",
+  "strictRule": "Whole-sheet NOT TO SCALE under north arrow excluded. Small dashed inset NOT TO SCALE areas must be masked without discarding otherwise scaled plan. Two-scale airport layouts need independent regions. Never activate new flight aircraft positions on visual opinion alone.",
+  "safety": "Not for actual navigation. Visual inspection is not a meter accuracy claim, source vector control revalidation or flight test. Preserve source-verified existing references.",
+  "pages": [
+    {
+      "page": 307,
+      "airport": "OIGG",
+      "category": "STAR",
+      "chartName": "KOBUB 1N, KOBUB 1P",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_graticule_main",
+      "visualEvidence": "STAR KOBUB: tilted/rotated grid, printed coordinates along chart edge; need grid orientation and independent fixes/RSR check.",
+      "notToScaleLabelBoxesPdfPoints": [],
+      "printedGridLabelCandidates": [
+        "49-30",
+        "50-00"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "recalculate_from_printed_grid_then_validate_navaids",
+      "imageName": "0307_OIGG.jpg"
+    },
+    {
+      "page": 308,
+      "airport": "OIGG",
+      "category": "STAR",
+      "chartName": "KOBUB 1Q",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_graticule_main",
+      "visualEvidence": "STAR KOBUB: contour-scale map with printed grid; measure ticks rather than label centres.",
+      "notToScaleLabelBoxesPdfPoints": [],
+      "printedGridLabelCandidates": [
+        "49-30",
+        "50-00"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "recalculate_from_printed_grid_then_validate_navaids",
+      "imageName": "0308_OIGG.jpg"
+    },
+    {
+      "page": 309,
+      "airport": "OIGG",
+      "category": "STAR",
+      "chartName": "DEDLA 1N, DEDLA 1P, RARTA 1N, RARTA 1P",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_graticule_main",
+      "visualEvidence": "STAR DEDLA/RARTA: graticule visible; extracted scale/rotation conflict requires independent anchors.",
+      "notToScaleLabelBoxesPdfPoints": [],
+      "printedGridLabelCandidates": [
+        "37-00",
+        "49-30",
+        "50-00"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "recalculate_from_printed_grid_then_validate_navaids",
+      "imageName": "0309_OIGG.jpg"
+    },
+    {
+      "page": 310,
+      "airport": "OIGG",
+      "category": "STAR",
+      "chartName": "DEDLA 1Q, RARTA 1Q",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_graticule_main",
+      "visualEvidence": "STAR DEDLA/RARTA: graticule visible; extracted scale/rotation conflict requires independent anchors.",
+      "notToScaleLabelBoxesPdfPoints": [],
+      "printedGridLabelCandidates": [
+        "37-00",
+        "49-30",
+        "50-00"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "recalculate_from_printed_grid_then_validate_navaids",
+      "imageName": "0310_OIGG.jpg"
+    },
+    {
+      "page": 313,
+      "airport": "OIGG",
+      "category": "STAR",
+      "chartName": "RALGO 1N, RALGO 1P",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_graticule_main",
+      "visualEvidence": "STAR RALGO: measured grids appear; check orientation using source navaids.",
+      "notToScaleLabelBoxesPdfPoints": [],
+      "printedGridLabelCandidates": [
+        "37-30",
+        "49-00",
+        "49-30",
+        "50-00"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "recalculate_from_printed_grid_then_validate_navaids",
+      "imageName": "0313_OIGG.jpg"
+    },
+    {
+      "page": 323,
+      "airport": "OIGG",
+      "category": "SID",
+      "chartName": "MODIL 1A, MODIL 1B",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_graticule_main",
+      "visualEvidence": "SID MODIL: map contains printed graticule and geographic aids; grid matching needs repair.",
+      "notToScaleLabelBoxesPdfPoints": [],
+      "printedGridLabelCandidates": [
+        "37-30",
+        "49-30"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "recalculate_from_printed_grid_then_validate_navaids",
+      "imageName": "0323_OIGG.jpg"
+    },
+    {
+      "page": 337,
+      "airport": "OIHH",
+      "category": "STAR",
+      "chartName": "IVELI 1N, IVELI 1P",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "whole_sheet_not_to_scale",
+      "visualEvidence": "STAR with NOT TO SCALE immediately beneath chart north indication; schematic geometry throughout.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          347.16,
+          612.62,
+          403.17,
+          619.94
+        ]
+      ],
+      "printedGridLabelCandidates": [],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": false,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "exclude_from_full_page_georeferencing",
+      "imageName": "0337_OIHH.jpg"
+    },
+    {
+      "page": 338,
+      "airport": "OIHH",
+      "category": "STAR",
+      "chartName": "ORLOG 2N, ORLOG 2P",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "whole_sheet_not_to_scale",
+      "visualEvidence": "STAR with NOT TO SCALE immediately beneath chart north indication; schematic geometry throughout.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          487.94,
+          397.59,
+          495.26,
+          453.6
+        ]
+      ],
+      "printedGridLabelCandidates": [],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": false,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "exclude_from_full_page_georeferencing",
+      "imageName": "0338_OIHH.jpg"
+    },
+    {
+      "page": 339,
+      "airport": "OIHH",
+      "category": "STAR",
+      "chartName": "ORLOG 1Q, ORLOG 1R",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "whole_sheet_not_to_scale",
+      "visualEvidence": "STAR with NOT TO SCALE immediately beneath chart north indication; schematic geometry throughout.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          487.94,
+          397.59,
+          495.26,
+          453.6
+        ]
+      ],
+      "printedGridLabelCandidates": [],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": false,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "exclude_from_full_page_georeferencing",
+      "imageName": "0339_OIHH.jpg"
+    },
+    {
+      "page": 340,
+      "airport": "OIHH",
+      "category": "SID",
+      "chartName": "IVELI 1A, IVELI 1B",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "whole_sheet_not_to_scale",
+      "visualEvidence": "SID with NOT TO SCALE immediately beneath chart north indication; schematic geometry throughout.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          390.84,
+          676.82,
+          446.85,
+          684.14
+        ]
+      ],
+      "printedGridLabelCandidates": [],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": false,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "exclude_from_full_page_georeferencing",
+      "imageName": "0340_OIHH.jpg"
+    },
+    {
+      "page": 341,
+      "airport": "OIHH",
+      "category": "SID",
+      "chartName": "ORLOG 1A, ORLOG 1B, ORLOG 1C",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "whole_sheet_not_to_scale",
+      "visualEvidence": "SID with NOT TO SCALE immediately beneath chart north indication; schematic geometry throughout.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          390.72,
+          654.5,
+          446.73,
+          661.82
+        ]
+      ],
+      "printedGridLabelCandidates": [],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": false,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "exclude_from_full_page_georeferencing",
+      "imageName": "0341_OIHH.jpg"
+    },
+    {
+      "page": 342,
+      "airport": "OIHH",
+      "category": "Airport",
+      "chartName": "Airport Diagram Chart (ADC)",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "multi_region_airport_layout",
+      "visualEvidence": "Hamedan airport ADC has a plotted geographic grid and a distinct inset/detail crop. Calibrate main drawing separately; prevent main calibration from reaching inset.",
+      "notToScaleLabelBoxesPdfPoints": [],
+      "printedGridLabelCandidates": [
+        "34-52",
+        "34-52.1",
+        "34-52.2",
+        "34-52.3",
+        "48-32.2",
+        "48-32.3",
+        "48-32.4",
+        "48-32.5",
+        "48-33",
+        "48-34"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": true,
+      "action": "calibrate_each_independent_map_region_or_fix_affine",
+      "imageName": "0342_OIHH.jpg"
+    },
+    {
+      "page": 350,
+      "airport": "OIHR",
+      "category": "STAR",
+      "chartName": "DEKBA 1N, DEKBA 1P, DEKBA 1Q",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "whole_sheet_not_to_scale",
+      "visualEvidence": "Arak STAR: NOT TO SCALE immediately beneath compass north arrow, despite named geographic fixes.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          327.84,
+          667.1,
+          383.85,
+          674.42
+        ]
+      ],
+      "printedGridLabelCandidates": [],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": false,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "exclude_from_full_page_georeferencing",
+      "imageName": "0350_OIHR.jpg"
+    },
+    {
+      "page": 351,
+      "airport": "OIHR",
+      "category": "STAR",
+      "chartName": "DEKBA 1T",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "whole_sheet_not_to_scale",
+      "visualEvidence": "Arak STAR: NOT TO SCALE immediately beneath compass north arrow; whole plan schematic.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          341.16,
+          655.34,
+          397.17,
+          662.66
+        ]
+      ],
+      "printedGridLabelCandidates": [],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": false,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "exclude_from_full_page_georeferencing",
+      "imageName": "0351_OIHR.jpg"
+    },
+    {
+      "page": 352,
+      "airport": "OIHR",
+      "category": "SID",
+      "chartName": "DEKBA 1B, DEKBA 1A",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "whole_sheet_not_to_scale",
+      "visualEvidence": "Arak SID: rotated schematic, NOT TO SCALE beside north index. Fix latitude labels are NOT mapped coordinates.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          483.26,
+          208.35,
+          490.58,
+          264.36
+        ]
+      ],
+      "printedGridLabelCandidates": [],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": false,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "exclude_from_full_page_georeferencing",
+      "imageName": "0352_OIHR.jpg"
+    },
+    {
+      "page": 353,
+      "airport": "OIHR",
+      "category": "SID",
+      "chartName": "DEKBA 1C, DEKBA 1D",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "whole_sheet_not_to_scale",
+      "visualEvidence": "Arak SID: rotated schematic, NOT TO SCALE beside north index.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          191.9,
+          677.31,
+          199.22,
+          733.32
+        ]
+      ],
+      "printedGridLabelCandidates": [],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": false,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "exclude_from_full_page_georeferencing",
+      "imageName": "0353_OIHR.jpg"
+    },
+    {
+      "page": 365,
+      "airport": "OIIE",
+      "category": "STAR",
+      "chartName": "MIVAK 3R, MUXOR 1V, NAGMO 2R, NAGMO 1V",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_main_with_not_to_scale_insets",
+      "visualEvidence": "Imam STAR MIVAK/MUXOR: large rotated true-grid map, separate dashed NOT TO SCALE MUXOR at one side and MIVAK at the other; mask only dashed boxes.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          333.06,
+          714.48,
+          343.5,
+          773.52
+        ],
+        [
+          408.3,
+          58.2,
+          418.74,
+          117.24
+        ]
+      ],
+      "printedGridLabelCandidates": [
+        "35-30",
+        "36-00",
+        "50-30",
+        "51-00",
+        "51-30",
+        "52-00"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": true,
+      "action": "georeference_main_only_and_mask_NTS_insets",
+      "imageName": "0365_OIIE.jpg"
+    },
+    {
+      "page": 366,
+      "airport": "OIIE",
+      "category": "STAR",
+      "chartName": "PAVET 2R, PAXID 2R, RUS 1V",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_graticule_main",
+      "visualEvidence": "Imam STAR PAVET/PAXID/RUS: full graticule and geography; no printed map-wide NOT TO SCALE. Resolve side-rotated grid orientation.",
+      "notToScaleLabelBoxesPdfPoints": [],
+      "printedGridLabelCandidates": [
+        "35-30",
+        "36-00",
+        "50-00",
+        "50-30",
+        "51-00",
+        "51-30"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "recalculate_from_printed_grid_then_validate_navaids",
+      "imageName": "0366_OIIE.jpg"
+    },
+    {
+      "page": 369,
+      "airport": "OIIE",
+      "category": "STAR",
+      "chartName": "BOXAM 2X, MIVAK 2X",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_main_with_not_to_scale_insets",
+      "visualEvidence": "Imam RNAV STAR BOXAM/MIVAK: main map has scale grid; boxed MIVAK outside-scaled inset is separate and should be masked.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          99.48,
+          373.29,
+          157.01,
+          383.49
+        ]
+      ],
+      "printedGridLabelCandidates": [
+        "35-00",
+        "51-00",
+        "51-30"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": true,
+      "action": "georeference_main_only_and_mask_NTS_insets",
+      "imageName": "0369_OIIE.jpg"
+    },
+    {
+      "page": 371,
+      "airport": "OIIE",
+      "category": "SID",
+      "chartName": "DHN 1E, DHN 1F, KAZ 2C, KAZ 1D",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_graticule_main",
+      "visualEvidence": "Imam SID DHN/KAZ: scale-plan map with geographic axes; check affne fit against IKA/DHN and runway anchors.",
+      "notToScaleLabelBoxesPdfPoints": [],
+      "printedGridLabelCandidates": [
+        "35-00",
+        "35-30",
+        "51-00",
+        "51-30",
+        "52-00",
+        "52-30"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "recalculate_from_printed_grid_then_validate_navaids",
+      "imageName": "0371_OIIE.jpg"
+    },
+    {
+      "page": 376,
+      "airport": "OIIE",
+      "category": "SID",
+      "chartName": "RUS 4C, RUS 4D",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_graticule_main",
+      "visualEvidence": "Imam SID RUS: map has latitude/longitude axes and source IKA/RUS navaids, no NOT TO SCALE; re-extract with DME/radial controls.",
+      "notToScaleLabelBoxesPdfPoints": [],
+      "printedGridLabelCandidates": [
+        "35-30",
+        "51-00"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "recalculate_from_printed_grid_then_validate_navaids",
+      "imageName": "0376_OIIE.jpg"
+    },
+    {
+      "page": 379,
+      "airport": "OIIE",
+      "category": "SID",
+      "chartName": "OIIE/IKA 1 MAY 20 20-3H",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_main_with_not_to_scale_insets",
+      "visualEvidence": "Imam radar SID: rotated full geographic map, two left dashed NOT TO SCALE fix extensions (PAXID/PAROT) should be excluded.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          108.28,
+          562.05,
+          115.24,
+          601.44
+        ]
+      ],
+      "printedGridLabelCandidates": [
+        "34-30",
+        "35-00",
+        "35-30",
+        "36-00",
+        "50-00",
+        "50-30",
+        "51-00",
+        "51-30",
+        "52-00",
+        "52-30"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": true,
+      "action": "georeference_main_only_and_mask_NTS_insets",
+      "imageName": "0379_OIIE.jpg"
+    },
+    {
+      "page": 386,
+      "airport": "OIIE",
+      "category": "Approach",
+      "chartName": "LOC RWY 29R",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_main_with_not_to_scale_insets",
+      "visualEvidence": "Imam ILS/LOC RWY 29R: geographic main plan with two dashed NOT TO SCALE stations RUS and VR; the lower vertical profile is not a map.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          478.56,
+          384.79,
+          527.72,
+          391.15
+        ],
+        [
+          95.16,
+          388.39,
+          144.32,
+          394.75
+        ]
+      ],
+      "printedGridLabelCandidates": [
+        "51-10",
+        "51-20",
+        "51-30"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": true,
+      "action": "georeference_main_only_and_mask_NTS_insets",
+      "imageName": "0386_OIIE.jpg"
+    },
+    {
+      "page": 387,
+      "airport": "OIIE",
+      "category": "Approach",
+      "chartName": "ILS RWY 29R (TEMPORARY PLATE)",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_main_with_not_to_scale_insets",
+      "visualEvidence": "Imam temporary ILS 29R: geographic plan, one dashed NOT TO SCALE VR; large separate missed-approach fix inset lower-left must be excluded; profile is non-plan.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          478.56,
+          422.11,
+          527.72,
+          428.47
+        ]
+      ],
+      "printedGridLabelCandidates": [
+        "35-20",
+        "35-30",
+        "51-10",
+        "51-20",
+        "51-30"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": true,
+      "action": "georeference_main_only_and_mask_NTS_insets",
+      "imageName": "0387_OIIE.jpg"
+    },
+    {
+      "page": 388,
+      "airport": "OIIE",
+      "category": "Approach",
+      "chartName": "ILS RWY 29R",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_main_with_not_to_scale_insets",
+      "visualEvidence": "Imam CAT II ILS 29R: geographic main plan with two dashed NOT TO SCALE RUS and VR. Lower profile excluded from map overlay.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          478.92,
+          384.86,
+          526.02,
+          390.98
+        ],
+        [
+          95.64,
+          388.46,
+          142.74,
+          394.58
+        ]
+      ],
+      "printedGridLabelCandidates": [
+        "51-10",
+        "51-20",
+        "51-30"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": true,
+      "action": "georeference_main_only_and_mask_NTS_insets",
+      "imageName": "0388_OIIE.jpg"
+    },
+    {
+      "page": 389,
+      "airport": "OIIE",
+      "category": "Approach",
+      "chartName": "CAT II ILS RWY 29R (TEMPORARY PLATE)",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_main_with_not_to_scale_insets",
+      "visualEvidence": "Imam temporary CAT II ILS 29R: geographic main plan, right dashed VR and large left missed-approach inset are different-scale; exclude them and profile.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          478.56,
+          422.11,
+          527.72,
+          428.47
+        ]
+      ],
+      "printedGridLabelCandidates": [
+        "35-20",
+        "35-30",
+        "51-10",
+        "51-20",
+        "51-30"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": true,
+      "action": "georeference_main_only_and_mask_NTS_insets",
+      "imageName": "0389_OIIE.jpg"
+    },
+    {
+      "page": 428,
+      "airport": "OIII",
+      "category": "SID",
+      "chartName": "VR 1A, VR 1B",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_graticule_main",
+      "visualEvidence": "Mehrabad VR 1A/B SID: rotated full contour map and printed degree grid; TRN symbol source point available for QA.",
+      "notToScaleLabelBoxesPdfPoints": [],
+      "printedGridLabelCandidates": [
+        "35-30",
+        "51-00",
+        "51-30"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "recalculate_from_printed_grid_then_validate_navaids",
+      "imageName": "0428_OIII.jpg"
+    },
+    {
+      "page": 432,
+      "airport": "OIII",
+      "category": "Airport",
+      "chartName": "HOT SPOTS",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "multi_region_airport_layout",
+      "visualEvidence": "Mehrabad HOT SPOTS/parking diagram, not an ordinary one-transform ADC; main apron parking plus upper-left Apron 5 independent crop with its own graticule.",
+      "notToScaleLabelBoxesPdfPoints": [],
+      "printedGridLabelCandidates": [
+        "35-41.2",
+        "35-41.3",
+        "35-41.4",
+        "35-41.5",
+        "35-41.6",
+        "35-41.7",
+        "35-41.8",
+        "35-41.9",
+        "51-17.9",
+        "51-18",
+        "51-18.7",
+        "51-18.8",
+        "51-18.9",
+        "51-19",
+        "51-19.1",
+        "51-19.2",
+        "51-19.3",
+        "51-19.4",
+        "51-19.5",
+        "51-19.6",
+        "51-19.7",
+        "51-19.8"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": true,
+      "action": "calibrate_each_independent_map_region_or_fix_affine",
+      "imageName": "0432_OIII.jpg"
+    },
+    {
+      "page": 444,
+      "airport": "OIKB",
+      "category": "STAR",
+      "chartName": "ASMUK 1P, ASMUK 1S, ASMUK 1X",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_main_with_not_to_scale_insets",
+      "visualEvidence": "Bandar Abbas ASMUK STAR: graticule main plan; dashed ASMUK NOT TO SCALE corner must be cropped, not entire map.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          135.96,
+          216.45,
+          193.49,
+          226.65
+        ]
+      ],
+      "printedGridLabelCandidates": [
+        "27-00",
+        "27-30",
+        "56-30"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": true,
+      "action": "georeference_main_only_and_mask_NTS_insets",
+      "imageName": "0444_OIKB.jpg"
+    },
+    {
+      "page": 446,
+      "airport": "OIKB",
+      "category": "STAR",
+      "chartName": "DAVEP 1X, TAVNO 1P, TAVNO 1X",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_main_with_not_to_scale_insets",
+      "visualEvidence": "Bandar Abbas TAVNO/DAVEP STAR: gridded full plan; TWO dashed NOT TO SCALE corner fix segments plus separate boxed holding diagram (different scale). Mask all three.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          126.6,
+          261.83,
+          186.2,
+          272.39
+        ],
+        [
+          466.8,
+          481.19,
+          526.4,
+          491.75
+        ]
+      ],
+      "printedGridLabelCandidates": [
+        "27-30",
+        "56-30"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": true,
+      "action": "georeference_main_only_and_mask_NTS_insets",
+      "imageName": "0446_OIKB.jpg"
+    },
+    {
+      "page": 448,
+      "airport": "OIKB",
+      "category": "STAR",
+      "chartName": "MOBON 1P, MOBON 1S, MOBON 1X",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_main_with_not_to_scale_insets",
+      "visualEvidence": "Bandar Abbas MOBON STAR: rotated gridded main plan; dashed NOT TO SCALE MOBON wing/corner only.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          143.1,
+          711.72,
+          153.54,
+          770.76
+        ]
+      ],
+      "printedGridLabelCandidates": [
+        "27-00",
+        "27-30",
+        "56-00",
+        "56-30"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": true,
+      "action": "georeference_main_only_and_mask_NTS_insets",
+      "imageName": "0448_OIKB.jpg"
+    },
+    {
+      "page": 454,
+      "airport": "OIKB",
+      "category": "SID",
+      "chartName": "MOBON 1A, MOBON 1B, MOBON 1D",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_main_with_not_to_scale_insets",
+      "visualEvidence": "Bandar Abbas MOBON SID: rotated gridded main map; small dashed NOT TO SCALE MOBON in lower-left only.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          146.13,
+          675.1,
+          156.33,
+          733.08
+        ]
+      ],
+      "printedGridLabelCandidates": [
+        "27-30",
+        "56-00",
+        "56-30"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": true,
+      "action": "georeference_main_only_and_mask_NTS_insets",
+      "imageName": "0454_OIKB.jpg"
+    },
+    {
+      "page": 455,
+      "airport": "OIKB",
+      "category": "SID",
+      "chartName": "MOBON 1E, MOBON 1F, MOBON 1H",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_main_with_not_to_scale_insets",
+      "visualEvidence": "Bandar Abbas MOBON SID: same independent dashed MOBON inset, main map remains scaled.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          147.25,
+          674.53,
+          157.57,
+          733.08
+        ]
+      ],
+      "printedGridLabelCandidates": [
+        "27-30",
+        "56-00",
+        "56-30"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": true,
+      "action": "georeference_main_only_and_mask_NTS_insets",
+      "imageName": "0455_OIKB.jpg"
+    },
+    {
+      "page": 456,
+      "airport": "OIKB",
+      "category": "SID",
+      "chartName": "TAVNO 1B, TAVNO 1C, TAVNO 1D",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_main_with_not_to_scale_insets",
+      "visualEvidence": "Bandar Abbas TAVNO SID: dashed NOT TO SCALE TAVNO at top of geographic diagram only.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          329.28,
+          194.17,
+          387.83,
+          204.49
+        ]
+      ],
+      "printedGridLabelCandidates": [
+        "27-30",
+        "56-30"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": true,
+      "action": "georeference_main_only_and_mask_NTS_insets",
+      "imageName": "0456_OIKB.jpg"
+    },
+    {
+      "page": 457,
+      "airport": "OIKB",
+      "category": "SID",
+      "chartName": "TAVNO 1F, TAVNO 1G, TAVNO 1H",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_main_with_not_to_scale_insets",
+      "visualEvidence": "Bandar Abbas TAVNO SID: dashed NOT TO SCALE TAVNO at top of geographic diagram only.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          329.4,
+          194.22,
+          388.44,
+          204.66
+        ]
+      ],
+      "printedGridLabelCandidates": [
+        "27-30",
+        "56-30"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": true,
+      "action": "georeference_main_only_and_mask_NTS_insets",
+      "imageName": "0457_OIKB.jpg"
+    },
+    {
+      "page": 459,
+      "airport": "OIKB",
+      "category": "Airport",
+      "chartName": "PARKING STANDS & COORDS",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "multi_region_airport_layout",
+      "visualEvidence": "Bandar Abbas PARKING STANDS & COORDS chart: very clear 27-12.3..27-12.7, 56-22..56-22.3 printed border graticules AND tabulated stand 101-108 INS coordinates. Existing affine fit residual 1.828 PDF points; verify label/tick and local variation before enabling.",
+      "notToScaleLabelBoxesPdfPoints": [],
+      "printedGridLabelCandidates": [
+        "27-12.3",
+        "27-12.4",
+        "27-12.5",
+        "27-12.6",
+        "27-12.7",
+        "56-22",
+        "56-22.1",
+        "56-22.2",
+        "56-22.3"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": true,
+      "action": "calibrate_each_independent_map_region_or_fix_affine",
+      "imageName": "0459_OIKB.jpg"
+    },
+    {
+      "page": 471,
+      "airport": "OIIP",
+      "category": "STAR",
+      "chartName": "MIVAK 1Q, PAVET 1Q",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "whole_sheet_not_to_scale",
+      "visualEvidence": "Payam STAR: NOT TO SCALE directly beneath north arrow, no geographic graticule.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          311.66,
+          643.83,
+          318.98,
+          699.84
+        ]
+      ],
+      "printedGridLabelCandidates": [],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": false,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "exclude_from_full_page_georeferencing",
+      "imageName": "0471_OIIP.jpg"
+    },
+    {
+      "page": 472,
+      "airport": "OIIP",
+      "category": "STAR",
+      "chartName": "PAXID 1Q, RUS 1N, SAV 1P, SAV 1Q",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "whole_sheet_not_to_scale",
+      "visualEvidence": "Payam STAR: NOT TO SCALE directly beneath north arrow, station coordinates provided but map is schematic.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          106.32,
+          321.62,
+          162.33,
+          328.94
+        ]
+      ],
+      "printedGridLabelCandidates": [],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": false,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "exclude_from_full_page_georeferencing",
+      "imageName": "0472_OIIP.jpg"
+    },
+    {
+      "page": 473,
+      "airport": "OIIP",
+      "category": "STAR",
+      "chartName": "RADAL 1N, BOXAM 2N, MUXOR 1N",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "whole_sheet_not_to_scale",
+      "visualEvidence": "Payam STAR: NOT TO SCALE beside north index, map-wide schematic.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          174.55,
+          304.51,
+          182.11,
+          362.76
+        ]
+      ],
+      "printedGridLabelCandidates": [],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": false,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "exclude_from_full_page_georeferencing",
+      "imageName": "0473_OIIP.jpg"
+    },
+    {
+      "page": 474,
+      "airport": "OIIP",
+      "category": "SID",
+      "chartName": "DHN 1G, DHN 1H, NAGMO 1E, NAGMO 1F",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "whole_sheet_not_to_scale",
+      "visualEvidence": "Payam SID: NOT TO SCALE directly beneath north arrow, map-wide schematic.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          138.84,
+          614.18,
+          194.85,
+          621.5
+        ]
+      ],
+      "printedGridLabelCandidates": [],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": false,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "exclude_from_full_page_georeferencing",
+      "imageName": "0474_OIIP.jpg"
+    },
+    {
+      "page": 475,
+      "airport": "OIIP",
+      "category": "SID",
+      "chartName": "PAROT 3E, PAROT 3F, PAXID 2E, PAXID 2F",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "whole_sheet_not_to_scale",
+      "visualEvidence": "Payam SID: NOT TO SCALE directly beneath north arrow; do not interpolate map position from a few printed fixes.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          381.24,
+          328.22,
+          437.25,
+          335.54
+        ]
+      ],
+      "printedGridLabelCandidates": [],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": false,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "exclude_from_full_page_georeferencing",
+      "imageName": "0475_OIIP.jpg"
+    },
+    {
+      "page": 476,
+      "airport": "OIIP",
+      "category": "SID",
+      "chartName": "RUS 2E, RUS 2F",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "whole_sheet_not_to_scale",
+      "visualEvidence": "Payam SID: NOT TO SCALE directly beneath north arrow, map-wide schematic.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          136.32,
+          677.69,
+          188.89,
+          684.53
+        ]
+      ],
+      "printedGridLabelCandidates": [],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": false,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "exclude_from_full_page_georeferencing",
+      "imageName": "0476_OIIP.jpg"
+    },
+    {
+      "page": 477,
+      "airport": "OIIP",
+      "category": "SID",
+      "chartName": "RUS 1G, RUS 1H",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "whole_sheet_not_to_scale",
+      "visualEvidence": "Payam SID: NOT TO SCALE directly beneath north arrow, map-wide schematic.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          128.28,
+          669.02,
+          184.29,
+          676.34
+        ]
+      ],
+      "printedGridLabelCandidates": [],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": false,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "exclude_from_full_page_georeferencing",
+      "imageName": "0477_OIIP.jpg"
+    },
+    {
+      "page": 497,
+      "airport": "OIKK",
+      "category": "SID",
+      "chartName": "ALGUV 1D, ALGUV 1E, ALGUV 2F, ALGUV 1G",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_graticule_main",
+      "visualEvidence": "Kerman ALGUV SID: mapped geographic grid with KER station; sparse axes, re-check graticule tick matching.",
+      "notToScaleLabelBoxesPdfPoints": [],
+      "printedGridLabelCandidates": [
+        "30-30",
+        "57-00"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "recalculate_from_printed_grid_then_validate_navaids",
+      "imageName": "0497_OIKK.jpg"
+    },
+    {
+      "page": 498,
+      "airport": "OIKK",
+      "category": "SID",
+      "chartName": "ALKES 2C, ALKES 1D",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_graticule_main",
+      "visualEvidence": "Kerman ALKES SID: rotated latitude/longitude main plan, KER reference; scale map despite old no-grid flag.",
+      "notToScaleLabelBoxesPdfPoints": [],
+      "printedGridLabelCandidates": [
+        "57-00",
+        "57-30"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "recalculate_from_printed_grid_then_validate_navaids",
+      "imageName": "0498_OIKK.jpg"
+    },
+    {
+      "page": 499,
+      "airport": "OIKK",
+      "category": "SID",
+      "chartName": "ALKUL 2D, ALKUL 1E",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_graticule_main",
+      "visualEvidence": "Kerman ALKUL SID: gridded main plan, KER coordinates useful as independent control.",
+      "notToScaleLabelBoxesPdfPoints": [],
+      "printedGridLabelCandidates": [
+        "30-00",
+        "57-00"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "recalculate_from_printed_grid_then_validate_navaids",
+      "imageName": "0499_OIKK.jpg"
+    },
+    {
+      "page": 500,
+      "airport": "OIKK",
+      "category": "SID",
+      "chartName": "ALMEK 2C, ALMEK 1F",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_graticule_main",
+      "visualEvidence": "Kerman ALMEK SID: gridded plan and geographic reference KER; no NOT TO SCALE label beneath north.",
+      "notToScaleLabelBoxesPdfPoints": [],
+      "printedGridLabelCandidates": [
+        "30-00",
+        "57-00"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "recalculate_from_printed_grid_then_validate_navaids",
+      "imageName": "0500_OIKK.jpg"
+    },
+    {
+      "page": 501,
+      "airport": "OIKK",
+      "category": "SID",
+      "chartName": "ALMOB 1D, ALMOB 1E, ALMOB 2F",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_main_with_not_to_scale_insets",
+      "visualEvidence": "Kerman ALMOB SID: gridded main map plus one dashed NOT TO SCALE ALMOB inset on left; mask only that region.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          93.24,
+          331.02,
+          152.28,
+          341.46
+        ]
+      ],
+      "printedGridLabelCandidates": [
+        "30-30",
+        "56-50"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": true,
+      "action": "georeference_main_only_and_mask_NTS_insets",
+      "imageName": "0501_OIKK.jpg"
+    },
+    {
+      "page": 502,
+      "airport": "OIKK",
+      "category": "SID",
+      "chartName": "GETIS 2C, GETIS 1E",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "scaled_graticule_main",
+      "visualEvidence": "Kerman GETIS SID: rotated printed scale graticule, no NOT TO SCALE map-wide; derive independent KER checks.",
+      "notToScaleLabelBoxesPdfPoints": [],
+      "printedGridLabelCandidates": [
+        "56-30",
+        "57-00"
+      ],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": true,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "recalculate_from_printed_grid_then_validate_navaids",
+      "imageName": "0502_OIKK.jpg"
+    },
+    {
+      "page": 510,
+      "airport": "OIKM",
+      "category": "STAR",
+      "chartName": "ORDAD 1N",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "whole_sheet_not_to_scale",
+      "visualEvidence": "Bam STAR: NOT TO SCALE beneath north-arrow index; do not calibrate whole plan from ORDAD/BAM coordinate pair.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          206.16,
+          562.94,
+          262.17,
+          570.26
+        ]
+      ],
+      "printedGridLabelCandidates": [],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": false,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "exclude_from_full_page_georeferencing",
+      "imageName": "0510_OIKM.jpg"
+    },
+    {
+      "page": 511,
+      "airport": "OIKM",
+      "category": "STAR",
+      "chartName": "ORDAD 1T",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "whole_sheet_not_to_scale",
+      "visualEvidence": "Bam STAR: NOT TO SCALE beneath north-arrow index; all graphic schematic.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          206.16,
+          562.94,
+          262.17,
+          570.26
+        ]
+      ],
+      "printedGridLabelCandidates": [],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": false,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "exclude_from_full_page_georeferencing",
+      "imageName": "0511_OIKM.jpg"
+    },
+    {
+      "page": 512,
+      "airport": "OIKM",
+      "category": "SID",
+      "chartName": "ORDAD 1A, ORDAD 1B, ORDAD 1C",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "whole_sheet_not_to_scale",
+      "visualEvidence": "Bam SID: NOT TO SCALE beneath north-arrow index, even with printed ORDAD, D7, D17.2 positions.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          418.68,
+          394.7,
+          474.69,
+          402.02
+        ]
+      ],
+      "printedGridLabelCandidates": [],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": false,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "exclude_from_full_page_georeferencing",
+      "imageName": "0512_OIKM.jpg"
+    },
+    {
+      "page": 513,
+      "airport": "OIKM",
+      "category": "SID",
+      "chartName": "ORDAD 1D, ORDAD 1E, ORDAD 1F",
+      "visualReviewedAt2_5x": true,
+      "imagePx": [
+        1530,
+        1980
+      ],
+      "visualClassification": "whole_sheet_not_to_scale",
+      "visualEvidence": "Bam SID: NOT TO SCALE beneath north-arrow index; complete scale-less depiction.",
+      "notToScaleLabelBoxesPdfPoints": [
+        [
+          373.92,
+          400.7,
+          429.93,
+          408.02
+        ]
+      ],
+      "printedGridLabelCandidates": [],
+      "georeferenceApproval": "pending_independent_geometric_validation",
+      "mainPlanMayBeCalibrated": false,
+      "masksRequiredBeforeEnablingAircraft": false,
+      "action": "exclude_from_full_page_georeferencing",
+      "imageName": "0513_OIKM.jpg"
+    }
+  ]
+}
