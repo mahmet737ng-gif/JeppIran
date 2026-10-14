@@ -43,6 +43,7 @@ check(o2,35+25.9/60,51+7.5/60,"SALAM_APRON_3");
 check(o3,35+41.4/60,51+19.0/60,"OIII_PARKING_MAIN");
 check(o3,35+41.85/60,51+17.95/60,"OIII_APRON_5_INSET");
 check(o3,35.5,51.2,null);
-assert.ok(app.includes("await loadIndependentAirportRegionGeorefs(m)"));
+assert.ok(app.includes('["region",()=>loadIndependentAirportRegionGeorefs(m)]'),
+  "Airport region loader must be scheduled by the guarded async bootstrap");
 assert.ok(app.includes("resolveGeoRegion(model,Number(lastPosition?.lat),Number(lastPosition?.lon))"));
 console.log("PASS OIIE Cargo/Salam & OIII main/Apron5 independent georef; source Web/Android assets identical; 29 OIII records preserved");
