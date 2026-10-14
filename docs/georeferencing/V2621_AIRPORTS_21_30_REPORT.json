@@ -20,13 +20,15 @@
     "OIKM"
   ],
   "sourcePages": 216,
-  "sourceCalibrated": 116,
-  "newlyPublished": 2,
+  "sourceCalibrated": 120,
+  "newlyPublished": 4,
   "publishedPages": [
-    422,
-    425
+    420,
+    424,
+    426,
+    427
   ],
-  "alreadyPresentOrProtected": 114,
+  "alreadyPresentOrProtected": 116,
   "excluded": [
     {
       "page": 305,
@@ -355,30 +357,6 @@
       "airport": "OIII",
       "reason": "No printed graticule labels",
       "status": "no_graticule"
-    },
-    {
-      "page": 420,
-      "airport": "OIII",
-      "reason": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
-      "status": "not_to_scale"
-    },
-    {
-      "page": 424,
-      "airport": "OIII",
-      "reason": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
-      "status": "not_to_scale"
-    },
-    {
-      "page": 426,
-      "airport": "OIII",
-      "reason": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
-      "status": "not_to_scale"
-    },
-    {
-      "page": 427,
-      "airport": "OIII",
-      "reason": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
-      "status": "not_to_scale"
     },
     {
       "page": 428,
