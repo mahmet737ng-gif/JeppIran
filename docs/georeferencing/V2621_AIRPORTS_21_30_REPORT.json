@@ -20,9 +20,12 @@
     "OIKM"
   ],
   "sourcePages": 216,
-  "sourceCalibrated": 114,
-  "newlyPublished": 0,
-  "publishedPages": [],
+  "sourceCalibrated": 116,
+  "newlyPublished": 2,
+  "publishedPages": [
+    422,
+    425
+  ],
   "alreadyPresentOrProtected": 114,
   "excluded": [
     {
@@ -360,26 +363,10 @@
       "status": "not_to_scale"
     },
     {
-      "page": 422,
-      "airport": "OIII",
-      "sourceFingerprint": "34ffed294be4704b7042cff66f7d284e017000891ec605ef36979f8a678b2ff0",
-      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
-      "status": "review_required_not_to_scale",
-      "candidateMethod": "single_axis_plus_conformal_scale"
-    },
-    {
       "page": 424,
       "airport": "OIII",
       "reason": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
       "status": "not_to_scale"
-    },
-    {
-      "page": 425,
-      "airport": "OIII",
-      "sourceFingerprint": "366ee22bc4265c9dc4f0ff983b8d274880eb22cab5e6e9b129a2965cff03adc2",
-      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
-      "status": "review_required_not_to_scale",
-      "candidateMethod": "paired_printed_graticule_vector_ticks"
     },
     {
       "page": 426,
