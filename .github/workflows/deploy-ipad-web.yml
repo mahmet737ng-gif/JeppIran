@@ -61,7 +61,7 @@ jobs:
       - name: Enforce owner-locked iPad chart gestures and appearance
         run: node --test tests/ipad-chart-ui-locked-v2621.test.cjs
 
-      - name: Check direct HOME navigation without altering locked chart gestures
+      - name: Check Charts Back navigation and fullscreen Home removal
         run: node --test tests/home-navigation-v2621.test.cjs
 
       - name: Verify airport UTC/local clocks and terminal/enroute currency safeguards

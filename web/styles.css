@@ -2022,3 +2022,18 @@ body.viewer-fullscreen #jpHomeBtn.jp-home-shortcut{
   min-height:48px;height:48px;z-index:10031;
 }
 body.viewer-fullscreen.jp-chart-drawer-open #jpHomeBtn{opacity:0;pointer-events:none}
+
+
+/* Restore original Charts layout: an in-header Back only, never floating HOME in charts/fullscreen. */
+#chartsView .airport-pane .pane-head{position:relative}
+#chartsView .pane-head h2{padding-right:68px;box-sizing:border-box}
+#chartsView #chartsBackBtn.jp-charts-back{position:absolute;right:10px;top:17px;z-index:2;padding:6px 7px;border:1px solid #275d7f;border-radius:7px;background:#092138;color:#c4e8ff;font:700 11px/1.2 system-ui,sans-serif;white-space:nowrap;cursor:pointer}
+#chartsView #chartsBackBtn:focus-visible,#chartsBackMobileBtn:focus-visible{outline:2px solid #40ccff;outline-offset:2px}
+.jp-charts-back-mobile{display:none}
+body:has(#chartsView.active) #jpHomeBtn.jp-home-shortcut,body.viewer-fullscreen #jpHomeBtn.jp-home-shortcut{display:none!important}
+@media(max-width:749px){
+  #chartsView .viewer-pane{position:relative}
+  #chartsView #chartsBackMobileBtn.jp-charts-back-mobile{display:block;position:absolute;right:9px;top:5px;z-index:5;height:35px;padding:5px 10px;border:1px solid #285f89;border-radius:8px;background:#0a2a47;color:#e4f5ff;font:700 12px system-ui,sans-serif;cursor:pointer}
+  #chartsView #airportPickerBtn{padding-right:90px!important}
+  #chartsView.chart-open #chartsBackMobileBtn,body.viewer-fullscreen #chartsBackMobileBtn{display:none!important}
+}

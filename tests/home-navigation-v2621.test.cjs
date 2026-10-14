@@ -4,29 +4,27 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const read=p=>fs.readFileSync(path.join(__dirname,'..',p),'utf8');
-
-test('HOME shortcut is available outside Home without replacing chart controls',()=>{
+test('original Charts layout keeps just a Back control in its own header and mobile profile',()=>{
   const html=read('web/index.html');
-  assert.match(html,/<button id="jpHomeBtn"[^>]*data-route="home"[\s\S]*?aria-label="Return to JEPPIRAN Home"/);
-  assert.match(html,/id="jpChartMenuBtn"|id="fullscreenExitBtn"/);
-  for(const id of ['airportPickerBtn','prevChartBtn','nextChartBtn','chartTaxiBtn','fullscreenBtn'])assert.ok(html.includes('id="'+id+'"'),id);
-  assert.match(html,/homeButton.hidden=el.id==="homeView"/);
+  assert.match(html,/id="chartsBackBtn"[^>]*class="back-btn jp-charts-back"/);
+  assert.match(html,/id="chartsBackMobileBtn"/);
+  for(const id of ['airportPickerBtn','prevChartBtn','nextChartBtn','chartTaxiBtn','fullscreenBtn','jpChartMenuBtn'])assert.ok(html.includes('id="'+id+'"'),id);
 });
-test('the route always goes straight home and exits native fullscreen',()=>{
+test('Back safely returns directly home, never leaves the offline origin',()=>{
   const js=read('web/app.js');
   assert.match(js,/async function returnToJeppiranHome\(\)/);
   assert.match(js,/await exitViewerFullscreen\(true\)/);
-  assert.match(js,/if\(target==="home"\)\{void returnToJeppiranHome\(\);return\}/);
+  assert.match(js,/\["chartsBackBtn","chartsBackMobileBtn"\]/);
   assert.match(js,/route\("home"\)/);
-  assert.match(js,/homeButton.hidden=el.id==="homeView"/);
-  assert.doesNotMatch(js.slice(js.indexOf('async function returnToJeppiranHome'),js.indexOf('$$("[data-route]")')),/history\.back\(/);
+  const fn=js.slice(js.indexOf('async function returnToJeppiranHome'),js.indexOf('$$("[data-route]")'));
+  assert.doesNotMatch(fn,/history\.back\(/);
 });
-test('HOME stays separate from chart gestures, with fullscreen drawer not obstructed',()=>{
-  const css=read('web/styles.css');
-  const drawer=read('web/fullscreen-chart-drawer.css');
-  assert.match(css,/#jpHomeBtn\[hidden\]\{display:none!important\}/);
-  assert.match(css,/body\.viewer-fullscreen #jpHomeBtn\.jp-home-shortcut/);
-  assert.match(css,/body\.viewer-fullscreen\.jp-chart-drawer-open #jpHomeBtn/);
-  assert.match(drawer,/body\.viewer-fullscreen #jpChartMenuBtn/);
-  assert.match(read('web/service-worker.js'),/jeppiran-pwa-2621-direct-home-r1/);
+test('HOME is hidden on Charts and fullscreen without affecting owner-locked gestures',()=>{
+  const html=read('web/index.html'),js=read('web/app.js'),css=read('web/styles.css');
+  const guard='homeButton.hidden=el.id==="homeView"||el.id==="chartsView";';
+  assert.ok(html.includes(guard));assert.ok(js.includes(guard));
+  assert.match(css,/body\.viewer-fullscreen #jpHomeBtn\.jp-home-shortcut\{display:none!important\}/);
+  assert.match(css,/#chartsView\.chart-open #chartsBackMobileBtn,body\.viewer-fullscreen #chartsBackMobileBtn\{display:none!important\}/);
+  assert.match(read('web/fullscreen-chart-drawer.css'),/body\.viewer-fullscreen #jpChartMenuBtn/);
+  assert.match(read('web/service-worker.js'),/jeppiran-pwa-2621-chart-back-r1/);
 });

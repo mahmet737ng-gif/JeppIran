@@ -328,7 +328,7 @@ function renderRoute(name){
   document.body.classList.remove("viewer-fullscreen");
   const el=$("#"+name+"View")||$("#homeView"); el.classList.add("active");
   const homeButton=$("#jpHomeBtn");
-  if(homeButton)homeButton.hidden=el.id==="homeView";
+  if(homeButton)homeButton.hidden=el.id==="homeView"||el.id==="chartsView";
   if(name==="charts"&&selectedChart)showChartMetar(true,true);
   // When the app is being served by the FSX Local Web bridge, entering the
   // simulator page must always restore FSX as the active source instead of
@@ -364,7 +364,8 @@ async function returnToJeppiranHome(){
     route("home");
   }
 }
-$$("[data-route]").forEach(b=>b.addEventListener("click",e=>{
+["chartsBackBtn","chartsBackMobileBtn"].forEach(id=>{const b=$("#"+id);if(b)b.addEventListener("click",()=>{void returnToJeppiranHome()})});
+$("[data-route]").forEach(b=>b.addEventListener("click",e=>{
   e.preventDefault();
   const target=b.dataset.route;
   // Keep navigation inside the current JEPPIRAN origin. In Local FSX mode,
