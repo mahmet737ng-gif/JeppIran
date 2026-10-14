@@ -83,7 +83,7 @@ def source_vector_model(page,p,row,anchor,fp):
   # Correct for rotated sheet; (lon->Y,lat->X) orientation determinant
   # reverses the normal handedness of unrotated (lon->X,lat->Y).
   derived_sign=measured_sign if singleton['pixelAxis']!=measured[0]['pixelAxis'] and measured[0]['pixelAxis']=='y' else -measured_sign
-  if measured[0]['pixelAxis']=='x' and singleton['pixelAxis']=='y':derived_sign=measured_sign
+  if measured_name=='latitude' and measured[0]['pixelAxis']=='x' and singleton['pixelAxis']=='y':derived_sign=measured_sign
   assert singleton['pixelAxis']!=measured[0]['pixelAxis']
   candidates=[]
   for step in ((.5/60,.25/60) if p==342 else ((5/60,2/60,1/60,.5/60) if p in (387,389) else (10/60,5/60,2/60,1/60,.5/60,.25/60))):
