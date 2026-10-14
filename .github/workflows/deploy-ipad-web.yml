@@ -1,4 +1,5 @@
 name: Deploy iPad Web App
+# V2621 additive non-OIII georeference refresh. Preserve every OIII/Mehrabad reference and locked chart UI.
 
 on:
   workflow_dispatch:
