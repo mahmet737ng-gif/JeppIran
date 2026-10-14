@@ -1,0 +1,24 @@
+name: Protect Existing JEPPIRAN Georeferences
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'app/src/main/assets/chart-georef.json'
+      - 'web/data/chart-georef.json'
+      - 'scripts/*georef*.py'
+      - 'tests/test_georef_preservation.py'
+      - '.github/workflows/protect-existing-georeferences.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  immutability:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 2
+      - name: Never-delete regression tests
+        run: python3 -m unittest discover -s tests -p test_georef_preservation.py -v
+      - name: No georeference deletion or replacement since preceding commit
+        run: python3 scripts/georef_preservation.py --baseline-ref HEAD^
