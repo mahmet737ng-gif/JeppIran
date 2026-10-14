@@ -1,0 +1,83 @@
+{
+  "engine": "JEPPIRAN_GEOREF_V2",
+  "cycle": "V2621",
+  "airport": "OICK",
+  "sourcePdf": "Iran2621.pdf",
+  "sourceSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+  "qaWorkflowRun": "https://github.com/mahmet737ng-gif/JeppIran/actions/runs/38648712632",
+  "scope": "Simulator geometric source QA only; not approved for actual navigation",
+  "existingReferences": {
+    "pages": [
+      220,
+      224,
+      225,
+      226
+    ],
+    "preservedExactly": true,
+    "sourceFingerprintsVerified": true
+  },
+  "newCandidates": {
+    "pages": [
+      218,
+      219,
+      221,
+      223
+    ],
+    "regionCount": 5,
+    "results": [
+      {
+        "page": 218,
+        "region": "main_rotated",
+        "controlPoints": 6,
+        "sourceTickMaxResidualPdfPoints": 0.04,
+        "independentNavaid": "KRD DVOR/DME",
+        "independentNavaidResidualPdfPoints": 0.47095
+      },
+      {
+        "page": 219,
+        "region": "main_rotated",
+        "controlPoints": 6,
+        "sourceTickMaxResidualPdfPoints": 0,
+        "independentNavaid": "KRD DVOR/DME",
+        "independentNavaidResidualPdfPoints": 0.49784
+      },
+      {
+        "page": 221,
+        "region": "main_adc",
+        "controlPoints": 6,
+        "sourceTickMaxResidualPdfPoints": 0.04,
+        "independentNavaid": "KRD DVOR/DME",
+        "independentNavaidResidualPdfPoints": 0.28945,
+        "mask": "independently scaled parking inset"
+      },
+      {
+        "page": 221,
+        "region": "parking_apron_inset",
+        "controlPoints": 4,
+        "sourceTickMaxResidualPdfPoints": 0,
+        "independentNavaid": null,
+        "independentNavaidResidualPdfPoints": null
+      },
+      {
+        "page": 223,
+        "region": "main_ils_29",
+        "controlPoints": 4,
+        "sourceTickMaxResidualPdfPoints": 0,
+        "independentNavaid": "KRD DVOR/DME",
+        "independentNavaidResidualPdfPoints": 0.11311,
+        "mask": "NOT TO SCALE inset"
+      }
+    ]
+  },
+  "tests": {
+    "syntheticUnitTests": 7,
+    "syntheticTestsPassed": true,
+    "sourceGridVectorTickValidation": true,
+    "sourceShaValidated": true,
+    "protectedWebAndroidAssetsIdentical": true,
+    "regionalAssertionsPassed": true,
+    "productionGeorefModified": false
+  },
+  "sourceEvidence": "Printed graticule vectors from original Jeppesen PDF, KRD WGS84 N33 26 03.1 E048 17 30.7 from Iran AIP ENR 4.1, independently measured PDF source KRD symbols.",
+  "deployment": "Not deployed as active Web/Android georeferences. Simulator visual verification and multi-region runtime support required before enabling."
+}
