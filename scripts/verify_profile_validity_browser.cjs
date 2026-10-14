@@ -58,6 +58,21 @@ async function waitForServer(){
   assert.ok(positions.periodTop>=positions.clockBottom-2,"dates physically below clock");
   assert.ok(positions.periodWidth>=100,"date range has visible width");
   assert.ok(positions.headerBottom>=positions.periodTop,"range is in the header");
+  // Owner-requested sidebar alignment: HOME immediately after an inset Charts title.
+  const sidebarHeader=await page.evaluate(()=>{
+    const pane=document.querySelector("#chartsView .airport-pane").getBoundingClientRect();
+    const title=document.querySelector("#chartsView .airport-pane .pane-head h2").getBoundingClientRect();
+    const home=document.getElementById("chartsBackBtn").getBoundingClientRect();
+    return {paneLeft:pane.left,paneRight:pane.right,titleLeft:title.left,titleRight:title.right,
+      homeLeft:home.left,homeRight:home.right,homeWidth:home.width};
+  });
+  assert.ok(sidebarHeader.titleLeft>=sidebarHeader.paneLeft+14,
+    "Charts header title needs a small left inset: "+JSON.stringify(sidebarHeader));
+  assert.ok(sidebarHeader.homeLeft>=sidebarHeader.titleRight+4&&
+    sidebarHeader.homeLeft<=sidebarHeader.titleRight+24,
+    "HOME button must sit immediately beside Charts title: "+JSON.stringify(sidebarHeader));
+  assert.ok(sidebarHeader.homeRight<=sidebarHeader.paneRight-3,
+    "HOME button must fit within the airport pane: "+JSON.stringify(sidebarHeader));
 
   // Critical regression: the old QA saw only the header, while a phone
   // could show a completely empty airport chart body. Exercise the actual
@@ -105,6 +120,15 @@ async function waitForServer(){
   await page.waitForTimeout(220);
   const opened=await page.evaluate(()=>document.querySelector("#chartsView .airport-pane").getBoundingClientRect().right);
   assert.ok(opened>=200,"airport drawer can be opened to switch airports: "+opened);
+  const mobileHeader=await page.evaluate(()=>{
+    const title=document.querySelector("#chartsView .airport-pane .pane-head h2").getBoundingClientRect();
+    const home=document.getElementById("chartsBackBtn").getBoundingClientRect();
+    return {titleRight:title.right,homeLeft:home.left,homeRight:home.right,
+      paneRight:document.querySelector("#chartsView .airport-pane").getBoundingClientRect().right};
+  });
+  assert.ok(mobileHeader.homeLeft>=mobileHeader.titleRight+3&&
+    mobileHeader.homeRight<=mobileHeader.paneRight,
+    "Mobile airport drawer must keep HOME next to Charts: "+JSON.stringify(mobileHeader));
   await page.locator("#airportPickerCloseBtn").click();
   await page.waitForTimeout(220);
   const closedAgain=await page.evaluate(()=>document.querySelector("#chartsView .airport-pane").getBoundingClientRect().right);

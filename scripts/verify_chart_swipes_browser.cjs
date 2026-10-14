@@ -65,18 +65,18 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   const second=await page.locator("#viewerChart").innerText();
   assert.notEqual(second,first,"a completed swipe must select the adjacent PDF");
   console.log("PASS PDF transition follows finger, reverses without navigating, commits next chart only on release.");
-  // Android keeps a single Back control on the ordinary Charts profile,
+  // Android keeps HOME navigation in the Charts header (and closed-drawer profile),
   // but fullscreen remains clean; the system Back gesture still works.
   await page.setViewportSize({width:390,height:844});
   await page.evaluate(()=>document.documentElement.classList.add("jp-android-phone"));
   await page.addStyleTag({content:require("node:fs").readFileSync(
     require("node:path").join("app","src","main","assets","phone-layout.css"),"utf8")});
   assert.equal(await page.locator("#chartsBackBtn").count(),1,
-    "Charts profile retains the requested Back control");
+    "Charts airport header retains the requested HOME control");
   assert.equal(await page.locator("#chartsBackMobileBtn").count(),1,
-    "Phone profile retains one responsive Back control");
+    "Phone profile retains a responsive HOME control");
   assert.equal(await page.locator("#chartsBackMobileBtn").isVisible(),false,
-    "When a chart is open, no Back button may cover its fullscreen workspace");
+    "When a chart is open, no HOME button may cover its fullscreen workspace");
   assert.equal(await page.locator("#prevChartBtn").count(),1,
     "Keep the approved chart Prev/Next toolbar even when gestures are supported");
   assert.equal(await page.locator("#nextChartBtn").count(),1);
@@ -92,7 +92,7 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   assert.equal(await page.evaluate(()=>window.jeppiranAndroidBack()),true,
     "Second Android Back gesture should return to Home");
   assert.equal(await page.locator("#homeView.active").isVisible(),true);
-  console.log("PASS Android screen-edge Back: chart → profile → Home; Charts has Back without a fullscreen overlay.");
+  console.log("PASS Android screen-edge Back: chart → profile → Home; Charts has HOME without a fullscreen overlay.");
 
  }finally{if(browser)await browser.close();child.kill("SIGTERM");}
 })().catch(e=>{console.error(e);process.exitCode=1});

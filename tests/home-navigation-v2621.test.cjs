@@ -4,9 +4,10 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const read=p=>fs.readFileSync(path.join(__dirname,'..',p),'utf8');
-test('original Charts layout keeps just a Back control in its own header and mobile profile',()=>{
+test('Charts title is inset with HOME immediately beside it; mobile return remains available',()=>{
   const html=read('web/index.html');
-  assert.match(html,/id="chartsBackBtn"[^>]*class="back-btn jp-charts-back"/);
+  assert.match(html,/<h2>Charts<\/h2><button id="chartsBackBtn"[^>]*aria-label="Go to JEPPIRAN Home"[^>]*>[\s\S]*?<span>HOME<\/span><\/button>/);
+  assert.doesNotMatch(html,/id="chartsBackBtn"[^>]*>← Back/);
   assert.match(html,/id="chartsBackMobileBtn"/);
   for(const id of ['airportPickerBtn','prevChartBtn','nextChartBtn','chartTaxiBtn','fullscreenBtn','fullscreenExitBtn'])assert.ok(html.includes('id="'+id+'"'),id);
 });
@@ -27,7 +28,7 @@ test('HOME is hidden on Charts and fullscreen without affecting owner-locked ges
   assert.match(css,/body\.viewer-fullscreen #jpHomeBtn\.jp-home-shortcut\{display:none!important\}/);
   assert.match(css,/#chartsView\.chart-open #chartsBackMobileBtn,body\.viewer-fullscreen #chartsBackMobileBtn\{display:none!important\}/);
   assert.match(read('web/fullscreen-chart-drawer.css'),/body\.viewer-fullscreen #jpChartMenuBtn/);
-  assert.match(read('web/service-worker.js'),/jeppiran-pwa-2621-profile-sidebar-r1/);
+  assert.match(read('web/service-worker.js'),/jeppiran-pwa-2621-header-home-r1/);
 });
 
 test('airport chart categories remain in the sidebar and NEVER occupy profile Overview',()=>{
@@ -38,4 +39,13 @@ test('airport chart categories remain in the sidebar and NEVER occupy profile Ov
   assert.match(js,/\["STAR","SID","Airport","Approach"\]\.forEach/);
   assert.match(js,/class="profile-heading"/);
   assert.match(js,/id="profileWeather"/);
+});
+
+test('Charts header title precedes adjacent HOME in flex layout, never in fullscreen',()=>{
+  const css=read('web/styles.css'),html=read('web/index.html');
+  assert.match(css,/#chartsView \.airport-pane \.pane-head\{[\s\S]*?flex-flow:row nowrap/);
+  assert.match(css,/#chartsView \.airport-pane \.pane-head h2\{[\s\S]*?order:0/);
+  assert.match(css,/#chartsView #chartsBackBtn\.jp-charts-back\{[\s\S]*?position:static/);
+  assert.match(css,/body\.viewer-fullscreen #chartsView #chartsBackBtn\{display:none!important\}/);
+  assert.match(html,/id="chartsBackMobileBtn"[^>]*aria-label="Go to JEPPIRAN Home"/);
 });
