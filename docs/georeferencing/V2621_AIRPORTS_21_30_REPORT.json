@@ -1,0 +1,660 @@
+{
+  "source": {
+    "file": "Iran2621.pdf",
+    "sha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+    "pageCount": 1654,
+    "chartDataVersion": "V2621",
+    "cycle": "2621"
+  },
+  "batch": "airports_21_30",
+  "airportOrder": [
+    "OIGG",
+    "OIHH",
+    "OIHR",
+    "OIIE",
+    "OIII",
+    "OIKB",
+    "OIIP",
+    "OIKJ",
+    "OIKK",
+    "OIKM"
+  ],
+  "sourcePages": 216,
+  "sourceCalibrated": 114,
+  "newlyPublished": 0,
+  "publishedPages": [],
+  "alreadyPresentOrProtected": 114,
+  "excluded": [
+    {
+      "page": 305,
+      "airport": "OIGG",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 306,
+      "airport": "OIGG",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 307,
+      "airport": "OIGG",
+      "reason": "No measured latitude/longitude grid could be resolved",
+      "status": "needs_additional_control_points_or_review"
+    },
+    {
+      "page": 308,
+      "airport": "OIGG",
+      "reason": "No measured latitude/longitude grid could be resolved",
+      "status": "needs_additional_control_points_or_review"
+    },
+    {
+      "page": 309,
+      "airport": "OIGG",
+      "reason": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
+      "status": "needs_additional_control_points_or_review"
+    },
+    {
+      "page": 310,
+      "airport": "OIGG",
+      "reason": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
+      "status": "needs_additional_control_points_or_review"
+    },
+    {
+      "page": 313,
+      "airport": "OIGG",
+      "reason": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
+      "status": "needs_additional_control_points_or_review"
+    },
+    {
+      "page": 323,
+      "airport": "OIGG",
+      "reason": "No measured latitude/longitude grid could be resolved",
+      "status": "needs_additional_control_points_or_review"
+    },
+    {
+      "page": 325,
+      "airport": "OIGG",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 336,
+      "airport": "OIHH",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 337,
+      "airport": "OIHH",
+      "reason": "NOT TO SCALE printed on source page",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 338,
+      "airport": "OIHH",
+      "reason": "NOT TO SCALE printed on source page",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 339,
+      "airport": "OIHH",
+      "reason": "NOT TO SCALE printed on source page",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 340,
+      "airport": "OIHH",
+      "reason": "NOT TO SCALE printed on source page",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 341,
+      "airport": "OIHH",
+      "reason": "NOT TO SCALE printed on source page",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 342,
+      "airport": "OIHH",
+      "reason": "Conformal scale derivation falls outside the plan view",
+      "status": "needs_additional_control_points_or_review"
+    },
+    {
+      "page": 343,
+      "airport": "OIHH",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 349,
+      "airport": "OIHR",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 350,
+      "airport": "OIHR",
+      "reason": "NOT TO SCALE printed on source page",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 351,
+      "airport": "OIHR",
+      "reason": "NOT TO SCALE printed on source page",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 352,
+      "airport": "OIHR",
+      "reason": "NOT TO SCALE printed on source page",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 353,
+      "airport": "OIHR",
+      "reason": "NOT TO SCALE printed on source page",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 359,
+      "airport": "OIIE",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 360,
+      "airport": "OIIE",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 361,
+      "airport": "OIIE",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 362,
+      "airport": "OIIE",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 363,
+      "airport": "OIIE",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 365,
+      "airport": "OIIE",
+      "sourceFingerprint": "9b443ed03a9cf7412ffa25a88a9f01f0873010b0455a409bbf2d292215ee1da2",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
+    },
+    {
+      "page": 366,
+      "airport": "OIIE",
+      "reason": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
+      "status": "needs_additional_control_points_or_review"
+    },
+    {
+      "page": 369,
+      "airport": "OIIE",
+      "sourceFingerprint": "bad198e98d4c388d3d0a3a442544c833936ba51dfa7a496ea9bdcaffdc6f87cf",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
+    },
+    {
+      "page": 371,
+      "airport": "OIIE",
+      "reason": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
+      "status": "needs_additional_control_points_or_review"
+    },
+    {
+      "page": 376,
+      "airport": "OIIE",
+      "reason": "No measured latitude/longitude grid could be resolved",
+      "status": "needs_additional_control_points_or_review"
+    },
+    {
+      "page": 379,
+      "airport": "OIIE",
+      "sourceFingerprint": "40db6dbfb7cd766dbf6e17c1f016de61d601fb129be5e4447962875eceb68998",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
+    },
+    {
+      "page": 381,
+      "airport": "OIIE",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 384,
+      "airport": "OIIE",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 385,
+      "airport": "OIIE",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 386,
+      "airport": "OIIE",
+      "reason": "No measured latitude/longitude grid could be resolved",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 387,
+      "airport": "OIIE",
+      "sourceFingerprint": "49ef0abf6d67460b1e9ffd4a358e1ec53a116af7eea47a6ffef3ac63a312f409",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
+    },
+    {
+      "page": 388,
+      "airport": "OIIE",
+      "reason": "No measured latitude/longitude grid could be resolved",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 389,
+      "airport": "OIIE",
+      "sourceFingerprint": "43d807200a0ec930449c9676cbb4a8b4289af4d5e1453b0f130df0774b148ac1",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
+    },
+    {
+      "page": 394,
+      "airport": "OIII",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 395,
+      "airport": "OIII",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 396,
+      "airport": "OIII",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 397,
+      "airport": "OIII",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 398,
+      "airport": "OIII",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 399,
+      "airport": "OIII",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 400,
+      "airport": "OIII",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 401,
+      "airport": "OIII",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 402,
+      "airport": "OIII",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 403,
+      "airport": "OIII",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 404,
+      "airport": "OIII",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 405,
+      "airport": "OIII",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 406,
+      "airport": "OIII",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 420,
+      "airport": "OIII",
+      "reason": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 422,
+      "airport": "OIII",
+      "sourceFingerprint": "34ffed294be4704b7042cff66f7d284e017000891ec605ef36979f8a678b2ff0",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
+    },
+    {
+      "page": 424,
+      "airport": "OIII",
+      "reason": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 425,
+      "airport": "OIII",
+      "sourceFingerprint": "366ee22bc4265c9dc4f0ff983b8d274880eb22cab5e6e9b129a2965cff03adc2",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
+    },
+    {
+      "page": 426,
+      "airport": "OIII",
+      "reason": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 427,
+      "airport": "OIII",
+      "reason": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 428,
+      "airport": "OIII",
+      "reason": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
+      "status": "needs_additional_control_points_or_review"
+    },
+    {
+      "page": 431,
+      "airport": "OIII",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 432,
+      "airport": "OIII",
+      "reason": "No measured latitude/longitude grid could be resolved",
+      "status": "needs_additional_control_points_or_review"
+    },
+    {
+      "page": 433,
+      "airport": "OIII",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 434,
+      "airport": "OIII",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 441,
+      "airport": "OIKB",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 442,
+      "airport": "OIKB",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 443,
+      "airport": "OIKB",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 444,
+      "airport": "OIKB",
+      "sourceFingerprint": "413aae1768691e41032471897a5effded6d0dabc34474826ddd77caf770e5c98",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "single_axis_plus_conformal_scale"
+    },
+    {
+      "page": 446,
+      "airport": "OIKB",
+      "reason": "No measured latitude/longitude grid could be resolved",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 448,
+      "airport": "OIKB",
+      "sourceFingerprint": "0fb66f27a19963a353ef2956f4d46b380eba79911a4d40aaad792df7290d8f2d",
+      "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+      "status": "review_required_not_to_scale",
+      "candidateMethod": "paired_printed_graticule_vector_ticks"
+    },
+    {
+      "page": 454,
+      "airport": "OIKB",
+      "reason": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 455,
+      "airport": "OIKB",
+      "reason": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 456,
+      "airport": "OIKB",
+      "reason": "No measured latitude/longitude grid could be resolved",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 457,
+      "airport": "OIKB",
+      "reason": "No measured latitude/longitude grid could be resolved",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 459,
+      "airport": "OIKB",
+      "reason": "Invalid affine fit: rank 3, residual 1.828",
+      "status": "needs_additional_control_points_or_review"
+    },
+    {
+      "page": 460,
+      "airport": "OIKB",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 461,
+      "airport": "OIKB",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 470,
+      "airport": "OIIP",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 471,
+      "airport": "OIIP",
+      "reason": "NOT TO SCALE printed on source page",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 472,
+      "airport": "OIIP",
+      "reason": "NOT TO SCALE printed on source page",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 473,
+      "airport": "OIIP",
+      "reason": "NOT TO SCALE printed on source page",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 474,
+      "airport": "OIIP",
+      "reason": "NOT TO SCALE printed on source page",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 475,
+      "airport": "OIIP",
+      "reason": "NOT TO SCALE printed on source page",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 476,
+      "airport": "OIIP",
+      "reason": "NOT TO SCALE printed on source page",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 477,
+      "airport": "OIIP",
+      "reason": "NOT TO SCALE printed on source page",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 479,
+      "airport": "OIIP",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 485,
+      "airport": "OIKJ",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 492,
+      "airport": "OIKK",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 493,
+      "airport": "OIKK",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 497,
+      "airport": "OIKK",
+      "reason": "No measured latitude/longitude grid could be resolved",
+      "status": "needs_additional_control_points_or_review"
+    },
+    {
+      "page": 498,
+      "airport": "OIKK",
+      "reason": "No measured latitude/longitude grid could be resolved",
+      "status": "needs_additional_control_points_or_review"
+    },
+    {
+      "page": 499,
+      "airport": "OIKK",
+      "reason": "No measured latitude/longitude grid could be resolved",
+      "status": "needs_additional_control_points_or_review"
+    },
+    {
+      "page": 500,
+      "airport": "OIKK",
+      "reason": "No measured latitude/longitude grid could be resolved",
+      "status": "needs_additional_control_points_or_review"
+    },
+    {
+      "page": 501,
+      "airport": "OIKK",
+      "reason": "No measured latitude/longitude grid could be resolved",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 502,
+      "airport": "OIKK",
+      "reason": "No measured latitude/longitude grid could be resolved",
+      "status": "needs_additional_control_points_or_review"
+    },
+    {
+      "page": 504,
+      "airport": "OIKK",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 509,
+      "airport": "OIKM",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    },
+    {
+      "page": 510,
+      "airport": "OIKM",
+      "reason": "NOT TO SCALE printed on source page",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 511,
+      "airport": "OIKM",
+      "reason": "NOT TO SCALE printed on source page",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 512,
+      "airport": "OIKM",
+      "reason": "NOT TO SCALE printed on source page",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 513,
+      "airport": "OIKM",
+      "reason": "NOT TO SCALE printed on source page",
+      "status": "not_to_scale"
+    },
+    {
+      "page": 515,
+      "airport": "OIKM",
+      "reason": "No printed graticule labels",
+      "status": "no_graticule"
+    }
+  ],
+  "note": "Only source-locked, independently rechecked printed-vector grid models are added. Unverified NOT TO SCALE/inset, graticule-free, and ambiguous pages remain inactive. Not for actual navigation."
+}
