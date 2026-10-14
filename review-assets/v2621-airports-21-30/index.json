@@ -1,0 +1,1345 @@
+[
+  {
+    "page": 307,
+    "airport": "OIGG",
+    "category": "STAR",
+    "chartName": "KOBUB 1N, KOBUB 1P",
+    "status": "needs_additional_control_points_or_review",
+    "reason": "No measured latitude/longitude grid could be resolved",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 224669,
+    "notToScaleTextBoxes": [],
+    "printedGridLabels": [
+      "49-30",
+      "50-00"
+    ],
+    "headerText": "R093\n3000\n1\n8\n0\n^\n11,000\n270^\n8200\n VO\nR\nT\nS\nR\n090^\nKOBUB\nD20.0 RST\n293^\n112.6 RST\nRASHT\nRST\nD\n13.0\n7.0\nKOBUB 1N\nMHA 3000\n093^\n273^\nD13.0 RST\nD13.0 RST\n(IAF)\n13.\n0 \nRST A\nrc\n3000\nKO\nBUB\n \n1P\n3000\n3000\n10\nKOBUB 1N, 1P\nFL070\nR113\nApt Elev\n-37\n*ATIS\n126.2\nKOBUB 1N [KOBU1N], KOBUB 1P [KOBU1P]\nARRIVALS\n(ALL RWYS)\n(BELOW SEA LEVEL)\nAlt Set: hPa    Trans level: By ATC \nActual descent clearance will be as \ndirected by ATC.\n10-2\n.STAR.\nJEPPESEN\n| JEPPESEN, 2026. ALL RIGHTS RESERVED.\nOIGG/RAS\nSARDAR-E-JANGAL\nRASHT, IRAN\n0\n5\n10\n15\n20\n5\n25\n13 FEB 26\n.Eff.19.Feb.\n3541\nD\n118\n71\n49-30\n50-00\nSTAR\nROUTING\nKOBUB 1N\nKOBUB 1P\nCHANGES: Procedures transferred, new format.\nFrom KOBUB intercept RST R113 inbound to RST VOR.\nFrom KOBUB 293^ track to D13.0 RST, turn RIGHT, \nalong D13.0 RST Arc to RST R093/D13.0.\nCONTOUR\nINTERVALS\n4000\n2000\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 986
+  },
+  {
+    "page": 308,
+    "airport": "OIGG",
+    "category": "STAR",
+    "chartName": "KOBUB 1Q",
+    "status": "needs_additional_control_points_or_review",
+    "reason": "No measured latitude/longitude grid could be resolved",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 208547,
+    "notToScaleTextBoxes": [],
+    "printedGridLabels": [
+      "49-30",
+      "50-00"
+    ],
+    "headerText": "R089\n3000\n1\n8\n0\n^\n11,000\n270^\n8200\n VO\nR\nT\nS\nR\n090^\nKOBUB\nD20.0 RST\n293^\n112.6 RST\nRASHT\nRST\nD\n7.0\nD13.0 RST\nD13.0 RST\n(IAF)\n13.\n0 RST\n Arc\n4000\n \n4000\n10\nFL070\nApt Elev\n-37\n*ATIS\n126.2\n[KOBU1Q]\n(ALL RWYS)\n(BELOW SEA LEVEL)\nAlt Set: hPa    Trans level: By ATC \nActual descent clearance will be as \ndirected by ATC.\n.STAR.\nJEPPESEN\n| JEPPESEN, 2026. ALL RIGHTS RESERVED.\nOIGG/RAS\nSARDAR-E-JANGAL\nRASHT, IRAN\n0\n5\n10\n15\n20\n5\n25\nKOBUB 1Q ARRIVAL\nMHA 4000\n089^\n269^\n10-2A\n13 FEB 26\n.Eff.19.Feb.\n3541\nD\n118\n71\n49-30\n50-00\nROUTING\nCHANGES: Procedures transferred, new format.\nFrom KOBUB 293^ track to D13.0 RST, turn RIGHT, along D13.0 RST \nArc to RST R089/D13.0.\nCONTOUR\nINTERVALS\n4000\n2000\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 846
+  },
+  {
+    "page": 309,
+    "airport": "OIGG",
+    "category": "STAR",
+    "chartName": "DEDLA 1N, DEDLA 1P, RARTA 1N, RARTA 1P",
+    "status": "needs_additional_control_points_or_review",
+    "reason": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 310410,
+    "notToScaleTextBoxes": [],
+    "printedGridLabels": [
+      "37-00",
+      "49-30",
+      "50-00"
+    ],
+    "headerText": "R093\n112^\n3000\n1\n8\n0\n^\n11,000\n270^\n8200\n V\nO R\nT\nS\nR\n090^\nDEDLA\nD13.0 RST\n316^\n112.6 RST\nRASHT\nRST\nD\n13.0\n093^\n273^\nD13.0 RST\nRARTA\nD20.0 RST\n340^\nD10.0 RST\n10.0\n340^\nD13.0 RST\n7.0\nRARTA 1N, 1P\n10\nFL110\nFL080\n(IAF)\nD1\n3.0 R\nST Ar\nc\nD1\n3.0\n \nRST\n \nArc\n3.0\nFL080\nRAR\nTA 1\nP\nRARTA 1N\n3000\nDEDLA 1N, 1P\nFL100\n17\nDEDLA 1N\n3000\nR135\nR160\nF\nL050\nD\nED\nLA 1\nP,\nRA\nRTA 1\nP\n3000\n[D112M]\nMHA 3000\nApt Elev\n-37\n*ATIS\n126.2\n(BELOW SEA LEVEL)\nAlt Set: hPa    Trans level: By ATC \nActual descent clearance will be as directed by ATC.\nRARTA 1P [RART1P]\nARRIVALS\n(ALL RWYS)\nDEDLA 1N [DEDL1N]\nDEDLA 1P [DEDL1P]\nRARTA 1N [RART1N]\nJEPPESEN\n.STAR.\n0\n5\n1\n0\n1\n5\n2\n0\n5\n2\n5\n13 FEB 26\n.Eff.19.Feb.\n8879\n121\n17 6\n118\n71\n37-00\n49-30\n50-00\nRARTA 1P\nRARTA 1N\nSTAR\nROUTING\nDEDLA 1P\nDEDLA 1N\nOIGG/RAS\n| JEPPESEN, 2026. ALL RIGHTS RESERVED.\n10-2B\nRASHT, IRAN\nSARDAR-E-JANGAL\nCHANGES: Procedures transferred, new format.\nFrom DEDLA intercept RST R135 inbound to RST VOR.\nFrom DEDLA intercept RST R135 inbound to D13.0 RST, turn \nRIGHT, along D13.0 RST Arc to RST R093/D13.0.\nFrom RARTA intercept RST R160 inbound to RST VOR.\nFrom RARTA intercept RST R160 inbound to D13.0 RST, turn \nRIGHT, along D13.0 RST Arc to RST R093/D13.0.\nCONTOUR\nINTERVALS\n12000\n10000\n8000\n6000\n4000\n2000\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 1405
+  },
+  {
+    "page": 310,
+    "airport": "OIGG",
+    "category": "STAR",
+    "chartName": "DEDLA 1Q, RARTA 1Q",
+    "status": "needs_additional_control_points_or_review",
+    "reason": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 287348,
+    "notToScaleTextBoxes": [],
+    "printedGridLabels": [
+      "37-00",
+      "49-30",
+      "50-00"
+    ],
+    "headerText": "R135\nR160\nR089\n112^\n3000\n1\n8\n0\n^\n11,000\n270^\n8200\n V\nO R\nT\nS\nR\n090^\nDEDLA\nD13.0 RST\n316^\n112.6 RST\nRASHT\nRST\nD\nD13.0 RST\nRARTA\nD20.0 RST\n340^\n340^\nD13.0 RST\n7.0\n10\nFL110\nFL080\n(IAF)\nD1\n3.0 R\nST Ar\nc\nD1\n3.0\nRST\n \nArc\nFL100\n17\nF\nL050 \n40\n00\n[D112M]\nApt Elev\n-37\n*ATIS\n126.2\n(BELOW SEA LEVEL)\nAlt Set: hPa    Trans level: By ATC \nActual descent clearance will be as directed by ATC.\nRARTA 1Q [RART1Q]\nARRIVALS\n(ALL RWYS)\nDEDLA 1Q [DEDL1Q]\nJEPPESEN\n.STAR.\n0\n5\n1\n0\n1\n5\n2\n0\n5\n2\n5\nRARTA 1Q\nDEDLA 1Q\nF\nL050\n13 FEB 26\n.Eff.19.Feb.\n8879\nMHA 4000\n089^\n269^\n121\n17 6\n118\n71\n37-00\n49-30\n50-00\nRARTA 1Q\nSTAR\nROUTING\nDEDLA 1Q\nOIGG/RAS\n| JEPPESEN, 2026. ALL RIGHTS RESERVED.\n10-2C\nRASHT, IRAN\nSARDAR-E-JANGAL\nCHANGES: New chart.\nFrom DEDLA intercept RST R135 inbound to D13.0 RST, turn \nRIGHT, along D13.0 RST Arc to RST R089/D13.0.\nFrom RARTA intercept RST R160 inbound to D13.0 RST, turn \nRIGHT, along D13.0 RST arc to RST R089/D13.0.\nCONTOUR\nINTERVALS\n12000\n10000\n8000\n6000\n4000\n2000\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 1132
+  },
+  {
+    "page": 313,
+    "airport": "OIGG",
+    "category": "STAR",
+    "chartName": "RALGO 1N, RALGO 1P",
+    "status": "needs_additional_control_points_or_review",
+    "reason": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 251026,
+    "notToScaleTextBoxes": [],
+    "printedGridLabels": [
+      "37-30",
+      "49-00",
+      "49-30",
+      "50-00"
+    ],
+    "headerText": "3000\n1\n8\n0\n^\n11,000\n270^\n8200\n \n V\nOR\nT\nS\nR\n090^\nApt Elev\n-37\n*ATIS\n126.2\nRALGO 1N [RALG1N], RALGO 1P [RALG1P]\nARRIVALS\n(ALL RWYS)\n(BELOW SEA LEVEL)\nAlt Set: hPa    Trans level: By ATC \nActual descent clearance will be as \ndirected by ATC.\n.STAR.\nJEPPESEN\n| JEPPESEN, 2026. ALL RIGHTS RESERVED.\nOIGG/RAS\nSARDAR-E-JANGAL\nRASHT, IRAN\nRALGO\nD15.0 RST\n102^\n112.6 RST\nRASHT\nRST\nD\n15.0\n102^\nMHA 3000\n093^\n273^\nD13.0 RST\n093^\n13.0\nRALGO 1N, 1P\n15\nFL100\nRALGO 1P: FL100\nRALGO 1N: 3000\nR282\n3000\nRALGO 1P\n(IAF)\n13 FEB 26\n.Eff.19.Feb.\n5\n10\n15\n20\n25\n30\n35\n40\n45\n0\n5\n10-2F\n10142\n134\n118\n71\n37-30\n49-00\n49-30\n50-00\nSTAR\nROUTING\nRALGO 1N\nRALGO 1P\nCHANGES: New chart.\nFrom RALGO intercept RST R282 inbound to RST VOR.\nFrom RALGO intercept RST R282 inbound to RST VOR, \nRST R093 to D13.0 RST.\nCONTOUR\nINTERVALS\n12000\n10000\n8000\n6000\n4000\n2000\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 988
+  },
+  {
+    "page": 323,
+    "airport": "OIGG",
+    "category": "SID",
+    "chartName": "MODIL 1A, MODIL 1B",
+    "status": "needs_additional_control_points_or_review",
+    "reason": "No measured latitude/longitude grid could be resolved",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 190662,
+    "notToScaleTextBoxes": [],
+    "printedGridLabels": [
+      "37-30",
+      "49-30"
+    ],
+    "headerText": "003^\n3000\n180^\n11,000\n270^\n8200\n \nT\nS\nR\nVO\nR\n090^\nApt Elev\n-37\n.Eff.19.Feb.\n(BELOW SEA LEVEL)\n13 FEB 26\nMODIL\n112.6 RST\nRASHT\nRST\nD\nTrans alt: 4000\n.SID.\nJEPPESEN\n| JEPPESEN, 2026. ALL RIGHTS RESERVED.\n10-3F\nOIGG/RAS\nSARDAR-E-JANGAL\nRASHT, IRAN\nTurn RIGHT, intercept RST R003 to MODIL, climb to cleared FL.\nTurn LEFT, intercept RST R003 to MODIL, climb to cleared FL.\n0\n5\n10\n15\n20\n5\n25\nM\nO\nD\nI\nL\n 1\nA\nM\nO\nD\nI\nL\n \n1\nB\n118\n37-30\n49-30\nRWY\nSID\nROUTING\n27\n09\nDEPARTURES\nMODIL 1A [MODI1A], MODIL 1B [MODI1B]\nCHANGES: SIDs transferred, new format.\nMODIL 1A\nMODIL 1B\n(ALL RWYS)\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 732
+  },
+  {
+    "page": 337,
+    "airport": "OIHH",
+    "category": "STAR",
+    "chartName": "IVELI 1N, IVELI 1P",
+    "status": "not_to_scale",
+    "reason": "NOT TO SCALE printed on source page",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 170392,
+    "notToScaleTextBoxes": [
+      [
+        347.16,
+        612.62,
+        403.17,
+        619.94
+      ]
+    ],
+    "printedGridLabels": [],
+    "headerText": "Apt Elev\nOIHH/HDM\n10-2\n.STAR.\nHAMADAN\nHAMADAN, IRAN\n5771'\nJEPPESEN\n.Eff.21.Jun.\n| JEPPESEN, 2015. ALL RIGHTS RESERVED.\nHAMADAN\nD117.9 HAM\nHAM\nN34 52.0 E048 33.0\nIVELI\n146^\n326^\n079^\nR184^\n259^\n004^\n17.1\n11000\n11000\nFL140\nIVELI 1N, 1P\nIVELI 1N\nIVELI 1P\n(IAF)\n(IAF)\nAlt Set: hPa    Trans level: By ATC    Trans alt: 13000'\nActual descent clearance will be as directed by ATC.\n8 JUN 18\nD11.0 HAM\nMHA 11000\n11.0\nD18.0 HAM\n18.0\nMHA 11000\nNone.\nMSA\nHAM VOR\n090^\n270^\n180^\nNOT TO SCALE\nCHANGES:\nRWYS 10, 28 ARRIVALS\nROUTING\nSTAR\nIVELI 1N\nIVELI 1P\nAt IVELI intercept HAM R-184 inbound to HAM VOR, turn RIGHT, HAM R-079\nto D18.0 HAM.\nAt IVELI intercept HAM R-184 inbound to HAM VOR, turn LEFT, HAM R-326\nto D11.0 HAM.\nIVELI 1N [IVEL1N], IVELI 1P [IVEL1P]\n12,100\n9700\n13,800\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 926
+  },
+  {
+    "page": 338,
+    "airport": "OIHH",
+    "category": "STAR",
+    "chartName": "ORLOG 2N, ORLOG 2P",
+    "status": "not_to_scale",
+    "reason": "NOT TO SCALE printed on source page",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 175164,
+    "notToScaleTextBoxes": [
+      [
+        487.94,
+        397.59,
+        495.26,
+        453.6
+      ]
+    ],
+    "printedGridLabels": [],
+    "headerText": "ORLOG\n259^\n1\n1\n0\n0\n0 O\nR\nLO\nG\n 2\nP\n(IAF)\nHAMADAN\nD117.9 HAM\nHAM\nN34 52.0 E048 33.0\n146^\n326^\n11000\n(IAF)\nR079^\nApt Elev\nOIHH/HDM\n.STAR.\nHAMADAN\nHAMADAN, IRAN\n5771'\nJEPPESEN\n.Eff.21.Jun.\n1\n2\n1\n1\n0\n0\n0O\nR\nLO\nG\n 2\nN\n, 2\nP\n10-2A\nAlt Set: hPa    Trans level: By ATC    Trans alt: 13000'\nActual descent clearance will be as directed by ATC.\n8 JUN 18\nD18.0 HAM\n1\n8\n.0\nD11.0 HAM\n11.0\nMHA 11000\nMHA 11000\n| JEPPESEN, 2015, 2018. ALL RIGHTS RESERVED.\nSTARs ORLOG 1N & 1P renumbered 2N & 2P.\nMSA\nHAM VOR\nCHANGES:\nRWYS 10, 28 ARRIVALS\n090^\n270^\n180^\nNOT TO SCALE\nROUTING\nSTAR\nORLOG 2N\nORLOG 2P\nAt ORLOG intercept HAM R-079 inbound to D18.0 HAM.\nORLOG 2N [ORLO2N], ORLOG 2P [ORLO2P]\n12,100\n9700\n13,800\nAt ORLOG intercept HAM R-079 inbound to HAM VOR,\nturn RIGHT, HAM R-326 to D11.0 HAM.\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 935
+  },
+  {
+    "page": 339,
+    "airport": "OIHH",
+    "category": "STAR",
+    "chartName": "ORLOG 1Q, ORLOG 1R",
+    "status": "not_to_scale",
+    "reason": "NOT TO SCALE printed on source page",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 181241,
+    "notToScaleTextBoxes": [
+      [
+        487.94,
+        397.59,
+        495.26,
+        453.6
+      ]
+    ],
+    "printedGridLabels": [],
+    "headerText": "ORLOG\n259^\n1\n1\n0\n0\n0 O\nR\nLO\nG\n 1\nR\n(IAF)\nHAMADAN\nHAM\nN34 51.8 E048 32.8\n152^\n(IAF)\nApt Elev\nOIHH/HDM\n.STAR.\nHAMADAN\nHAMADAN, IRAN\n5771'\nJEPPESEN\n23 MAR 18\n.Eff.29.Mar.\nHolding over D11.0 HAM revised.\n1\n2\n1\n1\n0\n0\n0O\nR\nLO\nG\n 1\nQ\n, 1\nR\n10-2B\n317 HAM\n079^\nHAMADAN\nD117.9 HAM\nHAM\nN34 52.0 E048 33.0\n332^\n332^\n11000\nAlt Set: hPa    Trans level: By ATC    Trans alt: 13000'\nActual descent clearance will be as directed by ATC.\nD11.0 HAM\n11.0\nMHA 11000\nMHA 11000\nD18.0 HAM\n1\n8\n.0\n| JEPPESEN, 2015, 2018. ALL RIGHTS RESERVED.\nMSA\nHAM VOR\nCHANGES:\nRWYS 10, 28 ARRIVALS\n090^\n270^\n180^\nNOT TO SCALE\nROUTING\nSTAR\nORLOG 1Q\nORLOG 1R\n12,100\n9700\n13,800\nAt ORLOG intercept 259^ brearing towards HAM NDB to D18.0 HAM.\nAt ORLOG intercept 259^ bearing to HAM NDB, turn RIGHT, 332^\nbearing to D11.0 HAM.\nORLOG 1Q [ORLO1Q], ORLOG 1R [ORLO1R]\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 981
+  },
+  {
+    "page": 340,
+    "airport": "OIHH",
+    "category": "SID",
+    "chartName": "IVELI 1A, IVELI 1B",
+    "status": "not_to_scale",
+    "reason": "NOT TO SCALE printed on source page",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 186401,
+    "notToScaleTextBoxes": [
+      [
+        390.84,
+        676.82,
+        446.85,
+        684.14
+      ]
+    ],
+    "printedGridLabels": [],
+    "headerText": "HAMADAN\nD117.9 HAM\nHAM\nN34 52.0 E048 33.0\nAt\n281^\n100^\nApt Elev\n.SID.\nOIHH/HDM\nTrans level: By ATC    Trans alt: 13000'\nHAMADAN\nHAMADAN, IRAN\n5769'\n24 APR 15\n.Eff.30.Apr.\nJEPPESEN\nAt 7800'\nNew procedures at this airport.\n| JEPPESEN, 2015. ALL RIGHTS RESERVED.\nThese SID require a minimum climb gradient\nof\n330' per NM.\n330' per NM\n413\n550\n825 1100 1375 1650\nGnd speed-KT\n75\n100\n150\n200\n250\n300\nClimb on HAM R-281 to 7500', turn RIGHT to HAM, turn RIGHT, HAM\nR-184 to IVELI, climb to cleared FL.\nAt or above\n9500'\n7500'\nAt\nIVELI\n1A\nIVELI\n1B\nIVELI\nN34 35.0 E048 29.9\n17\n184^\n10-3\nClimb on HAM R-100 to 7800', turn LEFT to HAM, turn LEFT, HAM R-184\nto IVELI, climb to cleared FL.\nMSA\nHAM VOR\n9700'\n090^\n270^\n180^\nNOT TO SCALE\nRWY\n28\nSID\nIVELI 1A\nROUTING\nIVELI 1B\n10\nCHANGES:\nRWYS 28, 10 DEPARTURES\n[IVEL1A]\nIVELI 1A\nIVELI 1B [IVEL1B]\n12,100'\n13,800'\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 1008
+  },
+  {
+    "page": 341,
+    "airport": "OIHH",
+    "category": "SID",
+    "chartName": "ORLOG 1A, ORLOG 1B, ORLOG 1C",
+    "status": "not_to_scale",
+    "reason": "NOT TO SCALE printed on source page",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 223516,
+    "notToScaleTextBoxes": [
+      [
+        390.72,
+        654.5,
+        446.73,
+        661.82
+      ]
+    ],
+    "printedGridLabels": [],
+    "headerText": "HAMADAN\nD117.9 HAM\nHAM\nN34 52.0 E048 33.0\nORLOG\n079^\nAt\nORLOG 1A\nORLOG 1A\nN34 55.2 E049 09.3\n30\n281^\n100^\nApt Elev\n.SID.\nOIHH/HDM\nTrans level: By ATC    Trans alt: 13000'\nHAMADAN\nHAMADAN, IRAN\n5769'\nAt\n7500'\n24 APR 15\n.Eff.30.Apr.\nJEPPESEN\nAt 7800'\nORLOG 1B\nORLOG 1C\nORLOG 1C\nFL140\nAt or above\nAt or above\nORLOG\n1A, 1C\n9500'\n245' per NM\n306\n408\n613\n817 1021 1225\nGnd speed-KT\n75\n100\n150\n200\n250\n300\nORLOG 1B:\nORLOG 1C:\nClimb on HAM R-100 to 7800', turn LEFT, intercept HAM R-079 to ORLOG,\nclimb to cleared FL.\nClimb on HAM R-100 to 7800', turn LEFT to HAM, turn LEFT, HAM R-079\nto ORLOG, climb to cleared FL.\n| JEPPESEN, 2004, 2015. ALL RIGHTS RESERVED.\nThese SID require a minimum climb gradient\nof\n10-3A\n245' per NM.\n245' per NM up to 8000'.\nClimb on HAM R-281 to 7500', turn RIGHT to HAM, turn LEFT, HAM R-079\nto ORLOG, climb to cleared FL.\nSIDs revised; SID ORLOG 1C established.\nMSA\nHAM VOR\n9700'\n090^\n270^\n180^\nNOT TO SCALE\nRWY\n28\nSID\nORLOG 1A\nROUTING\nORLOG 1B\n10\nCHANGES:\nRWYS 28, 10 DEPARTURES\n[ORLO1A]\nORLOG 1A\n[ORLO1B]\nORLOG 1C\nORLOG 1B\nORLOG 1C [ORLO1C]\n12,100'\n13,800'\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 1242
+  },
+  {
+    "page": 342,
+    "airport": "OIHH",
+    "category": "Airport",
+    "chartName": "Airport Diagram Chart (ADC)",
+    "status": "needs_additional_control_points_or_review",
+    "reason": "Conformal scale derivation falls outside the plan view",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 246329,
+    "notToScaleTextBoxes": [],
+    "printedGridLabels": [
+      "34-52",
+      "34-52.1",
+      "34-52.2",
+      "34-52.3",
+      "48-32.2",
+      "48-32.3",
+      "48-32.4",
+      "48-32.5",
+      "48-33",
+      "48-34"
+    ],
+    "headerText": "HS1\nHS2\nHS3\n05^E\n28\n280^\n3799m\n12,464'\n10\n100^\nStopway\n97m\nApt Elev\n10-9\n121.9\nVOR\nNDB\nHIRL (60m)\nJEPPESEN\n*HAMADAN Tower (Ground)\nElev\n5771'\n11,480'3499m\n500m\nTAKE-OFF\nA\nB\nC\nD\nAIR CARRIER (JAA)\nAll Rwys\n400m\nRL & RCLM\nNIL\n(DAY only)\n| JEPPESEN, 1998, 2024. ALL RIGHTS RESERVED.\nElev\n5703'\n318'\nControl\nTower\nARP\nStopway\n177' 54m\n123.5\n*HAMADAN Tower\n34-52\n48-32.2\n48-32.5\n34-52.2\n48-32.4\n48-32.3\n34-52\n48-32.2\n48-32.5\n48-32.4\n48-32.3\n34-52.1\n34-52.2\n34-52.3\n34-52.3\nHIALS\n34-52\n34-52\n48-33\n48-33\n48-34\n48-34\nPAPI-L(angle 3.42^)\n(For information only, not to be construed as ATC instructions.)\nHOT SPOTS\nCaution vehicle movement.\nUltra light ACFT taxiing have to maintain a good look out at all times due to helicopter operation\nand vehicles movement.\nAll ultra light ACFT, helicopters and vehicles shall hold short of RWY 10.\nMET\nHOT SPOT\n13 DEC 24\nTower\nControl\nTERMINAL\nRWY 10/28\n.Eff.26.Dec.\nA\n103\nIsolated\nparking position\nStrolling dogs exist on the movement area.\nPrior Permission Required for non-scheduled flights at least \n72 HR before Estimated Off Block Time (EOBT) from OIHH.\nTwy A, stands, isolated parking position, under construction area, buildings.\n102 101\nA\n5000\n1500\n1000\n1000\n500\n0\n0\nFeet\nMeters\n2000\n3000\n4000\nCHANGES:\n5771'\nHAMADAN\nHAMADAN, IRAN\nN34 52.2  E048 33.0\nRWY\nADDITIONAL RUNWAY INFORMATION\nThreshold\nLANDING BEYOND\nUSABLE LENGTHS\nWIDTH\nTAKE-OFF\nGlide Slope\n10\n28\n148'\n45m\nOIHH/HDM\nLEGEND\nHS3\nHS2\nHS1\nHS1\nHS1\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; T",
+    "fullTextLength": 1602
+  },
+  {
+    "page": 350,
+    "airport": "OIHR",
+    "category": "STAR",
+    "chartName": "DEKBA 1N, DEKBA 1P, DEKBA 1Q",
+    "status": "not_to_scale",
+    "reason": "NOT TO SCALE printed on source page",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 182480,
+    "notToScaleTextBoxes": [
+      [
+        327.84,
+        667.1,
+        383.85,
+        674.42
+      ]
+    ],
+    "printedGridLabels": [],
+    "headerText": "R340^\nR070^\n10-2\n.STAR.\nJEPPESEN\nApt Elev\nOIHR/AJK\nARAK\nARAK, IRAN\n5453'\nDEKBA\nD14 ARK\nD16 ARK\n266^\n223^\n170^\n10500\n10500\n10500\n20\nDEKBA 1Q\nDEKBA 1N\nDEKBA 1P\n(IAF CIRCLING VOR/DME)\nARAK\n114.8 ARK\nARK\nN34 08.2 E049 51.2\nD\n18.2\n9.3\nR043^\n(IAF VOR/DME Rwy 26)\nNote withdrawn.\n| JEPPESEN, 2011, 2026. ALL RIGHTS RESERVED.\n25 SEP 26\n.Eff.1.Oct.\nTrans level: FL140    Trans alt: 12000'\nAlt Set: hPa\nMHA 10500\nMHA 10500\nMSA\nARK VOR\nNOT TO SCALE\nCHANGES:\n090^\n180^\n270^\n360^\n160^\n250^\nRWY\nROUTING\nSTAR\nDEKBA 1N\n08, 26\nDEKBA 1P\nDEKBA 1Q\n26\n08, 26\n11,800\n11,000\n12,900\n11,800\nDEKBA 1N [DEKB1N]\nDEKBA 1P [DEKB1P]\nDEKBA 1Q [DEKB1Q]\nARRIVALS\n(RWYS 08, 26)\nAt DEKBA intercept R-043 inbound to ARK VOR.\nFrom DEKBA on 170^ track to D16 ARK.\nFrom DEKBA on 266^ track to D14 ARK.\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 923
+  },
+  {
+    "page": 351,
+    "airport": "OIHR",
+    "category": "STAR",
+    "chartName": "DEKBA 1T",
+    "status": "not_to_scale",
+    "reason": "NOT TO SCALE printed on source page",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 130013,
+    "notToScaleTextBoxes": [
+      [
+        341.16,
+        655.34,
+        397.17,
+        662.66
+      ]
+    ],
+    "printedGridLabels": [],
+    "headerText": ".STAR.\nJEPPESEN\nApt Elev\nOIHR/AJK\nARAK\nARAK, IRAN\n5453'\nDEKBA\n223^\n11500\n20\nARAK\n280 ARK\nARK\n10-2A\nNote withdrawn.\n| JEPPESEN, 2011, 2026. ALL RIGHTS RESERVED.\n25 SEP 26\n.Eff.1.Oct.\nAlt Set: hPa\nTrans level: FL140    Trans alt: 12000'\nN34 08.1 E049 50.9\nMSA\nARK NDB\nNOT TO SCALE\nCHANGES:\n090^\n180^\n270^\n360^\nROUTING\n11,800\n11,000\n11,800\n12,900\n[DEKB1T]\n(RWYS 08, 26)\nDEKBA 1T ARRIVAL\nAt DEKBA intercept 223^ bearing to ARK NDB.\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 589
+  },
+  {
+    "page": 352,
+    "airport": "OIHR",
+    "category": "SID",
+    "chartName": "DEKBA 1B, DEKBA 1A",
+    "status": "not_to_scale",
+    "reason": "NOT TO SCALE printed on source page",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 222539,
+    "notToScaleTextBoxes": [
+      [
+        483.26,
+        208.35,
+        490.58,
+        264.36
+      ]
+    ],
+    "printedGridLabels": [],
+    "headerText": "JEPPESEN\n10-3\nApt Elev\nOIHR/AJK\nARAK\nARAK, IRAN\n5440'\nTrans level: FL140    Trans alt: 12000'\n [DEKB1A]\n [DEKB1B]\nDEKBA\n.SID.\n260^\n070^\n043^\nD\nE\nK\nB\nA\n 1\nA\nD\nE\nK\nB\nA\n 1\nA\nD\nE\nK\nB\nA\n 1\nB\nD\nE\nK\nB\nA\n 1\nB\n2\n0\nN34 21.8 E050 08.5\nAt or above\n10500'\nDEKBA 1A\nAt or above\nFL125\nDEKBA 1B\n9000'\nAt\n320' per NM.\n300' per NM.\nThese SIDs require minimum climb gradients\nof\n8000'\nAt\nAt or above\nFL170\n20 MAY 11\nDEKBA 1A:\nDEKBA 1B:\nSIDs established & transferred.\nARAK\n114.8 ARK\nARK\nN34 08.2 E049 51.2\nD\nClimb on ARK R-260 to 8000', turn RIGHT to ARK, turn LEFT, intercept\nARK R-043 to DEKBA, climb to cleared FL.\nClimb on ARK R-070 to 9000', turn LEFT to ARK, turn RIGHT, intercept\nARK R-043 to DEKBA, climb to cleared FL.\n| JEPPESEN, 2009, 2011. ALL RIGHTS RESERVED.\nMSA\nARK VOR\n11,800' 11,000'\n11,800'\n12,900'\n090^\n180^\n270^\n360^\nDEKBA 1B\nDEKBA 1A\nNOT TO SCALE\nCHANGES:\nRWYS 26, 08 DEPARTURES\nRWY\n26\nSID\nDEKBA 1A\nROUTING\nDEKBA 1B\n08\n75\n100\n150\n200\n250\n300\n320' per NM\nGnd speed-KT\n400\n533 800 1067 1333 1600\n300' per NM\n375\n500 750 1000 1250 1500\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 1196
+  },
+  {
+    "page": 353,
+    "airport": "OIHR",
+    "category": "SID",
+    "chartName": "DEKBA 1C, DEKBA 1D",
+    "status": "not_to_scale",
+    "reason": "NOT TO SCALE printed on source page",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 228810,
+    "notToScaleTextBoxes": [
+      [
+        191.9,
+        677.31,
+        199.22,
+        733.32
+      ]
+    ],
+    "printedGridLabels": [],
+    "headerText": "JEPPESEN\n080^\n254^\nApt Elev\nOIHR/AJK\nARAK\nARAK, IRAN\n5440'\nTrans level: FL140    Trans alt: 12000'\n [DEKB1C]\n [DEKB1D]\nDEKBA\n.SID.\n260^\n074^\n096^\n236^\n043^\nD\nE\nK\nB\nA\n 1\nC\nD\nE\nK\nB\nA\n 1\nC\nD\nE\nK\nB\nA\n 1\nD\nD\nE\nK\nB\nA\n 1\nD\n2\n0\nN34 21.8 E050 08.5\n9000'\nAt\n320' per NM.\n300' per NM.\nThese SIDs require minimum climb gradients\nof\n8000'\nAt\nAt or above\nFL170\n280 ARK\nARK\nN34 08.1 E049 50.9\nARAK\n20 MAY 11\nClimb on 260^ bearing from ARK to 8000', turn RIGHT, intercept 096^ bearing\nto ARK, turn LEFT, 043^ bearing to DEKBA, climb to cleared FL.\nClimb on 074^ bearing from ARK to 9000', turn LEFT, intercept 236^ bearing to\nARK, turn RIGHT, intercept 043^ bearing to DEKBA, climb to cleared FL.\nDEKBA 1C:\nDEKBA 1D:\nNew chart.\n| JEPPESEN, 2011. ALL RIGHTS RESERVED.\n10-3A\nAt or above\nFL125\nDEKBA 1D\nAt or above\n10500'\nDEKBA 1C\nMSA\nARK NDB\n11,800' 11,000'\n11,800'\n12,900'\n090^\n180^\n270^\n360^\nDEKBA 1D\nDEKBA 1C\nNOT TO SCALE\nCHANGES:\nRWYS 26, 08 DEPARTURES\nRWY\n26\nSID\nDEKBA 1C\nROUTING\nDEKBA 1D\n08\n75\n100\n150\n200\n250\n300\n320' per NM\nGnd speed-KT\n400\n533 800 1067 1333 1600\n300' per NM\n375\n500 750 1000 1250 1500\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 1254
+  },
+  {
+    "page": 365,
+    "airport": "OIIE",
+    "category": "STAR",
+    "chartName": "MIVAK 3R, MUXOR 1V, NAGMO 2R, NAGMO 1V",
+    "status": "review_required_not_to_scale",
+    "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 417214,
+    "notToScaleTextBoxes": [
+      [
+        333.06,
+        714.48,
+        343.5,
+        773.52
+      ],
+      [
+        408.3,
+        58.2,
+        418.74,
+        117.24
+      ]
+    ],
+    "printedGridLabels": [
+      "35-30",
+      "36-00",
+      "50-30",
+      "51-00",
+      "51-30",
+      "52-00"
+    ],
+    "headerText": "TEHRAN\nMehrabad Intl\nOIII\nKARAJ\nPayam\nOIIP\n115^\nTEHRAN TMA\nTEH\nRAN/M\nEHRABA\nD CTR\n9400\n2\n3\n0\n^\n6500\n270^\n7000\n320^\n8400\n0\n2\n0\n^\n13,500\n \nA\nK\nI\nV\nO\nR\n150^\nD1\n0\n.\n0\nD\n15\n.0\n0\n7\n0\n^\n116.95 RUS\nRUDESHUR\nRUS\n59.2\nMIVAK 3R\n3\n7\n.\n3\nM\nU\nX\nO\nR\n 1\nV\n373 VR\nVARAMIN\nVR\n1\n5\n.\n2\nNAGMO\n115.3 TRN\nTEHRAN\nTRN\nD\n1\n8\n5\n^\n2\n0\n.\n7\n137^\nNAGMO 1V\nOIIE/IKA\nTEHRAN, IRAN\n.STAR.\n20-2A\nJEPPESEN\nIMAM KHOMAINI INTL\nApt Elev\nATIS\n127.2\n3305\nActual descent clearance will be as directed by ATC.\nMIVAK\n118^\nNOT TO SCALE\nMUXOR\n2\n5\n6\n^\nNOT TO SCALE\n0\n10\n20\n30\n40\n50\n10\nD\nFL110\nR298\n(IAF)\nR\n0\n4\n7\nN\nA\nG\nM\nO\n 2\nR\nF\nL1\n2\n0\nR\n0\n0\n5\n(IAF)\n9\n0\n0\n0 6\n5\n0\n0\nT\nF\nL1\n2\n0\nN35 23.2\nE051 56.1\n1\n1\n4\n0\n0\nT\n27\n \n| JEPPESEN, 2020, 2023. ALL RIGHTS RESERVED.\n2\n3\n.\n9\n13 FEB 26\nAlt Set: hPa   Trans level: FL110\n.Eff.19.Feb.\nMAX 220 KT\nMHA 8000\n275^\n095^\nMHA 9000\n1\n8\n1\n^\n0\n0\n1\n^\n097^\n277^\n14260\nVR NDB\n114\n153\n210\n176\n167\n35-30\n36-00\n50-30\n51-00\n51-30\n52-00\n2\n2\n7\n^\nN\nA\nG\nM\nO\n 2\nR\n, 1\nV\nF\nL1\n5\n0\n9000\nMAX 270 KT WITHIN TMA\n.SPEED:\nMAX 230 KT WITHIN CTR\n114.3 IKA\nIKA\nIMAM\nKHOMAINI\nD\nMHA 9000\nROUTING\nSTAR\nMIVAK 3R\nNAGMO 1V\nNAGMO 2R\nMUXOR 1V\nMIVAK 3R [MIVA3R]\nMUXOR 1V [MUXO1V]\nNAGMO 2R [NAGM2R]\nNAGMO 1V [NAGM1V]\nARRIVALS\nAt MIVAK intercept RUS R298 inbound to RUS VOR.\nAt MUXOR intercept 256^ bearing to VR NDB.\nAt NAGMO intercept TRN R005 inbound to TRN VOR, TRN R227 to RUS VOR.\nAt NAGMO intercept TRN R005 inbound to TRN VOR, TRN R137 to VR NDB.\n(ALL RWYS)\n(MUXOR 1V)\n(NAGMO 1V)\n(Holding for \nNAGMO 2R only)\nCHANGES: None.\nCONTOUR\nINTERVALS\n1500",
+    "fullTextLength": 1694
+  },
+  {
+    "page": 366,
+    "airport": "OIIE",
+    "category": "STAR",
+    "chartName": "PAVET 2R, PAXID 2R, RUS 1V",
+    "status": "needs_additional_control_points_or_review",
+    "reason": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 404118,
+    "notToScaleTextBoxes": [],
+    "printedGridLabels": [
+      "35-30",
+      "36-00",
+      "50-00",
+      "50-30",
+      "51-00",
+      "51-30"
+    ],
+    "headerText": "270^\nTEHRAN\nMehrabad Intl\nOIII\nKARAJ\nPayam\nOIIP\nTEHRAN TMA\nTEHERAN\n/MEHRAB\nAD CTR\n9400\n2\n3\n0\n^\n270^\n7000\n320^\n8400\n0\n2\n0\n^\n13,500\n \n \nA\nK\nI\nV\nO\nR\n150^\n0\n7\n0\n^\n6500\nD\n15\n.0\nD\n1\n0.\n0\nPAVET\n085^\nPAVET 2R\nPAXID\n146^\n38.1\nPAXID 2R\n19.3\n1\n0\n2\n0\n3\n0\n4\n0\n5\n0\n0\n5\n1\n5\n2\n5\n3\n5\n4\n5\n5\nJEPPESEN\n.STAR.\nApt Elev\nATIS\n127.2\n3305\nAlt Set: hPa   Trans level: FL110\nFL150\n[TRN28]\n9000\nR326\nFL120\nR265\n50\nActual descent clearance will be as directed by ATC.\n.Eff.19.Feb.\n13 FEB 26\nMHA 9000\n1\n8\n1\n^\n0\n0\n1\n^\n373 VR\nVARAMIN\nVR\n095^\n36.7\nRUS 1V\n9000\n15756\n(IAF)\n116.95 RUS\nRUDESHUR\nRUS\nD\n(IAF)\n121\n114\n153\n121\n17 6\n167\n35-30\n36-00\n50-00\n50-30\n51-00\n51-30\n115.3 TRN\nTEHRAN\nTRN\nD\nMAX 270 KT WITHIN TMA \n.SPEED:\nMAX 230 KT WITHIN CTR\n114.3 IKA\nIKA\nIMAM\nKHOMAINI\nD\nROUTING\nSTAR\nPAXID 2R\nPAVET 2R\nOIIE/IKA\n20-2B\nIMAM KHOMAINI INTL\nPAVET 2R [PAVE2R]\nPAXID 2R [PAXI2R]\nARRIVALS\nTEHRAN, IRAN\nAt PAVET intercept RUS R265 inbound to RUS VOR.\nAt PAXID intercept RUS R326 inbound to RUS VOR.\n| JEPPESEN, 2020, 2023. ALL RIGHTS RESERVED.\nRUS 1V [RUS1V]\nRUS 1V\n(ALL RWYS)\nFrom RUS VOR on 095^ track to VR NDB.\nCHANGES: None.\nCONTOUR\nINTERVALS\n17000\n15000\n13000\n11000\n9000\n7000\n5000\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 1306
+  },
+  {
+    "page": 369,
+    "airport": "OIIE",
+    "category": "STAR",
+    "chartName": "BOXAM 2X, MIVAK 2X",
+    "status": "review_required_not_to_scale",
+    "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 305379,
+    "notToScaleTextBoxes": [
+      [
+        99.48,
+        373.29,
+        157.01,
+        383.49
+      ]
+    ],
+    "printedGridLabels": [
+      "35-00",
+      "51-00",
+      "51-30"
+    ],
+    "headerText": "TEHRAN\nMehrabad Intl\nOIII\nTEHRAN TMA\nTEH\nRAN/M\nEHRABA\nD CTR\n9400\n230^\n270^\n7000\n8400\n020^\n13,500\n150^\n6500\n070^\nR\nP\nA\n8400\n1\n0 N\nM\n1\n5\nNM\nOXAVA\nBOXAM\nOIIE/IKA\nIMAM KHOMAINI INTL\nTEHRAN, IRAN\n20-2E\nApt Elev\n127.2\nATIS\nJEPPESEN\n.RNAV.STAR.\nMIVAK\nNOT TO SCALE\n(IAF)\n122^\n086^\n326^\nFL130\n7000\n7000\n8000T\n4800T\n5000T\n71.7\n16\n45.2\nMIVAK 2X\nBOXAM 2X\n3305\nAlt Set: hPa    Trans level: FL110\n1. RNAV 1.\n2. DME/DME required.\n0\n10\n20\n30\n40\n50\n10\n3. Actual descent clearance will be as directed by ATC.\nIE4~5\nATC will issue an alternative clearance.\n4. Compliance with RNP 1 will be radar monitored. Advise if unable to comply.\n.Eff.2.Nov.\n| JEPPESEN, 2020, 2023. ALL RIGHTS RESERVED.\n20 OCT 23\nMAX 230 KT\nMHA 7000\n150^\n330^\n134\n111\n114\n153\n35-00\n51-00\n51-30\nMAX 230 KT WITHIN CTR\n.SPEED: MAX 270 KT WITHIN TMA\nROUTING\nSTAR\nBOXAM 2X\nMIVAK 2X\nFrom MIVAK proceed to IE4~5, turn LEFT to OXAVA.\nFrom BOXAM proceed to OXAVA.\nBOXAM 2X [BOXA2X]\nMIVAK 2X [MIVA2X]\n(RWY 29R)\nRNAV ARRIVALS\nCHANGES: Holding over OXAVA added.\nCONTOUR\nINTERVALS\n9000\n7000\n5000\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 1197
+  },
+  {
+    "page": 371,
+    "airport": "OIIE",
+    "category": "SID",
+    "chartName": "DHN 1E, DHN 1F, KAZ 2C, KAZ 1D",
+    "status": "needs_additional_control_points_or_review",
+    "reason": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 340724,
+    "notToScaleTextBoxes": [],
+    "printedGridLabels": [
+      "35-00",
+      "35-30",
+      "51-00",
+      "51-30",
+      "52-00",
+      "52-30"
+    ],
+    "headerText": "075^\nTEHRAN\nMehrabad Intl\nOIII\nKARAJ\nPayam\nOIIP\n9400\n2\n3\n0\n^\n270^\n7000\n320^\n8400\n0\n2\n0\n^\n13,500\n \nV\nO\nR\nA\nK\nI\n150^\n6500\n0\n7\n0\n^\nD\n1\n0\n.0\nD1\n5\n.0\n6500\nOIIE/IKA\n20-3\nIMAM KHOMAINI INTL\nTEHRAN, IRAN\n.SID.\nJEPPESEN\n116.95 RUS\nRUDESHUR\nRUS\n114.3 IKA\nIKA\nD\nApt Elev\nTrans alt: 9000\nIMAM\nKHOMAINI\n093^\n0\n5\n2\n^\n3305\n0\n10\n20\n30\n40\n50\n10\nR273\n358 KAZ\nKAHRIZAK\nKAZ\n114.5 DHN\nDEHNAMAK\nDHN\nD\nD\n30 AUG 24\n.Eff.5.Sep.\nK\nA\nZ\n 2\nC\nK\nA\nZ\n 1\nD\nD\nH\nN\n 1\nE\nDHN 1E, 1F\nDHN 1F\n| JEPPESEN, 2020, 2023. ALL RIGHTS RESERVED.\nR794\n99\n114\n153\n210\n35-00\n35-30\n51-00\n51-30\n52-00\n52-30\nThese SIDs require minimum climb gradients\nof\n75\n100\n150\n200\n250\n300\nGnd speed-KT\n338\n675\n1350\n450\n900\n1125\n325\n650\n1300\n433\n867\n1083\n29L/R\n11L/R\nRWY\nSID\nROUTING\n29L/R\n11L/R\nDEPARTURES\n270 per NM for airway R794.\n270 per NM\n260 per NM\nTurn LEFT, intercept IKA R093 to DHN VOR, climb to cleared FL.\nTurn LEFT, intercept IKA R093 to DHN VOR, climb to cleared FL.\nTurn RIGHT, intercept 075^ bearing to KAZ NDB (RUS R075), climb to cleared FL.\nTurn LEFT, intercept IKA R052 to KAZ NDB, climb to cleared FL.\nKAZ 2C\nKAZ 1D\nKAZ 2C\nKAZ 1D\nDHN 1E\nDHN 1E, 1F:\nDHN 1E\nDHN 1F\nDHN 1F\n(ALL RWYS)\nCHANGES: None.\nCONTOUR\nINTERVALS\n13000\n11000\n9000\n7000\n5000\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 1358
+  },
+  {
+    "page": 376,
+    "airport": "OIIE",
+    "category": "SID",
+    "chartName": "RUS 4C, RUS 4D",
+    "status": "needs_additional_control_points_or_review",
+    "reason": "No measured latitude/longitude grid could be resolved",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 248099,
+    "notToScaleTextBoxes": [],
+    "printedGridLabels": [
+      "35-30",
+      "51-00"
+    ],
+    "headerText": "TEHRAN\nMehrabad Intl\nOIII\n6500\n7000\n320^\n8400\n020^\n13,500\nMSA IKA VOR\n150^\n070^\nD\n10\n.0\nD15.\n0\n230^\n270^\n6500\n6500\n9400\nApt Elev\n114.3 IKA\nIKA\nD\n.SID.\nOIIE/IKA\nIMAM KHOMAINI INTL\nTEHRAN, IRAN\n20-3E\nJEPPESEN\nR095\n275^\nIMAM\nKHOMAINI\n14\nTrans alt: 9000\n3305\n0\n5\n10\n15\n20\n5\n25\n116.95 RUS\nRUDESHUR\nRUS\nD\nwithin D15.0\n1\n1\n.Eff.5.Sep.\n30 AUG 24\nRUS 4D\n| JEPPESEN, 2020, 2024. ALL RIGHTS RESERVED.\nRUS 4C\nD8.0 IKA\nD5.0 IKA\n114\n153\n35-30\n51-00\nRWY\nSID\nROUTING\n29L/R\n11L/R\nDEPARTURES\nRUS 4C\nRUS 4D\nRUS 4C\nRUS 4D\n(ALL RWYS)\nCHANGES: Procedures renumbered and revised.\nTurn RIGHT within D5.0 IKA, return to IKA VOR, turn LEFT, IKA R275 to RUS VOR, climb\nto cleared FL.\nTurn LEFT within D8.0 IKA to IKA VOR, turn LEFT, IKA R275 to RUS VOR, climb to\ncleared FL.\nCONTOUR\nINTERVALS\n7000\n5000\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 937
+  },
+  {
+    "page": 379,
+    "airport": "OIIE",
+    "category": "SID",
+    "chartName": "OIIE/IKA 1 MAY 20 20-3H",
+    "status": "review_required_not_to_scale",
+    "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 366718,
+    "notToScaleTextBoxes": [
+      [
+        108.28,
+        562.05,
+        115.24,
+        601.44
+      ]
+    ],
+    "printedGridLabels": [
+      "34-30",
+      "35-00",
+      "35-30",
+      "36-00",
+      "50-00",
+      "50-30",
+      "51-00",
+      "51-30",
+      "52-00",
+      "52-30"
+    ],
+    "headerText": "275^\n305^\n268^\n2\n3\n6\n^\n124^\n095^\n093^\nCOMMS\nLOST\nCOMMS\nLOST\nC\nO\nM\nM\nS\nCOMMS\nLOST\nLOST\nLOST\nCOMMS\nLOST\nCOMMS\nLOST\nCOMMS\nLOST\nLOST\nTEHRAN\nMehrabad Intl\nOIII\nKARAJ\nPayam\nOIIP\n9400\n2\n3\n0\n^\n6500\n270^\n7000\n320^\n8400\n0\n2\n0\n^\n13,500\n \nV\nO\nR\nA\nK\nI\n \n150^\n0\n7\n0\n^\nD\n10\n.\n0\n15\n.\n0\nD\n2\n3\n0\n^\n6500\n7000\n6000\n114.5 DHN\nDEHNAMAK\nDHN\nD\n116.95 RUS\nRUDESHUR\nRUS\nR095\nPAVET\nDAXIL\nEGVEL\nELUSI\nOBRIX\n373 VR\nVARAMIN\nVR\n408 SAV\nSAV\nPAXID\nPAROT\nNOT TO SCALE\n328^\n2\n0\n1\n^\n2\n3\n8\n^\n1\n9\n1\n^\nR273\n74.9\n57.4\n63.3\n7\n3\n.\n8\n4\n8\n.\n1\n4\n6\n5\n0\n.\n8\n61.1\n22.8\n76.1\n| JEPPESEN, 2020. ALL RIGHTS RESERVED.\nJEPPESEN\nOIIE/IKA\nIMAM KHOMAINI INTL\n20-3H\nTEHRAN, IRAN\nApt Elev\nMEHERABAD Radar (App)\n119.7    125.1\n3305\nContact MEHERABAD Radar when airborne.\nFor LOST COMMS refer to 20-1P\npages.\nIKA 1A\nIKA 1B\n0\n1\n0\n2\n0\n3\n0\n4\n0\n5\n0\n1\n0\nTrans alt: 9000\n1 MAY 20\nPAROT\nDEHNAMAK\nOBRIX\nE\nLU\nS\nI\nE\nG\nV\nE\nL\nS\nA\nV\nE\nH\nD\nA\nX\nIL\nPAVET\nD\nClimb to\nand MAINTAIN\nClimb to\nand MAINTAIN\n(115.2) SAV\nSAV\nD\n129\n134\n111\n99\n121\n114\n153\n210\n121\n176\n167\n34-30\n35-00\n35-30\n36-00\n50-00\n50-30\n51-00\n51-30\n52-00\n52-30\n114.3 IKA\nIKA\nD\nIMAM\nKHOMAINI\nPAXID\nDME\nSAVEH\nROUTING\nOn RWY heading, climb to and MAINTAIN 7000, EXPECT RADAR vectors.\nSID\nOn RWY heading, climb to and MAINTAIN 6000, EXPECT RADAR vectors.\nRWY\n29L/R\n11L/R\nIKA 1A\nIKA 1B\nCHANGES:\n.RADAR.DEPARTURE.\nIKA 1A, IKA 1B\nRADAR DEPARTURES\nRUS DME established, new format.\nCONTOUR\nINTERVALS\n17000\n15000\n13000\n11000\n9000\n7000\n5000\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21",
+    "fullTextLength": 1575
+  },
+  {
+    "page": 386,
+    "airport": "OIIE",
+    "category": "Approach",
+    "chartName": "LOC RWY 29R",
+    "status": "not_to_scale",
+    "reason": "No measured latitude/longitude grid could be resolved",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 388724,
+    "notToScaleTextBoxes": [
+      [
+        478.56,
+        384.79,
+        527.72,
+        391.15
+      ],
+      [
+        95.16,
+        388.39,
+        144.32,
+        394.75
+      ]
+    ],
+    "printedGridLabels": [
+      "51-10",
+      "51-20",
+      "51-30"
+    ],
+    "headerText": "116^\n200^\nOI(D)-3N\nOI(R)-59\n4000\n4000\nFinal\nApch Crs\n140^\n320^\n140^\n(IAF)\n284^\n11\nD\nM\nE\nAr\nc\nI\nK\nA\nTEHRAN, IRAN\nIKA\nOIIE/IKA\nIMAM KHOMAINI INTL\n2\n1 6500 within 15 NM\n6500 within 10 NM\nCHANGES:\nBRIEFING STRIP TM\nApt Elev 3305'\n3256'\n5230'(1974')\nLOC\nIIKA\n284^\nTrans alt: 9000'\nRwy Elev: 114 hPa\nD6.2 IIKA\n110.3\nR-284\n114.3\n4600'\non\nMSA IKA VOR\nMISSED APCH:\nRwy\nREVUR\n1\n2\n1\n1\n020^\n270^\n320^\n070^\n150^\n230^\n127.2\n125.1\n119.7\nMEHRABAD Approach (R)\nIKA Tower\n118.7\n121.6\nGround\n114.3 IKA\nDI K A\nATIS\nILS DME\nI I K A\n284^ 110.3 IIKA\n0\n5\n5\n10\nJEPPESEN\nGnd speed-Kts\n70\n90\n100\n120\n140\n160\nAlt Set: hPa\nPANS OPS\nClimb on R-284 IKA to 4600', then turn LEFT to\n121.825\n095^\n275^\nNOT TO SCALE\n277^\n097^\nVARAMIN\n373 VR\nVR\nRUDESHUR\n116.95 RUS\nRUS\nNOT TO SCALE\n(IAF)\n(IAF)\n21-1\n5.6\n5.5\nD6.2\n6000'\nIKA\nIIKA\n284^\nD0.7\nIIKA\n0.5\nRwy 3256'\nTCH 57'\nV2400m\nV3600m\n(605')\n(705')\n3910'\n4010'\nR1200m\nCIRCLE-TO-LAND\nILS\nLOC (GS out)\n3670'(414')\nFULL\nALS out\nMDA(H)\nMax\nKts\n180\n205\nDA(H)\n(223')\nALS out\n3479'\nR1200m\nTDZ or CL out\nR1900m\nA\nB\nC\nD\n135\n100\nR1500m\nD:\n(203')\n3459'\nB:\n(200')\n3456'\nA:\n(213')\n3469'\nC:\n3750'(445') V1500m\n3810'(505') V1600m\n849\n743\n637\n531\n478\n372\n3.00^\nMAP at D0.7 IIKA\nIIKA\nD0.7\nRefer to\nMinimums\nDA(H)\nILS\nD11.0\n5230'\nMAX 220 KT\nMAX 220 KT\nIKA\nD11.0\nD22.7/\nR-115 RUS\nD22.8/\nR-095 IKA\nIIKA\nD6.2\nIKA\nD11.0\n(IF)\n6000\n8400\n13,500\n9400\n6500\n7000\n8400\n| JEPPESEN, 2017, 2025. ALL RIGHTS RESERVED.\n[MA29R]\n[MA29R]\n[FF29R]\n[CF29R]\n[CF29R]\n[FF29R]\n[D116K]\n[D14~K]\n[D14~O]\nMAX 220KT\nMHA 8000\nMAX 220KT\nMHA 800",
+    "fullTextLength": 2245
+  },
+  {
+    "page": 387,
+    "airport": "OIIE",
+    "category": "Approach",
+    "chartName": "ILS RWY 29R (TEMPORARY PLATE)",
+    "status": "review_required_not_to_scale",
+    "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 371037,
+    "notToScaleTextBoxes": [
+      [
+        478.56,
+        422.11,
+        527.72,
+        428.47
+      ]
+    ],
+    "printedGridLabels": [
+      "35-20",
+      "35-30",
+      "51-10",
+      "51-20",
+      "51-30"
+    ],
+    "headerText": "OI(R)-59\nFinal\nApch Crs\n284^\nTEHRAN, IRAN\nOIIE/IKA\nIMAM KHOMAINI INTL\n2\n1 6500 within 15 NM\n6500 within 10 NM\nCHANGES:\nBRIEFING STRIP TM\nApt Elev 3305'\n3256'\n5230'(1974')\nLOC\nIIKA\n284^\nTrans alt: 9000'\nRwy Elev: 114 hPa\nD6.2 IIKA\n110.3\nMISSED APCH:\nRwy\n127.2\n125.1\n119.7\nMEHRABAD Approach (R)\nIKA Tower\n118.7\n121.6\nGround\nATIS\nILS DME\nI I K A\n284^ 110.3 IIKA\n0\n5\n5\n10\nJEPPESEN\nAlt Set: hPa\nPANS OPS\n121.825\nNOT TO SCALE\n277^\n097^\nVARAMIN\n373 VR\nVR\n(IAF)\n5.6\n5.5\n6000'\n284^\n0.5\nRwy 3256'\nTCH 57'\nV2400m\nV3600m\n(605')\n(705')\n3910'\n4010'\nCIRCLE-TO-LAND\nILS\nALS out\nMDA(H)\nMax\n180\n205\nDA(H)\n(223')\n3479'\nR1200m\nTDZ or CL out\nA\nB\nC\nD\n135\n100\nD:\n(203')\n3459'\nB:\n(213')\n3469'\nC:\n3750'(445')\nV1500m\n3810'(505')\nV1600m\nIIKA\nD0.7\nRefer to\nMinimums\nDA(H)\n5230'\nMAX 220 KT\n(IF)\n[FF29R]\n[CF29R]\n[CF29R]\n[FF29R]\n284^\nMAX 220KT\nMHA 9000\n267^\nMissed apch requires a minimum climb gradient of 160'/NM.\nTrans level: FL110\nSTRAIGHT-IN LANDING\n1R750m when a Flight Director or Autopilot or HUD to DA is not used.\n.Std.\nR550m\n5 JUN 26\n.Eff.11.Jun.\n21-1-0\nILS Rwy 29R\nRUDESHUR\n116.95 RUS\nRUS\nD\n270^\n275^\n095^\nMAX 220 KT\nMHA 8000\n270^\nALTITUDE\n5230'\n4910'\n4590'\n4270'\n3950'\n3640'\nDIST to THR\n6.0\n5.0\n4.0\n3.0\n2.0\n1.0\nMISSED APCH FIX\n| JEPPESEN, 2026. ALL RIGHTS RESERVED.\n4000'\non284^\nGnd speed-KT\nGS\n3.00^\n70\n90\n100\n120\n140\n160\n372\n478\n531\n637\n743\n849\nKT\nLT\non\nRUS\nR-090\n116.95\n1 R550m\n(200')\n3456'\nA:\n1\n2\n1\n1\n020^\n270^\n070^\n150^\n230^\n8400\n13,500\n9400\n7000\n8400\n35-20\n35-30\n51-10\n51-20\n51-30\nIIKA\nD6.2\nIIKA\nD11.8\nD0.7IIKA\nD",
+    "fullTextLength": 2134
+  },
+  {
+    "page": 388,
+    "airport": "OIIE",
+    "category": "Approach",
+    "chartName": "ILS RWY 29R",
+    "status": "not_to_scale",
+    "reason": "No measured latitude/longitude grid could be resolved",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 334763,
+    "notToScaleTextBoxes": [
+      [
+        478.92,
+        384.86,
+        526.02,
+        390.98
+      ],
+      [
+        95.64,
+        388.46,
+        142.74,
+        394.58
+      ]
+    ],
+    "printedGridLabels": [
+      "51-10",
+      "51-20",
+      "51-30"
+    ],
+    "headerText": "116^\n200^\nOI(D)-3N\nOI(R)-59\n4000\n4000\n4000\nFinal\nApch Crs\n140^\n320^\n140^\n(IAF)\nD6.2\n284^\n11\nD\nM\nE\nAr\nc\nI\nK\nA\nIKA\nIIKA\nTEHRAN, IRAN\nIKA\nOIIE/IKA\nIMAM KHOMAINI INTL\nCHANGES:\nBRIEFING STRIP\nTM\nApt Elev 3305'\n3256'\nLOC\nIIKA\n284^\n110.3\nR-284\n114.3\n4600'\non\nMSA IKA VOR\nRwy\nREVUR\n1\n2\n1\n1\n020^\n270^\n320^\n070^\n150^\n230^\n320^\n127.2\n125.1\n119.7\nMEHRABAD Approach (R)\nIKA Tower\n118.7\n121.6\nGround\n114.3 IKA\nDI K A\nATIS\nILS DME\nI I K A\n284^ 110.3 IIKA\n0\n5\n5\n10\nJEPPESEN\nGnd speed-Kts\n70\n90\n100\n120\n140\n160\nDA(H)\n(133')\n3389'\nA\nCAT II ILS\nDA(H)\n(147')\n3403'\nB\nDA(H)\n(156')\nC\nDA(H)\n(167')\n3423'\nD\n3412'\nRA 134'\nRA 148'\nRA 157'\nRA 169'\nPANS OPS\n121.825\nD11.0\n095^\n275^\nNOT TO SCALE\n277^\n097^\n115^\n(IF)\nD22.8/\nR-095 IKA\nVARAMIN\n373 VR\nVR\n(IAF)\nD11.0 IKA\n5.6\n6.0\nD6.2\nIKA\nIIKA\n284^\nRwy 3256'\nTCH 57'\n849\n743\n637\n531\n478\n372\n3.00^\nD11.0\n5230'\nCAT II ILS\nRefer to\nMinimums\nCAT II ILS Rwy 29R\nGS\nMAX 220 KT\n21-1A\nD22.7/\nR-115 RUS\n268^\n6000\n6000'\n284^\n[D116K]\n[CF29R]\n[FF29R]\nMAX 220KT\nMHA 9000\n[D14~K]\n[D14~O]\n| JEPPESEN, 2017, 2025. ALL RIGHTS RESERVED.\n8400\n9400\n[FF29R]\n[CF29R]\n51-10\n51-20\n51-30\nIMAM\nKHOMAINI\n2\n1 6500 within 15 NM\n6500 within 10 NM\nClimb on R-284 IKA to 4600', then turn LEFT to\nMISSED APCH:\nTrans alt: 9000'\nRwy Elev: 114 hPa\nAlt Set: hPa\nD6.2 IIKA\n(1974')\n5230'\nMAX 220 KT\nMAX 220KT\nMHA 8000\nMAX 220KT\nMHA 8000\nRUDESHUR\n116.95 RUS\nRUS\nNOT TO SCALE\n(IAF)\nD\n6000\n8000\n6500\n7000\n8400\n8400\n13,500\nTrans level: FL110\nMissed apch requires a minimum climb gradient of 160'/NM.\n6000\n.Std.\nR400m\nR450m\nSTRA",
+    "fullTextLength": 1793
+  },
+  {
+    "page": 389,
+    "airport": "OIIE",
+    "category": "Approach",
+    "chartName": "CAT II ILS RWY 29R (TEMPORARY PLATE)",
+    "status": "review_required_not_to_scale",
+    "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 345349,
+    "notToScaleTextBoxes": [
+      [
+        478.56,
+        422.11,
+        527.72,
+        428.47
+      ]
+    ],
+    "printedGridLabels": [
+      "35-20",
+      "35-30",
+      "51-10",
+      "51-20",
+      "51-30"
+    ],
+    "headerText": "OI(R)-59\nFinal\nApch Crs\n284^\nTEHRAN, IRAN\nOIIE/IKA\nIMAM KHOMAINI INTL\n2\n1 6500 within 15 NM\n6500 within 10 NM\nCHANGES:\nBRIEFING STRIP TM\nApt Elev 3305'\n3256'\n5230'(1974')\nLOC\nIIKA\n284^\nTrans alt: 9000'\nRwy Elev: 114 hPa\nD6.2 IIKA\n110.3\nMISSED APCH:\nRwy\n127.2\n125.1\n119.7\nMEHRABAD Approach (R)\nIKA Tower\n118.7\n121.6\nGround\nATIS\nILS DME\nI I K A\n284^ 110.3 IIKA\n0\n5\n5\n10\nJEPPESEN\nAlt Set: hPa\nPANS OPS\n121.825\nNOT TO SCALE\n277^\n097^\nVARAMIN\n373 VR\nVR\n(IAF)\n5.6\n6.0\n284^\nRwy 3256'\nTCH 57'\nRefer to\nMinimums\n5230'\nMAX 220 KT\n[FF29R]\nMAX 220KT\nMHA 9000\n267^\nMissed apch requires a minimum climb gradient of 160'/NM.\nTrans level: FL110\nSTRAIGHT-IN LANDING\n.Std.\n5 JUN 26\n.Eff.11.Jun.\nRUDESHUR\n116.95 RUS\nRUS\nD\n270^\n275^\n095^\nMAX 220 KT\nMHA 8000\nALTITUDE\nDIST to THR\nMISSED APCH FIX\n| JEPPESEN, 2026. ALL RIGHTS RESERVED.\n4000'\nGnd speed-KT\nGS\n3.00^\n70\n90\n100\n120\n140\n160\n372\n478\n531\n637\n743\n849\n1\n2\n1\n1\n020^\n270^\n070^\n150^\n230^\n8400\n13,500\n9400\n7000\n8400\n35-20\n35-30\n51-10\n51-20\n51-30\nIIKA\nD6.2\n4685'\nCAT II ILS Rwy 29R\n21-1A-0\nCAT II ILS\nA\nB\nC\nD\nRA 134'\nRA 148'\nRA 157'\nRA 169'\nR400m\nR450m\nDA(H)\n(147')\n3403'\nDA(H)\n(156')\n3412'\nDA(H)\n(167')\n3423'\nDA(H)\n(133')\n3389'\nCAT II ILS\n284^\n(IF)\nIIKA\nD11.8\n[CF29R]\n6000\n[FF29R]\nD6.2 IIKA\n6000'\n[CF29R]\nIIKA\nD11.8\n284^\n270^\n270^\nMSA ARP\nAt D0.7 IIKA continue on track 284^, at 4000' turn\nLEFT to intercept R-090 RUS inbound to RUS VOR (cross RUS VOR \nbelow 7000'), over RUS VOR continue climb on R-270 RUS from \nRUS VOR to 8000', then turn LEFT to join RUS VOR holdi",
+    "fullTextLength": 1946
+  },
+  {
+    "page": 428,
+    "airport": "OIII",
+    "category": "SID",
+    "chartName": "VR 1A, VR 1B",
+    "status": "needs_additional_control_points_or_review",
+    "reason": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 225312,
+    "notToScaleTextBoxes": [],
+    "printedGridLabels": [
+      "35-30",
+      "51-00",
+      "51-30"
+    ],
+    "headerText": "137^\nTEHRAN\nImam Khomaini Intl\nOIIE\n16,200\n1\n8\n0\n^\n9400\n270^\n7900\n305^\n15,300\n V\nOR\nN\nR\nT\n0\n7\n5\n^\nJEPPESEN\nApt Elev\n3965\nTrans alt: 9000\n0\n5\n1\n0\n1\n5\n2\n0\n5\n2\n5\n115.3 TRN\nTEHRAN\nTRN\nD\n8357\nVARAMIN\n373 VR\nVR\n.Eff.2.Nov.\n27 OCT 23\nVR 1A\nV\nR\n \n1\nB\n114\n153\n35-30\n51-00\n51-30\nRWY\nSID\nROUTING\n29L/R\n11L/R\nTurn LEFT, intercept TRN R137 to VR NDB, climb to cleared FL.\nTurn RIGHT, intercept TRN R137 to VR NDB, climb to cleared FL.\nOIII/THR\n.SID.\nCHANGES:\nMEHRABAD INTL\n10-3H\nTEHRAN, IRAN\nDEPARTURES\n| JEPPESEN, 2020, 2023. ALL RIGHTS RESERVED.\n(ALL RWYS)\nCHANGES: VARAMIN SIDs renamed VR.\nVR 1A [VR1A]\nVR 1B [VR1B]\nVR 1A\nVR 1B\nCONTOUR\nINTERVALS\n10000\n8000\n6000\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 813
+  },
+  {
+    "page": 432,
+    "airport": "OIII",
+    "category": "Airport",
+    "chartName": "HOT SPOTS",
+    "status": "needs_additional_control_points_or_review",
+    "reason": "No measured latitude/longitude grid could be resolved",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 297182,
+    "notToScaleTextBoxes": [],
+    "printedGridLabels": [
+      "35-41.2",
+      "35-41.3",
+      "35-41.4",
+      "35-41.5",
+      "35-41.6",
+      "35-41.7",
+      "35-41.8",
+      "35-41.9",
+      "51-17.9",
+      "51-18",
+      "51-18.7",
+      "51-18.8",
+      "51-18.9",
+      "51-19",
+      "51-19.1",
+      "51-19.2",
+      "51-19.3",
+      "51-19.4",
+      "51-19.5",
+      "51-19.6",
+      "51-19.7",
+      "51-19.8"
+    ],
+    "headerText": "ARP\nE5\nA4\nB4\nB3\nA3\nA\nA\nA2\nRWY 11L/29R\nRWY 11R/29L\nControl\nTower\nE1\nTEHRAN, IRAN\nMEHRABAD INTL\nOIII/THR\nA\nJEPPESEN\nE6\nAPRON\n1\n303\n301\n305\n302 304\n306\n206\n205 204\n203\n202\n201\n102 104106 108110112 114\n101103 105 107109111113\nE4\nE3\nE2\nB2\n308\nE8\nE9\n410409\n408\n407\n406\n405\n404\n403\n402\n401\nA\nC\nTerminal 3\nTerminal 2\nTerminal 1\nREPUBLIC\nAPRON\nAPRON\nIRAN AIR\nAPRON\nE7\nC4E\nC4W\nC4E\nROMIN\nRADIN\nPARSE400\n310\nMAZDA\n100\n115\n116\n117\n118\n119\n120\n121\nMITRA\n207\n208\n200\n123\n125\n| JEPPESEN, 1998, 2024. ALL RIGHTS RESERVED.\n35-41.2\n35-41.3\n35-41.4\n35-41.6\n35-41.4\n35-41.3\n35-41.2\n35-41.5\n35-41.6\n51-18.7\n51-18.8\n51-19\n51-19.1\n51-19.2\n51-19.3\n51-19.4\n51-19.5\n51-19.6\n51-19.7\n51-19.8\n51-19.4\n51-19.5\n51-18.7\n51-18.8\n51-18.9\n51-19\n51-19.1\nASEMAN\nC\nAPRON 4\nAPRON 3\nAPRON 2\nC\nAIS\n51-19.8\n35-41.5\n51-18.9\n51-19.6\n20 DEC 24\n.Eff.26.Dec.\n35-41.6\n35-41.7\n35-41.7\n51-19.7\n51-19.2\n51\n-\nCHANGES:\n10-9B\nLEGEND\nHOT SPOTS\nSee (10-9A) AIRPORT INFO, HOT SPOTS,\nTAKE-OFF MNMS for description of Hot Spots.\nNo entry the RWY for take-off (one-way traffic)\n35-41.9\n35-41.9\n507\nAPRON 5\n35-41.8\n35-41.8\nCYRUS\nY\nA\nA7\nA\n51-17.9\n51-17.9\n RWY\n11L/29R\n51-18\n51-18\nStands coords moved to 10-9C, Apron 5 moved from 10-9C, guidelines.\nHS5\nHS4\nHS6\nHS4\nHS2\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 1366
+  },
+  {
+    "page": 444,
+    "airport": "OIKB",
+    "category": "STAR",
+    "chartName": "ASMUK 1P, ASMUK 1S, ASMUK 1X",
+    "status": "review_required_not_to_scale",
+    "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 292844,
+    "notToScaleTextBoxes": [
+      [
+        135.96,
+        216.45,
+        193.49,
+        226.65
+      ]
+    ],
+    "printedGridLabels": [
+      "27-00",
+      "27-30",
+      "56-30"
+    ],
+    "headerText": "R055\nBANDAR ABBAS\nHavadarya\nOIKP\n2000\n270^\n2800\n360^\n9700\n \nD\nN\nB\nV O\nR\n090^\nASMUK\nD13.0 BND\n163^\nMHA 4000\n055^\n235^\nD13.0 BND\nD20.0 BND\n163^\nD12.0 BND\n7.0\n117.2 BND\nBANDAR ABBAS\nBND\nD\n12.0\nMHA 3000\n206^\n026^\nD11.0 BND\n206^\n11.0\nR343\nASMUK 1P, 1S, 1X\nFL130\n3000\n3000\nASMUK 1S, 1X\n40\nASMUK 1P: FL130\nASMUK 1S, 1X: FL110\n1.0\nASMUK 1S\n(IAF)\nD1\n3.\n0 \nAr\nc\n40\n00\nAS\nM\nUK\n 1\nP\n.STAR.\nJEPPESEN\n| JEPPESEN, 2022. ALL RIGHTS RESERVED.\nOIKB/BND\nBANDAR ABBAS INTL\nBANDAR ABBAS, IRAN\nApt Elev\n22\n*ATIS\n128.650\n10-2\n5\n10\n15\n20\n25\n30\n35\n40\n45\n0\n5\nAlt Set: hPa   Trans level: By ATC\nActual descent clearance will be as directed by ATC.\n(ASMUK 1S, 1X only)\n(ASMUK 1P only)\n8603\n4 FEB 22\n85\n131\n27-00\n27-30\n56-30\nASMUK 1P [ASMU1P]\nASMUK 1S [ASMU1S]\nASMUK 1X [ASMU1X]\nARRIVALS\n(RWYS 03R/21L)\nROUTING\nSTAR\nASMUK 1X\nASMUK 1S\nASMUK 1P\nIntercept BND R343 inbound to BND VOR.\nIntercept BND R343 inbound to D13.0 BND, turn LEFT, along D13.0 Arc BND to\nBND R055/D13.0.\nIntercept BND R343 inbound to BND VOR, BND R206 to BND R206/D11.0.\nNOT TO SCALE\nCHANGES: STARs DAVEP 1P & 1X transferred, new format.\nCONTOUR\nINTERVALS\n10000\n8000\n6000\n4000\n2000\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 1283
+  },
+  {
+    "page": 446,
+    "airport": "OIKB",
+    "category": "STAR",
+    "chartName": "DAVEP 1X, TAVNO 1P, TAVNO 1X",
+    "status": "not_to_scale",
+    "reason": "No measured latitude/longitude grid could be resolved",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 295511,
+    "notToScaleTextBoxes": [
+      [
+        126.6,
+        261.83,
+        186.2,
+        272.39
+      ],
+      [
+        466.8,
+        481.19,
+        526.4,
+        491.75
+      ]
+    ],
+    "printedGridLabels": [
+      "27-30",
+      "56-30"
+    ],
+    "headerText": "R055\nBND\n055^\n2000\n270^\n2800\n360^\n9700\n \nD\nN\nB\nV\nOR\n090^\n055^\n235^\nHOLDING OVER\nBND R055/D13.0\nDAVEP\nD25.0 BND\n238^\nDAVEP 1X\n117.2 BND\nBANDAR ABBAS\nBND\nD\n25.0\nTAVNO\nD25.0 BND\n187^\nD13.0 BND\n12.0\nD13.0 BND\n187^\n13.0\nTAVNO 1X\nFL70\n3000\nR058\nR007\n35\nFL120\nFL80\n3000\n35\nTAVNO 1P, 1X\n(IAF)\n.STAR.\nJEPPESEN\n| JEPPESEN, 2022. ALL RIGHTS RESERVED.\nOIKB/BND\nBANDAR ABBAS INTL\nBANDAR ABBAS, IRAN\nApt Elev\n22\n*ATIS\n128.650\nAlt Set: hPa   Trans level: By ATC\nActual descent clearance will be as directed by ATC.\n10-2B\n5\n10\n15\n20\n25\n30\n35\n40\n45\n0\n5\n8603\n4 FEB 22\nMHA 4000\nTA\nV\nN\nO \n1P\n4\n00\n0\nD\n13\n.0 \nA\nrc\n131\n27-30\n56-30\nDAVEP 1X [DAVE1X]\nTAVNO 1P [TAVN1P]\nTAVNO 1X [TAVN1X]\nARRIVALS\n(RWYS 03R/21L)\nROUTING\nSTAR\nTAVNO 1X\nTAVNO 1P\nDAVEP 1X\nIntercept BND R007 inbound to BND VOR.\nIntercept BND R058 inbound to BND VOR.\nIntercept BND R007 inbound to D13.0 BND, turn LEFT, along D13.0 Arc BND to\nBND R055/D13.0.\nNOT TO SCALE\nNOT TO SCALE\nCHANGES: STARs transferred, new format.\nCONTOUR\nINTERVALS\n10000\n8000\n6000\n4000\n2000\nH\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 1169
+  },
+  {
+    "page": 448,
+    "airport": "OIKB",
+    "category": "STAR",
+    "chartName": "MOBON 1P, MOBON 1S, MOBON 1X",
+    "status": "review_required_not_to_scale",
+    "reason": "NOT TO SCALE page requires a fingerprint-bound review decision",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 312161,
+    "notToScaleTextBoxes": [
+      [
+        143.1,
+        711.72,
+        153.54,
+        770.76
+      ]
+    ],
+    "printedGridLabels": [
+      "27-00",
+      "27-30",
+      "56-00",
+      "56-30"
+    ],
+    "headerText": "270^\nR\n2\n0\n6\nBANDAR ABBAS\nHavadarya\nOIKP\n2000\n270^\n2800\n3\n6\n0\n^\n9700\n090^\nB\nN\nD \nVO\nR\nD10.0 BND\n119^\n10.0\nMHA 4000\n0\n5\n5\n^\n2\n3\n5\n^\n0\n5\n5\n^\n1\n3\n.\n0\nD11.0 BND\nMHA 3000\n2\n0\n6\n^\n0\n2\n6\n^\nD11.0 BND\n117.2 BND\nBANDAR ABBAS\nBND\nD\nD13.0 BND\n49\nFL100\nFL100\n4\n0\n0\n0\n1.0\n(MOBON 1S only)\nMOBON 1P: 4000\nMOBON 1X: 3000\nR299\nM\nO\nB\nO\nN\n 1\nP\n(IAF)\nF\nL1\n0\n0\nM\nO\nB\nON\n 1\nS\nD1\n1.\n0 \nAr\nc\n3\n0\n00\n(IAF)\nMOBON\nMOBON 1P, 1S, 1X\n.STAR.\nJEPPESEN\n| JEPPESEN, 2022. ALL RIGHTS RESERVED.\nOIKB/BND\nBANDAR ABBAS INTL\nBANDAR ABBAS, IRAN\n10-2D\n5\n10\n15\n20\n25\n30\n35\n40\n45\n0\n5\nApt Elev\n22\n*ATIS\n128.650\nAlt Set: hPa   Trans level: By ATC\nActual descent clearance will be as directed by ATC.\n7894\n4 FEB 22\n[D27~K]\n48\n85\n111\n131\n27-00\n27-30\n56-00\n56-30\nROUTING\nSTAR\nMOBON 1X\nMOBON 1S\nMOBON 1P\nIntercept BND R299 inbound to BND VOR.\nIntercept BND R299 inbound to BND VOR,\nBND R055 to BND R055/D13.0.\nIntercept BND R299 inbound to D11.0 BND,\nturn RIGHT, along D11.0 Arc BND to\nBND R206/D11.0.\nNOT TO SCALE\nMOBON 1P [MOBO1P]\nMOBON 1S [MOBO1S]\nMOBON 1X [MOBO1X]\nARRIVALS\n(RWYS 03R/21L)\nCHANGES: STARs transferred, new format.\nCONTOUR\nINTERVALS\n8000\n6000\n4000\n2000\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 1282
+  },
+  {
+    "page": 454,
+    "airport": "OIKB",
+    "category": "SID",
+    "chartName": "MOBON 1A, MOBON 1B, MOBON 1D",
+    "status": "not_to_scale",
+    "reason": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 339786,
+    "notToScaleTextBoxes": [
+      [
+        146.13,
+        675.1,
+        156.33,
+        733.08
+      ]
+    ],
+    "printedGridLabels": [
+      "27-30",
+      "56-00",
+      "56-30"
+    ],
+    "headerText": "0\n5\n0\n^\n300^\n285^\nBANDAR ABBAS\nHavadarya\nOIKP\n2000\n270^\n2800\n3\n6\n0\n^\n9700\n \nD\nN\nB\nV\nOR\n090^\nFL60\nFL130\n3000\n2000\n3000\nFL110\nFL110\nApt Elev\n22\n.SID.\nJEPPESEN\n| JEPPESEN, 2022. ALL RIGHTS RESERVED.\nOIKB/BND\nBANDAR ABBAS INTL\nBANDAR ABBAS, IRAN\n10-3E\n5\n10\n15\n20\n25\n30\n35\n40\n45\n0\n5\nTrans alt: 4000\nMOBON\n117.2 BND\nBANDAR ABBAS\nBND\nD\nR\n0\n7\n0\nR\n1\n8\n8\n2\n1\n0\n^\n0\n0\n8\n^\n2\n5\n0\n^\n285^\nMOBON 1A\nMOBON 1B, 1D\nM\nO\nB\nO\nN\n1\nB\nMOBON 1A:\nMOBON 1B, 1D:\nTurn\nMOBON 1A:\n7894\n4 FEB 22\nM\nO\nB\nO\nN\n 1\nD\n111\n131\n27-30\n56-00\n56-30\nMOBON 1A [MOBO1A]\nMOBON 1B [MOBO1B]\nMOBON 1D [MOBO1D]\nDEPARTURES\nROUTING\nSID\nMOBON 1B\nMOBON 1A\nRWY\nMOBON 1D\n03R\n21L\nNOT TO SCALE\n(RWYS 03R/21L)\nCHANGES: Chart reindexed, new format.\nTurn RIGHT, intercept BND R050 to 3000, turn RIGHT, intercept BND\nR070 inbound to cross BND VOR at or above FL60, BND R285, at FL110\nturn RIGHT, intercept BND R300 to MOBON, climb to cleared FL.\nIntercept BND R210 to 3000, turn LEFT, intercept BND R188 inbound\nto cross BND VOR at or above FL60, turn LEFT, BND R285, at FL110\nturn RIGHT, intercept BND R300 to MOBON, climb to cleared FL.\nIntercept BND R210 to 2000, turn RIGHT, intercept BND R285, at\nFL110 turn RIGHT, intercept BND R300 to cross MOBON at or above\nFL130, climb to cleared FL.\nCONTOUR\nINTERVALS\n8000\n6000\n4000\n2000\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 1428
+  },
+  {
+    "page": 455,
+    "airport": "OIKB",
+    "category": "SID",
+    "chartName": "MOBON 1E, MOBON 1F, MOBON 1H",
+    "status": "not_to_scale",
+    "reason": "Printed grid has an inconsistent scale, angle, or mirrored orientation",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 345352,
+    "notToScaleTextBoxes": [
+      [
+        147.25,
+        674.53,
+        157.57,
+        733.08
+      ]
+    ],
+    "printedGridLabels": [
+      "27-30",
+      "56-00",
+      "56-30"
+    ],
+    "headerText": "2\n3\n0\n^\n120^\n0\n3\n0\n^\n105^\nBANDAR ABBAS\nHavadarya\nOIKP\n2000\n270^\n2800\n3\n6\n0\n^\n9700\n \nD\nN\nB\nND\nB\n090^\nFL60\nFL130\nFL110\n3000\nFL110\n2000\n3000\nApt Elev\n22\n.SID.\nJEPPESEN\n| JEPPESEN, 2022. ALL RIGHTS RESERVED.\nOIKB/BND\nBANDAR ABBAS INTL\nBANDAR ABBAS, IRAN\n10-3F\n5\n10\n15\n20\n25\n30\n35\n40\n45\n0\n5\nTrans alt: 4000\n2\n1\n0\n^\n2\n5\n0\n^\n285^\nM\nO\nB\nO\nN\n 1\nH\nMOBON 1E\nMOBON 1F, 1H\nMOBON 1E:\nTurn\nMOBON 1E:\n250 BND\nBANDAR ABBAS\nBND\n0\n5\n0\n^\nM\nO\nB\nO\nN\n 1\nF\n0\n0\n9\n^\nMOBON\n300^\n285^\n7894\n4 FEB 22\n111\n131\n27-30\n56-00\n56-30\nMOBON 1E [MOBO1E]\nMOBON 1F [MOBO1F]\nMOBON 1H [MOBO1H]\nDEPARTURES\nROUTING\nSID\nMOBON 1F\nMOBON 1E\nRWY\nMOBON 1H\n03R\n21L\nNOT TO SCALE\n(RWYS 03R/21L)\nCHANGES: Chart reindexed, new format.\nTurn RIGHT, intercept 210^ bearing from BND NDB to 2000, turn RIGHT, \nintercept 285^ bearing from BND NDB, at FL110 turn RIGHT, intercept\n300^ bearing from BND NDB to cross MOBON at or above FL130, climb\nto cleared FL.\nTurn RIGHT, intercept 210^ bearing from BND NDB to 3000, turn LEFT,\nintercept 009^ bearing to cross BND NDB at or above FL60, turn LEFT,\n285^ bearing, at FL110 turn RIGHT, intercept 300^ bearing from\nBND NDB to MOBON, climb to cleared FL.\nTurn RIGHT, intercept 050^ bearing from BND NDB to 3000, turn RIGHT,\nintercept 250^ bearing to cross BND NDB at or above FL60,\n285^ bearing, at FL110 turn RIGHT, intercept 300^ bearing from\nBND NDB to MOBON, climb to cleared FL.\nCONTOUR\nINTERVALS\n8000\n6000\n4000\n2000\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Not",
+    "fullTextLength": 1565
+  },
+  {
+    "page": 456,
+    "airport": "OIKB",
+    "category": "SID",
+    "chartName": "TAVNO 1B, TAVNO 1C, TAVNO 1D",
+    "status": "not_to_scale",
+    "reason": "No measured latitude/longitude grid could be resolved",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 320751,
+    "notToScaleTextBoxes": [
+      [
+        329.28,
+        194.17,
+        387.83,
+        204.49
+      ]
+    ],
+    "printedGridLabels": [
+      "27-30",
+      "56-30"
+    ],
+    "headerText": "050^\n015^\nBANDAR ABBAS\nHavadarya\nOIKP\n2000\n270^\n2800\n360^\n9700\n090^\nB\nND\n V\nO\nR\nFL60\nFL170\nFL80\n3000\n3000\n.SID.\nJEPPESEN\n| JEPPESEN, 2022. ALL RIGHTS RESERVED.\n5\n10\n15\n20\n25\n30\n35\n40\n45\n0\n5\nOIKB/BND\nBANDAR ABBAS INTL\nBANDAR ABBAS, IRAN\n10-3G\nApt Elev\n22\nTrans alt: 4000\n117.2 BND\nBANDAR ABBAS\nBND\nD\nTAVNO\n250^\nR070\n210^\nR188\n008^\nTAVNO\n1B\n007^\nTAVNO 1C\nTAVNO 1B, 1D\n60\n8603\n4 FEB 22\n438\n583\n875\n1167 1458 1750\nGnd speed-KT\n75\n100\n150\n200\n250\n300\n350 per NM\nTAVNO 1D\n131\n27-30\n56-30\nTAVNO 1D [TAVN1D]\nRWY\nROUTING\nSID\n21L\n03R\nTAVNO 1D\nTAVNO 1B\nTAVNO 1C\nNOT TO SCALE\nTAVNO 1B [TAVN1B], TAVNO 1C [TAVN1C]\nDEPARTURES\n(RWYS 03R/21L)\nCHANGES: Chart reindexed, new format.\nIntercept BND R210 to 3000, turn LEFT, intercept BND R188 inbound to cross\nBND VOR at or above FL60, BND R007 to cross TAVNO at or above FL170, climb\nto cleared FL.\nTurn LEFT, intercept BND R015 to FL80, turn LEFT, intercept BND R007 to cross\nTAVNO at or above FL170, climb to cleared FL.\nTurn RIGHT, intercept BND R050 to 3000, turn RIGHT, intercept BND R070\ninbound to cross BND VOR at  or above FL60, BND R007 to cross TAVNO at or\nabove FL170, climb to cleared FL.\nTAVNO 1C\n350 per NM up to FL130.\nThis SID requires a minimum climb gradient of\nCONTOUR\nINTERVALS\n10000\n8000\n6000\n4000\n2000\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 1417
+  },
+  {
+    "page": 457,
+    "airport": "OIKB",
+    "category": "SID",
+    "chartName": "TAVNO 1F, TAVNO 1G, TAVNO 1H",
+    "status": "not_to_scale",
+    "reason": "No measured latitude/longitude grid could be resolved",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 331963,
+    "notToScaleTextBoxes": [
+      [
+        329.4,
+        194.22,
+        388.44,
+        204.66
+      ]
+    ],
+    "printedGridLabels": [
+      "27-30",
+      "56-30"
+    ],
+    "headerText": "230^\n030^\n195^\nBANDAR ABBAS\nHavadarya\nOIKP\n2000\n270^\n2800\n360^\n9700\n090^\nB\nND\n N\nD\nB\nFL170\nFL60\nFL80\n3000\n3000\n10-3H\nTAVNO\n.SID.\nJEPPESEN\n| JEPPESEN, 2022. ALL RIGHTS RESERVED.\n5\n10\n15\n20\n25\n30\n35\n40\n45\n0\n5\nOIKB/BND\nBANDAR ABBAS INTL\nBANDAR ABBAS, IRAN\nApt Elev\n22\nTrans alt: 4000\n210^\n250^\n250 BND\nBANDAR ABBAS\nBND\n050^\n009^\nTAVNO\n1F\nTAVNO 1H\n009^\n015^\nTAVNO 1G\nTAVNO 1F, 1H\n60\n8603\n4 FEB 22\n438\n583\n875\n1167 1458 1750\nGnd speed-KT\n75\n100\n150\n200\n250\n300\n350 per NM\n131\n27-30\n56-30\nTAVNO 1H [TAVN1H]\nRWY\n21L\n03R\nTAVNO 1H\nTAVNO 1F\nTAVNO 1G\nNOT TO SCALE\nROUTING\nSID\nNOT TO SCALE\nTAVNO 1F [TAVN1F], TAVNO 1G [TAVN1G]\nDEPARTURES\n(RWYS 03R/21L)\nCHANGES: Chart reindexed, new format.\nTurn LEFT, intercept 015^ bearing from BND NDB to FL80, turn LEFT, intercept 009^\nbearing from BND NDB to cross TAVNO at or above FL170, climb to cleared FL.\nTurn RIGHT, intercept 210^ bearing from BND NDB to 3000, turn  LEFT, intercept\n009^ bearing to cross BND NDB at or above FL60, 009^ bearing to cross TAVNO at\nor above FL170, climb to cleared FL.\nTurn RIGHT, intercept 050^ bearing from BND NDB to 3000, turn RIGHT, intercept\n250^ bearing to cross BND NDB at or above FL60, 009^ bearing to cross TAVNO at\nor above FL170, climb to cleared FL.\nTAVNO 1G\n350 per NM up to FL130.\nThis SID requires a minimum climb gradient of\nCONTOUR\nINTERVALS\n10000\n8000\n6000\n4000\n2000\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longe",
+    "fullTextLength": 1511
+  },
+  {
+    "page": 459,
+    "airport": "OIKB",
+    "category": "Airport",
+    "chartName": "PARKING STANDS & COORDS",
+    "status": "needs_additional_control_points_or_review",
+    "reason": "Invalid affine fit: rank 3, residual 1.828",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 199423,
+    "notToScaleTextBoxes": [],
+    "printedGridLabels": [
+      "27-12.3",
+      "27-12.4",
+      "27-12.5",
+      "27-12.6",
+      "27-12.7",
+      "56-22",
+      "56-22.1",
+      "56-22.2",
+      "56-22.3"
+    ],
+    "headerText": "JEPPESEN\n10-9A\n27-12.7\n27-12.6\n27-12.4\n27-12.3\n27-12.5\n27-12.7\n27-12.6\n27-12.5\n27-12.4\n27-12.3\n56-22\n56-22.1\n56-22.2\n56-22.3\n56-22\n56-22.1\n56-22.2\n101\nAPRON 1\nB\n102\n103\n104\n105\n106\n107\n108\nAPRON 2\nC\nControl Tower\nDOMESTIC\nTERMINAL\nINTERNATIONAL\nTERMINAL\nRWY 03L/21R\nRWY 03R/21L\n4 APR 25\n.Eff.17.Apr.\n| JEPPESEN, 2019, 2025. ALL RIGHTS RESERVED.\nBuildings.\n56-22.3\nOIKB/BND\nBANDAR ABBAS, IRAN\nBANDAR ABBAS INTL\nCHANGES:\nINS COORDINATES\nCOORDINATES\nSTAND No.\nSTAND No.\nCOORDINATES\n101\n102, 103\n104\n105\n106, 107\n108\nN27 12.7 E056 22.2\nN27 12.6 E056 22.2\nN27 12.5 E056 22.1\nN27 12.5 E056 22.1\nN27 12.4 E056 22.1\nN27 12.4 E056 22.0\nAPRON 1\nAPRON 2\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 804
+  },
+  {
+    "page": 471,
+    "airport": "OIIP",
+    "category": "STAR",
+    "chartName": "MIVAK 1Q, PAVET 1Q",
+    "status": "not_to_scale",
+    "reason": "NOT TO SCALE printed on source page",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 173459,
+    "notToScaleTextBoxes": [
+      [
+        311.66,
+        643.83,
+        318.98,
+        699.84
+      ]
+    ],
+    "printedGridLabels": [],
+    "headerText": "PAYAM\n117.5 PIM\nPIM\nN35 45.7 E050 51.1\nD\nMIVAK\n063^\n3\n9\n7\n5\n0\n0\n9\n0\n0\n0\n49\n7500\nMIVAK 1Q\nP\nA\nV\nE\nT\n 1\nQ\n102^\nApt Elev\n10-2\n.STAR.\nPAYAM\n4170'\nKARAJ, IRAN\nAlt Set: hPa    Trans level: FL110    Trans alt: 9000'\n| JEPPESEN, 2005, 2024. ALL RIGHTS RESERVED.\nR243^\nR282^\nJEPPESEN\n.SPEED:\nD12.0 PIM\n1\n2\n.0\n127.05\n*ATIS\nOIIP/PYK\n.Eff.21.Mar.\nPAVET\n15 MAR 24\nMSA\nPIM VOR\n180^\n270^\n360^\n090^\n12,800\n15,500\n9000\n11,100\nNOT TO SCALE\nMAX 230 KT WITHIN CTR\nMAX 270 KT WITHIN TMA\nROUTING\nSTAR\nMIVAK 1Q\nPAVET 1Q\nARRIVALS\nAt MIVAK intercept PIM R-282 inbound to PIM VOR.\nAt PAVET intercept PIM R-243 inbound to PIM VOR.\nMIVAK 1Q [MIVA1Q]\nPAVET 1Q [PAVE1Q]\nCHANGES: MIVAK 1P and PAVET 1P withdrawn.\n(ALL RWYS)\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 854
+  },
+  {
+    "page": 472,
+    "airport": "OIIP",
+    "category": "STAR",
+    "chartName": "PAXID 1Q, RUS 1N, SAV 1P, SAV 1Q",
+    "status": "not_to_scale",
+    "reason": "NOT TO SCALE printed on source page",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 221346,
+    "notToScaleTextBoxes": [
+      [
+        106.32,
+        321.62,
+        162.33,
+        328.94
+      ]
+    ],
+    "printedGridLabels": [],
+    "headerText": "Apt Elev\n.STAR.\nPAYAM\n10-2A\nKARAJ, IRAN\n127.05\n4170'\nN35 01.1 E050 22.3\n408 SAV\nSAV\nR204^\nR168^\nPAXID\nPAYAM\n117.5 PIM\nPIM\nN35 45.7 E050 51.1\nD\n7500\n348^\n7500\n22\nFL115\nPAXID 1Q\n138^\n024^\n042^\n9000\n7500\nSAVEH\nN35 01.1 E050 22.3\nSAV\n(115.2) SAV\nD\nDME\n| JEPPESEN, 2005, 2024. ALL RIGHTS RESERVED.\nRUDESHUR\n116.95 RUS\nRUS\nN35 26.7 E050 54.3\nR222^\nR318^\nJEPPESEN\n19.2\n36.6\n50.4\n.SPEED:\nD20.0 PIM\nD\nAlt Set: hPa    Trans level: FL110    Trans alt: 9000'\n20.0\n*ATIS\nOIIP/PYK\n.Eff.21.Mar.\nSAV 1Q\nSAV 1P\nRUS 1N\n15 MAR 24\nMHA 9000\n056^\n236^\nMSA\nPIM VOR\n180^\n270^\n360^\n090^\n12,800\n15,500\n9000\n11,100\nNOT TO SCALE\nMAX 230 KT WITHIN CTR\nMAX 270 KT WITHIN TMA\nROUTING\nSTAR\nPAXID 1Q [PAXI1Q]\nARRIVALS\nAt SAV NDB intercept RUS R-222 inbound to RUS VOR, RUS R-348 to PIM VOR.\nAt SAV NDB intercept PIM R-204 inbound to PIM VOR.\nSAV 1P [SAV1P]\nSAV 1Q [SAV1Q]\nSAV 1P\nSAV 1Q\nPAXID 1Q\nAt PAXID intercept PIM R-318 inbound to PIM VOR.\nRUS 1N\nAt RUS VOR intercept PIM R-168 inbound to PIM VOR.\nCHANGES: PAXID 1P and SAV 1S withdrawn, RUS 1N established.\nRUS 1N [RUS1N]\n(ALL RWYS)\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 1216
+  },
+  {
+    "page": 473,
+    "airport": "OIIP",
+    "category": "STAR",
+    "chartName": "RADAL 1N, BOXAM 2N, MUXOR 1N",
+    "status": "not_to_scale",
+    "reason": "NOT TO SCALE printed on source page",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 216325,
+    "notToScaleTextBoxes": [
+      [
+        174.55,
+        304.51,
+        182.11,
+        362.76
+      ]
+    ],
+    "printedGridLabels": [],
+    "headerText": "115^\nMUXOR\nRADAL\nBOXAM\n115.3 TRN\nTEHRAN\nTRN\nD\nN35 41.8 E051 17.0\nRUDESHUR\n116.95 RUS\nRUS\nN35 26.7 E050 54.3\nD\n373 VR\nVARAMIN\nVR\nN35 20.6 E051 38.2\nApt Elev\n.STAR.\nPAYAM\n4170'\nKARAJ, IRAN\nAlt Set: hPa    Trans level: FL110    Trans alt: 9000'\nJEPPESEN\n.SPEED:\n127.05\n*ATIS\nOIIP/PYK\n.Eff.21.Mar.\nM\nU\nX\nO\nR\n 1\nN\nRADAL 1N\nBOXAM 2N\nF\nL1\n2\n0\n9000\n9000\n9000\n3\n7\n.3\n43.3\n44.2\n1\n5\n.2\n36.7\n[TRN37]\n256^\n275^\n303^\n341^\n10-2B\n| JEPPESEN, 2024. ALL RIGHTS RESERVED.\n15 MAR 24\n180^\n270^\n305^\n075^\n16,200\n9400\n7900\n15,300\nMSA TRN VOR\nMHA 9000\n227^\n047^\n181^\n001^\nR095^\n9\n0\n0\n0 6\n5\n0\n0\nT\n1\n1\n4\n0\n0\nT\nMHA 9000\nNOT TO SCALE\nMAX 230 KT WITHIN CTR\nMAX 270 KT WITHIN TMA\nROUTING\nSTAR\nBOXAM 2N\nMUXOR 1N\nARRIVALS\nMUXOR 1N [MUXO1N]\nRADAL 1N [RADA1N]\nBOXAM 2N [BOXA2N]\nRADAL 1N\nCHANGES: New procedures at this airport.\n(ALL RWYS)\nAt MUXOR 256^ track to VR NDB, intercept\nRUS R-095 inbound to RUS VOR.\nAt BOXAM 341^ track to VR NDB, intercept\nRUS R-095 inbound to RUS VOR.\nAt RADAL 303^ track to VR NDB, intercept\nRUS R-095 inbound to RUS VOR.\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 1179
+  },
+  {
+    "page": 474,
+    "airport": "OIIP",
+    "category": "SID",
+    "chartName": "DHN 1G, DHN 1H, NAGMO 1E, NAGMO 1F",
+    "status": "not_to_scale",
+    "reason": "NOT TO SCALE printed on source page",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 243508,
+    "notToScaleTextBoxes": [
+      [
+        138.84,
+        614.18,
+        194.85,
+        621.5
+      ]
+    ],
+    "printedGridLabels": [],
+    "headerText": "300^\nApt Elev\n.SID.\n10-3\nPAYAM\nKARAJ, IRAN\n4170'\nTrans level: FL110    Trans alt: 9000'\nTEHRAN\n115.3 TRN\nN35 41.8 E051 17.0\nD\nNAGMO\nDEHNAMAK\n114.5 DHN\nDHN\nN35 15.2 E052 43.2\nD\n097^\nN35 45.7 E050 51.1\n120^\nTRN\nPAYAM\n117.5 PIM\nPIM\nD\n21\nR277^\n005^\n20\nNAGMO 1E, 1F\n107^ 75\nDHN 1G, 1H\nR287^\nN36 02.2\nE051 20.9\nDHN 1G, 1H\nNAGMO 1E, 1F\n7000'\nAt or above\nFL130\nAt or above\nDHN 1G\nNAGMO 1E\nDHN 1H\nNAGMO 1F\nSIDs are subject to Mehrabad APP clearance.\n| JEPPESEN, 2006, 2023. ALL RIGHTS RESERVED.\nJEPPESEN\n.Eff.28.Dec.\nOIIP/PYK\n22 DEC 23\nMSA\n180^\n270^\n360^\n090^\nPIM VOR\n12,800\n9000\n15,500\n11,100\n5500'\nAt\n30\n12\n12\n30\nDHN 1G\nDHN 1H\nNAGMO 1E\nNAGMO 1F\nRWY\nSID\nROUTING\nNOT TO SCALE\n5500'\nAt\nClimb on PIM R-300 to 5500', turn LEFT to PIM, PIM R-097 (TRN R-277 inbound) \nto TRN, turn RIGHT, TRN R-107 to DHN, climb to cleared FL.\nClimb on PIM R-120 to 5500', turn RIGHT to PIM, turn RIGHT, PIM R-097 \n(TRN R-277 inbound) to TRN, turn RIGHT, TRN R-107 to DHN, climb to cleared FL.\nClimb on PIM R-300 to 5500', turn LEFT to PIM, PIM R-097 (TRN R-277 inbound) \nto TRN, turn LEFT, TRN R-005 to NAGMO, climb to cleared FL.\nClimb on PIM R-120 to 5500', turn RIGHT to PIM, turn RIGHT, PIM R-097\n(TRN R-277 inbound) to TRN, turn LEFT, TRN R-005 to NAGMO, climb to cleared FL.\nCHANGES: Names and designators revised.\nDHN 1G [DHN1G], DHN 1H [DHN1H]\nNAGMO 1E [NAGM1E], NAGMO 1F [NAGM1F]\nDEPARTURES\n(ALL RWYS)\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026,",
+    "fullTextLength": 1542
+  },
+  {
+    "page": 475,
+    "airport": "OIIP",
+    "category": "SID",
+    "chartName": "PAROT 3E, PAROT 3F, PAXID 2E, PAXID 2F",
+    "status": "not_to_scale",
+    "reason": "NOT TO SCALE printed on source page",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 217665,
+    "notToScaleTextBoxes": [
+      [
+        381.24,
+        328.22,
+        437.25,
+        335.54
+      ]
+    ],
+    "printedGridLabels": [],
+    "headerText": "300^\n292^\nTRN\n318^\nApt Elev\n.SID.\nPAYAM\nKARAJ, IRAN\n4170'\nTrans level: FL110    Trans alt: 9000'\n10-3A\nPAROT\nN36 11.5 E049 58.7\n15\nPAROT 3F\nPAXID 2F\nPAXID\nN36 17.1 E050 20.4\nN35 45.7 E050 51.1\nPAYAM\n117.5 PIM\nPIM\nD\nTEHRAN\n115.3 TRN\nN35 41.8 E051 17.0\nDTRN\nPAXID 2E\n| JEPPESEN, 2006, 2023. ALL RIGHTS RESERVED.\nJEPPESEN\nDirect distance from\nPayam airport to:\nPAROT\n48NM\n.Eff.28.Dec.\n1. SIDs are subject to Mehrabad APP clearance.\n2. PAXID 2E/2F only to be used when instructed explicitly by ATC.\nD25.0 PIM\nOIIP/PYK\nPAROT 3E\n22 DEC 23\nMSA\n180^\n270^\n360^\n090^\nPIM VOR\n12,800\n9000\n15,500\n11,100\n30\nSID\nROUTING\n30\nPAROT 3E\nPAROT 3F\nPAXID 2E\n12\nPAXID 2F\n12\nRWY\nFL170\nAt or above\n7000'\nAt\nNOT TO SCALE\nTurn RIGHT, intercept PIM R-318 to PAXID, climb to cleared FL.\nFL95\nAbove\nClimb on PIM R-300 to 7000', turn RIGHT, intercept TRN R-292 to PAROT, \nclimb to cleared FL.\nTurn RIGHT, intercept PIM R-300 to 7000', turn RIGHT, intercept TRN R-292 to \nPAROT, climb to cleared FL.\nPAROT 3E [PARO3E], PAROT 3F [PARO3F]\nPAXID 2E [PAXI2E], PAXID 2F [PAXI2F]\nDEPARTURES\n(ALL RWYS)\nCHANGES: None.\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 1240
+  },
+  {
+    "page": 476,
+    "airport": "OIIP",
+    "category": "SID",
+    "chartName": "RUS 2E, RUS 2F",
+    "status": "not_to_scale",
+    "reason": "NOT TO SCALE printed on source page",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 169155,
+    "notToScaleTextBoxes": [
+      [
+        136.32,
+        677.69,
+        188.89,
+        684.53
+      ]
+    ],
+    "printedGridLabels": [],
+    "headerText": "300^\nApt Elev\n.SID.\nPAYAM\nKARAJ, IRAN\n4170'\nTrans level: FL110    Trans alt: 9000'\nN35 45.7 E050 51.1\n120^\nPAYAM\n117.5 PIM\nPIM\nD\n7000'\nAt or above\nSIDs are subject to Mehrabad APP clearance.\n10-3B\nRUS 2E\nRUS 2F\nRUDESHUR\n116.95 RUS\nRUS\nN35 26.7 E050 54.3\nR348^\n| JEPPESEN, 2006, 2023. ALL RIGHTS RESERVED.\nJEPPESEN\n.Eff.28.Dec.\n22 DEC 23\nD\nOIIP/PYK\nProcedure RUDESHUR renamed to RUS.\nMSA\n180^\n270^\n360^\n090^\nPIM VOR\n12,800\n9000\n11,100\n15,500\nCHANGES:\n168^\n19\nNOT TO SCALE\n30\n12\nRUS 2E\nRUS 2F\nRWY\nSID\nROUTING\n5500'\nAt\n5500'\nAt\nDEPARTURES\nClimb on PIM R-300 to 5500', turn LEFT to PIM VOR, turn RIGHT, PIM R-168\nto RUS VOR, climb to cleared FL.\nClimb on PIM R-120 to 5500', turn RIGHT to PIM VOR, turn LEFT, PIM R-168\nto RUS VOR, climb to cleared FL.\nRUS 2E\nRUS 2F\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 923
+  },
+  {
+    "page": 477,
+    "airport": "OIIP",
+    "category": "SID",
+    "chartName": "RUS 1G, RUS 1H",
+    "status": "not_to_scale",
+    "reason": "NOT TO SCALE printed on source page",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 168592,
+    "notToScaleTextBoxes": [
+      [
+        128.28,
+        669.02,
+        184.29,
+        676.34
+      ]
+    ],
+    "printedGridLabels": [],
+    "headerText": "Apt Elev\n.SID.\nPAYAM\nKARAJ, IRAN\n4170'\nTrans level: FL110    Trans alt: 9000'\n10-3C\nRUS 1G\nRUS 1H\nSIDs are subject to Mehrabad APP clearance.\nRUDESHUR\n116.95 RUS\nRUS\nN35 26.7 E050 54.3\nR348^\n| JEPPESEN, 2006, 2023. ALL RIGHTS RESERVED.\nJEPPESEN\n.Eff.28.Dec.\n22 DEC 23\nD\nProcedure RUDESHUR renamed to RUS.\nOIIP/PYK\nMSA\n180^\n270^\n360^\n090^\nPIM NDB\n12,800\n15,500\n9000\n11,100\nCHANGES:\n30\nSID\nROUTING\n12\nRWY\n306 PIM\nPAYAM\nN35 45.7 E050 51.1\nPIM\n168^\n19\nNOT TO SCALE\n6000'\nAt\n6000'\nAt\n7000'\nAt or above\nRUS 1G\nRUS 1H\nDEPARTURES\nClimb on runway heading to 6000', turn RIGHT to PIM NDB, 168^ bearing\nto RUS VOR, climb to cleared FL.\nClimb on runway heading to 6000', turn LEFT to PIM NDB, 168^ bearing to\nRUS VOR, climb to cleared FL.\nRUS 1G\nRUS 1H\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 902
+  },
+  {
+    "page": 497,
+    "airport": "OIKK",
+    "category": "SID",
+    "chartName": "ALGUV 1D, ALGUV 1E, ALGUV 2F, ALGUV 1G",
+    "status": "needs_additional_control_points_or_review",
+    "reason": "No measured latitude/longitude grid could be resolved",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 339458,
+    "notToScaleTextBoxes": [],
+    "printedGridLabels": [
+      "30-30",
+      "57-00"
+    ],
+    "headerText": "159^\n14,200\n180^\n15,800\n270^\n11,000\n360^\n12,000\n \nR\nE\nK\nVO\nR\n090^\n7400\n8500\n12000\n8500\nALGUV\n112.0 KER\nKERMAN\nKER\nD\n335^\n359^\nALGUV 2F\nALGUV 2F\nALGUV 1G\nALGUV 1E\nALGUV\n1E, 1G\nALGUV 2F\nSID\nALGUV 1D\nALGUV 1E\n34L\n16R\n34L\nApt Elev\nTrans alt: 15000\n5739\nALGUV 1G\n16R\nIntercept KER R335, at 8500, turn RIGHT, intercept\nKER R359 to ALGUV, climb to cleared FL.\n10-3\n.SID.\nJEPPESEN\nThese SIDs require minimum climb gradients of:\n1\n1\nuntil crossing\nKER VOR\n0\n5\n10\n15\n20\n5\n25\nOIKK/KER\nKERMAN\nKERMAN, IRAN\n30\nIntercept KER R159, at 7400, turn LEFT to KER VOR,\nturn RIGHT, intercept KER R359 to ALGUV, climb to\ncleared FL.\nALGUV 2F:\nAfter take off turn LEFT to cross KER VOR, turn\nRIGHT, intercept KER R359 to ALGUV, climb to\ncleared FL. MAX 200 KT until crossing KER VOR.\nALGUV 1D:\n300 per NM.\nALGUV 1E:\n260 per NM.\nALGUV 1G:\n310 per NM after intercepting KER R359.\n| JEPPESEN, 2021, 2022. ALL RIGHTS RESERVED.\nbut not\nbefore\nD8.0 KER\n388\n517\n775\n1033 1292 1550\n375\n500\n750\n1000 1250 1500\n325\n433\n650\n867\n1083 1300\n75\n100\n150\n200\n250\n300\nGnd speed-KT\n260 per NM\n300 per NM\n310 per NM\nD8.0\nKER\nALGUV\n1D\n9906\nALGUV 1D:\nturn RIGHT\nTurn\n.Eff.1.Dec.\n25 NOV 22\nIntercept KER R335, at or above 8500, but \nnot before D8.0 KER turn LEFT to cross KER VOR \nat or above 12000, turn LEFT, intercept KER R359 \nto ALGUV, climb to cleared FL.\n135\n162\n30-30\n57-00\nMAX 200 KT\nRWY\nROUTING\nALGUV 1E [ALGU1E]\nDEPARTURES\nALGUV 2F [ALGU2F]\nALGUV 1G [ALGU1G]\nALGUV 1D [ALGU1D]\n(RWYS 16R/34L)\nCHANGES: ALGUV 2F routing text.\nCONTOUR\nINTE",
+    "fullTextLength": 1684
+  },
+  {
+    "page": 498,
+    "airport": "OIKK",
+    "category": "SID",
+    "chartName": "ALKES 2C, ALKES 1D",
+    "status": "needs_additional_control_points_or_review",
+    "reason": "No measured latitude/longitude grid could be resolved",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 285133,
+    "notToScaleTextBoxes": [],
+    "printedGridLabels": [
+      "57-00",
+      "57-30"
+    ],
+    "headerText": "159^\n14,200\n1\n8\n0\n^\n15,800\n270^\n11,000\n3\n6\n0\n^\n12,000\n \nR\nE\nK\nVO\nR\n090^\n9000\n12000\n8500\n7400\n112.0 KER\nKERMAN\nKER\nD\nALKES\n099^\nALKES 1D\nALKES 1D\nALKES 2C\nALKES 2C\nALKES 2C:\nALKES 1D:\n335^\nApt Elev\nTrans alt: 15000\n5739\nSID\nALKES 2C\nALKES 1D\n34L\n16R\n.SID.\nJEPPESEN\n413\n550\n825\n1100 1375 1650\n288\n383\n575\n767\n958\n1150\nGnd speed-KT\n75\n100\n150\n200\n250\n300\n230 per NM\n330 per NM\nThese SIDs require minimum climb gradients of:\n330 per NM.\n230 per NM.\nALKES 2C:\nALKES 1D:\n0\n5\n10\n15\n20\n5\n25\nOIKK/KER\nKERMAN\nKERMAN, IRAN\n10-3A\n12846\n30\n| JEPPESEN, 2021, 2022. ALL RIGHTS RESERVED.\nIntercept KER R159, at 7400, turn LEFT to cross KER VOR at or above 9000, turn\nRIGHT to intercept KER R099 to ALKES, climb to cleared FL.\nD8.0\nKER\nbut not\nbefore\nD8.0 KER\nTurn\n.Eff.1.Dec.\nIntercept KER R335, at or above 8500, but not before D8.0 KER turn LEFT to cross\nKER VOR at or above 12000, intercept KER R099 to ALKES, climb to cleared FL.\n25 NOV 22\n135\n162\n57-00\n57-30\nALKES 1D [ALKE1D]\nDEPARTURES\nALKES 2C [ALKE2C]\n(RWYS 16R/34L)\nRWY\nROUTING\nCHANGES: None.\nCONTOUR\nINTERVALS\n14000\n12000\n10000\n8000\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 1239
+  },
+  {
+    "page": 499,
+    "airport": "OIKK",
+    "category": "SID",
+    "chartName": "ALKUL 2D, ALKUL 1E",
+    "status": "needs_additional_control_points_or_review",
+    "reason": "No measured latitude/longitude grid could be resolved",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 274290,
+    "notToScaleTextBoxes": [],
+    "printedGridLabels": [
+      "30-00",
+      "57-00"
+    ],
+    "headerText": "159^\n14,200\n180^\n15,800\n270^\n11,000\n360^\n12,000\n VO\nR\nR\nE\nK\n090^\n7400\n12000\n9000\n8500\n335^\n112.0 KER\nKERMAN\nKER\nD\n0\n5\n10\n15\n20\n5\n25\nALKUL 2D\nSID\nALKUL 1E\nALKUL 1E\n34L\n16R\nApt Elev\nTrans alt: 15000\n5739\n.SID.\nJEPPESEN\nThis SID requires a minimum climb gradient of:\n330 per NM.\nOIKK/KER\nKERMAN\n10-3B\nKERMAN, IRAN\nALKUL\nALKUL 2D\nALKUL 1E\nALKUL 1E\nALKUL 2D\n144^\nALKUL 2D:\nALKUL 1E:\n413\n550\n825\n1100 1375 1650\nGnd speed-KT\n75\n100\n150\n200\n250\n300\n330 per NM\n13574\n30\n| JEPPESEN, 2021, 2022. ALL RIGHTS RESERVED.\nD8.0\nKER\nbut not\nbefore\nD8.0 KER\nTurn\n1 JUL 22\n.Eff.14.Jul.\nIntercept KER R335, at or above 8500, but not before D8.0 KER turn LEFT to cross\nKER VOR at or above 12000, intercept KER R144 to ALKUL, climb to cleared FL.\nIntercept KER R159, at 7400, turn LEFT to cross KER VOR at or above 9000, turn RIGHT,\nintercept KER R144 to ALKUL, climb to cleared FL.\n166\n135\n162\n170\n30-00\n57-00\nRWY\nROUTING\nDEPARTURES\nALKUL 2D [ALKU2D]\nALKUL 1E [ALKU1E]\n(RWYS 16R/34L)\nCHANGES: ALKUL 1D renumbered 2D.\nCONTOUR\nINTERVALS\n14000\n12000\n10000\n8000\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 1197
+  },
+  {
+    "page": 500,
+    "airport": "OIKK",
+    "category": "SID",
+    "chartName": "ALMEK 2C, ALMEK 1F",
+    "status": "needs_additional_control_points_or_review",
+    "reason": "No measured latitude/longitude grid could be resolved",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 256758,
+    "notToScaleTextBoxes": [],
+    "printedGridLabels": [
+      "30-00",
+      "57-00"
+    ],
+    "headerText": "159^\n14,200\n180^\n15,800\n270^\n11,000\n360^\n12,000\n V\nO R\nR\nE\nK\n090^\n7400\n12000\n8500\nALMEK\n335^\n112.0 KER\nKERMAN\nKER\nD\n187^\nALMEK 2C\nALMEK 1F\n0\n5\n10\n15\n20\n5\n25\nALMEK 2C\nSID\nALMEK 1F\nALMEK 1F\n34L\n16R\nApt Elev\nTrans alt: 15000\n5739\n.SID.\nJEPPESEN\nThis SID requires a minimum climb gradient of\n280 per NM.\n350\n467\n700\n933\n1167 1400\nGnd speed-KT\n75\n100\n150\n200\n250\n300\n280 per NM\nALMEK 2C:\nOIKK/KER\nKERMAN\n10-3C\nKERMAN, IRAN\nALMEK 1F\nALMEK 2C\n30\n| JEPPESEN, 2021, 2022. ALL RIGHTS RESERVED.\nD8.0\nKER\nbut not\nbefore\nD8.0 KER\n9266\nTurn\n1 JUL 22\n.Eff.14.Jul.\nIntercept KER R335, at or above\n8500, but not before D8.0 KER\nturn LEFT to cross KER VOR at or\nabove 12000, intercept KER R187\nto ALMEK, climb to cleared FL.\nIntercept KER R159, at 7400, turn\nLEFT to KER VOR, turn LEFT,\nintercept KER R187 to ALMEK,\nclimb to cleared FL.\n166\n170\n135\n162\n30-00\n57-00\nRWY\nROUTING\nDEPARTURES\nALMEK 2C [ALME2C]\nALMEK 1F [ALME1F]\n(RWYS 16R/34L)\nCHANGES: ALMEK 1C renumbered 2C.\nCONTOUR\nINTERVALS\n10000\n8000\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 1144
+  },
+  {
+    "page": 501,
+    "airport": "OIKK",
+    "category": "SID",
+    "chartName": "ALMOB 1D, ALMOB 1E, ALMOB 2F",
+    "status": "not_to_scale",
+    "reason": "No measured latitude/longitude grid could be resolved",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 309086,
+    "notToScaleTextBoxes": [
+      [
+        93.24,
+        331.02,
+        152.28,
+        341.46
+      ]
+    ],
+    "printedGridLabels": [
+      "30-30",
+      "56-50"
+    ],
+    "headerText": "159^\n14,200\n180^\n15,800\n270^\n11,000\n360^\n12,000\n \nR\nE\nK\nVO\nR\n090^\n7400\n12000\n10000\n9000\n8500\n112.0 KER\nKERMAN\nKER\nD\n335^\nALMOB 2F\nSID\nALMOB 1D\nALMOB 1E\n34L\n16R\n34L\nIntercept KER R335, at 10000, turn LEFT, intercept\nKER R303 to ALMOB, climb to cleared FL.\n.SID.\nJEPPESEN\nThese SIDs require minimum climb gradients of:\nALMOB 1D:\nALMOB 1E:\n330 per NM.\n310 per NM.\n0\n5\n10\n15\n20\n5\n25\nOIKK/KER\nKERMAN\nKERMAN, IRAN\nALMOB\nApt Elev\nTrans alt: 15000\n5739\nIntercept KER R159, at 7400, turn RIGHT to cross\nKER VOR at or above 9000, turn LEFT, intercept\nKER R303 to ALMOB, climb to cleared FL.\n413\n550\n825\n1100 1375 1650\n388\n517\n775\n1033 1292 1550\nGnd speed-KT\n75\n100\n150\n200\n250\n300\n310 per NM\n330 per NM\n10-3D\n9594\nALMOB 2F\n30\n| JEPPESEN, 2021, 2023. ALL RIGHTS RESERVED.\nD8.0\nKER\nbut not\nbefore\nD8.0 KER\n.Eff.2.Nov.\n27 OCT 23\nIntercept KER R335, at or above 8500, but not \nbefore D8.0 KER turn LEFT to cross KER VOR \nat or above 12000, turn LEFT, intercept KER R303 \nto ALMOB, climb to cleared FL.\n1\n1\n135\n30-30\n56-50\nRWY\nROUTING\nNOT TO SCALE\nALMOB 1E\nALMOB 1D, 2F\nALMOB 1D\nALMOB 1E, 2F\nALMOB 1E:\nALMOB 2F:\nALMOB 2F:\nTurn\n303^\nALMOB 1D [ALMO1D]\nDEPARTURES\nALMOB 1E [ALMO1E]\nALMOB 2F [ALMO2F]\n(RWYS 16R/34L)\nCHANGES: ALMOB 2F route depiction.\nCONTOUR\nINTERVALS\n10000\n8000\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 1422
+  },
+  {
+    "page": 502,
+    "airport": "OIKK",
+    "category": "SID",
+    "chartName": "GETIS 2C, GETIS 1E",
+    "status": "needs_additional_control_points_or_review",
+    "reason": "No measured latitude/longitude grid could be resolved",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 269846,
+    "notToScaleTextBoxes": [],
+    "printedGridLabels": [
+      "56-30",
+      "57-00"
+    ],
+    "headerText": "159^\n14,200\n1\n8\n0\n^\n15,800\n270^\n11,000\n3\n6\n0\n^\n12,000\n090^\nKE\nR VO\nR\n9000\n12000\n7400\n8500\n112.0 KER\nKERMAN\nKER\nD\nGETIS 1E\nGETIS 2C\nGETIS 2C:\nGETIS 1E:\n335^\nApt Elev\nTrans alt: 15000\n5739\nSID\nGETIS 2C\nGETIS 1E\n34L\n16R\n.SID.\nJEPPESEN\n0\n5\n10\n15\n20\n5\n25\nOIKK/KER\nKERMAN\nKERMAN, IRAN\n10-3E\nGETIS\n2\n5\n7\n^\n \n9391\n3\n0\n| JEPPESEN, 2021, 2022. ALL RIGHTS RESERVED.\nbut not\nbefore\nD8.0 KER\nD8.0\nKER\nIntercept KER R159, at 7400, turn LEFT to cross KER VOR at or above 9000, turn\nLEFT to intercept KER R257 to GETIS, climb to cleared FL.\nTurn\n.Eff.2.Nov.\nThese SIDs require minimum climb gradients of:\n230 per NM.\nGETIS 2C:\nGETIS 1E:\nGnd speed-KT\n230 per NM\n330 per NM\n330 per NM.\n75\n288\n413\n383\n550\n575\n767\n958\n100\n150\n200\n250\n825\n1100 1375 1650\n1150\n300\nIntercept KER R335, at or above 8500, but not before D8.0 KER turn LEFT to cross\nKER VOR at or above 12000, turn RIGHT to intercept KER R257 to GETIS, climb to\ncleared FL.\n27 OCT 23\n135\n162\n56-30\n57-00\nGETIS 1E [GETI1E]\nDEPARTURES\nGETIS 2C [GETI2C]\n(RWYS 16R/34L)\nRWY\nROUTING\nCHANGES: None.\nCONTOUR\nINTERVALS\n10000\n8000\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 1224
+  },
+  {
+    "page": 510,
+    "airport": "OIKM",
+    "category": "STAR",
+    "chartName": "ORDAD 1N",
+    "status": "not_to_scale",
+    "reason": "NOT TO SCALE printed on source page",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 141863,
+    "notToScaleTextBoxes": [
+      [
+        206.16,
+        562.94,
+        262.17,
+        570.26
+      ]
+    ],
+    "printedGridLabels": [],
+    "headerText": "BAM\nBAM\nN29 04.7 E058 27.5\nORDAD\nN30 06.1 E057 54.9\n153^\nApt Elev\nOIKM/BXR\n10-2\n.STAR.\nBAM\n3231'\nAlt Set: hPa    Trans level: FL90    Trans alt: 7000'\nBAM, IRAN\nD114.9 BAM\nR333^\n11\n7000\nFL110\nD11 BAM\n55.1\n.Eff.30.Apr.\nJEPPESEN\nSTAR reindexed.\n| JEPPESEN, 2004, 2015. ALL RIGHTS RESERVED.\nMSA\n180^\n270^\n360^\n090^\n9900'\n5000'\n12,600'\n11,000'\nBAM VOR DME\nNOT TO SCALE\nCHANGES:\nORDAD 1N\n24 APR 15\nRWYS 12, 30 ARRIVAL\n[ORDA1N]\nROUTING\nAt ORDAD intercept BAM R-333 inbound to BAM.\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 636
+  },
+  {
+    "page": 511,
+    "airport": "OIKM",
+    "category": "STAR",
+    "chartName": "ORDAD 1T",
+    "status": "not_to_scale",
+    "reason": "NOT TO SCALE printed on source page",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 136661,
+    "notToScaleTextBoxes": [
+      [
+        206.16,
+        562.94,
+        262.17,
+        570.26
+      ]
+    ],
+    "printedGridLabels": [],
+    "headerText": "BAM\n379 BAM\nBAM\nN29 04.7 E058 27.3\nORDAD\nN30 06.1 E057 54.9\nFL110\n153^\nApt Elev\nOIKM/BXR\n.STAR.\nBAM\n3231'\nAlt Set: hPa    Trans level: FL90    Trans alt: 7000'\nBAM, IRAN\n10-2A\n66.2\n.Eff.30.Apr.\nSTAR reindexed.\n| JEPPESEN, 2005, 2015. ALL RIGHTS RESERVED.\nJEPPESEN\nMSA\n180^\n270^\n360^\n090^\n9900'\n5000'\nBAM NDB\n12,600'\n11,000'\nNOT TO SCALE\nCHANGES:\nORDAD 1T [ORDA1T]\n24 APR 15\nRWYS 12, 30 ARRIVAL\nROUTING\nAt ORDAD intercept 153^ bearing to BAM.\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 603
+  },
+  {
+    "page": 512,
+    "airport": "OIKM",
+    "category": "SID",
+    "chartName": "ORDAD 1A, ORDAD 1B, ORDAD 1C",
+    "status": "not_to_scale",
+    "reason": "NOT TO SCALE printed on source page",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 226745,
+    "notToScaleTextBoxes": [
+      [
+        418.68,
+        394.7,
+        474.69,
+        402.02
+      ]
+    ],
+    "printedGridLabels": [],
+    "headerText": "333^\n345^\nORDAD\nN30 06.1 E057 54.9\nORDAD 1C\nORDAD 1A\nORDAD 1B\n120^\nApt Elev\n.SID.\nOIKM/BXR\n10-3\nBAM\nBAM, IRAN\n3231'\nTrans level: FL90    Trans alt: 7000'\nBAM\nBAM\nN29 04.7 E058 27.5\nD114.9 BAM\nN29 00.9 E058 34.3\nD7 BAM\nN29 21.5 E058 23.1\nD17.2 BAM\n.Eff.30.Apr.\n| JEPPESEN, 2004, 2015. ALL RIGHTS RESERVED.\nSIDs reindexed.\nJEPPESEN\nMSA\n180^\n270^\n360^\n090^\n9900'\n5000'\nBAM VOR\n12,600'\n11,000'\nRWY\nSID\nROUTING\nORDAD 1A\nORDAD 1B\nORDAD 1C\n30\n12\nNOT TO SCALE\nCHANGES:\nRWYS 30, 12 DEPARTURES\n24 APR 15\nORDAD 1A\nORDAD 1B\nORDAD 1C\n[ORDA1B]\n[ORDA1C]\n75\n100\n150\n200\n250\n300\nGnd speed-KT\n250' per NM\n320' per NM\n313\n400\n417\n533\n625\n800\n833\n1067\n1042\n1333\n1250\n1600\nThese SIDs require minimum climb gradients\nof\nORDAD 1A:\nORDAD 1B:\nAt 4500'\nAt 7400'\n250' per NM up to 7400'.\n320' per NM up to 7400' or BAM 13.5 DME.\nTurn RIGHT, intercept BAM R-345 to D17.2 BAM, turn LEFT, intercept\nBAM R-333 to ORDAD, climb to cleared FL.\nTurn RIGHT, intercept BAM R-333 to ORDAD, climb to cleared FL.\nIntercept BAM R-120 to D7 BAM, turn LEFT, intercept BAM R-333 to\nORDAD, climb to cleared FL.\n[ORDA1A]\nDirect distance from\nBAM airport to \nORDAD: 67 NM\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 1286
+  },
+  {
+    "page": 513,
+    "airport": "OIKM",
+    "category": "SID",
+    "chartName": "ORDAD 1D, ORDAD 1E, ORDAD 1F",
+    "status": "not_to_scale",
+    "reason": "NOT TO SCALE printed on source page",
+    "imagePixels": [
+      1530,
+      1980
+    ],
+    "imageBytes": 226892,
+    "notToScaleTextBoxes": [
+      [
+        373.92,
+        400.7,
+        429.93,
+        408.02
+      ]
+    ],
+    "printedGridLabels": [],
+    "headerText": "154^\n165^\n300^\nBAM\n379 BAM\nBAM\nN29 04.7 E058 27.3\nORDAD\nN30 06.1 E057 54.9\nORDAD 1F\nORDAD 1D\nORDAD 1E\n334^\n345^\n120^\nApt Elev\n.SID.\nOIKM/BXR\nBAM\nBAM, IRAN\n3231'\nTrans level: FL90    Trans alt: 7000'\n10-3A\n.Eff.30.Apr.\nJEPPESEN\nSIDs reindexed.\n| JEPPESEN, 2005, 2015. ALL RIGHTS RESERVED.\nMSA\n180^\n270^\n360^\n090^\n9900'\n5000'\nBAM NDB\n12,600'\n11,000'\nRWY\nSID\nROUTING\nORDAD 1D\nORDAD 1E\nORDAD 1F\n30\n12\nNOT TO SCALE\nCHANGES:\nRWYS 30, 12 DEPARTURES\nAt 7400'\nAt 4500'\n24 APR 15\nORDAD 1D\nORDAD 1E\nORDAD 1F\n[ORDA1D]\n[ORDA1E]\n[ORDA1F]\n75\n100\n150\n200\n250\n300\nGnd speed-KT\n250' per NM\n320' per NM\n313\n400\n417\n533\n625\n800\n833\n1067\n1042\n1333\n1250\n1600\nThese SIDs require minimum climb gradients\nof\nORDAD 1D:\nORDAD 1E:\nDirect distance from\nBAM airport to \nORDAD: 67 NM\n250' per NM up to 7400'.\n320' per NM up to 7400'.\nTurn RIGHT, intercept 345^ bearing from BAM to 7400', turn LEFT,\nintercept 334^ bearing from BAM to ORDAD, climb to cleared FL.\nTurn RIGHT, intercept 334^ bearing from BAM to ORDAD, climb to\ncleared FL.\nIntercept 120^ bearing from BAM to 4500', turn LEFT, intercept 334^\nbearing from BAM to ORDAD, climb to cleared FL.\nPrinted from JeppView for Windows 5.3.0.0 on 09 Oct 2026; Terminal chart data cycle 21-2026; Notice: After 21 Oct 2026, 0000Z, this chart may no longer be valid\n",
+    "fullTextLength": 1283
+  }
+]
