@@ -1,0 +1,39 @@
+{
+  "schema": 1,
+  "chartDataVersion": "V2621",
+  "cycle": "2621",
+  "batch": "airports_21_30",
+  "airports": [
+    "OIGG",
+    "OIHH",
+    "OIHR",
+    "OIIE",
+    "OIII",
+    "OIKB",
+    "OIIP",
+    "OIKJ",
+    "OIKK",
+    "OIKM"
+  ],
+  "sourceSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+  "indexedChartPages": 216,
+  "sourceCalibratedChartPages": 120,
+  "newVerifiedSourceGeorefsThisRelease": [
+    420,
+    422,
+    424,
+    425,
+    426,
+    427
+  ],
+  "excludedPendingFurtherSourceControl": 96,
+  "activeGeoreferencingFiles": [
+    "web/data/chart-georef.json",
+    "app/src/main/assets/chart-georef.json"
+  ],
+  "reportPath": "docs/georeferencing/V2621_AIRPORTS_21_30_REPORT.json",
+  "sourceCommit": "afc8d1b5",
+  "flightSimulatorTestOnly": true,
+  "notForActualNavigation": true,
+  "note": "These six additional chart plan regions use V2621 PDF source-fingerprint-bound coordinate transforms with verified grid ticks and excluded NOT TO SCALE inset areas. Other 96 pages are not newly approved; existing accepted models remain unchanged."
+}
