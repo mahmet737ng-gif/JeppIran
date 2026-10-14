@@ -1436,6 +1436,10 @@ function updateAircraftMarker(){
 }
 
 let pdfRenderToken=0,currentPdfUrl="";
+let chartSlideDocument=null,chartSlideDocumentUrl="",chartSlideDocumentEpoch=0;
+const chartSlidePreviews=new Map();
+let activeChartSlide=null;
+
 async function pdfJs(){
   if(window.pdfjsLib)return window.pdfjsLib;
   try{
@@ -1498,9 +1502,17 @@ async function renderSelectedPdf(c){
   stage.innerHTML='<div class="pdf-loading">Loading chart…</div><div class="pdf-canvas-wrap"><div id="chartTransformLayer" class="chart-transform-layer"><canvas id="pdfCanvas"></canvas></div></div>';
   ensureAircraftFollowControl();
   showPublishedExperimentalGeorefNotice();
-  const lib=await pdfJs(), bytes=await getPdfBytes(currentPdfUrl,true);
-  if(token!==pdfRenderToken)return;
-  const doc=await lib.getDocument({data:bytes}).promise;
+  const url=currentPdfUrl;
+  let doc=chartSlideDocumentUrl===url?chartSlideDocument:null;
+  if(!doc){
+    const lib=await pdfJs(),bytes=await getPdfBytes(url,true);
+    if(token!==pdfRenderToken)return;
+    doc=await lib.getDocument({data:bytes}).promise;
+    if(token!==pdfRenderToken)return;
+    chartSlideDocument=doc;chartSlideDocumentUrl=url;
+    chartSlideDocumentEpoch++;
+    chartSlidePreviews.clear();
+  }
   const pageNo=Math.max(1,Math.min(doc.numPages,Number(c.pdf_page)||1));
   const page=await doc.getPage(pageNo);
   if(token!==pdfRenderToken)return;
@@ -1520,10 +1532,143 @@ async function renderSelectedPdf(c){
   applyChartTransform();
   updateAircraftMarker();
   window.dispatchEvent(new CustomEvent("jeppiran-chart-rendered",{detail:{page:Number(c.page)}}));
+  // An adjacent page is decoded before the user swipes, eliminating the
+  // blank flash of a PDF loading screen during interactive transitions.
+  const epoch=chartSlideDocumentEpoch;
+  setTimeout(()=>{if(epoch===chartSlideDocumentEpoch&&selectedChart===c)warmAdjacentChartSlides()},60);
 }
 function airportChartSequence(){
   return charts.filter(c=>c.airport===selectedAirport)
     .sort((a,b)=>(a.pdf_page||0)-(b.pdf_page||0));
+}
+// Interactive chart paging: exactly track the finger (no synthesized
+// scrolling velocity). Reversing the finger returns the CURRENT chart.
+function adjacentChart(delta){
+  if(!selectedChart||!selectedAirport)return null;
+  const seq=airportChartSequence();
+  const idx=seq.findIndex(c=>Number(c.page)===Number(selectedChart.page));
+  return idx>=0?(seq[idx+delta]||null):null;
+}
+function chartSlideKey(c,width){
+  return (c.pdf_page||c.page)+":"+Math.round(width);
+}
+async function createChartSlidePreview(c,doc=chartSlideDocument,epoch=chartSlideDocumentEpoch){
+  const stage=$("#pdfStage");
+  if(!doc||!c||!stage||epoch!==chartSlideDocumentEpoch)return null;
+  const width=Math.max(1,stage.clientWidth);
+  const key=chartSlideKey(c,width);
+  const cached=chartSlidePreviews.get(key);
+  if(cached)return cached;
+  try{
+    const page=await doc.getPage(Math.max(1,Number(c.pdf_page)||1));
+    if(epoch!==chartSlideDocumentEpoch)return null;
+    const basis=page.getViewport({scale:1});
+    // PDF tiles stay legible while moving but do not consume 3x DPR memory.
+    const scale=(Math.max(1,width-4)/basis.width)*Math.min(devicePixelRatio||1,1.65);
+    const viewport=page.getViewport({scale});
+    const canvas=document.createElement("canvas");
+    canvas.width=Math.max(1,Math.ceil(viewport.width));
+    canvas.height=Math.max(1,Math.ceil(viewport.height));
+    canvas.style.width=(viewport.width/Math.min(devicePixelRatio||1,1.65))+"px";
+    canvas.style.height=(viewport.height/Math.min(devicePixelRatio||1,1.65))+"px";
+    await page.render({canvasContext:canvas.getContext("2d",{alpha:false}),viewport}).promise;
+    if(epoch!==chartSlideDocumentEpoch)return null;
+    chartSlidePreviews.set(key,canvas);
+    // Keep the current and adjacent pages only; no unbounded canvas cache.
+    if(chartSlidePreviews.size>5)chartSlidePreviews.delete(chartSlidePreviews.keys().next().value);
+    return canvas;
+  }catch(error){console.warn("Adjacent chart preview unavailable",error);return null}
+}
+function warmAdjacentChartSlides(){
+  if(!chartSlideDocument||!selectedChart)return;
+  const doc=chartSlideDocument,epoch=chartSlideDocumentEpoch;
+  for(const delta of [-1,1]){
+    const c=adjacentChart(delta);
+    if(c)createChartSlidePreview(c,doc,epoch).catch(()=>{});
+  }
+}
+function chartSwipePanel(canvas,scrollOffset=0){
+  const panel=document.createElement("div");
+  panel.className="jp-chart-swipe-panel";
+  const inner=document.createElement("div");
+  inner.className="jp-chart-swipe-paper";
+  const copy=document.createElement("canvas");
+  copy.width=canvas.width;copy.height=canvas.height;
+  copy.style.width=canvas.style.width||canvas.width+"px";
+  copy.style.height=canvas.style.height||canvas.height+"px";
+  const ctx=copy.getContext("2d",{alpha:false});
+  if(ctx)ctx.drawImage(canvas,0,0);
+  inner.style.top=(-scrollOffset)+"px";
+  inner.appendChild(copy);
+  panel.appendChild(inner);
+  return panel;
+}
+function beginChartSwipe(direction){
+  if(activeChartSlide||chartZoom>1.001||!selectedChart)return null;
+  const target=adjacentChart(direction),stage=$("#pdfStage"),current=$("#pdfCanvas");
+  if(!target||!current||!stage||!chartSlideDocument)return null;
+  const width=stage.clientWidth;
+  const shield=document.createElement("div");
+  shield.className="jp-chart-swipe-shield";
+  shield.setAttribute("aria-hidden","true");
+  const track=document.createElement("div");
+  track.className="jp-chart-swipe-track";
+  const here=chartSwipePanel(current,stage.scrollTop);
+  const there=document.createElement("div");
+  there.className="jp-chart-swipe-panel jp-chart-swipe-neighbor";
+  there.style.left=(direction===1?"100%":"-100%");
+  const label=document.createElement("span");
+  label.className="jp-chart-swipe-loading";
+  label.textContent=(target.chart_number?target.chart_number+" · ":"")+displayChartName(target);
+  there.appendChild(label);
+  track.append(here,there);shield.appendChild(track);stage.appendChild(shield);
+  const state={shield,track,there,label,stage,dir:direction,target,width,dx:0,
+    ready:false,done:false,lastX:0,lastT:0,reversing:false};
+  activeChartSlide=state;
+  const cached=chartSlidePreviews.get(chartSlideKey(target,width));
+  const show=canvas=>{
+    if(!canvas||activeChartSlide!==state||state.done)return;
+    const paper=chartSwipePanel(canvas,0);
+    while(paper.firstChild)there.appendChild(paper.firstChild);
+    label.remove();state.ready=true;
+  };
+  if(cached)show(cached);
+  else createChartSlidePreview(target).then(show).catch(()=>{});
+  return state;
+}
+function updateChartSwipe(state,dx,x,time){
+  if(!state||state.done)return;
+  // Direction is fixed for this gesture. Crossing the start position cancels.
+  const clipped=Math.max(-state.width,Math.min(state.width,dx));
+  state.dx=state.dir===1?Math.min(0,clipped):Math.max(0,clipped);
+  if(state.lastT&&time>state.lastT){
+    state.reversing=Math.abs(x-state.lastX)>2 &&
+      Math.sign(x-state.lastX)===state.dir;
+  }
+  state.lastX=x;state.lastT=time;
+  state.track.style.transform="translate3d("+state.dx+"px,0,0)";
+}
+function finishChartSwipe(state,canceled){
+  if(!state||state.done)return;
+  state.done=true;
+  const advance=!canceled&&state.ready&&!state.reversing&&
+    Math.abs(state.dx)>=Math.max(80,state.width*0.32);
+  const destination=advance?-state.dir*state.width:0;
+  const remaining=Math.abs(destination-state.dx);
+  const duration=Math.max(110,Math.min(260,120+remaining*.16));
+  state.track.style.transition="transform "+duration+"ms cubic-bezier(.22,.78,.17,1)";
+  requestAnimationFrame(()=>{state.track.style.transform="translate3d("+destination+"px,0,0)"});
+  setTimeout(()=>{
+    state.shield.remove();
+    if(activeChartSlide===state)activeChartSlide=null;
+    if(advance&&selectedChart&&state.target.airport===selectedAirport)
+      navigateChart(state.dir);
+  },duration+35);
+}
+function cancelChartSwipe(){
+  const state=activeChartSlide;
+  if(!state)return;
+  state.done=true;state.shield.remove();activeChartSlide=null;
 }
 function navigateChart(delta){
   if(!selectedChart||!selectedAirport)return;
@@ -1760,6 +1905,7 @@ function setupChartGestures(){
 setupChartGestures();
 
 function selectChart(c,options={}){
+  cancelChartSwipe();
   cancelAircraftFollow();
   taxiOffRouteCount=0;taxiOffRouteActive=false;
   selectedChart=c;
@@ -1772,7 +1918,8 @@ function selectChart(c,options={}){
   showChartMetar(true,true);
   // On phones, choosing a procedure opens the chart immediately, rather
   // than leaving a tiny chart next to a permanent procedure column.
-  if(window.matchMedia("(max-width: 749px)").matches){
+  if(window.matchMedia("(max-width: 749px)").matches &&
+     !document.body.classList.contains("viewer-fullscreen")){
     enterViewerFullscreen();
   }
   renderSelectedPdf(c).catch(e=>{
