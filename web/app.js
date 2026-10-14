@@ -1609,6 +1609,11 @@ function beginChartSwipe(direction){
   if(!target||!current||!stage||!chartSlideDocument)return null;
   const width=stage.clientWidth;
   const shield=document.createElement("div");
+  const bounds=stage.getBoundingClientRect();
+  shield.style.left=bounds.left+"px";
+  shield.style.top=bounds.top+"px";
+  shield.style.width=bounds.width+"px";
+  shield.style.height=bounds.height+"px";
   shield.className="jp-chart-swipe-shield";
   shield.setAttribute("aria-hidden","true");
   const track=document.createElement("div");
