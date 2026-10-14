@@ -1923,3 +1923,29 @@ body.viewer-fullscreen.jp-chart-drawer-open #jpChartDrawer{
     grid-template-rows:minmax(0,1fr)!important;
   }
 }
+
+
+/* Update center: separate terminal AIRAC cycle, Enroute and application status.
+   The approved Home ILS backgrounds and chart toolbar are not modified. */
+.jp-update-view{background:radial-gradient(ellipse at 65% 0,#092b47,#061426 52%,#020b16)}
+.jp-update-view .jp-update-shell{max-width:980px;margin:0 auto;padding:clamp(15px,3vw,36px);display:grid;gap:14px}
+.jp-update-view .jp-update-header{padding:12px 3px;color:#e6f6ff}
+.jp-update-view .jp-update-header h2{font-size:clamp(26px,4vw,38px);margin:0 0 6px;letter-spacing:.06em}
+.jp-update-view .jp-update-header p{margin:0;color:#99bedc;line-height:1.45}
+.jp-update-view .jp-update-panel{border:1px solid #23577e;border-radius:16px;padding:18px;background:linear-gradient(150deg,#0c2d4b,#05182b);color:#e6f3ff}
+.jp-update-view .jp-update-panel h3{margin:0 0 14px;color:#39c5fb;font-size:16px}
+.jp-update-view .jp-update-panel p{line-height:1.5;font-size:14px;color:#bfd6e8}
+.jp-update-view .jp-update-action{margin-top:10px;min-height:45px;background:linear-gradient(105deg,#096dfa,#15c0fc);border:0;border-radius:10px;padding:10px 18px;color:white;font-weight:800}
+.jp-update-view select{width:100%;min-height:46px;margin:8px 0;border:1px solid #24638f;border-radius:10px;padding:7px 12px;background:#0a2842;color:#e2f6ff;font-size:16px}
+.jp-update-view label{font-size:13px;color:#a7cee9}
+.jp-update-changes{max-height:370px;overflow-y:auto;overscroll-behavior:contain}
+.jp-update-changes-head{font-size:14px;font-weight:800;padding:11px 4px;color:#79dafa}
+.jp-update-change{display:flex;gap:14px;align-items:baseline;border-top:1px solid #255270;padding:11px 4px;font-size:13px;line-height:1.35}
+.jp-update-change b{min-width:48px;font-size:11px;color:#7feac4}
+.jp-update-change span{overflow-wrap:anywhere}
+:root.light .jp-update-view{background:radial-gradient(ellipse at 65% 0,#e4f3fd,#f6fbff 55%,#e6f2fb)}
+:root.light .jp-update-view .jp-update-header,:root.light .jp-update-view .jp-update-panel{color:#173955}
+:root.light .jp-update-view .jp-update-panel{background:#fff;border-color:#b5d2e5}
+:root.light .jp-update-view .jp-update-panel h3{color:#126ea4}
+:root.light .jp-update-view .jp-update-header p,:root.light .jp-update-view .jp-update-panel p{color:#416581}
+:root.light .jp-update-view select{color:#214663;background:#eff8ff;border-color:#a9cee6}
