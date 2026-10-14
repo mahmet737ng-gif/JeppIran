@@ -161,6 +161,26 @@ def grid_region(page,chart,region):
     # treated as a global full-page map if it contains an independent inset.
     px_for_lat=lat[0]["pixelAxis"]
     px_for_lon=lon[0]["pixelAxis"]
+    # Source-based diagnostics: fitting derived graticule intersections would
+    # otherwise show a misleading zero residual even when measured ticks vary.
+    measured_tick_residual=max(
+        abs(slope*t["degrees"]+offset-t["pdfPoint"])
+        for ticks,slope,offset in ((lat,lat_slope,lat_b),(lon,lon_slope,lon_b))
+        for t in ticks if not t.get("derived")
+    )
+    checks=[]
+    for ref in region.get("independent",[]):
+        source_x,source_y=independent_symbol(page,ref)
+        projected={px_for_lat:lat_slope*ref["lat"]+lat_b,
+                   px_for_lon:lon_slope*ref["lon"]+lon_b}
+        independently_measured_error=math.hypot(
+            source_x-projected["x"],source_y-projected["y"])
+        if independently_measured_error>1.5:
+            raise ValueError("Independent published navaid check failed")
+        checks.append({"id":ref["id"],"source":ref["coordinateSource"],
+            "lat":ref["lat"],"lon":ref["lon"],
+            "referencePdfCenter":[source_x,source_y],
+            "residualMaxPdfPoints":round(independently_measured_error,5)})
     points=[]
     for a,b in itertools.product(lat,lon):
         pos={px_for_lat:lat_slope*a["degrees"]+lat_b,
@@ -190,6 +210,7 @@ def grid_region(page,chart,region):
         "maxResidualPdfPoints":1.5 if method=="paired_printed_graticule_vector_ticks" else 0.75,
         "validation":{"method":method,"gridMaxResidualPdfPoints":round(residual,6),
                       "measuredAxisValueCounts":measured_counts,
+                      "measuredSourceTickResidualPdfPoints":round(measured_tick_residual,6),
                       "independentChecks":checks,
                       "qaTestOnly":True,"notApprovedForNavigation":True,
                       "v2Region":region["id"]}

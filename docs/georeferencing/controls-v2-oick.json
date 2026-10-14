@@ -161,6 +161,20 @@
               "pageAxis": "x",
               "pixel": 473.76
             }
+          ],
+          "independent": [
+            {
+              "id": "KRD_DVOR_DME",
+              "lat": 33.434194444444444,
+              "lon": 48.29186111111111,
+              "coordinateSource": "Iran AIP ENR 4.1, KRD DVOR/DME 113.750 MHz, 332603.1N 0481730.7E",
+              "sourceSymbolRect": {
+                "left": 396.24,
+                "top": 283.08,
+                "right": 398.28,
+                "bottom": 285.12
+              }
+            }
           ]
         },
         {
@@ -241,6 +255,20 @@
               "label": "48-30",
               "pageAxis": "x",
               "pixel": 378.24
+            }
+          ],
+          "independent": [
+            {
+              "id": "KRD_DVOR_DME",
+              "lat": 33.434194444444444,
+              "lon": 48.29186111111111,
+              "coordinateSource": "Iran AIP ENR 4.1, KRD DVOR/DME 113.750 MHz, 332603.1N 0481730.7E",
+              "sourceSymbolRect": {
+                "left": 169.44,
+                "top": 293.88,
+                "right": 198.36,
+                "bottom": 322.8
+              }
             }
           ]
         }

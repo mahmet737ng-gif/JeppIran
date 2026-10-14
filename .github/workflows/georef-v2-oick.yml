@@ -30,6 +30,34 @@ jobs:
         run: cmp web/data/chart-georef.json app/src/main/assets/chart-georef.json
       - name: Run original V2621 source OICK diagnosis
         run: python scripts/georef_engine_v2.py --airport OICK --output review-assets/georef-v2-oick-qa.json
+      - name: Assert all OICK regional georeferences against original PDF
+        run: |
+          python - <<'PY'
+          import json
+          d=json.load(open("review-assets/georef-v2-oick-qa.json"))
+          assert d["existingProtected"]==[220,224,225,226]
+          assert d["existingFingerprintVerified"] is True
+          assert d["candidatePages"]==[218,219,221,223]
+          expected={218:1,219:1,221:2,223:1}
+          for p,count in expected.items():
+              chart=next(x for x in d["results"] if x["page"]==p)
+              regions=chart["landmarkRegions"]
+              assert len(regions)==count,(p,len(regions))
+              for record in regions:
+                  v=record["validation"]
+                  assert v["qaTestOnly"] and v["notApprovedForNavigation"]
+                  assert v["measuredSourceTickResidualPdfPoints"]<=.2
+                  assert v["gridMaxResidualPdfPoints"]<=record["maxResidualPdfPoints"]
+                  assert len(record["points"])>=4
+              if p in (218,219,223):
+                  assert len(regions[0]["validation"]["independentChecks"])==1
+              if p==221:
+                  assert len(regions[0]["validation"]["independentChecks"])==1
+                  assert regions[0]["excludedBounds"]
+                  assert regions[1]["validation"]["v2Region"]=="parking_apron_inset"
+          assert next(x for x in d["results"] if x["page"]==223)["landmarkRegions"][0]["excludedBounds"]
+          print("OICK_V2_SOURCE_PASS: 4 pages, 5 independent map regions; original 4 models unchanged")
+          PY
       - name: Render four OICK source charts for PDF-vector review
         run: |
           python - <<'PY'
