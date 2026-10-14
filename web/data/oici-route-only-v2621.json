@@ -1,0 +1,114 @@
+{
+  "schemaVersion": 1,
+  "type": "ROUTE_ONLY_NON_AFFINE_GEOREFERENCE",
+  "cycle": "V2621",
+  "source": {
+    "file": "Iran2621.pdf",
+    "sha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+    "pageCount": 1654
+  },
+  "safeForActualNavigation": false,
+  "activeInChartViewer": true,
+  "reviewStatus": "SIMULATOR_FLIGHT_QA_ONLY",
+  "warning": "NOT TO SCALE chart: only ILM–ALTET route centerline is position-calibrated; no holding, climb turns or lateral geography is approved.",
+  "charts": [
+    {
+      "page": 207,
+      "airport": "OICI",
+      "name": "ALTET 1N / ALTET 1P STAR",
+      "chartKey": "OICI|STAR|10-2|ALTET 1N, ALTET 1P",
+      "sourceFingerprint": "6d05daca31ad3af2ab113d4754cd78241663dc3ad1b544cc87521111723e5f92",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "pdfSize": {
+        "width": 612,
+        "height": 792
+      },
+      "nonAffine": true,
+      "crossTrackRenderGateNm": 0.5,
+      "waypoints": [
+        {
+          "id": "ILM",
+          "nmFromILM": 0,
+          "pdfX": 141.06,
+          "pdfY": 415.62,
+          "lat": 33.57841666666667,
+          "lon": 46.415388888888884,
+          "controlType": "Source VOR symbol"
+        },
+        {
+          "id": "D18.0_ILM",
+          "nmFromILM": 18,
+          "pdfX": 365.16,
+          "pdfY": 431.4,
+          "lat": 33.55326004042021,
+          "lon": 46.77315167933163,
+          "controlType": "Source D18.0 fix triangle"
+        },
+        {
+          "id": "ALTET",
+          "nmFromILM": 30.07838286002782,
+          "pdfX": 484.56,
+          "pdfY": 439.08,
+          "lat": 33.5358,
+          "lon": 47.0131,
+          "controlType": "Source ALTET fix triangle"
+        }
+      ],
+      "unsupportedGeometry": [
+        "holding/racetrack",
+        "off-centerline/entire-page map"
+      ],
+      "validation": {
+        "status": "FLIGHT_TEST_PENDING_NOT_FOR_ACTUAL_NAVIGATION",
+        "notToScale": true,
+        "fullPageGeoreferencingPermitted": false
+      }
+    },
+    {
+      "page": 209,
+      "airport": "OICI",
+      "name": "ALTET 1A / ALTET 1B SID",
+      "chartKey": "OICI|SID|10-3|ALTET 1A, ALTET 1B",
+      "sourceFingerprint": "79d21c557c53c2a1fc6b2600122356469037f3f48693d12208db5ff0b69c0bdc",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "pdfSize": {
+        "width": 612,
+        "height": 792
+      },
+      "nonAffine": true,
+      "crossTrackRenderGateNm": 0.5,
+      "waypoints": [
+        {
+          "id": "ILM",
+          "nmFromILM": 0,
+          "pdfX": 254.82,
+          "pdfY": 390.66,
+          "lat": 33.57841666666667,
+          "lon": 46.415388888888884,
+          "controlType": "Source VOR symbol"
+        },
+        {
+          "id": "ALTET",
+          "nmFromILM": 30.07838286002782,
+          "pdfX": 513.84,
+          "pdfY": 408.24,
+          "lat": 33.5358,
+          "lon": 47.0131,
+          "controlType": "Source ALTET fix triangle"
+        }
+      ],
+      "unsupportedGeometry": [
+        "R320/R155 climb-out legs",
+        "turns",
+        "off-centerline/entire-page map"
+      ],
+      "validation": {
+        "status": "FLIGHT_TEST_PENDING_NOT_FOR_ACTUAL_NAVIGATION",
+        "notToScale": true,
+        "fullPageGeoreferencingPermitted": false
+      }
+    }
+  ]
+}
