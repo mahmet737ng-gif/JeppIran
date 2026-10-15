@@ -109,6 +109,9 @@ jobs:
       - name: Test three new OIIE original-PDF SID/ILS simulator geometries
         run: node --test web/tests/oiie-missing-sid-ils-flightqa.test.cjs
 
+      - name: Verify owner-approved profile images fit without cropping
+        run: node --test web/tests/airport-profile-poster-fit.test.cjs
+
       - name: Verify all owner-locked airport profile poster hashes when installed
         run: python3 scripts/verify_owner_locked_profile_posters.py
 

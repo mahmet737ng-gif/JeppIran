@@ -1,22 +1,72 @@
-/* JEPPIRAN owner-locked airport profile poster backdrop — additive only.
- * FROZEN: no updates without explicit owner approval. Do not modify approved
- * home-art ILS backgrounds, Charts ADC sidebar banners, or chart controls.
- * Graphics are illustrative only, not actual satellite/ADC navigation data.
+/* JEPPIRAN airport PROFILE: owner-approved poster photos — FIT, NOT CROP.
+ * All 50 original WebP files and SHA-256 locks remain EXACTLY unchanged.
+ * This is a PRESENTATION-ONLY adjustment, approved 2026-10-15.
+ * Do not touch the Home ILS artwork, the Charts sidebar template, or chart viewer.
  */
+
+/* Each existing 4:3 poster must be visible in its entirety, including the
+   city/airport strip at the bottom. 'cover' previously cut off that strip
+   inside the landscape 16:9 desktop profile. Dark side areas are intentional
+   letterboxing; the image is never stretched or replaced. */
 #chartsView .airport-profile.jp-airport-poster-loaded {
-  background-image:
-    linear-gradient(180deg,rgba(3,13,25,.60) 0%,rgba(3,13,25,.88) 50%,rgba(3,13,25,.98) 100%),
-    var(--jp-airport-poster-image) !important;
-  background-size:cover,cover !important;
-  background-position:top center,top center !important;
+  background-color:#061526 !important;
+  background-image:var(--jp-airport-poster-image) !important;
+  background-size:contain !important;
+  background-position:center center !important;
   background-repeat:no-repeat !important;
 }
-:root.light #chartsView .airport-profile.jp-airport-poster-loaded {
-  background-image:
-    linear-gradient(180deg,rgba(248,252,255,.81) 0%,rgba(248,252,255,.94) 47%,rgba(245,251,255,.99) 100%),
-    var(--jp-airport-poster-image) !important;
-  background-size:cover,cover !important;
+
+/* Moderate translucency: let the approved photo show through without turning
+   the interface into glass. Keep foreground UI contrast and all interactions. */
+#chartsView .airport-profile.jp-airport-poster-loaded .profile-card {
+  background:rgba(5,24,43,.76) !important;
+  border-color:rgba(49,139,193,.74);
+  -webkit-backdrop-filter:blur(2px);
+  backdrop-filter:blur(2px);
 }
+#chartsView .airport-profile.jp-airport-poster-loaded .profile-tabs {
+  background:rgba(4,23,44,.77) !important;
+  border-color:rgba(49,139,193,.7);
+  -webkit-backdrop-filter:blur(2px);
+  backdrop-filter:blur(2px);
+}
+#chartsView .airport-profile.jp-airport-poster-loaded .rwy-row {
+  background:rgba(6,24,45,.70);
+}
+#chartsView .airport-profile.jp-airport-poster-loaded .rwy-row.active {
+  background:linear-gradient(95deg,rgba(7,58,116,.82),rgba(8,36,71,.79));
+}
+
+/* Retain the established Light Mode palette; photo shows softly behind it. */
+:root.light #chartsView .airport-profile.jp-airport-poster-loaded {
+  background-color:#eaf3f9 !important;
+  background-image:var(--jp-airport-poster-image) !important;
+  background-size:contain !important;
+  background-position:center center !important;
+  background-repeat:no-repeat !important;
+}
+:root.light #chartsView .airport-profile.jp-airport-poster-loaded .profile-card {
+  background:rgba(248,252,255,.85) !important;
+  border-color:rgba(119,169,202,.83);
+  -webkit-backdrop-filter:blur(2px);
+  backdrop-filter:blur(2px);
+}
+:root.light #chartsView .airport-profile.jp-airport-poster-loaded .profile-tabs {
+  background:rgba(233,246,254,.87) !important;
+  border-color:#b4d2e7;
+}
+:root.light #chartsView .airport-profile.jp-airport-poster-loaded .rwy-row {
+  background:rgba(250,253,255,.83);
+  color:#1b415e;
+}
+:root.light #chartsView .airport-profile.jp-airport-poster-loaded .rwy-row:not(.active) b {
+  color:#173b56;
+}
+:root.light #chartsView .airport-profile.jp-airport-poster-loaded .rwy-row.active {
+  background:linear-gradient(95deg,rgba(7,58,116,.87),rgba(8,36,71,.84));
+  color:#e9f5ff;
+}
+
 @media (prefers-reduced-motion:reduce) {
   #chartsView .airport-profile.jp-airport-poster-loaded {transition:none !important}
 }
