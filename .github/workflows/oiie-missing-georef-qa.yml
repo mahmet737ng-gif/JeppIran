@@ -1,0 +1,29 @@
+name: OIIE Missing SID ILS Source Georeference Candidate QA
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/build_oiie_missing_georef_qa.py'
+      - '.github/workflows/oiie-missing-georef-qa.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  candidate:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          lfs: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install 'PyMuPDF==1.26.6' 'numpy==2.3.5'
+      - run: python scripts/build_oiie_missing_georef_qa.py
+      - name: Verify stable source refs byte-identical across platforms
+        run: cmp app/src/main/assets/chart-georef.json web/data/chart-georef.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: oiie-sid-ils-new-georef-candidates
+          path: review-assets/oiie-new-georefs/
