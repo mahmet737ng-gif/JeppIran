@@ -7,6 +7,9 @@ Models have an explicit independently measured real-world control residual.
 import hashlib,json,math
 from pathlib import Path
 import fitz,numpy as np
+import sys
+sys.path.insert(0,'scripts')
+from extract_chart_georef import page_fingerprint
 PDF=Path("Iran2621.pdf")
 PIN="d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6"
 assert hashlib.sha256(PDF.read_bytes()).hexdigest()==PIN,"AIRAC source mismatch"
@@ -39,6 +42,8 @@ def deg(t):
 
 def model_check(num):
     page=doc[num-1]
+    png=Path("review-assets/oigg-source-"+str(num)+".png");png.parent.mkdir(parents=True,exist_ok=True)
+    page.get_pixmap(matrix=fitz.Matrix(2.5,2.5),alpha=False).save(str(png))
     assert len(page.search_for("NOT TO SCALE"))==0
     vor_xy=np.array(halo(page))
     fix_xy=np.array(fixmarker(page,TRI[num]))
@@ -70,7 +75,7 @@ def model_check(num):
     # Proposed measured-grid model, with RST anchoring x, 2 printed longitude
     # vector ticks, and KOBUB independently withheld. No guessed fixes.
     return {
-        "page":num,"type":"simulator_source_grid_candidate",
+        "page":num,"sourceFingerprint":page_fingerprint(page),"type":"simulator_source_grid_candidate",
         "vorPixel":vor_xy.tolist(),"fixPixel":fix_xy.tolist(),
         "latitudeSlope":scale,"latitudeIntercept":x_base,
         "longitudeSlope":lon_slope,"longitudeIntercept":lon_base,
