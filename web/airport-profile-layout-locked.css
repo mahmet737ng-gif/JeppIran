@@ -1,0 +1,100 @@
+/* JEPPIRAN profile layout AHVAZ APPROVED V1, owner-locked, 2026-10-15.
+ * Presentation only: original 50 airport posters and SHA-256 locks untouched.
+ * No changes to Home, Charts drawer, taxi, PDF viewer, chart gestures or georef.
+ *
+ * DESKTOP:
+ *    METAR (same width & height) WIND
+ *    RUNWAYS                     NOTAM
+ *    TAF                         [background]
+ * The approved image caption at the bottom is never used as navigation UI.
+ */
+#chartsView .airport-profile .profile-cols {
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  grid-template-areas:
+    "metar wind"
+    "runways notam"
+    "taf .";
+  column-gap:12px;
+  row-gap:11px;
+  align-items:start;
+}
+#chartsView .airport-profile #profileWeather {grid-area:metar;align-self:stretch;min-height:184px}
+#chartsView .airport-profile #profileWind {grid-area:wind;align-self:stretch;min-height:184px}
+#chartsView .airport-profile #profileRunways {grid-area:runways;align-self:start}
+#chartsView .airport-profile #profileNotam {grid-area:notam;align-self:start}
+#chartsView .airport-profile #profileTaf {grid-area:taf;align-self:start}
+
+#chartsView .airport-profile .profile-heading {gap:20px}
+#chartsView .airport-profile .profile-heading p {line-height:1.45}
+#chartsView .airport-profile .profile-elev-inline {
+  display:inline-block;
+  border-left:1px solid currentColor;
+  margin-left:13px;
+  padding-left:13px;
+  font-weight:700;
+  white-space:nowrap;
+}
+#chartsView .airport-profile .profile-elev .profile-coordinates,
+#chartsView .airport-profile .profile-elev .profile-local-clock {
+  display:block;
+  font-size:11px;
+  line-height:1.5;
+  font-weight:400;
+}
+#chartsView .airport-profile .profile-elev .profile-local-clock {opacity:.8}
+#chartsView .airport-profile #profileWind .wind-compact {
+  display:grid;
+  grid-template-columns:minmax(126px,0.45fr) minmax(0,0.55fr);
+  gap:11px;
+  align-items:center;
+  padding:2px 13px 11px;
+}
+#chartsView .airport-profile #profileWind .wind-compass {
+  margin:0;
+  min-height:0;
+  display:block;
+  padding:0;
+}
+#chartsView .airport-profile #profileWind .runway-bearing-compass {width:100%;max-width:none;gap:2px}
+#chartsView .airport-profile #profileWind .runway-bearing-compass svg {
+  display:block;
+  height:117px;
+  width:min(100%,154px);
+  margin:0 auto;
+}
+#chartsView .airport-profile #profileWind .runway-bearing-compass strong {
+  font-size:11px;
+  line-height:1.3;
+  text-align:center;
+}
+#chartsView .airport-profile #profileWind .wind-data {padding:2px 0 0;gap:3px;min-width:0;font-size:12px}
+#chartsView .airport-profile #profileWind .wind-data div {gap:7px;padding-top:5px;align-items:center}
+#chartsView .airport-profile #profileWind .wind-data div span {min-width:0}
+#chartsView .airport-profile #profileWind .wind-data div b {white-space:nowrap;text-align:right}
+#chartsView .airport-profile #profileNotam .profile-notam-details {padding-top:2px;padding-bottom:10px}
+
+/* Reserve clear space for the original poster's lower IATA/ICAO city lettering,
+   instead of allowing the final data card to sit over baked-in photo text. */
+#chartsView .airport-profile.jp-airport-poster-loaded .profile-shell {
+  padding-bottom:clamp(190px,22vw,310px);
+}
+
+/* Narrow portrait: no horizontal overflow, same approved reading order. */
+@media (max-width:960px) {
+  #chartsView .airport-profile .profile-cols {
+    grid-template-columns:minmax(0,1fr) !important;
+    grid-template-areas:"metar" "wind" "runways" "notam" "taf";
+    gap:10px;
+  }
+  #chartsView .airport-profile #profileWeather,
+  #chartsView .airport-profile #profileWind {min-height:0}
+  #chartsView .airport-profile .profile-elev-inline {margin-left:9px;padding-left:9px}
+}
+@media (max-width:540px) {
+  #chartsView .airport-profile #profileWind .wind-compact {grid-template-columns:minmax(95px,.43fr) minmax(0,.57fr);gap:6px;padding:2px 8px 10px}
+  #chartsView .airport-profile #profileWind .runway-bearing-compass svg {height:103px}
+  #chartsView .airport-profile #profileWind .wind-data {font-size:11px}
+  #chartsView .airport-profile .profile-heading {gap:8px}
+  #chartsView .airport-profile.jp-airport-poster-loaded .profile-shell {padding-bottom:200px}
+}

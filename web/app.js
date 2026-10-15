@@ -1065,8 +1065,8 @@ function runwayCompassMarkup(rw, weather){
       '<circle cx="160" cy="108" r="2.5" fill="#eefaff"/>'+
     '</svg>'+
     '<strong>RWY '+runwayName+' HDG · '+Math.round(heading)+'°</strong>'+
-    '<small>Heading printed beside RWY on V2621 ADC · no conversion</small>'+
-    '<small class="wind-arrow-label">'+profileEsc(windLabel)+'</small>'+
+
+
     '</div>';
 }
 function renderAirportProfile(icao){
@@ -1100,24 +1100,19 @@ function renderAirportProfile(icao){
       '<span><b>'+profileEsc(surface)+'</b><small>ADC '+adcHeading+'</small></span></button>';
     }).join(""):'<div class="profile-empty">Runway data unavailable; consult current ADC/AIP.</div>';
   root.innerHTML='<div class="profile-shell">'+
-    '<div class="profile-heading"><div><div class="profile-code-row"><strong class="profile-icao">'+profileEsc(icao)+'</strong><span class="profile-chip">'+profileEsc(d.iata||"—")+'</span><button type="button" class="profile-chip" id="profileFavBtn" aria-label="Favorite airport">'+(fav.has(icao)?"★":"☆")+'</button></div><h2>'+profileEsc(name)+'</h2><p>'+profileEsc(meta[1])+(meta[1]&&country?', ':'')+profileEsc(country)+'</p></div><div class="profile-elev">Elevation: '+(Number.isFinite(d.elevation)?d.elevation.toLocaleString()+' ft':'—')+'<br>⌖ '+formattedCoord+'<br><strong id="profileUtcClock" class="profile-utc-clock" aria-live="off">--:--:-- UTC</strong><div id="profileTerminalValidity" class="terminal-validity profile-terminal-validity" data-state="unknown" role="status" aria-live="polite">'+terminalValidityIndicator().profileMarkup+'</div></div></div>'+
-    '<nav class="profile-tabs" aria-label="Airport profile">'+["Overview"].map(t=>'<button type="button" class="profile-tab'+(profileTab===t?" active":"")+'" data-profile-tab="'+t+'">'+t+'</button>').join("")+'</nav>'+
-    '<div class="profile-cols"><div class="profile-col">'+
+    '<div class="profile-heading"><div><div class="profile-code-row"><strong class="profile-icao">'+profileEsc(icao)+'</strong><span class="profile-chip">'+profileEsc(d.iata||"—")+'</span><button type="button" class="profile-chip" id="profileFavBtn" aria-label="Favorite airport">'+(fav.has(icao)?"★":"☆")+'</button></div><h2>'+profileEsc(name)+'</h2><p>'+profileEsc(meta[1])+(meta[1]&&country?', ':'')+profileEsc(country)+'<span class="profile-elev-inline">Elevation '+(Number.isFinite(d.elevation)?d.elevation.toLocaleString()+' ft':'—')+'</span></p></div><div class="profile-elev"><strong id="profileUtcClock" class="profile-utc-clock" aria-live="off">--:--:-- UTC</strong><small class="profile-coordinates">⌖ '+formattedCoord+'</small><small id="profileLocalTime" class="profile-local-clock" aria-live="off">--:--:--</small><div id="profileTerminalValidity" class="terminal-validity profile-terminal-validity" data-state="unknown" role="status" aria-live="polite">'+terminalValidityIndicator().profileMarkup+'</div></div></div>'+
+    '<div class="profile-cols">'+
       '<section class="profile-card" id="profileWeather"><header><span>METAR • '+profileEsc(icao)+'</span><small id="profileMetarAge">'+(raw?"Last received / cached":"Loading live METAR…")+'</small></header>'+
         '<span class="metar-raw" id="profileMetarRaw">'+profileEsc(raw||"Waiting for actual METAR…")+'</span>'+
         '<div class="weather-summary"><div class="weather-brief"><span class="weather-icon">'+wx.icon+'</span><div><strong>'+profileEsc(raw?wx.temp:"—")+'</strong><small>'+profileEsc(raw?wx.desc:"Weather unavailable")+'</small><small>'+profileEsc(raw?wx.clouds:"")+'</small></div></div>'+
         '<div class="weather-facts"><span>◉ '+profileEsc(wx.visibility)+'</span><span>➤ '+(wx.windDirection===null?"—":wx.windDirection.toString().padStart(3,"0")+"°")+' / '+(wx.windSpeed===null?"—":wx.windSpeed+" kt")+'</span><span>UTC <span class="profile-utc"></span></span></div></div></section>'+
-      '<section class="profile-card" id="profileRunways"><header><span>RUNWAYS</span><small>V2621 ADC runway-end numbers only</small></header>'+runwayRows+'</section>'+
-      '<section class="profile-card" id="profileTaf"><header><span>TAF • '+profileEsc(icao)+'</span><small>Forecast / last available</small></header><div class="profile-weather-text">'+profileEsc(taf||"TAF unavailable — request pending")+'</div></section>'+
-      '<section class="profile-card" id="profileNotam"><header><span>NOTAM • '+profileEsc(icao)+'</span></header><details class="profile-notam-details"><summary>NOTAM status & details</summary><p>No validated NOTAM feed is connected. Current NOTAM status unknown. Check an authorized AIS/NOF source before flight.</p></details></section>'+
-    '</div><div class="profile-col">'+
       '<section class="profile-card" id="profileWind"><header><span>WIND COMPONENTS '+(rw?"("+profileEsc(rw.name)+")":"")+'</span></header>'+
-      '<div class="wind-compass">'+runwayCompassMarkup(rw,wx)+'</div>'+
-      '<div class="wind-data"><div><span>Runway HDG (ADC)</span><b>'+(rw?(Number.isFinite(rw.headingAdc)?Math.round(rw.headingAdc)+"°":"—"):"—")+'</b></div><div><span>METAR wind direction</span><b>'+(comp?comp.direction+"° / "+comp.speed+" kt":"—")+'</b></div><div><span class="'+(comp?(comp.headRaw>=0?"wind-status-head":Number(comp.head)>=3&&Number(comp.head)<=5?"wind-status-tail-warning":Number(comp.head)>5?"wind-status-tail-danger":"wind-status-neutral"):"wind-status-neutral")+'">↑ '+(comp?comp.headName:"Headwind")+'</span><b class="'+(comp?(comp.headRaw>=0?"wind-status-head":Number(comp.head)>=3&&Number(comp.head)<=5?"wind-status-tail-warning":Number(comp.head)>5?"wind-status-tail-danger":"wind-status-neutral"):"wind-status-neutral")+'">'+(comp?comp.head+" kt":"—")+'</b></div><div><span class="wind-cross">→ Crosswind</span><b class="wind-cross">'+(comp?comp.cross+" kt "+comp.crossName:"—")+'</b></div></div></section>'+
-      '<section class="profile-card" id="profileInfo"><header>ADDITIONAL INFORMATION</header>'+
-      [['ICAO',icao],['IATA',d.iata||"—"],['Field elevation',Number.isFinite(d.elevation)?d.elevation.toLocaleString()+" ft":"—"],['Coordinates',Number.isFinite(d.lat)?d.lat.toFixed(4)+"N, "+d.lon.toFixed(4)+"E":"—"],['Local time','<span id="profileLocalTime" aria-live="off">--:--:--</span>']].map(([k,v])=>'<div class="profile-info-row"><span>'+k+'</span><b>'+v+'</b></div>').join("")+'</section>'+
-
-    '</div></div></div>';
+      '<div class="wind-compact"><div class="wind-compass">'+runwayCompassMarkup(rw,wx)+'</div>'+
+      '<div class="wind-data"><div><span>Runway HDG (ADC)</span><b>'+(rw?(Number.isFinite(rw.headingAdc)?Math.round(rw.headingAdc)+"°":"—"):"—")+'</b></div><div><span>METAR wind direction</span><b>'+(comp?comp.direction+"° / "+comp.speed+" kt":"—")+'</b></div><div><span class="'+(comp?(comp.headRaw>=0?"wind-status-head":Number(comp.head)>=3&&Number(comp.head)<=5?"wind-status-tail-warning":Number(comp.head)>5?"wind-status-tail-danger":"wind-status-neutral"):"wind-status-neutral")+'">↑ '+(comp?comp.headName:"Headwind")+'</span><b class="'+(comp?(comp.headRaw>=0?"wind-status-head":Number(comp.head)>=3&&Number(comp.head)<=5?"wind-status-tail-warning":Number(comp.head)>5?"wind-status-tail-danger":"wind-status-neutral"):"wind-status-neutral")+'">'+(comp?comp.head+" kt":"—")+'</b></div><div><span class="wind-cross">→ Crosswind</span><b class="wind-cross">'+(comp?comp.cross+" kt "+comp.crossName:"—")+'</b></div></div></div></section>'+
+      '<section class="profile-card" id="profileRunways"><header><span>RUNWAYS</span><small>V2621 ADC runway-end numbers only</small></header>'+runwayRows+'</section>'+
+      '<section class="profile-card" id="profileNotam"><header><span>NOTAM • '+profileEsc(icao)+'</span></header><details class="profile-notam-details"><summary>NOTAM status & details</summary><p>No validated NOTAM feed is connected. Current NOTAM status unknown. Check an authorized AIS/NOF source before flight.</p></details></section>'+
+      '<section class="profile-card" id="profileTaf"><header><span>TAF • '+profileEsc(icao)+'</span><small>Forecast / last available</small></header><div class="profile-weather-text">'+profileEsc(taf||"TAF unavailable — request pending")+'</div></section>'+
+    '</div></div>';
   updateTerminalValidityDisplay();
   root.querySelector("#profileFavBtn").onclick=()=>{setAirportFavorite(icao);renderAirportProfile(icao)};
   root.querySelectorAll("[data-runway]").forEach(b=>b.onclick=()=>{window.jeppiranSelectedRunway=b.dataset.runway;renderAirportProfile(icao)});
