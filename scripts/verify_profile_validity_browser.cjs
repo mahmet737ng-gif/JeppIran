@@ -58,7 +58,7 @@ async function waitForServer(){
   assert.ok(positions.periodTop>=positions.clockBottom-2,"dates physically below clock");
   assert.ok(positions.periodWidth>=100,"date range has visible width");
   assert.ok(positions.headerBottom>=positions.periodTop,"range is in the header");
-  // Owner-requested sidebar alignment: HOME immediately after an inset Charts title.
+  // Owner-requested sidebar alignment: HOME is on the LEFT, Charts title to its RIGHT.
   const sidebarHeader=await page.evaluate(()=>{
     const pane=document.querySelector("#chartsView .airport-pane").getBoundingClientRect();
     const title=document.querySelector("#chartsView .airport-pane .pane-head h2").getBoundingClientRect();
@@ -66,13 +66,13 @@ async function waitForServer(){
     return {paneLeft:pane.left,paneRight:pane.right,titleLeft:title.left,titleRight:title.right,
       homeLeft:home.left,homeRight:home.right,homeWidth:home.width};
   });
-  assert.ok(sidebarHeader.titleLeft>=sidebarHeader.paneLeft+14,
-    "Charts header title needs a small left inset: "+JSON.stringify(sidebarHeader));
-  assert.ok(sidebarHeader.homeLeft>=sidebarHeader.titleRight+4&&
-    sidebarHeader.homeLeft<=sidebarHeader.titleRight+24,
-    "HOME button must sit immediately beside Charts title: "+JSON.stringify(sidebarHeader));
-  assert.ok(sidebarHeader.homeRight<=sidebarHeader.paneRight-3,
-    "HOME button must fit within the airport pane: "+JSON.stringify(sidebarHeader));
+  assert.ok(sidebarHeader.homeLeft>=sidebarHeader.paneLeft+14,
+    "HOME button needs the original small left inset: "+JSON.stringify(sidebarHeader));
+  assert.ok(sidebarHeader.titleLeft>=sidebarHeader.homeRight+4&&
+    sidebarHeader.titleLeft<=sidebarHeader.homeRight+24,
+    "Charts must sit immediately to the RIGHT of HOME: "+JSON.stringify(sidebarHeader));
+  assert.ok(sidebarHeader.titleRight<=sidebarHeader.paneRight-3,
+    "Charts title must fit within the airport pane: "+JSON.stringify(sidebarHeader));
 
   // Critical regression: the old QA saw only the header, while a phone
   // could show a completely empty airport chart body. Exercise the actual
@@ -126,9 +126,10 @@ async function waitForServer(){
     return {titleRight:title.right,homeLeft:home.left,homeRight:home.right,
       paneRight:document.querySelector("#chartsView .airport-pane").getBoundingClientRect().right};
   });
-  assert.ok(mobileHeader.homeLeft>=mobileHeader.titleRight+3&&
-    mobileHeader.homeRight<=mobileHeader.paneRight,
-    "Mobile airport drawer must keep HOME next to Charts: "+JSON.stringify(mobileHeader));
+  assert.ok(mobileHeader.titleRight<=mobileHeader.paneRight&&
+    mobileHeader.titleRight>=mobileHeader.homeRight+3&&
+    mobileHeader.titleRight<=mobileHeader.homeRight+125,
+    "Mobile airport drawer must keep Charts immediately RIGHT of HOME: "+JSON.stringify(mobileHeader));
   await page.locator("#airportPickerCloseBtn").click();
   await page.waitForTimeout(220);
   const closedAgain=await page.evaluate(()=>document.querySelector("#chartsView .airport-pane").getBoundingClientRect().right);

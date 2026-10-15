@@ -2024,18 +2024,18 @@ body.viewer-fullscreen #jpHomeBtn.jp-home-shortcut{
 body.viewer-fullscreen.jp-chart-drawer-open #jpHomeBtn{opacity:0;pointer-events:none}
 
 
-/* Locked Charts sidebar composition: title slightly inset, HOME immediately beside it.
+/* Locked Charts sidebar composition: HOME on left; Charts title to its right.
    Do not change the profile, PDF viewer, fullscreen toolbar, or chart gesture layers. */
 #chartsView .airport-pane .pane-head{
   position:relative;display:flex;flex-flow:row nowrap;align-items:center;
   justify-content:flex-start;gap:10px;padding-left:19px;
 }
 #chartsView .airport-pane .pane-head h2{
-  order:0;width:auto;flex:0 0 auto;margin:0;padding:0;box-sizing:border-box;
+  order:1;width:auto;flex:0 0 auto;margin:0;padding:0;box-sizing:border-box;
 }
 #chartsView #chartsBackBtn.jp-charts-back{
   /* Not a legacy .back-btn: Android must NOT hide this new HOME control. */
-  position:static;inset:auto;order:1;z-index:2;display:inline-flex;
+  position:static;inset:auto;order:0;z-index:2;display:inline-flex;
   align-items:center;justify-content:center;gap:5px;flex:0 0 auto;
   min-height:28px;padding:5px 8px;border:1px solid #275d7f;
   border-radius:7px;background:#092138;color:#c4e8ff;

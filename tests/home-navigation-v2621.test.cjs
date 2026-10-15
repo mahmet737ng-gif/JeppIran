@@ -4,9 +4,9 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const path=require('node:path');
 const read=p=>fs.readFileSync(path.join(__dirname,'..',p),'utf8');
-test('Charts title is inset with HOME immediately beside it; mobile return remains available',()=>{
+test('HOME stays on the left, Charts title immediately to its right; mobile return remains available',()=>{
   const html=read('web/index.html');
-  assert.match(html,/<h2>Charts<\/h2><button id="chartsBackBtn"[^>]*aria-label="Go to JEPPIRAN Home"[^>]*>[\s\S]*?<span>HOME<\/span><\/button>/);
+  assert.match(html,/<button id="chartsBackBtn"[^>]*aria-label="Go to JEPPIRAN Home"[^>]*>[\s\S]*?<span>HOME<\/span><\/button><h2>Charts<\/h2>/);
   assert.doesNotMatch(html,/id="chartsBackBtn"[^>]*>← Back/);
   assert.doesNotMatch(html,/id="chartsBackBtn" class="back-btn/);
   assert.match(html,/id="chartsBackBtn" class="jp-charts-back"/);
@@ -43,11 +43,11 @@ test('airport chart categories remain in the sidebar and NEVER occupy profile Ov
   assert.match(js,/id="profileWeather"/);
 });
 
-test('Charts header title precedes adjacent HOME in flex layout, never in fullscreen',()=>{
+test('HOME precedes Charts title in flex layout, never in fullscreen',()=>{
   const css=read('web/styles.css'),html=read('web/index.html');
   assert.match(css,/#chartsView \.airport-pane \.pane-head\{[\s\S]*?flex-flow:row nowrap/);
-  assert.match(css,/#chartsView \.airport-pane \.pane-head h2\{[\s\S]*?order:0/);
-  assert.match(css,/#chartsView #chartsBackBtn\.jp-charts-back\{[\s\S]*?position:static/);
+  assert.match(css,/#chartsView \.airport-pane \.pane-head h2\{[\s\S]*?order:1/);
+  assert.match(css,/#chartsView #chartsBackBtn\.jp-charts-back\{[\s\S]*?position:static;inset:auto;order:0/);
   assert.match(css,/body\.viewer-fullscreen #chartsView #chartsBackBtn\{display:none!important\}/);
   assert.match(html,/id="chartsBackMobileBtn"[^>]*aria-label="Go to JEPPIRAN Home"/);
 });
