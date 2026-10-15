@@ -102,6 +102,9 @@ jobs:
       - name: Verify OIGG STAR source-locked flight QA
         run: node --test web/tests/oigg-star-flightqa.test.cjs
 
+      - name: Test three new OIIE original-PDF SID/ILS simulator geometries
+        run: node --test web/tests/oiie-missing-sid-ils-flightqa.test.cjs
+
       - name: Verify all owner-locked airport profile poster hashes when installed
         run: python3 scripts/verify_owner_locked_profile_posters.py
 

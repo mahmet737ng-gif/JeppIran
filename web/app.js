@@ -21,6 +21,55 @@ const EXP_GEO_KEY="jeppiran-v2621-experimental-georef-enabled";
 function experimentalGeorefOn(){try{return localStorage.getItem(EXP_GEO_KEY)!=="off"}catch(_){return true}}
 // Reversible owner flight QA for OIGG KOBUB STARs. Source has a ~1 km
 // independent graticule disagreement; this MUST remain visibly experimental.
+// OIIE V2621 missing SID 376 / LOC 386 / ILS 388. Read-only, reversible
+// source-PDF flight QA. Never overwrite existing chart-georef.json records.
+async function loadOiiMissingSidIlsFlightQa(m){
+  try{
+    const response=await fetch("./data/oiie-missing-sid-ils-flightqa-v2621.json?v=oiie-376-386-388-r1",{cache:"no-store"});
+    if(!response.ok)throw Error("OIIE new SID/ILS QA HTTP "+response.status);
+    const data=await response.json();
+    const expected=new Map([[376,"fc0a0285d01f39872f68bae9fddf39cb6703f8c8c1d1776125de2c188d873c9b"],
+      [386,"17c4902191d2ee254d3c378ed23c75e973d1da66377d99b86c24742bfe81adeb"],
+      [388,"4185dfa21c0adf26e52ac08439bf4507bf16fd7014d89ab8cea08d9b23d95e23"]]);
+    if(data.version!==2||data.testOnly!==true||data.notForActualNavigation!==true||
+       data.coordinateSystem!=="WGS84"||data.coordinateSpace!=="pdf_points"||
+       data.origin!=="top_left"||data.source?.chartDataVersion!==m.version||
+       data.source?.sha256!==m.source_sha256||data.source?.pageCount!==1654||
+       !Array.isArray(data.charts)||data.charts.length!==3)
+      throw Error("OIIE source AIRAC mismatch");
+    const staged=[];
+    for(const item of data.charts){
+      const page=Number(item.page),c=charts.find(v=>v.airport==="OIIE"&&Number(v.page)===page);
+      const key=c?[c.airport,c.category.toUpperCase(),c.chart_number,c.name.toUpperCase()].join("|"):"";
+      const qa=item.validation;
+      if(!expected.has(page)||staged.some(z=>z[0]===page)||georefByPage.has(page)||
+         item.airport!=="OIIE"||item.sourceFingerprint!==expected.get(page)||
+         item.chartKey!==key||qa?.qaTestOnly!==true||qa?.notApprovedForNavigation!==true||
+         qa?.originalPdfSha256!==m.source_sha256||
+         qa?.method!==(page===376?"two_navaid_source_grid_flight_qa":"crossplate_ika_grid_flight_qa")||
+         !Array.isArray(qa?.sourceControlPoints)||qa.sourceControlPoints.length<4||
+         !Number.isFinite(Math.max(...Object.values(qa?.independentCheckErrorsPdfPoints||{})))||
+         Math.max(...Object.values(qa.independentCheckErrorsPdfPoints))>1.5||
+         (page===376&&item.excludedBounds?.length!==0)||
+         (page!==376&&item.excludedBounds?.length!==2))
+        throw Error("OIIE flight QA metadata, source controls, NTS masking or protected map "+page);
+      const model=makeGeoModel(item);
+      if(!model)throw Error("OIIE invalid source-calibrated geometry "+page);
+      staged.push([page,model]);
+    }
+    if(manifest!==m||staged.length!==3||staged.some(([page])=>georefByPage.has(page)))return;
+    for(const [page,model] of staged){
+      experimentalEligibleGeoModels.set(page,model);
+      if(experimentalGeorefOn()){
+        georefByPage.set(page,model);
+        experimentalGeorefPages.add(page);
+      }
+    }
+    showPublishedExperimentalGeorefNotice();
+    if(selectedChart?.airport==="OIIE")updateAircraftMarker();
+    console.info("OIIE SID 376, LOC 386, ILS 388 source-locked flight-QA overlay ready; not for actual navigation");
+  }catch(e){console.warn("OIIE source-locked simulator references refused; all original models preserved:",e)}
+}
 async function loadOiggStarsFlightQa(m){
   try{
     const res=await fetch("./data/oigg-star-flightqa-v2621.json?v=oigg-kobub-qa-r1",{cache:"no-store"});
@@ -122,7 +171,9 @@ function showPublishedExperimentalGeorefNotice(){
   panel.id="provisionalGeorefWarning";
   panel.style.cssText="position:absolute;top:7px;left:7px;z-index:40;background:#553210f2;color:#fff6db;border:2px solid #fcbf55;padding:7px 9px;max-width:calc(100% - 14px);border-radius:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;font:12px/1.4 Arial,sans-serif;box-shadow:0 2px 9px #0006";
   const msg=document.createElement("strong");
-  msg.textContent=[307,308].includes(page)?
+  msg.textContent=[376,386,388].includes(page)?
+    (enabled?"⚠ OIIE SID/ILS · SOURCE GRID & NAVAID GEO QA · SIMULATOR ONLY · NOT FOR ACTUAL NAVIGATION":"OIIE SID/ILS SIMULATOR GEOREFERENCE DISABLED"):
+    [307,308].includes(page)?
     (enabled?"⚠ OIGG KOBUB STAR · GRID DISAGREES 700–940 m · SIMULATOR FLIGHT QA ONLY · NOT FOR NAVIGATION":"OIGG KOBUB STAR TEST GEOREFERENCE DISABLED"):
     (enabled?"⚠ GEOREFERENCE · INDEPENDENT AIP QA PENDING · NOT FOR NAVIGATION":"GEOREFERENCE LAYER DISABLED");
   panel.appendChild(msg);
@@ -593,6 +644,7 @@ async function loadData(){
           ["ltfm",()=>loadLtfmGridGeorefs(m)],
           ["published",()=>loadPublishedExperimentalGeorefs(m)],
           ["oigg-kobub-flightqa",()=>loadOiggStarsFlightQa(m)],
+          ["oiie-missing-sid-ils-flightqa",()=>loadOiiMissingSidIlsFlightQa(m)],
           ["oici-route-flight-qa",()=>loadOiciRouteOnlyFlightQa(m)]
         ]){
           try{await task()}catch(error){console.warn("Optional georeference "+label+" failed",error)}
@@ -1094,7 +1146,7 @@ function geoBoundsContains(b,x,y,t=0){
 }
 function makeGeoModel(item){
   if(!item||!Number.isInteger(Number(item.page)))return null;
-  const allowed=new Set(["paired_printed_graticule_vector_ticks","single_axis_plus_conformal_scale","aip_and_printed_grid_10m_test_only","two_vector_landmarks_simulator_qa"]);
+  const allowed=new Set(["paired_printed_graticule_vector_ticks","single_axis_plus_conformal_scale","aip_and_printed_grid_10m_test_only","two_vector_landmarks_simulator_qa","two_navaid_source_grid_flight_qa","crossplate_ika_grid_flight_qa"]);
   if(!allowed.has(item.validation&&item.validation.method))return null;
   const width=geoNum(item.width),height=geoNum(item.height),b=item.bounds||{};
   const bounds={left:geoNum(b.left),top:geoNum(b.top),right:geoNum(b.right),bottom:geoNum(b.bottom)};
@@ -1332,7 +1384,9 @@ function setPositionStatus(state,text,detail=""){
   if(state==="off"||state==="waiting"||state==="error")text="POS OFF";
   if(selectedChart && selectedChart.airport!=="OIII" && experimentalGeorefPages.has(Number(selectedChart.page))){
     state="warning";text=(text||"GPS")+" · GEOREF";
-    detail=selectedChart.airport==="OIGG"&&[307,308].includes(Number(selectedChart.page))?
+    detail=selectedChart.airport==="OIIE"&&[376,386,388].includes(Number(selectedChart.page))?
+      "OIIE V2621 SID/ILS SOURCE GRID & IKA/RUS GEOREFERENCE QA · SIMULATOR ONLY · NOT FOR ACTUAL NAVIGATION. "+(detail||""):
+      selectedChart.airport==="OIGG"&&[307,308].includes(Number(selectedChart.page))?
       "OIGG KOBUB GEO QA · ORIGINAL GRID DISAGREEMENT APPROX 700–940 m · SIMULATOR ONLY · NOT FOR NAVIGATION. "+(detail||""):
       "GEOREFERENCE · INDEPENDENT AIP QA PENDING · NOT FOR NAVIGATION. "+(detail||"");
   }

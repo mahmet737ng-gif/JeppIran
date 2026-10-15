@@ -1,0 +1,323 @@
+{
+  "version": 2,
+  "coordinateSpace": "pdf_points",
+  "coordinateSystem": "WGS84",
+  "origin": "top_left",
+  "testOnly": true,
+  "notForActualNavigation": true,
+  "source": {
+    "chartDataVersion": "V2621",
+    "sha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+    "pageCount": 1654
+  },
+  "charts": [
+    {
+      "page": 376,
+      "airport": "OIIE",
+      "name": "RUS 4C, RUS 4D",
+      "chartKey": "OIIE|SID|20-3E|RUS 4C, RUS 4D",
+      "sourceFingerprint": "fc0a0285d01f39872f68bae9fddf39cb6703f8c8c1d1776125de2c188d873c9b",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90,
+        "top": 163,
+        "right": 531.5,
+        "bottom": 724
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "lat": 35.3,
+          "lon": 50.9,
+          "x": 147.80498730319232,
+          "y": 601.6494339622659,
+          "source": "Derived from original PDF vector navaid control and printed geographic grid, simulator QA"
+        },
+        {
+          "lat": 35.3,
+          "lon": 51.23,
+          "x": 447.1158252920213,
+          "y": 601.6494339622659,
+          "source": "Derived from original PDF vector navaid control and printed geographic grid, simulator QA"
+        },
+        {
+          "lat": 35.47,
+          "lon": 50.9,
+          "x": 147.80498730319232,
+          "y": 411.1211320754737,
+          "source": "Derived from original PDF vector navaid control and printed geographic grid, simulator QA"
+        },
+        {
+          "lat": 35.47,
+          "lon": 51.23,
+          "x": 447.1158252920213,
+          "y": 411.1211320754737,
+          "source": "Derived from original PDF vector navaid control and printed geographic grid, simulator QA"
+        }
+      ],
+      "maxResidualPdfPoints": 0.5,
+      "validation": {
+        "method": "two_navaid_source_grid_flight_qa",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "originalPdfSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+        "sourceControlPoints": [
+          {
+            "id": "RUS",
+            "lat": 35.445,
+            "lon": 50.905,
+            "pdf": [
+              152.34,
+              439.14
+            ],
+            "type": "original PDF RUS VOR circle; Iran AIP ENR 4.1"
+          },
+          {
+            "id": "IKA",
+            "lat": 35.409666666666666,
+            "lon": 51.17847222222222,
+            "pdf": [
+              400.38,
+              478.74
+            ],
+            "type": "original PDF IKA VOR circle; Iran AIP AD 2.19"
+          },
+          {
+            "id": "35-30",
+            "pdf": 378.720001,
+            "type": "PDF latitude tick held out"
+          },
+          {
+            "id": "51-00",
+            "pdf": 238.56,
+            "type": "PDF longitude tick held out"
+          }
+        ],
+        "independentCheckErrorsPdfPoints": {
+          "35-30": 1.2215104339614982,
+          "51-00": 0.05475876079668751
+        },
+        "controlPointCount": 4,
+        "notToScaleRegionCount": 0,
+        "flightSimulatorQAOnly": true
+      }
+    },
+    {
+      "page": 386,
+      "airport": "OIIE",
+      "name": "LOC RWY 29R",
+      "chartKey": "OIIE|APPROACH||LOC RWY 29R",
+      "sourceFingerprint": "17c4902191d2ee254d3c378ed23c75e973d1da66377d99b86c24742bfe81adeb",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90,
+        "top": 171,
+        "right": 531.5,
+        "bottom": 504
+      },
+      "excludedBounds": [
+        {
+          "left": 90,
+          "top": 267,
+          "right": 158,
+          "bottom": 410
+        },
+        {
+          "left": 476,
+          "top": 271,
+          "right": 531.5,
+          "bottom": 408
+        }
+      ],
+      "points": [
+        {
+          "lat": 35.4,
+          "lon": 51.166666666666664,
+          "x": 225.36000100000092,
+          "y": 260.85381400467304,
+          "source": "Derived from original PDF vector navaid control and printed geographic grid, simulator QA"
+        },
+        {
+          "lat": 35.4,
+          "lon": 51.333333333333336,
+          "x": 376.92001300000265,
+          "y": 260.85381400467304,
+          "source": "Derived from original PDF vector navaid control and printed geographic grid, simulator QA"
+        },
+        {
+          "lat": 35.35,
+          "lon": 51.166666666666664,
+          "x": 225.36000100000092,
+          "y": 316.64071850700566,
+          "source": "Derived from original PDF vector navaid control and printed geographic grid, simulator QA"
+        },
+        {
+          "lat": 35.35,
+          "lon": 51.333333333333336,
+          "x": 376.92001300000265,
+          "y": 316.64071850700566,
+          "source": "Derived from original PDF vector navaid control and printed geographic grid, simulator QA"
+        }
+      ],
+      "maxResidualPdfPoints": 0.5,
+      "validation": {
+        "method": "crossplate_ika_grid_flight_qa",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "originalPdfSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+        "sourceControlPoints": [
+          {
+            "id": "IKA",
+            "lat": 35.409666666666666,
+            "lon": 51.17847222222222,
+            "pdf": [
+              235.98000000000002,
+              249.78
+            ],
+            "type": "original PDF IKA VOR concentric ring centre; independent WGS84 control"
+          },
+          {
+            "id": "D6.2_IKIA",
+            "pdf": [
+              330.36,
+              281.34
+            ],
+            "type": "original D6.2 plate symbol matched across neighboring plate"
+          },
+          {
+            "id": "51-10",
+            "pdf": 225.360001,
+            "type": "original PDF longitude vector tick"
+          },
+          {
+            "id": "51-20",
+            "pdf": 376.920013,
+            "type": "original PDF longitude vector tick"
+          },
+          {
+            "id": "35-30_TEMPORARY",
+            "pdf": 149.28000500000002,
+            "type": "matched neighboring TEMP ILS chart printed latitude + verified original vector page shift"
+          }
+        ],
+        "independentCheckErrorsPdfPoints": {
+          "IKA_VOR_pdf_points": 0.31062,
+          "shared_D6_2_vector_shift_pdf_points": 0
+        },
+        "controlPointCount": 4,
+        "notToScaleRegionCount": 2,
+        "flightSimulatorQAOnly": true
+      }
+    },
+    {
+      "page": 388,
+      "airport": "OIIE",
+      "name": "ILS RWY 29R",
+      "chartKey": "OIIE|APPROACH||ILS RWY 29R",
+      "sourceFingerprint": "4185dfa21c0adf26e52ac08439bf4507bf16fd7014d89ab8cea08d9b23d95e23",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90,
+        "top": 171,
+        "right": 531.5,
+        "bottom": 504
+      },
+      "excludedBounds": [
+        {
+          "left": 90,
+          "top": 267,
+          "right": 158,
+          "bottom": 410
+        },
+        {
+          "left": 476,
+          "top": 271,
+          "right": 531.5,
+          "bottom": 408
+        }
+      ],
+      "points": [
+        {
+          "lat": 35.4,
+          "lon": 51.166666666666664,
+          "x": 224.28000099999917,
+          "y": 260.6454648696381,
+          "source": "Derived from original PDF vector navaid control and printed geographic grid, simulator QA"
+        },
+        {
+          "lat": 35.4,
+          "lon": 51.333333333333336,
+          "x": 375.7200009999942,
+          "y": 260.6454648696381,
+          "source": "Derived from original PDF vector navaid control and printed geographic grid, simulator QA"
+        },
+        {
+          "lat": 35.35,
+          "lon": 51.166666666666664,
+          "x": 224.28000099999917,
+          "y": 316.3881948044509,
+          "source": "Derived from original PDF vector navaid control and printed geographic grid, simulator QA"
+        },
+        {
+          "lat": 35.35,
+          "lon": 51.333333333333336,
+          "x": 375.7200009999942,
+          "y": 316.3881948044509,
+          "source": "Derived from original PDF vector navaid control and printed geographic grid, simulator QA"
+        }
+      ],
+      "maxResidualPdfPoints": 0.5,
+      "validation": {
+        "method": "crossplate_ika_grid_flight_qa",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "originalPdfSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+        "sourceControlPoints": [
+          {
+            "id": "IKA",
+            "lat": 35.409666666666666,
+            "lon": 51.17847222222222,
+            "pdf": [
+              235.26,
+              249.66
+            ],
+            "type": "original PDF IKA VOR concentric ring centre; independent WGS84 control"
+          },
+          {
+            "id": "D6.2_IKIA",
+            "pdf": [
+              329.88,
+              281.22
+            ],
+            "type": "original D6.2 plate symbol matched across neighboring plate"
+          },
+          {
+            "id": "51-10",
+            "pdf": 224.280001,
+            "type": "original PDF longitude vector tick"
+          },
+          {
+            "id": "51-20",
+            "pdf": 375.720001,
+            "type": "original PDF longitude vector tick"
+          },
+          {
+            "id": "35-30_TEMPORARY",
+            "pdf": 149.160005,
+            "type": "matched neighboring TEMP ILS chart printed latitude + verified original vector page shift"
+          }
+        ],
+        "independentCheckErrorsPdfPoints": {
+          "IKA_VOR_pdf_points": 0.32787,
+          "shared_D6_2_vector_shift_pdf_points": 0
+        },
+        "controlPointCount": 4,
+        "notToScaleRegionCount": 2,
+        "flightSimulatorQAOnly": true
+      }
+    }
+  ]
+}

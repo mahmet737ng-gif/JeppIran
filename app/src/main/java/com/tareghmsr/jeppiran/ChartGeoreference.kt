@@ -205,6 +205,12 @@ data class GeoReference(
 
 object ChartGeoreferenceStore {
     private const val ASSET = "chart-georef.json"
+    private const val OIIE_MISSING_GEOREF_ASSET = "oiie-missing-sid-ils-flightqa-v2621.json"
+    private val OIIE_MISSING_GEOREF_FINGERPRINTS = mapOf(
+        376 to "fc0a0285d01f39872f68bae9fddf39cb6703f8c8c1d1776125de2c188d873c9b",
+        386 to "17c4902191d2ee254d3c378ed23c75e973d1da66377d99b86c24742bfe81adeb",
+        388 to "4185dfa21c0adf26e52ac08439bf4507bf16fd7014d89ab8cea08d9b23d95e23"
+    )
     private const val OIGG_STAR_QA_ASSET = "oigg-star-flightqa-v2621.json"
     private val OIGG_STAR_QA_FINGERPRINTS = mapOf(
         307 to "a40a3de145df915dd71dcec063477726c6eb31adb0284b12e426f1c6794a81b9",
@@ -233,7 +239,9 @@ object ChartGeoreferenceStore {
         setOf(
             "paired_printed_graticule_vector_ticks",
             "single_axis_plus_conformal_scale",
-            "two_vector_landmarks_simulator_qa"
+            "two_vector_landmarks_simulator_qa",
+            "two_navaid_source_grid_flight_qa",
+            "crossplate_ika_grid_flight_qa"
         )
 
     private data class ParsedGeoreferences(
@@ -305,6 +313,7 @@ object ChartGeoreferenceStore {
             chartDataVersion = selected.chartDataVersion
             references.putAll(selected.references)
             loadOiggStarFlightQa(context, selected)
+            loadOiiMissingSidIlsFlightQa(context, selected)
             loadPublishedOickV2(context, selected)
             if (selected.chartDataVersion == "V2621" &&
                 selected.sourceSha256 == OIMM_ILS_SOURCE_SHA
@@ -495,6 +504,74 @@ object ChartGeoreferenceStore {
             references.putAll(fitted.references)
         } catch (_: Exception) {
             // Source mismatch or absent test asset: preserve the prior approved set.
+        }
+    }
+
+    /**
+     * Three V2621 Imam Khomeini airport source-backed *simulator QA* pages.
+     * Page 376 uses verified IKA/RUS source circles, original 35-30 and 51-00
+     * heldout printed ticks. 386/388 use printed longitudes, source IKA VOR
+     * ring and original vector D6.2 agreement with adjacent temporary plates.
+     * Original already georeferenced SID/ILS pages are strictly immutable.
+     */
+    private fun loadOiiMissingSidIlsFlightQa(context: Context, selected: ParsedGeoreferences) {
+        if (selected.chartDataVersion != "V2621" ||
+            selected.sourceSha256 != OIMM_ILS_SOURCE_SHA ||
+            OIIE_MISSING_GEOREF_FINGERPRINTS.keys.any { references.containsKey(it) }) return
+        try {
+            val raw = context.assets.open(OIIE_MISSING_GEOREF_ASSET)
+                .bufferedReader().use { it.readText() }
+            val root = JSONObject(raw)
+            val source = root.optJSONObject("source") ?: return
+            val charts = root.optJSONArray("charts") ?: return
+            if (root.optInt("version") != 2 || !root.optBoolean("testOnly") ||
+                !root.optBoolean("notForActualNavigation") ||
+                root.optString("coordinateSystem") != "WGS84" ||
+                root.optString("coordinateSpace") != "pdf_points" ||
+                root.optString("origin") != "top_left" ||
+                source.optString("chartDataVersion") != selected.chartDataVersion ||
+                source.optString("sha256") != selected.sourceSha256 ||
+                source.optInt("pageCount") != 1654 || charts.length() != 3) return
+            val keys = mapOf(
+                376 to "OIIE|SID|20-3E|RUS 4C, RUS 4D",
+                386 to "OIIE|APPROACH||LOC RWY 29R",
+                388 to "OIIE|APPROACH||ILS RWY 29R"
+            )
+            val seen = mutableSetOf<Int>()
+            for (i in 0 until charts.length()) {
+                val item = charts.optJSONObject(i) ?: return
+                val page = item.optInt("page", -1)
+                val qa = item.optJSONObject("validation") ?: return
+                val errors = qa.optJSONObject("independentCheckErrorsPdfPoints") ?: return
+                val controls = qa.optJSONArray("sourceControlPoints") ?: return
+                val masks = item.optJSONArray("excludedBounds") ?: return
+                val expectedMethod = if (page == 376) "two_navaid_source_grid_flight_qa"
+                    else "crossplate_ika_grid_flight_qa"
+                if (page !in OIIE_MISSING_GEOREF_FINGERPRINTS.keys || !seen.add(page) ||
+                    item.optString("airport") != "OIIE" ||
+                    item.optString("chartKey") != keys[page] ||
+                    item.optString("sourceFingerprint") != OIIE_MISSING_GEOREF_FINGERPRINTS[page] ||
+                    qa.optString("method") != expectedMethod ||
+                    !qa.optBoolean("qaTestOnly") || !qa.optBoolean("notApprovedForNavigation") ||
+                    qa.optString("originalPdfSha256") != selected.sourceSha256 ||
+                    controls.length() < 4 || masks.length() != if (page == 376) 0 else 2 ||
+                    errors.length() == 0) return
+                val metricNames = errors.keys()
+                while (metricNames.hasNext()) {
+                    val metric = metricNames.next()
+                    val error = errors.optDouble(metric, Double.NaN)
+                    if (!error.isFinite() || error !in 0.0..1.5) return
+                }
+            }
+            if (seen != OIIE_MISSING_GEOREF_FINGERPRINTS.keys) return
+            val parsed = parse(raw) ?: return
+            if (parsed.chartDataVersion != selected.chartDataVersion ||
+                parsed.sourceSha256 != selected.sourceSha256 ||
+                parsed.references.keys != seen ||
+                seen.any { references.containsKey(it) }) return
+            references.putAll(parsed.references)
+        } catch (_: Exception) {
+            // Invalid or unavailable source -> keep existing references and no overlay.
         }
     }
 
