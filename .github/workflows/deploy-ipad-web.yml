@@ -124,6 +124,9 @@ jobs:
           python3 scripts/build_textfree_airport_posters.py
           python3 scripts/build_textfree_airport_posters.py --check
 
+      - name: Enforce fixed full poster viewport for all 50 airport profiles
+        run: node --test web/tests/airport-profile-viewport-fit.test.cjs
+
       - name: Validate live vector-clear poster text
         run: node --test web/tests/live-airport-poster-caption.test.cjs
 

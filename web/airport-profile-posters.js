@@ -9,17 +9,28 @@
   const root = document.getElementById("airportProfile");
   if (!root) return;
   const loading = new Map();
+  const dimensions = new Map();
   let queued = false;
   let lastCode = "";
   const urlFor = (icao) => "./airport-profile-posters-textfree/" + icao + ".webp";
 
-  // Original 50 asset files are never modified. A sanitized display-only copy
-  // has the raster caption covered; live HTML restores infinitely sharp text.
-  // All values are read from the current actual airport profile, never OCR.
-  function ensureCaption() {
+  // The poster is a fixed, fully contained image with its HTML caption anchored
+  // INSIDE the same image rectangle, never to scrolling profile content.
+  // There is no new or re-encoded artwork in this change.
+  function ensureFrame() {
+    let frame = root.querySelector(".jp-poster-frame");
+    if (!frame) {
+      frame = document.createElement("div");
+      frame.className = "jp-poster-frame";
+      frame.setAttribute("aria-hidden", "true");
+      root.prepend(frame);
+    }
+    return frame;
+  }
+  function ensureCaption(frame) {
     const shell = root.querySelector(".profile-shell");
     const icao = (root.querySelector(".profile-icao")?.textContent || "").trim().toUpperCase();
-    if (!shell || !airports[icao] || shell.querySelector(".jp-poster-caption")) return;
+    if (!shell || !frame || !airports[icao] || frame.querySelector(".jp-poster-caption")) return;
     const iata = airports[icao];
     const cityLine = root.querySelector(".profile-heading p")?.firstChild?.textContent || "";
     const city = cityLine.split(",")[0].trim() || root.querySelector(".profile-heading h2")?.textContent?.replace(/\s+(International\s+)?Airport$/i, "") || "";
@@ -44,52 +55,93 @@
     divider.textContent = "✈";
     caption.appendChild(divider);
     display("span","jp-caption-coordinates",coordinates);
-    shell.appendChild(caption);
+    frame.appendChild(caption);
   }
-
+  function fitCards() {
+    const shell = root.querySelector(".profile-shell");
+    if (!shell || !root.classList.contains("jp-airport-poster-loaded")) return;
+    // Reset before measurement so switching airports / runway counts never
+    // accumulates fractional zoom from a previous profile.
+    shell.style.zoom = "1";
+    const available = Math.max(1,root.clientHeight - 20);
+    const natural = Math.max(1,shell.scrollHeight);
+    // A compact desktop profile fits inside the viewport in one shot.
+    // Tiny portrait viewports may scroll their DATA surface only, but the
+    // complete fixed photo and its caption never scroll or get cropped.
+    const scale = Math.min(1,available/natural);
+    const chosen = Math.max(0.72,scale);
+    shell.style.zoom = String(chosen);
+    shell.style.maxHeight = (available/chosen)+"px";
+    shell.style.overflowY = scale < 0.72 ? "auto" : "hidden";
+  }
+  function positionFrame(icao) {
+    if (!root.classList.contains("jp-airport-poster-loaded")) return;
+    if ((root.querySelector(".profile-icao")?.textContent || "").trim().toUpperCase() !== icao) return;
+    const frame = ensureFrame();
+    const size = dimensions.get(icao) || {width:4,height:3};
+    const w = Math.max(1,root.clientWidth),h = Math.max(1,root.clientHeight);
+    const scale = Math.min(w/size.width,h/size.height);
+    const posterW = Math.min(w,size.width*scale), posterH = Math.min(h,size.height*scale);
+    frame.style.width = posterW+"px";
+    frame.style.height = posterH+"px";
+    frame.style.left = (w-posterW)/2+"px";
+    frame.style.top = (h-posterH)/2+"px";
+    frame.style.backgroundImage = 'url("' + urlFor(icao) + '")';
+    ensureCaption(frame);
+    fitCards();
+  }
   function remove() {
     root.classList.remove("jp-airport-poster-loaded");
     root.style.removeProperty("--jp-airport-poster-image");
-    root.querySelector(".jp-poster-caption")?.remove();
+    root.querySelector(".jp-poster-frame")?.remove();
+    const shell = root.querySelector(".profile-shell");
+    if (shell) {shell.style.zoom = "";shell.style.maxHeight = "";shell.style.overflowY = "";}
   }
   function use(icao) {
     if (root.querySelector(".profile-icao")?.textContent?.trim()?.toUpperCase() !== icao) return;
-    root.style.setProperty("--jp-airport-poster-image", 'url("' + urlFor(icao) + '")');
     root.classList.add("jp-airport-poster-loaded");
-    ensureCaption();
+    positionFrame(icao);
   }
   function apply() {
     queued = false;
     const icao = (root.querySelector(".profile-icao")?.textContent || "").trim().toUpperCase();
-    if (icao === lastCode) { if (root.classList.contains("jp-airport-poster-loaded")) ensureCaption(); return; }
+    if (icao === lastCode && root.classList.contains("jp-airport-poster-loaded")) {
+      positionFrame(icao);
+      return;
+    }
+    if (icao === lastCode && loading.get(icao) === "pending") return;
     lastCode = icao;
     remove();
     if (!Object.prototype.hasOwnProperty.call(airports, icao)) return;
     const currentIata = (root.querySelector(".profile-code-row .profile-chip")?.textContent || "").trim().toUpperCase();
     if (currentIata && currentIata !== "—" && currentIata !== airports[icao]) {
-      // Fail closed rather than show an image with mismatched airport identification.
+      // A mismatched ICAO/IATA pair must never display another airport's art.
       return;
     }
-    if (loading.has(icao)) {
-      if (loading.get(icao) === "ready") use(icao);
-      return;
-    }
+    if (loading.get(icao) === "ready") {use(icao);return;}
+    if (loading.get(icao) === "missing") return;
+    if (loading.get(icao) === "pending") return;
     loading.set(icao, "pending");
     const img = new Image();
     img.onload = () => {
       loading.set(icao, "ready");
+      dimensions.set(icao, {width:img.naturalWidth,height:img.naturalHeight});
       if (lastCode === icao) use(icao);
     };
-    img.onerror = () => {
-      loading.set(icao, "missing");
-      // Existing profile gradient remains visible until approved image is installed.
-    };
+    img.onerror = () => {loading.set(icao, "missing");};
     img.src = urlFor(icao);
   }
   function queue() {
-    if (!queued) { queued = true; requestAnimationFrame(apply); }
+    if (!queued) {queued = true; requestAnimationFrame(apply);}
   }
   new MutationObserver(queue).observe(root, {childList:true,subtree:true});
+  if (typeof ResizeObserver !== "undefined") {
+    new ResizeObserver(() => {
+      if (lastCode && root.classList.contains("jp-airport-poster-loaded")) positionFrame(lastCode);
+    }).observe(root);
+  } else {
+    window.addEventListener("resize",queue,{passive:true});
+  }
   queue();
   window.JEPPIRAN_APPROVED_PROFILE_POSTERS = Object.freeze({
     count:Object.keys(airports).length, mapping:airports, frozen:true, illustrativeOnly:true

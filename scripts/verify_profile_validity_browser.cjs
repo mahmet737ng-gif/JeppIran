@@ -86,6 +86,26 @@ async function waitForServer(){
   assert.ok(Math.abs(bw.width-ww.width)<=2&&Math.abs(bw.height-ww.height)<=2,"METAR/Wind same dimensions: "+JSON.stringify(approved.boxes));
   assert.ok(ww.left>bw.right-3&&nn.left>rr.right-3&&nn.top>=ww.bottom-2,"NOTAM belongs below Wind in right column: "+JSON.stringify(approved.boxes));
   console.log("PASS approved Ahwaz layout geometry, equal-sized METAR/Wind, NOTAM below Wind",JSON.stringify(approved.boxes));
+  // The full original picture (without cropped edge) and its live text must
+  // fit and stay anchored together inside a non-scrolling airport viewport.
+  await page.locator("#airportProfile.jp-airport-poster-loaded .jp-poster-frame")
+    .waitFor({state:"visible",timeout:15000});
+  const fixedPoster=await page.evaluate(()=>{
+    const outer=document.querySelector("#airportProfile");
+    const frame=outer.querySelector(".jp-poster-frame");
+    const cap=frame.querySelector(".jp-poster-caption");
+    const rect=node=>{const r=node.getBoundingClientRect();return {x:r.x,y:r.y,left:r.left,right:r.right,top:r.top,bottom:r.bottom,width:r.width,height:r.height}};
+    return {outer:rect(outer),frame:rect(frame),cap:rect(cap),overflow:getComputedStyle(outer).overflowY,
+      scrolled:outer.scrollHeight>outer.clientHeight+3};
+  });
+  assert.ok(!fixedPoster.scrolled,"airport poster viewport must not scroll: "+JSON.stringify(fixedPoster));
+  assert.equal(fixedPoster.overflow,"hidden","airport image never becomes scrolling content");
+  assert.ok(fixedPoster.frame.left>=fixedPoster.outer.left-2&&fixedPoster.frame.top>=fixedPoster.outer.top-2 &&
+    fixedPoster.frame.right<=fixedPoster.outer.right+2&&fixedPoster.frame.bottom<=fixedPoster.outer.bottom+2,
+    "whole image contained in viewport: "+JSON.stringify(fixedPoster));
+  assert.ok(fixedPoster.cap.left>=fixedPoster.frame.left-2&&fixedPoster.cap.bottom<=fixedPoster.frame.bottom+2,
+    "live labels are anchored to image, not scroll area: "+JSON.stringify(fixedPoster));
+  console.log("PASS full poster in viewport with fixed live caption",JSON.stringify(fixedPoster));
   assert.equal(await page.locator("#profileValidity").count(),0,"no standalone card");
   const positions=await page.evaluate(()=>{
    const clock=document.querySelector("#profileUtcClock").getBoundingClientRect();

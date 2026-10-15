@@ -1,0 +1,104 @@
+/* JEPPIRAN airport-profile fixed poster viewport V1 — owner approved.
+ * Presentation-only: all fifty original image blobs and hashes UNCHANGED.
+ * Poster and all vector-sharp labels share one immutable image rectangle;
+ * viewport resizing re-fits the whole poster (letterboxing, never cropping).
+ * No rules target Home, chart viewer, GPS, CDFA or simulator.
+ */
+#chartsView .airport-profile.jp-airport-poster-loaded {
+  position:relative;
+  isolation:isolate;
+  height:100%;
+  min-height:0!important;
+  width:100%;
+  overflow:hidden!important;
+  overscroll-behavior:none;
+  padding:clamp(10px,1.2vw,18px)!important;
+  background-color:#061526!important;
+  background-image:none!important;
+}
+:root.light #chartsView .airport-profile.jp-airport-poster-loaded {
+  background-color:#eaf3f9!important;
+  background-image:none!important;
+}
+#chartsView .airport-profile.jp-airport-poster-loaded .jp-poster-frame {
+  position:absolute;
+  z-index:0;
+  display:block;
+  overflow:hidden;
+  padding:0;
+  margin:0;
+  border:0;
+  pointer-events:none;
+  background-position:center;
+  background-repeat:no-repeat;
+  background-size:100% 100%;
+}
+#chartsView .airport-profile.jp-airport-poster-loaded .profile-shell {
+  position:relative;
+  z-index:1;
+  box-sizing:border-box;
+  display:block!important;
+  width:100%;
+  min-height:0!important;
+  height:auto!important;
+  padding-bottom:0!important;
+  margin:0 auto;
+  transform-origin:top center;
+  overscroll-behavior:contain;
+}
+#chartsView .airport-profile.jp-airport-poster-loaded .jp-poster-frame .jp-poster-caption {
+  position:absolute;
+  z-index:1;
+  box-sizing:border-box;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  left:5.2%;
+  bottom:4.8%;
+  top:auto;
+  width:auto;
+  max-width:76%;
+  margin:0!important;
+  padding:0!important;
+  pointer-events:none;
+}
+#chartsView .airport-profile.jp-airport-poster-loaded .jp-poster-frame .jp-caption-title {
+  font-size:clamp(17px, min(3.4vw,5.6vh), 58px);
+  max-width:100%;
+}
+#chartsView .airport-profile.jp-airport-poster-loaded .jp-poster-frame .jp-caption-city {
+  font-size:clamp(10px, min(1.35vw,2.05vh), 22px);
+}
+#chartsView .airport-profile.jp-airport-poster-loaded .jp-poster-frame .jp-caption-country {
+  font-size:clamp(8px, min(0.92vw,1.48vh), 15px);
+  margin-top:5px;
+}
+#chartsView .airport-profile.jp-airport-poster-loaded .jp-poster-frame .jp-caption-divider {
+  margin:5px 0 3px;
+}
+#chartsView .airport-profile.jp-airport-poster-loaded .jp-poster-frame .jp-caption-coordinates {
+  font-size:clamp(9px,min(.85vw,1.35vh),14px);
+}
+@media(max-width:960px) {
+  #chartsView .airport-profile.jp-airport-poster-loaded .jp-poster-frame .jp-poster-caption {
+    left:5%;bottom:4%;max-width:90%;
+  }
+}
+@media(max-width:540px) {
+  #chartsView .airport-profile.jp-airport-poster-loaded .jp-poster-frame .jp-caption-title {font-size:clamp(14px,4vw,25px)}
+  #chartsView .airport-profile.jp-airport-poster-loaded .jp-poster-frame .jp-caption-city {font-size:10px}
+  #chartsView .airport-profile.jp-airport-poster-loaded .jp-poster-frame .jp-caption-country {font-size:8px}
+  #chartsView .airport-profile.jp-airport-poster-loaded .jp-poster-frame .jp-caption-coordinates {font-size:8px}
+}
+/* Reduce vertical height of DATA panels, not the poster, on shorter laptops. */
+@media(min-width:961px) and (max-height:790px) {
+  #chartsView .airport-profile.jp-airport-poster-loaded .profile-heading {padding-bottom:6px}
+  #chartsView .airport-profile.jp-airport-poster-loaded .profile-icao {font-size:clamp(26px,3vw,44px)}
+  #chartsView .airport-profile.jp-airport-poster-loaded .profile-cols {row-gap:7px}
+  #chartsView .airport-profile.jp-airport-poster-loaded .profile-card>header {padding:7px 10px}
+  #chartsView .airport-profile.jp-airport-poster-loaded .rwy-row {padding:7px 9px;margin:3px 7px}
+  #chartsView .airport-profile.jp-airport-poster-loaded .weather-summary {padding:4px 10px 9px}
+  #chartsView .airport-profile.jp-airport-poster-loaded #profileWeather,
+  #chartsView .airport-profile.jp-airport-poster-loaded #profileWind {min-height:145px}
+  #chartsView .airport-profile.jp-airport-poster-loaded #profileWind .runway-bearing-compass svg {height:88px}
+}
