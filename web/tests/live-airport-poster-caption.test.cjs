@@ -4,7 +4,7 @@ const read=p=>fs.readFileSync(path.resolve(__dirname,"../..",p),"utf8");
 test("all fifty immutable source files have a separate renderable display derivative",()=>{
  const p=read("scripts/build_textfree_airport_posters.py");
  assert.match(p,/manifest\["expectedCount"\] != 50/);
- assert.match(p,/hashlib\.sha256\(blob\)\.hexdigest\(\) != item\["sha256"\]/);
+ assert.match(p,/hashlib\.sha256\(blob\)\.hexdigest\(\)\s*!=\s*item\["sha256"\]/);
  assert.match(p,/airport-profile-posters-textfree/);
  assert.match(p,/cv2\.inpaint/);
  assert.match(p,/mask_letters/);
