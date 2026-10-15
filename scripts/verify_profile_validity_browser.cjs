@@ -72,6 +72,37 @@ async function waitForServer(){
   await page.evaluate(()=>selectAirport("OIII"));
   console.log("PASS Chrome OIIE 20-9B/C: selected chart rows and viewer title corrected");
 
+  // AIRPORT audit: all 10 visual corrections, including five safely rerouted
+  // ICAO branches. Original PDFs and chart identities must remain unchanged.
+  const audit=await page.evaluate(()=>{
+    const data=AUDITED_AIRPORT_DISPLAY_V2621;
+    return Object.entries(data).map(([page,row])=>{
+      const c=charts.find(c=>Number(c.page)===Number(page));
+      return {page:+page,source:c?.airport,displayAirport:displayAirportCode(c),
+        displayedNumber:displayChartNumber(c),displayedName:displayChartName(c),
+        sourcePdfPage:manifest?.airports?.[c?.airport]?.global_pages?.[c?.pdf_page-1]};
+    });
+  });
+  assert.equal(audit.length,10);
+  for(const row of audit){
+    const expected={
+      94:["OIBK","10-4","NOISE ABATEMENT"],408:["OIII","10-1R1","RADAR MINIMUM ALTITUDES"],
+      432:["OIII","10-9B","HOT SPOTS"],514:["OIKM","10-9","Airport Diagram Chart (ADC)"],
+      548:["OIKY","10-9","Airport Diagram Chart (ADC)"],651:["OINE","10-9","Airport Diagram Chart (ADC)"],
+      808:["OITM","10-9","Airport Diagram Chart (ADC)"],896:["OIZB","10-9","Airport Diagram Chart (ADC)"],
+      1125:["LTAC","10-4","NOISE ABATEMENT"],1243:["LTFM","30-4","NOISE ABATEMENT"]
+    }[row.page];
+    assert.deepEqual([row.displayAirport,row.displayedNumber,row.displayedName],expected);
+    assert.equal(row.sourcePdfPage,row.page,"underlying source PDF page preserved");
+  }
+  await page.evaluate(()=>{selectAirport("OIKM");expanded.add("Airport");renderAirports("");});
+  const bam=page.locator("#chartsView .airport-inline-tree .tree-item").filter({hasText:"10-9"}).first();
+  assert.ok(await bam.innerText(),"BAM must appear under OIKM, not OIKK");
+  await bam.click();
+  await page.waitForFunction(()=>currentPdfUrl.endsWith("/OIKK.pdf"),null,{timeout:10000});
+  assert.equal((await page.locator("#viewerChart").innerText()).includes("10-9"),true);
+  await page.evaluate(()=>selectAirport("OIII"));
+
   // Owner-approved Ahwaz profile: actual Chrome geometry and section placement.
   await page.locator("#profileWind").waitFor({state:"visible",timeout:12000});
   const approved=await page.evaluate(()=>{

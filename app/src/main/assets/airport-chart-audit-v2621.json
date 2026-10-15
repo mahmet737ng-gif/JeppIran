@@ -1,0 +1,109 @@
+{
+  "cycle": "2621",
+  "version": "V2621",
+  "source_pdf_sha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+  "displayOnly": true,
+  "safety": "Do not edit original chart source ICAO, name, chart number, physical PDF/page, bookmarks or approved georeferences. For a reassigned airport, use the original source airport PDF and original pdf_page.",
+  "pages": {
+    "94": {
+      "source_icao": "OIBK",
+      "display_icao": "OIBK",
+      "chart_number": "10-4",
+      "original_name": "KISH INTL 21 NOV 25 10-4 .Eff.27.Nov. .NOISE.",
+      "category": "Airport",
+      "pdf_page": 10,
+      "display_number": "10-4",
+      "display_name": "NOISE ABATEMENT"
+    },
+    "408": {
+      "source_icao": "OIII",
+      "display_icao": "OIII",
+      "chart_number": "10-1R",
+      "original_name": "RADAR MINIMUM ALTITUDES",
+      "category": "Airport",
+      "pdf_page": 15,
+      "display_number": "10-1R1",
+      "display_name": "RADAR MINIMUM ALTITUDES"
+    },
+    "432": {
+      "source_icao": "OIII",
+      "display_icao": "OIII",
+      "chart_number": "10-9A",
+      "original_name": "HOT SPOTS",
+      "category": "Airport",
+      "pdf_page": 39,
+      "display_number": "10-9B",
+      "display_name": "HOT SPOTS"
+    },
+    "514": {
+      "source_icao": "OIKK",
+      "display_icao": "OIKM",
+      "chart_number": "10-9",
+      "original_name": "Airport Diagram Chart (ADC)",
+      "category": "Airport",
+      "pdf_page": 18,
+      "display_number": "10-9",
+      "display_name": "Airport Diagram Chart (ADC)"
+    },
+    "548": {
+      "source_icao": "OIKK",
+      "display_icao": "OIKY",
+      "chart_number": "10-9",
+      "original_name": "Airport Diagram Chart (ADC)",
+      "category": "Airport",
+      "pdf_page": 19,
+      "display_number": "10-9",
+      "display_name": "Airport Diagram Chart (ADC)"
+    },
+    "651": {
+      "source_icao": "OING",
+      "display_icao": "OINE",
+      "chart_number": "10-9",
+      "original_name": "Airport Diagram Chart (ADC)",
+      "category": "Airport",
+      "pdf_page": 2,
+      "display_number": "10-9",
+      "display_name": "Airport Diagram Chart (ADC)"
+    },
+    "808": {
+      "source_icao": "OITT",
+      "display_icao": "OITM",
+      "chart_number": "10-9",
+      "original_name": "Airport Diagram Chart (ADC)",
+      "category": "Airport",
+      "pdf_page": 2,
+      "display_number": "10-9",
+      "display_name": "Airport Diagram Chart (ADC)"
+    },
+    "896": {
+      "source_icao": "OIZH",
+      "display_icao": "OIZB",
+      "chart_number": "10-9",
+      "original_name": "Airport Diagram Chart (ADC)",
+      "category": "Airport",
+      "pdf_page": 1,
+      "display_number": "10-9",
+      "display_name": "Airport Diagram Chart (ADC)"
+    },
+    "1125": {
+      "source_icao": "LTAC",
+      "display_icao": "LTAC",
+      "chart_number": "10-4",
+      "original_name": "ESENBOGA INTL 26 SEP 25 10-4 .Eff.2.Oct. .NOISE.",
+      "category": "Airport",
+      "pdf_page": 56,
+      "display_number": "10-4",
+      "display_name": "NOISE ABATEMENT"
+    },
+    "1243": {
+      "source_icao": "LTFM",
+      "display_icao": "LTFM",
+      "chart_number": "30-4",
+      "original_name": "NOISE",
+      "category": "Airport",
+      "pdf_page": 82,
+      "display_number": "30-4",
+      "display_name": "NOISE ABATEMENT"
+    }
+  }
+}

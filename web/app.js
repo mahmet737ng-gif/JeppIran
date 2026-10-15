@@ -83,8 +83,127 @@ const REVIEWED_V2621_GROUND_TITLES=Object.freeze({
     "name": "VISUAL DOCKING GUIDANCE SYSTEMS (VDGS) (CONT.)"
   }
 });
+// AIRPORT V2621 owner-approved corrections. Logical airport/plate labels are
+// resolved separately from immutable source PDF identities and chart geo keys.
+const AUDITED_AIRPORT_DISPLAY_V2621=Object.freeze({
+  "94": {
+    "source_icao": "OIBK",
+    "display_icao": "OIBK",
+    "chart_number": "10-4",
+    "original_name": "KISH INTL 21 NOV 25 10-4 .Eff.27.Nov. .NOISE.",
+    "category": "Airport",
+    "pdf_page": 10,
+    "display_number": "10-4",
+    "display_name": "NOISE ABATEMENT"
+  },
+  "408": {
+    "source_icao": "OIII",
+    "display_icao": "OIII",
+    "chart_number": "10-1R",
+    "original_name": "RADAR MINIMUM ALTITUDES",
+    "category": "Airport",
+    "pdf_page": 15,
+    "display_number": "10-1R1",
+    "display_name": "RADAR MINIMUM ALTITUDES"
+  },
+  "432": {
+    "source_icao": "OIII",
+    "display_icao": "OIII",
+    "chart_number": "10-9A",
+    "original_name": "HOT SPOTS",
+    "category": "Airport",
+    "pdf_page": 39,
+    "display_number": "10-9B",
+    "display_name": "HOT SPOTS"
+  },
+  "514": {
+    "source_icao": "OIKK",
+    "display_icao": "OIKM",
+    "chart_number": "10-9",
+    "original_name": "Airport Diagram Chart (ADC)",
+    "category": "Airport",
+    "pdf_page": 18,
+    "display_number": "10-9",
+    "display_name": "Airport Diagram Chart (ADC)"
+  },
+  "548": {
+    "source_icao": "OIKK",
+    "display_icao": "OIKY",
+    "chart_number": "10-9",
+    "original_name": "Airport Diagram Chart (ADC)",
+    "category": "Airport",
+    "pdf_page": 19,
+    "display_number": "10-9",
+    "display_name": "Airport Diagram Chart (ADC)"
+  },
+  "651": {
+    "source_icao": "OING",
+    "display_icao": "OINE",
+    "chart_number": "10-9",
+    "original_name": "Airport Diagram Chart (ADC)",
+    "category": "Airport",
+    "pdf_page": 2,
+    "display_number": "10-9",
+    "display_name": "Airport Diagram Chart (ADC)"
+  },
+  "808": {
+    "source_icao": "OITT",
+    "display_icao": "OITM",
+    "chart_number": "10-9",
+    "original_name": "Airport Diagram Chart (ADC)",
+    "category": "Airport",
+    "pdf_page": 2,
+    "display_number": "10-9",
+    "display_name": "Airport Diagram Chart (ADC)"
+  },
+  "896": {
+    "source_icao": "OIZH",
+    "display_icao": "OIZB",
+    "chart_number": "10-9",
+    "original_name": "Airport Diagram Chart (ADC)",
+    "category": "Airport",
+    "pdf_page": 1,
+    "display_number": "10-9",
+    "display_name": "Airport Diagram Chart (ADC)"
+  },
+  "1125": {
+    "source_icao": "LTAC",
+    "display_icao": "LTAC",
+    "chart_number": "10-4",
+    "original_name": "ESENBOGA INTL 26 SEP 25 10-4 .Eff.2.Oct. .NOISE.",
+    "category": "Airport",
+    "pdf_page": 56,
+    "display_number": "10-4",
+    "display_name": "NOISE ABATEMENT"
+  },
+  "1243": {
+    "source_icao": "LTFM",
+    "display_icao": "LTFM",
+    "chart_number": "30-4",
+    "original_name": "NOISE",
+    "category": "Airport",
+    "pdf_page": 82,
+    "display_number": "30-4",
+    "display_name": "NOISE ABATEMENT"
+  }
+});
+function auditedAirportDisplay(c){
+  if(manifest?.version!=="V2621"||!c)return null;
+  const record=AUDITED_AIRPORT_DISPLAY_V2621[String(Number(c.page))];
+  if(!record||c.airport!==record.source_icao ||
+     c.category!==record.category || c.chart_number!==record.chart_number ||
+     c.name!==record.original_name||Number(c.pdf_page)!==record.pdf_page)return null;
+  const sourcePages=manifest.airports?.[record.source_icao]?.global_pages;
+  if(!Array.isArray(sourcePages)||Number(sourcePages[record.pdf_page-1])!==Number(c.page)||
+     !manifest.airports?.[record.display_icao])return null;
+  return record;
+}
+function displayAirportCode(c){return auditedAirportDisplay(c)?.display_icao||c?.airport||""}
+function displayChartNumber(c){return auditedAirportDisplay(c)?.display_number||c?.chart_number||""}
 let chartDisplayNamesByPage=Object.create(null);
 function displayChartName(c){
+  const corrected=auditedAirportDisplay(c);
+  if(corrected && corrected.display_name!==c.name)return corrected.display_name;
   const page=String(Number(c?.page));
   const review=REVIEWED_V2621_GROUND_TITLES[page];
   if(review && manifest?.version==="V2621" &&
@@ -712,7 +831,7 @@ async function loadData(){
         }
         if(selectedChart){
           const label=$("#viewerChart");
-          if(label)label.textContent=(selectedChart.chart_number?selectedChart.chart_number+" • ":"")+displayChartName(selectedChart);
+          if(label)label.textContent=(displayChartNumber(selectedChart)?displayChartNumber(selectedChart)+" • ":"")+displayChartName(selectedChart);
           if(jpChartDrawerOpen)refreshFullscreenChartDrawer();
         }
         airportMetadata=profiles&&profiles.airports&&profiles.cycle===m.version?profiles.airports:{};
@@ -1030,7 +1149,7 @@ function renderAirports(filter=""){
   const oldScroll=list.scrollTop;list.innerHTML="";
   const q=filter.trim().toUpperCase();
   const fav=new Set(getAirportFavorites());
-  [...new Set(charts.map(c=>c.airport))].sort().filter(icao=>{
+  [...new Set(charts.map(displayAirportCode))].sort().filter(icao=>{
     const record=airportMetadata[icao]||{};const legacy=AIRPORTS[icao]||["",""];
     const meta=[record.name||legacy[0]||"",record.city||legacy[1]||""];
     return (!q||(icao+" "+meta.join(" ")).toUpperCase().includes(q))&&(airportFilterMode!=="favorites"||fav.has(icao));
@@ -1069,7 +1188,7 @@ function selectAirport(icao){
 }
 function renderTreeInto(root){
   root.innerHTML="";if(!selectedAirport)return;
-  const airportCharts=charts.filter(c=>c.airport===selectedAirport).sort((a,b)=>(a.pdf_page||0)-(b.pdf_page||0));
+  const airportCharts=charts.filter(c=>displayAirportCode(c)===selectedAirport).sort((a,b)=>Number(a.page)-Number(b.page));
   ["STAR","SID","Airport","Approach"].forEach(cat=>{
     const items=airportCharts.filter(c=>(c.category||"Other")===cat);
     if(!items.length)return;
@@ -1083,7 +1202,7 @@ function renderTreeInto(root){
     if(groupOpen)items.forEach(c=>{
       const item=document.createElement("button");item.type="button";
       item.className="tree-item"+(selectedChart&&Number(selectedChart.page)===Number(c.page)?" selected":"");
-      item.innerHTML=profileEsc(c.chart_number?c.chart_number+" • "+displayChartName(c):displayChartName(c));
+      item.innerHTML=profileEsc(displayChartNumber(c)?displayChartNumber(c)+" • "+displayChartName(c):displayChartName(c));
       item.onclick=e=>{e.stopPropagation();selectChart(c)};
       wrap.appendChild(item)
     });
@@ -1768,9 +1887,13 @@ async function getPdfBytes(url,save=true){
 }
 async function renderSelectedPdf(c){
   const token=++pdfRenderToken;
-  const info=manifest&&manifest.airports&&manifest.airports[selectedAirport];
-  if(!info)throw new Error("No PDF URL is available for "+selectedAirport);
-  currentPdfUrl="./charts/"+encodeURIComponent(info.file||selectedAirport+".pdf");
+  // A reassigned airport diagram remains at its immutable source PDF page.
+  // Using the destination-airport PDF here would display an unrelated chart.
+  const pdfIcao=c.airport;
+  const info=manifest?.airports?.[pdfIcao];
+  if(!info||Number(info.global_pages?.[Number(c.pdf_page)-1])!==Number(c.page))
+    throw new Error("Source chart/PDF identity mismatch for "+selectedAirport+" / "+c.page);
+  currentPdfUrl="./charts/"+encodeURIComponent(info.file||pdfIcao+".pdf");
   if(chartCacheSupported()){
     $("#offlinePdfBtn").disabled=false;
     setOfflineButtonLabel("Save Offline");
@@ -1820,8 +1943,8 @@ async function renderSelectedPdf(c){
   setTimeout(()=>{if(epoch===chartSlideDocumentEpoch&&selectedChart===c)warmAdjacentChartSlides()},60);
 }
 function airportChartSequence(){
-  return charts.filter(c=>c.airport===selectedAirport)
-    .sort((a,b)=>(a.pdf_page||0)-(b.pdf_page||0));
+  return charts.filter(c=>displayAirportCode(c)===selectedAirport)
+    .sort((a,b)=>Number(a.page)-Number(b.page));
 }
 // Interactive chart paging: exactly track the finger (no synthesized
 // scrolling velocity). Reversing the finger returns the CURRENT chart.
@@ -1829,7 +1952,9 @@ function adjacentChart(delta){
   if(!selectedChart||!selectedAirport)return null;
   const seq=airportChartSequence();
   const idx=seq.findIndex(c=>Number(c.page)===Number(selectedChart.page));
-  return idx>=0?(seq[idx+delta]||null):null;
+  const next=idx>=0?(seq[idx+delta]||null):null;
+  // Swipe previews use a single PDF document; never preview another airport's source PDF.
+  return next && next.airport===selectedChart.airport?next:null;
 }
 function chartSlideKey(c,width){
   return (c.pdf_page||c.page)+":"+Math.round(width);
@@ -1906,7 +2031,7 @@ function beginChartSwipe(direction){
   there.style.left=(direction===1?"100%":"-100%");
   const label=document.createElement("span");
   label.className="jp-chart-swipe-loading";
-  label.textContent=(target.chart_number?target.chart_number+" · ":"")+displayChartName(target);
+  label.textContent=(displayChartNumber(target)?displayChartNumber(target)+" · ":"")+displayChartName(target);
   there.appendChild(label);
   track.append(here,there);shield.appendChild(track);stage.appendChild(shield);
   const state={shield,track,there,label,stage,dir:direction,target,width,dx:0,
@@ -2222,7 +2347,7 @@ function selectChart(c,options={}){
   expanded.add(c.category||"Other");
   renderAirports($("#airportSearch").value);
   refreshPositionStatus();
-  $("#viewerChart").textContent=(c.chart_number?c.chart_number+" • ":"")+displayChartName(c);
+  $("#viewerChart").textContent=(displayChartNumber(c)?displayChartNumber(c)+" • ":"")+displayChartName(c);
   showChartMetar(true,true);
   // On phones, choosing a procedure opens the chart immediately, rather
   // than leaving a tiny chart next to a permanent procedure column.
@@ -2324,7 +2449,7 @@ $("#selectSimulatorPositionBtn").addEventListener("click",()=>{
 function openTaxiDiagram(){
   if(!selectedAirport)return;
   const airport=selectedAirport;
-  const airportCharts=charts.filter(c=>c.airport===selectedAirport&&c.category==="Airport");
+  const airportCharts=charts.filter(c=>displayAirportCode(c)===selectedAirport&&c.category==="Airport");
   const diagram=airportCharts.find(c=>/\b(?:AIRPORT|AERODROME)\s+(?:DIAGRAM|LAYOUT)\b|\bADC\b/i.test(c.name||""))
     ||airportCharts.find(c=>/^10-0?9$/i.test((c.chart_number||"").trim()));
   if(!diagram){
@@ -2426,7 +2551,7 @@ function refreshFullscreenChartDrawer(){
       const row=document.createElement("button");
       row.type="button";
       row.className="jp-drawer-chart"+(selectedChart&&Number(c.page)===Number(selectedChart.page)?" is-current":"");
-      row.textContent=(c.chart_number?c.chart_number+" · ":"")+displayChartName(c);
+      row.textContent=(displayChartNumber(c)?displayChartNumber(c)+" · ":"")+displayChartName(c);
       row.setAttribute("aria-current",row.classList.contains("is-current")?"page":"false");
       row.onclick=()=>{
         setFullscreenChartDrawer(false);

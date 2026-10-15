@@ -56,6 +56,7 @@ jobs:
       - name: Gate OICI 207 and 209 route-only simulator flight QA before release
         run: |
           node --check web/app.js
+          node --test tests/airport-chart-audit-v2621.test.cjs
           node --check web/oici-route-only-v2621.mjs
           node --test tests/oici-route-only-v2621.test.cjs
 
