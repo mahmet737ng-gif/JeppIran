@@ -205,6 +205,11 @@ data class GeoReference(
 
 object ChartGeoreferenceStore {
     private const val ASSET = "chart-georef.json"
+    private const val OIGG_STAR_QA_ASSET = "oigg-star-flightqa-v2621.json"
+    private val OIGG_STAR_QA_FINGERPRINTS = mapOf(
+        307 to "a40a3de145df915dd71dcec063477726c6eb31adb0284b12e426f1c6794a81b9",
+        308 to "ceb66c6a644da4d000d9d23a4121c73be70542a54f0e3e0037537b716a921b81"
+    )
     private const val OICK_V2_ASSET = "oick-georef-v2621.json"
     private val OICK_V2_PAGES = setOf(218, 219, 221, 223)
     private val OICK_V2_FINGERPRINTS = mapOf(
@@ -227,7 +232,8 @@ object ChartGeoreferenceStore {
     private val SUPPORTED_METHODS =
         setOf(
             "paired_printed_graticule_vector_ticks",
-            "single_axis_plus_conformal_scale"
+            "single_axis_plus_conformal_scale",
+            "two_vector_landmarks_simulator_qa"
         )
 
     private data class ParsedGeoreferences(
@@ -298,6 +304,7 @@ object ChartGeoreferenceStore {
 
             chartDataVersion = selected.chartDataVersion
             references.putAll(selected.references)
+            loadOiggStarFlightQa(context, selected)
             loadPublishedOickV2(context, selected)
             if (selected.chartDataVersion == "V2621" &&
                 selected.sourceSha256 == OIMM_ILS_SOURCE_SHA
@@ -443,6 +450,51 @@ object ChartGeoreferenceStore {
             oickV2Regions.putAll(staged)
         } catch (_: Exception) {
             oickV2Regions.clear()
+        }
+    }
+
+    /**
+     * OIGG STAR 307/308 source-locked, two-landmark SIMULATOR QA ONLY.
+     * Printed grid mismatches by ~0.7–0.94 km: never treat as a flight
+     * navigation georeference. Existing published pages cannot be overwritten.
+     */
+    private fun loadOiggStarFlightQa(context: Context, selected: ParsedGeoreferences) {
+        if (selected.chartDataVersion != "V2621" ||
+            selected.sourceSha256 != OIMM_ILS_SOURCE_SHA ||
+            OIGG_STAR_QA_FINGERPRINTS.keys.any { references.containsKey(it) }) return
+        try {
+            val raw = context.assets.open(OIGG_STAR_QA_ASSET).bufferedReader().use { it.readText() }
+            val root = JSONObject(raw)
+            val source = root.optJSONObject("source") ?: return
+            val charts = root.optJSONArray("charts") ?: return
+            if (root.optInt("version") != 2 || !root.optBoolean("testOnly") ||
+                !root.optBoolean("notForActualNavigation") ||
+                source.optString("chartDataVersion") != "V2621" ||
+                source.optString("sha256") != selected.sourceSha256 ||
+                source.optInt("pageCount") != 1654 || charts.length() != 2) return
+            val seen = mutableSetOf<Int>()
+            for (i in 0 until charts.length()) {
+                val chart = charts.optJSONObject(i) ?: return
+                val page = chart.optInt("page", -1)
+                val qa = chart.optJSONObject("validation") ?: return
+                if (page !in OIGG_STAR_QA_FINGERPRINTS.keys || !seen.add(page) ||
+                    chart.optString("airport") != "OIGG" ||
+                    !chart.optString("chartKey").startsWith("OIGG|STAR|") ||
+                    chart.optString("sourceFingerprint") != OIGG_STAR_QA_FINGERPRINTS[page] ||
+                    qa.optString("method") != "two_vector_landmarks_simulator_qa" ||
+                    !qa.optBoolean("qaTestOnly") || !qa.optBoolean("notApprovedForNavigation") ||
+                    qa.optDouble("independentPrintedGridMismatchMaxMetres", 0.0) !in 700.0..1100.0) return
+            }
+            if (seen != OIGG_STAR_QA_FINGERPRINTS.keys) return
+            val fitted = parse(raw) ?: return
+            if (fitted.chartDataVersion != selected.chartDataVersion ||
+                fitted.sourceSha256 != selected.sourceSha256 ||
+                fitted.references.keys != seen ||
+                seen.any { references.containsKey(it) }) return
+            // Atomic additive promotion: chart-georef.json is never modified.
+            references.putAll(fitted.references)
+        } catch (_: Exception) {
+            // Source mismatch or absent test asset: preserve the prior approved set.
         }
     }
 

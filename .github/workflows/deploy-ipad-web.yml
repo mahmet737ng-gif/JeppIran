@@ -99,6 +99,9 @@ jobs:
       - name: Verify additive OICK V2 source georeferencing
         run: node --test web/tests/oick-v2-georef.test.cjs
 
+      - name: Verify OIGG STAR source-locked flight QA
+        run: node --test web/tests/oigg-star-flightqa.test.cjs
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:

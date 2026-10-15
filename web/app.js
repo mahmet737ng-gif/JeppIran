@@ -19,6 +19,47 @@ let experimentalOimmPreviousModels=new Map();
 const EXPERIMENTAL_OIMM_ILS_PAGES=new Set([605,606,607]);
 const EXP_GEO_KEY="jeppiran-v2621-experimental-georef-enabled";
 function experimentalGeorefOn(){try{return localStorage.getItem(EXP_GEO_KEY)!=="off"}catch(_){return true}}
+// Reversible owner flight QA for OIGG KOBUB STARs. Source has a ~1 km
+// independent graticule disagreement; this MUST remain visibly experimental.
+async function loadOiggStarsFlightQa(m){
+  try{
+    const res=await fetch("./data/oigg-star-flightqa-v2621.json?v=oigg-kobub-qa-r1",{cache:"no-store"});
+    if(!res.ok)throw Error("OIGG KOBUB QA file HTTP "+res.status);
+    const data=await res.json();
+    if(data.version!==2||data.testOnly!==true||data.notForActualNavigation!==true||
+       data.source?.chartDataVersion!==m.version||data.source?.sha256!==m.source_sha256||
+       data.source?.pageCount!==1654||data.coordinateSpace!=="pdf_points"||
+       data.origin!=="top_left"||!Array.isArray(data.charts)||data.charts.length!==2)
+      throw Error("OIGG flight QA AIRAC/source mismatch");
+    const approvedIdentities=new Map([[307,"a40a3de145df915dd71dcec063477726c6eb31adb0284b12e426f1c6794a81b9"],[308,"ceb66c6a644da4d000d9d23a4121c73be70542a54f0e3e0037537b716a921b81"]]);
+    const staged=[];
+    for(const item of data.charts){
+      const page=Number(item.page),c=charts.find(x=>x.airport==="OIGG"&&Number(x.page)===page);
+      const chartKey=c?[c.airport,c.category.toUpperCase(),c.chart_number,c.name.toUpperCase()].join("|"):"";
+      if(!approvedIdentities.has(page)||staged.some(([n])=>n===page)||georefByPage.has(page)||
+         item.airport!=="OIGG"||item.sourceFingerprint!==approvedIdentities.get(page)||
+         item.chartKey!==chartKey||item.validation?.method!=="two_vector_landmarks_simulator_qa"||
+         item.validation?.qaTestOnly!==true||item.validation?.notApprovedForNavigation!==true||
+         Number(item.validation.independentPrintedGridMismatchMaxMetres)<700 ||
+         Number(item.validation.independentPrintedGridMismatchMaxMetres)>1100)
+        throw Error("OIGG flight QA control, identity or immutable map check failed "+page);
+      const model=makeGeoModel(item);
+      if(!model)throw Error("OIGG two-landmark QA geometry failed "+page);
+      staged.push([page,model]);
+    }
+    if(manifest!==m||staged.length!==2||staged.some(([n])=>georefByPage.has(n)))return;
+    for(const [page,model] of staged){
+      experimentalEligibleGeoModels.set(page,model);
+      if(experimentalGeorefOn()){
+        georefByPage.set(page,model);
+        experimentalGeorefPages.add(page);
+      }
+    }
+    showPublishedExperimentalGeorefNotice();
+    if(selectedChart?.airport==="OIGG")updateAircraftMarker();
+    console.warn("OIGG KOBUB STAR 307/308 installed as SIMULATOR ONLY – 700-940 m source-grid discrepancy");
+  }catch(e){console.warn("OIGG STAR flight QA safely disabled; source maps unchanged",e)}
+}
 async function loadPublishedExperimentalGeorefs(m){
   experimentalGeorefPages=new Set();
   experimentalEligibleGeoModels=new Map();
@@ -81,7 +122,9 @@ function showPublishedExperimentalGeorefNotice(){
   panel.id="provisionalGeorefWarning";
   panel.style.cssText="position:absolute;top:7px;left:7px;z-index:40;background:#553210f2;color:#fff6db;border:2px solid #fcbf55;padding:7px 9px;max-width:calc(100% - 14px);border-radius:8px;display:flex;align-items:center;gap:8px;flex-wrap:wrap;font:12px/1.4 Arial,sans-serif;box-shadow:0 2px 9px #0006";
   const msg=document.createElement("strong");
-  msg.textContent=enabled?"⚠ GEOREFERENCE · INDEPENDENT AIP QA PENDING · NOT FOR NAVIGATION":"GEOREFERENCE LAYER DISABLED";
+  msg.textContent=[307,308].includes(page)?
+    (enabled?"⚠ OIGG KOBUB STAR · GRID DISAGREES 700–940 m · SIMULATOR FLIGHT QA ONLY · NOT FOR NAVIGATION":"OIGG KOBUB STAR TEST GEOREFERENCE DISABLED"):
+    (enabled?"⚠ GEOREFERENCE · INDEPENDENT AIP QA PENDING · NOT FOR NAVIGATION":"GEOREFERENCE LAYER DISABLED");
   panel.appendChild(msg);
   const btn=document.createElement("button");
   btn.type="button";btn.textContent=enabled?"Disable additional georefs":"Enable additional georefs";
@@ -549,6 +592,7 @@ async function loadData(){
           ["othh-extra",()=>loadOthhFlightExtraGeorefs(m)],
           ["ltfm",()=>loadLtfmGridGeorefs(m)],
           ["published",()=>loadPublishedExperimentalGeorefs(m)],
+          ["oigg-kobub-flightqa",()=>loadOiggStarsFlightQa(m)],
           ["oici-route-flight-qa",()=>loadOiciRouteOnlyFlightQa(m)]
         ]){
           try{await task()}catch(error){console.warn("Optional georeference "+label+" failed",error)}
@@ -1050,7 +1094,7 @@ function geoBoundsContains(b,x,y,t=0){
 }
 function makeGeoModel(item){
   if(!item||!Number.isInteger(Number(item.page)))return null;
-  const allowed=new Set(["paired_printed_graticule_vector_ticks","single_axis_plus_conformal_scale","aip_and_printed_grid_10m_test_only"]);
+  const allowed=new Set(["paired_printed_graticule_vector_ticks","single_axis_plus_conformal_scale","aip_and_printed_grid_10m_test_only","two_vector_landmarks_simulator_qa"]);
   if(!allowed.has(item.validation&&item.validation.method))return null;
   const width=geoNum(item.width),height=geoNum(item.height),b=item.bounds||{};
   const bounds={left:geoNum(b.left),top:geoNum(b.top),right:geoNum(b.right),bottom:geoNum(b.bottom)};
@@ -1288,7 +1332,9 @@ function setPositionStatus(state,text,detail=""){
   if(state==="off"||state==="waiting"||state==="error")text="POS OFF";
   if(selectedChart && selectedChart.airport!=="OIII" && experimentalGeorefPages.has(Number(selectedChart.page))){
     state="warning";text=(text||"GPS")+" · GEOREF";
-    detail="GEOREFERENCE · INDEPENDENT AIP QA PENDING · NOT FOR NAVIGATION. "+(detail||"");
+    detail=selectedChart.airport==="OIGG"&&[307,308].includes(Number(selectedChart.page))?
+      "OIGG KOBUB GEO QA · ORIGINAL GRID DISAGREEMENT APPROX 700–940 m · SIMULATOR ONLY · NOT FOR NAVIGATION. "+(detail||""):
+      "GEOREFERENCE · INDEPENDENT AIP QA PENDING · NOT FOR NAVIGATION. "+(detail||"");
   }
   if(selectedChart?.airport==="OICK"&&[218,219,221,223].includes(Number(selectedChart.page))&&
      !["off","waiting","error"].includes(state)){

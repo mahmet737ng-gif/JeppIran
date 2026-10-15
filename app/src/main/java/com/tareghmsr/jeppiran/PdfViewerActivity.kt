@@ -3029,6 +3029,9 @@ private val locationPermissionLauncher =
 
         val isOimmIlsExperimental =
             currentIcao == "OIMM" && currentChartGlobalPage() in 605..607
+        val isOiggKobubFlightQa =
+            currentIcao == "OIGG" && currentChartGlobalPage() in setOf(307, 308) &&
+                repository.getDataVersion() == "V2621"
         val isOiciRouteOnlyQa =
             currentIcao == "OICI" && currentChartGlobalPage() in setOf(207, 209) &&
                 repository.getDataVersion() == "V2621"
@@ -3039,7 +3042,9 @@ private val locationPermissionLauncher =
                 chartTitle.ifBlank {
                     "Chart"
                 } +
-                if (isOiciRouteOnlyQa) {
+                if (isOiggKobubFlightQa) {
+                    " ⚠ KOBUB STAR · SIMULATOR GEO QA"
+                } else if (isOiciRouteOnlyQa) {
                     " ⚠ ROUTE-ONLY GEOREF QA"
                 } else if (isOimmIlsExperimental) {
                     " ⚠ GEOREF · AIP QA PENDING"
@@ -3049,7 +3054,9 @@ private val locationPermissionLauncher =
 
 
         pageText.text =
-            if (isOiciRouteOnlyQa) {
+            if (isOiggKobubFlightQa) {
+                "⚠ KOBUB/RST SOURCE GRID DIFFERS BY ~700–940 m · SIMULATOR QA ONLY · NOT FOR ACTUAL NAVIGATION"
+            } else if (isOiciRouteOnlyQa) {
                 "NOT TO SCALE · ILM–ALTET ROUTE FLIGHT QA ONLY · NOT FOR ACTUAL NAVIGATION"
             } else if (isOimmIlsExperimental) {
                 "INDEPENDENT AIP QA PENDING — NOT FOR ACTUAL NAVIGATION"

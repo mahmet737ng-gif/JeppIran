@@ -1,0 +1,137 @@
+{
+  "version": 2,
+  "coordinateSystem": "WGS84",
+  "coordinateSpace": "pdf_points",
+  "origin": "top_left",
+  "testOnly": true,
+  "notForActualNavigation": true,
+  "source": {
+    "chartDataVersion": "V2621",
+    "sha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+    "pageCount": 1654
+  },
+  "charts": [
+    {
+      "page": 307,
+      "airport": "OIGG",
+      "name": "KOBUB 1N, KOBUB 1P",
+      "chartKey": "OIGG|STAR|10-2|KOBUB 1N, KOBUB 1P",
+      "sourceFingerprint": "a40a3de145df915dd71dcec063477726c6eb31adb0284b12e426f1c6794a81b9",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90,
+        "top": 85,
+        "right": 532,
+        "bottom": 782
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "x": 150,
+          "y": 200,
+          "lat": 37.384164496797176,
+          "lon": 50.148787836528804,
+          "source": "Derived from original PDF RST and KOBUB vector centers; simulator test calibration only"
+        },
+        {
+          "x": 475,
+          "y": 200,
+          "lat": 37.09421947082446,
+          "lon": 50.143960373365,
+          "source": "Derived from original PDF RST and KOBUB vector centers; simulator test calibration only"
+        },
+        {
+          "x": 150,
+          "y": 700,
+          "lat": 37.3900703029564,
+          "lon": 49.58783192430816,
+          "source": "Derived from original PDF RST and KOBUB vector centers; simulator test calibration only"
+        },
+        {
+          "x": 475,
+          "y": 700,
+          "lat": 37.1001252769837,
+          "lon": 49.58300446114435,
+          "source": "Derived from original PDF RST and KOBUB vector centers; simulator test calibration only"
+        }
+      ],
+      "maxResidualPdfPoints": 0.75,
+      "validation": {
+        "method": "two_vector_landmarks_simulator_qa",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "sourceVerifiedPdfSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+        "calibrationLandmarks": [
+          "RST_VOR",
+          "KOBUB"
+        ],
+        "independentPrintedGridMismatchMaxMetres": 926.5,
+        "notes": "Only two PDF landmark controls. Printed longitudes disagree by approximately 0.7-0.94 km; geometry NOT approved for real navigation or positional accuracy."
+      }
+    },
+    {
+      "page": 308,
+      "airport": "OIGG",
+      "name": "KOBUB 1Q",
+      "chartKey": "OIGG|STAR|10-2A|KOBUB 1Q",
+      "sourceFingerprint": "ceb66c6a644da4d000d9d23a4121c73be70542a54f0e3e0037537b716a921b81",
+      "coordinateSpace": "pdf_points",
+      "origin": "top_left",
+      "width": 612,
+      "height": 792,
+      "bounds": {
+        "left": 90,
+        "top": 85,
+        "right": 532,
+        "bottom": 782
+      },
+      "excludedBounds": [],
+      "points": [
+        {
+          "x": 150,
+          "y": 200,
+          "lat": 37.3841223075216,
+          "lon": 50.148667810132544,
+          "source": "Derived from original PDF RST and KOBUB vector centers; simulator test calibration only"
+        },
+        {
+          "x": 475,
+          "y": 200,
+          "lat": 37.09416217436387,
+          "lon": 50.143892210048065,
+          "source": "Derived from original PDF RST and KOBUB vector centers; simulator test calibration only"
+        },
+        {
+          "x": 150,
+          "y": 700,
+          "lat": 37.38996466559579,
+          "lon": 49.58768267007906,
+          "source": "Derived from original PDF RST and KOBUB vector centers; simulator test calibration only"
+        },
+        {
+          "x": 475,
+          "y": 700,
+          "lat": 37.100004532438064,
+          "lon": 49.58290706999458,
+          "source": "Derived from original PDF RST and KOBUB vector centers; simulator test calibration only"
+        }
+      ],
+      "maxResidualPdfPoints": 0.75,
+      "validation": {
+        "method": "two_vector_landmarks_simulator_qa",
+        "qaTestOnly": true,
+        "notApprovedForNavigation": true,
+        "sourceVerifiedPdfSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+        "calibrationLandmarks": [
+          "RST_VOR",
+          "KOBUB"
+        ],
+        "independentPrintedGridMismatchMaxMetres": 938,
+        "notes": "Only two PDF landmark controls. Printed longitudes disagree by approximately 0.7-0.94 km; geometry NOT approved for real navigation or positional accuracy."
+      }
+    }
+  ]
+}
