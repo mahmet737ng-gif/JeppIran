@@ -55,6 +55,22 @@ async function waitForServer(){
     null,{timeout:18000});
   assert.ok(await page.evaluate(()=>charts.find(c=>c.page===383).name.startsWith("51-")),
     "Source chart data and georeference keys are unchanged despite the display title");
+  // Real regression: inspect VISIBLE airport tree and chart viewer toolbar.
+  await page.evaluate(()=>{ selectAirport("OIIE"); expanded.add("Airport"); renderAirports(""); });
+  for(const [number,title] of [
+    ["20-9B","AIRCRAFT PARKING CHART (APRON 1 / PASSENGER APRON)"],
+    ["20-9C","AIRCRAFT PARKING CHART (APRON 2 CARGO / APRON 3 SALAM)"]
+  ]){
+    const row=page.locator("#chartsView .airport-inline-tree .tree-item").filter({hasText:number}).first();
+    await row.waitFor({state:"visible",timeout:12000});
+    assert.ok((await row.innerText()).includes(title),
+      "visible AIRPORT sidebar must show source-reviewed "+number+" title");
+    await row.click();
+    assert.ok((await page.locator("#viewerChart").innerText()).includes(title),
+      "opened chart toolbar must show source-reviewed "+number+" title");
+  }
+  await page.evaluate(()=>selectAirport("OIII"));
+  console.log("PASS Chrome OIIE 20-9B/C: selected chart rows and viewer title corrected");
 
   // Owner-approved Ahwaz profile: actual Chrome geometry and section placement.
   await page.locator("#profileWind").waitFor({state:"visible",timeout:12000});

@@ -1,9 +1,97 @@
 const RAW_ROOT="./data/";
 // V2621 APPROACH display titles are UI-only: never mutate c.name, chart keys,
 // georef chartKey, stable bookmark IDs, simulator bridges or PDF page indices.
+// Source-audited V2621 ground plates must display correctly on FIRST render,
+// even when offline or other optional metadata requests are delayed or unavailable.
+// Original c.name, chart IDs, bookmark keys, PDFs and georeferencing are unchanged.
+const REVIEWED_V2621_GROUND_TITLES=Object.freeze({
+  "382": {
+    "icao": "OIIE",
+    "chart_number": "20-9B",
+    "category": "Airport",
+    "original_name": "51-08.5 51-08.6 51-08.7 51-08.8 51-08.9 51-09 51-09.1 51-09.2 51-09.3 51-09.4 51-09.5 51-09.6",
+    "name": "AIRCRAFT PARKING CHART (APRON 1 / PASSENGER APRON)"
+  },
+  "383": {
+    "icao": "OIIE",
+    "chart_number": "20-9C",
+    "category": "Airport",
+    "original_name": "51-09.9 51-10 51-10.1 51-10.2 51-10.3 51-10.4 51-10.5 51-10.6 51-10.7 51-10.8 51-10.9 51-11 51-11.1 51-11.2 51-11.3",
+    "name": "AIRCRAFT PARKING CHART (APRON 2 CARGO / APRON 3 SALAM)"
+  },
+  "985": {
+    "icao": "ORBI",
+    "chart_number": "10-9B",
+    "category": "Airport",
+    "original_name": "AIRPORT CHART",
+    "name": "NOSE-IN PARKING PROCEDURES (AGNIS / PAPA)"
+  },
+  "1003": {
+    "icao": "ORER",
+    "chart_number": "10-9B",
+    "category": "Airport",
+    "original_name": "AIRPORT CHART",
+    "name": "PUSHBACK / ENGINE RUN PROCEDURES"
+  },
+  "1004": {
+    "icao": "ORER",
+    "chart_number": "10-9C",
+    "category": "Airport",
+    "original_name": "AIRPORT CHART",
+    "name": "LOW VISIBILITY TAXI ROUTES"
+  },
+  "1028": {
+    "icao": "ORSJ",
+    "chart_number": "10-9A",
+    "category": "Airport",
+    "original_name": "AIRPORT CHART",
+    "name": "AIRCRAFT PARKING CHART (APRON 1 / CARGO APRON)"
+  },
+  "1051": {
+    "icao": "OOMS",
+    "chart_number": "10-9B",
+    "category": "Airport",
+    "original_name": "AIRPORT CHART",
+    "name": "AIRPORT GROUND CHART (APRONS & STANDS)"
+  },
+  "1131": {
+    "icao": "LTAC",
+    "chart_number": "10-9E",
+    "category": "Airport",
+    "original_name": "AIRPORT CHART",
+    "name": "LOW VISIBILITY PROCEDURES"
+  },
+  "1132": {
+    "icao": "LTAC",
+    "chart_number": "10-9F",
+    "category": "Airport",
+    "original_name": "AIRPORT CHART",
+    "name": "LOW VISIBILITY PROCEDURES (CONT.)"
+  },
+  "1435": {
+    "icao": "OMDB",
+    "chart_number": "10-9L",
+    "category": "Airport",
+    "original_name": "AIRPORT CHART",
+    "name": "VISUAL DOCKING GUIDANCE SYSTEMS (VDGS)"
+  },
+  "1436": {
+    "icao": "OMDB",
+    "chart_number": "10-9M",
+    "category": "Airport",
+    "original_name": "AIRPORT CHART",
+    "name": "VISUAL DOCKING GUIDANCE SYSTEMS (VDGS) (CONT.)"
+  }
+});
 let chartDisplayNamesByPage=Object.create(null);
 function displayChartName(c){
   const page=String(Number(c?.page));
+  const review=REVIEWED_V2621_GROUND_TITLES[page];
+  if(review && manifest?.version==="V2621" &&
+     c?.airport===review.icao && c?.chart_number===review.chart_number &&
+     c?.category===review.category && c?.name===review.original_name){
+    return review.name;
+  }
   return chartDisplayNamesByPage[page] || c?.name || ("Chart "+page);
 }
 

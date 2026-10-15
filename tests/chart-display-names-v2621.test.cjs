@@ -40,3 +40,19 @@ test('Android uses safe page, ICAO, chart number and exact original name guards'
  assert.match(code,/optJSONObject\("airportPages"\)/);
  assert.match(code,/label\.optString\("original_name"\) == old/);
 });
+
+test('all 11 reviewed V2621 ground plate names are bundled for immediate display',()=>{
+ const js=fs.readFileSync(path.join(__dirname,'../web/app.js'),'utf8');
+ const html=fs.readFileSync(path.join(__dirname,'../web/index.html'),'utf8');
+ const sw=fs.readFileSync(path.join(__dirname,'../web/service-worker.js'),'utf8');
+ assert.match(html,/app\.js\?v=2621-ground-title-firstpaint-r2/);
+ assert.match(sw,/app\.js\?v=2621-ground-title-firstpaint-r2/);
+ const open='const REVIEWED_V2621_GROUND_TITLES=Object.freeze(';
+ const start=js.indexOf(open),end=js.indexOf(');\nlet chartDisplayNamesByPage=',start);
+ assert.ok(start>=0&&end>start,'reviewed titles are missing from the main JS');
+ const embedded=JSON.parse(js.slice(start+open.length,end));
+ assert.deepEqual(embedded,titles.airportPages);
+ assert.match(js,/manifest\?\.version==="V2621"/);
+ assert.match(js,/c\?\.name===review\.original_name/);
+ assert.ok(js.indexOf('REVIEWED_V2621_GROUND_TITLES')<js.indexOf('function displayChartName'));
+});
