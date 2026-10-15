@@ -10,6 +10,7 @@ on:
       - 'tests/offline-auto-sync.test.cjs'
       - 'tests/profile-clocks-validity.test.cjs'
       - 'tests/home-navigation-v2621.test.cjs'
+      - 'tests/chart-display-names-v2621.test.cjs'
       - 'scripts/verify_profile_validity_browser.cjs'
       - 'scripts/verify_chart_swipes_browser.cjs'
       - 'scripts/build_offline_manifest.py'
@@ -79,6 +80,9 @@ jobs:
 
       - name: Check Charts Back navigation and fullscreen Home removal
         run: node --test tests/home-navigation-v2621.test.cjs
+
+      - name: Verify exact V2621 apron and airport ground plate display-only names
+        run: node --test tests/chart-display-names-v2621.test.cjs
 
       - name: Verify airport UTC/local clocks and terminal/enroute currency safeguards
         run: |

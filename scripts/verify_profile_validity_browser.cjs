@@ -48,6 +48,14 @@ async function waitForServer(){
   assert.equal((await from.innerText()).trim(),"09 Oct 2026","visible starting date in OIII");
   assert.equal((await to.innerText()).trim(),"22 Oct 2026","visible final date in OIII");
   assert.ok(await page.locator("#profileUtcClock").isVisible(),"UTC clock above dates");
+  // Confirm real Chrome uses the reviewed apron headings while retaining source chart identities.
+  await page.waitForFunction(()=>
+    displayChartName(charts.find(c=>c.page===382))==="AIRCRAFT PARKING CHART (APRON 1 / PASSENGER APRON)" &&
+    displayChartName(charts.find(c=>c.page===383))==="AIRCRAFT PARKING CHART (APRON 2 CARGO / APRON 3 SALAM)",
+    null,{timeout:18000});
+  assert.ok(await page.evaluate(()=>charts.find(c=>c.page===383).name.startsWith("51-")),
+    "Source chart data and georeference keys are unchanged despite the display title");
+
   assert.equal(await page.locator("#profileValidity").count(),0,"no standalone card");
   const positions=await page.evaluate(()=>{
    const clock=document.querySelector("#profileUtcClock").getBoundingClientRect();
