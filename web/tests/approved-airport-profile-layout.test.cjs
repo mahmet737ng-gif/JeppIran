@@ -48,7 +48,13 @@ test("original fifty picture files and SHA hashes remain owner-locked",()=>{
  assert.match(posterCss,/background-size:contain\s*!important/);
  assert.doesNotMatch(posterCss,/background-size:cover/);
  const html=read("web/index.html"),sw=read("web/service-worker.js");
- for(const name of ["app.js?v=2621-ahwaz-approved-profile-r1","airport-profile-layout-locked.css?v=2621-ahwaz-approved-profile-r1"]){
-  assert.ok(html.includes(name)&&sw.includes(name),name);
- }
+ // Match the exact current app.js version in both entrypoint and offline shell.
+ // Do not freeze an obsolete JS query string: new chart labels must be able to deploy
+ // without touching any of the 50 approved poster files or profile CSS.
+ const appEntry=html.match(/<script src="\.\/(app\.js\?v=[^"]+)" defer><\/script>/);
+ assert.ok(appEntry,"versioned app.js entrypoint required");
+ assert.ok(sw.includes("./"+appEntry[1]),"offline shell must precache the same JS revision");
+ const profileCss="airport-profile-layout-locked.css?v=2621-ahwaz-approved-profile-r1";
+ assert.ok(html.includes(profileCss)&&sw.includes(profileCss),
+  "owner-locked profile CSS revision must remain unchanged");
 });
