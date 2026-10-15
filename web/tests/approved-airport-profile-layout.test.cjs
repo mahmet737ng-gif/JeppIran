@@ -21,8 +21,11 @@ test("approved Ahwaz profile cards have one direct CSS grid and five sections",(
  assert.match(profile,/profile-elev-inline/);
  assert.ok(profile.indexOf('id="profileWind"')<profile.indexOf('id="profileNotam"'));
  assert.match(css,/grid-template-columns:repeat\(2,minmax\(0,1fr\)\)\s*!important/);
- assert.match(css,/"metar wind"\s*"runways notam"\s*"taf \."/);
- for(const [id,area] of [["profileWeather","metar"],["profileWind","wind"],["profileRunways","runways"],["profileNotam","notam"],["profileTaf","taf"]])
+ assert.match(css,/"metar wind"\s*"runways stack"/);
+ assert.match(profile,/class="profile-right-stack"/);
+ assert.ok(profile.indexOf('id="profileNotam"')<profile.indexOf('id="profileTaf"'));
+ assert.match(css,/\.profile-right-stack \{/);
+ for(const [id,area] of [["profileWeather","metar"],["profileWind","wind"],["profileRunways","runways"]])
   assert.ok(css.includes("#"+id+" {grid-area:"+area),id);
  assert.match(css,/#profileWeather \{grid-area:metar;align-self:stretch/);
  assert.match(css,/#profileWind \{grid-area:wind;align-self:stretch/);
@@ -54,7 +57,7 @@ test("original fifty picture files and SHA hashes remain owner-locked",()=>{
  const appEntry=html.match(/<script src="\.\/(app\.js\?v=[^"]+)" defer><\/script>/);
  assert.ok(appEntry,"versioned app.js entrypoint required");
  assert.ok(sw.includes("./"+appEntry[1]),"offline shell must precache the same JS revision");
- const profileCss="airport-profile-layout-locked.css?v=2621-ahwaz-approved-profile-r1";
+ const profileCss="airport-profile-layout-locked.css?v=2621-ahwaz-taf-right-r2";
  assert.ok(html.includes(profileCss)&&sw.includes(profileCss),
   "owner-locked profile CSS revision must remain unchanged");
 });

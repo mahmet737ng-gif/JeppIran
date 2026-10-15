@@ -110,12 +110,15 @@ async function waitForServer(){
     const boxes=Object.fromEntries(ids.map(id=>{const r=document.getElementById(id).getBoundingClientRect();return [id,{top:r.top,left:r.left,right:r.right,bottom:r.bottom,width:r.width,height:r.height}]}));
     return {boxes,extraInfo:document.querySelectorAll("#profileInfo").length,overview:document.querySelectorAll("#airportProfile .profile-tabs").length,localClock:!!document.getElementById("profileLocalTime")};
   });
-  const bw=approved.boxes.profileWeather,ww=approved.boxes.profileWind,nn=approved.boxes.profileNotam,rr=approved.boxes.profileRunways;
+  const bw=approved.boxes.profileWeather,ww=approved.boxes.profileWind,nn=approved.boxes.profileNotam,rr=approved.boxes.profileRunways,tt=approved.boxes.profileTaf;
   assert.equal(approved.extraInfo,0,"Additional Information removed");
   assert.equal(approved.overview,0,"unnecessary Overview tab removed");
   assert.ok(approved.localClock,"airport-local time still runs in header");
   assert.ok(Math.abs(bw.width-ww.width)<=2&&Math.abs(bw.height-ww.height)<=2,"METAR/Wind same dimensions: "+JSON.stringify(approved.boxes));
   assert.ok(ww.left>bw.right-3&&nn.left>rr.right-3&&nn.top>=ww.bottom-2,"NOTAM belongs below Wind in right column: "+JSON.stringify(approved.boxes));
+  assert.ok(Math.abs(tt.left-nn.left)<=2&&Math.abs(tt.width-nn.width)<=2&&
+    tt.top>=nn.bottom-2&&tt.top-nn.bottom<=15,
+    "TAF belongs directly below NOTAM in the right column: "+JSON.stringify(approved.boxes));
   console.log("PASS approved Ahwaz layout geometry, equal-sized METAR/Wind, NOTAM below Wind",JSON.stringify(approved.boxes));
   // The full original picture (without cropped edge) and its live text must
   // fit and stay anchored together inside a non-scrolling airport viewport.

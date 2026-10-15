@@ -12,7 +12,7 @@
   const dimensions = new Map();
   let queued = false;
   let lastCode = "";
-  const urlFor = (icao) => "./airport-profile-posters-textfree/" + icao + ".webp";
+  const urlFor = (icao) => "./airport-profile-posters-textfree/" + icao + ".webp?v=2621-letter-repair-r2";
 
   // The poster is a fixed, fully contained image with its HTML caption anchored
   // INSIDE the same image rectangle, never to scrolling profile content.

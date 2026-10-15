@@ -124,7 +124,7 @@ jobs:
 
       - name: Build 50 text-free airport poster DISPLAY images from immutable sources
         run: |
-          python3 -m pip install --break-system-packages --disable-pip-version-check Pillow==11.3.0
+          python3 -m pip install --break-system-packages --disable-pip-version-check Pillow==11.3.0 opencv-python-headless==4.11.0.86
           python3 scripts/build_textfree_airport_posters.py
           python3 scripts/build_textfree_airport_posters.py --check
 
