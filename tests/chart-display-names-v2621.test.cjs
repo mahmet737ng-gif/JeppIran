@@ -45,8 +45,9 @@ test('all 11 reviewed V2621 ground plate names are bundled for immediate display
  const js=fs.readFileSync(path.join(__dirname,'../web/app.js'),'utf8');
  const html=fs.readFileSync(path.join(__dirname,'../web/index.html'),'utf8');
  const sw=fs.readFileSync(path.join(__dirname,'../web/service-worker.js'),'utf8');
- assert.match(html,/app\.js\?v=2621-ground-title-firstpaint-r2/);
- assert.match(sw,/app\.js\?v=2621-ground-title-firstpaint-r2/);
+ const appEntry=html.match(/<script src="\.\/(app\.js\?v=[^"]+)" defer><\/script>/);
+ assert.ok(appEntry,"versioned application entrypoint required");
+ assert.ok(sw.includes("./"+appEntry[1]),"offline service worker must use the same app revision");
  const open='const REVIEWED_V2621_GROUND_TITLES=Object.freeze(';
  const start=js.indexOf(open),end=js.indexOf(');\nlet chartDisplayNamesByPage=',start);
  assert.ok(start>=0&&end>start,'reviewed titles are missing from the main JS');
