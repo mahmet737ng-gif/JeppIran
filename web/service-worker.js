@@ -1,4 +1,4 @@
-const CACHE="jeppiran-pwa-2621-profile-fit-no-crop-r2";
+const CACHE="jeppiran-pwa-2621-oiie-new-geo-flightqa-r1";
 const SNAPSHOT_META="jeppiran-offline-meta-v2";
 const SNAPSHOT_KEY="./__jeppiran_active_offline_v2__";
 const OFFLINE_ASSET_CACHE="jeppiran-all-offline-assets-v1";
