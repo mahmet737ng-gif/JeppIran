@@ -49,7 +49,7 @@ test('all 11 reviewed V2621 ground plate names are bundled for immediate display
  assert.ok(appEntry,"versioned application entrypoint required");
  assert.ok(sw.includes("./"+appEntry[1]),"offline service worker must use the same app revision");
  const open='const REVIEWED_V2621_GROUND_TITLES=Object.freeze(';
- const start=js.indexOf(open),end=js.indexOf(');\nlet chartDisplayNamesByPage=',start);
+ const start=js.indexOf(open),end=js.indexOf(');\n// AIRPORT V2621 owner-approved corrections.',start);
  assert.ok(start>=0&&end>start,'reviewed titles are missing from the main JS');
  const embedded=JSON.parse(js.slice(start+open.length,end));
  assert.deepEqual(embedded,titles.airportPages);
