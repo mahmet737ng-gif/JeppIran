@@ -554,7 +554,7 @@ object ChartGeoreferenceStore {
                     qa.optString("method") != expectedMethod ||
                     !qa.optBoolean("qaTestOnly") || !qa.optBoolean("notApprovedForNavigation") ||
                     qa.optString("originalPdfSha256") != selected.sourceSha256 ||
-                    controls.length() < 4 || masks.length() != if (page == 376) 0 else 2 ||
+                    controls.length() < 4 || masks.length() != (if (page == 376) 0 else 2) ||
                     errors.length() == 0) return
                 val metricNames = errors.keys()
                 while (metricNames.hasNext()) {
