@@ -30,6 +30,7 @@ def rectangle(page,coords,shape="c",width=None):
         r=tuple(float(z) for z in v["rect"])
         if max(abs(r[k]-coords[k]) for k in range(4))>0.08:continue
         if shape not in {a[0] for a in v["items"]}:continue
+        if shape=="l" and not width and v.get("type")!="fs":continue
         if width and not (width[0]<=r[2]-r[0]<=width[1]):continue
         match.append(v)
     if len(match)!=1:raise ValueError(f"Could not locate unique original PDF vector {coords}; count={len(match)}")
