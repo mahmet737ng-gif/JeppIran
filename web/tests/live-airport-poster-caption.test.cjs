@@ -11,14 +11,15 @@ test("all fifty immutable source files have a separate renderable display deriva
 });
 test("caption is live DOM from profile, not an image or hardcoded airport name",()=>{
  const js=read("web/airport-profile-posters.js");
- assert.match(js,/function ensureCaption\(\)/);
+ assert.match(js,/function ensureCaption\(frame\)/);
  assert.match(js,/document\.createElement\("section"\)/);
  assert.match(js,/\.textContent = value/);
  assert.match(js,/className = "jp-poster-caption"/);
  assert.match(js,/airports\[icao\]/);
  assert.match(js,/\.profile-coordinates/);
  assert.match(js,/airport-profile-posters-textfree\//);
- assert.match(js,/ensureCaption\(\)/);
+ assert.match(js,/ensureCaption\(frame\)/);
+ assert.match(js,/frame\.appendChild\(caption\)/);
 });
 test("approved metallic gradient typography stays text at arbitrary zoom",()=>{
  const css=read("web/airport-profile-live-text.css");
@@ -30,7 +31,7 @@ test("approved metallic gradient typography stays text at arbitrary zoom",()=>{
 });
 test("live caption assets are versioned in HTML and SW and generated before package",()=>{
  const html=read("web/index.html"),sw=read("web/service-worker.js"),wf=read(".github/workflows/deploy-ipad-web.yml");
- for(const n of ["airport-profile-posters.js?v=2621-live-caption-r1","airport-profile-live-text.css?v=2621-live-caption-r1"]) {
+ for(const n of ["airport-profile-posters.js?v=2621-poster-viewport-fixed-r1","airport-profile-live-text.css?v=2621-live-caption-r1"]) {
   assert.ok(html.includes(n)&&sw.includes(n),n);
  }
  assert.match(wf,/python3 scripts\/build_textfree_airport_posters\.py/);

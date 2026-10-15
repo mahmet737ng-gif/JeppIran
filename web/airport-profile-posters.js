@@ -62,6 +62,8 @@
     if (!shell || !root.classList.contains("jp-airport-poster-loaded")) return;
     // Reset before measurement so switching airports / runway counts never
     // accumulates fractional zoom from a previous profile.
+    shell.style.maxHeight = "";
+    shell.style.overflowY = "";
     shell.style.zoom = "1";
     const available = Math.max(1,root.clientHeight - 20);
     const natural = Math.max(1,shell.scrollHeight);
