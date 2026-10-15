@@ -121,12 +121,12 @@ for num,temp,tick_x,delta_y,ika_center,d62_center in [
         d62=rectangle(page,(326.4,277.92,334.32,284.76),shape="l")
         old_d62=rectangle(old,(326.28,329.52,334.20,336.36),shape="l")
         assert abs((d62[1]-old_d62[1])-delta_y)<.05
-        navaid=icon
+        navaid=ring
         check_d62=abs(d62[1]-old_d62[1]-delta_y)
     else:
         # CAT-II page reproduces same vector navaid ring minus 0.72 x,
         # 0.12 y from 386, while preserving chart-grid x-source labels.
-        navaid=ika_center
+        navaid=ring
         check_d62=abs(d62_center[1]-281.34+.12)
         assert check_d62<.05
     lons=(51+10/60,51+20/60)
@@ -137,7 +137,7 @@ for num,temp,tick_x,delta_y,ika_center,d62_center in [
     y_intercept=y_35_30-north_scale*35.5
     projected=(slope*IKA[1]+intercept,north_scale*IKA[0]+y_intercept)
     navaid_error=math.hypot(projected[0]-navaid[0],projected[1]-navaid[1])
-    assert navaid_error<3.5, f"IKA independent control mismatch {num} {navaid_error}"
+    assert navaid_error<1.0, f"IKA independent control mismatch {num} {navaid_error}"
     # Cross-plate y-shift of 51.6 / 51.72 PDF points is confirmed against
     # original D6.2 diamond and VOR centre, not guessed from a screenshot.
     b={"left":90,"top":171,"right":531.5,"bottom":504}
@@ -154,7 +154,7 @@ for num,temp,tick_x,delta_y,ika_center,d62_center in [
                "latitudes":[35.40,35.35],
                "longitudes":[51+10/60,51+20/60],
                "source":[{"id":"IKA","lat":IKA[0],"lon":IKA[1],"pdf":list(navaid),
-                          "type":"original IKA VOR centre, independent plotted symbol"},
+                          "type":"original PDF IKA VOR concentric ring centre; independent WGS84 control"},
                          {"id":"D6.2_IKIA","pdf":list(d62_center),"type":"original D6.2 plate symbol matched across neighboring plate"},
                          {"id":"51-10","pdf":tick_x[0],"type":"original PDF longitude vector tick"},
                          {"id":"51-20","pdf":tick_x[1],"type":"original PDF longitude vector tick"},
