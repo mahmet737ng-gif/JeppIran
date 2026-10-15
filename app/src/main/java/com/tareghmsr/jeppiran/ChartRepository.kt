@@ -516,11 +516,38 @@ class ChartRepository(
         }.getOrDefault(JSONObject())
     }
 
+    // Keep this reviewed display map separate from the canonical charts-current.json.
+    private val airportGroundTitles2621: JSONObject by lazy {
+        runCatching {
+            context.assets.open("chart-display-names-v2621.json").bufferedReader().use { reader ->
+                val data = JSONObject(reader.readText())
+                if (data.optString("cycle") == "2621" && data.optBoolean("displayOnly")) {
+                    data.optJSONObject("airportPages") ?: JSONObject()
+                } else JSONObject()
+            }
+        }.getOrDefault(JSONObject())
+    }
+
     private fun visuallyReviewed2621Title(
         page: Int, icao: String, number: String, category: String, old: String
     ): String {
         val active = ChartUpdateStore.activeVersion(context)
         if (!hasReviewed2621Bundle || (active.isNotBlank() && active != "V2621")) return old
+
+        // Plate names in V2621: only display titles, only if ALL original fields match.
+        // No change to the source PDF, raw chart name, bookmark ID or georeference chartKey.
+        if (category == "Airport") {
+            val label = airportGroundTitles2621.optJSONObject(page.toString())
+            if (label != null &&
+                label.optString("icao") == icao &&
+                label.optString("chart_number") == number &&
+                label.optString("category") == category &&
+                label.optString("original_name") == old
+            ) {
+                val corrected = label.optString("name")
+                if (corrected.isNotBlank()) return corrected
+            }
+        }
 
         // Only rename an AIRPORT title when source page, ICAO, and chart
         // number match the visual audit; keep the canonical data unchanged.
