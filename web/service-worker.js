@@ -87,7 +87,7 @@ self.addEventListener("fetch",event=>{
     }).catch(()=>localFallback(event.request)));
     return;
   }
-  if(url.pathname.endsWith("/offline-assets.json")||url.pathname.endsWith("/data/charts-current.json")||url.pathname.endsWith("/data/charts-manifest.json")||url.pathname.endsWith("/data/chart-georef.json")||url.pathname.endsWith("/data/oigg-star-flightqa-v2621.json")||url.pathname.endsWith("/data/oiie-missing-sid-ils-flightqa-v2621.json")||url.pathname.endsWith("/data/airport-region-georef-v2621.json")||url.pathname.endsWith("/data/airport-profiles.json")||url.pathname.endsWith("/data/airport-runways.json")||url.pathname.endsWith("/data/chart-briefing-titles-v2621.json")){
+  if(url.pathname.endsWith("/offline-assets.json")||url.pathname.endsWith("/data/charts-current.json")||url.pathname.endsWith("/data/charts-manifest.json")||url.pathname.endsWith("/data/chart-georef.json")||url.pathname.endsWith("/data/oigg-star-flightqa-v2621.json")||url.pathname.endsWith("/data/oiie-missing-sid-ils-flightqa-v2621.json")||url.pathname.endsWith("/data/airport-region-georef-v2621.json")||url.pathname.endsWith("/data/airport-profiles.json")||url.pathname.endsWith("/data/airport-runways.json")||url.pathname.endsWith("/data/chart-briefing-titles-v2621.json")||url.pathname.endsWith("/data/chart-display-names-v2621.json")){
     event.respondWith(fetch(event.request).then(response=>{
       if(response.ok){const copy=response.clone();event.waitUntil(caches.open(CACHE).then(cache=>cache.put(event.request,copy)))}
       return response;
