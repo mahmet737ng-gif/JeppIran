@@ -53,6 +53,23 @@ for num in [375,376,377,385,386,387,388,389]:
      found.append({"label":label,"geo":numeric,"interpretation":ax,"positions":sorted(possibilities,key=lambda x:x["score"])[:3],"word":[round(z,2) for z in w[:4]]})
   except Exception as err: pass
  entry["pairedTicks"]=found
+ entry["nearbyVectors"]={}
+ targets={376:{"RUS":(158.5,441.5),"IKA":(416.5,482.0)},
+          386:{"IKA":(233.6,248.5),"D6_2":(330.4,281.3),"D11_0":(448.0,308.0),"REVUR":(408,477)},
+          387:{"IKA":(233.5,300.1),"D6_2":(330.2,332.9)},
+          388:{"IKA":(233.1,248.5),"D6_2":(329.9,281.2),"D11_0":(447.0,308.0),"REVUR":(409,477)},
+          389:{"IKA":(233.5,300.1),"D6_2":(330.2,332.9)}}.get(num,{})
+ for name,(cx,cy) in targets.items():
+  a=[]
+  for ix,d in enumerate(v):
+   bb=fitz.Rect(d["rect"])
+   dx=max(bb.x0-cx,cx-bb.x1,0)
+   dy=max(bb.y0-cy,cy-bb.y1,0)
+   if math.hypot(dx,dy)>20 or bb.width>55 or bb.height>55:continue
+   a.append({"i":ix,"rect":[round(z,3) for z in bb],"type":d.get("type"),"fill":d.get("fill"),
+             "stroke":d.get("color"),"items":len(d["items"]),
+             "shapeTypes":sorted(set(z[0] for z in d["items"])),"distance":round(math.hypot(dx,dy),2)})
+  entry["nearbyVectors"][name]=sorted(a,key=lambda v:(v["distance"],v["rect"][2]-v["rect"][0]))[:70]
  report["pages"].append(entry)
  p.get_pixmap(matrix=fitz.Matrix(2.5,2.5),alpha=False).save(str(out/f"OIIE-{num}.png"))
  print("OIIE_PAGE",num,"fingerprint",entry["fp"],"grids",entry["gridLabels"],"halo",entry["grayHalos"],"names",entry["names"],"NTS",entry["NTS"],flush=True)
