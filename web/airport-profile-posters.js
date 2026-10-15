@@ -81,7 +81,12 @@
     if ((root.querySelector(".profile-icao")?.textContent || "").trim().toUpperCase() !== icao) return;
     const frame = ensureFrame();
     const size = dimensions.get(icao) || {width:4,height:3};
-    const w = Math.max(1,root.clientWidth),h = Math.max(1,root.clientHeight);
+    // The CSS profile panel may have a fractional transformed width. Use
+    // whichever is smaller: layout pixels or actually visible bounds, so no
+    // part of the photo can extend past the right/bottom edge.
+    const rect = root.getBoundingClientRect();
+    const w = Math.max(1,Math.min(root.clientWidth,rect.width));
+    const h = Math.max(1,Math.min(root.clientHeight,rect.height));
     const scale = Math.min(w/size.width,h/size.height);
     const posterW = Math.min(w,size.width*scale), posterH = Math.min(h,size.height*scale);
     frame.style.width = posterW+"px";
