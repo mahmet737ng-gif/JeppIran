@@ -1,0 +1,168 @@
+{
+  "schema": 1,
+  "ownerLocked": true,
+  "illustrativeOnly": true,
+  "expectedCount": 40,
+  "files": {
+    "OIII": {
+      "file": "OIII.webp",
+      "sha256": "bc8abf89237c818f140ea264280a5d29a31519347da039bb25d8a3ed715a9913"
+    },
+    "OIIE": {
+      "file": "OIIE.webp",
+      "sha256": "b48353f2967a7b3ef17430d827d8cf1392c0a78668a0870d62f8549e4b7378d2"
+    },
+    "OIMM": {
+      "file": "OIMM.webp",
+      "sha256": "fa70bbe4a809da47963888819a9f8f6974f52484a42fbb9a7bf9143ffcef7e25"
+    },
+    "OICC": {
+      "file": "OICC.webp",
+      "sha256": "463d516abe93d2bfd99897a60d0d52c0c037c3dacd1ce0b3cbf4a3de52b1842a"
+    },
+    "OITR": {
+      "file": "OITR.webp",
+      "sha256": "4ea71a2e3b3872c279453debcfdace678a020466e4677e8a813407bff7b3c982"
+    },
+    "OISS": {
+      "file": "OISS.webp",
+      "sha256": "ffa198e475bc6d0b449841fee462b1611f4862c56bbaaf95afef40ad77074414"
+    },
+    "OIFM": {
+      "file": "OIFM.webp",
+      "sha256": "1fa0b4bda92368e95d185086647ff71adb85af955985615092f0a1620267a88d"
+    },
+    "OIAW": {
+      "file": "OIAW.webp",
+      "sha256": "cccf4381245b93a1451b051f28b1571acfbe90c78331abcc7309128cb530fbe0"
+    },
+    "OIKB": {
+      "file": "OIKB.webp",
+      "sha256": "9dc1a1119c0d67f8c807a1ea9ca68c7e37cbe38c397b9d2acbbd843f46e5f380"
+    },
+    "OIYY": {
+      "file": "OIYY.webp",
+      "sha256": "9495c7f14fcfe41f37b9c8427e8672aa3fbd564f42bd78c02d2d19fd42ae055e"
+    },
+    "OITT": {
+      "file": "OITT.webp",
+      "sha256": "ef70a22486f71699a896fca7dde676c73598e5dc476270995b0e9a0b2ebac706"
+    },
+    "OIKK": {
+      "file": "OIKK.webp",
+      "sha256": "059ff12d0a5011c62a93c6837b1cc0845cae301861bb1f43957ec129059f4f32"
+    },
+    "OIGG": {
+      "file": "OIGG.webp",
+      "sha256": "1ecd003de88768d51af140f187cabf4c5d1b2ea44a06d2a616b3d633093b51ec"
+    },
+    "OITL": {
+      "file": "OITL.webp",
+      "sha256": "5c59c625fd2da8c5a96801f61486c1d179850a71e740aeaac8da973011dd77c0"
+    },
+    "OIBK": {
+      "file": "OIBK.webp",
+      "sha256": "8c758906f89a8d6d2d62cab53389897efdd3c42b574a876f2e70dde6303dd7d0"
+    },
+    "OIZC": {
+      "file": "OIZC.webp",
+      "sha256": "93f9725f5a94752c6016c217bc0937de252bb293d36f94e0258ba257da62282e"
+    },
+    "OIBB": {
+      "file": "OIBB.webp",
+      "sha256": "7555707a9cfde52a5739aacf3c94d5659918880f65c35502b37451a3bc6644a3"
+    },
+    "OIHH": {
+      "file": "OIHH.webp",
+      "sha256": "161fba56e96d4b24dd9ec2e7101c129b8a9ac8464ea5deca213b8f65a7bac160"
+    },
+    "OIMB": {
+      "file": "OIMB.webp",
+      "sha256": "9db13b4a4561b5c822bb66516de5ee5d3cabff0a925ff02790889af1cd163aeb"
+    },
+    "OITZ": {
+      "file": "OITZ.webp",
+      "sha256": "43f83ff98e3cfa796a7f09de7b33450fc94e506d72e053132cd964d472d02215"
+    },
+    "OIAA": {
+      "file": "OIAA.webp",
+      "sha256": "56c381e3954fe0299af24d6bcc026e5fe2cfe9738b91292e097e4698070a4686"
+    },
+    "OIBA": {
+      "file": "OIBA.webp",
+      "sha256": "28756dd044d4b805b7c4584118bdd78947b31328ab962fc0ad61634b7e4dbc04"
+    },
+    "OIBP": {
+      "file": "OIBP.webp",
+      "sha256": "2330c3b7e2697d4f034e118222d27391433f10e383d41a4b2bc2f8c95d4b97a4"
+    },
+    "OIMN": {
+      "file": "OIMN.webp",
+      "sha256": "237a0dd25741d010a2b90f3e5cd6dda3e7e16a24f219fc01f7c65421e79b34ec"
+    },
+    "OING": {
+      "file": "OING.webp",
+      "sha256": "307047d0b3ed2557e3e0b51603c061ec6bb8c56cd6a90b042dcf29a8ec0333b3"
+    },
+    "OIHR": {
+      "file": "OIHR.webp",
+      "sha256": "bb0f02e47ee2bf3fa0c04ce2fcdcfb0b4d7a18e4ef83ab8181af0642ad4d5593"
+    },
+    "OISL": {
+      "file": "OISL.webp",
+      "sha256": "7fc23e98bba2b631d00b0cec1cb43017b537515ba42ed711fb2405f1f6fe2f6f"
+    },
+    "OIKQ": {
+      "file": "OIKQ.webp",
+      "sha256": "12c69fc205bad7b285f80a9a73d010d667c0a0654a5cddb68f53e1273353d611"
+    },
+    "OIZH": {
+      "file": "OIZH.webp",
+      "sha256": "5b378bd950b3ed784a3727f1587be68593f82d5c68131f1b4964a59fed5be39f"
+    },
+    "OICS": {
+      "file": "OICS.webp",
+      "sha256": "e030e51ed91f563697101384ade8466b2998c42e873a50d6efa430b1bd3247cc"
+    },
+    "OIIL": {
+      "file": "OIIL.webp",
+      "sha256": "b2d9840e0e8b6fb8f9833768b16280cb60265663279e7763fd1fe78836951ff6"
+    },
+    "OISR": {
+      "file": "OISR.webp",
+      "sha256": "b059d7b3a39fd1a42d701a359bf762d3a01e2a79d83aff5c7e0eaeaec8c95725"
+    },
+    "OINN": {
+      "file": "OINN.webp",
+      "sha256": "c42bdbb5bad908c442e0f4713426baeefd09c85647c5d3fc71f89c996899bff1"
+    },
+    "OINR": {
+      "file": "OINR.webp",
+      "sha256": "50eb9eb4172f983ab24546f7f00a1dad710f97b0d4a7f2ec0ff650f3ac9b6018"
+    },
+    "OINZ": {
+      "file": "OINZ.webp",
+      "sha256": "539c1487ff5d5a01d1e90e267750f3f7bd4b1ed0c70494a8f8a962542bca6ead"
+    },
+    "OISY": {
+      "file": "OISY.webp",
+      "sha256": "af598fa5e10ebe156893448541047ec70258f256e17164bcd54c1ca088cf434e"
+    },
+    "OIKY": {
+      "file": "OIKY.webp",
+      "sha256": "2ee9a00947885c640b50e984a6536074ce3cb9aaa9f78385cdee1a16ec1924c9"
+    },
+    "OIAM": {
+      "file": "OIAM.webp",
+      "sha256": "05cacffefe9922c6a237bbaab13f40b8c1a1ccdfdc83b1703c59a439c27051b8"
+    },
+    "OIAD": {
+      "file": "OIAD.webp",
+      "sha256": "453db7a7626631ad2463d67a7e2a69c6b0c4be62419681a2cd7a659a92a25a18"
+    },
+    "OIMT": {
+      "file": "OIMT.webp",
+      "sha256": "f02fc65bc5f16d390cd2329386ad16f2355c0203000d4026d56604312e589325"
+    }
+  }
+}
