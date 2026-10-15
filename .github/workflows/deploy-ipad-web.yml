@@ -118,6 +118,15 @@ jobs:
       - name: Verify all owner-locked airport profile poster hashes when installed
         run: python3 scripts/verify_owner_locked_profile_posters.py
 
+      - name: Build 50 text-free airport poster DISPLAY images from immutable sources
+        run: |
+          python3 -m pip install --break-system-packages --disable-pip-version-check Pillow==11.3.0
+          python3 scripts/build_textfree_airport_posters.py
+          python3 scripts/build_textfree_airport_posters.py --check
+
+      - name: Validate live vector-clear poster text
+        run: node --test web/tests/live-airport-poster-caption.test.cjs
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:

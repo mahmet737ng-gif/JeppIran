@@ -1,0 +1,105 @@
+/* JEPPIRAN owner-approved pixel-free poster lettering.
+   Original approved 50 images remain permanently unchanged; display-only
+   text-free derivatives replace only the original caption field.
+   The artwork and city landmarks outside that field remain intact.
+*/
+#chartsView .airport-profile.jp-airport-poster-loaded .profile-shell {
+  display:flex;
+  flex-direction:column;
+  min-height:calc(100dvh - 94px);
+  padding-bottom:clamp(18px,2.6vw,42px);
+}
+#chartsView .airport-profile .jp-poster-caption {
+  box-sizing:border-box;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  flex:none;
+  margin-top:auto;
+  padding-top:clamp(78px,10vh,168px);
+  margin-left:clamp(10px,2.8vw,48px);
+  max-width:min(64%,720px);
+  pointer-events:none;
+  color:#f1f4f9;
+  text-align:left;
+  isolation:isolate;
+}
+#chartsView .airport-profile .jp-caption-title {
+  display:block;
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:clamp(25px,4vw,64px);
+  font-weight:950;
+  line-height:1.07;
+  letter-spacing:-.045em;
+  white-space:nowrap;
+  color:#f7f9ff;
+  background-image:
+    repeating-linear-gradient(95deg,rgba(255,255,255,.17) 0px,rgba(255,255,255,0) .8px,rgba(0,0,0,.09) 1.7px,transparent 3px),
+    linear-gradient(180deg,#fff 0%,#f4f7fb 22%,#c5e1f5 49%,#f5af84 81%,#925b53 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  -webkit-text-fill-color:transparent;
+  filter:drop-shadow(0 2px 2px rgba(0,0,0,.55));
+}
+#chartsView .airport-profile .jp-caption-city {
+  margin-top:clamp(3px,.65vw,11px);
+  font-size:clamp(12px,1.45vw,24px);
+  font-weight:450;
+  letter-spacing:clamp(.20em,.48vw,.44em);
+  color:#f2f6fc;
+  text-shadow:0 2px 3px #041021;
+}
+#chartsView .airport-profile .jp-caption-country {
+  margin-top:9px;
+  font-size:clamp(8px,1.02vw,16px);
+  font-weight:400;
+  letter-spacing:clamp(.13em,.31vw,.29em);
+  color:#e8eff8;
+  text-shadow:0 1px 2px #041021;
+}
+#chartsView .airport-profile .jp-caption-divider {
+  display:flex;
+  align-items:center;
+  gap:13px;
+  width:min(100%,360px);
+  margin:9px 0 6px;
+  font-size:clamp(14px,1.4vw,23px);
+  line-height:1;
+  color:#d4e8f7;
+}
+#chartsView .airport-profile .jp-caption-divider::after {
+  content:"";
+  flex:1;
+  border-top:1px solid #c1d4e8;
+  opacity:.85;
+}
+#chartsView .airport-profile .jp-caption-coordinates {
+  font-size:clamp(10px,.94vw,15px);
+  letter-spacing:.24em;
+  color:#e1e9f5;
+  white-space:nowrap;
+  text-shadow:0 2px 3px #05101f;
+}
+:root.light #chartsView .airport-profile.jp-airport-poster-loaded .jp-poster-caption,
+:root.light #chartsView .airport-profile.jp-airport-poster-loaded .jp-caption-city,
+:root.light #chartsView .airport-profile.jp-airport-poster-loaded .jp-caption-country,
+:root.light #chartsView .airport-profile.jp-airport-poster-loaded .jp-caption-coordinates {
+  color:#f2f6fc;
+}
+@media(max-width:960px) {
+  #chartsView .airport-profile .jp-poster-caption {
+    max-width:90%;
+    margin-left:5px;
+    padding-top:clamp(50px,7vh,110px);
+  }
+  #chartsView .airport-profile .jp-caption-title {font-size:clamp(22px,5vw,46px)}
+  #chartsView .airport-profile .jp-caption-country {letter-spacing:.09em}
+  #chartsView .airport-profile .jp-caption-coordinates {letter-spacing:.06em}
+}
+@media(max-width:540px) {
+  #chartsView .airport-profile .jp-poster-caption {max-width:100%;padding-top:44px;margin:0}
+  #chartsView .airport-profile .jp-caption-title {font-size:clamp(22px,5vw,34px)}
+  #chartsView .airport-profile .jp-caption-city {letter-spacing:.10em}
+  #chartsView .airport-profile .jp-caption-country {font-size:9px;letter-spacing:.02em}
+  #chartsView .airport-profile .jp-caption-coordinates {font-size:9px;letter-spacing:.02em}
+}
