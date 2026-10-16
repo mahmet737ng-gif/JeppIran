@@ -1,7 +1,7 @@
 "use strict";
 const assert=require("node:assert/strict"),fs=require("node:fs"),path=require("node:path"),crypto=require("node:crypto"),test=require("node:test");
 const root=path.resolve(__dirname,"../..");
-test("twenty approved original WebP images are present, unmodified, and reviewable",()=>{
+test("twenty approved original WebP images are present, unmodified, and reviewable in groups of 10",()=>{
  const dir=path.join(root,"web/airport-profile-posters-new20");
  const manifest=JSON.parse(fs.readFileSync(path.join(dir,"manifest.json"),"utf8"));
  assert.equal(manifest.schema,1);
@@ -21,7 +21,10 @@ test("twenty approved original WebP images are present, unmodified, and reviewab
   assert.equal(crypto.createHash("sha256").update(buffer).digest("hex"),a.sha256_webp,file);
  }
  const gallery=fs.readFileSync(path.join(dir,"index.html"),"utf8");
- assert.match(gallery,/n<=20/);
+ assert.match(gallery,/const perPage=10/);
+ assert.match(gallery,/for\(let n=first;n<=last;n\+\+\)/);
+ assert.match(gallery,/\?batch=1/);
+ assert.match(gallery,/\?batch=2/);
  assert.match(gallery,/new20_/);
  assert.match(gallery,/No airport code is assigned until correct mapping is confirmed/);
 });

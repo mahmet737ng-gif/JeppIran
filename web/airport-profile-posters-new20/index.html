@@ -1,1 +1,56 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>JEPPIRAN | New 20 poster review</title><style>body{background:#061525;color:#f0f5fb;font:15px system-ui,Arial;margin:0;padding:22px}h1{font-size:24px}p{color:#accce7}main{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px}figure{margin:0;border:1px solid #244762;border-radius:12px;overflow:hidden;background:#102438}img{display:block;width:100%;height:auto}figcaption{padding:10px;font-size:12px;letter-spacing:.05em}</style></head><body><h1>JEPPIRAN — new 20 illustration review</h1><p>Two batches, original geometry and city icons preserved. These images are illustrative only, not ADC. No airport code is assigned until correct mapping is confirmed.</p><main id="items"></main><script>for(let n=1;n<=20;n++){const id=String(n).padStart(2,'0');const f=document.createElement('figure');const i=document.createElement('img');i.src='new20_'+id+'.webp';i.loading='lazy';i.alt='Poster '+id;const c=document.createElement('figcaption');c.textContent='DESIGN '+id+' · '+(n<11?'FIRST':'SECOND')+' BATCH';f.append(i,c);document.querySelector('#items').append(f)}</script></body></html>
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JEPPIRAN | Airport poster review (batches of 10)</title>
+<style>
+*{box-sizing:border-box}
+body{background:#061525;color:#f0f5fb;font:15px system-ui,Arial;margin:0;padding:22px}
+h1{font-size:24px;margin:0 0 12px}
+p{color:#accce7;line-height:1.55;max-width:840px}
+nav{display:flex;align-items:center;flex-wrap:wrap;gap:10px;margin:20px 0}
+nav a{color:#eaf5fc;text-decoration:none;padding:10px 15px;border:1px solid #335e7a;border-radius:8px;background:#12324b}
+nav a[aria-current="page"]{border-color:#88d8ff;background:#236080;font-weight:700}
+main{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:12px}
+figure{margin:0;border:1px solid #244762;border-radius:12px;overflow:hidden;background:#102438}
+img{display:block;width:100%;height:auto}
+figcaption{padding:10px;font-size:12px;letter-spacing:.05em}
+#counter{color:#cfe3f5;font-weight:600}
+</style>
+</head>
+<body>
+<h1>JEPPIRAN — airport poster review</h1>
+<p>Original approved illustration files are presented in separate groups of ten. The existing 50 airport images remain locked and unchanged. These illustrations are decorative only, not charts, taxi maps, or navigation data. No airport code is assigned until correct mapping is confirmed.</p>
+<nav aria-label="Poster review batches">
+<a href="?batch=1" id="batch1">Batch 01 — designs 01–10</a>
+<a href="?batch=2" id="batch2">Batch 02 — designs 11–20</a>
+</nav>
+<p id="counter" role="status"></p>
+<main id="items"></main>
+<script>
+"use strict";
+const perPage=10;
+const total=20;
+const batches=Math.ceil(total/perPage);
+const requested=Number(new URLSearchParams(location.search).get("batch"));
+const batch=Number.isInteger(requested)&&requested>=1&&requested<=batches?requested:1;
+const first=(batch-1)*perPage+1,last=Math.min(total,first+perPage-1);
+document.getElementById("batch"+batch).setAttribute("aria-current","page");
+document.getElementById("counter").textContent="Viewing designs "+String(first).padStart(2,"0")+"–"+String(last).padStart(2,"0")+" of "+total;
+const holder=document.getElementById("items");
+for(let n=first;n<=last;n++){
+ const id=String(n).padStart(2,"0");
+ const card=document.createElement("figure");
+ const preview=document.createElement("img");
+ preview.src="new20_"+id+".webp";
+ preview.loading="lazy";
+ preview.alt="Illustrative airport poster design "+id;
+ const caption=document.createElement("figcaption");
+ caption.textContent="DESIGN "+id+" · BATCH "+String(batch).padStart(2,"0");
+ card.append(preview,caption);
+ holder.append(card);
+}
+</script>
+</body>
+</html>
