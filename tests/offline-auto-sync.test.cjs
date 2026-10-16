@@ -147,3 +147,36 @@ test("offline verification is local-only and detects missing cached files",async
   assert.equal(await b.api.verify(),false,"evicted PDF must fail offline verification");
   assert.match(b.controls.offlineVerifyStatus.textContent,/NOT READY/);
 });
+
+test("an unavailable iPad PDF yields a recoverable HTTP status, never a browser-internal network error",async()=>{
+  const workerText=fs.readFileSync("web/service-worker.js","utf8");
+  const callbacks={};
+  const memory=new Storage();
+  const SW={
+    location:{origin:new URL(BASE).origin},
+    registration:{scope:BASE},
+    addEventListener(type,handler){callbacks[type]=handler;}
+  };
+  vm.runInNewContext(workerText,{
+    self:SW,caches:memory,fetch:async()=>{throw Error("network disconnected");},
+    Response,Request,URL,console
+  });
+  let responsePromise;
+  const request=new Request(BASE+"charts/OIBL.pdf");
+  const event={request,respondWith(p){responsePromise=Promise.resolve(p);},waitUntil(){}};
+  callbacks.fetch(event);
+  const missing=await responsePromise;
+  assert.equal(missing.status,503);
+  assert.match(await missing.text(),/Go Offline/);
+  const legacy=await memory.open("jeppiran-chart-pdfs-v2621-printclean-3");
+  await legacy.put(request,new Response("saved-PDF-content"));
+  callbacks.fetch(event);
+  const saved=await responsePromise;
+  assert.equal(saved.status,200);
+  assert.equal(await saved.text(),"saved-PDF-content");
+});
+test("PDF error screen offers direct access to offline settings",()=>{
+  const app=fs.readFileSync("web/app.js","utf8");
+  assert.match(app,/openOfflineSettingsFromChart/);
+  assert.match(app,/This airport PDF has not been saved on this iPad/);
+});

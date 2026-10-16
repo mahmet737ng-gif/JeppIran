@@ -1981,8 +1981,16 @@ async function getPdfBytes(url,save=true){
     }
   }
   if(!res){
-    res=await fetch(url,{mode:"cors",cache:"no-store"});
-    if(!res.ok)throw new Error("PDF HTTP "+res.status);
+    try{
+      res=await fetch(url,{mode:"cors",cache:"no-store"});
+    }catch(_){
+      throw new Error("This airport PDF is not accessible offline. Reconnect to the internet, open Settings → Go Offline, wait for READY OFFLINE, then tap Verify Offline.");
+    }
+    if(!res.ok){
+      if(res.status===503)
+        throw new Error("This airport PDF has not been saved on this iPad. Connect to the internet, open Settings → Go Offline, then Verify Offline.");
+      throw new Error("PDF download failed (HTTP "+res.status+"). Reconnect and retry, or use Settings → Go Offline.");
+    }
     if(save&&cache){
       try{await cache.put(url,res.clone())}catch(_){}
     }
@@ -2460,7 +2468,12 @@ function selectChart(c,options={}){
     enterViewerFullscreen();
   }
   renderSelectedPdf(c).catch(e=>{
-    $("#pdfStage").innerHTML='<div class="empty-state"><img src="./app-icon.png" alt=""><b>Chart unavailable</b><span>'+escapeHtml(e.message)+'</span></div>';
+    const stage=$("#pdfStage");
+    stage.innerHTML='<div class="empty-state"><img src="./app-icon.png" alt=""><b>Chart unavailable</b><span>'+escapeHtml(e.message)+'</span><button id="openOfflineSettingsFromChart" type="button">Open Offline Settings</button></div>';
+    stage.querySelector("#openOfflineSettingsFromChart")?.addEventListener("click",()=>{
+      const settings=$("#appearanceSettingsDialog");
+      if(settings?.showModal&&!settings.open)settings.showModal();
+    });
   });
 }
 function hideChartMetar(){
