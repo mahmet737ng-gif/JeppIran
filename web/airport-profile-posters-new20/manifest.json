@@ -1,0 +1,109 @@
+{
+  "schema": 1,
+  "count": 20,
+  "status": "published_for_review",
+  "mapping_status": "no_unverified_airport_mapping",
+  "illustrative_only": true,
+  "images": [
+    {
+      "file": "new20_01.webp",
+      "git_blob_sha1": "9553f1794e700b13979c85d434bc23d7405b04b1",
+      "batch": 1
+    },
+    {
+      "file": "new20_02.webp",
+      "git_blob_sha1": "d6224f8c77ff91d4bb9bfddf15a80739e54763dc",
+      "batch": 1
+    },
+    {
+      "file": "new20_03.webp",
+      "git_blob_sha1": "c536c3f5a4c05ff9b319886490390f37771777ad",
+      "batch": 1
+    },
+    {
+      "file": "new20_04.webp",
+      "git_blob_sha1": "161ebc9afe1dd62b48f956c6de2b39390e2b2752",
+      "batch": 1
+    },
+    {
+      "file": "new20_05.webp",
+      "git_blob_sha1": "47ba95a1a98e13786e5abf2f9d892cd8a978b649",
+      "batch": 1
+    },
+    {
+      "file": "new20_06.webp",
+      "git_blob_sha1": "9ac452974202ae0fc425c2667ad4513a015a0df0",
+      "batch": 1
+    },
+    {
+      "file": "new20_07.webp",
+      "git_blob_sha1": "fa0cff4bbb5968145867bb5a6100c9a20ade396a",
+      "batch": 1
+    },
+    {
+      "file": "new20_08.webp",
+      "git_blob_sha1": "1d41b67676b5961f8b42351ea3da42092d927aa4",
+      "batch": 1
+    },
+    {
+      "file": "new20_09.webp",
+      "git_blob_sha1": "d1534f5f7f428d2f26508251ffcc096f20e97be3",
+      "batch": 1
+    },
+    {
+      "file": "new20_10.webp",
+      "git_blob_sha1": "7cc5f807321472b82ea75048f119b4930137fef1",
+      "batch": 1
+    },
+    {
+      "file": "new20_11.webp",
+      "git_blob_sha1": "d6652e0c07cb39320c631ebf597fb5737e82cc8b",
+      "batch": 2
+    },
+    {
+      "file": "new20_12.webp",
+      "git_blob_sha1": "fc928cf287fcba65949c558246f933a631e695bd",
+      "batch": 2
+    },
+    {
+      "file": "new20_13.webp",
+      "git_blob_sha1": "74962583ea7f85ecdf7a4f29064f081ca0ede8dc",
+      "batch": 2
+    },
+    {
+      "file": "new20_14.webp",
+      "git_blob_sha1": "ef7fa0de257fcdee4e8a1da29e54be69e1500489",
+      "batch": 2
+    },
+    {
+      "file": "new20_15.webp",
+      "git_blob_sha1": "6e85a171e947e6f3de81dfbc4c10f31072a374f2",
+      "batch": 2
+    },
+    {
+      "file": "new20_16.webp",
+      "git_blob_sha1": "ccc20114de51c5812b62070cbfa4f6c1c1f3fb01",
+      "batch": 2
+    },
+    {
+      "file": "new20_17.webp",
+      "git_blob_sha1": "f2a344dced1afae93909b7de2023326b42a5949f",
+      "batch": 2
+    },
+    {
+      "file": "new20_18.webp",
+      "git_blob_sha1": "1a319fff03dd737d7fd31f1fb43fe1dc5523702a",
+      "batch": 2
+    },
+    {
+      "file": "new20_19.webp",
+      "git_blob_sha1": "646bb2b659dabdaf103202350f014ecf1bf333c0",
+      "batch": 2
+    },
+    {
+      "file": "new20_20.webp",
+      "git_blob_sha1": "1e394328279b85bda3683ddd582f3bb93d33e073",
+      "batch": 2
+    }
+  ]
+}
