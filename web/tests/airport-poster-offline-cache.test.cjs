@@ -28,10 +28,15 @@ test("all image poster bytes are served from immutable content-addressed URL cac
 });
 test("preload starts at launch without blocking initial UI or deleting chart PDFs",()=>{
  const html=read("web/index.html"),sw=read("web/service-worker.js");
- for(const n of ["airport-poster-preload.js?v=2621-persistent-r1","airport-profile-posters.js?v=2621-persistent-r1","app.js?v=2621-airport-audit10-r1-saqez-r1"]){
+ for(const n of ["airport-poster-preload.js?v=2621-persistent-r1","airport-profile-posters.js?v=2621-persistent-r1"]){
   assert.ok(html.includes(n),n);
   assert.ok(sw.includes(n),n);
  }
+ // The airport poster cache is immutable; app.js still needs its own version
+ // whenever chart UI logic changes. Verify parity rather than freeze an old SHA.
+ const appEntry=html.match(/<script src="\.\/(app\.js\?v=[^"]+)" defer><\/script>/);
+ assert.ok(appEntry,"versioned app.js script missing");
+ assert.ok(sw.includes("./"+appEntry[1]),"same app.js revision in offline worker");
  assert.ok(html.indexOf("airport-poster-preload.js")<html.indexOf("airport-profile-posters.js"));
  assert.match(sw,/const PDF_CACHE=/);
  assert.match(sw,/const AIRPORT_POSTER_CACHE=/);
