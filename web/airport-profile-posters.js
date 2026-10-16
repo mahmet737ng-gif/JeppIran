@@ -82,6 +82,9 @@
     if (!root.classList.contains("jp-airport-poster-loaded")) return;
     if ((root.querySelector(".profile-icao")?.textContent || "").trim().toUpperCase() !== icao) return;
     const frame = ensureFrame();
+    // Fit the foreground cards first: zoom can change the available layout width.
+    // Measure and size the backdrop only AFTER the final profile layout settles.
+    fitCards();
     const size = dimensions.get(icao) || {width:4,height:3};
     // The CSS profile panel may have a fractional transformed width. Use
     // whichever is smaller: layout pixels or actually visible bounds, so no
@@ -97,7 +100,6 @@
     frame.style.top = (h-posterH)/2+"px";
     frame.style.backgroundImage = 'url("' + urlFor(icao) + '")';
     ensureCaption(frame);
-    fitCards();
   }
   function remove() {
     root.classList.remove("jp-airport-poster-loaded");
