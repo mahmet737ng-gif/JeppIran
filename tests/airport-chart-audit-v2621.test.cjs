@@ -34,6 +34,7 @@ test('UI remaps airport branches and corrected plate labels; PDF loading uses im
  );
  assert.match(js,/next\.airport===selectedChart\.airport/);
  assert.match(js,/function displayChartNumber\(c\)/);
- assert.match(html,/app\.js\?v=2621-airport-audit10-r1/);
- assert.match(sw,/app\.js\?v=2621-airport-audit10-r1/);
+ const appEntry=html.match(/<script src="\.\/(app\.js\?v=[^"]+)" defer><\/script>/);
+ assert.ok(appEntry,"versioned chart script required");
+ assert.ok(sw.includes("./"+appEntry[1]),"offline worker must precache the same chart script revision");
 });
