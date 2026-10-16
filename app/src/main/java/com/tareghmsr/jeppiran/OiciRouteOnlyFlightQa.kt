@@ -88,6 +88,7 @@ object OiciRouteOnlyFlightQa {
         loaded = true
         try {
             val root = JSONObject(context.assets.open(ASSET).bufferedReader().use { it.readText() })
+            if (!root.optBoolean("activeInChartViewer", false)) return
             if (root.optInt("schemaVersion") != 1 ||
                 root.optString("type") != "ROUTE_ONLY_NON_AFFINE_GEOREFERENCE" ||
                 root.optString("cycle") != "V2621" ||
@@ -142,6 +143,8 @@ object OiciRouteOnlyFlightQa {
         fullBitmapWidth: Int, fullBitmapHeight: Int, cropLeft: Int, cropTop: Int,
         bitmapWidth: Int, bitmapHeight: Int
     ): RenderedAircraftPosition? {
+        // Both route-only pages have been disabled by the owner.
+        if (dataVersion == "V2621" && page in expectedKeys) return null
         if (dataVersion != "V2621" || page !in expectedKeys) return null
         load(context)
         return routes[page]?.rendered(latitude, longitude, headingDegrees,

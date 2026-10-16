@@ -219,6 +219,8 @@ function displayChartName(c){
  */
 let experimentalGeorefPages=new Set();
 // Separate from approved affine models: two OICI NOT TO SCALE route-centerline QA maps.
+// Owner-deactivated NOT TO SCALE charts: never georeference OICI 207 or 209.
+const OICI_DISABLED_GEOREF_PAGES=new Set([207,209]);
 let oiciRouteQaPages=new Set();
 let oiciRouteModule=null;
 let experimentalEligibleGeoModels=new Map();
@@ -1526,32 +1528,16 @@ async function loadIndependentAirportRegionGeorefs(m){
 // Fail closed unless exact AIRAC, PDF SHA, index chart keys and schematic
 // QA metadata match. NEVER overwrite any approved chart georeference.
 async function loadOiciRouteOnlyFlightQa(m){
+  // Disabled by owner in V2621; remove any prior in-memory models as well.
   oiciRouteQaPages.clear();
-  try{
-    const [response,mod]=await Promise.all([
-      fetch("./data/oici-route-only-v2621.json?v=2621-oici-route-flightqa-r1",{cache:"no-store"}),
-      import("./oici-route-only-v2621.mjs?v=2621-oici-route-flightqa-r1")
-    ]);
-    if(!response.ok)throw Error("OICI route-only flight QA HTTP "+response.status);
-    const data=await response.json();
-    if(!mod.validateOiciRoutes(data,m,charts))throw Error("OICI route-only dataset / cycle / chart identity mismatch");
-    if(manifest!==m)return;
-    const models=[];
-    for(const item of data.charts){
-      if(georefByPage.has(item.page))throw Error("OICI approved reference already exists: "+item.page);
-      const model=mod.buildOiciRouteModel(item);
-      if(!model)throw Error("OICI nonaffine model rejected: "+item.page);
-      models.push([item.page,model]);
-    }
-    oiciRouteModule=mod;
-    for(const [page,model] of models){georefByPage.set(page,model);oiciRouteQaPages.add(page)}
-    console.info("JEPPIRAN OICI route-only simulator QA enabled", [...oiciRouteQaPages]);
-  }catch(e){console.warn("OICI route-only georeferencing disabled:",e)}
+  oiciRouteModule=null;
+  for(const page of OICI_DISABLED_GEOREF_PAGES)georefByPage.delete(page);
 }
 function buildGeorefIndex(root){
   const map=new Map();
   if(!root||root.version!==2||root.coordinateSystem!=="WGS84"||root.coordinateSpace!=="pdf_points"||root.origin!=="top_left")return map;
   (Array.isArray(root.charts)?root.charts:[]).forEach(item=>{
+    if(root.source?.chartDataVersion==="V2621"&&OICI_DISABLED_GEOREF_PAGES.has(Number(item.page)))return;
     const model=makeGeoModel(item);
     if(model&&!map.has(model.page))map.set(model.page,model);
   });
@@ -1610,44 +1596,42 @@ function chartHasGeoref(){
   return !!(selectedChart&&georefByPage.get(Number(selectedChart.page)));
 }
 function refreshPositionStatus(){
+  // Show source-agnostic states; connection source remains visible in details.
+  const source=activePositionSource==="gps"?"DEVICE GPS":
+    activePositionSource==="fsx"?"FSX":
+    activePositionSource==="xplane"?"X-PLANE":"SIMULATOR";
+  const from="Source: "+source+". ";
   if(!activePositionSource){
     setPositionStatus("off","POS OFF","No position source selected.");
     return;
   }
   if(!lastPosition){
-    setPositionStatus("waiting","POS OFF","Waiting for a live position fix.");
+    setPositionStatus("waiting","POS OFF",from+"Waiting for a live position fix.");
     return;
   }
   const model=selectedChart&&georefByPage.get(Number(selectedChart.page));
   if(!selectedChart){
-    const code=activePositionSource==="gps"?"GPS":activePositionSource==="fsx"?"FSX":"XPLANE";
-    setPositionStatus("live",code+" LIVE","Position is live. Open a chart to display the aircraft.");
+    setPositionStatus("live","POS LIVE",from+"Position is live. Open a chart to display the aircraft.");
     return;
   }
   if(!model){
-    const code=activePositionSource==="gps"?"GPS":activePositionSource==="fsx"?"FSX":"XPLANE";
-    setPositionStatus("warning",code+" NO GEOREF","Position is live, but this chart has no valid georeference.");
+    setPositionStatus("warning","NO GEOREF",from+"Position is live, but this chart has no valid georeference.");
     return;
   }
   const p=projectGeo(model,Number(lastPosition.lat),Number(lastPosition.lon));
   if(!p){
-    const code=activePositionSource==="gps"?"GPS":activePositionSource==="fsx"?"FSX":"XPLANE";
-    setPositionStatus("outside",code+" OUTSIDE","Position is live, but it is outside the mapped area of this chart.");
+    setPositionStatus("outside","OUTSIDE CHART",from+"Position is live, but outside the mapped chart area.");
     return;
   }
   const acc=Number.isFinite(lastPosition.accuracy)?(" • ±"+Math.round(lastPosition.accuracy)+" m"):"";
-  const code=activePositionSource==="gps"?"GPS":activePositionSource==="fsx"?"FSX":"XPLANE";
   const region=model.regions?resolveGeoRegion(model,Number(lastPosition.lat),Number(lastPosition.lon)):null;
   if(region&&region.region!=="CARGO_APRON_2"&&selectedChart?.airport!=="OIII"){
-    // Newly reconstructed V2621 printed-grid airport regions have not yet
-    // received an independent AIP/flight accuracy check. Show explicit QA.
-    setPositionStatus("warning",code+" GEOREF QA"+acc,
-      "PDF printed-grid regional model for simulator QA only; independent positioning validation pending.");
+    setPositionStatus("warning","GEOREF QA"+acc,
+      from+"PDF printed-grid regional model for simulator QA only; independent positioning validation pending.");
     return;
   }
-  setPositionStatus("live",code+" LIVE"+acc,"Position is live and inside this chart.");
+  setPositionStatus("live","POS LIVE"+acc,from+"Position is live and inside this chart.");
 }
-
 // Center aircraft at 150% and follow it as live simulator/GPS positions change.
 // Transform origin is 50% 0, while the PDF canvas sits centered horizontally in the stage.
 // Find Me uses the current real chart projection. Never guess a position on
@@ -2768,7 +2752,7 @@ function updatePositionUi(p,source){
     const btn=$("#connectFsxBtn");if(btn){btn.disabled=false;btn.textContent="SIMULATOR CONNECTED"}
   }
   const badge=$("#viewerPositionBadge");
-  if(badge){badge.textContent=sourceLabel+" LIVE";badge.classList.add("live")}
+  if(badge){badge.textContent="POS LIVE";badge.classList.add("live")}
   document.querySelectorAll(".source-card").forEach(x=>x.classList.remove("active"));
   if(source==="gps") $("#useGpsBtn").classList.add("active");
   if(source==="xplane") $("#useXpBtn").classList.add("active");

@@ -693,6 +693,8 @@ object ChartGeoreferenceStore {
         fullBitmapWidth: Int, fullBitmapHeight: Int, cropLeft: Int, cropTop: Int,
         bitmapWidth: Int, bitmapHeight: Int
     ): RenderedAircraftPosition? {
+        // Owner-disabled OICI STAR 207 and SID 209: never resurrect legacy calibration.
+        if (dataVersion == "V2621" && (page == 207 || page == 209)) return null
         load(context)
         if (dataVersion != chartDataVersion) return null
         // Two independent ADC transforms: first the separate parking inset,

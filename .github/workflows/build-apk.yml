@@ -53,7 +53,7 @@ jobs:
           lfs: true
           fetch-depth: 2
 
-      - name: Gate OICI 207 and 209 route-only simulator flight QA before release
+      - name: Ensure OICI 207/209 georeferencing remains disabled before release
         run: |
           node --check web/app.js
           node --test tests/airport-chart-audit-v2621.test.cjs

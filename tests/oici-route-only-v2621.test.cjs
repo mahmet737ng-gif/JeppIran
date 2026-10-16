@@ -1,53 +1,41 @@
-const test=require("node:test");
-const assert=require("node:assert/strict");
-const fs=require("node:fs");
-const path=require("node:path");
-const ROOT=path.resolve(__dirname,"..");
-const DATA=JSON.parse(fs.readFileSync(path.join(ROOT,"web/data/oici-route-only-v2621.json"),"utf8"));
-const records=DATA.charts.map(c=>({
-  page:c.page,airport:"OICI",
-  category:c.page===207?"STAR":"SID",
-  chart_number:c.page===207?"10-2":"10-3",
-  name:c.page===207?"ALTET 1N, ALTET 1P":"ALTET 1A, ALTET 1B"
-}));
-const manifest={version:"V2621",source_sha256:DATA.source.sha256};
-test("OICI 207/209 NOT TO SCALE route QA has exact source, chart identity and nonaffine guards",async()=>{
- const m=await import("../web/oici-route-only-v2621.mjs");
- assert.equal(m.validateOiciRoutes(DATA,manifest,records),true);
- assert.equal(m.validateOiciRoutes({...DATA,source:{...DATA.source,sha256:"invalid"}},manifest,records),false);
- assert.equal(m.validateOiciRoutes({...DATA,charts:DATA.charts.slice(0,1)},manifest,records),false);
- assert.equal(m.validateOiciRoutes(DATA,{...manifest,version:"V2622"},records),false);
- assert.equal(m.validateOiciRoutes(DATA,manifest,records.slice(0,1)),false);
-});
-test("OICI ILM, D18 and ALTET anchors project accurately; out-of-corridor positions fail closed",async()=>{
- const m=await import("../web/oici-route-only-v2621.mjs");
- for(const row of DATA.charts){
-   const model=m.buildOiciRouteModel(row);
-   assert.ok(model);
-   assert.equal(model.routeOnly,true);
-   for(const point of row.waypoints){
-     const p=m.projectOiciRoute(model,point.lat,point.lon);
-     assert.ok(p,"anchor "+row.page+" "+point.id);
-     assert.ok(Math.hypot(p.x-point.pdfX,p.y-point.pdfY)<0.4,"anchor match "+row.page+" "+point.id);
-   }
-   const [a,b]=[row.waypoints[0],row.waypoints.at(-1)];
-   const lat=(a.lat+b.lat)/2,lon=(a.lon+b.lon)/2;
-   assert.ok(m.projectOiciRoute(model,lat,lon),"centerline");
-   assert.equal(m.projectOiciRoute(model,lat+0.03,lon),null,"off course must hide");
-   assert.equal(m.projectOiciRoute(model,a.lat,a.lon-0.05),null,"before ILM must hide");
-   assert.equal(m.projectOiciRoute(model,b.lat,b.lon+0.05),null,"past ALTET must hide");
-   const heading=m.headingOiciRoute(model,lat,lon,94.7,612,792);
-   assert.ok(Number.isFinite(heading)&&Math.abs(heading-94)<8);
+"use strict";
+const test=require("node:test"),assert=require("node:assert/strict"),fs=require("node:fs"),path=require("node:path");
+const root=path.resolve(__dirname,".."),read=p=>fs.readFileSync(path.join(root,p),"utf8");
+const data=JSON.parse(read("web/data/oici-route-only-v2621.json"));
+const android=JSON.parse(read("app/src/main/assets/oici-route-only-v2621.json"));
+const charts=JSON.parse(read("app/src/main/assets/charts-current.json"));
+const web=JSON.parse(read("web/data/chart-georef.json"));
+const native=JSON.parse(read("app/src/main/assets/chart-georef.json"));
+test("OICI 207/209 route-only models are removed from the viewer and 807 other models remain unchanged",async()=>{
+ assert.deepEqual(data,android);
+ assert.equal(data.cycle,"V2621");assert.equal(data.activeInChartViewer,false);
+ assert.match(data.reviewStatus,/DISABLED_BY_OWNER/);assert.deepEqual(data.charts,[]);
+ assert.deepEqual(web,native);assert.equal(web.charts.length,807);
+ for(const page of [207,209]){
+  const c=charts.find(x=>x.page===page);assert.equal(c.airport,"OICI");
+  assert.equal(c.category,page===207?"STAR":"SID");
+  assert.equal(c.chart_number,page===207?"10-2":"10-3");
+  assert.ok(!web.charts.some(x=>x.page===page));
  }
+ const mod=await import("../web/oici-route-only-v2621.mjs");
+ assert.equal(mod.validateOiciRoutes(data,{version:"V2621",source_sha256:data.source.sha256},charts),false);
 });
-test("Release never adds schema-incompatible routes to existing protected affine chart-georef data",()=>{
- const web=JSON.parse(fs.readFileSync(path.join(ROOT,"web/data/chart-georef.json"),"utf8"));
- const android=JSON.parse(fs.readFileSync(path.join(ROOT,"app/src/main/assets/chart-georef.json"),"utf8"));
- assert.deepEqual(web,android);
- assert.equal(web.charts.length>=807,true);
- for(const page of [207,209])assert.equal(web.charts.some(c=>c.page===page),false);
- const native=fs.readFileSync(path.join(ROOT,"app/src/main/java/com/tareghmsr/jeppiran/ChartGeoreference.kt"),"utf8");
- assert.match(native,/val ref = references\[page\]/);
- assert.match(native,/if \(ref == null\)/);
- assert.match(native,/OiciRouteOnlyFlightQa\.renderedPoint/);
+test("Web and native reject cached OICI models; live/outside labels do not name the simulator",()=>{
+ const js=read("web/app.js"),geo=read("app/src/main/java/com/tareghmsr/jeppiran/ChartGeoreference.kt");
+ const fallback=read("app/src/main/java/com/tareghmsr/jeppiran/OiciRouteOnlyFlightQa.kt");
+ assert.match(js,/OICI_DISABLED_GEOREF_PAGES=new Set\(\[207,209\]\)/);
+ assert.match(js,/for\(const page of OICI_DISABLED_GEOREF_PAGES\)georefByPage\.delete\(page\)/);
+ assert.match(js,/OICI_DISABLED_GEOREF_PAGES\.has\(Number\(item\.page\)\)/);
+ assert.doesNotMatch(js,/georefByPage\.set\(page,model\);oiciRouteQaPages\.add\(page\)/);
+ assert.match(geo,/dataVersion == "V2621" && \(page == 207 \|\| page == 209\)/);
+ assert.match(fallback,/!root\.optBoolean\("activeInChartViewer", false\)/);
+ const s=js.slice(js.indexOf("function refreshPositionStatus(){"),js.indexOf("// Center aircraft at 150%",js.indexOf("function refreshPositionStatus(){")));
+ assert.match(s,/setPositionStatus\("live","POS LIVE"/);
+ assert.match(s,/setPositionStatus\("outside","OUTSIDE CHART"/);
+ assert.match(s,/setPositionStatus\("warning","NO GEOREF"/);
+ assert.doesNotMatch(s,/code\+" (?:LIVE|OUTSIDE)"/);
+ assert.match(js,/badge\.textContent="POS LIVE"/);
+ const html=read("web/index.html"),sw=read("web/service-worker.js");
+ assert.ok(html.includes("app.js?v=2621-oici-ungeoref-neutral-pos-r1"));
+ assert.ok(sw.includes("app.js?v=2621-oici-ungeoref-neutral-pos-r1"));
 });
