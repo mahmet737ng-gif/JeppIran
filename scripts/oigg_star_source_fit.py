@@ -89,3 +89,57 @@ report={"airport":"OIGG","cycle":"V2621","originalPdfSha256":PIN,
         "flightQAOnly":True,"notApprovedForNavigation":True}
 p=Path("review-assets/oigg-star-source-fit.json");p.parent.mkdir(parents=True,exist_ok=True)
 p.write_text(json.dumps(report,indent=2)+"\n")
+
+
+# Source-PDF independent inspection of user-provided simulator fixes.
+# This report is a diagnostic: coordinates measured from FSX are *not*
+# PDF control points until a chart symbol can be positively identified.
+FSX_CONTROLS = {
+    "D20_R113": {"lat": 37+10.65/60, "lon":49+59.21/60,
+                  "note":"FSX 19.885 NM from RST on inbound 293 magnetic"},
+    "D15_EAST": {"lat":37+18.34/60, "lon":49+55.72/60,
+                 "note":"FSX 15.024 NM from RST east, inbound heading 271 magnetic"}
+}
+def nearby_white_triangles(page, target):
+    hits=[]
+    for draw in page.get_drawings():
+        fill=draw.get("fill")
+        if not fill or len(fill)<3 or not all(abs(float(z)-1)<.015 for z in fill[:3]):
+            continue
+        r=fitz.Rect(draw["rect"])
+        if draw.get("type")!="fs" or not (2<r.width<20 and 2<r.height<20):
+            continue
+        x,y=(r.x0+r.x1)/2,(r.y0+r.y1)/2
+        dist=float(np.hypot(x-target[0],y-target[1]))
+        if dist<110:
+            hits.append({"centerPdf":[round(x,3),round(y,3)],
+                         "boundsPdf":[round(float(z),3) for z in r],
+                         "distanceFromOldFitPdf":round(dist,3)})
+    return sorted(hits,key=lambda c:c["distanceFromOldFitPdf"])[:25]
+pdf_controls=[]
+old_geos=json.loads(Path("web/data/oigg-star-flightqa-v2621.json").read_text())
+for entry in old_geos["charts"]:
+    page_num=entry["page"]
+    s=entry["points"];mlat=sum(p["lat"] for p in s)/len(s);mlon=sum(p["lon"] for p in s)/len(s)
+    mx=sum(p["x"] for p in s)/len(s);my=sum(p["y"] for p in s)/len(s)
+    mat=np.array([[p["lon"]-mlon,p["lat"]-mlat] for p in s])
+    coeffx=np.linalg.lstsq(mat,np.array([p["x"]-mx for p in s]),rcond=None)[0]
+    coeffy=np.linalg.lstsq(mat,np.array([p["y"]-my for p in s]),rcond=None)[0]
+    page=doc[page_num-1]
+    controls=[]
+    for name,c in FSX_CONTROLS.items():
+        ll=np.array([c["lon"]-mlon,c["lat"]-mlat])
+        target=[float(mx+ll@coeffx),float(my+ll@coeffy)]
+        words=[{"text":w[4],"rect":[round(float(t),2) for t in w[:4]]} for w in page.get_text("words")
+               if any(k in w[4].upper() for k in ("D20","20.0","D15","15.0","RST"))]
+        controls.append({"id":name,"fsxWgs84":c,"oldModelPredictionPdf":target,
+                         "sourcePdfWhiteTriangleCandidates":nearby_white_triangles(page,target),
+                         "nearbyRelevantSourceText":words[:35],
+                         "status":"MEASURED_CANDIDATES_ONLY_NOT_GCP"})
+    pdf_controls.append({"page":page_num,"controls":controls})
+inspection_path=Path("review-assets/oigg-star-user-fsx-source-controls.json")
+inspection_path.write_text(json.dumps({"sourceSha256":PIN,"flightQAOnly":True,
+                                       "notForActualNavigation":True,
+                                       "pages":pdf_controls},indent=2)+"\n")
+for item in pdf_controls:
+    print("OIGG_FSX_SOURCE_PDF_CANDIDATES",json.dumps(item,ensure_ascii=False),flush=True)
