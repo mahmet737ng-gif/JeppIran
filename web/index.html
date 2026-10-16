@@ -361,14 +361,17 @@
       </fieldset>
       <section class="offline-settings-section" aria-labelledby="offlinePackTitle">
         <h4 id="offlinePackTitle">Offline access · automatic updates</h4>
-        <p>All app files and airport charts are saved on this device automatically when online. On each launch, refresh, reconnect and every five minutes while open, only changed files are downloaded. Go Offline manually verifies your saved copy. Live weather still needs internet.</p>
+        <p>iPad: open JEPPIRAN in Safari, tap Share → Add to Home Screen, then launch JEPPIRAN from that icon. Tap Go Offline and keep the app open until READY OFFLINE appears. Use Verify Offline to confirm the saved files before switching to Airplane Mode.</p>
+        <p>Downloads and updates run only while the app is open and online. Live weather requires internet. iPadOS can remove website storage when space is low; recheck before travel.</p>
         <div class="offline-settings-buttons">
           <button id="goOfflineBtn" type="button">Go Offline</button>
+          <button id="verifyOfflineBtn" type="button">Verify Offline</button>
           <button id="stopOfflineBtn" type="button" hidden>Stop</button>
         </div>
         <progress id="offlinePackProgress" max="100" value="0" hidden></progress>
         <small id="offlinePackCount" aria-live="polite"></small>
         <p id="offlinePackStatus" role="status" aria-live="polite">Checking saved files…</p>
+        <p id="offlineVerifyStatus" role="status" aria-live="polite">Offline access has not been verified on this device.</p>
       </section>
       <button id="appearanceSettingsCloseBtn" class="appearance-settings-close" type="button">Done</button>
     </div>

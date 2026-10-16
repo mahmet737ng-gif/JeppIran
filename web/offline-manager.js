@@ -7,10 +7,12 @@
   const LEGACY_PDFS="jeppiran-chart-pdfs-v2621-printclean-3";
   const btn=document.getElementById("goOfflineBtn");
   const stop=document.getElementById("stopOfflineBtn");
+  const verifyButton=document.getElementById("verifyOfflineBtn");
+  const verifyStatus=document.getElementById("offlineVerifyStatus");
   const status=document.getElementById("offlinePackStatus");
   const meter=document.getElementById("offlinePackProgress");
   const count=document.getElementById("offlinePackCount");
-  if(!btn||!stop||!status||!meter||!count)return;
+  if(!btn||!stop||!status||!meter||!count||!verifyButton||!verifyStatus)return;
   const origin=new URL("./",location.href);
   const supported=()=>isSecureContext&&!!window.caches&&!!window.crypto?.subtle&&"serviceWorker" in navigator;
   const sizeLabel=n=>(n/1048576).toFixed(1)+" MiB";
@@ -78,6 +80,43 @@
     const names=await caches.keys();
     await Promise.all(names.filter(n=>n.startsWith(LAYER_PREFIX)&&!keep.has(n)).map(n=>caches.delete(n)));
   }
+  // Local-only readiness check. This does not fetch anything and can be run with
+  // Airplane Mode enabled on iPad after reopening from the Home Screen icon.
+  async function verifyOffline(){
+    if(busy){verifyStatus.textContent="A download is in progress. Check again once it finishes.";return false;}
+    verifyButton.disabled=true;
+    try{
+      if(!supported())throw Error("Safari offline storage or Service Worker is unavailable");
+      const worker=await navigator.serviceWorker.ready;
+      if(!worker?.active)throw Error("Offline Service Worker is not active");
+      if(!navigator.serviceWorker.controller)
+        throw Error("Reopen JEPPIRAN from its Home Screen icon, then check again");
+      const state=await readState();
+      if(!state)throw Error("No complete offline download found; use Go Offline while connected");
+      const entries=Object.values(state.entries);
+      const pdfs=entries.filter(entry=>entry.kind==="pdf");
+      if(!state.pdfCount||pdfs.length!==state.pdfCount)
+        throw Error("Saved airport PDF count is incomplete; run Go Offline again");
+      for(const required of ["./","./index.html","./app.js","./offline-manager.js",
+                             "./data/charts-manifest.json","./vendor/pdf.min.mjs"]){
+        if(!state.entries[keyOf(required)])
+          throw Error("Essential offline resource is missing: "+required);
+      }
+      for(let i=0;i<entries.length;i++){
+        const entry=entries[i];
+        const saved=await cachedResponse(entry);
+        if(!saved?.ok)throw Error("Missing offline file: "+entry.url+". Reconnect and use Go Offline.");
+        if(i%25===0)verifyStatus.textContent="Checking local files: "+(i+1)+"/"+entries.length;
+      }
+      verifyStatus.textContent="OFFLINE VERIFIED · "+state.cycle+" · "+
+        pdfs.length+" airport PDFs · "+entries.length+
+        " saved files. You can now test by switching on Airplane Mode and reopening the app.";
+      return true;
+    }catch(error){
+      verifyStatus.textContent="OFFLINE NOT READY · "+error.message;
+      return false;
+    }finally{verifyButton.disabled=false;}
+  }
   async function reportStored(){
     if(busy||!supported())return;
     try{
@@ -99,7 +138,7 @@
       return;
     }
     busy=true;aborter=new AbortController();
-    btn.disabled=true;stop.hidden=false;
+    btn.disabled=true;verifyButton.disabled=true;stop.hidden=false;
     meter.hidden=false;meter.value=0;
     const signal=aborter.signal;
     let old=null,downloaded=0,reused=0,downloadBytes=0;
@@ -159,7 +198,7 @@
       if(e?.name==="AbortError")setStatus("Download paused. Previously saved offline version remains available. The next check resumes.");
       else setStatus("Sync interrupted: "+e.message+". Previously saved offline version remains available.");
     }finally{
-      lastCheck=Date.now();busy=false;aborter=null;btn.disabled=false;stop.hidden=true;
+      lastCheck=Date.now();busy=false;aborter=null;btn.disabled=false;verifyButton.disabled=false;stop.hidden=true;
       if(!old&&!(await readState().catch(()=>null)))meter.hidden=true;
     }
   }
@@ -172,10 +211,12 @@
       return cachedResponse(entry);
     },
     hasSnapshot:async()=>!!(await readState()),
+    verify:verifyOffline,
     sync:()=>sync({manual:true})
   };
   stop.addEventListener("click",()=>aborter?.abort());
   btn.addEventListener("click",()=>sync({manual:true}));
+  verifyButton.addEventListener("click",()=>verifyOffline());
   // When the web app/PWA is open, compare GitHub Pages package automatically.
   // iPadOS does NOT guarantee background execution after the PWA is closed.
   function checkSoon(force=false){

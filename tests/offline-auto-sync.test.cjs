@@ -52,13 +52,13 @@ function makeBrowser(){
   const memory=new Storage();
   const listeners={};
   const controls=Object.fromEntries(
-    ["goOfflineBtn","stopOfflineBtn","offlinePackStatus","offlinePackProgress","offlinePackCount"]
+    ["goOfflineBtn","stopOfflineBtn","verifyOfflineBtn","offlineVerifyStatus","offlinePackStatus","offlinePackProgress","offlinePackCount"]
      .map(id=>[id,{disabled:false,hidden:false,value:0,textContent:"",addEventListener(type,cb){this[type]=cb;}}]));
   const document={visibilityState:"visible",hidden:false,
                   getElementById:id=>controls[id],
                   addEventListener(name,cb){listeners["document:"+name]=cb;}};
   const window={caches:memory,crypto:webcrypto,addEventListener(name,cb){listeners[name]=cb;}};
-  const navigator={onLine:true,serviceWorker:{ready:Promise.resolve({active:true})},
+  const navigator={onLine:true,serviceWorker:{ready:Promise.resolve({active:true}),controller:{}},
                    storage:{persist:async()=>false}};
   let remote={...files};let failures=new Set();const requests=[];
   let manifest;
@@ -130,4 +130,20 @@ test("automatic sync is scheduled for launch, visibility, reconnect and five-min
   assert.equal(typeof b.listeners.online,"function");
   assert.equal(typeof b.listeners["document:visibilitychange"],"function");
   assert.equal(typeof b.api.getPdfResponse,"function");
+});
+
+test("offline verification is local-only and detects missing cached files",async()=>{
+  const b=makeBrowser();
+  assert.equal(await b.api.verify(),false,"no completed package must not be declared ready");
+  b.setManifest(await packageFor(files));
+  await b.api.sync();
+  const requestsBeforeVerify=b.requests.length;
+  assert.equal(await b.api.verify(),true,"complete committed snapshot must verify");
+  assert.equal(b.requests.length,requestsBeforeVerify,"verification must never access network");
+  const state=await (await (await b.memory.open("jeppiran-offline-meta-v2"))
+    .match("./__jeppiran_active_offline_v2__")).json();
+  const entry=state.entries[new URL("./charts/OIIE.pdf",BASE).pathname];
+  await (await b.memory.open(entry.cache)).delete(entry.url);
+  assert.equal(await b.api.verify(),false,"evicted PDF must fail offline verification");
+  assert.match(b.controls.offlineVerifyStatus.textContent,/NOT READY/);
 });

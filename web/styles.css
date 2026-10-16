@@ -1350,7 +1350,10 @@ body.viewer-fullscreen .fullscreen-cdfa:not([hidden]){display:flex}
 .offline-settings-buttons{display:flex;gap:9px;align-items:center;margin:10px 0}
 #goOfflineBtn{background:var(--accent2,#167acc);color:#fff;border:0;border-radius:9px;font-weight:800;padding:10px 17px;cursor:pointer}
 #goOfflineBtn:disabled{opacity:.55;cursor:default}
-#stopOfflineBtn{padding:10px 15px;border:1px solid currentColor;border-radius:9px;background:transparent;color:inherit}
+#stopOfflineBtn,#verifyOfflineBtn{padding:10px 15px;border:1px solid currentColor;border-radius:9px;background:transparent;color:inherit;cursor:pointer}
+#verifyOfflineBtn:disabled{opacity:.55;cursor:default}
+.offline-settings-buttons{flex-wrap:wrap}
+#offlineVerifyStatus{font-size:12px;overflow-wrap:anywhere}
 #stopOfflineBtn[hidden],#offlinePackProgress[hidden]{display:none!important}
 #offlinePackProgress{display:block;width:100%;height:11px;accent-color:var(--accent2,#167acc);margin:8px 0 4px}
 #offlinePackCount{display:block;font-size:11px;opacity:.75}
