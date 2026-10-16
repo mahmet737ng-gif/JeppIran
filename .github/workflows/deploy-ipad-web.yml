@@ -134,6 +134,9 @@ jobs:
       - name: Build SHA-versioned poster cache registry for current images
         run: python3 scripts/build_airport_poster_precache_manifest.py
 
+      - name: Check new twenty approved decorative airport assignments and old image locks
+        run: node --test web/tests/new20-profile-assignment.test.cjs
+
       - name: Verify Saqez identity and persistent poster download contract
         run: node --test web/tests/airport-poster-offline-cache.test.cjs
 
@@ -300,6 +303,12 @@ jobs:
 
       - name: Verify native two-way runway-only route contract
         run: node web/tests/taxi-oiie-runway-axes.test.cjs web/data/taxi-surveys/OIIE-runway-axes-v2621.json
+      - name: Verify all 20 newly assigned poster images actually render in airport profiles in real Chrome
+        run: |
+          export NODE_PATH="$RUNNER_TEMP/jeppiran-browser-qa/node_modules"
+          export JEPPIRAN_CHROME_BIN="$(command -v google-chrome)"
+          node scripts/verify_new20_profile_browser.cjs
+
       - name: Verify visible airport chart validity in real Chrome
         run: |
           export NODE_PATH="$RUNNER_TEMP/jeppiran-browser-qa/node_modules"
@@ -379,3 +388,8 @@ jobs:
           # Github Pages sometimes stays in updating_pages >10m despite
           # successful package upload; avoid the action's 600000ms default abort.
           timeout: 1200000
+
+      - name: Smoke-test live GitHub Pages — every new poster and profile mapping
+        env:
+          JEPPIRAN_PAGE_URL: ${{ steps.deployment.outputs.page_url }}
+        run: node scripts/verify_new20_public_web.cjs

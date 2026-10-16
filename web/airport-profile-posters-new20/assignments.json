@@ -1,0 +1,30 @@
+{
+  "schema": 1,
+  "status": "active_on_airport_profiles",
+  "count": 20,
+  "artwork_type": "illustrative conceptual scenes, not actual airport photography or navigation charts",
+  "review_note": "Assigned to currently uncovered airports by broad coastal, mountain, inland, or regional atmosphere. Depicted terminals, runways, city landmarks and runway alignment are fictional and must not be interpreted as aerial photography, real airport geography or published charts.",
+  "preserve_owner_locked_50": true,
+  "airport_to_design": {
+    "OIBL": "new20_05",
+    "OIBS": "new20_12",
+    "OIBV": "new20_13",
+    "OICI": "new20_15",
+    "OICZ": "new20_04",
+    "OIFE": "new20_16",
+    "OIFP": "new20_17",
+    "OIKJ": "new20_10",
+    "OIKR": "new20_19",
+    "OIMJ": "new20_08",
+    "OINE": "new20_03",
+    "OISF": "new20_09",
+    "OITU": "new20_14",
+    "OIZB": "new20_20",
+    "OIZI": "new20_18",
+    "OIZS": "new20_06",
+    "OTHH": "new20_01",
+    "UGSB": "new20_02",
+    "OOMS": "new20_07",
+    "OPKC": "new20_11"
+  }
+}

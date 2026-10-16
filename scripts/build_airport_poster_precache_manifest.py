@@ -29,7 +29,22 @@ def main():
     for file in sorted(folder.glob("new20_*.webp")):
         digest = hashlib.sha256(file.read_bytes()).hexdigest()
         gallery.append("./airport-profile-posters-new20/" + file.name + "?v=" + digest[:20])
-    out = {"schema": 1, "cache_policy": "immutable-per-sha256", "posters": posters, "gallery": gallery}
+    # Assign the new twenty illustrations to previously uncovered airports, but
+    # never replace or change any of the fifty approved original backgrounds.
+    assignments = json.loads((folder / "assignments.json").read_text(encoding="utf-8"))
+    mapped = assignments.get("airport_to_design", {})
+    expected = {f"new20_{n:02d}" for n in range(1, 21)}
+    if assignments.get("count") != 20 or len(mapped) != 20 or set(mapped.values()) != expected:
+        raise SystemExit("Exactly 20 unique approved new profile designs are required")
+    gallery_urls = {Path(url.split("?")[0]).stem: url for url in gallery}
+    for icao, design in sorted(mapped.items()):
+        if not (len(icao) == 4 and icao.isupper()) or icao in posters:
+            raise SystemExit("Owner-locked airport collision or invalid ICAO: " + icao)
+        if design not in gallery_urls:
+            raise SystemExit("Missing source image for: " + design)
+        posters[icao] = gallery_urls[design]
+    out = {"schema": 1, "cache_policy": "immutable-per-sha256", "posters": posters,
+           "gallery": gallery, "new20_profile_icaos": sorted(mapped)}
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
     data = json.dumps(out, ensure_ascii=False, indent=2, sort_keys=True) + "\n"
     if OUTPUT.read_text(encoding="utf-8") != data if OUTPUT.exists() else True:
