@@ -240,6 +240,7 @@ object ChartGeoreferenceStore {
             "paired_printed_graticule_vector_ticks",
             "single_axis_plus_conformal_scale",
             "two_vector_landmarks_simulator_qa",
+            "three_source_controls_printed_grid_simulator_qa",
             "two_navaid_source_grid_flight_qa",
             "crossplate_ika_grid_flight_qa"
         )
@@ -463,8 +464,8 @@ object ChartGeoreferenceStore {
     }
 
     /**
-     * OIGG STAR 307/308 source-locked, two-landmark SIMULATOR QA ONLY.
-     * Printed grid mismatches by ~0.7–0.94 km: never treat as a flight
+     * OIGG STAR 307/308 RST/D20/KOBUB + grid SIMULATOR QA ONLY.
+     * Remaining source residual up to ~0.55 km: never treat as a flight
      * navigation georeference. Existing published pages cannot be overwritten.
      */
     private fun loadOiggStarFlightQa(context: Context, selected: ParsedGeoreferences) {
@@ -490,9 +491,9 @@ object ChartGeoreferenceStore {
                     chart.optString("airport") != "OIGG" ||
                     !chart.optString("chartKey").startsWith("OIGG|STAR|") ||
                     chart.optString("sourceFingerprint") != OIGG_STAR_QA_FINGERPRINTS[page] ||
-                    qa.optString("method") != "two_vector_landmarks_simulator_qa" ||
+                    qa.optString("method") != "three_source_controls_printed_grid_simulator_qa" ||
                     !qa.optBoolean("qaTestOnly") || !qa.optBoolean("notApprovedForNavigation") ||
-                    qa.optDouble("independentPrintedGridMismatchMaxMetres", 0.0) !in 700.0..1100.0) return
+                    qa.optDouble("independentPrintedGridMismatchMaxMetres", 0.0) !in 250.0..650.0) return
             }
             if (seen != OIGG_STAR_QA_FINGERPRINTS.keys) return
             val fitted = parse(raw) ?: return

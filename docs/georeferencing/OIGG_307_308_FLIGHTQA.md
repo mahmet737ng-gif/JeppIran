@@ -21,3 +21,25 @@ Protection: `chart-georef.json` remains byte-for-byte unchanged in Web & Android
 Reproduce source validation: [GitHub original-PDF geometry QA](https://github.com/mahmet737ng-gif/JeppIran/actions/runs/38670180390) and `node --test web/tests/oigg-star-flightqa.test.cjs`.
 
 Owner validation needed: compare RST, KOBUB and several additional independently surveyed fixes/thresholds on simulator route; do not promote to approved full-plan calibration until published grid inconsistency is resolved.
+
+
+## Owner flight-D20 recalibration r2 — published test-only 2026-10-16
+
+On the verified original Iran2621.pdf the D20 RST white vector triangles
+were measured at p307 (382.68,332.64) and p308 (382.38,332.64) PDF points.
+The user supplied near-D20 position at 19.885 NM, magnetic R113, and a
+second independent FSX D15 sample 15.024 NM east of RST. The near-D20
+sample is extrapolated 0.115 NM on its observed true bearing to the
+published nominal D20 symbol. D15 is a geodetic check only and has no
+independently measured PDF pixel; it is explicitly NOT fitted as a GCP.
+
+The new simulator-only source-weighted WGS84 similarity model uses
+RST VOR, D20 RST, KOBUB PDF symbols and the two original 50-00/49-30
+longitude ticks. The exact 3-point affine model was rejected for
+near-collinear anchors and mirrored geometry. D20 fit error reduced
+from ~8.6 PDF points to ~3.5; worst of the printed grid and landmark
+residuals remains ~5.34 PDF points (about 530 m). This is NOT suitable
+for actual navigation; existing protected production georeferences
+remain byte-for-byte unchanged. The two flight-QA records are
+source-fingerprinted, reversible, and identical in Web/Android.
+A further FSX re-flight at RST, D20 and KOBUB is still required.

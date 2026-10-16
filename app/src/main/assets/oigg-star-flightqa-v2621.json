@@ -32,44 +32,111 @@
         {
           "x": 150,
           "y": 200,
-          "lat": 37.384164496797176,
-          "lon": 50.148787836528804,
-          "source": "Derived from original PDF RST and KOBUB vector centers; simulator test calibration only"
+          "lat": 37.38414571389304,
+          "lon": 50.1449029322981,
+          "source": "Derived grid node of weighted similarity; not a measured PDF landmark"
         },
         {
           "x": 475,
           "y": 200,
-          "lat": 37.09421947082446,
-          "lon": 50.143960373365,
-          "source": "Derived from original PDF RST and KOBUB vector centers; simulator test calibration only"
+          "lat": 37.09387835120292,
+          "lon": 50.14029785192075,
+          "source": "Derived grid node of weighted similarity; not a measured PDF landmark"
         },
         {
           "x": 150,
           "y": 700,
-          "lat": 37.3900703029564,
-          "lon": 49.58783192430816,
-          "source": "Derived from original PDF RST and KOBUB vector centers; simulator test calibration only"
+          "lat": 37.389779462123414,
+          "lon": 49.583323396041315,
+          "source": "Derived grid node of weighted similarity; not a measured PDF landmark"
         },
         {
           "x": 475,
           "y": 700,
-          "lat": 37.1001252769837,
-          "lon": 49.58300446114435,
-          "source": "Derived from original PDF RST and KOBUB vector centers; simulator test calibration only"
+          "lat": 37.09951209943329,
+          "lon": 49.57871831566396,
+          "source": "Derived grid node of weighted similarity; not a measured PDF landmark"
         }
       ],
       "maxResidualPdfPoints": 0.75,
       "validation": {
-        "method": "two_vector_landmarks_simulator_qa",
+        "method": "three_source_controls_printed_grid_simulator_qa",
         "qaTestOnly": true,
         "notApprovedForNavigation": true,
         "sourceVerifiedPdfSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+        "originalRejectedGridMismatchMaxMetres": 926.5,
+        "independentPrintedGridMismatchMaxMetres": 524.3,
+        "maxCalibrationResidualPdfPoints": 5.2788,
         "calibrationLandmarks": [
           "RST_VOR",
-          "KOBUB"
+          "D20_RST_PDF_TRIANGLE",
+          "KOBUB_PDF_TRIANGLE",
+          "SOURCE_LONGITUDE_GRID_50_00_AND_49_30"
         ],
-        "independentPrintedGridMismatchMaxMetres": 926.5,
-        "notes": "Only two PDF landmark controls. Printed longitudes disagree by approximately 0.7-0.94 km; geometry NOT approved for real navigation or positional accuracy."
+        "userFsxEvidence": {
+          "d20NearFix": {
+            "lat": 37.1775,
+            "lon": 49.98683333333334,
+            "distanceFromRSTnm": 19.88459,
+            "convertedToNominal20NmOnSameTrueBearing": true
+          },
+          "d15HeldOutWithoutPdfSymbol": {
+            "lat": 37.30566666666667,
+            "lon": 49.928666666666665,
+            "distanceFromRSTnm": 15.024214,
+            "pdfPrediction": [
+              240.28412173593165,
+              391.3860574229154
+            ],
+            "usedInFit": false
+          }
+        },
+        "independentControls": {
+          "RST": {
+            "lat": 37.32633333333333,
+            "lon": 49.615833333333335,
+            "pdf": [
+              221.0999984741211,
+              674.1000061035156
+            ]
+          },
+          "D20": {
+            "lat": 37.17663274124008,
+            "lon": 49.98898243632351,
+            "pdf": [
+              382.68,
+              332.64
+            ]
+          },
+          "KOBUB": {
+            "lat": 37.10416666666667,
+            "lon": 50.178888888888885,
+            "pdf": [
+              463.44000244140625,
+              169.02001953125
+            ]
+          },
+          "printedGraticule": [
+            {
+              "lon": 50,
+              "y": 324.600006,
+              "comparisonLatitude": 37.32633333333333
+            },
+            {
+              "lon": 49.5,
+              "y": 768,
+              "comparisonLatitude": 37.32633333333333
+            }
+          ]
+        },
+        "residualsPdfPoints": {
+          "RST": 3.9609,
+          "D20": 3.5118,
+          "KOBUB": 3.2522,
+          "GRID_50_00": 3.5767,
+          "GRID_49_30": 5.2788
+        },
+        "notes": "Original PDF source-vector RST/KOBUB/D20 and printed longitude ticks; weighted WGS84 similarity avoids a mirrored, ill-conditioned 3-point affine. Residual up to ~0.55 km. SIMULATOR QA ONLY."
       }
     },
     {
@@ -93,45 +160,113 @@
         {
           "x": 150,
           "y": 200,
-          "lat": 37.3841223075216,
-          "lon": 50.148667810132544,
-          "source": "Derived from original PDF RST and KOBUB vector centers; simulator test calibration only"
+          "lat": 37.384065987202895,
+          "lon": 50.144789427929446,
+          "source": "Derived grid node of weighted similarity; not a measured PDF landmark"
         },
         {
           "x": 475,
           "y": 200,
-          "lat": 37.09416217436387,
-          "lon": 50.143892210048065,
-          "source": "Derived from original PDF RST and KOBUB vector centers; simulator test calibration only"
+          "lat": 37.09375368461066,
+          "lon": 50.14022681348477,
+          "source": "Derived grid node of weighted similarity; not a measured PDF landmark"
         },
         {
           "x": 150,
           "y": 700,
-          "lat": 37.38996466559579,
-          "lon": 49.58768267007906,
-          "source": "Derived from original PDF RST and KOBUB vector centers; simulator test calibration only"
+          "lat": 37.389647783598896,
+          "lon": 49.58312294655711,
+          "source": "Derived grid node of weighted similarity; not a measured PDF landmark"
         },
         {
           "x": 475,
           "y": 700,
-          "lat": 37.100004532438064,
-          "lon": 49.58290706999458,
-          "source": "Derived from original PDF RST and KOBUB vector centers; simulator test calibration only"
+          "lat": 37.09933548100666,
+          "lon": 49.57856033211244,
+          "source": "Derived grid node of weighted similarity; not a measured PDF landmark"
         }
       ],
       "maxResidualPdfPoints": 0.75,
       "validation": {
-        "method": "two_vector_landmarks_simulator_qa",
+        "method": "three_source_controls_printed_grid_simulator_qa",
         "qaTestOnly": true,
         "notApprovedForNavigation": true,
         "sourceVerifiedPdfSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+        "originalRejectedGridMismatchMaxMetres": 938,
+        "independentPrintedGridMismatchMaxMetres": 530.3,
+        "maxCalibrationResidualPdfPoints": 5.3394,
         "calibrationLandmarks": [
           "RST_VOR",
-          "KOBUB"
+          "D20_RST_PDF_TRIANGLE",
+          "KOBUB_PDF_TRIANGLE",
+          "SOURCE_LONGITUDE_GRID_50_00_AND_49_30"
         ],
-        "independentPrintedGridMismatchMaxMetres": 938,
-        "notes": "Only two PDF landmark controls. Printed longitudes disagree by approximately 0.7-0.94 km; geometry NOT approved for real navigation or positional accuracy."
+        "userFsxEvidence": {
+          "d20NearFix": {
+            "lat": 37.1775,
+            "lon": 49.98683333333334,
+            "distanceFromRSTnm": 19.88459,
+            "convertedToNominal20NmOnSameTrueBearing": true
+          },
+          "d15HeldOutWithoutPdfSymbol": {
+            "lat": 37.30566666666667,
+            "lon": 49.928666666666665,
+            "distanceFromRSTnm": 15.024214,
+            "pdfPrediction": [
+              240.15714943960913,
+              391.2674772004217
+            ],
+            "usedInFit": false
+          }
+        },
+        "independentControls": {
+          "RST": {
+            "lat": 37.32633333333333,
+            "lon": 49.615833333333335,
+            "pdf": [
+              220.9800033569336,
+              673.9800109863281
+            ]
+          },
+          "D20": {
+            "lat": 37.17663274124008,
+            "lon": 49.98898243632351,
+            "pdf": [
+              382.38,
+              332.64
+            ]
+          },
+          "KOBUB": {
+            "lat": 37.10416666666667,
+            "lon": 50.178888888888885,
+            "pdf": [
+              463.3800048828125,
+              168.96002197265625
+            ]
+          },
+          "printedGraticule": [
+            {
+              "lon": 50,
+              "y": 324.359985,
+              "comparisonLatitude": 37.32633333333333
+            },
+            {
+              "lon": 49.5,
+              "y": 767.760071,
+              "comparisonLatitude": 37.32633333333333
+            }
+          ]
+        },
+        "residualsPdfPoints": {
+          "RST": 4.0085,
+          "D20": 3.4927,
+          "KOBUB": 3.2597,
+          "GRID_50_00": 3.705,
+          "GRID_49_30": 5.3394
+        },
+        "notes": "Original PDF source-vector RST/KOBUB/D20 and printed longitude ticks; weighted WGS84 similarity avoids a mirrored, ill-conditioned 3-point affine. Residual up to ~0.55 km. SIMULATOR QA ONLY."
       }
     }
-  ]
+  ],
+  "calibrationRevision": "oigg-rst-d20-source-grid-flightqa-r2"
 }

@@ -281,7 +281,7 @@ async function loadOiiMissingSidIlsFlightQa(m){
 }
 async function loadOiggStarsFlightQa(m){
   try{
-    const res=await fetch("./data/oigg-star-flightqa-v2621.json?v=oigg-kobub-qa-r1",{cache:"no-store"});
+    const res=await fetch("./data/oigg-star-flightqa-v2621.json?v=oigg-rst-d20-grid-r2",{cache:"no-store"});
     if(!res.ok)throw Error("OIGG KOBUB QA file HTTP "+res.status);
     const data=await res.json();
     if(data.version!==2||data.testOnly!==true||data.notForActualNavigation!==true||
@@ -296,13 +296,13 @@ async function loadOiggStarsFlightQa(m){
       const chartKey=c?[c.airport,c.category.toUpperCase(),c.chart_number,c.name.toUpperCase()].join("|"):"";
       if(!approvedIdentities.has(page)||staged.some(([n])=>n===page)||georefByPage.has(page)||
          item.airport!=="OIGG"||item.sourceFingerprint!==approvedIdentities.get(page)||
-         item.chartKey!==chartKey||item.validation?.method!=="two_vector_landmarks_simulator_qa"||
+         item.chartKey!==chartKey||item.validation?.method!=="three_source_controls_printed_grid_simulator_qa"||
          item.validation?.qaTestOnly!==true||item.validation?.notApprovedForNavigation!==true||
-         Number(item.validation.independentPrintedGridMismatchMaxMetres)<700 ||
-         Number(item.validation.independentPrintedGridMismatchMaxMetres)>1100)
+         Number(item.validation.independentPrintedGridMismatchMaxMetres)<250 ||
+         Number(item.validation.independentPrintedGridMismatchMaxMetres)>650)
         throw Error("OIGG flight QA control, identity or immutable map check failed "+page);
       const model=makeGeoModel(item);
-      if(!model)throw Error("OIGG two-landmark QA geometry failed "+page);
+      if(!model)throw Error("OIGG D20/source-grid QA geometry failed "+page);
       staged.push([page,model]);
     }
     if(manifest!==m||staged.length!==2||staged.some(([n])=>georefByPage.has(n)))return;
@@ -315,7 +315,7 @@ async function loadOiggStarsFlightQa(m){
     }
     showPublishedExperimentalGeorefNotice();
     if(selectedChart?.airport==="OIGG")updateAircraftMarker();
-    console.warn("OIGG KOBUB STAR 307/308 installed as SIMULATOR ONLY – 700-940 m source-grid discrepancy");
+    console.warn("OIGG KOBUB STAR 307/308 r2 source-grid/D20 recalibration loaded; simulator QA only, residual up to ~0.55 km");
   }catch(e){console.warn("OIGG STAR flight QA safely disabled; source maps unchanged",e)}
 }
 async function loadPublishedExperimentalGeorefs(m){
@@ -383,7 +383,7 @@ function showPublishedExperimentalGeorefNotice(){
   msg.textContent=[376,386,388].includes(page)?
     (enabled?"⚠ OIIE SID/ILS · SOURCE GRID & NAVAID GEO QA · SIMULATOR ONLY · NOT FOR ACTUAL NAVIGATION":"OIIE SID/ILS SIMULATOR GEOREFERENCE DISABLED"):
     [307,308].includes(page)?
-    (enabled?"⚠ OIGG KOBUB STAR · GRID DISAGREES 700–940 m · SIMULATOR FLIGHT QA ONLY · NOT FOR NAVIGATION":"OIGG KOBUB STAR TEST GEOREFERENCE DISABLED"):
+    (enabled?"⚠ OIGG KOBUB STAR · D20 / SOURCE GRID RECALIBRATED · QA RESIDUAL UP TO ~550 m · SIMULATOR FLIGHT QA ONLY · NOT FOR NAVIGATION":"OIGG KOBUB STAR TEST GEOREFERENCE DISABLED"):
     (enabled?"⚠ GEOREFERENCE · INDEPENDENT AIP QA PENDING · NOT FOR NAVIGATION":"GEOREFERENCE LAYER DISABLED");
   panel.appendChild(msg);
   const btn=document.createElement("button");
@@ -1352,7 +1352,7 @@ function geoBoundsContains(b,x,y,t=0){
 }
 function makeGeoModel(item){
   if(!item||!Number.isInteger(Number(item.page)))return null;
-  const allowed=new Set(["paired_printed_graticule_vector_ticks","single_axis_plus_conformal_scale","aip_and_printed_grid_10m_test_only","two_vector_landmarks_simulator_qa","two_navaid_source_grid_flight_qa","crossplate_ika_grid_flight_qa"]);
+  const allowed=new Set(["paired_printed_graticule_vector_ticks","single_axis_plus_conformal_scale","aip_and_printed_grid_10m_test_only","two_vector_landmarks_simulator_qa","three_source_controls_printed_grid_simulator_qa","two_navaid_source_grid_flight_qa","crossplate_ika_grid_flight_qa"]);
   if(!allowed.has(item.validation&&item.validation.method))return null;
   const width=geoNum(item.width),height=geoNum(item.height),b=item.bounds||{};
   const bounds={left:geoNum(b.left),top:geoNum(b.top),right:geoNum(b.right),bottom:geoNum(b.bottom)};
@@ -1577,7 +1577,7 @@ function setPositionStatus(state,text,detail=""){
     detail=selectedChart.airport==="OIIE"&&[376,386,388].includes(Number(selectedChart.page))?
       "OIIE V2621 SID/ILS SOURCE GRID & IKA/RUS GEOREFERENCE QA · SIMULATOR ONLY · NOT FOR ACTUAL NAVIGATION. "+(detail||""):
       selectedChart.airport==="OIGG"&&[307,308].includes(Number(selectedChart.page))?
-      "OIGG KOBUB GEO QA · ORIGINAL GRID DISAGREEMENT APPROX 700–940 m · SIMULATOR ONLY · NOT FOR NAVIGATION. "+(detail||""):
+      "OIGG KOBUB GEO QA r2 · SOURCE RESIDUAL UP TO ~550 m · SIMULATOR ONLY · NOT FOR NAVIGATION. "+(detail||""):
       "GEOREFERENCE · INDEPENDENT AIP QA PENDING · NOT FOR NAVIGATION. "+(detail||"");
   }
   if(selectedChart?.airport==="OICK"&&[218,219,221,223].includes(Number(selectedChart.page))&&

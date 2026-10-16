@@ -143,3 +143,32 @@ inspection_path.write_text(json.dumps({"sourceSha256":PIN,"flightQAOnly":True,
                                        "pages":pdf_controls},indent=2)+"\n")
 for item in pdf_controls:
     print("OIGG_FSX_SOURCE_PDF_CANDIDATES",json.dumps(item,ensure_ascii=False),flush=True)
+
+# Original PDF source-locked publication gate for revised D20 flight QA.
+revised=json.loads(Path("web/data/oigg-star-flightqa-v2621.json").read_text())
+assert revised["calibrationRevision"]=="oigg-rst-d20-source-grid-flightqa-r2"
+assert revised==json.loads(Path("app/src/main/assets/oigg-star-flightqa-v2621.json").read_text())
+for entry in revised["charts"]:
+    num=entry["page"];v=entry["validation"]
+    assert v["method"]=="three_source_controls_printed_grid_simulator_qa"
+    assert v["qaTestOnly"] and v["notApprovedForNavigation"]
+    triangle=v["independentControls"]["D20"]["pdf"]
+    candidates=nearby_white_triangles(doc[num-1],triangle)
+    assert candidates and math.dist(candidates[0]["centerPdf"],triangle)<0.15,(num,"D20 source triangle")
+    points=entry["points"]
+    avg=lambda key:sum(pt[key] for pt in points)/len(points)
+    mlon,mlat,mx,my=(avg(z) for z in ("lon","lat","x","y"))
+    ll=np.array([[q["lon"]-mlon,q["lat"]-mlat] for q in points])
+    fx=np.linalg.lstsq(ll,[q["x"]-mx for q in points],rcond=None)[0]
+    fy=np.linalg.lstsq(ll,[q["y"]-my for q in points],rcond=None)[0]
+    assert np.linalg.det(np.array([fx,fy]))<0
+    def pxy(lat,lon):
+        q=np.array([lon-mlon,lat-mlat])
+        return [mx+float(q@fx),my+float(q@fy)]
+    for name in ("RST","D20","KOBUB"):
+        ctrl=v["independentControls"][name]
+        assert math.dist(pxy(ctrl["lat"],ctrl["lon"]),ctrl["pdf"])<4.2,(num,name)
+    for grid in v["independentControls"]["printedGraticule"]:
+        assert abs(pxy(grid["comparisonLatitude"],grid["lon"])[1]-grid["y"])<5.6,(num,"source grid")
+    assert not v["userFsxEvidence"]["d15HeldOutWithoutPdfSymbol"]["usedInFit"]
+    print("OIGG_R2_REVISED_SOURCE_FIT_PASS",num,v["residualsPdfPoints"]["D20"],v["maxCalibrationResidualPdfPoints"],flush=True)
