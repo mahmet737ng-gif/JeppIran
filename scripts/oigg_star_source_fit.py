@@ -146,7 +146,7 @@ for item in pdf_controls:
 
 # Original PDF source-locked publication gate for revised D20 flight QA.
 revised=json.loads(Path("web/data/oigg-star-flightqa-v2621.json").read_text())
-assert revised["calibrationRevision"]=="oigg-rst-d20-source-grid-flightqa-r2"
+assert revised["calibrationRevision"]=="oigg-rst-d20-local-warp-flightqa-r3"
 assert revised==json.loads(Path("app/src/main/assets/oigg-star-flightqa-v2621.json").read_text())
 for entry in revised["charts"]:
     num=entry["page"];v=entry["validation"]
@@ -214,3 +214,8 @@ for item in revised["charts"]:
         predicted=[mx+float(u@fit_x),my+float(u@fit_y)]
         print("OIGG_SOURCE_BLACK_LINES",json.dumps({"page":num,"name":name,
          "modelPdf":predicted,"nearest":segment_match_at(doc[num-1],predicted)},ensure_ascii=False),flush=True)
+
+assert all(entry["routeWarp"]["type"]=="oigg_source_control_local_residual" for entry in revised["charts"])
+assert all(entry["routeWarp"]["controls"]==["RST","D20","KOBUB"] for entry in revised["charts"])
+assert all(entry["routeWarp"]["simulatorOnly"] and entry["routeWarp"]["notApprovedForNavigation"] for entry in revised["charts"])
+print("OIGG_R3_LOCAL_WARP_SOURCE_LOCK_PASS",flush=True)

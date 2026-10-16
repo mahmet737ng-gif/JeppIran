@@ -281,7 +281,7 @@ async function loadOiiMissingSidIlsFlightQa(m){
 }
 async function loadOiggStarsFlightQa(m){
   try{
-    const res=await fetch("./data/oigg-star-flightqa-v2621.json?v=oigg-rst-d20-grid-r2",{cache:"no-store"});
+    const res=await fetch("./data/oigg-star-flightqa-v2621.json?v=oigg-local-r3",{cache:"no-store"});
     if(!res.ok)throw Error("OIGG KOBUB QA file HTTP "+res.status);
     const data=await res.json();
     if(data.version!==2||data.testOnly!==true||data.notForActualNavigation!==true||
@@ -295,7 +295,7 @@ async function loadOiggStarsFlightQa(m){
       const page=Number(item.page),c=charts.find(x=>x.airport==="OIGG"&&Number(x.page)===page);
       const chartKey=c?[c.airport,c.category.toUpperCase(),c.chart_number,c.name.toUpperCase()].join("|"):"";
       if(!approvedIdentities.has(page)||staged.some(([n])=>n===page)||georefByPage.has(page)||
-         item.airport!=="OIGG"||item.sourceFingerprint!==approvedIdentities.get(page)||
+         item.airport!=="OIGG"||item.routeWarp?.type!=="oigg_source_control_local_residual"||item.sourceFingerprint!==approvedIdentities.get(page)||
          item.chartKey!==chartKey||item.validation?.method!=="three_source_controls_printed_grid_simulator_qa"||
          item.validation?.qaTestOnly!==true||item.validation?.notApprovedForNavigation!==true||
          Number(item.validation.independentPrintedGridMismatchMaxMetres)<250 ||
@@ -315,7 +315,7 @@ async function loadOiggStarsFlightQa(m){
     }
     showPublishedExperimentalGeorefNotice();
     if(selectedChart?.airport==="OIGG")updateAircraftMarker();
-    console.warn("OIGG KOBUB STAR 307/308 r2 source-grid/D20 recalibration loaded; simulator QA only, residual up to ~0.55 km");
+    console.warn("OIGG KOBUB STAR 307/308 R3 PDF-vector anchored local georeference; simulator-only; source-grid uncertainty remains");
   }catch(e){console.warn("OIGG STAR flight QA safely disabled; source maps unchanged",e)}
 }
 async function loadPublishedExperimentalGeorefs(m){
@@ -383,7 +383,7 @@ function showPublishedExperimentalGeorefNotice(){
   msg.textContent=[376,386,388].includes(page)?
     (enabled?"⚠ OIIE SID/ILS · SOURCE GRID & NAVAID GEO QA · SIMULATOR ONLY · NOT FOR ACTUAL NAVIGATION":"OIIE SID/ILS SIMULATOR GEOREFERENCE DISABLED"):
     [307,308].includes(page)?
-    (enabled?"⚠ OIGG KOBUB STAR · D20 / SOURCE GRID RECALIBRATED · QA RESIDUAL UP TO ~550 m · SIMULATOR FLIGHT QA ONLY · NOT FOR NAVIGATION":"OIGG KOBUB STAR TEST GEOREFERENCE DISABLED"):
+    (enabled?"⚠ OIGG KOBUB STAR · D20 / RST / KOBUB LOCAL GEOREF QA · SOURCE GRID STILL DISAGREES · SIMULATOR FLIGHT QA ONLY · NOT FOR NAVIGATION":"OIGG KOBUB STAR TEST GEOREFERENCE DISABLED"):
     (enabled?"⚠ GEOREFERENCE · INDEPENDENT AIP QA PENDING · NOT FOR NAVIGATION":"GEOREFERENCE LAYER DISABLED");
   panel.appendChild(msg);
   const btn=document.createElement("button");
@@ -1391,13 +1391,56 @@ function makeGeoModel(item){
     const q=projectGeoRaw(model,p.lat,p.lon);
     if(!q||Math.hypot(q.x-p.x,q.y-p.y)>maxResidual)return null;
   }
+  if(item.routeWarp){
+    const w=item.routeWarp,source=item.validation?.independentControls;
+    if(![307,308].includes(model.page)||w.type!=="oigg_source_control_local_residual"||
+       item.validation?.method!=="three_source_controls_printed_grid_simulator_qa"||
+       w.simulatorOnly!==true||w.notApprovedForNavigation!==true||
+       w.fullStrengthCrossTrackNm!==1.5||w.fadeEndCrossTrackNm!==6||
+       JSON.stringify(w.controls)!==JSON.stringify(["RST","D20","KOBUB"])||!source)return null;
+    const controls=["RST","D20","KOBUB"].map(key=>source[key]).map(c=>({
+      x:Number(c?.pdf?.[0]),y:Number(c?.pdf?.[1]),lat:Number(c?.lat),lon:Number(c?.lon)}));
+    if(controls.some(c=>!Number.isFinite(c.x)||!Number.isFinite(c.y)||
+       !Number.isFinite(c.lat)||!Number.isFinite(c.lon)||
+       !geoBoundsContains(bounds,c.x,c.y)))return null;
+    model.routeCorrection={controls,fullNm:1.5,endNm:6};
+  }
   return model;
 }
+// PDF-vector source-anchored local correction. Keeps FSX latitude/longitude untouched.
+function projectOiggSourceWarp(model,lat,lon,original){
+  const warp=model?.routeCorrection;
+  if(!warp||warp.controls.length!==3)return original;
+  const [rst,d20,kobub]=warp.controls,cosine=Math.cos(rst.lat*Math.PI/180);
+  if(Math.abs(cosine)<0.1)return original;
+  const geo=(la,lo)=>[(lo-rst.lon)*60*cosine,(la-rst.lat)*60];
+  const [ve,vn]=geo(kobub.lat,kobub.lon),len2=ve*ve+vn*vn;
+  if(len2<10)return original;
+  const [e,n]=geo(lat,lon);
+  const t=Math.max(0,Math.min(1,(e*ve+n*vn)/len2));
+  const cross=Math.abs(e*vn-n*ve)/Math.sqrt(len2);
+  if(cross>=warp.endNm)return original;
+  const r=cross<=warp.fullNm?1:(warp.endNm-cross)/(warp.endNm-warp.fullNm);
+  const strength=r*r*(3-2*r);
+  const fractions=warp.controls.map(c=>{const [p,q]=geo(c.lat,c.lon);return (p*ve+q*vn)/len2;});
+  if(!(fractions[0]<fractions[1]&&fractions[1]<fractions[2]))return original;
+  let dx=0,dy=0;
+  for(let i=0;i<3;i++){
+    let w=1;
+    for(let j=0;j<3;j++)if(j!==i)w*=(t-fractions[j])/(fractions[i]-fractions[j]);
+    const c=warp.controls[i];
+    const px=model.meanX+model.xLon*(c.lon-model.meanLon)+model.xLat*(c.lat-model.meanLat);
+    const py=model.meanY+model.yLon*(c.lon-model.meanLon)+model.yLat*(c.lat-model.meanLat);
+    dx+=w*(c.x-px);dy+=w*(c.y-py);
+  }
+  return {x:original.x+strength*dx,y:original.y+strength*dy};
+}
+
 function projectGeoRaw(model,lat,lon){
   if(!model||!Number.isFinite(lat)||!Number.isFinite(lon)||lat<-90||lat>90||lon<-180||lon>180)return null;
   const x=model.meanX+model.xLon*(lon-model.meanLon)+model.xLat*(lat-model.meanLat);
   const y=model.meanY+model.yLon*(lon-model.meanLon)+model.yLat*(lat-model.meanLat);
-  return Number.isFinite(x)&&Number.isFinite(y)?{x,y}:null;
+  return Number.isFinite(x)&&Number.isFinite(y)?projectOiggSourceWarp(model,lat,lon,{x,y}):null;
 }
 // A single PDF page may contain TWO independently scaled/georeferenced maps.
 // Resolve in geographic space and require the projected point to fall inside
@@ -1556,6 +1599,20 @@ function renderedGeoHeading(model,lat,heading,canvas){
     if(!active)return 0;
     model=active.model;
   }
+  if(model?.routeCorrection){
+    const lon=Number(lastPosition?.lon),theta=heading*Math.PI/180;
+    const cosLat=Math.cos(lat*Math.PI/180);
+    if(Number.isFinite(lon)&&Math.abs(cosLat)>1e-8){
+      const p=projectGeoRaw(model,lat,lon);
+      const q=projectGeoRaw(model,lat+0.0001*Math.cos(theta),
+                             lon+0.0001*Math.sin(theta)/cosLat);
+      if(p&&q){
+        const dx=(q.x-p.x)*canvas.clientWidth/model.width;
+        const dy=(q.y-p.y)*canvas.clientHeight/model.height;
+        if(Math.hypot(dx,dy)>1e-8)return Math.atan2(dx,-dy)*180/Math.PI;
+      }
+    }
+  }
   const r=Math.PI/180,cosLat=Math.cos(lat*r);
   if(Math.abs(cosLat)<1e-8)return 0;
   const east=Math.sin(heading*r)/cosLat,north=Math.cos(heading*r);
@@ -1577,7 +1634,7 @@ function setPositionStatus(state,text,detail=""){
     detail=selectedChart.airport==="OIIE"&&[376,386,388].includes(Number(selectedChart.page))?
       "OIIE V2621 SID/ILS SOURCE GRID & IKA/RUS GEOREFERENCE QA · SIMULATOR ONLY · NOT FOR ACTUAL NAVIGATION. "+(detail||""):
       selectedChart.airport==="OIGG"&&[307,308].includes(Number(selectedChart.page))?
-      "OIGG KOBUB GEO QA r2 · SOURCE RESIDUAL UP TO ~550 m · SIMULATOR ONLY · NOT FOR NAVIGATION. "+(detail||""):
+      "OIGG KOBUB LOCAL GEO QA r3 · PRINTED GRID CONFLICT REMAINS · SIMULATOR ONLY · NOT FOR NAVIGATION. "+(detail||""):
       "GEOREFERENCE · INDEPENDENT AIP QA PENDING · NOT FOR NAVIGATION. "+(detail||"");
   }
   if(selectedChart?.airport==="OICK"&&[218,219,221,223].includes(Number(selectedChart.page))&&

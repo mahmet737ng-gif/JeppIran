@@ -45,7 +45,8 @@ data class GeoReference(
     val points: List<GeoReferencePoint>,
     val maxResidualPdfPoints: Double = 0.75,
     val excludedBounds: List<GeoReferenceBounds> = emptyList(),
-    val strictBounds: Boolean = false
+    val strictBounds: Boolean = false,
+    val routeWarpControls: List<GeoReferencePoint> = emptyList()
 ) {
     private companion object {
         const val OUTER_EDGE_TOLERANCE_PDF_POINTS = 6.0
@@ -69,11 +70,57 @@ data class GeoReference(
 
     fun isValid(): Boolean = transform != null
 
+    // The only eligible charts are OIGG 307/308 source-fingerprinted SIMULATOR QA.
+    // Smooth PDF-ground-control residual interpolation, not aircraft/route snapping.
+    private fun correctedProject(
+        latitude: Double,
+        longitude: Double,
+        raw: Pair<Double, Double>,
+        t: Transform
+    ): Pair<Double, Double> {
+        if (routeWarpControls.size != 3) return raw
+        val rst = routeWarpControls[0]
+        val kobub = routeWarpControls[2]
+        val cosine = cos(Math.toRadians(rst.latitude))
+        if (abs(cosine) < 0.1) return raw
+        fun local(lat: Double, lon: Double): Pair<Double, Double> =
+            Pair((lon - rst.longitude) * 60.0 * cosine, (lat - rst.latitude) * 60.0)
+        val (ve, vn) = local(kobub.latitude, kobub.longitude)
+        val lenSq = ve * ve + vn * vn
+        if (lenSq < 10.0) return raw
+        val (e, n) = local(latitude, longitude)
+        val along = ((e * ve + n * vn) / lenSq).coerceIn(0.0, 1.0)
+        val cross = abs(e * vn - n * ve) / kotlin.math.sqrt(lenSq)
+        if (cross >= 6.0) return raw
+        val r = if (cross <= 1.5) 1.0 else (6.0 - cross) / 4.5
+        val strength = r * r * (3.0 - 2.0 * r)
+        val positions = routeWarpControls.map { anchor ->
+            val (ae, an) = local(anchor.latitude, anchor.longitude)
+            (ae * ve + an * vn) / lenSq
+        }
+        if (!(positions[0] < positions[1] && positions[1] < positions[2])) return raw
+        var dx = 0.0
+        var dy = 0.0
+        for (i in 0..2) {
+            var weight = 1.0
+            for (j in 0..2) if (j != i) {
+                weight *= (along - positions[j]) / (positions[i] - positions[j])
+            }
+            val control = routeWarpControls[i]
+            val original = t.project(control.latitude, control.longitude)
+            dx += weight * (control.x - original.first)
+            dy += weight * (control.y - original.second)
+        }
+        return Pair(raw.first + strength * dx, raw.second + strength * dy)
+    }
+
+
     fun project(latitude: Double, longitude: Double): Pair<Double, Double>? {
         if (!latitude.isFinite() || !longitude.isFinite() ||
             latitude !in -90.0..90.0 || longitude !in -180.0..180.0
         ) return null
-        val projected = transform?.project(latitude, longitude) ?: return null
+        val t = transform ?: return null
+        val projected = correctedProject(latitude, longitude, t.project(latitude, longitude), t)
         return projected.takeIf {
             /*
              * Keep the aircraft visible while its centre crosses only the
@@ -93,12 +140,25 @@ data class GeoReference(
     }
 
     fun renderedHeading(latitude: Double, headingDegrees: Double,
-                        bitmapWidth: Int, bitmapHeight: Int): Float? {
+                        bitmapWidth: Int, bitmapHeight: Int,
+                        longitude: Double = Double.NaN): Float? {
         if (!latitude.isFinite() || !headingDegrees.isFinite()) return null
         val t = transform ?: return null
         val angle = Math.toRadians(headingDegrees)
         val latitudeCosine = cos(Math.toRadians(latitude))
         if (abs(latitudeCosine) < 1e-8) return null
+        if (routeWarpControls.size == 3 && longitude.isFinite()) {
+            val p = correctedProject(latitude, longitude, t.project(latitude, longitude), t)
+            val step = 0.0001
+            val lat2 = latitude + step * cos(angle)
+            val lon2 = longitude + step * sin(angle) / latitudeCosine
+            val q = correctedProject(lat2, lon2, t.project(lat2, lon2), t)
+            val dxLocal = (q.first - p.first) * bitmapWidth / width
+            val dyLocal = (q.second - p.second) * bitmapHeight / height
+            if (hypot(dxLocal, dyLocal) > 1e-8) {
+                return Math.toDegrees(atan2(dxLocal, -dyLocal)).toFloat()
+            }
+        }
         val east = sin(angle) / latitudeCosine
         val north = cos(angle)
         val dx = (t.xLon * east + t.xLat * north) * bitmapWidth / width
@@ -125,12 +185,20 @@ data class GeoReference(
         if (!x.isFinite() || !y.isFinite() || x < 0 || y < 0 ||
             x > bitmapWidth || y > bitmapHeight
         ) return null
-        val heading = renderedHeading(latitude, headingDegrees, fullBitmapWidth, fullBitmapHeight)
+        val heading = renderedHeading(latitude, headingDegrees, fullBitmapWidth, fullBitmapHeight, longitude)
             ?: return null
         return RenderedAircraftPosition(x.toFloat(), y.toFloat(), heading)
     }
 
     private fun fit(): Transform? {
+        if (routeWarpControls.isNotEmpty() && (
+            page !in setOf(307, 308) || routeWarpControls.size != 3 ||
+                routeWarpControls.any {
+                    !it.x.isFinite() || !it.y.isFinite() ||
+                        !it.latitude.isFinite() || !it.longitude.isFinite() ||
+                        !bounds.contains(it.x, it.y)
+                }
+            )) return null
         if (points.size < 4 || !width.isFinite() || !height.isFinite() ||
             width <= 0 || height <= 0 || !maxResidualPdfPoints.isFinite() ||
             maxResidualPdfPoints !in 0.0..2.0 ||
@@ -489,6 +557,7 @@ object ChartGeoreferenceStore {
                 val qa = chart.optJSONObject("validation") ?: return
                 if (page !in OIGG_STAR_QA_FINGERPRINTS.keys || !seen.add(page) ||
                     chart.optString("airport") != "OIGG" ||
+                    chart.optJSONObject("routeWarp")?.optString("type") != "oigg_source_control_local_residual" ||
                     !chart.optString("chartKey").startsWith("OIGG|STAR|") ||
                     chart.optString("sourceFingerprint") != OIGG_STAR_QA_FINGERPRINTS[page] ||
                     qa.optString("method") != "three_source_controls_printed_grid_simulator_qa" ||
@@ -663,6 +732,31 @@ object ChartGeoreferenceStore {
                         }
                 }
 
+            val warpMetadata = item.optJSONObject("routeWarp")
+            val warpPoints = if (warpMetadata != null) {
+                if (page !in setOf(307, 308) ||
+                    method != "three_source_controls_printed_grid_simulator_qa" ||
+                    warpMetadata.optString("type") != "oigg_source_control_local_residual" ||
+                    !warpMetadata.optBoolean("simulatorOnly") ||
+                    !warpMetadata.optBoolean("notApprovedForNavigation") ||
+                    warpMetadata.optDouble("fullStrengthCrossTrackNm") != 1.5 ||
+                    warpMetadata.optDouble("fadeEndCrossTrackNm") != 6.0
+                ) continue
+                val independent = item.optJSONObject("validation")
+                    ?.optJSONObject("independentControls") ?: continue
+                val names = listOf("RST", "D20", "KOBUB")
+                names.map { name ->
+                    val p = independent.optJSONObject(name)
+                    val xy = p?.optJSONArray("pdf")
+                    GeoReferencePoint(
+                        xy?.optDouble(0, Double.NaN) ?: Double.NaN,
+                        xy?.optDouble(1, Double.NaN) ?: Double.NaN,
+                        p?.optDouble("lat", Double.NaN) ?: Double.NaN,
+                        p?.optDouble("lon", Double.NaN) ?: Double.NaN
+                    )
+                }
+            } else emptyList()
+
             val reference =
                 GeoReference(
                     page,
@@ -671,7 +765,8 @@ object ChartGeoreferenceStore {
                     bounds,
                     points,
                     item.optDouble("maxResidualPdfPoints", 0.75),
-                    safeExcludedBounds
+                    safeExcludedBounds,
+                    routeWarpControls = warpPoints
                 )
 
             // Duplicate page identifiers are ambiguous within one source.

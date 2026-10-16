@@ -43,3 +43,31 @@ for actual navigation; existing protected production georeferences
 remain byte-for-byte unchanged. The two flight-QA records are
 source-fingerprinted, reversible, and identical in Web/Android.
 A further FSX re-flight at RST, D20 and KOBUB is still required.
+
+
+## R3 local PDF-ground-control correction — 2026-10-16
+
+Owner flight feedback: KOBUB is visually aligned, but the aircraft drifts below
+the chart's black R113 line around D12. Inspecting the **original vector PDF**
+found that the released R2 affine fit misses the printed R113 black centerline
+by 3.420 PDF points at FSX D12. The chart source line was measured from
+(322.44,457.56) to (239.52,626.16) on p307, stroke width 1.68 PDF pt.
+
+R3 retains the original published WGS84 base fit (no synthetic base GCP),
+and adds a **reversible route-local residual field** from independently measured
+RST VOR, published D20 RST triangle, and KOBUB PDF vector centers.
+The 3-anchor residual is interpolated by relative geographic progress along
+RST→KOBUB with a smooth lateral fade from full correction within 1.5 NM
+to zero at 6 NM cross-track. Aircraft lat/lon from FSX remains untouched:
+this is a chart coordinate transform, not GPS alteration or snapping the
+aircraft to a drawn line. It is limited to the two experimental OIGG STAR
+plates, and does not modify any approved georeferences or other chart imagery.
+
+At all three control symbols the corrected projection has effectively zero
+PDF-point anchor residual by construction. Independently measured 307 R113
+line distance at the supplied D12 FSX location is predicted to drop from
+3.420 to about 0.505 PDF points. This is a model comparison, NOT a
+new simulator flight-test, independent cartographic validation, or a
+navigation approval. Print-grid conflicts persist off route and remain
+explicitly noted. Page 308's different charted procedure is NOT presumed
+to contain the same D12 route centerline.

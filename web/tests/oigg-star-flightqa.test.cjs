@@ -6,7 +6,7 @@ const web=json("data/oigg-star-flightqa-v2621.json");
 const android=json("../app/src/main/assets/oigg-star-flightqa-v2621.json");
 const stable=json("data/chart-georef.json"),index=json("data/charts-current.json");
 assert.deepEqual(web,android,"Web and Android flight QA model must be identical");
-assert.equal(web.calibrationRevision,"oigg-rst-d20-source-grid-flightqa-r2");
+assert.equal(web.calibrationRevision,"oigg-rst-d20-local-warp-flightqa-r3");
 assert.equal(web.version,2);assert.equal(web.testOnly,true);assert.equal(web.notForActualNavigation,true);
 assert.equal(web.source.sha256,stable.source.sha256);assert.equal(stable.charts.length,807);
 assert.deepEqual(web.charts.map(c=>c.page),[307,308]);
@@ -17,6 +17,9 @@ for(const c of web.charts){
  assert.equal(c.sourceFingerprint,fingerprints[c.page]);
  assert.equal(c.chartKey,[k.airport,k.category.toUpperCase(),k.chart_number,k.name.toUpperCase()].join("|"));
  assert.equal(v.method,"three_source_controls_printed_grid_simulator_qa");
+ assert.equal(c.routeWarp?.type,"oigg_source_control_local_residual");
+ assert.equal(c.routeWarp?.simulatorOnly,true);
+ assert.deepEqual(c.routeWarp?.controls,["RST","D20","KOBUB"]);
  assert.equal(v.qaTestOnly,true);assert.equal(v.notApprovedForNavigation,true);
  assert.equal(v.userFsxEvidence.d15HeldOutWithoutPdfSymbol.usedInFit,false);
  assert.ok(v.independentPrintedGridMismatchMaxMetres>=250&&v.independentPrintedGridMismatchMaxMetres<=650);
@@ -41,7 +44,7 @@ for(const c of web.charts){
 const app=read("app.js"),native=read("../app/src/main/java/com/tareghmsr/jeppiran/ChartGeoreference.kt");
 assert.ok(app.includes("three_source_controls_printed_grid_simulator_qa"));
 assert.ok(native.includes("three_source_controls_printed_grid_simulator_qa"));
-assert.ok(app.includes("oigg-rst-d20-grid-r2"));
+assert.ok(app.includes("oigg-local-r3"));
 assert.ok(read("index.html").includes("oigg-d20-r2"));
 assert.ok(read("service-worker.js").includes("oigg-d20-r2"));
 console.log("PASS OIGG STAR 307/308 revised flight-only QA, D20 and original grid; 807 protected georefs unchanged");

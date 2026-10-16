@@ -137,6 +137,20 @@
           "GRID_49_30": 5.2788
         },
         "notes": "Original PDF source-vector RST/KOBUB/D20 and printed longitude ticks; weighted WGS84 similarity avoids a mirrored, ill-conditioned 3-point affine. Residual up to ~0.55 km. SIMULATOR QA ONLY."
+      },
+      "routeWarp": {
+        "type": "oigg_source_control_local_residual",
+        "controls": [
+          "RST",
+          "D20",
+          "KOBUB"
+        ],
+        "fullStrengthCrossTrackNm": 1.5,
+        "fadeEndCrossTrackNm": 6,
+        "localOnly": true,
+        "simulatorOnly": true,
+        "notApprovedForNavigation": true,
+        "notes": "Smooth chart-specific source-GCP correction; NOT position snapping; only approved simulator flight QA."
       }
     },
     {
@@ -265,8 +279,22 @@
           "GRID_49_30": 5.3394
         },
         "notes": "Original PDF source-vector RST/KOBUB/D20 and printed longitude ticks; weighted WGS84 similarity avoids a mirrored, ill-conditioned 3-point affine. Residual up to ~0.55 km. SIMULATOR QA ONLY."
+      },
+      "routeWarp": {
+        "type": "oigg_source_control_local_residual",
+        "controls": [
+          "RST",
+          "D20",
+          "KOBUB"
+        ],
+        "fullStrengthCrossTrackNm": 1.5,
+        "fadeEndCrossTrackNm": 6,
+        "localOnly": true,
+        "simulatorOnly": true,
+        "notApprovedForNavigation": true,
+        "notes": "Smooth chart-specific source-GCP correction; NOT position snapping; only approved simulator flight QA."
       }
     }
   ],
-  "calibrationRevision": "oigg-rst-d20-source-grid-flightqa-r2"
+  "calibrationRevision": "oigg-rst-d20-local-warp-flightqa-r3"
 }
