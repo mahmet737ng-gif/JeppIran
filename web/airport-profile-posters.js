@@ -12,7 +12,7 @@
   const dimensions = new Map();
   let queued = false;
   let lastCode = "";
-  const urlFor = (icao) => "./airport-profile-posters-textfree/" + icao + ".webp?v=2621-letter-repair-r2";
+  const urlFor = (icao) => window.JEPPIRAN_POSTER_CACHE_URLS?.[icao] || "./airport-profile-posters-textfree/" + icao + ".webp?v=2621-letter-repair-r2";
 
   // The poster is a fixed, fully contained image with its HTML caption anchored
   // INSIDE the same image rectangle, never to scrolling profile content.
@@ -150,6 +150,14 @@
     window.addEventListener("resize",queue,{passive:true});
   }
   queue();
+  window.addEventListener("jeppiran:poster-assets-ready",()=>{
+    // Keep the current frame; future selections take the correct hash URL.
+    // If we previously marked an image missing, retry once cache is ready.
+    for(const [code,status] of loading)if(status==="missing")loading.delete(code);
+    if(lastCode && !root.classList.contains("jp-airport-poster-loaded")){
+      lastCode="";queue();
+    }
+  });
   window.JEPPIRAN_APPROVED_PROFILE_POSTERS = Object.freeze({
     count:Object.keys(airports).length, mapping:airports, frozen:true, illustrativeOnly:true
   });

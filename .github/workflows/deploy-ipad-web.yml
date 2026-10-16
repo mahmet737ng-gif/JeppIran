@@ -128,6 +128,12 @@ jobs:
           python3 scripts/build_textfree_airport_posters.py
           python3 scripts/build_textfree_airport_posters.py --check
 
+      - name: Build SHA-versioned poster cache registry for current images
+        run: python3 scripts/build_airport_poster_precache_manifest.py
+
+      - name: Verify Saqez identity and persistent poster download contract
+        run: node --test web/tests/airport-poster-offline-cache.test.cjs
+
       - name: Enforce fixed full poster viewport for all 50 airport profiles
         run: node --test web/tests/airport-profile-viewport-fit.test.cjs
 

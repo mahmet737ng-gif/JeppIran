@@ -91,6 +91,12 @@ def build(manifest_path, csv_path=None):
                 record[field] = value
         found[key] = record
         grades[key] = grade
+    # OICZ is Saqez Airport in Saqez (owner-verified V2621 identity).
+    # Preserve source-backed lat/lon/elevation if available, only correct the
+    # name and municipality; an external CSV must not relabel this airport.
+    if "OICZ" in desired:
+        found["OICZ"] = {**found.get("OICZ", {"source": "JEPPIRAN airport identity override"}),
+                         "country": "Iran", "name": "Saqez Airport", "city": "Saqez"}
     missing = sorted(desired.difference(found))
     out = {
         "cycle": manifest.get("version", ""),

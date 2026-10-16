@@ -581,7 +581,7 @@ const CATEGORY_ORDER=["Airport","STAR","SID","Approach","Other"];
 const AIRPORTS={
 "LTFM":["ISTANBUL AIRPORT","ISTANBUL"],"OIAA":["ABADAN AIRPORT","ABADAN"],"OIAM":["MAHSHAHR AIRPORT","MAHSHAHR"],
 "OIAW":["AHWAZ AIRPORT","AHWAZ"],"OIBB":["BUSHEHR AIRPORT","BUSHEHR"],"OIBK":["KISH ISLAND","KISH ISLAND"],
-"OIBP":["ASALOUYEH AIRPORT","ASALOUYEH"],"OICC":["KERMANSHAH AIRPORT","KERMANSHAH"],"OICI":["ILAM AIRPORT","ILAM"],"OICZ":["SAQEZ AIRPORT","SAQEZ"],
+"OIBP":["ASALOUYEH AIRPORT","ASALOUYEH"],"OICC":["KERMANSHAH AIRPORT","KERMANSHAH"],"OICI":["ILAM AIRPORT","ILAM"],"OICZ":["Saqez Airport","Saqez"],
 "OIFM":["ISFAHAN AIRPORT","ISFAHAN"],"OIGG":["RASHT AIRPORT","RASHT"],"OIHH":["HAMADAN AIRPORT","HAMADAN"],
 "OIIE":["IMAM KHOMEINI INTERNATIONAL","TEHRAN"],"OIII":["MEHRABAD INTERNATIONAL","TEHRAN"],"OIIP":["KARAJ AIRPORT","KARAJ"],
 "OIKK":["KERMAN AIRPORT","KERMAN"],"OIMB":["BIRJAND AIRPORT","BIRJAND"],"OIMT":["TABAS AIRPORT","TABAS"],"OIMM":["MASHHAD INTERNATIONAL","MASHHAD"],
@@ -1150,11 +1150,11 @@ function renderAirports(filter=""){
   const q=filter.trim().toUpperCase();
   const fav=new Set(getAirportFavorites());
   [...new Set(charts.map(displayAirportCode))].sort().filter(icao=>{
-    const record=airportMetadata[icao]||{};const legacy=AIRPORTS[icao]||["",""];
+    const record=icao==="OICZ"?{...airportMetadata[icao],name:"Saqez Airport",city:"Saqez"}:(airportMetadata[icao]||{});const legacy=AIRPORTS[icao]||["",""];
     const meta=[record.name||legacy[0]||"",record.city||legacy[1]||""];
     return (!q||(icao+" "+meta.join(" ")).toUpperCase().includes(q))&&(airportFilterMode!=="favorites"||fav.has(icao));
   }).forEach(icao=>{
-    const record=airportMetadata[icao]||{};const legacy=AIRPORTS[icao]||["",""];
+    const record=icao==="OICZ"?{...airportMetadata[icao],name:"Saqez Airport",city:"Saqez"}:(airportMetadata[icao]||{});const legacy=AIRPORTS[icao]||["",""];
     const meta=[record.name||legacy[0]||"AIRPORT",record.city||legacy[1]||""];
     const branch=document.createElement("div");
     branch.className="airport-branch"+(icao===selectedAirport?" selected":"");
@@ -1278,7 +1278,7 @@ function runwayCompassMarkup(rw, weather){
 }
 function renderAirportProfile(icao){
   const root=$("#airportProfile");if(!root||icao!==selectedAirport)return;
-  const community=airportMetadata[icao]||{};
+  const community=icao==="OICZ"?{...(airportMetadata[icao]||{}),name:"Saqez Airport",city:"Saqez"}:(airportMetadata[icao]||{});
   const d={...(AIRPORT_PROFILE[icao]||{}),...community};
   if(airportRunwayMetadata[icao]&&airportRunwayMetadata[icao].length)d.runways=airportRunwayMetadata[icao];
   const legacy=AIRPORTS[icao]||["",""];
