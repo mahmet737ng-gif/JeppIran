@@ -1,109 +1,250 @@
 {
   "schema": 1,
   "count": 20,
-  "status": "published_for_review",
-  "mapping_status": "no_unverified_airport_mapping",
-  "illustrative_only": true,
-  "images": [
+  "date": "2026-10-16",
+  "status": "published_review_gallery",
+  "mapping_status": "airport codes must be verified against V2621 charts; previous 50 untouched",
+  "description": "20 approved generated images in the two most recent batches, with original full PNG and web-optimized WebP; no letters are baked into artwork.",
+  "assets": [
     {
-      "file": "new20_01.webp",
-      "git_blob_sha1": "9553f1794e700b13979c85d434bc23d7405b04b1",
-      "batch": 1
+      "id": "new20_01",
+      "source_image": "twilight_island_airport_by_the_sea.png",
+      "origin_batch": 1,
+      "width": 1672,
+      "height": 941,
+      "sha256_png": "0f76d19fe88156c2181d09ffbfc9fd033b0e27ac433de5ce8217928ef8b6f262",
+      "sha256_webp": "2f106c68b5ae2ebb27583d74c26315ce5117c0753c89d87fd7ea4b1733d0aac6",
+      "scene_type": "illustrative conceptual airport city poster",
+      "lower_right_city_symbol": true,
+      "flight_navigation_eligible": false
     },
     {
-      "file": "new20_02.webp",
-      "git_blob_sha1": "d6224f8c77ff91d4bb9bfddf15a80739e54763dc",
-      "batch": 1
+      "id": "new20_02",
+      "source_image": "moonlit_coastal_airport_aerial.png",
+      "origin_batch": 1,
+      "width": 1672,
+      "height": 941,
+      "sha256_png": "dacb04583b6e88ca5cdedd279ab30c5c80ef9965403b606e1c7905c98e6f7938",
+      "sha256_webp": "6317b2c8bb7b22b0f085b4d279f2f5911c7eda7cf634b0687bba32c9b2284ee6",
+      "scene_type": "illustrative conceptual airport city poster",
+      "lower_right_city_symbol": true,
+      "flight_navigation_eligible": false
     },
     {
-      "file": "new20_03.webp",
-      "git_blob_sha1": "c536c3f5a4c05ff9b319886490390f37771777ad",
-      "batch": 1
+      "id": "new20_03",
+      "source_image": "midnight_airport_over_wetlands.png",
+      "origin_batch": 1,
+      "width": 1672,
+      "height": 941,
+      "sha256_png": "614762206fe370d853efd771327df48e226379ee568beeb251f615f6aee2d358",
+      "sha256_webp": "f911e4ccc22d03a6b47879cdbfee21f4fa48248f3913dd47f49b6f0ffc9abe59",
+      "scene_type": "illustrative conceptual airport city poster",
+      "lower_right_city_symbol": true,
+      "flight_navigation_eligible": false
     },
     {
-      "file": "new20_04.webp",
-      "git_blob_sha1": "161ebc9afe1dd62b48f956c6de2b39390e2b2752",
-      "batch": 1
+      "id": "new20_04",
+      "source_image": "twilight_airport_beneath_snowy_mountains.png",
+      "origin_batch": 1,
+      "width": 1672,
+      "height": 941,
+      "sha256_png": "c4c429529f030831a8008b34c95bf0d0480dad7a88cc4c12ad79d27eb4918ec0",
+      "sha256_webp": "5a12d4c5df22027c673d55f4dff88806833e3c2d6652a4ca4fe00c4e8bc42ec5",
+      "scene_type": "illustrative conceptual airport city poster",
+      "lower_right_city_symbol": true,
+      "flight_navigation_eligible": false
     },
     {
-      "file": "new20_05.webp",
-      "git_blob_sha1": "47ba95a1a98e13786e5abf2f9d892cd8a978b649",
-      "batch": 1
+      "id": "new20_05",
+      "source_image": "twilight_airport_along_the_gulf_coast.png",
+      "origin_batch": 1,
+      "width": 1672,
+      "height": 941,
+      "sha256_png": "b938b49c5ebe1e030b34cf2637ae25e83d65009b9f2795b21798a968e84c32d8",
+      "sha256_webp": "8dcba40227b9dfec81e70b5ebabbdaf1f87cf2ae94a6c664455c266ce5519762",
+      "scene_type": "illustrative conceptual airport city poster",
+      "lower_right_city_symbol": true,
+      "flight_navigation_eligible": false
     },
     {
-      "file": "new20_06.webp",
-      "git_blob_sha1": "9ac452974202ae0fc425c2667ad4513a015a0df0",
-      "batch": 1
+      "id": "new20_06",
+      "source_image": "desert_airport_under_twilight_skies.png",
+      "origin_batch": 1,
+      "width": 1672,
+      "height": 941,
+      "sha256_png": "56787b643111972074892b601869da0c8b21033dec522d8703039c1762a50bce",
+      "sha256_webp": "fd54354574516449284dda705370afe70245d7263c58113a6bb4698e0027d8fe",
+      "scene_type": "illustrative conceptual airport city poster",
+      "lower_right_city_symbol": true,
+      "flight_navigation_eligible": false
     },
     {
-      "file": "new20_07.webp",
-      "git_blob_sha1": "fa0cff4bbb5968145867bb5a6100c9a20ade396a",
-      "batch": 1
+      "id": "new20_07",
+      "source_image": "coastal_airport_under_twilight_lights.png",
+      "origin_batch": 1,
+      "width": 1672,
+      "height": 941,
+      "sha256_png": "0b1da973efef478a1860c923e9d12bff16897c293aa59a5816989e4d13e48ccc",
+      "sha256_webp": "ea66413b948ce5a83f91fa2606e7d21a61b20c56d1c505b59398ed5ccc0e59df",
+      "scene_type": "illustrative conceptual airport city poster",
+      "lower_right_city_symbol": true,
+      "flight_navigation_eligible": false
     },
     {
-      "file": "new20_08.webp",
-      "git_blob_sha1": "1d41b67676b5961f8b42351ea3da42092d927aa4",
-      "batch": 1
+      "id": "new20_08",
+      "source_image": "twilight_airport_beneath_mountain_lights.png",
+      "origin_batch": 1,
+      "width": 1672,
+      "height": 941,
+      "sha256_png": "7d82c3e1ead3b010032a1dba3c8e6c591a990b9f0eb7d40982a867cf0097e84d",
+      "sha256_webp": "e39ec97f6146e7a4712c0ddf3d9436613b5eb30e8193652c6f9a279470fa5f9c",
+      "scene_type": "illustrative conceptual airport city poster",
+      "lower_right_city_symbol": true,
+      "flight_navigation_eligible": false
     },
     {
-      "file": "new20_09.webp",
-      "git_blob_sha1": "d1534f5f7f428d2f26508251ffcc096f20e97be3",
-      "batch": 1
+      "id": "new20_09",
+      "source_image": "first_twilight_pistachio.png",
+      "origin_batch": 1,
+      "width": 1672,
+      "height": 941,
+      "sha256_png": "305666cc7a28e4e23fa0687a7a79af56b91e5e9150290441044c4d8ed17c43c0",
+      "sha256_webp": "28791deb22d022c933b1430b97bbef04bc562560dcd255433b557f9b7163086a",
+      "scene_type": "illustrative conceptual airport city poster",
+      "lower_right_city_symbol": true,
+      "flight_navigation_eligible": false
     },
     {
-      "file": "new20_10.webp",
-      "git_blob_sha1": "7cc5f807321472b82ea75048f119b4930137fef1",
-      "batch": 1
+      "id": "new20_10",
+      "source_image": "desert_airport_beneath_mountain_twilight.png",
+      "origin_batch": 1,
+      "width": 1672,
+      "height": 941,
+      "sha256_png": "a923d29c36a0d24b930ca8bc02373d3d1bef812d3b7fb07a8fcf80be0ab59b00",
+      "sha256_webp": "344d287c00c3cbecc9fa10b5c6277345c22411d6ac03c85d91bcc22bb096de9f",
+      "scene_type": "illustrative conceptual airport city poster",
+      "lower_right_city_symbol": true,
+      "flight_navigation_eligible": false
     },
     {
-      "file": "new20_11.webp",
-      "git_blob_sha1": "d6652e0c07cb39320c631ebf597fb5737e82cc8b",
-      "batch": 2
+      "id": "new20_11",
+      "source_image": "cinematic_coastal_airport_at_dusk.png",
+      "origin_batch": 2,
+      "width": 1672,
+      "height": 941,
+      "sha256_png": "77b806a4f4c929c2cf06940f3b2e91d834f78634a3caef14a2a305ad5204d969",
+      "sha256_webp": "899d6d690dc72453a5d8c21782aa89e4ae308940f14bad57d2b0e30c0846caa8",
+      "scene_type": "illustrative conceptual airport city poster",
+      "lower_right_city_symbol": true,
+      "flight_navigation_eligible": false
     },
     {
-      "file": "new20_12.webp",
-      "git_blob_sha1": "fc928cf287fcba65949c558246f933a631e695bd",
-      "batch": 2
+      "id": "new20_12",
+      "source_image": "desert_island_airport_and_oil_platform_at_dusk.png",
+      "origin_batch": 2,
+      "width": 1672,
+      "height": 941,
+      "sha256_png": "bf63676411b73cd8c1028e1de048b285f9cb1f99fdecce20ccb2eb6ca0ea8688",
+      "sha256_webp": "6acc9c932606cd89d4a1c20a21c0f3a53e0d88881abb907eb01279d44537039f",
+      "scene_type": "illustrative conceptual airport city poster",
+      "lower_right_city_symbol": true,
+      "flight_navigation_eligible": false
     },
     {
-      "file": "new20_13.webp",
-      "git_blob_sha1": "74962583ea7f85ecdf7a4f29064f081ca0ede8dc",
-      "batch": 2
+      "id": "new20_13",
+      "source_image": "twilight_island_airport_and_industrial_port.png",
+      "origin_batch": 2,
+      "width": 1672,
+      "height": 941,
+      "sha256_png": "52f3c73c247da4a228f172df805962a4eac3b920e2b0c5c206a65f26d7ed8afc",
+      "sha256_webp": "10c30e17c3e0b722b58269fb7b27d7449e24552819ad2c0013e0ba2805d833fd",
+      "scene_type": "illustrative conceptual airport city poster",
+      "lower_right_city_symbol": true,
+      "flight_navigation_eligible": false
     },
     {
-      "file": "new20_14.webp",
-      "git_blob_sha1": "ef7fa0de257fcdee4e8a1da29e54be69e1500489",
-      "batch": 2
+      "id": "new20_14",
+      "source_image": "twilight_airport_beneath_mountain_fortress.png",
+      "origin_batch": 2,
+      "width": 1672,
+      "height": 941,
+      "sha256_png": "263d414a2beee3bc4de47ab36425b46ff5c3e040651b5337bb95ddf181ea3cdf",
+      "sha256_webp": "998717dbacb81b3a96a0b43ff0ee7b1ba61d6b28f1e555b6a2b28fbbe8ebd805",
+      "scene_type": "illustrative conceptual airport city poster",
+      "lower_right_city_symbol": true,
+      "flight_navigation_eligible": false
     },
     {
-      "file": "new20_15.webp",
-      "git_blob_sha1": "6e85a171e947e6f3de81dfbc4c10f31072a374f2",
-      "batch": 2
+      "id": "new20_15",
+      "source_image": "twilight_airport_valley_and_mountain_ruins.png",
+      "origin_batch": 2,
+      "width": 1672,
+      "height": 941,
+      "sha256_png": "f1c833a0de6c24fecbae8f3999044959644efa1042a1597fb12e65af9be64020",
+      "sha256_webp": "1c88be4e5ed16a7a0eceb21c1c52ab3e02efd6f26e32221d45f8d42e9ff04a26",
+      "scene_type": "illustrative conceptual airport city poster",
+      "lower_right_city_symbol": true,
+      "flight_navigation_eligible": false
     },
     {
-      "file": "new20_16.webp",
-      "git_blob_sha1": "ccc20114de51c5812b62070cbfa4f6c1c1f3fb01",
-      "batch": 2
+      "id": "new20_16",
+      "source_image": "twilight_airport_and_illuminated_persian_bridge.png",
+      "origin_batch": 2,
+      "width": 1672,
+      "height": 941,
+      "sha256_png": "a9491006c41c94630b1c5ed38241ca04b4979c84a5893872f8dbef4c46a26a30",
+      "sha256_webp": "6609672bf15584cc3643d55919e726b16a25f726cc1a02a63844419bbc33ff69",
+      "scene_type": "illustrative conceptual airport city poster",
+      "lower_right_city_symbol": true,
+      "flight_navigation_eligible": false
     },
     {
-      "file": "new20_17.webp",
-      "git_blob_sha1": "f2a344dced1afae93909b7de2023326b42a5949f",
-      "batch": 2
+      "id": "new20_17",
+      "source_image": "isfahan_airbase_at_twilight.png",
+      "origin_batch": 2,
+      "width": 1672,
+      "height": 941,
+      "sha256_png": "e837b077deffe2cade5d2bf7000c6e6496c2bb924ce127b5ee3d75bc42a62b8e",
+      "sha256_webp": "e7a12c405305eaa18d25c7b166c852383ae8606d3f915b94a35043db77c15f83",
+      "scene_type": "illustrative conceptual airport city poster",
+      "lower_right_city_symbol": true,
+      "flight_navigation_eligible": false
     },
     {
-      "file": "new20_18.webp",
-      "git_blob_sha1": "1a319fff03dd737d7fd31f1fb43fe1dc5523702a",
-      "batch": 2
+      "id": "new20_18",
+      "source_image": "twilight_airport_beneath_mountain_skies.png",
+      "origin_batch": 2,
+      "width": 1672,
+      "height": 941,
+      "sha256_png": "5f34efbf09f4776e346292a3d627b1ac1b53124cfe453e8da2f6bb71529b4763",
+      "sha256_webp": "82f15a717923db9935c1f35868c88f491cbef0d7510b796564b6796072d5b27a",
+      "scene_type": "illustrative conceptual airport city poster",
+      "lower_right_city_symbol": true,
+      "flight_navigation_eligible": false
     },
     {
-      "file": "new20_19.webp",
-      "git_blob_sha1": "646bb2b659dabdaf103202350f014ecf1bf333c0",
-      "batch": 2
+      "id": "new20_19",
+      "source_image": "second_twilight_pistachio.png",
+      "origin_batch": 2,
+      "width": 1672,
+      "height": 941,
+      "sha256_png": "134296c56190d095ebd016c25d86bc8d9fe730c90346be27c55c54ef1885ca28",
+      "sha256_webp": "4839c27f835f00b277671f99bb1788a41cf0a1be81218b213423dd28e80d8d21",
+      "scene_type": "illustrative conceptual airport city poster",
+      "lower_right_city_symbol": true,
+      "flight_navigation_eligible": false
     },
     {
-      "file": "new20_20.webp",
-      "git_blob_sha1": "1e394328279b85bda3683ddd582f3bb93d33e073",
-      "batch": 2
+      "id": "new20_20",
+      "source_image": "twilight_airport_over_desert_city.png",
+      "origin_batch": 2,
+      "width": 1672,
+      "height": 941,
+      "sha256_png": "a0f4442815fa86e8d0bde3ddc97a6c187b042e7c7173589468f3be25da210d51",
+      "sha256_webp": "24337d961f3c95fa57de77ae644de3beda6520ccfba532d6779832595902d61d",
+      "scene_type": "illustrative conceptual airport city poster",
+      "lower_right_city_symbol": true,
+      "flight_navigation_eligible": false
     }
   ]
 }
