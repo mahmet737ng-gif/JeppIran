@@ -34,7 +34,7 @@ test("approved metallic gradient typography stays text at arbitrary zoom",()=>{
 });
 test("live caption assets are versioned in HTML and SW and generated before package",()=>{
  const html=read("web/index.html"),sw=read("web/service-worker.js"),wf=read(".github/workflows/deploy-ipad-web.yml");
- for(const n of ["airport-profile-posters.js?v=2621-letter-repair-r2","airport-profile-live-text.css?v=2621-live-caption-r1"]) {
+ for(const n of ["airport-profile-posters.js?v=2621-persistent-r1","airport-profile-live-text.css?v=2621-live-caption-r1"]) {
   assert.ok(html.includes(n)&&sw.includes(n),n);
  }
  assert.match(wf,/python3 scripts\/build_textfree_airport_posters\.py/);
