@@ -3,7 +3,7 @@
   "count": 20,
   "date": "2026-10-16",
   "status": "published_review_gallery",
-  "mapping_status": "airport codes must be verified against V2621 charts; previous 50 untouched",
+  "mapping_status": "not assigned to airport ICAO until visual/geography verification; original 50 remain locked",
   "description": "20 approved generated images in the two most recent batches, with original full PNG and web-optimized WebP; no letters are baked into artwork.",
   "assets": [
     {
