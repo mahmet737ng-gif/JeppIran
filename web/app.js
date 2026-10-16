@@ -226,8 +226,14 @@ let oiciRouteModule=null;
 let experimentalEligibleGeoModels=new Map();
 let experimentalOimmPreviousModels=new Map();
 const EXPERIMENTAL_OIMM_ILS_PAGES=new Set([605,606,607]);
-const EXP_GEO_KEY="jeppiran-v2621-experimental-georef-enabled";
-function experimentalGeorefOn(){try{return localStorage.getItem(EXP_GEO_KEY)!=="off"}catch(_){return true}}
+// Legacy site-wide "off" disabled every previously published experimental chart.
+// Only an explicit per-chart choice is now allowed; old global off is ignored.
+const EXP_GEO_PAGE_KEY="jeppiran-v2621-explicit-georef-chart-v1:";
+function experimentalGeorefOn(page){
+  if(!Number.isInteger(Number(page))||Number(page)<=0)return true;
+  try{return localStorage.getItem(EXP_GEO_PAGE_KEY+Number(page))!=="off"}
+  catch(_){return true}
+}
 // Reversible owner flight QA for OIGG KOBUB STARs. Source has a ~1 km
 // independent graticule disagreement; this MUST remain visibly experimental.
 // OIIE V2621 missing SID 376 / LOC 386 / ILS 388. Read-only, reversible
@@ -269,7 +275,7 @@ async function loadOiiMissingSidIlsFlightQa(m){
     if(manifest!==m||staged.length!==3||staged.some(([page])=>georefByPage.has(page)))return;
     for(const [page,model] of staged){
       experimentalEligibleGeoModels.set(page,model);
-      if(experimentalGeorefOn()){
+      if(experimentalGeorefOn(page)){
         georefByPage.set(page,model);
         experimentalGeorefPages.add(page);
       }
@@ -350,19 +356,22 @@ async function loadPublishedExperimentalGeorefs(m){
   }catch(error){console.warn("Experimental georeferences skipped; stable set preserved.",error)}
 }
 function togglePublishedExperimentalGeoref(){
-  const enabled=!experimentalGeorefOn();
-  try{localStorage.setItem(EXP_GEO_KEY,enabled?"on":"off")}catch(_){}
-  experimentalGeorefPages.clear();
-  for(const [page,model] of experimentalEligibleGeoModels){
-    if(enabled){
-      if(EXPERIMENTAL_OIMM_ILS_PAGES.has(page)||!georefByPage.has(page)){
-        georefByPage.set(page,model);experimentalGeorefPages.add(page)
-      }
-    }else if(georefByPage.get(page)===model){
-      const old=experimentalOimmPreviousModels.get(page);
-      if(EXPERIMENTAL_OIMM_ILS_PAGES.has(page)&&old)georefByPage.set(page,old);
-      else georefByPage.delete(page);
+  const page=Number(selectedChart?.page);
+  const model=experimentalEligibleGeoModels.get(page);
+  if(!Number.isInteger(page)||!model)return;
+  // Never make one airport's chart button disable all other airport charts.
+  const enabled=!experimentalGeorefOn(page);
+  try{localStorage.setItem(EXP_GEO_PAGE_KEY+page,enabled?"on":"off")}catch(_){}
+  if(enabled){
+    if(EXPERIMENTAL_OIMM_ILS_PAGES.has(page)||!georefByPage.has(page)){
+      georefByPage.set(page,model);
+      experimentalGeorefPages.add(page);
     }
+  }else if(georefByPage.get(page)===model){
+    const prior=experimentalOimmPreviousModels.get(page);
+    if(EXPERIMENTAL_OIMM_ILS_PAGES.has(page)&&prior)georefByPage.set(page,prior);
+    else georefByPage.delete(page); // deliberate opt-out for this one QA layer only
+    experimentalGeorefPages.delete(page);
   }
   showPublishedExperimentalGeorefNotice();
   updateAircraftMarker();
@@ -387,7 +396,7 @@ function showPublishedExperimentalGeorefNotice(){
     (enabled?"⚠ GEOREFERENCE · INDEPENDENT AIP QA PENDING · NOT FOR NAVIGATION":"GEOREFERENCE LAYER DISABLED");
   panel.appendChild(msg);
   const btn=document.createElement("button");
-  btn.type="button";btn.textContent=enabled?"Disable additional georefs":"Enable additional georefs";
+  btn.type="button";btn.textContent=enabled?"Disable THIS chart test georef":"Enable THIS chart test georef";
   btn.style.cssText="background:#fbd28b;color:#422400;border:0;border-radius:6px;padding:5px 8px;cursor:pointer;font-weight:bold";
   btn.addEventListener("click",togglePublishedExperimentalGeoref);
   panel.appendChild(btn);
@@ -813,7 +822,29 @@ async function loadData(){
         ));
         if(manifest!==m)return;
         const [g,profiles,runways,chartNameData,briefTitleData,enrouteInfo]=optional;
-        georefByPage=buildGeorefIndex(g);
+        let candidate=buildGeorefIndex(g);
+        if(!validBaseGeorefCandidate(g,candidate,m)){
+          console.warn("Protected georef source missing/partial. Keeping all previously loaded references and retrying.");
+          // A prior flaky / stale cache must never erase any OIGG model.
+          // Retry a fresh request before accepting that a chart has no georef.
+          try{
+            const restored=await fetch(RAW_ROOT+"chart-georef.json?restore=protected-v2621-r1",
+              {cache:"no-store"});
+            if(restored.ok){
+              const response=await restored.json();
+              const second=buildGeorefIndex(response);
+              if(validBaseGeorefCandidate(response,second,m))candidate=second;
+            }
+          }catch(error){console.warn("Protected source retry failed; previous refs retained",error)}
+        }
+        if(manifest!==m)return;
+        if(validBaseGeorefCandidate(g,candidate,m)||
+           (m.version==="V2621"&&candidate.size>=807&&
+            [...OIGG_PROTECTED_PAGES_V2621].every(page=>candidate.has(page)))){
+          georefByPage=preservePreviouslyPublishedGeorefs(georefByPage,candidate);
+        }else{
+          console.error("Refusing to delete or overwrite existing chart georeferences due to incomplete source");
+        }
         enrouteValidityManifest=enrouteInfo&&enrouteInfo.schema===1?enrouteInfo:null;
         chartDisplayNamesByPage=(chartNameData&&chartNameData.cycle==="2621"&&chartNameData.pages&&
           charts.some(c=>c.airport==="OIKR"&&Number(c.page)===541))
@@ -1576,6 +1607,33 @@ async function loadOiciRouteOnlyFlightQa(m){
   oiciRouteModule=null;
   for(const page of OICI_DISABLED_GEOREF_PAGES)georefByPage.delete(page);
 }
+// Owner rule: never replace a loaded stable airport reference set with an
+// empty or incomplete response. Exact V2621 published OIGG records are locked.
+const OIGG_PROTECTED_PAGES_V2621=new Set([
+  309,310,311,312,313,314,315,316,317,318,319,320,321,322,
+  324,326,327,328,329,330,331,332,333,334,335
+]);
+function validBaseGeorefCandidate(root,candidate,activeManifest){
+  if(!root||!(candidate instanceof Map)||root.version!==2||candidate.size===0)return false;
+  if(root.source?.chartDataVersion==="V2621"){
+    if(activeManifest?.version!=="V2621"||
+       root.source.sha256!==activeManifest.source_sha256||
+       !Array.isArray(root.charts)||root.charts.length<807||
+       ![...OIGG_PROTECTED_PAGES_V2621].every(page=>candidate.has(page)))return false;
+  }
+  return true;
+}
+function preservePreviouslyPublishedGeorefs(oldMap,candidate){
+  // No existing reference can vanish due to a transient request,
+  // partially parsed dataset or an optional loader.
+  const merged=new Map(candidate);
+  for(const [page,model] of oldMap){
+    if(OICI_DISABLED_GEOREF_PAGES.has(page))continue; // explicit owner exception
+    if(!merged.has(page))merged.set(page,model);
+  }
+  return merged;
+}
+
 function buildGeorefIndex(root){
   const map=new Map();
   if(!root||root.version!==2||root.coordinateSystem!=="WGS84"||root.coordinateSpace!=="pdf_points"||root.origin!=="top_left")return map;
