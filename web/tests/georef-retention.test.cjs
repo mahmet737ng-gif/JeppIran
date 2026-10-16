@@ -23,6 +23,10 @@ test("every published OIGG source record is present and protected in V2621",()=>
 test("missing/partial chart source rejected without losing any prior stable georefs",()=>{
  assert.equal(valid(null,new Map(),manifest),false);
  assert.equal(valid(stable,new Map(),manifest),false);
+ const wrongCycle={...stable,source:{...stable.source,chartDataVersion:"V2620"}};
+ assert.equal(valid(wrongCycle,current,manifest),false);
+ const wrongPdf={...stable,source:{...stable.source,sha256:"0".repeat(64)}};
+ assert.equal(valid(wrongPdf,current,manifest),false);
  const broken=new Map(current);broken.delete(317);
  assert.equal(valid(stable,broken,manifest),false);
  const recovered=preserve(current,broken);

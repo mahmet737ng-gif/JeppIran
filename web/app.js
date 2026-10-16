@@ -1615,6 +1615,9 @@ const OIGG_PROTECTED_PAGES_V2621=new Set([
 ]);
 function validBaseGeorefCandidate(root,candidate,activeManifest){
   if(!root||!(candidate instanceof Map)||root.version!==2||candidate.size===0)return false;
+  // A stale offline AIRAC response must NEVER supersede the current chart set.
+  if(root.source?.chartDataVersion!==activeManifest?.version||
+     root.source?.sha256!==activeManifest?.source_sha256)return false;
   if(root.source?.chartDataVersion==="V2621"){
     if(activeManifest?.version!=="V2621"||
        root.source.sha256!==activeManifest.source_sha256||
