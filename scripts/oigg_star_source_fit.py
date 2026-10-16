@@ -172,3 +172,45 @@ for entry in revised["charts"]:
         assert abs(pxy(grid["comparisonLatitude"],grid["lon"])[1]-grid["y"])<5.6,(num,"source grid")
     assert not v["userFsxEvidence"]["d15HeldOutWithoutPdfSymbol"]["usedInFit"]
     print("OIGG_R2_REVISED_SOURCE_FIT_PASS",num,v["residualsPdfPoints"]["D20"],v["maxCalibrationResidualPdfPoints"],flush=True)
+
+
+# Independent original-PDF centerline inspection at owner FSX D12.
+# This does NOT revise any calibration model.
+def segment_match_at(page, target):
+    result=[]
+    for draw in page.get_drawings():
+        color=draw.get("color")
+        if color is None or len(color)<3 or max(float(z) for z in color[:3])>0.22:
+            continue
+        for part in draw["items"]:
+            if part[0]!="l" or len(part)<3:
+                continue
+            a,b=part[1],part[2]
+            ax,ay=float(a.x),float(a.y);bx,by=float(b.x),float(b.y)
+            length=math.hypot(bx-ax,by-ay)
+            if length<18:
+                continue
+            t=max(0,min(1,((target[0]-ax)*(bx-ax)+(target[1]-ay)*(by-ay))/(length*length)))
+            nearest=[ax+t*(bx-ax),ay+t*(by-ay)]
+            d=math.dist(target,nearest)
+            if d<42:
+                result.append({"line":[[round(ax,3),round(ay,3)],[round(bx,3),round(by,3)]],
+                  "closest":[round(x,3) for x in nearest],"distancePdf":round(d,3),
+                  "length":round(length,3),"width":draw.get("width"),"type":draw.get("type")})
+    return sorted(result,key=lambda q:(q["distancePdf"],-q["length"]))[:25]
+for item in revised["charts"]:
+    num=item["page"]
+    c=item["validation"]["userFsxEvidence"]["d15HeldOutWithoutPdfSymbol"]
+    s=item["points"]
+    mlon=sum(p["lon"] for p in s)/4;mlat=sum(p["lat"] for p in s)/4
+    mx=sum(p["x"] for p in s)/4;my=sum(p["y"] for p in s)/4
+    coords=np.array([[p["lon"]-mlon,p["lat"]-mlat] for p in s])
+    fit_x=np.linalg.lstsq(coords,[p["x"]-mx for p in s],rcond=None)[0]
+    fit_y=np.linalg.lstsq(coords,[p["y"]-my for p in s],rcond=None)[0]
+    for name,latitude,longitude in [("D12_FSX",37+14.12/60,49+50.34/60),
+                                     ("D20_FSX",37+10.65/60,49+59.21/60),
+                                     ("KOBUB",KOBUB["lat"],KOBUB["lon"])]:
+        u=np.array([longitude-mlon,latitude-mlat])
+        predicted=[mx+float(u@fit_x),my+float(u@fit_y)]
+        print("OIGG_SOURCE_BLACK_LINES",json.dumps({"page":num,"name":name,
+         "modelPdf":predicted,"nearest":segment_match_at(doc[num-1],predicted)},ensure_ascii=False),flush=True)
