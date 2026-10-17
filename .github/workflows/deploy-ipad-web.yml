@@ -316,6 +316,12 @@ jobs:
           export JEPPIRAN_CHROME_BIN="$(command -v google-chrome)"
           node scripts/verify_new20_profile_browser.cjs
 
+      - name: Verify city landmarks and text-free poster header for sample airports in Chrome
+        run: |
+          export NODE_PATH="$RUNNER_TEMP/jeppiran-browser-qa/node_modules"
+          export JEPPIRAN_CHROME_BIN="$(command -v google-chrome)"
+          node scripts/verify_profile_scenery_browser.cjs
+
       - name: Verify visible airport chart validity in real Chrome
         run: |
           export NODE_PATH="$RUNNER_TEMP/jeppiran-browser-qa/node_modules"
