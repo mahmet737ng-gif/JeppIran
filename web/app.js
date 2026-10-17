@@ -1319,6 +1319,17 @@ function renderAirportProfile(icao){
   const raw=wxCache[icao+":metar"]||"";
   const taf=wxCache[icao+":taf"]||"";
   const wx=metarInfo(raw);const rw=profileCurrentRunway(icao),comp=windComponents(raw,rw);
+  // Flight-rule badge belongs to the profile METAR card. It is based solely
+  // on the reported cloud ceiling and prevailing visibility, never forecast
+  // conditions, guessed clouds, or runway headings.
+  const flight=window.JEPPIRAN_FLIGHT_CATEGORY?.classify(raw)||
+    {code:"UNKNOWN",description:"METAR ceiling/visibility unavailable"};
+  const flightClass=/^(VFR|MVFR|IFR|LIFR)$/.test(flight.code)?flight.code.toLowerCase():"unknown";
+  const flightLabel=flightClass==="unknown"?"WX —":flight.code;
+  const flightBadge='<span class="jp-flight-category jp-flight-'+flightClass+
+    '" title="'+profileEsc(flight.description)+'" aria-label="'+
+    profileEsc("METAR flight category: "+(flightClass==="unknown"?"unavailable":flight.code))+
+    '">'+profileEsc(flightLabel)+'</span>';
   const formattedCoord=Number.isFinite(d.lat)?d.lat.toFixed(4)+"° N &nbsp; "+d.lon.toFixed(4)+"° E":"Data not available";
   const fav=new Set(getAirportFavorites());
   const categories=[["STAR","STAR"],["SID","SID"],["Airport","AIRPORT"],["Approach","APP"]];
@@ -1342,7 +1353,7 @@ function renderAirportProfile(icao){
   root.innerHTML='<div class="profile-shell">'+
     '<div class="profile-heading"><div><div class="profile-code-row"><strong class="profile-icao">'+profileEsc(icao)+'</strong><span class="profile-chip">'+profileEsc(d.iata||"—")+'</span><button type="button" class="profile-chip" id="profileFavBtn" aria-label="Favorite airport">'+(fav.has(icao)?"★":"☆")+'</button></div><h2>'+profileEsc(name)+'</h2><p>'+profileEsc(meta[1])+(meta[1]&&country?', ':'')+profileEsc(country)+'<span class="profile-elev-inline">Elevation '+(Number.isFinite(d.elevation)?d.elevation.toLocaleString()+' ft':'—')+'</span></p></div><div class="profile-elev"><strong id="profileUtcClock" class="profile-utc-clock" aria-live="off">--:--:-- UTC</strong><small class="profile-coordinates">⌖ '+formattedCoord+'</small><small id="profileLocalTime" class="profile-local-clock" aria-live="off">--:--:--</small><div id="profileTerminalValidity" class="terminal-validity profile-terminal-validity" data-state="unknown" role="status" aria-live="polite">'+terminalValidityIndicator().profileMarkup+'</div></div></div>'+
     '<div class="profile-cols">'+
-      '<section class="profile-card" id="profileWeather"><header><span>METAR • '+profileEsc(icao)+'</span><small id="profileMetarAge">'+(raw?"Last received / cached":"Loading live METAR…")+'</small></header>'+
+      '<section class="profile-card" id="profileWeather"><header><span class="jp-metar-heading"><span>METAR • '+profileEsc(icao)+'</span>'+flightBadge+'</span><small id="profileMetarAge">'+(raw?"Last received / cached":"Loading live METAR…")+'</small></header>'+
         '<span class="metar-raw" id="profileMetarRaw">'+profileEsc(raw||"Waiting for actual METAR…")+'</span>'+
         '<div class="weather-summary"><div class="weather-brief"><span class="weather-icon">'+wx.icon+'</span><div><strong>'+profileEsc(raw?wx.temp:"—")+'</strong><small>'+profileEsc(raw?wx.desc:"Weather unavailable")+'</small><small>'+profileEsc(raw?wx.clouds:"")+'</small></div></div>'+
         '<div class="weather-facts"><span>◉ '+profileEsc(wx.visibility)+'</span><span>➤ '+(wx.windDirection===null?"—":wx.windDirection.toString().padStart(3,"0")+"°")+' / '+(wx.windSpeed===null?"—":wx.windSpeed+" kt")+'</span><span>UTC <span class="profile-utc"></span></span></div></div></section>'+
