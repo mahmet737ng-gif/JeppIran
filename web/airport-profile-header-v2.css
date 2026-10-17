@@ -8,7 +8,7 @@
   height:100%!important;
   inset:0!important;
   background-size:cover!important;
-  background-position:center center!important;
+  background-position:center bottom!important;
 }
 #chartsView .airport-profile.jp-airport-poster-loaded .profile-heading {
   position:relative;
@@ -161,5 +161,34 @@
   }
   #chartsView .airport-profile.jp-airport-poster-loaded .jp-poster-frame .jp-caption-divider {
     margin-top:clamp(105px,13vh,145px);
+  }
+}
+
+/* Approved city/landmark content is concentrated in the bottom quarter.
+   This is the original background re-shown at its unchanged pixel scale and
+   coordinates, never a new symbol or distorted cutout. It is a foreground
+   sibling to the information cards, so airport scenery stays visible even
+   when cards are long. Profile data remains in the reserved upper area. */
+#chartsView .airport-profile.jp-airport-poster-loaded > .jp-poster-scenic-foreground {
+  position:absolute;
+  z-index:2;
+  pointer-events:none;
+  left:0;
+  right:0;
+  bottom:0;
+  width:100%;
+  height:clamp(108px,27%,260px);
+  background-repeat:no-repeat;
+  background-position:center bottom;
+  -webkit-mask-image:linear-gradient(to bottom,transparent 0%,#000 27%,#000 100%);
+  mask-image:linear-gradient(to bottom,transparent 0%,#000 27%,#000 100%);
+}
+#chartsView .airport-profile.jp-airport-poster-loaded .profile-shell {
+  /* fitCards() reserves the scenic area before scaling any cards. */
+  max-height:calc(100% - var(--jp-scenic-reserve,170px));
+}
+@media(max-width:780px) {
+  #chartsView .airport-profile.jp-airport-poster-loaded > .jp-poster-scenic-foreground {
+    height:clamp(88px,20%,175px);
   }
 }
