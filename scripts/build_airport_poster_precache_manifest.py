@@ -43,6 +43,25 @@ def main():
         if design not in gallery_urls:
             raise SystemExit("Missing source image for: " + design)
         posters[icao] = gallery_urls[design]
+    # Owner-approved 13 profile replacements: 11 existing profile codes and
+    # 2 newly added international airports. Original 50 and gallery 20 remain
+    # untouched; SHA revision URLs replace only these named display choices.
+    approved = json.loads((WEB / "airport-profile-posters-v3" / "manifest.json").read_text(encoding="utf-8"))
+    entries = approved.get("files", {})
+    if approved.get("count") != 13 or len(entries) != 13 or not approved.get("ownerApproved"):
+        raise SystemExit("Expected exactly 13 owner-approved poster replacements")
+    for icao, details in sorted(entries.items()):
+        if len(icao) != 4 or not icao.isupper() or details.get("file") != icao + ".webp":
+            raise SystemExit("Invalid new poster ICAO/path: " + icao)
+        image = WEB / "airport-profile-posters-v3" / details["file"]
+        if not image.is_file():
+            raise SystemExit("Missing owner-approved airport poster: " + icao)
+        blob = image.read_bytes()
+        digest = hashlib.sha256(blob).hexdigest()
+        if len(blob) != details["size"] or digest != details["sha256"]:
+            raise SystemExit("Owner-approved poster integrity mismatch: " + icao)
+        posters[icao] = "./airport-profile-posters-v3/" + icao + ".webp?v=" + digest[:20]
+    print("13 owner-approved replacement posters verified; 50 originals + 20 gallery retained")
     out = {"schema": 1, "cache_policy": "immutable-per-sha256", "posters": posters,
            "gallery": gallery, "new20_profile_icaos": sorted(mapped)}
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
