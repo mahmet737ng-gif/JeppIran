@@ -7,14 +7,16 @@
   "use strict";
   const airports = Object.freeze({"OIII":"THR","OIIE":"IKA","OIMM":"MHD","OICC":"KSH","OITR":"OMH","OISS":"SYZ","OIFM":"IFN","OIAW":"AWZ","OIKB":"BND","OIYY":"AZD","OITT":"TBZ","OIKK":"KER","OIGG":"RAS","OITL":"ADU","OIBK":"KIH","OIZC":"ZBR","OIBB":"BUZ","OIHH":"HDM","OIMB":"XBJ","OITZ":"JWN","OIAA":"ABD","OIBA":"AEU","OIBP":"PGU","OIMN":"BJB","OING":"GBT","OIHR":"AJK","OISL":"LRR","OIKQ":"GSM","OIZH":"ZAH","OICS":"SDG","OIIL":"IIL","OISR":"LFM","OINN":"NSH","OINR":"RZR","OINZ":"SRY","OISY":"YES","OIKY":"SYJ","OIAM":"MRX","OIAD":"DEF","OIMT":"TCX","OIIP":"PYK","OIKM":"BXR","OIMS":"AFZ","OISJ":"JAR","OITK":"KHY","OITP":"PFQ","OIBQ":"KHK","OITM":"IMQ","OICK":"KHD","OIFS":"CQD"});
   const additionalPosterAssignments = Object.freeze({"OIBL":"new20_05","OIBS":"new20_12","OIBV":"new20_13","OICI":"new20_15","OICZ":"new20_04","OIFE":"new20_16","OIFP":"new20_17","OIKJ":"new20_10","OIKR":"new20_19","OIMJ":"new20_08","OINE":"new20_03","OISF":"new20_09","OITU":"new20_14","OIZB":"new20_20","OIZI":"new20_18","OIZS":"new20_06","OTHH":"new20_01","UGSB":"new20_02","OOMS":"new20_07","OPKC":"new20_11"});
-  const allAirports = Object.freeze({...airports,...Object.fromEntries(Object.keys(additionalPosterAssignments).map(icao=>[icao,true]))});
+  const v3AirportCodes = Object.freeze(["LTAC","LTFM","OIAA","OIAM","OIAW","OIBA","OIBB","OIBK","OIBL","OIBP","OIBQ","OIII","OIMM"]);
+  const v3AirportSet = new Set(v3AirportCodes);
+  const allAirports = Object.freeze({...airports,...Object.fromEntries(Object.keys(additionalPosterAssignments).map(icao=>[icao,true])),...Object.fromEntries(v3AirportCodes.map(icao=>[icao,true]))});
   const root = document.getElementById("airportProfile");
   if (!root) return;
   const loading = new Map();
   const dimensions = new Map();
   let queued = false;
   let lastCode = "";
-  const urlFor = (icao) => window.JEPPIRAN_POSTER_CACHE_URLS?.[icao] || (additionalPosterAssignments[icao] ? "./airport-profile-posters-new20/" + additionalPosterAssignments[icao] + ".webp" : "./airport-profile-posters-textfree/" + icao + ".webp?v=2621-letter-repair-r2");
+  const urlFor = (icao) => window.JEPPIRAN_POSTER_CACHE_URLS?.[icao] || (v3AirportSet.has(icao) ? "./airport-profile-posters-v3/" + icao + ".webp?v=2621-poster-v3-13" : (additionalPosterAssignments[icao] ? "./airport-profile-posters-new20/" + additionalPosterAssignments[icao] + ".webp" : "./airport-profile-posters-textfree/" + icao + ".webp?v=2621-letter-repair-r2"));
 
   // The poster is a fixed, fully contained image with its HTML caption anchored
   // INSIDE the same image rectangle, never to scrolling profile content.

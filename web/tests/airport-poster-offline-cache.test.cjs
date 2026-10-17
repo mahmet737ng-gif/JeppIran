@@ -19,6 +19,7 @@ test("all image poster bytes are served from immutable content-addressed URL cac
  assert.match(sw,/const AIRPORT_POSTER_CACHE="jeppiran-airport-poster-files-v1"/);
  assert.match(sw,/\/airport-profile-posters-textfree\//);
  assert.match(sw,/\/airport-profile-posters-new20\//);
+ assert.match(sw,/\/airport-profile-posters-v3\//);
  assert.match(sw,/const ready=await cache\.match\(event\.request\)/);
  assert.match(sw,/if\(ready\)return ready/);
  assert.match(loader,/CACHE = "jeppiran-airport-poster-files-v1"/);
@@ -28,7 +29,7 @@ test("all image poster bytes are served from immutable content-addressed URL cac
 });
 test("preload starts at launch without blocking initial UI or deleting chart PDFs",()=>{
  const html=read("web/index.html"),sw=read("web/service-worker.js");
- for(const n of ["airport-poster-preload.js?v=2621-persistent-r1","airport-profile-posters.js?v=2621-profile-scenery-restored-r3"]){
+ for(const n of ["airport-poster-preload.js?v=2621-persistent-v3-13-r1","airport-profile-posters.js?v=2621-profile-v3-13-r1"]){
   assert.ok(html.includes(n),n);
   assert.ok(sw.includes(n),n);
  }

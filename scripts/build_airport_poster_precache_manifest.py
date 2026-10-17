@@ -43,6 +43,25 @@ def main():
         if design not in gallery_urls:
             raise SystemExit("Missing source image for: " + design)
         posters[icao] = gallery_urls[design]
+    # Thirteen newly approved DISPLAY backgrounds override earlier displayed
+    # variants only. The 50 immutable source posters and 20 historical gallery
+    # assets are not touched. Two international airports extend coverage.
+    v3_dir = WEB / "airport-profile-posters-v3"
+    v3 = json.loads((v3_dir / "manifest.json").read_text(encoding="utf-8"))
+    records = v3.get("files", {})
+    if v3.get("schema") != 1 or v3.get("expectedCount") != 13 or len(records) != 13:
+        raise SystemExit("Invalid approved V3 profile manifest")
+    present = {p.stem for p in v3_dir.glob("*.webp")}
+    if present != set(records):
+        raise SystemExit("V3 airport profile artwork set incomplete or unexpected")
+    for icao, meta in sorted(records.items()):
+        if len(icao) != 4 or not icao.isupper() or not isinstance(meta, dict):
+            raise SystemExit("Invalid V3 ICAO mapping: " + icao)
+        file = v3_dir / (icao + ".webp")
+        digest = hashlib.sha256(file.read_bytes()).hexdigest()
+        if digest != meta.get("sha256"):
+            raise SystemExit("V3 profile hash mismatch: " + icao)
+        posters[icao] = "./airport-profile-posters-v3/" + file.name + "?v=" + digest[:20]
     out = {"schema": 1, "cache_policy": "immutable-per-sha256", "posters": posters,
            "gallery": gallery, "new20_profile_icaos": sorted(mapped)}
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)

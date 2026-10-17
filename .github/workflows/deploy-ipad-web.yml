@@ -138,6 +138,9 @@ jobs:
       - name: Verify all twenty newly published poster WebPs against SHA256 manifest
         run: node --test web/tests/new20-posters-integrity.test.cjs
 
+      - name: Validate all 13 approved V3 city/airport composites
+        run: node --test web/tests/airport-poster-v3-assets.test.cjs
+
       - name: Build SHA-versioned poster cache registry for current images
         run: python3 scripts/build_airport_poster_precache_manifest.py
 

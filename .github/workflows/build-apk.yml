@@ -545,6 +545,14 @@ jobs:
 
           gh release upload "$RELEASE_TAG"             app/src/main/assets/chart-georef.json             --clobber
 
+      - name: Verify and prepare V3 airport posters for embedded offline Android
+        run: |
+          node --test web/tests/airport-poster-v3-assets.test.cjs
+          python3 -m pip install --quiet --disable-pip-version-check Pillow==11.3.0 opencv-python-headless==4.11.0.86
+          python3 scripts/build_textfree_airport_posters.py
+          python3 scripts/build_airport_poster_precache_manifest.py
+          test -s web/data/airport-poster-cache.json
+
       - name: Bundle complete offline JEPPIRAN Android application
         shell: bash
         run: |

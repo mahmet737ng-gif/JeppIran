@@ -6,6 +6,7 @@ const assert=require("node:assert/strict"),fs=require("node:fs"),path=require("n
 const root=path.resolve(__dirname,"..");
 const manifest=JSON.parse(fs.readFileSync(path.join(root,"web/airport-profile-posters-new20/manifest.json"),"utf8"));
 const assigned=JSON.parse(fs.readFileSync(path.join(root,"web/airport-profile-posters-new20/assignments.json"),"utf8"));
+const v3=JSON.parse(fs.readFileSync(path.join(root,"web/airport-profile-posters-v3/manifest.json"),"utf8"));
 const base=process.env.JEPPIRAN_PAGE_URL;
 if(!base||!/^https:\/\//.test(base))throw Error("Pages deployment output URL is required");
 const url=(relative)=>new URL(relative,base.endsWith("/")?base:base+"/");
@@ -17,13 +18,14 @@ async function get(relative){const r=await fetch(url(relative),{headers:{"Cache-
   try{
    const html=await (await get("index.html")).text();
    const gallery=await (await get("airport-profile-posters-new20/?batch=1")).text();
-   const code=await (await get("airport-profile-posters.js?v=2621-profile-scenery-restored-r3")).text();
+   const code=await (await get("airport-profile-posters.js?v=2621-profile-v3-13-r1")).text();
    const mapping=await (await get("data/airport-poster-cache.json")).json();
-   assert.ok(html.includes("airport-profile-posters.js?v=2621-profile-scenery-restored-r3"));
+   assert.ok(html.includes("airport-profile-posters.js?v=2621-profile-v3-13-r1"));
    assert.ok(gallery.includes("const perPage=10")&&gallery.includes("const total=20"));
    assert.ok(code.includes("additionalPosterAssignments"));
-   assert.equal(Object.keys(mapping.posters).length,70);
-   for(const [icao,id] of Object.entries(assigned.airport_to_design))assert.ok(mapping.posters[icao].includes(id+".webp"));
+   assert.equal(Object.keys(mapping.posters).length,72);
+   for(const [icao,id] of Object.entries(assigned.airport_to_design))if(!(icao in v3.files))assert.ok(mapping.posters[icao].includes(id+".webp"));
+   for(const icao of Object.keys(v3.files))assert.ok(mapping.posters[icao].includes("/"+icao+".webp?v="),icao);
    ready=true;break;
   }catch(e){console.log("Published Pages not current yet, attempt",i,e.message);if(i<15)await wait(12000)}
  }
@@ -37,5 +39,11 @@ async function get(relative){const r=await fetch(url(relative),{headers:{"Cache-
   assert.equal(crypto.createHash("sha256").update(body).digest("hex"),entry.sha256_webp,entry.id);
   console.log("LIVE WEB PASS",entry.id,body.length,"bytes");
  }
- console.log("PASS PUBLIC PAGES: twenty original WebPs reachable, correct SHA256, 70 profile mappings and both review pages.");
+ for(const [icao,meta] of Object.entries(v3.files)){
+  const r=await get("airport-profile-posters-v3/"+icao+".webp");
+  const body=Buffer.from(await r.arrayBuffer());
+  assert.equal(crypto.createHash("sha256").update(body).digest("hex"),meta.sha256,icao);
+  console.log("LIVE WEB V3 PASS",icao,body.length,"bytes");
+ }
+ console.log("PASS PUBLIC PAGES: twenty historical photos, thirteen V3 photos, 72 profile mappings and both review pages.");
 })().catch(e=>{console.error(e);process.exitCode=1});
