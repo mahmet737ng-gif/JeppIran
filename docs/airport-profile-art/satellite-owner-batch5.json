@@ -1,0 +1,101 @@
+{
+  "schema": 1,
+  "date": "2026-10-18",
+  "batch": 5,
+  "illustrativeOnly": true,
+  "generationTool": "image_gen.imagegen",
+  "mode": "built-in reference-guided image editing",
+  "commonPrompt": "Use case: style-transfer/compositing. Project: JeppIran decorative airport profile, 16:9,1672x941.\nUSER rejected previous images as TOO IMAGINARY. This is a faithful screenshot-to-cinematic-render edit, not a new airport design.\nINPUT1: USER'S Google Earth/Maps screenshot, sole authoritative airport GEOMETRY and CAMERA/CROP. INPUT2: OLD artwork, only navy/amber palette and bottom scenic footer theme; its airport plan, development and repeated landmarks are WRONG, discard them. Optional INPUT3: real city landmark photo for FOOTER only.\nStrictly retain input1 runway number, relative alignment, apron footprint/size, exact side/location, connector count and shapes, building/roof footprints, nearby road/field/sea/river relations, camera angle and crop. If a runway continues outside the crop, leave it continuing outside; DO NOT invent thresholds/ends or zoom out to fabricate unseen airport. No mirrored/extended geography, no extra airfield infrastructure, no big hub or high-rise.\nBUILDING VOLUME: Extrude ONLY observed roofs into restrained, believable low buildings, usually 1-2 stories, actual existing hangars a little taller; visible facades, roof edges, local wall materials, coherent shadows and small warm windows. Preserve each roof outline and color family. No new towers, ornamental futuristic terminals, multigate concourses, jet bridges or new urban development. Keep empty land empty. This should feel like the real reference with subtle realistic 3D architecture and lighting.\nCinematic legible BLUE HOUR: navy/cool muted natural ground, restrained warm amber road/apron lighting, realistic terrain rather than overly glowing fantasy. Airfield occupies upper82-85%. Bottom15-18% is a softly blended separate ground-view city/landscape strip, landmark strongest at right, never planted on airport grounds. Do not cover key terminals with footer.\nDUPLICATE CHECK: EXACTLY ONE instance of each distinctive landmark/complex total. Input2 contains BAD mirrored clones: do not copy them. No second partial duplicate hiding at an image edge, no matching twin pavilions/towers/hotels. Natural varied scenery.\nREMOVE screenshot UI, search bar, logos, watermark, compass, map buttons. No text/cards/titles or typography anywhere. Do not copy any watermark/signage in optional landmark photo.",
+  "airports": [
+    {
+      "icao": "OITU",
+      "satelliteReference": "image(20261017-232042).png",
+      "satelliteReferenceSha256": "faf60b250dee149fc35665d64f793a7821a3501b6726b1b13b83f6c77992a0be",
+      "specificPrompt": "OITU. One diagonal runway from LOWER-LEFT continuing outside crop toward UPPER-RIGHT visible turnpad/threshold. Compact apron ABOVE runway left-center with a short bent/perpendicular connector. Terminal immediately behind apron has distinctive pale-green elongated oval/leaf curved roof, keep modest size and that precise footprint. Triangular/loop landscaped entry and parking behind, scattered tiny support roofs only. Highway crosses upper-middle with looping interchange left-center, dry brown fields, erosion channels and rocky hill upper-left. No dense city or river at airport. Footer theme from input2: one castle complex on rocky hill at right, mountains and modest city glow left; exactly one castle.",
+      "output": "web/airport-profile-posters-v3/OITU.webp",
+      "outputSha256": "90b3b4388a9efb9ddb857e91493fc37573c9e8b267cb7c59b7093eea88700a5a",
+      "landmarkReference": null
+    },
+    {
+      "icao": "OITM",
+      "satelliteReference": "image(20261017-232204).png",
+      "satelliteReferenceSha256": "60e6352b380d441222f430c0c1009e64406a6da623af73048bca3932aa79d66e",
+      "specificPrompt": "OITM, use this exact project code. Very oblique single long narrow runway from lower-left/center near tiny apron toward upper-right and TOP EDGE, keep far end cropped. Tiny rectangular apron at lower-left side with a few very small low tan/white buildings on west edge. NO long parallel taxiway. Irregular farm parcels everywhere, haze far top; nearby main road on runway RIGHT with a line of tiny industrial sheds to its right and loop near bottom. Distant village top-left. Small rural airfield, not hub. Footer theme only: ONE naturally varied rocky escarpment/plateau at right with valley/city left, not repeated/mirrored cliff segments.",
+      "output": "web/airport-profile-posters-v3/OITM.webp",
+      "outputSha256": "4fc2cf49216375a25dca46be67beec2bc5238f875c7e4769c82e215d9a982563",
+      "landmarkReference": null
+    },
+    {
+      "icao": "OITR",
+      "satelliteReference": "image(20261017-232307).png",
+      "satelliteReferenceSha256": "22c191b23ad72b7c075a427ed9dba6f136ac5d52288f2e550bf20a0607c9e6a4",
+      "specificPrompt": "OITR Urmia. ONE runway UPPER-LEFT to LOWER-RIGHT, preserve screenshot crop. Civil apron LOWER/LEFT side near southeast/right-center, two actual connectors around elongated dry infield. Long LOW terminal roof and parking below apron, no multigate concourse. Separate apron farther upper-left on same lower side with TWO existing BLUE-ROOF hangars and small rectangular paved helicopter/pad markings; road links behind. Dense orchards and farm parcels around, village far right. Footer: keep exactly ONE white modern split-leg arch monument at bottom right beside waterfront; old poster's matching second arch must be absent.",
+      "output": "web/airport-profile-posters-v3/OITR.webp",
+      "outputSha256": "b8cf768037258079a74d0378cbe7246c1503fd3afef11bd00cba9306200330d0",
+      "landmarkReference": null
+    },
+    {
+      "icao": "OITT",
+      "satelliteReference": "image(20261017-232356).png",
+      "satelliteReferenceSha256": "754372eabc805ebd1eb36d9112e18e2d7f4e31a2511b1fabca71cca5061a1c09",
+      "specificPrompt": "OITT Tabriz. CLOSE CROP, preserve EXACTLY TWO parallel runway strips diagonal UPPER-LEFT to LOWER-RIGHT in upper half, with screenshot connector network and long dry strip between. Lower runway near threshold at right; do not invent unseen runway ends or zoom out. Main apron BELOW lower runway center/left with observed stands only. Large WHITE-ROOF real terminal lower-right-center with curved/angled footprint, BLUE-ROOF large hangar far lower-left and other maintenance roofs left-middle; extrude actual roofs, do not redesign. Parking lots, curving entry roads and roundabout bottom. Footer ONE illuminated domed pavilion building in waterfront/park theme, never a matching copy.",
+      "output": "web/airport-profile-posters-v3/OITT.webp",
+      "outputSha256": "d6204155e79edd179d2fa72064f3523461cff99e71e98074a175e7a43b29da21",
+      "landmarkReference": null
+    },
+    {
+      "icao": "OITZ",
+      "satelliteReference": "image(20261017-232452).png",
+      "satelliteReferenceSha256": "8103c9c40374d73a707547ed79157e72f6acbeaeecdc7e06d0cf95649c2b61fc",
+      "specificPrompt": "OITZ Zanjan. Single runway LOWER-LEFT visible threshold toward UPPER-RIGHT far threshold, full runway as screenshot. Apron BELOW runway near lower center, irregular broad polygon with small oval/oblong dry island toward upper-left. TWO actual connectors around small dry wedge; partial parallel TAXIWAY extends upper-right to far end enclosing long infield, do not transform taxiway into second runway. Modest blue-white terminal and triangular groundside entry/parking below apron, plain rectangular parking lot lower-right and few support roofs lower-left. Keep open dry fields. Footer exactly ONE blue-domed octagonal Soltaniyeh-style monument complex at right; delete old poster's partial edge duplicate.",
+      "output": "web/airport-profile-posters-v3/OITZ.webp",
+      "outputSha256": "ea7b069f4e513ccc102f173793691a940d1043a43e8d92ca1a2c8300981d5d18",
+      "landmarkReference": null
+    },
+    {
+      "icao": "OIYY",
+      "satelliteReference": "image(20261017-232604).png",
+      "satelliteReferenceSha256": "90e525f70aea749d1da2de85cfeb5e54fa87da587923ee5f96f33651858d10d4",
+      "specificPrompt": "OIYY Yazd. CLOSE CROP: ONE runway nearly vertical diagonal UPPER-LEFT to LOWER-CENTER, continues beyond both frame ends. Do not invent complete runway or ends. Apron RIGHT of runway center, elongated rectangular pavement with TWO rounded dry islands along runway edge. Low narrow terminal roofs along apron's right edge, small compounds/fuel tanks behind upper part. Oval/loop access parking and roundabouts right, curving main highway farther right/top, sparse dry town at right edge, empty desert left/above. Small aircraft-shaped decorative planting on island is flat planting, not a new aircraft/building. Footer ONE coherent Yazd cityscape, exactly ONE Amir Chakhmaq-style tall arched facade with its integral pair of minarets; naturally varied windcatcher roofs, no cloned facade/rows.",
+      "output": "web/airport-profile-posters-v3/OIYY.webp",
+      "outputSha256": "ba2378cf150372458a589e86a55a3c9bee1bc04b26f5454d98fec3e27f19497a",
+      "landmarkReference": null
+    },
+    {
+      "icao": "OIZC",
+      "satelliteReference": "image(20261017-232648).png",
+      "satelliteReferenceSha256": "b546f3309fd8b3fe50ad496bdb7f1c24ae704c81263fb211e7e0f0ae1d1bedc7",
+      "specificPrompt": "OIZC Konarak. TWO long parallel runway strips shallow LOWER-LEFT toward UPPER-RIGHT across image. Both source left threshold markings and broad end connectors/long taxiways are authoritative. Keep two runways and exact source strip distinctions/connector shapes, no generic single runway. Low desert compound with long pale apron BOTTOM-LEFT partly cropped, another small rectangular apron/tiny compound lower-right-middle. Vast empty pale sand. No harbor or coast touching airport. Footer only: ONE continuous separate Makran coastal sea scene, varied eroded ridges and fishing boat as old style; no mirrored harbor, copied cliffs or invented airport waterfront.",
+      "output": "web/airport-profile-posters-v3/OIZC.webp",
+      "outputSha256": "217543a98e0ed169634c94aef204393e8691aec36ddd6334fb781d8b2810656e",
+      "landmarkReference": null
+    },
+    {
+      "icao": "OIZI",
+      "satelliteReference": "image(20261017-232813).png",
+      "satelliteReferenceSha256": "1090eeca82dd5a60aab34e2106ed99a6465964117954ee1869a985816cde5ce6",
+      "specificPrompt": "OIZI Iranshahr. ONE runway LOWER-LEFT visible threshold/turnpad toward UPPER-RIGHT outside crop, keep clipping. Compact apron ABOVE/LEFT side near center. Wide curved bent perpendicular connector lower-left and second narrow straight perpendicular connector to right around broad dry infield. Tiny low terminal with distinctive light BLUE roof behind apron, little white roofs/service compounds, tree-lined road behind and parking near terminal. Dry eroded plain, not city hub. White thin antenna/path on opposite side is NOT extra taxiway/runway. Footer exactly ONE carved stone relief block at right among palms and mountains. No matching second carved block.",
+      "output": "web/airport-profile-posters-v3/OIZI.webp",
+      "outputSha256": "273b7c3354294628ed683e8666e10d7ee94922475fdc57fe1f7d94b6084123d3",
+      "landmarkReference": null
+    },
+    {
+      "icao": "OIZH",
+      "satelliteReference": "image(20261017-232901).png",
+      "satelliteReferenceSha256": "6465bd0ee2bf6f473a653ff735d117f4fa9adc3e4b6fa9cc734443a1494d9f8b",
+      "specificPrompt": "OIZH Zahedan. CLOSE CROP civil apron middle with LOW NARROW white terminal roofs behind. Landscaped roundabout above apron and straight tree-lined boulevard upward. Main long runway corridor shallow LOWER-LEFT toward UPPER-RIGHT just BELOW apron. Second parallel dark strip/taxiway partially visible at very BOTTOM-RIGHT with small plane and curved connector: match source exact distinctions/markings, no imagined full runways or ends. Apron has center short perpendicular exit downward and RIGHT bent S connector around long dry infield. Empty sand left, urban grid only TOP-RIGHT, separate maintenance apron/blue roofs far LEFT. Footer exactly ONE blue-domed mosque complex with legitimate integral minarets; remove old art's partial duplicate mosque at extreme right.",
+      "output": "web/airport-profile-posters-v3/OIZH.webp",
+      "outputSha256": "59cab780cbc463541bc4d8ff2d6684ea00d811b073f510df96cea97c1754b5e1",
+      "landmarkReference": null
+    },
+    {
+      "icao": "OIZB",
+      "satelliteReference": "image(20261017-232955).png",
+      "satelliteReferenceSha256": "edc6abd21087fe11a34fa00abc883f4311b75e58a8c89092b52eb223176317f8",
+      "specificPrompt": "OIZB Zabol. ONE runway steep LOWER-LEFT visible threshold/displaced overrun arrows toward UPPER-RIGHT beyond crop, keep cropped end. Small square apron upper-left/LEFT of runway near center; ONE bent perpendicular connector with large bare triangular gap. Very modest low white/blue terminal and tiny service roofs behind apron, oval-loop access parking and main road roughly parallel behind at left, secondary small compounds left-bottom along road. Sparse dry irregular fields, farm settlement far right, planted tree rows right of runway. Footer exactly ONE traditional conical-domed/tomb complex on rocky rise at right; modest city glow left. No repeated dome/fortress.",
+      "output": "web/airport-profile-posters-v3/OIZB.webp",
+      "outputSha256": "46cf57eb78a0b42d33df067b9b79fa332abcb03b0e7a3e26e919bc6411f36ce3",
+      "landmarkReference": null
+    }
+  ]
+}

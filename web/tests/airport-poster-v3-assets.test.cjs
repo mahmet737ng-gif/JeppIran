@@ -2,10 +2,10 @@
 const test=require("node:test"),assert=require("node:assert/strict"),fs=require("node:fs"),path=require("node:path"),crypto=require("node:crypto");
 const root=path.resolve(__dirname,"../..");
 const dir=path.join(root,"web/airport-profile-posters-v3");
-test("a stale offline registry cannot replace any of the 53 current V3 posters",()=>{
+test("a stale offline registry cannot replace any of the 63 current V3 posters",()=>{
  const vm=require("node:vm");
  const source=fs.readFileSync(path.join(root,"web/airport-profile-posters.js"),"utf8");
- const codes=["LTAC","LTFM","OIAA","OIAM","OIAW","OIBA","OIBB","OIBK","OIBL","OIBP","OIBQ","OIBS","OIBV","OICC","OICI","OICK","OICS","OICZ","OIFE","OIFM","OIFP","OIFS","OIGG","OIHH","OIHR","OIIE","OIII","OIIP","OIKB","OIKJ","OIKK","OIKM","OIKQ","OIKR","OIKY","OIMB","OIMJ","OIMM","OIMN","OIMS","OIMT","OINE","OING","OINN","OINR","OINZ","OISF","OISL","OISR","OISS","OISY","OITK","OITL"];
+ const codes=["LTAC","LTFM","OIAA","OIAM","OIAW","OIBA","OIBB","OIBK","OIBL","OIBP","OIBQ","OIBS","OIBV","OICC","OICI","OICK","OICS","OICZ","OIFE","OIFM","OIFP","OIFS","OIGG","OIHH","OIHR","OIIE","OIII","OIIP","OIKB","OIKJ","OIKK","OIKM","OIKQ","OIKR","OIKY","OIMB","OIMJ","OIMM","OIMN","OIMS","OIMT","OINE","OING","OINN","OINR","OINZ","OISF","OISL","OISR","OISS","OISY","OITK","OITL","OITM","OITR","OITT","OITU","OITZ","OIYY","OIZB","OIZC","OIZH","OIZI"];
  const urls=Object.fromEntries(codes.map(c=>[c,"./airport-profile-posters-textfree/"+c+".webp?v=old"]));
  const window={JEPPIRAN_POSTER_CACHE_URLS:urls,addEventListener(){}};
  const rootStub={querySelector(){return null}};
@@ -18,8 +18,8 @@ test("a stale offline registry cannot replace any of the 53 current V3 posters",
    const fresh="./airport-profile-posters-v3/"+code+".webp?v=1234567890abcdef1234";
    urls[code]=fresh;assert.equal(window.testPosterUrl(code),fresh,code+" preserves current content hash");
  }
- urls.OITT="./airport-profile-posters-textfree/OITT.webp?v=unchanged";
- assert.equal(window.testPosterUrl("OITT"),urls.OITT,"other approved airports retain their original mapping");
+ urls.OIAD="./airport-profile-posters-textfree/OIAD.webp?v=unchanged";
+ assert.equal(window.testPosterUrl("OIAD"),urls.OIAD,"other approved airports retain their original mapping");
 });
 test("poster registry refreshes online and retains offline fallback",async()=>{
  const vm=require("node:vm"),handlers={},writes=[];
@@ -36,10 +36,10 @@ test("poster registry refreshes online and retains offline fallback",async()=>{
  assert.equal(await read(),"current-registry");assert.deepEqual(writes,["current-registry"]);
  offline=true;assert.equal(await read(),"old-registry");assert.equal(networkCalls,2);
 });
-test("all 53 ICAO-labelled airport composites match the approved source hashes",()=>{
+test("all 63 ICAO-labelled airport composites match the approved source hashes",()=>{
  const manifest=JSON.parse(fs.readFileSync(path.join(dir,"manifest.json"),"utf8"));
- assert.equal(manifest.schema,1);assert.equal(manifest.expectedCount,53);assert.equal(manifest.illustrativeOnly,true);
- assert.equal(Object.keys(manifest.files).length,53);
+ assert.equal(manifest.schema,1);assert.equal(manifest.expectedCount,63);assert.equal(manifest.illustrativeOnly,true);
+ assert.equal(Object.keys(manifest.files).length,63);
  assert.deepEqual(fs.readdirSync(dir).filter(x=>x.endsWith(".webp")).sort(),Object.keys(manifest.files).map(c=>c+".webp").sort());
  for(const [icao,entry] of Object.entries(manifest.files)){
    const bytes=fs.readFileSync(path.join(dir,entry.file));
