@@ -97,5 +97,12 @@
       "outputSha256": "46cf57eb78a0b42d33df067b9b79fa332abcb03b0e7a3e26e919bc6411f36ce3",
       "landmarkReference": null
     }
-  ]
+  ],
+  "displayIdentityCorrection": {
+    "icao": "OITM",
+    "iata": "ACP",
+    "reason": "The legacy decorative caption map used IMQ, which failed the existing ICAO/IATA identity guard against the current OITM profile. Correct the decorative map only so the approved screenshot artwork can load.",
+    "profileSource": "https://ourairports.com/airports/OITM/",
+    "navigationDataChanged": false
+  }
 }
