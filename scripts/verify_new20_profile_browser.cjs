@@ -21,7 +21,8 @@ async function ready(){for(let i=0;i<100;i++){if(server.exitCode!==null)throw Er
   await page.goto(base+"#charts",{waitUntil:"domcontentloaded",timeout:30000});
   await page.waitForFunction(()=>typeof selectAirport==="function" && Array.isArray(charts) && charts.length>1500,null,{timeout:60000});
   await page.waitForFunction(()=>!!window.JEPPIRAN_POSTER_CACHE_URLS && Object.keys(window.JEPPIRAN_POSTER_CACHE_URLS).length>=70,null,{timeout:25000});
-  for(const [icao,id] of Object.entries(assignment)){
+  const checks={...assignment,...Object.fromEntries(Object.keys(replaced).map(icao=>[icao,icao]))};
+  for(const [icao,id] of Object.entries(checks)){
    const actual=Object.hasOwn(replaced,icao)?icao:id;
    await page.evaluate(code=>selectAirport(code),icao);
    await page.waitForFunction(({code,design})=>{
@@ -45,6 +46,7 @@ async function ready(){for(let i=0;i<100;i++){if(server.exitCode!==null)throw Er
   }
   const report=await page.evaluate(()=>window.JEPPIRAN_NEW20_PROFILE_POSTERS);
   assert.equal(report.count,20);
-  console.log("PASS ALL 20 decorative profile images loaded within visible browser profile; original 50 untouched.");
+  console.log("PASS all assigned and current corrected profile images loaded within visible browser profile; original 50 untouched.");
  }finally{if(browser)await browser.close();server.kill("SIGTERM")}
 })().catch(e=>{console.error(e);process.exitCode=1;server.kill("SIGTERM")});
+

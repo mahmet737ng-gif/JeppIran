@@ -43,13 +43,13 @@ def main():
         if design not in gallery_urls:
             raise SystemExit("Missing source image for: " + design)
         posters[icao] = gallery_urls[design]
-    # Thirteen newly approved DISPLAY backgrounds override earlier displayed
+    # Current approved DISPLAY backgrounds override earlier displayed
     # variants only. The 50 immutable source posters and 20 historical gallery
     # assets are not touched. Two international airports extend coverage.
     v3_dir = WEB / "airport-profile-posters-v3"
     v3 = json.loads((v3_dir / "manifest.json").read_text(encoding="utf-8"))
     records = v3.get("files", {})
-    if v3.get("schema") != 1 or v3.get("expectedCount") != 13 or len(records) != 13:
+    if v3.get("schema") != 1 or v3.get("expectedCount") != 23 or len(records) != 23:
         raise SystemExit("Invalid approved V3 profile manifest")
     present = {p.stem for p in v3_dir.glob("*.webp")}
     if present != set(records):
@@ -71,3 +71,4 @@ def main():
     print("Poster precache:", len(posters), "profile photos and", len(gallery), "gallery photos")
 if __name__ == "__main__":
     main()
+

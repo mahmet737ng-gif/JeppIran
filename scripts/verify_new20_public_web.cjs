@@ -47,5 +47,6 @@ async function get(relative){const r=await fetch(url(relative),{headers:{"Cache-
   assert.equal(crypto.createHash("sha256").update(body).digest("hex"),meta.sha256,icao);
   console.log("LIVE WEB V3 PASS",icao,body.length,"bytes");
  }
- console.log("PASS PUBLIC PAGES: twenty historical photos, thirteen V3 photos, 72 profile mappings and both review pages.");
+ console.log("PASS PUBLIC PAGES: twenty historical photos, all current V3 photos, 72 profile mappings and both review pages.");
 })().catch(e=>{console.error(e);process.exitCode=1});
+
