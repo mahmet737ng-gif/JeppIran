@@ -89,16 +89,21 @@
     shell.style.maxHeight = "";
     shell.style.overflowY = "";
     shell.style.zoom = "1";
-    const available = Math.max(1,root.clientHeight - 20);
+    // Preserve a bottom scenic strip for the airport's own landmark.
+    // Without this reserve long runway listings cover the approved lower-
+    // right skyline on shorter laptop and tablet screens.
+    const compact = root.clientWidth < 780;
+    const scenicReserve = compact
+      ? Math.max(92, Math.min(145, root.clientHeight * .17))
+      : Math.max(145, Math.min(215, root.clientHeight * .24));
+    root.style.setProperty("--jp-scenic-reserve", scenicReserve + "px");
+    const available = Math.max(180, root.clientHeight - scenicReserve - 16);
     const natural = Math.max(1,shell.scrollHeight);
-    // A compact desktop profile fits inside the viewport in one shot.
-    // Tiny portrait viewports may scroll their DATA surface only, but the
-    // complete fixed photo and its caption never scroll or get cropped.
     const scale = Math.min(1,available/natural);
-    const chosen = Math.max(0.72,scale);
+    const chosen = Math.max(0.64,scale);
     shell.style.zoom = String(chosen);
     shell.style.maxHeight = (available/chosen)+"px";
-    shell.style.overflowY = scale < 0.72 ? "auto" : "hidden";
+    shell.style.overflowY = scale < 0.64 ? "auto" : "hidden";
   }
   function positionFrame(icao) {
     if (!root.classList.contains("jp-airport-poster-loaded")) return;
@@ -122,6 +127,20 @@
     frame.style.top = (h-posterH)/2+"px";
     frame.style.backgroundImage = 'url("' + urlFor(icao) + '")';
     ensureCaption(frame);
+    // Repaint ONLY the bottom landmark strip in a foreground scenic layer.
+    // This is the SAME image, at the SAME position/scale as the full poster,
+    // so scenery is not moved, duplicated or invented. It prevents cards
+    // from obscuring the city symbol after runway rows are populated.
+    let scene = frame.querySelector(".jp-poster-scenic-foreground");
+    if (!scene) {
+      scene = document.createElement("div");
+      scene.className = "jp-poster-scenic-foreground";
+      scene.setAttribute("aria-hidden", "true");
+      frame.appendChild(scene);
+    }
+    const cover = Math.max(w/size.width,h/size.height);
+    scene.style.backgroundImage = 'url("' + urlFor(icao) + '")';
+    scene.style.backgroundSize = (size.width*cover)+"px "+(size.height*cover)+"px";
     // Precisely align the live Favorites control immediately after the
     // metallic ICAO / IATA label, including responsive zoom adjustments.
     const button = root.querySelector("#profileFavBtn");
@@ -139,6 +158,7 @@
   function remove() {
     root.classList.remove("jp-airport-poster-loaded");
     root.style.removeProperty("--jp-airport-poster-image");
+    root.style.removeProperty("--jp-scenic-reserve");
     root.querySelector(".jp-poster-frame")?.remove();
     const shell = root.querySelector(".profile-shell");
     if (shell) {shell.style.zoom = "";shell.style.maxHeight = "";shell.style.overflowY = "";}
