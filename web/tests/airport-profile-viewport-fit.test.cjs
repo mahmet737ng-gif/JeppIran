@@ -19,7 +19,7 @@ test("original assets are not edited, all 50 source signatures are present",()=>
 });
 test("new asset versioned in HTML and service worker and tests included in Pages",()=>{
  const html=read("web/index.html"),sw=read("web/service-worker.js"),wf=read(".github/workflows/deploy-ipad-web.yml");
- for(const name of ["airport-profile-viewport-locked.css?v=2621-poster-viewport-fixed-r1","airport-profile-posters.js?v=2621-persistent-r2"])
+ for(const name of ["airport-profile-viewport-locked.css?v=2621-poster-viewport-fixed-r1","airport-profile-posters.js?v=2621-profile-scenery-restored-r3"])
   assert.ok(html.includes(name)&&sw.includes(name),name);
  assert.match(wf,/node --test web\/tests\/airport-profile-viewport-fit\.test\.cjs/);
 });
