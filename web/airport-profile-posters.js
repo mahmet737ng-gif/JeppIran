@@ -7,7 +7,7 @@
   "use strict";
   const airports = Object.freeze({"OIII":"THR","OIIE":"IKA","OIMM":"MHD","OICC":"KSH","OITR":"OMH","OISS":"SYZ","OIFM":"IFN","OIAW":"AWZ","OIKB":"BND","OIYY":"AZD","OITT":"TBZ","OIKK":"KER","OIGG":"RAS","OITL":"ADU","OIBK":"KIH","OIZC":"ZBR","OIBB":"BUZ","OIHH":"HDM","OIMB":"XBJ","OITZ":"JWN","OIAA":"ABD","OIBA":"AEU","OIBP":"PGU","OIMN":"BJB","OING":"GBT","OIHR":"AJK","OISL":"LRR","OIKQ":"GSM","OIZH":"ZAH","OICS":"SDG","OIIL":"IIL","OISR":"LFM","OINN":"NSH","OINR":"RZR","OINZ":"SRY","OISY":"YES","OIKY":"SYJ","OIAM":"MRX","OIAD":"DEF","OIMT":"TCX","OIIP":"PYK","OIKM":"BXR","OIMS":"AFZ","OISJ":"JAR","OITK":"KHY","OITP":"PFQ","OIBQ":"KHK","OITM":"IMQ","OICK":"KHD","OIFS":"CQD"});
   const additionalPosterAssignments = Object.freeze({"OIBL":"new20_05","OIBS":"new20_12","OIBV":"new20_13","OICI":"new20_15","OICZ":"new20_04","OIFE":"new20_16","OIFP":"new20_17","OIKJ":"new20_10","OIKR":"new20_19","OIMJ":"new20_08","OINE":"new20_03","OISF":"new20_09","OITU":"new20_14","OIZB":"new20_20","OIZI":"new20_18","OIZS":"new20_06","OTHH":"new20_01","UGSB":"new20_02","OOMS":"new20_07","OPKC":"new20_11"});
-  const v3AirportCodes = Object.freeze(["LTAC","LTFM","OIAA","OIAM","OIAW","OIBA","OIBB","OIBK","OIBL","OIBP","OIBQ","OIBS","OIBV","OICC","OICI","OICK","OICS","OICZ","OIFE","OIFM","OIFP","OIFS","OIGG","OIHH","OIHR","OIIE","OIII","OIIP","OIKB","OIKJ","OIKK","OIKM","OIMM"]);
+  const v3AirportCodes = Object.freeze(["LTAC","LTFM","OIAA","OIAM","OIAW","OIBA","OIBB","OIBK","OIBL","OIBP","OIBQ","OIBS","OIBV","OICC","OICI","OICK","OICS","OICZ","OIFE","OIFM","OIFP","OIFS","OIGG","OIHH","OIHR","OIIE","OIII","OIIP","OIKB","OIKJ","OIKK","OIKM","OIKQ","OIKR","OIKY","OIMB","OIMJ","OIMM","OIMN","OIMS","OIMT","OINE","OING"]);
   const v3AirportSet = new Set(v3AirportCodes);
   const allAirports = Object.freeze({...airports,...Object.fromEntries(Object.keys(additionalPosterAssignments).map(icao=>[icao,true])),...Object.fromEntries(v3AirportCodes.map(icao=>[icao,true]))});
   const root = document.getElementById("airportProfile");
@@ -18,8 +18,8 @@
   let lastCode = "";
   const urlFor = (icao) => {
     const cached = window.JEPPIRAN_POSTER_CACHE_URLS?.[icao];
-    // An older offline registry can still point eleven of these airports at
-    // their previous artwork. Never let it override the approved V3 set.
+    // Older offline registries can still point these airports at previous
+    // artwork. Never let them override the current approved V3 set.
     if (v3AirportSet.has(icao)) {
       const current = "./airport-profile-posters-v3/" + icao + ".webp";
       return cached?.startsWith(current + "?v=") ? cached : current + "?v=2621-poster-v3-13";

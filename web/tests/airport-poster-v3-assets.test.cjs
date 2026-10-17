@@ -2,10 +2,10 @@
 const test=require("node:test"),assert=require("node:assert/strict"),fs=require("node:fs"),path=require("node:path"),crypto=require("node:crypto");
 const root=path.resolve(__dirname,"../..");
 const dir=path.join(root,"web/airport-profile-posters-v3");
-test("a stale offline registry cannot replace any of the 33 current V3 posters",()=>{
+test("a stale offline registry cannot replace any of the 43 current V3 posters",()=>{
  const vm=require("node:vm");
  const source=fs.readFileSync(path.join(root,"web/airport-profile-posters.js"),"utf8");
- const codes=["LTAC","LTFM","OIAA","OIAM","OIAW","OIBA","OIBB","OIBK","OIBL","OIBP","OIBQ","OIBS","OIBV","OICC","OICI","OICK","OICS","OICZ","OIFE","OIFM","OIFP","OIFS","OIGG","OIHH","OIHR","OIIE","OIII","OIIP","OIKB","OIKJ","OIKK","OIKM","OIMM"];
+ const codes=["LTAC","LTFM","OIAA","OIAM","OIAW","OIBA","OIBB","OIBK","OIBL","OIBP","OIBQ","OIBS","OIBV","OICC","OICI","OICK","OICS","OICZ","OIFE","OIFM","OIFP","OIFS","OIGG","OIHH","OIHR","OIIE","OIII","OIIP","OIKB","OIKJ","OIKK","OIKM","OIKQ","OIKR","OIKY","OIMB","OIMJ","OIMM","OIMN","OIMS","OIMT","OINE","OING"];
  const urls=Object.fromEntries(codes.map(c=>[c,"./airport-profile-posters-textfree/"+c+".webp?v=old"]));
  const window={JEPPIRAN_POSTER_CACHE_URLS:urls,addEventListener(){}};
  const rootStub={querySelector(){return null}};
@@ -36,10 +36,10 @@ test("poster registry refreshes online and retains offline fallback",async()=>{
  assert.equal(await read(),"current-registry");assert.deepEqual(writes,["current-registry"]);
  offline=true;assert.equal(await read(),"old-registry");assert.equal(networkCalls,2);
 });
-test("all 33 ICAO-labelled airport composites match the approved source hashes",()=>{
+test("all 43 ICAO-labelled airport composites match the approved source hashes",()=>{
  const manifest=JSON.parse(fs.readFileSync(path.join(dir,"manifest.json"),"utf8"));
- assert.equal(manifest.schema,1);assert.equal(manifest.expectedCount,33);assert.equal(manifest.illustrativeOnly,true);
- assert.equal(Object.keys(manifest.files).length,33);
+ assert.equal(manifest.schema,1);assert.equal(manifest.expectedCount,43);assert.equal(manifest.illustrativeOnly,true);
+ assert.equal(Object.keys(manifest.files).length,43);
  assert.deepEqual(fs.readdirSync(dir).filter(x=>x.endsWith(".webp")).sort(),Object.keys(manifest.files).map(c=>c+".webp").sort());
  for(const [icao,entry] of Object.entries(manifest.files)){
    const bytes=fs.readFileSync(path.join(dir,entry.file));
