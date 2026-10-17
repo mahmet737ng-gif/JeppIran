@@ -40,3 +40,25 @@ test("live caption assets are versioned in HTML and SW and generated before pack
  assert.match(wf,/python3 scripts\/build_textfree_airport_posters\.py/);
  assert.match(wf,/node --test web\/tests\/live-airport-poster-caption\.test\.cjs/);
 });
+
+test("V2 global headers replace old captions without changing original artwork",()=>{
+ const js=read("web/airport-profile-posters.js");
+ const css=read("web/airport-profile-header-v2.css");
+ const py=read("scripts/build_textfree_airport_posters.py");
+ const html=read("web/index.html"), sw=read("web/service-worker.js");
+ assert.match(js,/icao\+" \/ "\+iata/);
+ assert.match(js,/const displayName =/);
+ assert.match(js,/airportSuffix\.test/);
+ assert.match(js,/jp-caption-elevation/);
+ assert.match(js,/jp-caption-divider/);
+ assert.doesNotMatch(js,/display\("span","jp-caption-coordinates"/);
+ assert.match(css,/\.jp-poster-frame \{/);
+ assert.match(css,/background-size:cover!important/);
+ assert.match(css,/\.jp-caption-divider::before/);
+ assert.match(css,/\.jp-caption-divider::after/);
+ assert.match(py,/extend_and_repair_caption/);
+ assert.match(py,/height \* 16 \/ 9/);
+ assert.match(py,/cv2\.BORDER_REFLECT_101/);
+ const style="airport-profile-header-v2.css?v=2621-profile-header-wide-v2";
+ assert.ok(html.includes(style)&&sw.includes(style));
+});
