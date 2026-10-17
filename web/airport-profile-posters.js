@@ -29,34 +29,51 @@
     }
     return frame;
   }
+  // One live, accessible header per airport. The old poster-bottom label is
+  // not rendered; the source of the city/name/elevation remains the profile.
   function ensureCaption(frame) {
     const shell = root.querySelector(".profile-shell");
     const icao = (root.querySelector(".profile-icao")?.textContent || "").trim().toUpperCase();
     if (!shell || !frame || !allAirports[icao] || frame.querySelector(".jp-poster-caption")) return;
     const iata = airports[icao] || (root.querySelector(".profile-code-row .profile-chip")?.textContent || "").trim().toUpperCase() || "—";
+    const airportName = (root.querySelector(".profile-heading h2")?.textContent || "Airport").trim();
     const cityLine = root.querySelector(".profile-heading p")?.firstChild?.textContent || "";
-    const city = cityLine.split(",")[0].trim() || root.querySelector(".profile-heading h2")?.textContent?.replace(/\s+(International\s+)?Airport$/i, "") || "";
-    const country = cityLine.split(",")[1]?.trim() || "Iran";
-    const coordinates = (root.querySelector(".profile-coordinates")?.textContent || "").replace(/^[⌖\s]+/, "").trim();
+    const city = cityLine.split(",")[0].trim();
+    // Coordinates remain only in the top-right clock/status panel.
+    const rightSideCoordinates = root.querySelector(".profile-coordinates")?.textContent || "";
+    const elevation = (root.querySelector(".profile-elev-inline")?.textContent || "Elevation —").trim();
+    const normalize = s => s.normalize("NFKD").replace(/[\u0300-\u036f]/g,"").toLowerCase()
+      .replace(/[^a-z0-9 ]/g," ").replace(/\s+/g," ").trim();
+    const cityKey=normalize(city), nameKey=normalize(airportName);
+    const airportSuffix=/^(?:(?:international|regional|domestic|municipal|city|civil|military|commercial) )*(?:airport|aerodrome|airfield|air base)$/;
+    const sameName = cityKey && (cityKey === nameKey ||
+      (nameKey.startsWith(cityKey+" ") && airportSuffix.test(nameKey.slice(cityKey.length+1))));
+    const displayName = !cityKey || sameName ? airportName : city+" / "+airportName;
     const caption = document.createElement("section");
     caption.className = "jp-poster-caption";
-    caption.setAttribute("aria-label", "Airport poster label");
-    const display = (tag, className, value) => {
+    caption.setAttribute("aria-label", "Airport profile heading");
+    const display = (parent, tag, className, value) => {
       const element = document.createElement(tag);
       element.className = className;
       element.textContent = value;
-      caption.appendChild(element);
+      parent.appendChild(element);
       return element;
     };
-    display("strong","jp-caption-title",iata+" / "+icao);
-    display("span","jp-caption-city",city.toUpperCase());
-    display("span","jp-caption-country",city.toUpperCase()+"  |  "+country.toUpperCase());
+    const codes = document.createElement("div");
+    codes.className = "jp-caption-codes";
+    display(codes,"strong","jp-caption-title",icao+" / "+iata);
+    // Preserve the original clickable Favorites button and its event handler.
+    const favorite = root.querySelector("#profileFavBtn");
+    if (favorite) { favorite.classList.add("jp-header-favorite"); codes.appendChild(favorite); }
+    caption.appendChild(codes);
+    display(caption,"span","jp-caption-city",displayName);
+    display(caption,"span","jp-caption-elevation",elevation);
     const divider = document.createElement("div");
     divider.className = "jp-caption-divider";
     divider.setAttribute("aria-hidden","true");
     divider.textContent = "✈";
     caption.appendChild(divider);
-    display("span","jp-caption-coordinates",coordinates);
+    frame.removeAttribute("aria-hidden");
     frame.appendChild(caption);
   }
   function fitCards() {
