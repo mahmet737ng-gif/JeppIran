@@ -1,4 +1,4 @@
-const CACHE="jeppiran-pwa-2621-oiie-new-geo-flightqa-r1";
+const CACHE="jeppiran-pwa-2621-approved-13-airport-profiles-v3";
 const SNAPSHOT_META="jeppiran-offline-meta-v2";
 const SNAPSHOT_KEY="./__jeppiran_active_offline_v2__";
 const OFFLINE_ASSET_CACHE="jeppiran-all-offline-assets-v1";
@@ -55,7 +55,7 @@ self.addEventListener("message",event=>{
     await Promise.all(Array.from({length:4},async()=>{
       while(next<urls.length){
         const item=urls[next++];
-        if(typeof item!=="string"||!/^\.\/airport-profile-posters-(?:textfree|new20)\/[a-zA-Z0-9_-]+\.webp\?v=[a-f0-9]{20}$/.test(item))continue;
+        if(typeof item!=="string"||!/^\.\/airport-profile-posters-(?:textfree|new20|v3)\/[a-zA-Z0-9_-]+\.webp\?v=[a-f0-9]{20}$/.test(item))continue;
         const request=new Request(new URL(item,self.registration.scope));
         try{
           if(await cache.match(request))continue;
@@ -72,7 +72,7 @@ self.addEventListener("fetch",event=>{
   if(url.origin!==self.location.origin)return;
   // Content-addressed wallpaper URLs: cache first and never re-download an
   // unchanged photo. Do not delete this separate cache when the SW updates.
-  if(url.pathname.includes("/airport-profile-posters-textfree/")||url.pathname.includes("/airport-profile-posters-new20/")){
+  if(url.pathname.includes("/airport-profile-posters-textfree/")||url.pathname.includes("/airport-profile-posters-new20/")||url.pathname.includes("/airport-profile-posters-v3/")){
     event.respondWith((async()=>{
       const cache=await caches.open(AIRPORT_POSTER_CACHE);
       const ready=await cache.match(event.request);
