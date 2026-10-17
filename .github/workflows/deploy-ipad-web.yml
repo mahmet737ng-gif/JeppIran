@@ -117,6 +117,9 @@ jobs:
       - name: Verify locked Ahwaz-style airport profile layout for all airports
         run: node --test web/tests/approved-airport-profile-layout.test.cjs
 
+      - name: Validate METAR flight-rule category thresholds and safe unknown state
+        run: node --test web/tests/metar-flight-categories.test.cjs
+
       - name: Verify owner-approved profile images fit without cropping
         run: node --test web/tests/airport-profile-poster-fit.test.cjs
 
