@@ -61,6 +61,10 @@
   max-width:none;
 }
 #chartsView .airport-profile.jp-airport-poster-loaded .jp-header-favorite {
+  position:absolute;
+  z-index:6;
+  top:16px;
+  left:280px;
   border:1px solid rgba(106,183,232,.45);
   background:rgba(7,33,59,.75);
   color:#9dd9fd;
