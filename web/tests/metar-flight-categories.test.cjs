@@ -12,7 +12,7 @@ const known=[
   ["MVFR","8000 BKN080"],
   ["MVFR","9999 BKN030"],
   ["MVFR","5000 OVC030"],
-  ["IFR","1500 BKN030"],
+  ["IFR","2500 BKN030"],
   ["IFR","9999 OVC008"],
   ["IFR","6000 VV005"],
   ["LIFR","0500 BKN040"],
@@ -35,7 +35,7 @@ test("ceiling determines more restrictive category when visibility is VFR",()=>{
  assert.equal(category.classify(report("9999 BKN003")).code,"LIFR");
 });
 test("visibility determines more restrictive category when ceiling is high",()=>{
- assert.equal(category.classify(report("1200 BKN080")).code,"IFR");
+ assert.equal(category.classify(report("2800 BKN080")).code,"IFR");
 });
 test("few and scattered clouds are not ceilings",()=>{
  assert.equal(category.classify(report("9999 FEW003 SCT005")).code,"VFR");
