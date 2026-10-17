@@ -45,37 +45,45 @@ def mask_letters(rgb):
 
 
 def extend_and_repair_caption(rgb):
-    """Create a wide DISPLAY copy without stretching/cropping its original core.
+    """Replace the baked-in lower-left black text plate in DISPLAY copies only.
 
-    The 50 locked source WebPs are never written. The historic lower-left
-    lettering occupies a dark label field; softly rebuild that field from
-    surrounding scene texture, then extend both lateral edges with continuity-
-    preserving reflected scene pixels. These margins are illustrative artwork,
-    never geospatial imagery.
+    Source poster hashes remain immutable. Use the same poster's neighbouring
+    skyline/mountain/city pixels, deliberately omitting the lower-right landmark
+    from the sample so that it is NEVER cloned into the left of the picture.
+    Overwrite the old dark plate fully in its core (prior alpha=.88 left a
+    visible dark patch), with smooth boundaries into the untouched scene.
     """
     height, width = rgb.shape[:2]
-    # Replace only the old lower-left caption field. Smooth fades eliminate
-    # the conspicuous dark rectangular patch, while preserving the middle and
-    # right-side city/landmark and runway details of the original image.
-    patch_width = int(round(width * .57))
-    sample = rgb[:, int(width * .53):int(width * .97)]
-    filled = cv2.resize(sample, (patch_width, height), interpolation=cv2.INTER_LINEAR)
-    xx = np.arange(patch_width, dtype=np.float32)[None, :] / width
-    yy = np.arange(height, dtype=np.float32)[:, None] / height
-    ax = np.clip((.57 - xx) / .23, 0, 1)
-    ay = np.clip((yy - .695) / .13, 0, 1)
-    alpha = (ax * ay * .88)[:, :, None]
-    out = rgb.copy()
-    out[:, :patch_width] = np.clip(
-        out[:, :patch_width].astype(np.float32) * (1 - alpha) +
-        filled.astype(np.float32) * alpha, 0, 255).astype(np.uint8)
-    # 16:9 presentation extension. Border reflection ensures each newly
-    # synthesized pixel joins naturally at the existing original image edge.
-    wide = max(width, int(round(height * 16 / 9)))
-    left = (wide - width) // 2
-    right = wide - width - left
-    return cv2.copyMakeBorder(out, 0, 0, left, right, cv2.BORDER_REFLECT_101)
+    patch_width = int(round(width * .59))
+    # For these approved 4:3 posters the landmark sits in the rightmost 25%;
+    # draw only on the left 59%, source from the central scenic strip.
+    donor_left, donor_right = int(width * .425), int(width * .735)
+    sample = rgb[:, donor_left:donor_right].copy()
+    scenic = cv2.resize(sample, (patch_width, height),
+                        interpolation=cv2.INTER_CUBIC)
+    x = np.linspace(0, 1, patch_width, endpoint=True, dtype=np.float32)[None, :]
+    y = np.linspace(0, 1, height, endpoint=True, dtype=np.float32)[:, None]
 
+    def smoothstep(a, b, t):
+        u = np.clip((t-a)/(b-a), 0.0, 1.0)
+        return u*u*(3.0-2.0*u)
+
+    # Text starts at 69% height. Begin blending above it and finish before
+    # the first large glyph row. Keep the full bottom-left city scene.
+    vertical = smoothstep(.645, .762, y)
+    horizontal = 1.0 - smoothstep(.70, .995, x)
+    opacity = (vertical * horizontal)[:, :, None]
+    repaired = rgb.copy()
+    repaired[:, :patch_width] = np.clip(
+        rgb[:, :patch_width].astype(np.float32)*(1-opacity) +
+        scenic.astype(np.float32)*opacity, 0, 255).astype(np.uint8)
+
+    # Add scenic pixels to the sides, preserving the original image dimensions
+    # and the lower-right city's symbol within the unmodified central block.
+    wide = max(width, int(round(height * 16 / 9)))
+    left = (wide-width)//2
+    right = wide-width-left
+    return cv2.copyMakeBorder(repaired,0,0,left,right,cv2.BORDER_REFLECT_101)
 
 def clean(source, target):
     with Image.open(source) as source_image:
