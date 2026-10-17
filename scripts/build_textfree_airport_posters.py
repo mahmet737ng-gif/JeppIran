@@ -44,6 +44,39 @@ def mask_letters(rgb):
     return mask
 
 
+def extend_and_repair_caption(rgb):
+    """Create a wide DISPLAY copy without stretching/cropping its original core.
+
+    The 50 locked source WebPs are never written. The historic lower-left
+    lettering occupies a dark label field; softly rebuild that field from
+    surrounding scene texture, then extend both lateral edges with continuity-
+    preserving reflected scene pixels. These margins are illustrative artwork,
+    never geospatial imagery.
+    """
+    height, width = rgb.shape[:2]
+    # Replace only the old lower-left caption field. Smooth fades eliminate
+    # the conspicuous dark rectangular patch, while preserving the middle and
+    # right-side city/landmark and runway details of the original image.
+    patch_width = int(round(width * .57))
+    sample = rgb[:, int(width * .53):int(width * .97)]
+    filled = cv2.resize(sample, (patch_width, height), interpolation=cv2.INTER_LINEAR)
+    xx = np.arange(patch_width, dtype=np.float32)[None, :] / width
+    yy = np.arange(height, dtype=np.float32)[:, None] / height
+    ax = np.clip((.57 - xx) / .23, 0, 1)
+    ay = np.clip((yy - .695) / .13, 0, 1)
+    alpha = (ax * ay * .88)[:, :, None]
+    out = rgb.copy()
+    out[:, :patch_width] = np.clip(
+        out[:, :patch_width].astype(np.float32) * (1 - alpha) +
+        filled.astype(np.float32) * alpha, 0, 255).astype(np.uint8)
+    # 16:9 presentation extension. Border reflection ensures each newly
+    # synthesized pixel joins naturally at the existing original image edge.
+    wide = max(width, int(round(height * 16 / 9)))
+    left = (wide - width) // 2
+    right = wide - width - left
+    return cv2.copyMakeBorder(out, 0, 0, left, right, cv2.BORDER_REFLECT_101)
+
+
 def clean(source, target):
     with Image.open(source) as source_image:
         rgb = np.asarray(source_image.convert("RGB"))
@@ -52,10 +85,10 @@ def clean(source, target):
         raise ValueError(f"Unsupported image size: {source.name} {w}x{h}")
     repaired=cv2.inpaint(cv2.cvtColor(rgb,cv2.COLOR_RGB2BGR),
                          mask_letters(rgb),4,cv2.INPAINT_TELEA)
+    repaired_rgb = cv2.cvtColor(repaired,cv2.COLOR_BGR2RGB)
+    wide_rgb = extend_and_repair_caption(repaired_rgb)
     target.parent.mkdir(parents=True,exist_ok=True)
-    Image.fromarray(cv2.cvtColor(repaired,cv2.COLOR_BGR2RGB)).save(
-        target,"WEBP",quality=95,method=6)
-
+    Image.fromarray(wide_rgb).save(target,"WEBP",quality=94,method=6)
 
 def main():
     p=argparse.ArgumentParser()
