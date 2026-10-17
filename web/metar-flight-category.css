@@ -1,0 +1,72 @@
+/* Airport Profile: color-coded METAR flight rules.
+   UI only; source is the latest available METAR, potentially cached.
+   Existing profile geometry, locked poster, and chart toolbar untouched. */
+#chartsView .airport-profile .jp-metar-heading {
+  display:inline-flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+  min-width:0;
+}
+#chartsView .airport-profile .jp-flight-category {
+  --jp-rule-fg:#aab9c8;
+  --jp-rule-bg:rgba(148,163,184,.12);
+  --jp-rule-border:rgba(148,163,184,.35);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  padding:4px 10px;
+  min-height:27px;
+  min-width:60px;
+  border:1px solid var(--jp-rule-border);
+  border-radius:7px;
+  color:var(--jp-rule-fg);
+  background:var(--jp-rule-bg);
+  font:800 12px/1.1 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  letter-spacing:.075em;
+  white-space:nowrap;
+  vertical-align:middle;
+}
+#chartsView .airport-profile .jp-flight-category::before {
+  content:"";
+  width:7px;
+  height:7px;
+  flex:0 0 7px;
+  border-radius:50%;
+  background:var(--jp-rule-fg);
+}
+#chartsView .airport-profile .jp-flight-vfr {
+  --jp-rule-fg:#2ee38a;
+  --jp-rule-bg:rgba(32,190,111,.13);
+  --jp-rule-border:rgba(46,227,138,.55);
+}
+#chartsView .airport-profile .jp-flight-mvfr {
+  --jp-rule-fg:#ffcf54;
+  --jp-rule-bg:rgba(249,192,40,.14);
+  --jp-rule-border:rgba(255,207,84,.58);
+}
+#chartsView .airport-profile .jp-flight-ifr {
+  --jp-rule-fg:#5bb4ff;
+  --jp-rule-bg:rgba(52,148,255,.15);
+  --jp-rule-border:rgba(91,180,255,.58);
+}
+#chartsView .airport-profile .jp-flight-lifr {
+  --jp-rule-fg:#ff6175;
+  --jp-rule-bg:rgba(244,63,94,.15);
+  --jp-rule-border:rgba(255,97,117,.65);
+}
+:root.light #chartsView .airport-profile .jp-flight-vfr {--jp-rule-fg:#087d49}
+:root.light #chartsView .airport-profile .jp-flight-mvfr {--jp-rule-fg:#855800}
+:root.light #chartsView .airport-profile .jp-flight-ifr {--jp-rule-fg:#0861ad}
+:root.light #chartsView .airport-profile .jp-flight-lifr {--jp-rule-fg:#b01539}
+@media(max-width:750px) {
+  #chartsView .airport-profile #profileWeather>header {
+    flex-wrap:wrap;
+    row-gap:4px;
+  }
+  #chartsView .airport-profile .jp-flight-category {
+    min-height:25px;
+    padding:3px 8px;
+  }
+}
