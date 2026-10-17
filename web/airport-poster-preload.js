@@ -10,7 +10,7 @@
   window.JEPPIRAN_POSTER_CACHE_URLS = Object.create(null);
   window.JEPPIRAN_POSTER_CACHE_STATUS = {loaded:0,total:0,ready:false};
   const valid = u => typeof u==="string" &&
-    /^\.\/airport-profile-posters-(?:textfree|new20)\/[a-zA-Z0-9_-]+\.webp\?v=[a-f0-9]{20}$/.test(u);
+    /^\.\/airport-profile-posters-(?:textfree|new20|v3)\/[a-zA-Z0-9_-]+\.webp\?v=[a-f0-9]{20}$/.test(u);
   async function cacheOne(cache,url) {
     const req = new Request(new URL(url, document.baseURI).href,{mode:"same-origin"});
     if(await cache.match(req)) return true;
