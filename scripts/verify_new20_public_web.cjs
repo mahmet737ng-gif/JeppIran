@@ -17,9 +17,9 @@ async function get(relative){const r=await fetch(url(relative),{headers:{"Cache-
   try{
    const html=await (await get("index.html")).text();
    const gallery=await (await get("airport-profile-posters-new20/?batch=1")).text();
-   const code=await (await get("airport-profile-posters.js?v=2621-persistent-r2")).text();
+   const code=await (await get("airport-profile-posters.js?v=2621-profile-scenery-restored-r3")).text();
    const mapping=await (await get("data/airport-poster-cache.json")).json();
-   assert.ok(html.includes("airport-profile-posters.js?v=2621-persistent-r2"));
+   assert.ok(html.includes("airport-profile-posters.js?v=2621-profile-scenery-restored-r3"));
    assert.ok(gallery.includes("const perPage=10")&&gallery.includes("const total=20"));
    assert.ok(code.includes("additionalPosterAssignments"));
    assert.equal(Object.keys(mapping.posters).length,70);
