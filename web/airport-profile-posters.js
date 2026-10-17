@@ -64,7 +64,12 @@
     display(codes,"strong","jp-caption-title",icao+" / "+iata);
     // Preserve the original clickable Favorites button and its event handler.
     const favorite = root.querySelector("#profileFavBtn");
-    if (favorite) { favorite.classList.add("jp-header-favorite"); codes.appendChild(favorite); }
+    if (favorite) {
+      favorite.classList.add("jp-header-favorite");
+      // Keep it in the foreground profile shell so a decorative background
+      // layer can never intercept or cover its clicks.
+      root.querySelector(".profile-heading")?.appendChild(favorite);
+    }
     caption.appendChild(codes);
     display(caption,"span","jp-caption-city",displayName);
     display(caption,"span","jp-caption-elevation",elevation);
@@ -117,6 +122,19 @@
     frame.style.top = (h-posterH)/2+"px";
     frame.style.backgroundImage = 'url("' + urlFor(icao) + '")';
     ensureCaption(frame);
+    // Precisely align the live Favorites control immediately after the
+    // metallic ICAO / IATA label, including responsive zoom adjustments.
+    const button = root.querySelector("#profileFavBtn");
+    const title = frame.querySelector(".jp-caption-title");
+    const heading = root.querySelector(".profile-heading");
+    const shell = root.querySelector(".profile-shell");
+    if (button && title && heading && shell) {
+      const tr = title.getBoundingClientRect(), hr = heading.getBoundingClientRect();
+      const z = Math.max(.01, Number(shell.style.zoom) || 1);
+      button.style.left = Math.max(4,Math.min((hr.width / z) - 42,
+        (tr.right - hr.left + 11) / z)) + "px";
+      button.style.top = Math.max(2,(tr.top - hr.top + 3) / z) + "px";
+    }
   }
   function remove() {
     root.classList.remove("jp-airport-poster-loaded");
