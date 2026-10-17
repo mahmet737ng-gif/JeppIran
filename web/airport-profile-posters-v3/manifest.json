@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "expectedCount": 43,
+  "expectedCount": 53,
   "illustrativeOnly": true,
   "format": "image/webp",
   "resolution": [
@@ -313,25 +313,118 @@
       "satelliteReference": "image(20261017-221306).png",
       "satelliteReferenceSha256": "17470832c544f04832babb4cab8f827bb5cc8adf65118bdb9f11a608d49f2cd3",
       "method": "Reference-guided cinematic 3D illustration; footprint-based building volumes and single-instance city landmark composition visually reviewed against supplied satellite screenshot"
+    },
+    "OINN": {
+      "file": "OINN.webp",
+      "sha256": "6b6cf267933aaebbca2e62222b690718c494a4ff942075668b53b3e0f9d393a4",
+      "size": 288350,
+      "satelliteReference": "image(20261017-224651).png",
+      "satelliteReferenceSha256": "4f0f225998d2dafe4e0c06b692793f0ec12e1987c6d7d2b1c15b95333f7ee014",
+      "method": "Owner screenshot-guided cinematic illustration; observed roof footprints given proportional low-rise volume; camera crop, airfield connections and single-instance city landmarks visually reviewed"
+    },
+    "OINR": {
+      "file": "OINR.webp",
+      "sha256": "8aea4e442ced5b43cffa186acad8f31b2839b87507eadc71d0ac0c17341c8a4d",
+      "size": 224300,
+      "satelliteReference": "image(20261017-224843).png",
+      "satelliteReferenceSha256": "769a43c94d21655a58000ff9390f23082d01fce46d6dc468e078b70c73a5cdea",
+      "method": "Owner screenshot-guided cinematic illustration; observed roof footprints given proportional low-rise volume; camera crop, airfield connections and single-instance city landmarks visually reviewed"
+    },
+    "OINZ": {
+      "file": "OINZ.webp",
+      "sha256": "4965ae6f1fa86104d5ca42bbb9b3e49e28ec53130b21ffe791fb7b9e0cbf2121",
+      "size": 263414,
+      "satelliteReference": "image(20261017-224942).png",
+      "satelliteReferenceSha256": "8e03ce6e94654533ca2529123d0e60ca5efb2e3173685d71141100f788d356c6",
+      "method": "Owner screenshot-guided cinematic illustration; observed roof footprints given proportional low-rise volume; camera crop, airfield connections and single-instance city landmarks visually reviewed",
+      "landmarkReference": {
+        "sourceUrl": "https://www.100honar.com/Home/ContestantFile/23488",
+        "description": "Sari clock tower, photographer Seyed Hadi Emadi"
+      }
+    },
+    "OISF": {
+      "file": "OISF.webp",
+      "sha256": "c96d486729c7480d53b0b70060c57da42000686fc5a160920a05652aeb20b4df",
+      "size": 271764,
+      "satelliteReference": "image(20261017-225139).png",
+      "satelliteReferenceSha256": "bf21ecf733dcf606c03a2afe621593e6a45069e793b5d9caf647c2f77b5cc6df",
+      "method": "Owner screenshot-guided cinematic illustration; observed roof footprints given proportional low-rise volume; camera crop, airfield connections and single-instance city landmarks visually reviewed"
+    },
+    "OISL": {
+      "file": "OISL.webp",
+      "sha256": "0c920d8acbc701b80f16de2ec760d39c11331544449c084e883094280a76b4e6",
+      "size": 201616,
+      "satelliteReference": "image(20261017-225426).png",
+      "satelliteReferenceSha256": "2e8b6f414e2955d275866cf9af32c373de88b68d884ed89c896757e7e4c0e4e8",
+      "method": "Owner screenshot-guided cinematic illustration; observed roof footprints given proportional low-rise volume; camera crop, airfield connections and single-instance city landmarks visually reviewed",
+      "landmarkReference": {
+        "sourceUrl": "https://commons.wikimedia.org/wiki/Category:Qeysariyeh_Bazaar_(Lar)",
+        "description": "Lar Qeysariyeh Bazaar dome"
+      }
+    },
+    "OISR": {
+      "file": "OISR.webp",
+      "sha256": "ee516238aa8a91ff2dbd55da59c0c18108895dd0ac17b460830bac007b271d1a",
+      "size": 221526,
+      "satelliteReference": "image(20261017-225608).png",
+      "satelliteReferenceSha256": "f707e31aa9455608a678fabe85f487a496d54cf94b534d26ef9e1640fae4fe62",
+      "method": "Owner screenshot-guided cinematic illustration; observed roof footprints given proportional low-rise volume; camera crop, airfield connections and single-instance city landmarks visually reviewed"
+    },
+    "OISS": {
+      "file": "OISS.webp",
+      "sha256": "904fe39f8ae72ebd72d1f6f3a847b542f5b5bb296be5cc9d37df746596e6c243",
+      "size": 314646,
+      "satelliteReference": "image(20261017-230350).png",
+      "satelliteReferenceSha256": "bdeb6e05ca4663a729363bd7f6f869d8807f1cf364902e7a645f9c8fe95f3f55",
+      "method": "Owner screenshot-guided cinematic illustration; observed roof footprints given proportional low-rise volume; camera crop, airfield connections and single-instance city landmarks visually reviewed"
+    },
+    "OISY": {
+      "file": "OISY.webp",
+      "sha256": "2667b44a720fcc26a388db4437ea06527f237359ccc3752413f1071c4900c260",
+      "size": 258072,
+      "satelliteReference": "image(20261017-230504).png",
+      "satelliteReferenceSha256": "e5bddc886a085adff4115a02309a10280901e4dd831b0505655f62fb4d760228",
+      "method": "Owner screenshot-guided cinematic illustration; observed roof footprints given proportional low-rise volume; camera crop, airfield connections and single-instance city landmarks visually reviewed"
+    },
+    "OITK": {
+      "file": "OITK.webp",
+      "sha256": "280408721846140fa796aedd69b438118638f0d6e8047a36afe5a617d46090de",
+      "size": 178192,
+      "satelliteReference": "image(20261017-230549).png",
+      "satelliteReferenceSha256": "3cb6fcd2626aa3932181167553cee93f131e6d003d652ea1631ed46661860cfc",
+      "method": "Owner screenshot-guided cinematic illustration; observed roof footprints given proportional low-rise volume; camera crop, airfield connections and single-instance city landmarks visually reviewed",
+      "landmarkReference": {
+        "sourceUrl": "https://www.tripadvisor.fr/Attraction_Review-g946423-d8723806-Reviews-Shams_Tabrizi_Tomb-Khoy_West_Azerbaijan_Province.html",
+        "description": "Khoy Shams Tabrizi minaret"
+      }
+    },
+    "OITL": {
+      "file": "OITL.webp",
+      "sha256": "6ca0b7fa6b2287268a09e03d05ee3126a33bb7b80f5358b41ae3868ecf201cf5",
+      "size": 226096,
+      "satelliteReference": "image(20261017-230656).png",
+      "satelliteReferenceSha256": "616faed795827eb3c095c7163984bfe9d473f3f9624216c78cbc743df65ce25f",
+      "method": "Owner screenshot-guided cinematic illustration; observed roof footprints given proportional low-rise volume; camera crop, airfield connections and single-instance city landmarks visually reviewed"
     }
   },
   "satelliteReferenceBatch": {
     "count": 10,
     "airports": [
-      "OIKQ",
-      "OIKR",
-      "OIKY",
-      "OIMB",
-      "OIMJ",
-      "OIMN",
-      "OIMS",
-      "OIMT",
-      "OINE",
-      "OING"
+      "OINN",
+      "OINR",
+      "OINZ",
+      "OISF",
+      "OISL",
+      "OISR",
+      "OISS",
+      "OISY",
+      "OITK",
+      "OITL"
     ],
     "date": "2026-10-18",
-    "batch": 3,
-    "buildingTreatment": "Proportional volumetric buildings based on observed footprints",
+    "batch": 4,
+    "referenceSource": "Owner-supplied Google Earth/Maps screenshots",
+    "buildingTreatment": "Proportional low-rise volumes on observed roof footprints",
     "landmarkReview": "One instance of each focal landmark or coherent complex; no mirrored duplicates"
   },
   "satelliteReferenceBatches": [
@@ -385,6 +478,26 @@
       "date": "2026-10-18",
       "batch": 3,
       "buildingTreatment": "Proportional volumetric buildings based on observed footprints",
+      "landmarkReview": "One instance of each focal landmark or coherent complex; no mirrored duplicates"
+    },
+    {
+      "count": 10,
+      "airports": [
+        "OINN",
+        "OINR",
+        "OINZ",
+        "OISF",
+        "OISL",
+        "OISR",
+        "OISS",
+        "OISY",
+        "OITK",
+        "OITL"
+      ],
+      "date": "2026-10-18",
+      "batch": 4,
+      "referenceSource": "Owner-supplied Google Earth/Maps screenshots",
+      "buildingTreatment": "Proportional low-rise volumes on observed roof footprints",
       "landmarkReview": "One instance of each focal landmark or coherent complex; no mirrored duplicates"
     }
   ]
