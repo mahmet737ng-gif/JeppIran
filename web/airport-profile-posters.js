@@ -16,7 +16,16 @@
   const dimensions = new Map();
   let queued = false;
   let lastCode = "";
-  const urlFor = (icao) => window.JEPPIRAN_POSTER_CACHE_URLS?.[icao] || (v3AirportSet.has(icao) ? "./airport-profile-posters-v3/" + icao + ".webp?v=2621-poster-v3-13" : (additionalPosterAssignments[icao] ? "./airport-profile-posters-new20/" + additionalPosterAssignments[icao] + ".webp" : "./airport-profile-posters-textfree/" + icao + ".webp?v=2621-letter-repair-r2"));
+  const urlFor = (icao) => {
+    const cached = window.JEPPIRAN_POSTER_CACHE_URLS?.[icao];
+    // An older offline registry can still point eleven of these airports at
+    // their previous artwork. Never let it override the approved V3 set.
+    if (v3AirportSet.has(icao)) {
+      const current = "./airport-profile-posters-v3/" + icao + ".webp";
+      return cached?.startsWith(current + "?v=") ? cached : current + "?v=2621-poster-v3-13";
+    }
+    return cached || (additionalPosterAssignments[icao] ? "./airport-profile-posters-new20/" + additionalPosterAssignments[icao] + ".webp" : "./airport-profile-posters-textfree/" + icao + ".webp?v=2621-letter-repair-r2");
+  };
 
   // The poster is a fixed, fully contained image with its HTML caption anchored
   // INSIDE the same image rectangle, never to scrolling profile content.
@@ -225,3 +234,4 @@
     count:Object.keys(airports).length, mapping:airports, frozen:true, illustrativeOnly:true
   });
 })();
+
