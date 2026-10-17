@@ -8,6 +8,8 @@ const manifest=JSON.parse(fs.readFileSync(path.join(root,"web/airport-profile-po
 const assigned=JSON.parse(fs.readFileSync(path.join(root,"web/airport-profile-posters-new20/assignments.json"),"utf8"));
 const v3=JSON.parse(fs.readFileSync(path.join(root,"web/airport-profile-posters-v3/manifest.json"),"utf8"));
 const base=process.env.JEPPIRAN_PAGE_URL;
+const posterScript=fs.readFileSync(path.join(root,"web/index.html"),"utf8").match(/src="\.\/(airport-profile-posters\.js\?v=[^"]+)"/)?.[1];
+assert.ok(posterScript,"Current versioned airport poster script is required");
 if(!base||!/^https:\/\//.test(base))throw Error("Pages deployment output URL is required");
 const url=(relative)=>new URL(relative,base.endsWith("/")?base:base+"/");
 const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
@@ -18,9 +20,9 @@ async function get(relative){const r=await fetch(url(relative),{headers:{"Cache-
   try{
    const html=await (await get("index.html")).text();
    const gallery=await (await get("airport-profile-posters-new20/?batch=1")).text();
-   const code=await (await get("airport-profile-posters.js?v=2621-profile-v3-13-r1")).text();
+   const code=await (await get(posterScript)).text();
    const mapping=await (await get("data/airport-poster-cache.json")).json();
-   assert.ok(html.includes("airport-profile-posters.js?v=2621-profile-v3-13-r1"));
+   assert.ok(html.includes(posterScript));
    assert.ok(gallery.includes("const perPage=10")&&gallery.includes("const total=20"));
    assert.ok(code.includes("additionalPosterAssignments"));
    assert.equal(Object.keys(mapping.posters).length,72);
