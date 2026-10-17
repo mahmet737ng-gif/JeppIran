@@ -131,12 +131,12 @@
     // This is the SAME image, at the SAME position/scale as the full poster,
     // so scenery is not moved, duplicated or invented. It prevents cards
     // from obscuring the city symbol after runway rows are populated.
-    let scene = frame.querySelector(".jp-poster-scenic-foreground");
+    let scene = root.querySelector(".jp-poster-scenic-foreground");
     if (!scene) {
       scene = document.createElement("div");
       scene.className = "jp-poster-scenic-foreground";
       scene.setAttribute("aria-hidden", "true");
-      frame.appendChild(scene);
+      root.appendChild(scene);
     }
     const cover = Math.max(w/size.width,h/size.height);
     scene.style.backgroundImage = 'url("' + urlFor(icao) + '")';
@@ -160,6 +160,7 @@
     root.style.removeProperty("--jp-airport-poster-image");
     root.style.removeProperty("--jp-scenic-reserve");
     root.querySelector(".jp-poster-frame")?.remove();
+    root.querySelector(".jp-poster-scenic-foreground")?.remove();
     const shell = root.querySelector(".profile-shell");
     if (shell) {shell.style.zoom = "";shell.style.maxHeight = "";shell.style.overflowY = "";}
   }
