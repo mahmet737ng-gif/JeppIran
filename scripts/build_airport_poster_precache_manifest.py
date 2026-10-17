@@ -49,7 +49,7 @@ def main():
     v3_dir = WEB / "airport-profile-posters-v3"
     v3 = json.loads((v3_dir / "manifest.json").read_text(encoding="utf-8"))
     records = v3.get("files", {})
-    if v3.get("schema") != 1 or v3.get("expectedCount") != 23 or len(records) != 23:
+    if v3.get("schema") != 1 or v3.get("expectedCount") != 33 or len(records) != 33:
         raise SystemExit("Invalid approved V3 profile manifest")
     present = {p.stem for p in v3_dir.glob("*.webp")}
     if present != set(records):

@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "expectedCount": 23,
+  "expectedCount": 33,
   "illustrativeOnly": true,
   "format": "image/webp",
   "resolution": [
@@ -144,10 +144,90 @@
       "satelliteReferenceSha256": "1ef53c4ddf4eebeb6c5c6f06930aeafc0c2c0f74711b3884cab0421fb5865732",
       "method": "Reference-guided cinematic illustration; airport layout visually reviewed against supplied satellite screenshot"
     },
+    "OIFS": {
+      "file": "OIFS.webp",
+      "sha256": "6c9e3f3ba5d90a9ffd6a0f341608a775baeaaf8df980c6a10c16dad0a57c2018",
+      "size": 268096,
+      "satelliteReference": "image(20261017-210620).png",
+      "satelliteReferenceSha256": "fbc84239af7ab19bb04c38a0de70e65ac25b60f6b52c040b4d8a4f8bff7ccf4f",
+      "method": "Reference-guided cinematic illustration; airport layout visually reviewed against supplied satellite screenshot"
+    },
+    "OIGG": {
+      "file": "OIGG.webp",
+      "sha256": "c33575ff8a3c4e73fcd0e1132c57e72c7def037a512db46120e7f4ac922735da",
+      "size": 252430,
+      "satelliteReference": "image(20261017-210922).png",
+      "satelliteReferenceSha256": "277e465b7d1c43de1bed47d7619be38204c033e3bd54ea22df1b06822abdb365",
+      "method": "Reference-guided cinematic illustration; airport layout visually reviewed against supplied satellite screenshot"
+    },
+    "OIHH": {
+      "file": "OIHH.webp",
+      "sha256": "eb32ad9b7f25b0cdd74b038018778fdaae0af6303bea4c587c3514328a759df0",
+      "size": 273908,
+      "satelliteReference": "image(20261017-211019).png",
+      "satelliteReferenceSha256": "2710fcb29fb75eba5f6736f41610a483f8d6e35571bdfcd1dbd4cd9f7845bbf1",
+      "method": "Reference-guided cinematic illustration; airport layout visually reviewed against supplied satellite screenshot"
+    },
+    "OIHR": {
+      "file": "OIHR.webp",
+      "sha256": "9b948d68fe5de3b46bb4242f3d403e2e41cd80628909d5760c526ede460be643",
+      "size": 275814,
+      "satelliteReference": "image(20261017-211135).png",
+      "satelliteReferenceSha256": "c282a7146178223113e81a91ba388f6478504cf81dbbe89367af3dd1dd172b55",
+      "method": "Reference-guided cinematic illustration; airport layout visually reviewed against supplied satellite screenshot"
+    },
+    "OIIE": {
+      "file": "OIIE.webp",
+      "sha256": "0b4e900d99dc8e7df68c1011b7c3570bc3513a03d05102e260846d3dee04941d",
+      "size": 286168,
+      "satelliteReference": "image(20261017-211256).png",
+      "satelliteReferenceSha256": "11f83103e4e761ebe2e7dd0dd36022730c6c79fa1ab0ca51f80126be55278ecb",
+      "method": "Reference-guided cinematic illustration; airport layout visually reviewed against supplied satellite screenshot"
+    },
     "OIII": {
       "file": "OIII.webp",
       "sha256": "78aee180112e0b41ae1c4708528785d66f47f67b4599f1ff0be8475b0666dd3a",
       "size": 538268
+    },
+    "OIIP": {
+      "file": "OIIP.webp",
+      "sha256": "e5c6ad98b7a8e63a75b88b5cd629eba8ea0b141955dfb657972c27345dc08b94",
+      "size": 275876,
+      "satelliteReference": "image(20261017-211455).png",
+      "satelliteReferenceSha256": "97e237d85191e6e7bdd09d602284a0a1370ceec9074225342b337ce7135c5b53",
+      "method": "Reference-guided cinematic illustration; airport layout visually reviewed against supplied satellite screenshot"
+    },
+    "OIKB": {
+      "file": "OIKB.webp",
+      "sha256": "dc6dec23803435ed48c8243929483333f312599769ae5ca177725e1d5be1db93",
+      "size": 302674,
+      "satelliteReference": "image(20261017-211403).png",
+      "satelliteReferenceSha256": "c7ad1b058a165c7c0167f435f6762e8a094a3dc6a35c6a07aeb2580b19defb1f",
+      "method": "Reference-guided cinematic illustration; airport layout visually reviewed against supplied satellite screenshot"
+    },
+    "OIKJ": {
+      "file": "OIKJ.webp",
+      "sha256": "67e3298a68b52d4d3b7d009b2df0d99aa32d8a542cd2447e7b316f90e5570ca5",
+      "size": 244568,
+      "satelliteReference": "image(20261017-211613).png",
+      "satelliteReferenceSha256": "581ba8c7356de07f9e5a8391d704d450595ab2aec93c34ca7692b99f8258ae12",
+      "method": "Reference-guided cinematic illustration; airport layout visually reviewed against supplied satellite screenshot"
+    },
+    "OIKK": {
+      "file": "OIKK.webp",
+      "sha256": "dc8d9a9ea9b46c60743b047d70a3883ebb78899a7a5bd01c3d2d364770c2ca78",
+      "size": 288754,
+      "satelliteReference": "image(20261017-211705).png",
+      "satelliteReferenceSha256": "14f42e690001b649229567bf1875ee7be1b2afb64216927543881b586f636279",
+      "method": "Reference-guided cinematic illustration; airport layout visually reviewed against supplied satellite screenshot"
+    },
+    "OIKM": {
+      "file": "OIKM.webp",
+      "sha256": "c4eddc740a25a64867833660282dd69ad6f417cf15c6a2df222a2259c403b393",
+      "size": 221780,
+      "satelliteReference": "image(20261017-211810).png",
+      "satelliteReferenceSha256": "4bf9b2e785bc5e82e0fcdcdf69b4c7de8b4c503ead81cfe085845fae0af3e84b",
+      "method": "Reference-guided cinematic illustration; airport layout visually reviewed against supplied satellite screenshot"
     },
     "OIMM": {
       "file": "OIMM.webp",
@@ -158,17 +238,53 @@
   "satelliteReferenceBatch": {
     "count": 10,
     "airports": [
-      "OIBS",
-      "OIBV",
-      "OICC",
-      "OICI",
-      "OICK",
-      "OICS",
-      "OICZ",
-      "OIFE",
-      "OIFM",
-      "OIFP"
+      "OIFS",
+      "OIGG",
+      "OIHH",
+      "OIHR",
+      "OIIE",
+      "OIKB",
+      "OIIP",
+      "OIKJ",
+      "OIKK",
+      "OIKM"
     ],
-    "date": "2026-10-18"
-  }
+    "date": "2026-10-18",
+    "batch": 2
+  },
+  "satelliteReferenceBatches": [
+    {
+      "count": 10,
+      "airports": [
+        "OIBS",
+        "OIBV",
+        "OICC",
+        "OICI",
+        "OICK",
+        "OICS",
+        "OICZ",
+        "OIFE",
+        "OIFM",
+        "OIFP"
+      ],
+      "date": "2026-10-18"
+    },
+    {
+      "count": 10,
+      "airports": [
+        "OIFS",
+        "OIGG",
+        "OIHH",
+        "OIHR",
+        "OIIE",
+        "OIKB",
+        "OIIP",
+        "OIKJ",
+        "OIKK",
+        "OIKM"
+      ],
+      "date": "2026-10-18",
+      "batch": 2
+    }
+  ]
 }
