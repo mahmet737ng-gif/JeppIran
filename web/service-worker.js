@@ -1,4 +1,4 @@
-const CACHE="jeppiran-pwa-2621-classic-r5-notam-ui-cachefix-r3";
+const CACHE="jeppiran-pwa-2621-notam-ui-cachefix-r3";
 const SNAPSHOT_META="jeppiran-offline-meta-v2";
 const SNAPSHOT_KEY="./__jeppiran_active_offline_v2__";
 const OFFLINE_ASSET_CACHE="jeppiran-all-offline-assets-v1";
