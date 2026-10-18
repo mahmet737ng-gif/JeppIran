@@ -640,3 +640,148 @@ body.chart-is-fullscreen{overflow:hidden}
   .carousel-region{height:125px}
   .classic-viewer-host{height:clamp(270px,58dvh,800px)}
 }
+
+
+/* ANDROID CAROUSEL QA — confirmed chart selected = compact top selector.
+   Only staged for separate .phoneqa APK. Classic app layout is untouched. */
+.carousel-region{
+  transition:height .33s cubic-bezier(.22,.82,.22,1),margin .33s cubic-bezier(.22,.82,.22,1);
+}
+.airport-token .icao,.airport-token .iata{
+  transition:filter .18s ease;
+}
+body.chart-selected .page-frame{height:100dvh;min-height:0;overflow:hidden}
+body.chart-selected .topline{
+  flex:0 0 auto;min-height:48px;padding-top:5px;padding-bottom:5px;
+}
+body.chart-selected .topline .search-box{
+  height:32px;max-width:210px;
+}
+body.chart-selected .topline .preview-mark{display:none}
+body.chart-selected main{
+  flex:1 1 auto;height:calc(100dvh - 48px);min-height:0;
+  display:flex;flex-direction:column;overflow:hidden;padding:0 0 2px;
+}
+body.chart-selected .carousel-region{
+  flex:0 0 auto;height:80px!important;
+  min-height:0!important;margin:0 auto!important;
+}
+body.chart-selected .airport-token{
+  min-height:56px!important;gap:3px!important;
+}
+body.chart-selected .airport-token .icao{
+  font-size:calc(var(--icao-size,24px) * .59)!important;
+}
+body.chart-selected .airport-token .iata{
+  font-size:calc(var(--iata-size,15px) * .72)!important;
+}
+body.chart-selected .airport-token::before,
+body.chart-selected .airport-token::after{
+  top:11%!important;bottom:11%!important;
+}
+body.chart-selected .procedure-zone{
+  flex:0 0 auto;margin:0 auto 3px!important;
+}
+body.chart-selected .classic-viewer-host{
+  flex:1 1 auto!important;min-height:0!important;
+  height:auto!important;max-height:none!important;
+  margin:1px auto 2px!important;
+}
+body.chart-selected .footer{display:none!important}
+@media(max-width:690px){
+  body.chart-selected .topline{min-height:42px;padding:3px 7px;gap:8px}
+  body.chart-selected .topline .brand b{font-size:14px}
+  body.chart-selected .topline .brand>span:last-child{display:none}
+  body.chart-selected .topline .search-box{height:28px;max-width:155px;width:38vw}
+  body.chart-selected .topline .search-box input{font-size:10px}
+  body.chart-selected .original-link{font-size:9px;padding:5px}
+  body.chart-selected main{height:calc(100dvh - 42px)}
+  body.chart-selected .carousel-region{
+    height:63px!important;
+    grid-template-columns:22px minmax(0,1fr) 22px!important;
+    width:calc(100vw - 6px)!important;
+  }
+  body.chart-selected .nav-arrow{font-size:29px;width:22px;height:55px}
+  body.chart-selected .airport-token{
+    min-height:48px!important;
+  }
+  body.chart-selected .airport-token .icao{
+    font-size:calc(var(--icao-size,20px) * .64)!important;
+    line-height:1!important
+  }
+  body.chart-selected .airport-token .iata{
+    font-size:calc(var(--iata-size,11px) * .72)!important;
+    line-height:1!important
+  }
+  body.chart-selected .procedure-categories{
+    min-height:48px!important;
+  }
+  body.chart-selected .category-shell>.procedure-category{
+    min-height:43px!important;
+  }
+  body.chart-selected .category-shell.active>.procedure-category{
+    min-height:96px!important;
+  }
+  body.chart-selected .category-shell .procedure-details.open{
+    max-height:98px!important;height:98px!important;
+  }
+  body.chart-selected .classic-viewer-host{
+    width:calc(100vw - 6px)!important;
+    border-radius:6px!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .carousel-region{transition:none!important}
+}
+
+
+/* R6 QA identification: one glance should make it impossible to confuse the
+ * separately installed Android test with the approved Classic app. */
+html.jp-android-carousel-qa .original-link{display:none!important}
+html.jp-android-carousel-qa .topline .preview-mark{
+  display:block!important;flex:0 0 auto!important;
+  color:#b8edff!important;
+  font-size:10px!important;letter-spacing:.055em!important;
+  line-height:1.1!important;text-align:right!important;
+  border:1px solid rgba(88,206,247,.5);
+  border-radius:7px;padding:6px 7px;background:rgba(12,83,129,.45);
+}
+html.jp-android-carousel-qa .topline .preview-mark span{
+  display:block!important;font-size:9px!important;
+  letter-spacing:0!important;color:#ecfaff!important;
+}
+@media(max-width:690px){
+  html.jp-android-carousel-qa .topline .search-box{
+    display:none!important;
+  }
+  html.jp-android-carousel-qa .topline{
+    min-height:46px!important;
+    display:flex!important;justify-content:space-between!important;gap:4px!important;
+  }
+  html.jp-android-carousel-qa .topline .brand{font-size:14px!important}
+  html.jp-android-carousel-qa .topline .brand span:last-child{
+    display:none!important;
+  }
+  html.jp-android-carousel-qa.chart-selected .topline{
+    min-height:42px!important;
+  }
+}
+
+
+/* The Android QA Update entry opens the unified native updater, never a
+ * stale Web-only/legacy Android mix. */
+.qa-updates-link{display:none}
+html.jp-android-carousel-qa .qa-updates-link{
+ display:inline-flex;align-items:center;justify-content:center;
+ font:800 10px system-ui,sans-serif;letter-spacing:.045em;
+ color:#eaf8ff!important;text-decoration:none;
+ padding:8px 10px;border:1px solid #377fa8;border-radius:8px;
+ background:rgba(9,61,97,.78);white-space:nowrap;
+}
+html.jp-android-carousel-qa .qa-updates-link:hover{
+ border-color:#67d5fd;background:rgba(19,105,153,.9);
+}
+@media(max-width:690px){
+ html.jp-android-carousel-qa .qa-updates-link{font-size:10px;padding:7px}
+ html.jp-android-carousel-qa .topline .preview-mark{font-size:9px!important;padding:4px!important}
+}

@@ -937,6 +937,12 @@ let publishedChartChanges=null;
 const updateBtn=$("#updateCard");
 const isAndroidLocal=()=>!!document.querySelector('meta[name="jeppiran-runtime"][content="android-local-apk"]');
 updateBtn.addEventListener("click",()=>{
+  if(isAndroidLocal()){
+    // The APK has ONE update screen. Never show the web-only page whose
+    // cards mix stale Web statuses with native installed chart data.
+    window.location.href="jeppiran://updates";
+    return;
+  }
   route("update");
   $("#updateNativeBtn").hidden=!isAndroidLocal();
   $("#updateRefreshBtn").hidden=isAndroidLocal();

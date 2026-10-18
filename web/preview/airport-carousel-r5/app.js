@@ -1,4 +1,4 @@
-/* JeppIran V2621 — isolated airport-carousel-r5 preview.
+/* JeppIran V2621 — isolated airport-carousel-r5 Android compact Carousel preview.
  * No changes to source airport assets, PDF pages, georeferencing or main app.
  * Display-only. Aviation weather must come from a real METAR, never mock data.
  */
@@ -550,7 +550,9 @@ const classicHost=$("#classicViewerHost"),classicFrame=$("#classicViewerFrame");
 const classicStatus=$("#classicViewerStatus");
 let classicReady=false,classicRequested=null,classicConfirmedKey="",classicLoadStarted=false;
 function hideInlineChart(){
-  classicRequested=null;classicHost.hidden=true;
+  classicRequested=null;
+  classicHost.hidden=true;
+  document.body.classList.remove("chart-selected");
 }
 function dispatchClassicSelection(){
   if(!classicReady||!classicRequested||!classicFrame.contentWindow)return;
@@ -562,6 +564,7 @@ function dispatchClassicSelection(){
 }
 function showInlineChart(item){
   if(!item||!validProcedure(item)){
+    document.body.classList.remove("chart-selected");
     classicRequested=null;
     classicStatus.hidden=false;
     classicStatus.textContent="Select a published chart from the category.";
@@ -569,6 +572,7 @@ function showInlineChart(item){
     return;
   }
   classicHost.hidden=false;
+  document.body.classList.add("chart-selected");
   classicRequested={icao:item.airport,page:Number(item.page)};
   const key=classicRequested.icao+":"+classicRequested.page;
   if(classicConfirmedKey!==key){
@@ -577,7 +581,7 @@ function showInlineChart(item){
   }else classicStatus.hidden=true;
   if(!classicLoadStarted){
     classicLoadStarted=true;
-    classicFrame.src=ROOT+"?jeppiranEmbedCharts=1#charts";
+    classicFrame.src=ROOT+"index.html?jeppiranEmbedCharts=1#charts";
   }
   dispatchClassicSelection();
 }
@@ -642,5 +646,38 @@ async function boot(){
     console.warn("Optional airport profile index unavailable",error);
   }
 }
+// In the isolated APK the top logo must return to the airport selector,
+// NEVER navigate into the bundled production Classic page.
+if(["android-phone","android-carousel-qa"].includes(
+  new URLSearchParams(location.search).get("platform"))){
+  const brand=document.querySelector(".topline .brand");
+  if(brand){
+    brand.removeAttribute("href");
+    brand.setAttribute("role","button");
+    brand.setAttribute("tabindex","0");
+    brand.addEventListener("click",()=>{
+      if(activeChartCategory)closeProcedureCategory();
+      else window.location.assign(new URL("../../index.html#home",location.href));
+    });
+    brand.addEventListener("keydown",event=>{
+      if(event.key==="Enter"||event.key===" "){
+        event.preventDefault();
+        if(activeChartCategory)closeProcedureCategory();
+        else window.location.assign(new URL("../../index.html#home",location.href));
+      }
+    });
+  }
+}
+// Android OS back gesture closes a chart group before leaving Carousel QA.
+window.jeppiranAndroidBack=()=>{
+  if(document.fullscreenElement){void document.exitFullscreen().catch(()=>{});return true;}
+  if(activeChartCategory){closeProcedureCategory();return true;}
+  if(["android-phone","android-carousel-qa"].includes(
+       new URLSearchParams(location.search).get("platform"))){
+    window.location.assign(new URL("../../index.html#home",location.href));
+    return true;
+  }
+  return false;
+};
 void boot();
 })();

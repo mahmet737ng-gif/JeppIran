@@ -6,6 +6,8 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.os.SystemClock
+import android.widget.Toast
 import android.view.View
 import android.webkit.CookieManager
 import android.webkit.GeolocationPermissions
@@ -49,6 +51,7 @@ class MobileWebActivity : AppCompatActivity() {
     private lateinit var browser: WebView
     private lateinit var progress: ProgressBar
     private lateinit var errorMessage: TextView
+    private var lastBackPress: Long = 0L
     private var geoOrigin: String? = null
     private var geoCallback: GeolocationPermissions.Callback? = null
 
@@ -252,9 +255,24 @@ class MobileWebActivity : AppCompatActivity() {
         browser.evaluateJavascript(
             "(function(){return window.jeppiranAndroidBack ? window.jeppiranAndroidBack() : false})()"
         ) { result ->
-            if (result != "true" && !isFinishing && !isDestroyed) {
-                // At Home the OS gesture closes the Android activity.
-                super.onBackPressed()
+            if (isFinishing || isDestroyed) return@evaluateJavascript
+            if (result == "true") {
+                lastBackPress = 0L
+                return@evaluateJavascript
+            }
+            // A single Back on the landing screen should not kill the app.
+            // In Carousel, JS first collapses the chart / returns to Home.
+            val now = SystemClock.elapsedRealtime()
+            if (lastBackPress != 0L && now - lastBackPress < 2000L) {
+                lastBackPress = 0L
+                finish()
+            } else {
+                lastBackPress = now
+                Toast.makeText(
+                    this@MobileWebActivity,
+                    "Press Back again to exit JeppIran",
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
