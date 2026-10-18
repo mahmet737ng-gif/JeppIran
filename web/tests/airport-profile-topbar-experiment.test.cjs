@@ -18,6 +18,7 @@ test("design 2 is a reversible OIII-only runtime overlay using live card nodes",
 test("topbar scripts deploy after approved posters and old side panel remains reversible fallback",()=>{
  const html=read("web/index.html"),sw=read("web/service-worker.js");
  const side=read("web/airport-profile-side-panel-experiment.js");
+ const css=read("web/airport-profile-topbar-experiment.css");
  for(const file of ["airport-profile-topbar-experiment.css","airport-profile-topbar-experiment.js"]){
   const rev=file.endsWith(".css")?"r3":"r1";
   assert.ok(html.includes(file+"?v=2621-oiii-topbar-design2-"+rev));
