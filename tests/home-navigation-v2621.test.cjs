@@ -30,7 +30,10 @@ test('HOME is hidden on Charts and fullscreen without affecting owner-locked ges
   assert.match(css,/body\.viewer-fullscreen #jpHomeBtn\.jp-home-shortcut,\s*body\.viewer-fullscreen #chartsView #chartsBackBtn\{display:none!important\}/);
   assert.match(css,/#chartsView\.chart-open #chartsBackMobileBtn,\s*body\.viewer-fullscreen #chartsBackMobileBtn\{display:none!important\}/);
   assert.match(read('web/fullscreen-chart-drawer.css'),/body\.viewer-fullscreen #jpChartMenuBtn/);
-  assert.match(read('web/service-worker.js'),/jeppiran-pwa-2621-oiie-new-geo-flightqa-r1/);
+  const sw=read('web/service-worker.js');
+  assert.match(sw,/const CACHE="jeppiran-pwa-2621-notam-ui-cachefix-r3"/);
+  assert.match(sw,/url\.pathname\.endsWith\("\/notam-service\.js"\)/);
+  assert.match(sw,/url\.pathname\.endsWith\("\/notam-service\.css"\)/);
 });
 
 test('airport chart categories remain in the sidebar and NEVER occupy profile Overview',()=>{
