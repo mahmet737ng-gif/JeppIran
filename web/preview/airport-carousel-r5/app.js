@@ -550,7 +550,9 @@ const classicHost=$("#classicViewerHost"),classicFrame=$("#classicViewerFrame");
 const classicStatus=$("#classicViewerStatus");
 let classicReady=false,classicRequested=null,classicConfirmedKey="",classicLoadStarted=false;
 function hideInlineChart(){
-  classicRequested=null;classicHost.hidden=true;
+  classicRequested=null;
+  classicHost.hidden=true;
+  document.body.classList.remove("chart-selected");
 }
 function dispatchClassicSelection(){
   if(!classicReady||!classicRequested||!classicFrame.contentWindow)return;
@@ -562,6 +564,7 @@ function dispatchClassicSelection(){
 }
 function showInlineChart(item){
   if(!item||!validProcedure(item)){
+    document.body.classList.remove("chart-selected");
     classicRequested=null;
     classicStatus.hidden=false;
     classicStatus.textContent="Select a published chart from the category.";
@@ -569,6 +572,7 @@ function showInlineChart(item){
     return;
   }
   classicHost.hidden=false;
+  document.body.classList.add("chart-selected");
   classicRequested={icao:item.airport,page:Number(item.page)};
   const key=classicRequested.icao+":"+classicRequested.page;
   if(classicConfirmedKey!==key){
@@ -577,7 +581,7 @@ function showInlineChart(item){
   }else classicStatus.hidden=true;
   if(!classicLoadStarted){
     classicLoadStarted=true;
-    classicFrame.src=ROOT+"?jeppiranEmbedCharts=1#charts";
+    classicFrame.src=ROOT+"index.html?jeppiranEmbedCharts=1#charts";
   }
   dispatchClassicSelection();
 }
