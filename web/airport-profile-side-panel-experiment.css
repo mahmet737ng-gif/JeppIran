@@ -86,7 +86,9 @@
 }
 #chartsView .airport-profile.jp-side-panel-experiment #profileWeather,
 #chartsView .airport-profile.jp-side-panel-experiment #profileWind{
-  min-height:0!important;
+  box-sizing:border-box!important;
+  min-height:270px!important;
+  height:270px!important;
 }
 #chartsView .airport-profile.jp-side-panel-experiment .profile-card{
   background:linear-gradient(145deg,rgba(9,33,60,.88),rgba(5,20,40,.86))!important;
