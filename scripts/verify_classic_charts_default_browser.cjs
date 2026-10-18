@@ -24,7 +24,7 @@ async function ready(){
   const html=fs.readFileSync(path.join(root,"web/index.html"),"utf8");
   assert.match(html,/name="chartsLayoutMode" value="classic" checked/);
   assert.match(html,/const KEY="jeppiran-chart-layout-v2"/);
-  assert.match(html,/preview\/airport-carousel-r4/);
+  assert.match(html,/preview\/airport-carousel-r5/);
   await ready();
   browser=await chromium.launch({headless:true,...(process.env.JEPPIRAN_CHROME_BIN?{executablePath:process.env.JEPPIRAN_CHROME_BIN}:{})});
   const page=await browser.newPage();
@@ -53,7 +53,7 @@ async function ready(){
   assert.equal(await page.evaluate(()=>localStorage.getItem("jeppiran-chart-layout-v2")),"carousel");
   await page.goto(base,{waitUntil:"domcontentloaded"});
   await page.locator('button.home-card[data-route="charts"]').click();
-  await page.waitForURL(/\/preview\/airport-carousel-r4\/$/);
+  await page.waitForURL(/\/preview\/airport-carousel-r5\/$/);
   await page.goto(base,{waitUntil:"domcontentloaded"});
   assert.equal(await page.locator('input[name="chartsLayoutMode"][value="carousel"]').isChecked(),true,
     "Only a deliberate new Carousel choice should be remembered");
