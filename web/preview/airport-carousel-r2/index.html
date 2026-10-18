@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#071524">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>JeppIran — Airport Carousel & Chart Dock Test R2</title>
+  <link rel="icon" href="../../app-icon.png">
+  <link rel="stylesheet" href="./styles.css?v=carousel-r2-1">
+  <script src="../../metar-flight-category.js?v=2621-wxrules-v1" defer></script>
+  <script src="./app.js?v=carousel-r2-1" defer></script>
+</head>
+<body>
+  <div class="scenery" id="scenery" aria-hidden="true"></div>
+  <div class="scenery-shade" aria-hidden="true"></div>
+  <div class="page-frame">
+    <header class="topline">
+      <a class="brand" href="../../" title="Open original JeppIran (unchanged)"><span class="wing" aria-hidden="true">✈</span><b>JeppIran</b><span>Charts</span></a>
+      <div class="search-box"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.7" cy="10.7" r="6.3"></circle><path d="m15.3 15.3 5 5"></path></svg><input id="airportSearch" type="search" placeholder="Search ICAO, IATA or airport…" autocomplete="off" aria-label="Find an airport"><div id="searchResults" class="search-results" hidden></div></div>
+      <div class="preview-mark">TEST PREVIEW <span>airport-carousel-r2</span></div>
+      <a class="original-link" href="../../#charts" title="Leave preview and open original Charts">Original app <span aria-hidden="true">↗</span></a>
+    </header>
+
+    <main>
+      <section class="carousel-region" aria-label="Choose airport">
+        <button id="prevAirport" class="nav-arrow prev" type="button" aria-label="Previous airport">‹</button>
+        <div id="airportCarousel" class="carousel" role="group" aria-label="Airport selector — swipe left or right, use arrow keys or tap an airport" tabindex="0"><div id="carouselTrack" class="carousel-track">
+          <div class="static-airports" aria-hidden="true">
+            <span class="static-airport"><strong>OIMM</strong><small>MHD</small></span>
+            <span class="static-airport"><strong>OISL</strong><small>LRR</small></span>
+            <span class="static-airport"><strong>OIYY</strong><small>AZD</small></span>
+            <span class="static-airport"><strong>OIFM</strong><small>IFN</small></span>
+            <span class="static-airport static-selected"><strong>OIII</strong><small>THR</small></span>
+            <span class="static-airport"><strong>OIKB</strong><small>BND</small></span>
+            <span class="static-airport"><strong>OIAW</strong><small>AWZ</small></span>
+            <span class="static-airport"><strong>OIBB</strong><small>BUZ</small></span>
+            <span class="static-airport"><strong>OITT</strong><small>TBZ</small></span>
+          </div>
+        </div></div>
+        <button id="nextAirport" class="nav-arrow next" type="button" aria-label="Next airport">›</button>
+      </section>
+
+      <section class="selected-airport" aria-live="polite">
+        <h1 id="airportName">Mehrabad International Airport</h1>
+        <p id="airportPlace">Tehran, Iran <span class="sep">│</span> Elevation 3,962 ft</p>
+        <div class="weather-line" aria-label="Aviation weather">
+          <div class="weather-unit"><span id="flightDot" class="flight-dot unknown"></span><strong id="flightCategory" class="flight-category unknown">WX —</strong></div>
+          <span class="divider"></span>
+          <div class="weather-unit"><span class="weather-icon" aria-hidden="true">☁</span><span id="clouds">—</span></div>
+          <span class="divider"></span>
+          <div class="weather-unit"><span class="weather-icon" aria-hidden="true">♨</span><span id="temperature">—</span></div>
+          <span class="divider"></span>
+          <div class="weather-unit"><span class="weather-icon" aria-hidden="true">≋</span><span id="wind">— / — kt</span></div>
+          <span class="divider"></span>
+          <div class="weather-unit"><span class="weather-icon" aria-hidden="true">◉</span><span id="qnh">QNH —</span></div>
+        </div>
+        <p id="weatherStatus" class="weather-status" role="status">Checking live METAR…</p>
+      </section>
+
+      <div class="actions"><span class="hint">Swipe or drag quickly to spin • Release to snap to center</span></div>
+    </main>
+
+    <div id="chartSheetScrim" class="chart-sheet-scrim" hidden aria-hidden="true"></div>
+    <section id="chartSheet" class="chart-sheet" role="region" aria-labelledby="chartSheetHeading" aria-hidden="true" inert>
+      <div class="sheet-handle" aria-hidden="true"></div>
+      <div class="chart-sheet-header">
+        <div class="sheet-heading-group">
+          <span id="sheetAirportCode" class="sheet-airport-code">OIII · THR · V2621</span>
+          <h2 id="chartSheetHeading">STAR charts</h2>
+        </div>
+        <button id="closeChartSheet" type="button" class="sheet-close" aria-label="Close chart selector">×</button>
+      </div>
+      <label class="chart-search-wrap">
+        <span aria-hidden="true">⌕</span>
+        <input id="chartSearch" type="search" autocomplete="off" placeholder="Search procedure or chart number…" aria-label="Search this category's charts">
+      </label>
+      <div id="sheetChartCount" class="sheet-chart-count" role="status">Choose a chart category</div>
+      <div id="chartList" class="sheet-chart-list" aria-live="polite"></div>
+      <p class="sheet-disclaimer">V2621 • Preview selector • Charts open separately • Not for actual navigation</p>
+    </section>
+    <nav id="chartDock" class="chart-dock" aria-label="Airport chart categories">
+      <div class="chart-dock-airport">
+        <span id="chartsAirport">OIII</span>
+        <small>CHARTS</small>
+      </div>
+      <button type="button" class="chart-dock-button" data-category="STAR" aria-controls="chartSheet" aria-expanded="false">STAR</button>
+      <button type="button" class="chart-dock-button" data-category="SID" aria-controls="chartSheet" aria-expanded="false">SID</button>
+      <button type="button" class="chart-dock-button" data-category="AIRPORT" aria-controls="chartSheet" aria-expanded="false">AIRPORT</button>
+      <button type="button" class="chart-dock-button" data-category="APP" aria-controls="chartSheet" aria-expanded="false">APP</button>
+    </nav>
+    <footer class="footer">JEPPIRAN · V2621 · DESIGN PREVIEW ONLY · NOT FOR NAVIGATION</footer>
+  </div>
+</body>
+</html>

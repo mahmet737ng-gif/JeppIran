@@ -1,0 +1,444 @@
+/* JeppIran V2621 — isolated airport-carousel-r2 preview.
+ * No changes to source airport assets, PDF pages, georeferencing or main app.
+ * Display-only. Aviation weather must come from a real METAR, never mock data.
+ */
+(()=>{
+"use strict";
+const ROOT="../../";
+const WX_CACHE_URL="https://raw.githubusercontent.com/mahmet737ng-gif/JeppIran/wx-cache/wx-live.json";
+const WX_CACHE_API="https://api.github.com/repos/mahmet737ng-gif/JeppIran/contents/wx-live.json?ref=wx-cache";
+const fallbackIata=Object.freeze({OIII:"THR",OIIE:"IKA",OIMM:"MHD",OISS:"SYZ",OIFM:"IFN",OIKB:"BND",OITT:"TBZ",OIAW:"AWZ",OIBK:"KIH",OICC:"KSH",OIYY:"AZD",OIBB:"BUZ",OIMB:"XBJ",OIAW:"AWZ",OITR:"OMH",OIHH:"HDM",OIAA:"ABD",OIBA:"AEU",OIBP:"PGU",OIMN:"BJB",OING:"GBT",OIHR:"AJK",OISL:"LRR",OIKK:"KER",OIGG:"RAS",OIMS:"AFZ",OISY:"YES",OIZH:"ZAH",OITL:"ADU",OITZ:"JWN",OIKY:"SYJ",OICK:"KHD",OIKM:"BXR",OITM:"ACP",OIZC:"ZBR",OIMT:"TCX",OIPK:"PYK",OISR:"LFM",OITU:"IMQ",LTFM:"IST",LTAC:"ESB",OMDB:"DXB",OMDW:"DWC",OOMS:"MCT",ORBI:"BGW",ORER:"EBL",ORMM:"BSR",ORNI:"NJF",OTHH:"DOH",UGTB:"TBS",UGSB:"BUS",UDYZ:"EVN",OPIS:"ISB",OPKC:"KHI"});
+const fallbackNames={OIII:["Mehrabad International Airport","Tehran, Iran",3962],OIIE:["Imam Khomeini International Airport","Tehran, Iran",3305],OIMM:["Mashhad International Airport","Mashhad, Iran",3263]};
+const $=sel=>document.querySelector(sel);
+const el={carousel:$("#airportCarousel"),track:$("#carouselTrack"),name:$("#airportName"),place:$("#airportPlace"),scenery:$("#scenery"),category:$("#flightCategory"),dot:$("#flightDot"),clouds:$("#clouds"),temp:$("#temperature"),wind:$("#wind"),qnh:$("#qnh"),weatherStatus:$("#weatherStatus"),search:$("#airportSearch"),results:$("#searchResults")};
+let codes=["OIMM","OISL","OIYY","OIFM","OIII","OIKB","OIAW","OIBB","OITT"], metadata={},selected=4,visualPos=4,raf=0,animationToken=0,gesture=null;
+const carouselButtons=new Map();
+let chartManifest=null,charts=null,wxCache=null,wxCacheAt=0,metarRequest=0;
+let chartCatalogPromise=null,activeChartCategory=null,chartSheetToken=0,activeChartRows=[];
+const wrap=i=>(i%codes.length+codes.length)%codes.length;
+const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
+const getCode=i=>codes[wrap(i)];
+const getProfile=code=>metadata[code]||{};
+const current=()=>getCode(selected);
+const slotStep=()=>el.carousel.clientWidth/(innerWidth<=690?5.5:innerWidth<=1040?7.3:9.25);
+const visibleRadius=()=>innerWidth<=690?2:innerWidth<=1040?3:4;
+function preferredIndex(code){return codes.indexOf(code)}
+// Every airport button is created once. Continuous interpolation updates only its
+// transform, font size and opacity — never replace DOM nodes mid-gesture.
+const wrappedDelta=(index,position)=>{
+  const n=codes.length;
+  return ((index-position+n/2)%n+n)%n-n/2;
+};
+const smoothstep=t=>t*t*(3-2*t);
+let suppressTapUntil=0;
+function makeAirportButton(index){
+  const code=getCode(index),data=getProfile(code),button=document.createElement("button");
+  button.type="button";button.className="airport-token";
+  button.dataset.airport=code;
+  button.setAttribute("aria-label",code+" "+(data.iata||fallbackIata[code]||"")+" "+(data.name||""));
+  button.tabIndex=-1;
+  const icao=document.createElement("span"),iata=document.createElement("span");
+  icao.className="icao";iata.className="iata";
+  icao.textContent=code;iata.textContent=data.iata||fallbackIata[code]||"—";
+  button.append(icao,iata);
+  button.addEventListener("click",()=>{
+    if(gesture?.moved||performance.now()<suppressTapUntil)return;
+    centerOn(index,true);
+  });
+  return button;
+}
+function buildTrack(){
+  carouselButtons.clear();
+  const fragment=document.createDocumentFragment();
+  for(let i=0;i<codes.length;i++){
+    const button=makeAirportButton(i);
+    carouselButtons.set(i,button);
+    fragment.append(button);
+  }
+  el.track.replaceChildren(fragment);
+}
+function paintTrack(){
+  const radius=visibleRadius(),step=slotStep();
+  const compact=innerWidth<=690;
+  const mid=wrap(Math.round(visualPos));
+  for(const [index,button] of carouselButtons){
+    const d=wrappedDelta(index,visualPos),distance=Math.abs(d);
+    const visible=distance<=radius+1.2;
+    button.style.visibility=visible?"visible":"hidden";
+    button.style.pointerEvents=visible?"auto":"none";
+    button.tabIndex=visible?0:-1;
+    if(!visible)continue;
+    const focus=smoothstep(clamp(1-distance/1.12,0,1));
+    const opacity=distance<.45?1:clamp(1-Math.max(0,distance-.5)*.17,.24,1);
+    button.style.setProperty("--slot-width",(step*1.28).toFixed(2)+"px");
+    button.style.setProperty("--shift",(d*step).toFixed(3)+"px");
+    button.style.setProperty("--scale","1");
+    button.style.setProperty("--opacity",opacity.toFixed(3));
+    button.style.setProperty("--icao-size",((compact?15:24)+(compact?29:53)*focus).toFixed(2)+"px");
+    button.style.setProperty("--iata-size",((compact?10:15)+(compact?13:20)*focus).toFixed(2)+"px");
+    button.style.setProperty("--guide-opacity",focus.toFixed(3));
+    button.style.zIndex=String(100-Math.floor(distance*10));
+    const active=index===mid;
+    button.classList.toggle("active",active);
+    if(active)button.setAttribute("aria-current","true");
+    else button.removeAttribute("aria-current");
+  }
+}
+function resetWeather(){
+  el.category.textContent="WX —";el.category.className="flight-category unknown";
+  el.dot.className="flight-dot unknown";el.clouds.textContent="—";el.temp.textContent="—";
+  el.wind.textContent="— / — kt";el.qnh.textContent="QNH —";
+  el.weatherStatus.textContent="Checking available METAR…";
+}
+function artwork(code){return `${ROOT}airport-profile-posters-v3/${code}.webp`}
+let bgTicket=0;
+function updateImage(code){
+  // Only the immutable approved poster is used; no synthetic airport imagery.
+  const ticket=++bgTicket,img=new Image();
+  img.onload=()=>{if(ticket===bgTicket)el.scenery.style.backgroundImage=`url("${artwork(code)}")`};
+  img.onerror=()=>{if(ticket===bgTicket)el.scenery.style.backgroundImage="none"};
+  img.src=artwork(code);
+}
+function updateSelected(){
+  const code=current(),d=getProfile(code),fallback=fallbackNames[code];
+  el.name.textContent=d.name||(fallback&&fallback[0])||code+" Airport";
+  const city=d.city||fallback&&fallback[1]?.split(",")[0]||"",country=d.country||fallback&&fallback[1]?.split(",").slice(1).join(",").trim()||"";
+  const elevation=Number.isFinite(d.elevation)?d.elevation:(fallback&&fallback[2]);
+  el.place.textContent=(city&&country?city+", "+country:city||country||"Location unavailable")+"  │  Elevation "+(Number.isFinite(elevation)?elevation.toLocaleString("en-US")+" ft":"unavailable");
+  $("#chartsAirport").textContent=code;
+  if(!window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches){
+    for(const node of [el.name,el.place])node.animate?.([
+      {opacity:.65,transform:"translateY(5px)"},
+      {opacity:1,transform:"translateY(0)"}
+    ],{duration:280,easing:"cubic-bezier(.2,.8,.2,1)"});
+  }
+  updateImage(code);resetWeather();void updateMetar(code);
+  if(activeChartCategory)void renderChartSheet(activeChartCategory);
+}
+function stopAnimation(){animationToken++;if(raf)cancelAnimationFrame(raf);raf=0;}
+function commitPosition(target){
+  const next=wrap(Math.round(target)),changed=selected!==next;
+  visualPos=next;selected=next;
+  paintTrack();
+  if(changed)updateSelected();
+}
+// Animated easing runs on an unwrapped floating airport index. This avoids
+// discrete index switches halfway through an animation (the old "name jump").
+function animateTo(target,duration){
+  stopAnimation();
+  const origin=visualPos,begin=performance.now(),token=animationToken;
+  const reduced=window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+  if(reduced){commitPosition(target);return;}
+  const distance=Math.abs(target-origin);
+  const ms=duration??clamp(210+distance*67,225,720);
+  function frame(t){
+    if(token!==animationToken)return;
+    const p=clamp((t-begin)/ms,0,1);
+    const ease=1-Math.pow(1-p,3);
+    visualPos=origin+(target-origin)*ease;
+    paintTrack();
+    if(p<1)raf=requestAnimationFrame(frame);
+    else {raf=0;commitPosition(target);}
+  }
+  raf=requestAnimationFrame(frame);
+}
+function centerOn(target,animated){
+  const index=wrap(target);
+  const delta=wrappedDelta(index,visualPos);
+  if(animated)animateTo(visualPos+delta);
+  else {stopAnimation();commitPosition(index);}
+}
+function changeBy(steps){
+  if(!Number.isFinite(steps)||!steps)return;
+  animateTo(visualPos+clamp(Math.round(steps),-8,8));
+}
+// Finger tracks the text one-for-one; a fast flick adds a bounded, damped glide
+// and the stop always snaps to a real airport position.
+function pointerDown(e){
+  if(e.button!==0&&e.pointerType==="mouse")return;
+  if(gesture)return;
+  stopAnimation();
+  const now=performance.now();
+  gesture={id:e.pointerId,startX:e.clientX,startPos:visualPos,
+    history:[{x:e.clientX,t:now}],moved:false};
+  el.carousel.classList.add("dragging");
+  // Leave native button click intact; capture only after an actual swipe.
+}
+function pointerMove(e){
+  if(!gesture||gesture.id!==e.pointerId)return;
+  const dx=e.clientX-gesture.startX;
+  if(Math.abs(dx)>5&&!gesture.moved){
+    gesture.moved=true;
+    try{el.carousel.setPointerCapture(e.pointerId)}catch(_){}
+  }
+  if(!gesture.moved)return;
+  const now=performance.now();
+  gesture.history.push({x:e.clientX,t:now});
+  gesture.history=gesture.history.filter(item=>now-item.t<=120);
+  visualPos=gesture.startPos-dx/slotStep();
+  paintTrack();
+}
+function pointerUp(e){
+  if(!gesture||gesture.id!==e.pointerId)return;
+  const info=gesture;
+  gesture=null;
+  el.carousel.classList.remove("dragging");
+  if(info.moved){try{el.carousel.releasePointerCapture(e.pointerId)}catch(_){}}
+  if(!info.moved){
+    animateTo(Math.round(visualPos),200);
+    return;
+  }
+  suppressTapUntil=performance.now()+240;
+  const now=performance.now();
+  const points=info.history.filter(p=>now-p.t<=115);
+  const first=points[0]||{x:info.startX,t:now};
+  const last=points[points.length-1]||first;
+  const velocity=(last.x-first.x)/Math.max(15,last.t-first.t);
+  const projected=clamp(-velocity*240/slotStep(),-5.5,5.5);
+  const target=Math.round(visualPos+projected);
+  animateTo(target,clamp(215+Math.abs(target-visualPos)*70,220,690));
+}
+el.carousel.addEventListener("pointerdown",pointerDown);
+el.carousel.addEventListener("pointermove",pointerMove);
+el.carousel.addEventListener("pointerup",pointerUp);
+el.carousel.addEventListener("pointercancel",()=>{
+  gesture=null;el.carousel.classList.remove("dragging");
+  animateTo(Math.round(visualPos),230);
+});
+el.carousel.addEventListener("dragstart",e=>e.preventDefault());
+el.carousel.addEventListener("wheel",e=>{
+  if(Math.abs(e.deltaX)>Math.abs(e.deltaY)||e.shiftKey){
+    e.preventDefault();
+    const delta=e.deltaX||e.deltaY;
+    changeBy(Math.sign(delta)*clamp(Math.round(Math.abs(delta)/85),1,4));
+  }
+},{passive:false});
+el.carousel.addEventListener("keydown",e=>{
+  if(e.key==="ArrowLeft"||e.key==="ArrowRight"){
+    e.preventDefault();changeBy(e.key==="ArrowRight"?1:-1);
+  }else if(e.key==="Home"){
+    e.preventDefault();centerOn(0,true);
+  }else if(e.key==="End"){
+    e.preventDefault();centerOn(codes.length-1,true);
+  }
+});
+$("#prevAirport").addEventListener("click",()=>changeBy(-1));
+$("#nextAirport").addEventListener("click",()=>changeBy(1));
+window.addEventListener("resize",()=>paintTrack(),{passive:true});
+function showResults(){
+ const value=el.search.value.trim().toUpperCase();el.results.replaceChildren();
+ if(!value){el.results.hidden=true;return;}
+ const matches=codes.filter(c=>c.includes(value)||String(getProfile(c).iata||fallbackIata[c]||"").toUpperCase().includes(value)||String(getProfile(c).name||"").toUpperCase().includes(value)).slice(0,12);
+ if(!matches.length){el.results.hidden=true;return;}
+ for(const code of matches){const b=document.createElement("button");b.type="button";const label=document.createElement("b"),small=document.createElement("small");label.textContent=code+" · "+(getProfile(code).iata||fallbackIata[code]||"—");small.textContent=getProfile(code).name||"Airport";b.append(label,small);b.onclick=()=>{centerOn(preferredIndex(code),false);el.search.value="";el.results.hidden=true;el.carousel.focus()};el.results.append(b)}
+ el.results.hidden=false;
+}
+el.search.addEventListener("input",showResults);
+el.search.addEventListener("keydown",e=>{if(e.key==="Escape")el.results.hidden=true;else if(e.key==="Enter"&&!el.results.hidden){e.preventDefault();el.results.querySelector("button")?.click()}});
+document.addEventListener("click",e=>{if(!e.target.closest(".search-box"))el.results.hidden=true});
+function normalizeRaw(row){const s=typeof row==="string"?row:row?.raw||row?.rawText||row?.rawOb||"";return String(s||"").trim()}
+async function readSourceMetar(code){
+ if(!wxCache||Date.now()-wxCacheAt>1000*60){
+  try{const res=await fetch(WX_CACHE_URL+"?t="+Math.floor(Date.now()/300000),{cache:"no-store",mode:"cors"});if(!res.ok)throw Error("Weather cache offline");wxCache=await res.json();wxCacheAt=Date.now();}
+  catch(_){try{const r=await fetch(WX_CACHE_API+"&t="+Math.floor(Date.now()/300000),{mode:"cors",cache:"no-store"});if(r.ok){const doc=await r.json();wxCache=JSON.parse(atob(String(doc.content).replace(/\s+/g,"")));wxCacheAt=Date.now()}}catch(_){}}
+ }
+ const cached=normalizeRaw(wxCache?.stations?.[code]?.metar);
+ if(cached)return {raw:cached,source:"JeppIran cached METAR"};
+ const attempts=[
+  {url:"https://rotatepilot.com/api/v1/metar?icao="+encodeURIComponent(code)+"&taf=1",pick:d=>d?.raw},
+  {url:"https://metars.eu/api/metars/"+encodeURIComponent(code),pick:d=>d?.raw||d?.rawText||d?.data?.raw||d?.data?.rawText||d?.data?.[0]?.raw}
+ ];
+ for(const a of attempts){try{const r=await fetch(a.url,{mode:"cors",cache:"no-store"});if(!r.ok)continue;const json=await r.json();const raw=normalizeRaw(a.pick(json));if(raw)return {raw,source:"Live METAR provider"};}catch(_){}}
+ throw Error("METAR unavailable");
+}
+function decode(raw){
+ const tokens=raw.toUpperCase().trim().split(/\s+/),base=tokens.slice(0,Math.max(0,tokens.findIndex(x=>/^(?:RMK|NOSIG|TEMPO|BECMG)$/.test(x)))||undefined); // current observation only
+ const arr=base.length?base:tokens;
+ const cloud=arr.find(t=>/^(FEW|SCT|BKN|OVC|VV)\d{3}(?:CB|TCU)?$/.test(t))|| (arr.includes("CAVOK")?"CAVOK":arr.includes("SKC")?"SKC":"—");
+ const temp=arr.find(t=>/^M?\d{2}\/M?\d{2}$/.test(t));
+ const tval=temp?temp.split("/")[0].replace(/^M/,"-")+"°C":"—";
+ const wind=arr.find(t=>/^(?:\d{3}|VRB)\d{2,3}(?:G\d{2,3})?KT$/.test(t));
+ const match=wind?.match(/^(\d{3}|VRB)(\d{2,3})(?:G(\d{2,3}))?KT$/);
+ const w=match?(match[1]==="VRB"?"VRB":String(Number(match[1])).padStart(3,"0")+"°")+" / "+Number(match[2])+" kt"+(match[3]?" G"+Number(match[3]):""):"— / — kt";
+ const pressure=arr.find(t=>/^Q\d{4}$/.test(t)||/^A\d{4}$/.test(t));
+ const qnh=pressure?.startsWith("Q")?"QNH "+pressure.slice(1)+" hPa":pressure?.startsWith("A")?"QNH "+(Number(pressure.slice(1))/100).toFixed(2)+" inHg":"QNH —";
+ return {cloud,tval,wind:w,qnh};
+}
+async function updateMetar(code){
+ const req=++metarRequest;
+ try{const {raw,source}=await readSourceMetar(code);if(req!==metarRequest||current()!==code)return;
+  const d=decode(raw);
+  const category=window.JEPPIRAN_FLIGHT_CATEGORY?.classify(raw)?.code||"UNKNOWN",key=category.toLowerCase();
+  el.category.textContent=category==="UNKNOWN"?"WX —":category;
+  el.category.className="flight-category "+key;
+  el.dot.className="flight-dot "+key;
+  el.clouds.textContent=d.cloud;el.temp.textContent=d.tval;el.wind.textContent=d.wind;el.qnh.textContent=d.qnh;
+  el.weatherStatus.textContent=source+" · Verify observation timestamp · Not for navigation";
+ }catch(_){if(req!==metarRequest||current()!==code)return;el.weatherStatus.textContent="METAR unavailable — no weather values invented";}
+}
+/* PREVIEW-ONLY CHART DOCK — STAR / SID / AIRPORT / APP.
+ * Source stays V2621, every href resolves to the existing airport PDF's
+ * precise published page. Do not mutate the original JeppIran chart viewer.
+ */
+const categoryMap=Object.freeze({STAR:"STAR",SID:"SID",AIRPORT:"AIRPORT",APP:"APPROACH"});
+const sheet=$("#chartSheet"),scrim=$("#chartSheetScrim"),chartList=$("#chartList");
+function closeChartSheet(){
+  activeChartCategory=null;
+  ++chartSheetToken;
+  sheet.classList.remove("open");
+  sheet.setAttribute("aria-hidden","true");
+  sheet.inert=true;
+  scrim.hidden=true;
+  document.querySelectorAll(".chart-dock-button").forEach(button=>{
+    button.classList.remove("active");
+    button.setAttribute("aria-expanded","false");
+  });
+}
+async function loadPublishedCharts(){
+  if(chartManifest&&charts)return [chartManifest,charts];
+  if(!chartCatalogPromise){
+    chartCatalogPromise=Promise.all([
+      fetch(ROOT+"data/charts-manifest.json",{cache:"no-store"}).then(r=>{
+        if(!r.ok)throw Error("Chart manifest HTTP "+r.status);
+        return r.json();
+      }),
+      fetch(ROOT+"data/charts-current.json",{cache:"no-store"}).then(r=>{
+        if(!r.ok)throw Error("Chart index HTTP "+r.status);
+        return r.json();
+      })
+    ]).then(([m,c])=>{
+      if(!m?.airports||!Array.isArray(c))throw Error("Chart index is incomplete");
+      chartManifest=m;charts=c;return [m,c];
+    }).catch(e=>{chartCatalogPromise=null;throw e;});
+  }
+  return chartCatalogPromise;
+}
+function renderFilteredCharts(){
+  const value=$("#chartSearch").value.trim().toUpperCase();
+  const visible=activeChartRows.filter(item=>
+    (String(item.chart_number||"")+" "+String(item.name||"")).toUpperCase().includes(value));
+  const frag=document.createDocumentFragment();
+  for(const item of visible){
+    const source=chartManifest?.airports?.[item.airport];
+    const pdfPage=Number(item.pdf_page);
+    // Manifest verifies chart identity and PDF page before offering a link.
+    if(!source||!pdfPage||Number(source.global_pages?.[pdfPage-1])!==Number(item.page))continue;
+    const link=document.createElement("a");
+    link.className="sheet-chart-link";
+    link.href=ROOT+"charts/"+encodeURIComponent(source.file||item.airport+".pdf")+"#page="+pdfPage;
+    link.target="_blank";
+    link.rel="noopener noreferrer";
+    link.setAttribute("aria-label","Open "+String(item.name||"chart")+" in a new tab");
+    const number=document.createElement("span"),title=document.createElement("span"),arrow=document.createElement("span");
+    number.className="sheet-chart-number";
+    title.className="sheet-chart-title";
+    arrow.className="sheet-chart-arrow";
+    number.textContent=item.chart_number||"—";
+    title.textContent=item.name||"Chart "+item.page;
+    arrow.textContent="↗";arrow.setAttribute("aria-hidden","true");
+    link.append(number,title,arrow);
+    frag.append(link);
+  }
+  chartList.replaceChildren(frag);
+  const count=chartList.querySelectorAll(".sheet-chart-link").length;
+  $("#sheetChartCount").textContent=count+" chart"+(count===1?"":"s")+(value?" matching “"+value+"”":"");
+  if(!count){
+    const empty=document.createElement("div");
+    empty.className="sheet-chart-empty";
+    empty.textContent=value?"No charts match this search.":"No charts available in this category.";
+    chartList.append(empty);
+  }
+}
+async function renderChartSheet(category){
+  if(!activeChartCategory||activeChartCategory!==category)return;
+  const request=++chartSheetToken,code=current();
+  const p=getProfile(code),iata=p.iata||fallbackIata[code]||"—";
+  $("#sheetAirportCode").textContent=code+" · "+iata+" · V2621";
+  $("#chartSheetHeading").textContent=category+" charts";
+  $("#sheetChartCount").textContent="Loading published V2621 charts…";
+  chartList.replaceChildren();
+  activeChartRows=[];
+  try{
+    const [,all]=await loadPublishedCharts();
+    if(request!==chartSheetToken||current()!==code||activeChartCategory!==category)return;
+    activeChartRows=all.filter(item=>item.airport===code &&
+      String(item.category||"").toUpperCase()===categoryMap[category])
+      .sort((a,b)=>Number(a.page)-Number(b.page));
+    renderFilteredCharts();
+  }catch(error){
+    if(request!==chartSheetToken||activeChartCategory!==category)return;
+    $("#sheetChartCount").textContent="Chart index unavailable";
+    const empty=document.createElement("div");
+    empty.className="sheet-chart-empty";
+    empty.textContent="Can't load V2621 charts: "+error.message;
+    chartList.replaceChildren(empty);
+  }
+}
+function openChartSheet(category){
+  if(!(category in categoryMap))return;
+  if(activeChartCategory===category){closeChartSheet();return;}
+  activeChartCategory=category;
+  sheet.inert=false;
+  sheet.classList.add("open");
+  sheet.setAttribute("aria-hidden","false");
+  scrim.hidden=false;
+  $("#chartSearch").value="";
+  chartList.scrollTop=0;
+  document.querySelectorAll(".chart-dock-button").forEach(button=>{
+    const active=button.dataset.category===category;
+    button.classList.toggle("active",active);
+    button.setAttribute("aria-expanded",String(active));
+  });
+  void renderChartSheet(category);
+}
+document.querySelectorAll(".chart-dock-button").forEach(button=>
+  button.addEventListener("click",()=>openChartSheet(button.dataset.category)));
+$("#chartSearch").addEventListener("input",renderFilteredCharts);
+$("#closeChartSheet").addEventListener("click",closeChartSheet);
+scrim.addEventListener("click",closeChartSheet);
+window.addEventListener("keydown",event=>{
+  if(event.key==="Escape"&&activeChartCategory){event.preventDefault();closeChartSheet();}
+});
+async function fetchJsonTimed(url,timeoutMs=9000){
+  const controller=new AbortController();
+  const timer=setTimeout(()=>controller.abort(),timeoutMs);
+  try{
+    const response=await fetch(url,{cache:"no-store",signal:controller.signal});
+    if(!response.ok)throw Error("HTTP "+response.status+" for "+url);
+    return await response.json();
+  } finally {clearTimeout(timer)}
+}
+function refreshCatalogView(){
+  const was=current();
+  stopAnimation();
+  selected=Math.max(0,codes.indexOf(was));
+  visualPos=selected;
+  buildTrack();paintTrack();updateSelected();
+}
+async function boot(){
+  // Show the full airport carousel, OIII poster and thin chart dock BEFORE any
+  // fetch. A slow/blocked manifest must never leave an empty preview screen.
+  buildTrack();
+  paintTrack();
+  updateSelected();
+  try{
+    const manifest=await fetchJsonTimed(ROOT+"data/charts-manifest.json",9500);
+    const newCodes=Object.keys(manifest?.airports||{}).sort();
+    if(!newCodes.length)throw Error("Empty airport list");
+    codes=newCodes;refreshCatalogView();
+  }catch(error){
+    console.warn("Carousel preview using built-in airport labels",error);
+    // The fallback airport selector stays functional without metadata.
+  }
+  try{
+    const profiles=await fetchJsonTimed(ROOT+"data/airport-profiles.json",9500);
+    if(profiles?.airports&&typeof profiles.airports==="object"){
+      metadata=profiles.airports;
+      refreshCatalogView();
+    }
+  }catch(error){
+    console.warn("Optional airport profile index unavailable",error);
+  }
+}
+void boot();
+})();
