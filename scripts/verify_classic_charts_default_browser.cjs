@@ -51,7 +51,7 @@ async function ready(){
   await page.locator('input[name="chartsLayoutMode"][value="carousel"]').check();
   await page.evaluate(()=>document.querySelector("#appearanceSettingsDialog").close());
   assert.equal(await page.evaluate(()=>localStorage.getItem("jeppiran-chart-layout-v2")),"carousel");
-  await page.locator('button[data-route="home"].brand').click();
+  await page.goto(base,{waitUntil:"domcontentloaded"});
   await page.locator('button.home-card[data-route="charts"]').click();
   await page.waitForURL(/\/preview\/airport-carousel-r4\/$/);
   await page.goto(base,{waitUntil:"domcontentloaded"});
