@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "expectedCount": 73,
+  "expectedCount": 78,
   "illustrativeOnly": true,
   "format": "image/webp",
   "resolution": [
@@ -565,24 +565,59 @@
       "satelliteReference": "image(20261018-010650).png",
       "satelliteReferenceSha256": "dba462736148f9840cbfe1bb46840164dbfb0d66e88f6de2cd56fedb97de5b4d",
       "method": "Owner screenshot-guided cinematic illustration; observed roof footprints given proportional building volume; camera crop, airfield connections and single-instance city landmarks visually reviewed"
+    },
+    "ORSJ": {
+      "file": "ORSJ.webp",
+      "sha256": "b1b2501351cc1fc6ef0ed5c94d4571152a7fa10f552ec7c3c54254007e35c430",
+      "size": 247700,
+      "satelliteReference": "ChatGPT Image Oct 18, 2026, 05_28_37 AM.png",
+      "satelliteReferenceSha256": "483a0c94de984c9c7c25788fe5daee08e61c2a08d18c840886700a3d2f678ad0",
+      "method": "Owner screenshot-guided cinematic illustration; observed roof footprints given proportional building volume; camera crop, airfield connections and single-instance city landmarks visually reviewed"
+    },
+    "OTHH": {
+      "file": "OTHH.webp",
+      "sha256": "eb09b5eb768c270cd60b8e544a3ab00b78fa1525bb9a50d5d7f20e17a0166748",
+      "size": 297310,
+      "satelliteReference": "ChatGPT Image Oct 18, 2026, 05_28_42 AM.png",
+      "satelliteReferenceSha256": "5831e585513fb5d836f32d28c0d3e3441f751203f7a963d8dd13dc0c28611e96",
+      "method": "Owner screenshot-guided cinematic illustration; observed roof footprints given proportional building volume; camera crop, airfield connections and single-instance city landmarks visually reviewed"
+    },
+    "UDYZ": {
+      "file": "UDYZ.webp",
+      "sha256": "4b5e61599319fbc7dc5f5fca3e691fe6d4a04e3a8191b1638cd6df0b97b757d5",
+      "size": 250768,
+      "satelliteReference": "ChatGPT Image Oct 18, 2026, 05_28_46 AM.png",
+      "satelliteReferenceSha256": "4dd3f1570511589671e8593e2da502abd432425ed3230875f66122fc649f107d",
+      "method": "Owner screenshot-guided cinematic illustration; observed roof footprints given proportional building volume; camera crop, airfield connections and single-instance city landmarks visually reviewed"
+    },
+    "UGSB": {
+      "file": "UGSB.webp",
+      "sha256": "43168ecf5d9a5356eb9e739cb55cf1e0cccb8f78a27059238aabbb52fadf0fcc",
+      "size": 246810,
+      "satelliteReference": "ChatGPT Image Oct 18, 2026, 05_28_55 AM.png",
+      "satelliteReferenceSha256": "9ead648c9e0156e5ef1c98dad478fa479ec348c8bef45a98c358f75fe612c418",
+      "method": "Owner screenshot-guided cinematic illustration; observed roof footprints given proportional building volume; camera crop, airfield connections and single-instance city landmarks visually reviewed"
+    },
+    "UGTB": {
+      "file": "UGTB.webp",
+      "sha256": "cce6b3876178ed86bfe28e59f802a70d6492d92eb154b37b4c3460962d0c96e5",
+      "size": 267366,
+      "satelliteReference": "image(20261018-015944).png",
+      "satelliteReferenceSha256": "aa1290cf2c69e5099ff879a7a3fa165097747792d2c5e37ac89e710ca2318c1e",
+      "method": "Owner screenshot-guided cinematic illustration; observed roof footprints given proportional building volume; camera crop, airfield connections and single-instance city landmarks visually reviewed"
     }
   },
   "satelliteReferenceBatch": {
-    "count": 10,
+    "count": 5,
     "airports": [
-      "OIZS",
-      "OMDB",
-      "OMDW",
-      "OOMS",
-      "OPIS",
-      "OPKC",
-      "ORBI",
-      "ORER",
-      "ORMM",
-      "ORNI"
+      "ORSJ",
+      "OTHH",
+      "UDYZ",
+      "UGSB",
+      "UGTB"
     ],
     "date": "2026-10-18",
-    "batch": 6,
+    "batch": 7,
     "referenceSource": "Owner-supplied Google Earth/Maps screenshots",
     "buildingTreatment": "Proportional building volumes on observed roof footprints; existing international terminals retain their roof outlines",
     "landmarkReview": "One instance of each focal landmark or coherent complex; no mirrored duplicates"
@@ -696,6 +731,21 @@
       ],
       "date": "2026-10-18",
       "batch": 6,
+      "referenceSource": "Owner-supplied Google Earth/Maps screenshots",
+      "buildingTreatment": "Proportional building volumes on observed roof footprints; existing international terminals retain their roof outlines",
+      "landmarkReview": "One instance of each focal landmark or coherent complex; no mirrored duplicates"
+    },
+    {
+      "count": 5,
+      "airports": [
+        "ORSJ",
+        "OTHH",
+        "UDYZ",
+        "UGSB",
+        "UGTB"
+      ],
+      "date": "2026-10-18",
+      "batch": 7,
       "referenceSource": "Owner-supplied Google Earth/Maps screenshots",
       "buildingTreatment": "Proportional building volumes on observed roof footprints; existing international terminals retain their roof outlines",
       "landmarkReview": "One instance of each focal landmark or coherent complex; no mirrored duplicates"

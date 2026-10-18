@@ -1,0 +1,157 @@
+{
+  "schema": 1,
+  "cycle": "V2621",
+  "sourceSha256": "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6",
+  "airports": {
+    "OPIS": {
+      "profile": {
+        "name": "Islamabad Intl",
+        "city": "Islamabad",
+        "country": "Pakistan",
+        "iata": "ISB",
+        "elevation": 1761,
+        "lat": 33.548333,
+        "lon": 72.825
+      },
+      "source": {
+        "type": "Jeppesen Airport Information and ADC",
+        "repositoryPath": "web/data/charts/OPIS.pdf",
+        "airportPdfSha256": "2f7c8ee26a3cd77d6d2477e5856a92b838640fc8522f8443aa2c60cac5c657c1",
+        "airportInfoPdfPages": [
+          1,
+          2
+        ],
+        "airportInfoGlobalPages": [
+          1599,
+          1600
+        ],
+        "adcPdfPage": 25,
+        "adcGlobalPage": 1623,
+        "chartNumber": "20-9",
+        "chartDate": "2025-09-26",
+        "releasePdfSha256": "1e3d80461317c361f3a507a65a89c266a16d603f319f67d4dacba2ba51aa6181",
+        "releaseUrl": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-3/OPIS.pdf"
+      },
+      "publishedCoordinates": "N33 32.9 E072 49.5",
+      "adcFrequenciesMHz": {
+        "ATIS": 126.2,
+        "Clearance": 118.55,
+        "Ground": 130.6,
+        "Tower": 122.15,
+        "Departure": 119.65
+      },
+      "runways": [
+        {
+          "name": "28L",
+          "headingAdc": 278,
+          "length": 3658,
+          "width": 60,
+          "lengthFt": 12001,
+          "widthFt": 197,
+          "surface": "asphalt"
+        },
+        {
+          "name": "10L",
+          "headingAdc": 98,
+          "length": 3658,
+          "width": 45,
+          "lengthFt": 12001,
+          "widthFt": 148,
+          "surface": "asphalt"
+        },
+        {
+          "name": "10R",
+          "headingAdc": 98,
+          "length": 3658,
+          "width": 60,
+          "lengthFt": 12001,
+          "widthFt": 197,
+          "surface": "asphalt"
+        },
+        {
+          "name": "28R",
+          "headingAdc": 278,
+          "length": 3658,
+          "width": 45,
+          "lengthFt": 12001,
+          "widthFt": 148,
+          "surface": "asphalt"
+        }
+      ]
+    },
+    "OPKC": {
+      "profile": {
+        "name": "Jinnah Intl",
+        "city": "Karachi",
+        "country": "Pakistan",
+        "iata": "KHI",
+        "elevation": 102,
+        "lat": 24.908333,
+        "lon": 67.163333
+      },
+      "source": {
+        "type": "Jeppesen Airport Information and ADC",
+        "repositoryPath": "web/data/charts/OPKC.pdf",
+        "airportPdfSha256": "fce4051ccb236365572c666c5dfe236baa507211287f242c938db7b6f2ea077f",
+        "airportInfoPdfPages": [
+          1,
+          2
+        ],
+        "airportInfoGlobalPages": [
+          1562,
+          1563
+        ],
+        "adcPdfPage": 19,
+        "adcGlobalPage": 1580,
+        "chartNumber": "10-9",
+        "chartDate": "2026-03-20",
+        "releasePdfSha256": "57bd418c77846e10c9b1fb4e4b1f9b425395f308266ede29b9f9d540707bcd03",
+        "releaseUrl": "https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-3/OPKC.pdf"
+      },
+      "publishedCoordinates": "N24 54.5 E067 09.8",
+      "adcFrequenciesMHz": {
+        "ATIS": 126.7,
+        "Ground": 121.6,
+        "Tower": 118.3
+      },
+      "runways": [
+        {
+          "name": "07R",
+          "headingAdc": 74,
+          "length": 3400,
+          "width": 45,
+          "lengthFt": 11155,
+          "widthFt": 148,
+          "surface": "concrete"
+        },
+        {
+          "name": "25L",
+          "headingAdc": 254,
+          "length": 3400,
+          "width": 45,
+          "lengthFt": 11155,
+          "widthFt": 148,
+          "surface": "concrete"
+        },
+        {
+          "name": "07L",
+          "headingAdc": 74,
+          "length": 3500,
+          "width": 45,
+          "lengthFt": 11483,
+          "widthFt": 148,
+          "surface": "concrete"
+        },
+        {
+          "name": "25R",
+          "headingAdc": 254,
+          "length": 3500,
+          "width": 45,
+          "lengthFt": 11483,
+          "widthFt": 148,
+          "surface": "concrete"
+        }
+      ]
+    }
+  }
+}

@@ -9,6 +9,7 @@ const assigned=JSON.parse(fs.readFileSync(path.join(root,"web/airport-profile-po
 const v3=JSON.parse(fs.readFileSync(path.join(root,"web/airport-profile-posters-v3/manifest.json"),"utf8"));
 const original=JSON.parse(fs.readFileSync(path.join(root,"web/airport-profile-posters/manifest.json"),"utf8"));
 const expectedProfiles=[...new Set([...Object.keys(original.files),...Object.keys(assigned.airport_to_design),...Object.keys(v3.files)])].sort();
+const chartProfiles=JSON.parse(fs.readFileSync(path.join(root,"app/src/main/assets/airport-profile-chart-overrides.json"),"utf8")).airports;
 const base=process.env.JEPPIRAN_PAGE_URL;
 const posterScript=fs.readFileSync(path.join(root,"web/index.html"),"utf8").match(/src="\.\/(airport-profile-posters\.js\?v=[^"]+)"/)?.[1];
 assert.ok(posterScript,"Current versioned airport poster script is required");
@@ -28,6 +29,11 @@ async function get(relative){const r=await fetch(url(relative),{headers:{"Cache-
    assert.ok(gallery.includes("const perPage=10")&&gallery.includes("const total=20"));
    assert.ok(code.includes("additionalPosterAssignments"));
    assert.deepEqual(Object.keys(mapping.posters).sort(),expectedProfiles);
+   const profiles=await (await get("data/airport-profiles.json")).json();
+   for(const [icao,entry] of Object.entries(chartProfiles)){
+    for(const [key,value] of Object.entries(entry.profile))assert.equal(profiles.airports[icao]?.[key],value,icao+" chart profile "+key);
+    assert.match(profiles.airports[icao].source,/Jeppesen/);
+   }
    for(const [icao,id] of Object.entries(assigned.airport_to_design))if(!(icao in v3.files))assert.ok(mapping.posters[icao].includes(id+".webp"));
    for(const icao of Object.keys(v3.files))assert.ok(mapping.posters[icao].includes("/"+icao+".webp?v="),icao);
    ready=true;break;

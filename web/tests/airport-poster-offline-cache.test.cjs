@@ -29,7 +29,7 @@ test("all image poster bytes are served from immutable content-addressed URL cac
 });
 test("preload starts at launch without blocking initial UI or deleting chart PDFs",()=>{
  const html=read("web/index.html"),sw=read("web/service-worker.js");
- for(const n of ["airport-poster-preload.js?v=2621-persistent-v3-13-r1","airport-profile-posters.js?v=2621-profile-v3-73-r1"]){
+ for(const n of ["airport-poster-preload.js?v=2621-persistent-v3-13-r1","airport-profile-posters.js?v=2621-profile-v3-78-r1"]){
   assert.ok(html.includes(n),n);
   assert.ok(sw.includes(n),n);
  }

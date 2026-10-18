@@ -14,6 +14,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 URL = "https://raw.githubusercontent.com/davidmegginson/ourairports-data/main/airports.csv"
+CHART_PROFILES = Path(__file__).resolve().parents[1] / "app/src/main/assets/airport-profile-chart-overrides.json"
 COUNTRIES = {
     "IR": "Iran", "TR": "Türkiye", "AE": "United Arab Emirates",
     "OM": "Oman", "IQ": "Iraq", "AM": "Armenia", "GE": "Georgia",
@@ -97,6 +98,18 @@ def build(manifest_path, csv_path=None):
     if "OICZ" in desired:
         found["OICZ"] = {**found.get("OICZ", {"source": "JEPPIRAN airport identity override"}),
                          "country": "Iran", "name": "Saqez Airport", "city": "Saqez"}
+    # Owner-reviewed chart values take precedence only for this exact source
+    # cycle. This also fills OPIS/OPKC, which the regional CSV filter omits.
+    chart_profiles = json.loads(CHART_PROFILES.read_text(encoding="utf-8"))
+    if (chart_profiles.get("schema") == 1 and
+            chart_profiles.get("cycle") == manifest.get("version") and
+            chart_profiles.get("sourceSha256") == manifest.get("source_sha256")):
+        for icao, entry in chart_profiles.get("airports", {}).items():
+            if icao not in desired:
+                continue
+            found[icao] = {**found.get(icao, {}), **entry["profile"],
+                           "source": "Jeppesen Airport Information and ADC " + chart_profiles["cycle"],
+                           "chartSource": entry["source"]}
     missing = sorted(desired.difference(found))
     out = {
         "cycle": manifest.get("version", ""),

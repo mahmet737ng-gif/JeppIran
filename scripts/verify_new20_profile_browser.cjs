@@ -8,6 +8,7 @@ const fs=require("node:fs"),path=require("node:path");
 const root=path.resolve(__dirname,"..");
 const assignment=JSON.parse(fs.readFileSync(path.join(root,"web/airport-profile-posters-new20/assignments.json"),"utf8")).airport_to_design;
 const replaced=JSON.parse(fs.readFileSync(path.join(root,"web/airport-profile-posters-v3/manifest.json"),"utf8")).files;
+const chartProfiles=JSON.parse(fs.readFileSync(path.join(root,"app/src/main/assets/airport-profile-chart-overrides.json"),"utf8")).airports;
 const port=38279,base="http://127.0.0.1:"+port+"/";
 const server=spawn("python3",["-m","http.server",String(port),"--bind","127.0.0.1","--directory","web"],{cwd:root,stdio:"ignore"});
 const delay=ms=>new Promise(resolve=>setTimeout(resolve,ms));
@@ -21,6 +22,8 @@ async function ready(){for(let i=0;i<100;i++){if(server.exitCode!==null)throw Er
   await page.goto(base+"#charts",{waitUntil:"domcontentloaded",timeout:30000});
   await page.waitForFunction(()=>typeof selectAirport==="function" && Array.isArray(charts) && charts.length>1500,null,{timeout:60000});
   await page.waitForFunction(()=>!!window.JEPPIRAN_POSTER_CACHE_URLS && Object.keys(window.JEPPIRAN_POSTER_CACHE_URLS).length>=70,null,{timeout:25000});
+  await page.waitForFunction(()=>typeof airportMetadata==="object" &&
+    airportMetadata.OPIS?.source?.startsWith("Jeppesen") && airportMetadata.OPKC?.source?.startsWith("Jeppesen"),null,{timeout:25000});
   const checks={...assignment,...Object.fromEntries(Object.keys(replaced).map(icao=>[icao,icao]))};
   for(const [icao,id] of Object.entries(checks)){
    const actual=Object.hasOwn(replaced,icao)?icao:id;
@@ -42,6 +45,19 @@ async function ready(){for(let i=0;i<100;i++){if(server.exitCode!==null)throw Er
    assert.ok(result.image.includes(actual+".webp"),"incorrect image for "+icao);
    assert.ok(result.caption?.includes(icao),"missing clear ICAO caption "+icao);
    assert.ok(result.inside,"cropped image for "+icao);
+   if(chartProfiles[icao]){
+    const expected=chartProfiles[icao].profile;
+    const shown=await page.evaluate(()=>({name:document.querySelector("#airportProfile .profile-heading h2")?.textContent,
+     iata:document.querySelector("#airportProfile .profile-code-row .profile-chip")?.textContent,
+     place:document.querySelector("#airportProfile .profile-heading p")?.textContent,
+     coordinates:document.querySelector("#airportProfile .profile-coordinates")?.textContent}));
+    assert.equal(shown.name,expected.name,icao+" chart airport name");
+    assert.equal(shown.iata,expected.iata,icao+" chart IATA");
+    assert.ok(shown.place.includes(expected.city)&&shown.place.includes(expected.country),icao+" chart location");
+    assert.ok(shown.place.replace(/,/g,"").includes("Elevation "+expected.elevation+" ft"),icao+" chart elevation");
+    assert.ok(shown.coordinates.includes(expected.lat.toFixed(4))&&shown.coordinates.includes(expected.lon.toFixed(4)),icao+" chart ARP");
+    console.log("PASS Chrome chart-derived profile",icao,shown.name);
+   }
    console.log("PASS Chrome profile",icao,actual,Math.round(result.width)+"x"+Math.round(result.height));
   }
   const report=await page.evaluate(()=>window.JEPPIRAN_NEW20_PROFILE_POSTERS);

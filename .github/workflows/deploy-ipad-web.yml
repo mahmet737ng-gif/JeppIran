@@ -94,6 +94,7 @@ jobs:
         run: |
           node --check web/app.js
           node --test tests/profile-clocks-validity.test.cjs
+          node --test tests/chart-airport-profiles.test.cjs
 
       - name: Enforce owner-locked aircraft marker and constant screen size
         run: node --test tests/aircraft-marker-locked.test.cjs
