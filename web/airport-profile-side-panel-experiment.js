@@ -40,7 +40,7 @@
   }
   function apply(){
     queued=false;
-    if(code()==="OIII")install();
+    if(code()==="OIII"&&!root.classList.contains("jp-o3-topbar-experiment"))install();
     else if(active)remove();
   }
   function queue(){

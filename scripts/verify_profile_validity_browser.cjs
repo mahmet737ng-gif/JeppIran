@@ -104,11 +104,15 @@ async function waitForServer(){
   await page.evaluate(()=>selectAirport("OIII"));
 
   // Owner-approved Ahwaz profile: actual Chrome geometry and section placement.
+  if(await page.locator("#airportProfile.jp-o3-topbar-experiment").count()){
+    await page.locator("#airportProfile .jp-o3-control[data-target=profileWind]").click();
+  }
   await page.locator("#profileWind").waitFor({state:"visible",timeout:12000});
   const approved=await page.evaluate(()=>{
     const ids=["profileWeather","profileWind","profileRunways","profileNotam","profileTaf"];
     const boxes=Object.fromEntries(ids.map(id=>{const r=document.getElementById(id).getBoundingClientRect();return [id,{top:r.top,left:r.left,right:r.right,bottom:r.bottom,width:r.width,height:r.height}]}));
     return {boxes,extraInfo:document.querySelectorAll("#profileInfo").length,overview:document.querySelectorAll("#airportProfile .profile-tabs").length,localClock:!!document.getElementById("profileLocalTime"),
+      topbar:document.getElementById("airportProfile").classList.contains("jp-o3-topbar-experiment"),
       sidePanel:document.getElementById("airportProfile").classList.contains("jp-side-panel-experiment"),
       toggle:document.querySelectorAll("#airportProfile>.jp-side-panel-toggle").length};
   });
@@ -116,7 +120,15 @@ async function waitForServer(){
   assert.equal(approved.extraInfo,0,"Additional Information removed");
   assert.equal(approved.overview,0,"unnecessary Overview tab removed");
   assert.ok(approved.localClock,"airport-local time still runs in header");
-  if(approved.sidePanel){
+  if(approved.topbar){
+    assert.equal(approved.toggle,0,"old OIII side-panel is inactive during design-2 trial");
+    assert.equal(await page.locator("#airportProfile .jp-o3-topbar").count(),1,"one floating info bar");
+    assert.equal(await page.locator("#airportProfile .jp-o3-details:not([hidden])").count(),1,"live detail drawer opens");
+    assert.ok(bw.width>180 && ww.width>180 && rr.width>180,"all actual data cards remain in the details drawer");
+    await page.locator("#airportProfile .jp-o3-close").click();
+    assert.equal(await page.locator("#airportProfile .jp-o3-details[hidden]").count(),1,"drawer closes without hiding image");
+    console.log("PASS reversible OIII design-2 topbar",JSON.stringify(approved.boxes));
+  }else if(approved.sidePanel){
     assert.equal(approved.toggle,1,"OIII experiment has one reversible side-panel toggle");
     assert.ok(Math.abs(bw.width-ww.width)<=2&&Math.abs(bw.height-ww.height)<=2,"OIII METAR/Wind retain equal dimensions: "+JSON.stringify(approved.boxes));
     assert.ok(Math.abs(bw.left-ww.left)<=2&&Math.abs(ww.left-rr.left)<=2&&Math.abs(rr.left-nn.left)<=2,
@@ -190,6 +202,9 @@ async function waitForServer(){
   const phoneCss=require("node:fs").readFileSync(
     path.join(root,"app/src/main/assets/phone-layout.css"),"utf8");
   await page.addStyleTag({content:phoneCss});
+  if(await page.locator("#airportProfile.jp-o3-topbar-experiment").count()){
+    await page.locator("#airportProfile .jp-o3-control[data-target=profileWeather]").first().click();
+  }
   await page.locator("#profileWeather").waitFor({state:"visible",timeout:18000});
   assert.equal(await page.locator("#profileProcedures").count(),0,"airport profile must not contain a duplicated chart list");
   const geometry=await page.evaluate(()=>{

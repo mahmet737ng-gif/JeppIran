@@ -131,6 +131,11 @@ jobs:
       - name: Verify reversible OIII side-panel experiment
         run: node --test web/tests/airport-profile-side-panel-experiment.test.cjs
 
+      - name: Verify OIII floating information-bar experiment and rollback isolation
+        run: |
+          node --check web/airport-profile-topbar-experiment.js
+          node --test web/tests/airport-profile-topbar-experiment.test.cjs
+
       - name: Verify all owner-locked airport profile poster hashes when installed
         run: python3 scripts/verify_owner_locked_profile_posters.py
 
