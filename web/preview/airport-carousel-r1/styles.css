@@ -61,3 +61,124 @@ dialog{border:1px solid #37779f;border-radius:16px;color:#f3faff;width:min(780px
 @media(prefers-reduced-motion:reduce){
   .airport-token{transition:none!important}
 }
+
+
+/* airport-carousel-r1 / chart-dock trial r1 — preview only.
+   Fixed slender glass strip and retractable selector do not alter original app. */
+.chart-dock{
+  position:fixed;z-index:22;
+  bottom:calc(env(safe-area-inset-bottom,0px) + 30px);
+  left:50%;transform:translateX(-50%);
+  display:grid;grid-template-columns:92px repeat(4,minmax(0,1fr));
+  align-items:center;gap:5px;
+  width:min(760px,calc(100vw - 28px));
+  height:58px;padding:5px 7px;
+  background:linear-gradient(128deg,rgba(4,23,42,.9),rgba(5,31,51,.83));
+  border:1px solid rgba(112,192,236,.53);
+  border-radius:14px;
+  box-shadow:0 12px 45px rgba(0,0,0,.46);
+  -webkit-backdrop-filter:blur(17px) saturate(1.25);
+  backdrop-filter:blur(17px) saturate(1.25);
+}
+.chart-dock-airport{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  border-right:1px solid rgba(135,205,238,.2);line-height:1.05;height:75%;
+}
+.chart-dock-airport>span{font-weight:900;color:#fff;font-size:15px;letter-spacing:.02em}
+.chart-dock-airport>small{font-size:9px;color:#76c6eb;letter-spacing:.14em;margin-top:5px}
+.chart-dock-button{
+  display:flex;align-items:center;justify-content:center;height:100%;
+  border-radius:8px;border:1px solid transparent;color:#def0fd;
+  background:rgba(62,129,178,.08);
+  font-weight:800;font-size:clamp(11px,1vw,13px);letter-spacing:.065em;
+  transition:background-color .19s ease,border-color .19s ease,color .19s ease;
+}
+.chart-dock-button:hover,.chart-dock-button:focus-visible{
+  background:rgba(56,156,211,.18);border-color:rgba(91,199,254,.42);color:#fff;
+}
+.chart-dock-button.active{
+  color:#fff;background:rgba(26,130,188,.32);
+  border-color:rgba(87,205,255,.8);
+  box-shadow:inset 0 -2px 0 #65d7ff,0 0 16px rgba(38,153,239,.18);
+}
+.chart-sheet-scrim{
+  position:fixed;z-index:19;inset:0;
+  background:rgba(1,9,19,.28);
+  -webkit-backdrop-filter:blur(1px);backdrop-filter:blur(1px);
+}
+.chart-sheet-scrim[hidden]{display:none!important}
+.chart-sheet{
+  position:fixed;z-index:21;
+  left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 97px);
+  transform:translate(-50%,24px);
+  width:min(760px,calc(100vw - 28px));
+  max-height:min(56svh,530px);min-height:230px;
+  display:flex;flex-direction:column;overflow:hidden;
+  padding:0 14px 8px;
+  border-radius:18px;border:1px solid rgba(110,198,245,.58);
+  background:linear-gradient(145deg,rgba(4,24,44,.97),rgba(6,25,42,.94));
+  box-shadow:0 18px 65px rgba(0,0,0,.54);
+  -webkit-backdrop-filter:blur(22px) saturate(1.2);
+  backdrop-filter:blur(22px) saturate(1.2);
+  opacity:0;pointer-events:none;
+  transition:transform .25s cubic-bezier(.21,.82,.24,1),opacity .18s ease;
+}
+.chart-sheet.open{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.sheet-handle{width:45px;height:4px;border-radius:5px;background:#6aafda;margin:8px auto 10px;flex-shrink:0;opacity:.8}
+.chart-sheet-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.sheet-heading-group{min-width:0}
+.sheet-airport-code{color:#75c9f8;font-size:10px;font-weight:800;letter-spacing:.12em}
+.chart-sheet-header h2{margin:3px 0 0;font-weight:850;letter-spacing:-.01em;font-size:clamp(18px,1.5vw,24px);color:#f2faff}
+.sheet-close{
+  width:36px;height:36px;flex-shrink:0;border-radius:9px;
+  border:1px solid rgba(126,198,236,.48);
+  background:rgba(51,105,142,.22);color:#fff;font-size:29px;line-height:1;
+}
+.sheet-close:hover{border-color:#74d7ff;background:rgba(51,141,189,.37)}
+.chart-search-wrap{
+  height:41px;display:flex;align-items:center;gap:8px;flex-shrink:0;
+  border:1px solid rgba(91,158,207,.49);border-radius:10px;
+  background:rgba(1,15,29,.6);padding:0 12px;
+}
+.chart-search-wrap span{font-size:22px;color:#a7dcfa}
+.chart-search-wrap input{
+  background:transparent;border:0;outline:0;color:#fff;min-width:0;width:100%;font-size:13px;
+}
+.chart-search-wrap:focus-within{border-color:#6bd9ff}
+.chart-search-wrap input::placeholder{color:#a6bfd1}
+.sheet-chart-count{font-size:11px;color:#a8cbe1;margin:9px 2px 7px;flex-shrink:0}
+.sheet-chart-list{overflow-y:auto;flex:1;min-height:60px;padding:0 2px 6px;overscroll-behavior:contain;scrollbar-color:#397196 transparent}
+.sheet-chart-link{
+  display:flex;align-items:center;gap:12px;
+  width:100%;text-decoration:none;color:#e9f5fc;
+  border:1px solid rgba(92,157,199,.26);border-radius:9px;
+  background:rgba(21,59,88,.37);
+  padding:11px 12px;margin-bottom:6px;
+  transition:background .16s ease,border-color .16s ease;
+}
+.sheet-chart-link:hover,.sheet-chart-link:focus-visible{background:rgba(26,101,150,.53);border-color:#62c8f5}
+.sheet-chart-number{font-family:Menlo,Consolas,monospace;flex-shrink:0;min-width:45px;color:#6dd1ff;font-size:11px;font-weight:800}
+.sheet-chart-title{flex:1;min-width:0;text-wrap:pretty;line-height:1.35;font-size:12px}
+.sheet-chart-arrow{font-size:18px;color:#8cd5f8}
+.sheet-chart-empty{padding:16px 8px;color:#afcee4;text-align:center;font-size:13px}
+.sheet-disclaimer{margin:5px 2px 2px;font-size:10px;color:#a3bed0;text-align:center;flex-shrink:0}
+.footer{padding-bottom:7px}
+@media(max-width:690px){
+  .chart-dock{height:53px;bottom:calc(env(safe-area-inset-bottom,0px) + 28px);gap:2px;padding:4px;
+    grid-template-columns:57px repeat(4,minmax(0,1fr));width:calc(100vw - 16px);border-radius:12px}
+  .chart-dock-airport>span{font-size:12px}
+  .chart-dock-airport>small{font-size:7px;letter-spacing:.02em}
+  .chart-dock-button{font-size:10px;letter-spacing:0;border-radius:7px}
+  .chart-sheet{width:calc(100vw - 16px);bottom:calc(env(safe-area-inset-bottom,0px) + 88px);
+    max-height:min(64svh,580px);padding:0 9px 8px;border-radius:15px}
+  .sheet-chart-link{gap:9px;padding:11px 8px}
+  .sheet-chart-number{min-width:35px;font-size:10px}
+  .sheet-chart-title{font-size:12px}
+  .footer{padding-bottom:4px}
+}
+@media(max-height:590px){
+  .chart-sheet{max-height:calc(100svh - 134px);min-height:170px}
+}
+@media(prefers-reduced-motion:reduce){
+  .chart-sheet,.chart-dock-button{transition:none}
+}

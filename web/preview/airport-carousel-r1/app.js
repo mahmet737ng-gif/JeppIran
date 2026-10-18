@@ -14,6 +14,7 @@ const el={carousel:$("#airportCarousel"),track:$("#carouselTrack"),name:$("#airp
 let codes=["OIII"], metadata={},selected=0,visualPos=0,raf=0,animationToken=0,gesture=null;
 const carouselButtons=new Map();
 let chartManifest=null,charts=null,wxCache=null,wxCacheAt=0,metarRequest=0;
+let chartCatalogPromise=null,activeChartCategory=null,chartSheetToken=0,activeChartRows=[];
 const wrap=i=>(i%codes.length+codes.length)%codes.length;
 const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
 const getCode=i=>codes[wrap(i)];
@@ -112,6 +113,7 @@ function updateSelected(){
     ],{duration:280,easing:"cubic-bezier(.2,.8,.2,1)"});
   }
   updateImage(code);resetWeather();void updateMetar(code);
+  if(activeChartCategory)void renderChartSheet(activeChartCategory);
 }
 function stopAnimation(){animationToken++;if(raf)cancelAnimationFrame(raf);raf=0;}
 function commitPosition(target){
@@ -274,27 +276,129 @@ async function updateMetar(code){
   el.weatherStatus.textContent=source+" · Verify observation timestamp · Not for navigation";
  }catch(_){if(req!==metarRequest||current()!==code)return;el.weatherStatus.textContent="METAR unavailable — no weather values invented";}
 }
-async function openCharts(){
- const code=current(),dialog=$("#chartDialog"),groups=$("#chartGroups");
- $("#chartDialogTitle").textContent=code+" · "+el.name.textContent;
- groups.textContent="Loading published charts…";dialog.showModal();
- try{
-  if(!chartManifest||!charts){const [m,c]=await Promise.all([fetch(ROOT+"data/charts-manifest.json").then(r=>{if(!r.ok)throw Error("Chart manifest unavailable");return r.json()}),fetch(ROOT+"data/charts-current.json").then(r=>{if(!r.ok)throw Error("Chart index unavailable");return r.json()})]);chartManifest=m;charts=c;}
-  if(!dialog.open)return;
-  groups.replaceChildren();const airport=chartManifest.airports?.[code];
-  if(!airport){groups.textContent="Charts not found for this airport";return;}
-  const positions=new Map((airport.global_pages||[]).map((n,i)=>[Number(n),i+1]));
-  for(const [display,cats] of [["STAR",["STAR"]],["SID",["SID"]],["AIRPORT",["AIRPORT"]],["APP",["APPROACH"]]]){
-   const rows=charts.filter(c=>c.airport===code&&cats.includes(String(c.category).toUpperCase()));
-   const details=document.createElement("details"),summary=document.createElement("summary");details.className="chart-group";summary.textContent=display+"  ("+rows.length+")";details.append(summary);
-   for(const item of rows){const page=positions.get(Number(item.page));if(!page)continue;const link=document.createElement("a");link.target="_blank";link.rel="noopener noreferrer";link.href=ROOT+"charts/"+encodeURIComponent(code)+".pdf#page="+page;link.textContent=(item.chart_number?item.chart_number+" · ":"")+item.name;details.append(link)}
-   groups.append(details);
-  }
- }catch(e){groups.textContent="Published charts could not be loaded: "+e.message;}
+/* PREVIEW-ONLY CHART DOCK — STAR / SID / AIRPORT / APP.
+ * Source stays V2621, every href resolves to the existing airport PDF's
+ * precise published page. Do not mutate the original JeppIran chart viewer.
+ */
+const categoryMap=Object.freeze({STAR:"STAR",SID:"SID",AIRPORT:"AIRPORT",APP:"APPROACH"});
+const sheet=$("#chartSheet"),scrim=$("#chartSheetScrim"),chartList=$("#chartList");
+function closeChartSheet(){
+  activeChartCategory=null;
+  ++chartSheetToken;
+  sheet.classList.remove("open");
+  sheet.setAttribute("aria-hidden","true");
+  sheet.inert=true;
+  scrim.hidden=true;
+  document.querySelectorAll(".chart-dock-button").forEach(button=>{
+    button.classList.remove("active");
+    button.setAttribute("aria-expanded","false");
+  });
 }
-$("#showCharts").addEventListener("click",openCharts);
-$("#closeCharts").addEventListener("click",()=>$("#chartDialog").close());
-$("#chartDialog").addEventListener("click",e=>{if(e.target===e.currentTarget)e.currentTarget.close()});
+async function loadPublishedCharts(){
+  if(chartManifest&&charts)return [chartManifest,charts];
+  if(!chartCatalogPromise){
+    chartCatalogPromise=Promise.all([
+      fetch(ROOT+"data/charts-manifest.json",{cache:"no-store"}).then(r=>{
+        if(!r.ok)throw Error("Chart manifest HTTP "+r.status);
+        return r.json();
+      }),
+      fetch(ROOT+"data/charts-current.json",{cache:"no-store"}).then(r=>{
+        if(!r.ok)throw Error("Chart index HTTP "+r.status);
+        return r.json();
+      })
+    ]).then(([m,c])=>{
+      if(!m?.airports||!Array.isArray(c))throw Error("Chart index is incomplete");
+      chartManifest=m;charts=c;return [m,c];
+    }).catch(e=>{chartCatalogPromise=null;throw e;});
+  }
+  return chartCatalogPromise;
+}
+function renderFilteredCharts(){
+  const value=$("#chartSearch").value.trim().toUpperCase();
+  const visible=activeChartRows.filter(item=>
+    (String(item.chart_number||"")+" "+String(item.name||"")).toUpperCase().includes(value));
+  const frag=document.createDocumentFragment();
+  for(const item of visible){
+    const source=chartManifest?.airports?.[item.airport];
+    const pdfPage=Number(item.pdf_page);
+    // Manifest verifies chart identity and PDF page before offering a link.
+    if(!source||!pdfPage||Number(source.global_pages?.[pdfPage-1])!==Number(item.page))continue;
+    const link=document.createElement("a");
+    link.className="sheet-chart-link";
+    link.href=ROOT+"charts/"+encodeURIComponent(source.file||item.airport+".pdf")+"#page="+pdfPage;
+    link.target="_blank";
+    link.rel="noopener noreferrer";
+    link.setAttribute("aria-label","Open "+String(item.name||"chart")+" in a new tab");
+    const number=document.createElement("span"),title=document.createElement("span"),arrow=document.createElement("span");
+    number.className="sheet-chart-number";
+    title.className="sheet-chart-title";
+    arrow.className="sheet-chart-arrow";
+    number.textContent=item.chart_number||"—";
+    title.textContent=item.name||"Chart "+item.page;
+    arrow.textContent="↗";arrow.setAttribute("aria-hidden","true");
+    link.append(number,title,arrow);
+    frag.append(link);
+  }
+  chartList.replaceChildren(frag);
+  const count=chartList.querySelectorAll(".sheet-chart-link").length;
+  $("#sheetChartCount").textContent=count+" chart"+(count===1?"":"s")+(value?" matching “"+value+"”":"");
+  if(!count){
+    const empty=document.createElement("div");
+    empty.className="sheet-chart-empty";
+    empty.textContent=value?"No charts match this search.":"No charts available in this category.";
+    chartList.append(empty);
+  }
+}
+async function renderChartSheet(category){
+  if(!activeChartCategory||activeChartCategory!==category)return;
+  const request=++chartSheetToken,code=current();
+  const p=getProfile(code),iata=p.iata||fallbackIata[code]||"—";
+  $("#sheetAirportCode").textContent=code+" · "+iata+" · V2621";
+  $("#chartSheetHeading").textContent=category+" charts";
+  $("#sheetChartCount").textContent="Loading published V2621 charts…";
+  chartList.replaceChildren();
+  activeChartRows=[];
+  try{
+    const [,all]=await loadPublishedCharts();
+    if(request!==chartSheetToken||current()!==code||activeChartCategory!==category)return;
+    activeChartRows=all.filter(item=>item.airport===code &&
+      String(item.category||"").toUpperCase()===categoryMap[category])
+      .sort((a,b)=>Number(a.page)-Number(b.page));
+    renderFilteredCharts();
+  }catch(error){
+    if(request!==chartSheetToken||activeChartCategory!==category)return;
+    $("#sheetChartCount").textContent="Chart index unavailable";
+    const empty=document.createElement("div");
+    empty.className="sheet-chart-empty";
+    empty.textContent="Can't load V2621 charts: "+error.message;
+    chartList.replaceChildren(empty);
+  }
+}
+function openChartSheet(category){
+  if(!(category in categoryMap))return;
+  if(activeChartCategory===category){closeChartSheet();return;}
+  activeChartCategory=category;
+  sheet.inert=false;
+  sheet.classList.add("open");
+  sheet.setAttribute("aria-hidden","false");
+  scrim.hidden=false;
+  $("#chartSearch").value="";
+  chartList.scrollTop=0;
+  document.querySelectorAll(".chart-dock-button").forEach(button=>{
+    const active=button.dataset.category===category;
+    button.classList.toggle("active",active);
+    button.setAttribute("aria-expanded",String(active));
+  });
+  void renderChartSheet(category);
+}
+document.querySelectorAll(".chart-dock-button").forEach(button=>
+  button.addEventListener("click",()=>openChartSheet(button.dataset.category)));
+$("#chartSearch").addEventListener("input",renderFilteredCharts);
+$("#closeChartSheet").addEventListener("click",closeChartSheet);
+scrim.addEventListener("click",closeChartSheet);
+window.addEventListener("keydown",event=>{
+  if(event.key==="Escape"&&activeChartCategory){event.preventDefault();closeChartSheet();}
+});
 async function boot(){
  try{
   const manifestResponse=await fetch(ROOT+"data/charts-manifest.json",{cache:"no-store"});
