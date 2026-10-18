@@ -18,7 +18,8 @@ test("new style URL versioned in both HTML and offline service worker",()=>{
   const url="airport-profile-posters.css?v=2621-profile-fit-no-crop-r2";
   assert.ok(html.includes(url));
   assert.ok(sw.includes(url));
-  assert.match(sw,/const CACHE="jeppiran-pwa-2621-oiie-new-geo-flightqa-r1"/);
+  assert.match(sw,/const CACHE="jeppiran-pwa-2621-notam-ui-cachefix-r3"/);
+  assert.match(sw,/url\.pathname\.endsWith\("\/notam-service\.css"\)/);
 });
 test("the same 50 approved image names and SHA256 locks are retained",()=>{
   const man=JSON.parse(read("web/airport-profile-posters/manifest.json"));
