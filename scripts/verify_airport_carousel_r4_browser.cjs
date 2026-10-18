@@ -32,7 +32,9 @@ export function getDocument({url}){
  try{
   const main=fs.readFileSync(path.join(root,"web/index.html"),"utf8");
   assert.ok(main.includes('name="chartsLayoutMode" value="classic" checked'));
-  assert.ok(main.includes("./preview/airport-carousel-r4/"));
+  // R4 remains archived for regression; Settings now points to the improved R5.
+  assert.ok(fs.existsSync(path.join(root,"web/preview/airport-carousel-r4/index.html")));
+  assert.ok(main.includes("./preview/airport-carousel-r5/"));
   await ready();
   browser=await chromium.launch({headless:true,...(process.env.JEPPIRAN_CHROME_BIN?{executablePath:process.env.JEPPIRAN_CHROME_BIN}:{})});
   const page=await browser.newPage({viewport:{width:1440,height:900},reducedMotion:"no-preference"});
