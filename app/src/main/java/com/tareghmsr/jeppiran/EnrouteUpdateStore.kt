@@ -119,7 +119,8 @@ object EnrouteUpdateStore {
     fun activate(
         context: Context,
         manifestRaw: String,
-        onProgress: (Int) -> Unit
+        onProgress: (Int) -> Unit,
+        onCheckpoint: () -> Unit = {}
     ) {
         val root =
             JSONObject(
@@ -251,7 +252,8 @@ object EnrouteUpdateStore {
                 downloadAndVerify(
                     address,
                     target,
-                    expectedSha
+                    expectedSha,
+                    onCheckpoint
                 )
 
                 completed +=
@@ -350,7 +352,8 @@ object EnrouteUpdateStore {
     private fun downloadAndVerify(
         address: String,
         target: File,
-        expectedSha: String
+        expectedSha: String,
+        onCheckpoint: () -> Unit
     ) {
         var connection:
             HttpURLConnection? =
@@ -415,6 +418,7 @@ object EnrouteUpdateStore {
                             while (
                                 true
                             ) {
+                                onCheckpoint()
                                 val count =
                                     input.read(
                                         buffer

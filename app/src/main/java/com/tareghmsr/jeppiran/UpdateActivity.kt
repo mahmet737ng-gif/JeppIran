@@ -4,6 +4,9 @@ import android.graphics.Color
 import android.graphics.Typeface
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.widget.ProgressBar
 import android.view.Gravity
 import android.widget.Button
 import android.widget.LinearLayout
@@ -38,13 +41,28 @@ class UpdateActivity : AppCompatActivity() {
     private lateinit var dataStatus: TextView
     private lateinit var dataDetails: TextView
     private lateinit var dataUpdateButton: Button
+    private lateinit var dataPauseButton: Button
+    private lateinit var dataProgress: ProgressBar
 
     private lateinit var enrouteStatus: TextView
     private lateinit var enrouteDetails: TextView
     private lateinit var enrouteUpdateButton: Button
+    private lateinit var enroutePauseButton: Button
+    private lateinit var enrouteProgress: ProgressBar
 
     private lateinit var appStatus: TextView
     private lateinit var appUpdateButton: Button
+    private lateinit var appPauseButton: Button
+    private lateinit var appProgress: ProgressBar
+    private val progressHandler = Handler(Looper.getMainLooper())
+    private val refreshProgress = object : Runnable {
+        override fun run() {
+            if (!isFinishing && !isDestroyed) {
+                showBackgroundDownloadStatus()
+                progressHandler.postDelayed(this, 650L)
+            }
+        }
+    }
 
     private lateinit var viewChangesButton: Button
     private lateinit var checkButton: Button
@@ -72,20 +90,68 @@ class UpdateActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        progressHandler.removeCallbacks(refreshProgress)
+        progressHandler.post(refreshProgress)
 
-        if (::appStatus.isInitialized &&
-            remoteAppInfo != null &&
-            AppUpdateManager.canInstallPackages(this)
-        ) {
-            appStatus.text = "Ready to install app update"
-            appUpdateButton.isEnabled = true
+        // Check/download state is owned by WorkManager, not this Activity.
+    }
+
+    override fun onPause() {
+        progressHandler.removeCallbacks(refreshProgress)
+        // The UI stops observing; WorkManager downloads DO NOT stop.
+        super.onPause()
+    }
+
+    private fun showBackgroundDownloadStatus() {
+        val rows = listOf(
+            Triple(DurableUpdateQueue.TERMINAL, dataStatus, dataPauseButton),
+            Triple(DurableUpdateQueue.ENROUTE, enrouteStatus, enroutePauseButton),
+            Triple(DurableUpdateQueue.APPLICATION, appStatus, appPauseButton)
+        )
+        val bars = listOf(dataProgress, enrouteProgress, appProgress)
+        val actions = listOf(dataUpdateButton, enrouteUpdateButton, appUpdateButton)
+        for ((i, row) in rows.withIndex()) {
+            val (type, label, pause) = row
+            val state = DurableUpdateQueue.state(this, type)
+            val busy = state in setOf("queued", "running", "paused")
+            val percent = DurableUpdateQueue.progress(this, type)
+            bars[i].visibility = if (busy || state == "completed") android.view.View.VISIBLE
+                else android.view.View.GONE
+            bars[i].progress = percent
+            pause.visibility = if (busy) android.view.View.VISIBLE
+                else android.view.View.GONE
+            pause.text = if (DurableUpdateQueue.isPaused(this, type))
+                "RESUME DOWNLOAD" else "PAUSE DOWNLOAD"
+            if (busy) {
+                label.text = type.uppercase(Locale.US) + " • " +
+                    state.uppercase(Locale.US) + " • " + percent + "%\n" +
+                    DurableUpdateQueue.detail(this, type)
+                actions[i].isEnabled = false
+            }
+            if (state == "failed") {
+                label.text = type.uppercase(Locale.US) + " • " +
+                    DurableUpdateQueue.detail(this, type)
+                actions[i].isEnabled = type != DurableUpdateQueue.APPLICATION ||
+                    remoteAppInfo != null
+            }
+            if (state == "completed") {
+                label.text = DurableUpdateQueue.detail(this, type)
+                if (type == DurableUpdateQueue.APPLICATION) {
+                    actions[i].text = "INSTALL VERIFIED APK"
+                    actions[i].isEnabled = true
+                } else {
+                    actions[i].isEnabled = false
+                }
+            }
         }
     }
 
     private fun buildUi() {
         val root = LinearLayout(this).apply {
             orientation = LinearLayout.VERTICAL
-            background = getDrawable(R.drawable.bg_flight_deck)
+            background = GradientDrawable(GradientDrawable.Orientation.TOP_BOTTOM, intArrayOf(
+                Color.rgb(4, 21, 39), Color.rgb(2, 10, 23)
+            ))
         }
 
         val scroll = ScrollView(this)
@@ -102,7 +168,7 @@ class UpdateActivity : AppCompatActivity() {
         })
 
         content.addView(TextView(this).apply {
-            text = "Chart-cycle data and the JEPPIRAN application are updated independently."
+            text = "Terminal Charts, Enroute Data and Application updates are separate. Downloads continue when you leave this page."
             textSize = 13f
             setTextColor(secondaryTextColor())
             setPadding(0, 5.dp, 0, 18.dp)
@@ -128,6 +194,18 @@ class UpdateActivity : AppCompatActivity() {
             isEnabled = false
         }
         content.addView(dataUpdateButton, buttonParams(12))
+        dataPauseButton = actionButton("PAUSE DOWNLOAD") {
+            DurableUpdateQueue.togglePause(this, DurableUpdateQueue.TERMINAL)
+            showBackgroundDownloadStatus()
+        }.apply { visibility = android.view.View.GONE }
+        content.addView(dataPauseButton, buttonParams(5))
+        dataProgress = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
+            max = 100
+            progress = 0
+            visibility = android.view.View.GONE
+        }
+        content.addView(dataProgress, LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, 9.dp).apply { topMargin = 8.dp })
 
         viewChangesButton = actionButton("VIEW ACTIVE CYCLE CHANGES") {
             startActivity(
@@ -185,6 +263,17 @@ class UpdateActivity : AppCompatActivity() {
             enrouteUpdateButton,
             buttonParams(12)
         )
+        enroutePauseButton = actionButton("PAUSE DOWNLOAD") {
+            DurableUpdateQueue.togglePause(this, DurableUpdateQueue.ENROUTE)
+            showBackgroundDownloadStatus()
+        }.apply { visibility = android.view.View.GONE }
+        content.addView(enroutePauseButton, buttonParams(5))
+        enrouteProgress = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
+            max = 100
+            visibility = android.view.View.GONE
+        }
+        content.addView(enrouteProgress, LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, 9.dp).apply { topMargin = 8.dp })
 
         addSectionTitle(content, "APPLICATION", 24)
 
@@ -197,6 +286,18 @@ class UpdateActivity : AppCompatActivity() {
             isEnabled = false
         }
         content.addView(appUpdateButton, buttonParams(12))
+        appPauseButton = actionButton("PAUSE DOWNLOAD") {
+            DurableUpdateQueue.togglePause(this, DurableUpdateQueue.APPLICATION)
+            showBackgroundDownloadStatus()
+        }.apply { visibility = android.view.View.GONE }
+        content.addView(appPauseButton, buttonParams(5))
+        appProgress = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
+            max = 100
+            progress = 0
+            visibility = android.view.View.GONE
+        }
+        content.addView(appProgress, LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, 9.dp).apply { topMargin = 8.dp })
 
         checkButton = actionButton("CHECK ALL UPDATES") {
             checkAllUpdates()
@@ -530,6 +631,12 @@ class UpdateActivity : AppCompatActivity() {
     private fun checkAppUpdate() {
         appUpdateButton.isEnabled = false
         appStatus.text = "Checking JEPPIRAN version…"
+        if (packageName.endsWith(".phoneqa")) {
+            appStatus.text = "TEST APK • Updates are delivered separately from production."
+            appUpdateButton.isEnabled = false
+            refreshCheckButton()
+            return
+        }
 
         thread(name = "JeppIran-AppUpdateCheck") {
             try {
@@ -571,278 +678,33 @@ class UpdateActivity : AppCompatActivity() {
     }
 
     private fun installDataUpdate() {
-        if (
-            remoteManifestRaw.isBlank() ||
-            remoteDataVersion.isBlank()
-        ) {
-            checkDataUpdate()
-            return
-        }
-
-        dataUpdateButton.isEnabled = false
-        checkButton.isEnabled = false
-        dataStatus.text =
-            "Downloading and validating " +
-                remoteDataVersion +
-                "…"
-
-        thread(name = "JeppIran-DataUpdateInstall") {
-            try {
-                val chartsRaw = fetchText(REMOTE_CHARTS)
-
-                val releaseTag =
-                    remoteReleaseTag
-                        .ifBlank {
-                            JSONObject(remoteManifestRaw)
-                                .optString("release_tag")
-                                .trim()
-                        }
-
-                require(releaseTag.isNotBlank()) {
-                    "Chart release tag is missing"
-                }
-
-                val georefRaw =
-                    fetchText(
-                        RELEASE_ROOT +
-                            releaseTag +
-                            "/chart-georef.json"
-                    )
-
-                val changesRaw =
-                    runCatching {
-                        fetchText(REMOTE_CHANGES)
-                    }.getOrDefault("")
-
-                ChartUpdateStore.activate(
-                    this,
-                    remoteDataVersion,
-                    remoteManifestRaw,
-                    chartsRaw,
-                    georefRaw,
-                    changesRaw
-                )
-
-                val repository =
-                    ChartRepository(this)
-
-                repository.reload()
-
-                runOnUiThread {
-                    dataStatus.text =
-                        "Data Cycle " +
-                            remoteCycle.ifBlank {
-                                repository.getDataVersion()
-                            } +
-                            " • Up to date"
-
-                    dataDetails.text =
-                        formatValidity(
-                            remoteEffectiveFrom,
-                            remoteEffectiveTo
-                        ).ifBlank {
-                            "Validity dates not published"
-                        }
-
-                    dataUpdateButton.isEnabled = false
-                    viewChangesButton.isEnabled =
-                        ChartChangesStore
-                            .allChangedAirports(this)
-                            .isNotEmpty()
-
-                    refreshCheckButton()
-                }
-            } catch (error: Throwable) {
-                runOnUiThread {
-                    dataStatus.text =
-                        "Data update not installed"
-
-                    dataDetails.text =
-                        (error.message ?: "Validation failed") +
-                            "\n\nThe previous chart cycle is still active."
-
-                    dataUpdateButton.isEnabled = true
-                    refreshCheckButton()
-                }
-            }
-        }
+        DurableUpdateQueue.enqueue(applicationContext, DurableUpdateQueue.TERMINAL)
+        showBackgroundDownloadStatus()
     }
 
     private fun installEnrouteUpdate() {
-        val info =
-            remoteEnrouteInfo
-
-        if (
-            info == null ||
-            remoteEnrouteManifestRaw.isBlank()
-        ) {
-            checkEnrouteUpdate()
-            return
-        }
-
-        if (
-            !info.published ||
-            info.fileCount <=
-                0
-        ) {
-            enrouteStatus.text =
-                "Enroute Data " +
-                    info.cycle +
-                    " • Package not published"
-
-            enrouteUpdateButton.isEnabled =
-                false
-
-            return
-        }
-
-        enrouteUpdateButton.isEnabled =
-            false
-
-        checkButton.isEnabled =
-            false
-
-        enrouteStatus.text =
-            "Downloading Enroute Data " +
-                info.cycle +
-                "…"
-
-        thread(
-            name =
-                "JeppIran-EnrouteUpdateInstall"
-        ) {
-            try {
-                EnrouteUpdateStore
-                    .activate(
-                        this,
-                        remoteEnrouteManifestRaw
-                    ) {
-                        progress ->
-
-                        runOnUiThread {
-                            enrouteStatus.text =
-                                "Downloading Enroute Data " +
-                                    info.cycle +
-                                    " • " +
-                                    progress +
-                                    "%"
-                        }
-                    }
-
-                runOnUiThread {
-                    val productSuffix =
-                        info.products
-                            .takeIf {
-                                it.isNotBlank()
-                            }
-                            ?.let {
-                                " • " + it
-                            }
-                            .orEmpty()
-
-                    enrouteStatus.text =
-                        "Enroute Data " +
-                            info.cycle +
-                            productSuffix +
-                            " • Up to date"
-
-                    enrouteDetails.text =
-                        formatValidity(
-                            info.effectiveFrom,
-                            info.effectiveTo
-                        ).ifBlank {
-                            "Validity dates not published"
-                        }
-
-                    enrouteUpdateButton.isEnabled =
-                        false
-
-                    refreshCheckButton()
-                }
-
-            } catch (
-                error: Throwable
-            ) {
-                runOnUiThread {
-                    enrouteStatus.text =
-                        "Enroute update failed"
-
-                    enrouteDetails.text =
-                        error.message
-                            ?: "Unable to install Enroute package"
-
-                    enrouteUpdateButton.isEnabled =
-                        true
-
-                    refreshCheckButton()
-                }
-            }
-        }
+        DurableUpdateQueue.enqueue(applicationContext, DurableUpdateQueue.ENROUTE)
+        showBackgroundDownloadStatus()
     }
 
-
     private fun installAppUpdate() {
-        val info = remoteAppInfo
-
-        if (info == null) {
-            checkAppUpdate()
-            return
-        }
-
-        if (!AppUpdateManager.canInstallPackages(this)) {
-            appStatus.text =
-                "Installation permission required • Allow JEPPIRAN from this source"
-
-            AppUpdateManager.openInstallPermission(this)
-            return
-        }
-
-        appUpdateButton.isEnabled = false
-        checkButton.isEnabled = false
-        appStatus.text =
-            "Downloading " +
-                info.versionName +
-                "…"
-
-        thread(name = "JeppIran-AppUpdateInstall") {
-            try {
-                val apk =
-                    AppUpdateManager.downloadAndVerify(
-                        this,
-                        info
-                    ) { progress ->
-                        runOnUiThread {
-                            appStatus.text =
-                                "Downloading " +
-                                    info.versionName +
-                                    " • " +
-                                    progress +
-                                    "%"
-                        }
-                    }
-
-                runOnUiThread {
-                    appStatus.text =
-                        "Verified • opening Android installer"
-
-                    AppUpdateManager.launchInstaller(
-                        this,
-                        apk
-                    )
-
-                    refreshCheckButton()
-                }
-            } catch (error: Throwable) {
-                runOnUiThread {
-                    appStatus.text =
-                        "App update failed • " +
-                            (error.message ?: "Unable to install update")
-
-                    appUpdateButton.isEnabled = true
-                    refreshCheckButton()
-                }
+        if (DurableUpdateQueue.state(this, DurableUpdateQueue.APPLICATION) == "completed") {
+            if (!AppUpdateManager.canInstallPackages(this)) {
+                AppUpdateManager.openInstallPermission(this)
+                return
             }
+            val apk = java.io.File(cacheDir, "updates/jeppiran-update.apk")
+            if (apk.isFile && apk.length() > 0) {
+                AppUpdateManager.launchInstaller(this, apk)
+            } else appStatus.text = "Verified APK missing. Check updates again."
+            return
         }
+        if (packageName.endsWith(".phoneqa")) {
+            appStatus.text = "QA APK updates are distributed separately; original JeppIran is unchanged."
+            return
+        }
+        DurableUpdateQueue.enqueue(applicationContext, DurableUpdateQueue.APPLICATION)
+        showBackgroundDownloadStatus()
     }
 
     private fun refreshCheckButton() {
@@ -918,10 +780,9 @@ class UpdateActivity : AppCompatActivity() {
     ): TextView =
         TextView(this).apply {
             text = textValue
-            textSize = 14f
-            setTextColor(primaryTextColor())
-            setPadding(16.dp, 16.dp, 16.dp, 16.dp)
-            background = cardBackground()
+            textSize = 13f
+            setTextColor(Color.rgb(169, 205, 230))
+            setPadding(15.dp, 8.dp, 15.dp, 10.dp)
         }
 
     private fun actionButton(
@@ -931,6 +792,17 @@ class UpdateActivity : AppCompatActivity() {
         Button(this).apply {
             text = label
             gravity = Gravity.CENTER
+            isAllCaps = false
+            setTextColor(Color.WHITE)
+            textSize = 13f
+            typeface = Typeface.DEFAULT_BOLD
+            background = GradientDrawable(
+                GradientDrawable.Orientation.LEFT_RIGHT,
+                intArrayOf(Color.rgb(13, 87, 158), Color.rgb(14, 140, 188))
+            ).apply {
+                cornerRadius = 10.dp.toFloat()
+                setStroke(1.dp, Color.rgb(63, 153, 208))
+            }
             setOnClickListener { action() }
         }
 
@@ -994,37 +866,17 @@ class UpdateActivity : AppCompatActivity() {
     }
 
 
-    private fun primaryTextColor(): Int =
-        ContextCompat.getColor(
-            this,
-            R.color.jeppiran_text
-        )
+    private fun primaryTextColor(): Int = Color.rgb(232, 246, 255)
 
-    private fun secondaryTextColor(): Int =
-        ContextCompat.getColor(
-            this,
-            R.color.jeppiran_text_secondary
-        )
+    private fun secondaryTextColor(): Int = Color.rgb(158, 195, 222)
 
     private fun cardBackground(): GradientDrawable =
-        GradientDrawable().apply {
-            shape = GradientDrawable.RECTANGLE
+        GradientDrawable(
+            GradientDrawable.Orientation.TL_BR,
+            intArrayOf(Color.rgb(11, 46, 76), Color.rgb(5, 24, 43))
+        ).apply {
             cornerRadius = 14.dp.toFloat()
-
-            setColor(
-                ContextCompat.getColor(
-                    this@UpdateActivity,
-                    R.color.jeppiran_surface
-                )
-            )
-
-            setStroke(
-                1.dp,
-                ContextCompat.getColor(
-                    this@UpdateActivity,
-                    R.color.jeppiran_card_stroke
-                )
-            )
+            setStroke(1.dp, Color.rgb(36, 88, 125))
         }
 
     private val Int.dp: Int
