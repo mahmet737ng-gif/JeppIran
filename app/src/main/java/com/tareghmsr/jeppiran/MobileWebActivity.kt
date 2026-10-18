@@ -6,6 +6,8 @@ import android.content.pm.PackageManager
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.os.SystemClock
+import android.widget.Toast
 import android.view.View
 import android.webkit.CookieManager
 import android.webkit.GeolocationPermissions
@@ -56,6 +58,7 @@ class MobileWebActivity : AppCompatActivity() {
     private lateinit var browser: WebView
     private lateinit var progress: ProgressBar
     private lateinit var errorMessage: TextView
+    private var lastQaBackPress: Long = 0L
     private var geoOrigin: String? = null
     private var geoCallback: GeolocationPermissions.Callback? = null
 
@@ -259,8 +262,28 @@ class MobileWebActivity : AppCompatActivity() {
         browser.evaluateJavascript(
             "(function(){return window.jeppiranAndroidBack ? window.jeppiranAndroidBack() : false})()"
         ) { result ->
-            if (result != "true" && !isFinishing && !isDestroyed) {
-                // At Home the OS gesture closes the Android activity.
+            if (isFinishing || isDestroyed) return@evaluateJavascript
+            if (result == "true") {
+                lastQaBackPress = 0L
+                return@evaluateJavascript
+            }
+            if (packageName.endsWith(".phoneqa")) {
+                // QA is deliberately separate from production. At its landing
+                // screen, one stray Android back gesture must NOT kill it.
+                val now = SystemClock.elapsedRealtime()
+                if (now - lastQaBackPress < 2000L && lastQaBackPress != 0L) {
+                    lastQaBackPress = 0L
+                    finish()
+                } else {
+                    lastQaBackPress = now
+                    Toast.makeText(
+                        this@MobileWebActivity,
+                        "Carousel QA: press Back again to exit",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            } else {
+                // Original JeppIran keeps its approved Home/back behavior.
                 super.onBackPressed()
             }
         }

@@ -19,6 +19,8 @@ async function ready(){
   assert.match(local,/preview\/airport-carousel-r5\/index.html/);
   assert.match(local,/\.phoneqa/);
   assert.match(local,/WebViewAssetLoader/);
+  assert.match(local,/press Back again to exit/,"Native must never exit from a single Back");
+  assert.match(local,/lastQaBackPress/);
   const manifest=fs.readFileSync(path.join(root,"app/src/main/AndroidManifest.xml"),"utf8");
   assert.match(manifest,/JeppIran Carousel QA/);
   const build=fs.readFileSync(path.join(root,"app/build.gradle.kts"),"utf8");
@@ -36,8 +38,12 @@ async function ready(){
   ])}));
   await page.route("**/data/airport-profiles.json",r=>r.fulfill({contentType:"application/json",body:JSON.stringify({airports:{OIII:{iata:"THR",name:"Mehrabad International Airport",city:"Tehran",country:"Iran",elevation:3962}}})}));
   await page.route("**/wx-live.json*",r=>r.abort());
-  await page.goto(url,{waitUntil:"domcontentloaded"});
+  await page.goto(url+"?platform=android-carousel-qa",{waitUntil:"domcontentloaded"});
   await page.waitForFunction(()=>document.querySelectorAll(".airport-token").length===12);
+  assert.equal(await page.locator("html").evaluate(el=>el.classList.contains("jp-android-carousel-qa")),true);
+  assert.equal(await page.locator(".preview-mark").isVisible(),true,"QA identity must be visible on phone");
+  assert.equal(await page.locator(".original-link").isHidden(),true,"QA must not accidentally route to Classic");
+  assert.equal(await page.locator(".topline .brand").getAttribute("href"),null,"QA logo is not a link to Classic");
   const expanded=await page.locator(".carousel-region").evaluate(el=>el.getBoundingClientRect().height);
   assert.equal(await page.locator("#airportName").isVisible(),true);
   assert.equal(await page.locator("body").evaluate(el=>el.classList.contains("chart-selected")),false);
@@ -58,9 +64,12 @@ async function ready(){
   assert.match(geometry.pdfSrc,/index\.html\?jeppiranEmbedCharts=1#charts/,"Use explicit index.html for Android AssetLoader");
   assert.equal(await page.locator("#airportName").isVisible(),false);
   assert.equal(await page.locator("#classicViewerHost").isVisible(),true);
-  await page.locator('.procedure-category[data-category="STAR"]').click();
+  assert.equal(await page.evaluate(()=>window.jeppiranAndroidBack()),true,
+    "Android Back from an active chart must be handled inside Carousel");
   await page.waitForTimeout(450);
   assert.equal(await page.locator("#airportName").isVisible(),true);
+  assert.equal(await page.evaluate(()=>window.jeppiranAndroidBack()),false,
+    "Landing screen delegates to native double-back guard");
   assert.equal(await page.locator("#classicViewerHost").isHidden(),true);
   const restored=await page.locator(".carousel-region").evaluate(el=>el.getBoundingClientRect().height);
   assert.ok(restored>geometry.airport.height*1.25);

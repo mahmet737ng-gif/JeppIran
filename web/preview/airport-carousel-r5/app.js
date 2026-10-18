@@ -646,6 +646,25 @@ async function boot(){
     console.warn("Optional airport profile index unavailable",error);
   }
 }
+// In the isolated APK the top logo must return to the airport selector,
+// NEVER navigate into the bundled production Classic page.
+if(new URLSearchParams(location.search).get("platform")==="android-carousel-qa"){
+  const brand=document.querySelector(".topline .brand");
+  if(brand){
+    brand.removeAttribute("href");
+    brand.setAttribute("role","button");
+    brand.setAttribute("tabindex","0");
+    brand.addEventListener("click",()=>{
+      if(activeChartCategory)closeProcedureCategory();
+    });
+    brand.addEventListener("keydown",event=>{
+      if(event.key==="Enter"||event.key===" "){
+        event.preventDefault();
+        if(activeChartCategory)closeProcedureCategory();
+      }
+    });
+  }
+}
 // Android OS back gesture closes a chart group before leaving Carousel QA.
 window.jeppiranAndroidBack=()=>{
   if(document.fullscreenElement){void document.exitFullscreen().catch(()=>{});return true;}

@@ -733,3 +733,36 @@ body.chart-selected .footer{display:none!important}
 @media(prefers-reduced-motion:reduce){
   .carousel-region{transition:none!important}
 }
+
+
+/* R6 QA identification: one glance should make it impossible to confuse the
+ * separately installed Android test with the approved Classic app. */
+html.jp-android-carousel-qa .original-link{display:none!important}
+html.jp-android-carousel-qa .topline .preview-mark{
+  display:block!important;flex:0 0 auto!important;
+  color:#b8edff!important;
+  font-size:10px!important;letter-spacing:.055em!important;
+  line-height:1.1!important;text-align:right!important;
+  border:1px solid rgba(88,206,247,.5);
+  border-radius:7px;padding:6px 7px;background:rgba(12,83,129,.45);
+}
+html.jp-android-carousel-qa .topline .preview-mark span{
+  display:block!important;font-size:9px!important;
+  letter-spacing:0!important;color:#ecfaff!important;
+}
+@media(max-width:690px){
+  html.jp-android-carousel-qa .topline .search-box{
+    display:none!important;
+  }
+  html.jp-android-carousel-qa .topline{
+    min-height:46px!important;
+    display:flex!important;justify-content:space-between!important;gap:4px!important;
+  }
+  html.jp-android-carousel-qa .topline .brand{font-size:14px!important}
+  html.jp-android-carousel-qa .topline .brand span:last-child{
+    display:none!important;
+  }
+  html.jp-android-carousel-qa.chart-selected .topline{
+    min-height:42px!important;
+  }
+}
