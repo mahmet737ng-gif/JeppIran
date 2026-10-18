@@ -72,6 +72,14 @@ jobs:
           JEPPIRAN_VERSION_NAME: '29.3-test'
         run: gradle testDebugUnitTest assembleDebug --stacktrace
 
+      - name: Upload test APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: JeppIran-Carousel-29.3-Integrated-QA
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30
+
       - name: Boot Android emulator and verify installed QA actually opens Carousel
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -100,10 +108,3 @@ jobs:
           echo "This test APK installs alongside original JeppIran (separate package com.tareghmsr.jeppiran.phoneqa)." >> "$GITHUB_STEP_SUMMARY"
           echo "Download the **JeppIran-Carousel-29.3-Integrated-QA** artifact from this workflow run." >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Upload test APK artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: JeppIran-Carousel-29.3-Integrated-QA
-          path: app/build/outputs/apk/debug/app-debug.apk
-          if-no-files-found: error
-          retention-days: 30
