@@ -1,0 +1,105 @@
+name: Publish verified Android 29.5 immediately
+
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/publish-android-29-5-fast.yml']
+
+permissions:
+  actions: read
+  contents: write
+
+jobs:
+  promote-signed-apk:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Set up Android signing verification tools
+        uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools'
+      - name: Install matching SDK build tools
+        run: |
+          yes | sdkmanager --licenses > /dev/null || true
+          sdkmanager 'build-tools;36.0.0'
+      - name: Download already-tested production APK 29.5
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          mkdir -p "$RUNNER_TEMP/apk" "$RUNNER_TEMP/old" "$RUNNER_TEMP/meta"
+          gh run download 39172376244 --repo "${{ github.repository }}" --name apk-29.5 --dir "$RUNNER_TEMP/apk"
+          test -s "$RUNNER_TEMP/apk/29.5.apk"
+      - name: Verify installed-package compatibility, signing, version and checksum
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          NEW="$RUNNER_TEMP/apk/29.5.apk"
+          OLD="$RUNNER_TEMP/old/29.4.apk"
+          gh release download jeppiran-android-262565 --repo "${{ github.repository }}" --pattern "29.4.apk" --dir "$RUNNER_TEMP/old"
+          test -s "$OLD"
+          APK_SIGNER="$ANDROID_HOME/build-tools/36.0.0/apksigner"
+          AAPT="$ANDROID_HOME/build-tools/36.0.0/aapt"
+          "$APK_SIGNER" verify "$NEW"
+          "$APK_SIGNER" verify "$OLD"
+          OLD_CERT="$("$APK_SIGNER" verify --print-certs "$OLD" | grep 'Signer #1 certificate SHA-256 digest:' | head -1 | cut -d: -f2- | xargs)"
+          NEW_CERT="$("$APK_SIGNER" verify --print-certs "$NEW" | grep 'Signer #1 certificate SHA-256 digest:' | head -1 | cut -d: -f2- | xargs)"
+          test -n "$OLD_CERT"
+          test "$OLD_CERT" = "$NEW_CERT"
+          PACKAGE_LINE="$("$AAPT" dump badging "$NEW" | sed -n '1p')"
+          echo "$PACKAGE_LINE"
+          [[ "$PACKAGE_LINE" == *"name='com.tareghmsr.jeppiran'"* ]]
+          [[ "$PACKAGE_LINE" == *"versionCode='262566'"* ]]
+          [[ "$PACKAGE_LINE" == *"versionName='29.5'"* ]]
+          sha256sum "$NEW"
+      - name: Upload official 29.5 Release and only then update stable in-app pointer
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          REPO="${{ github.repository }}"
+          TAG="jeppiran-android-262566"
+          FILE="$RUNNER_TEMP/apk/29.5.apk"
+          mkdir -p "$RUNNER_TEMP/meta/previous"
+          gh release download jeppiran-test --repo "$REPO" --pattern app-update.json --dir "$RUNNER_TEMP/meta/previous"
+          python3 - "$RUNNER_TEMP/meta/previous/app-update.json" <<'PY'
+          import json,sys
+          obj=json.load(open(sys.argv[1]))
+          code=int(obj["versionCode"])
+          if code > 262566:
+              raise SystemExit("Newer Android version already published; refusing downgrade")
+          print("Stable update pointer before publication:",obj["versionName"],code)
+          PY
+          if ! gh release view "$TAG" --repo "$REPO" >/dev/null 2>&1; then
+            gh release create "$TAG" --repo "$REPO" --title "JEPPIRAN Android 29.5 (262566)" --notes "Signed 29.5 APK; fixes background update downloads, Pause/Resume and unified Android Update UI."
+          fi
+          gh release upload "$TAG" "$FILE" --repo "$REPO" --clobber
+          # Ensure the exact signed APK is downloadable before announcing it.
+          gh release view "$TAG" --repo "$REPO" --json assets --jq '.assets[].name' | grep -qx '29.5.apk'
+          python3 - "$FILE" "$RUNNER_TEMP/meta/app-update.json" <<'PY'
+          import sys,json,datetime,hashlib,pathlib
+          apk=pathlib.Path(sys.argv[1])
+          metadata={
+            "versionCode":262566,
+            "versionName":"29.5",
+            "apkUrl":"https://github.com/mahmet737ng-gif/JeppIran/releases/download/jeppiran-android-262566/29.5.apk",
+            "apkSizeBytes":apk.stat().st_size,
+            "sha256":hashlib.sha256(apk.read_bytes()).hexdigest(),
+            "publishedAt":datetime.datetime.now(datetime.timezone.utc).isoformat().replace("+00:00","Z"),
+            "updateMode":"direct-delta-or-full",
+            "patches":[]
+          }
+          pathlib.Path(sys.argv[2]).write_text(json.dumps(metadata,indent=2)+"\n")
+          PY
+          gh release upload jeppiran-test "$RUNNER_TEMP/meta/app-update.json" --repo "$REPO" --clobber
+          mkdir -p "$RUNNER_TEMP/meta/confirmed"
+          gh release download jeppiran-test --repo "$REPO" --pattern app-update.json --dir "$RUNNER_TEMP/meta/confirmed"
+          python3 - "$RUNNER_TEMP/meta/confirmed/app-update.json" <<'PY'
+          import sys,json
+          meta=json.load(open(sys.argv[1]))
+          assert meta["versionName"]=="29.5" and meta["versionCode"]==262566
+          assert meta["apkUrl"].endswith("/29.5.apk")
+          print("PASS: official in-app latest version:",meta["versionName"],meta["versionCode"])
+          PY
