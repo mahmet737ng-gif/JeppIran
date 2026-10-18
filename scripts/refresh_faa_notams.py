@@ -37,22 +37,30 @@ def parse(payload):
         out.append(dict(id=ident,text=text,begin=choose(n,"effectiveStartDate","startDate","startdate","begin","validFrom"),end=choose(n,"effectiveEndDate","endDate","enddate","end","validTo"),status=status))
     return out
 def get_batch(group):
-    # The public FAA search accepts comma-separated location designators.
-    # Grouping reduces rate-limiting; never attribute a NOTAM to the wrong airport.
-    body=urllib.parse.urlencode(dict(searchType="0",designatorsForLocation=",".join(group),offset="0",notamsOnly="false")).encode()
-    req=urllib.request.Request(API,data=body,method="POST",headers={"Content-Type":"application/x-www-form-urlencoded; charset=UTF-8","Accept":"application/json","User-Agent":"JEPPIRAN-NOTAM-Relay/1.0"})
+    # FAA Search returns at most 30 NOTAMs per response. Read every page.
+    # A complete (rather than only first-page) result is required to mark available.
+    found={}
     try:
-        with urllib.request.urlopen(req,timeout=18) as response:
-            raw=response.read(4000000)
-            if len(raw)==4000000:raise ValueError("Oversized response")
-        result=parse(json.loads(raw))
+        for offset in range(0, 600, 30):
+            body=urllib.parse.urlencode(dict(searchType="0",designatorsForLocation=",".join(group),offset=str(offset),notamsOnly="false")).encode()
+            req=urllib.request.Request(API,data=body,method="POST",headers={"Content-Type":"application/x-www-form-urlencoded; charset=UTF-8","Accept":"application/json","User-Agent":"JEPPIRAN-NOTAM-Relay/1.0"})
+            with urllib.request.urlopen(req,timeout=18) as response:
+                raw=response.read(4000000)
+                if len(raw)==4000000:raise ValueError("Oversized response")
+            page=parse(json.loads(raw))
+            keys={(n["id"],n["text"]) for n in page}
+            if offset and keys and keys.issubset(set(found)):
+                raise ValueError("FAA pagination repeated a previous page")
+            for n in page:found[(n["id"],n["text"])]=n
+            if len(page)<30:break
+        else:
+            raise ValueError("FAA result exceeded pagination safety ceiling")
         fetched=dt.datetime.now(dt.timezone.utc).isoformat()
         separated={k:[] for k in group}
-        for n in result:
-            # ICAO NOTAM section A) is the authoritative target location.
-            m=re.search(r"(?:^|\s)A\)\s*([A-Z0-9]{4})\b",n["text"].upper())
-            if m and m.group(1) in separated:
-                separated[m.group(1)].append(n)
+        for n in found.values():
+            match=re.search(r"(?:^|\s)A\)\s*([A-Z0-9]{4})\b",n["text"].upper())
+            if match and match.group(1) in separated:
+                separated[match.group(1)].append(n)
         return {icao:dict(status="available",fetched_at=fetched,notams=separated[icao]) for icao in group}
     except Exception as exc:
         print("FAA group retrieval unavailable:",",".join(group),str(exc)[:120],flush=True)
