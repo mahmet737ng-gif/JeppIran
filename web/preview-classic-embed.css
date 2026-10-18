@@ -48,3 +48,55 @@ html.jp-preview-classic-embed #chartsView #pdfStage{
   overflow:hidden!important
 }
 html.jp-preview-classic-embed #chartsView .chart-metar-banner{z-index:5}
+
+
+/* R6 Android QA only: keep the original Classic controls but size them for a
+ * 6-7 inch phone screen. The parent carousel remains outside this iframe. */
+@media(max-width:690px){
+  html.jp-preview-classic-embed #chartsView .viewer-toolbar{
+    display:flex!important;flex-direction:column!important;
+    align-items:stretch!important;gap:2px!important;
+    padding:3px 5px!important;
+    height:auto!important;min-height:0!important;
+    max-height:110px!important;overflow:hidden!important;
+  }
+  html.jp-preview-classic-embed #chartsView .viewer-title{
+    flex:0 0 auto!important;min-height:0!important;
+    max-width:100%!important;white-space:nowrap!important;
+  }
+  html.jp-preview-classic-embed #chartsView .viewer-title strong{
+    font-size:11px!important;line-height:1.15!important;
+  }
+  html.jp-preview-classic-embed #chartsView .viewer-title small{
+    font-size:10px!important;line-height:1.15!important;
+    margin-top:1px!important;
+  }
+  html.jp-preview-classic-embed #chartsView .viewer-actions{
+    max-width:100%!important;width:100%!important;
+    flex:0 0 auto!important;display:flex!important;
+    gap:3px!important;align-items:center!important;
+    flex-wrap:nowrap!important;overflow-x:auto!important;
+    overflow-y:hidden!important;
+    -webkit-overflow-scrolling:touch!important;
+    padding:1px 0!important;
+  }
+  html.jp-preview-classic-embed #chartsView .viewer-actions .icon-btn,
+  html.jp-preview-classic-embed #chartsView .viewer-actions .raster-btn{
+    height:32px!important;min-height:32px!important;
+    padding:3px 5px!important;border-radius:5px!important;
+    flex-shrink:0!important;
+  }
+  html.jp-preview-classic-embed #chartsView .viewer-actions .raster-only{
+    width:34px!important;min-width:34px!important;padding:2px!important;
+  }
+  html.jp-preview-classic-embed #chartsView .viewer-actions .toolbar-art{
+    width:26px!important;
+  }
+  html.jp-preview-classic-embed #chartsView .viewer-actions .zoom-value{
+    min-width:48px!important;font-size:12px!important;
+    padding:2px 5px!important;
+  }
+  html.jp-preview-classic-embed #chartsView .chart-metar-banner{
+    max-height:64px!important;overflow:hidden!important;
+  }
+}
