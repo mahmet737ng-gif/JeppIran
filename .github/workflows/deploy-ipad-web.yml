@@ -128,8 +128,8 @@ jobs:
       - name: Validate runway length and width from Jeppesen Airport Information for all 78 airports
         run: node --test web/tests/airport-runway-dimensions.test.cjs
 
-      - name: Verify five V2621 runway schematic prototypes
-        run: node --test web/tests/airport-runway-schematics.test.cjs
+      - name: Verify reversible OIII side-panel experiment
+        run: node --test web/tests/airport-profile-side-panel-experiment.test.cjs
 
       - name: Verify all owner-locked airport profile poster hashes when installed
         run: python3 scripts/verify_owner_locked_profile_posters.py

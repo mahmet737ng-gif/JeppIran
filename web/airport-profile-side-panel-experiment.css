@@ -1,0 +1,175 @@
+/* OIII-only experimental collapsible glass panel. */
+#chartsView .airport-profile.jp-side-panel-experiment{
+  --jp-side-panel-width:clamp(330px,31vw,430px);
+}
+#chartsView .airport-profile.jp-side-panel-experiment>.jp-poster-scenic-foreground{
+  display:none!important;
+}
+#chartsView .airport-profile.jp-side-panel-experiment .profile-shell{
+  position:absolute!important;
+  z-index:7!important;
+  top:0!important;
+  right:0!important;
+  bottom:0!important;
+  left:auto!important;
+  box-sizing:border-box!important;
+  width:var(--jp-side-panel-width)!important;
+  height:100%!important;
+  max-height:none!important;
+  margin:0!important;
+  padding:18px 14px 28px!important;
+  overflow-x:hidden!important;
+  overflow-y:auto!important;
+  overscroll-behavior:contain!important;
+  zoom:1!important;
+  transform:translateX(0)!important;
+  transform-origin:right center!important;
+  opacity:1;
+  border-left:1px solid rgba(110,194,239,.38);
+  background:linear-gradient(155deg,rgba(5,20,34,.93),rgba(4,13,24,.82));
+  box-shadow:-20px 0 50px rgba(0,0,0,.42),inset 1px 0 rgba(255,255,255,.06);
+  -webkit-backdrop-filter:blur(13px) saturate(1.15);
+  backdrop-filter:blur(13px) saturate(1.15);
+  transition:transform .28s ease,opacity .22s ease;
+}
+#chartsView .airport-profile.jp-side-panel-experiment.jp-side-panel-collapsed .profile-shell{
+  transform:translateX(calc(100% + 4px))!important;
+  opacity:0;
+  pointer-events:none;
+}
+#chartsView .airport-profile.jp-side-panel-experiment .jp-poster-frame .jp-poster-caption{
+  right:calc(var(--jp-side-panel-width) + 28px)!important;
+  transition:right .28s ease;
+}
+#chartsView .airport-profile.jp-side-panel-experiment.jp-side-panel-collapsed .jp-poster-frame .jp-poster-caption{
+  right:clamp(16px,2vw,36px)!important;
+}
+#chartsView .airport-profile.jp-side-panel-experiment .profile-heading{
+  display:block!important;
+  min-height:0!important;
+  padding:0 2px 13px!important;
+}
+#chartsView .airport-profile.jp-side-panel-experiment .profile-heading>div:first-child{
+  display:block!important;
+}
+#chartsView .airport-profile.jp-side-panel-experiment .profile-icao{
+  font-size:32px!important;
+}
+#chartsView .airport-profile.jp-side-panel-experiment .profile-heading h2{
+  margin-top:5px!important;
+  font-size:18px!important;
+  line-height:1.2!important;
+}
+#chartsView .airport-profile.jp-side-panel-experiment .profile-heading p{
+  font-size:12px!important;
+}
+#chartsView .airport-profile.jp-side-panel-experiment .profile-elev{
+  max-width:none!important;
+  margin:10px 0 0!important;
+  text-align:left!important;
+  white-space:normal!important;
+  font-size:11px!important;
+  line-height:1.5!important;
+}
+#chartsView .airport-profile.jp-side-panel-experiment .profile-tabs{
+  margin-bottom:10px!important;
+}
+#chartsView .airport-profile.jp-side-panel-experiment .profile-tab{
+  padding:8px 2px!important;
+  font-size:10px!important;
+}
+#chartsView .airport-profile.jp-side-panel-experiment .profile-cols{
+  display:grid!important;
+  grid-template-columns:minmax(0,1fr)!important;
+  grid-template-areas:"metar" "wind" "runways" "stack"!important;
+  gap:9px!important;
+}
+#chartsView .airport-profile.jp-side-panel-experiment #profileWeather,
+#chartsView .airport-profile.jp-side-panel-experiment #profileWind{
+  min-height:0!important;
+}
+#chartsView .airport-profile.jp-side-panel-experiment .profile-card{
+  background:linear-gradient(145deg,rgba(9,33,60,.88),rgba(5,20,40,.86))!important;
+  border-color:rgba(49,129,180,.52)!important;
+}
+#chartsView .airport-profile.jp-side-panel-experiment .profile-card>header{
+  padding:9px 11px!important;
+}
+#chartsView .airport-profile.jp-side-panel-experiment .weather-summary{
+  grid-template-columns:1fr!important;
+  padding:5px 11px 11px!important;
+}
+#chartsView .airport-profile.jp-side-panel-experiment .weather-facts{
+  border-left:0!important;
+  border-top:1px solid #1c4564;
+  padding:8px 0 0!important;
+}
+#chartsView .airport-profile.jp-side-panel-experiment #profileWind .wind-compact{
+  grid-template-columns:110px minmax(0,1fr)!important;
+  padding:2px 9px 10px!important;
+}
+#chartsView .airport-profile.jp-side-panel-experiment #profileWind .runway-bearing-compass svg{
+  height:92px!important;
+}
+#chartsView .airport-profile.jp-side-panel-experiment .rwy-row{
+  grid-template-columns:minmax(72px,1fr) minmax(94px,1.2fr) minmax(62px,.7fr)!important;
+  padding:8px 9px!important;
+  margin:4px 7px!important;
+  font-size:10px!important;
+}
+#chartsView .airport-profile.jp-side-panel-experiment .rwy-row b{
+  font-size:13px!important;
+}
+#chartsView .airport-profile .jp-side-panel-toggle{
+  position:absolute;
+  z-index:12;
+  top:50%;
+  right:calc(var(--jp-side-panel-width) + 10px);
+  translate:0 -50%;
+  width:38px;
+  height:64px;
+  border:1px solid rgba(111,204,248,.5);
+  border-radius:12px 0 0 12px;
+  background:rgba(5,24,40,.88);
+  color:#74dcff;
+  box-shadow:0 8px 28px rgba(0,0,0,.36);
+  -webkit-backdrop-filter:blur(8px);
+  backdrop-filter:blur(8px);
+  cursor:pointer;
+  transition:right .28s ease,background .18s ease;
+}
+#chartsView .airport-profile .jp-side-panel-toggle:hover,
+#chartsView .airport-profile .jp-side-panel-toggle:focus-visible{
+  background:rgba(8,54,82,.95);
+  outline:2px solid rgba(65,198,255,.65);
+  outline-offset:2px;
+}
+#chartsView .airport-profile .jp-side-panel-toggle span{
+  display:block;
+  font:300 38px/1 Arial,sans-serif;
+}
+#chartsView .airport-profile.jp-side-panel-collapsed .jp-side-panel-toggle{
+  right:8px;
+}
+:root.light #chartsView .airport-profile.jp-side-panel-experiment .profile-shell{
+  border-left-color:rgba(71,142,177,.48);
+  background:linear-gradient(155deg,rgba(244,251,255,.94),rgba(221,239,248,.88));
+  box-shadow:-20px 0 50px rgba(25,68,91,.24),inset 1px 0 rgba(255,255,255,.8);
+}
+@media(max-width:720px){
+  #chartsView .airport-profile.jp-side-panel-experiment{
+    --jp-side-panel-width:min(88vw,380px);
+  }
+  #chartsView .airport-profile.jp-side-panel-experiment .profile-shell{
+    padding:13px 10px 24px!important;
+  }
+  #chartsView .airport-profile .jp-side-panel-toggle{
+    width:32px;height:56px;right:calc(var(--jp-side-panel-width) + 5px);
+  }
+  #chartsView .airport-profile.jp-side-panel-collapsed .jp-side-panel-toggle{right:5px}
+}
+@media(prefers-reduced-motion:reduce){
+  #chartsView .airport-profile.jp-side-panel-experiment .profile-shell,
+  #chartsView .airport-profile.jp-side-panel-experiment .jp-poster-frame .jp-poster-caption,
+  #chartsView .airport-profile .jp-side-panel-toggle{transition:none}
+}
