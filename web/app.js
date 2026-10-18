@@ -1218,6 +1218,7 @@ function selectAirport(icao){
   renderAirportProfile(icao);
   refreshProfileMetar(icao);
   refreshProfileTaf(icao);
+  window.JEPPIRAN_NOTAM?.refresh(icao);
 }
 function renderTreeInto(root){
   root.innerHTML="";if(!selectedAirport)return;
@@ -1367,6 +1368,7 @@ function renderAirportProfile(icao){
       '</div>'+
     '</div></div>';
   updateTerminalValidityDisplay();
+  window.JEPPIRAN_NOTAM?.render(icao,root.querySelector("#profileNotam"));
   root.querySelector("#profileFavBtn").onclick=()=>{setAirportFavorite(icao);renderAirportProfile(icao)};
   root.querySelectorAll("[data-runway]").forEach(b=>b.onclick=()=>{window.jeppiranSelectedRunway=b.dataset.runway;renderAirportProfile(icao)});
   utcDisplay();

@@ -1,0 +1,39 @@
+name: Refresh Web NOTAM Relay
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/refresh_faa_notams.py'
+      - '.github/workflows/refresh-web-notams.yml'
+  schedule:
+    - cron: '*/30 * * * *'
+permissions:
+  contents: write
+concurrency:
+  group: web-notam-relay
+  cancel-in-progress: true
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v5
+      - name: Fetch official FAA NOTAM Search data with safe status flags
+        run: |
+          python3 -m py_compile scripts/refresh_faa_notams.py
+          python3 scripts/refresh_faa_notams.py
+      - name: Publish lightweight public NOTAM cache
+        env:
+          GITHUB_TOKEN: \${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p /tmp/jeppiran-notam-publish
+          cp /tmp/jeppiran-notams-current.json /tmp/jeppiran-notam-publish/notams-current.json
+          cd /tmp/jeppiran-notam-publish
+          git init -b notam-cache
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add notams-current.json
+          git commit -m "Refresh FAA NOTAM relay"
+          git remote add origin "https://x-access-token:\${GITHUB_TOKEN}@github.com/\${GITHUB_REPOSITORY}.git"
+          git push --force origin notam-cache
