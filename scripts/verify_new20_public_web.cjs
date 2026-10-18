@@ -7,6 +7,8 @@ const root=path.resolve(__dirname,"..");
 const manifest=JSON.parse(fs.readFileSync(path.join(root,"web/airport-profile-posters-new20/manifest.json"),"utf8"));
 const assigned=JSON.parse(fs.readFileSync(path.join(root,"web/airport-profile-posters-new20/assignments.json"),"utf8"));
 const v3=JSON.parse(fs.readFileSync(path.join(root,"web/airport-profile-posters-v3/manifest.json"),"utf8"));
+const original=JSON.parse(fs.readFileSync(path.join(root,"web/airport-profile-posters/manifest.json"),"utf8"));
+const expectedProfiles=[...new Set([...Object.keys(original.files),...Object.keys(assigned.airport_to_design),...Object.keys(v3.files)])].sort();
 const base=process.env.JEPPIRAN_PAGE_URL;
 const posterScript=fs.readFileSync(path.join(root,"web/index.html"),"utf8").match(/src="\.\/(airport-profile-posters\.js\?v=[^"]+)"/)?.[1];
 assert.ok(posterScript,"Current versioned airport poster script is required");
@@ -25,7 +27,7 @@ async function get(relative){const r=await fetch(url(relative),{headers:{"Cache-
    assert.ok(html.includes(posterScript));
    assert.ok(gallery.includes("const perPage=10")&&gallery.includes("const total=20"));
    assert.ok(code.includes("additionalPosterAssignments"));
-   assert.equal(Object.keys(mapping.posters).length,72);
+   assert.deepEqual(Object.keys(mapping.posters).sort(),expectedProfiles);
    for(const [icao,id] of Object.entries(assigned.airport_to_design))if(!(icao in v3.files))assert.ok(mapping.posters[icao].includes(id+".webp"));
    for(const icao of Object.keys(v3.files))assert.ok(mapping.posters[icao].includes("/"+icao+".webp?v="),icao);
    ready=true;break;
@@ -47,6 +49,6 @@ async function get(relative){const r=await fetch(url(relative),{headers:{"Cache-
   assert.equal(crypto.createHash("sha256").update(body).digest("hex"),meta.sha256,icao);
   console.log("LIVE WEB V3 PASS",icao,body.length,"bytes");
  }
- console.log("PASS PUBLIC PAGES: twenty historical photos, all current V3 photos, 72 profile mappings and both review pages.");
+ console.log("PASS PUBLIC PAGES: twenty historical photos, all current V3 photos,",expectedProfiles.length,"profile mappings and both review pages.");
 })().catch(e=>{console.error(e);process.exitCode=1});
 

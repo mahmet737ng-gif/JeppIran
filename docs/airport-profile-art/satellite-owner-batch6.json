@@ -1,0 +1,91 @@
+{
+  "schema": 1,
+  "date": "2026-10-18",
+  "batch": 6,
+  "illustrativeOnly": true,
+  "generationTool": "image_gen.imagegen",
+  "mode": "built-in reference-guided image editing",
+  "commonPrompt": "Use case: style-transfer/compositing. Project: JeppIran decorative airport profile, 16:9,1672x941.\nUSER rejected previous images as TOO IMAGINARY. This is a faithful screenshot-to-cinematic-render edit, not a new airport design.\nINPUT1: USER'S Google Earth/Maps screenshot, sole authoritative airport GEOMETRY and CAMERA/CROP. INPUT2: Existing JeppIran artwork, ONLY its navy/amber palette, cinematic rendering quality and separate bottom scenic-strip treatment. It may depict an unrelated airport and city. Its AIRPORT GEOMETRY and LANDMARK identity are NOT authoritative; use only INPUT1 geometry and the explicitly named city-footer subject in the specific prompt. Discard old imaginary infrastructure. Optional INPUT3: real city landmark photo for FOOTER only.\nStrictly retain input1 runway number, relative alignment, apron footprint/size, exact side/location, connector count and shapes, building/roof footprints, nearby road/field/sea/river relations, camera angle and crop. If a runway continues outside the crop, leave it continuing outside; DO NOT invent thresholds/ends or zoom out to fabricate unseen airport. No mirrored/extended geography, no extra airfield infrastructure, no big hub or high-rise.\nBUILDING VOLUME: Extrude ONLY observed roofs into restrained, believable low buildings, usually 1-2 stories, visible large international terminals 2-4 stories only on their actual roof footprints, actual existing hangars a little taller; visible facades, roof edges, local wall materials, coherent shadows and small warm windows. Preserve each roof outline and color family. No new towers, ornamental futuristic terminals, multigate concourses, jet bridges or new urban development. Keep empty land empty. This should feel like the real reference with subtle realistic 3D architecture and lighting.\nCinematic legible BLUE HOUR: navy/cool muted natural ground, restrained warm amber road/apron lighting, realistic terrain rather than overly glowing fantasy. Airfield occupies upper82-85%. Bottom15-18% is a softly blended separate ground-view city/landscape strip, landmark strongest at right, never planted on airport grounds. Do not cover key terminals with footer.\nDUPLICATE CHECK: EXACTLY ONE instance of each distinctive landmark/complex total. Input2 contains BAD mirrored clones: do not copy them. No second partial duplicate hiding at an image edge, no matching twin pavilions/towers/hotels. Natural varied scenery.\nREMOVE screenshot UI, search bar, logos, watermark, compass, map buttons. No text/cards/titles or typography anywhere. Do not copy any watermark/signage in optional landmark photo.",
+  "airports": [
+    {
+      "icao": "OIZS",
+      "satelliteReference": "image(20261018-005136).png",
+      "satelliteReferenceSha256": "3f2eac11b592c1639e600a160cab52edc8d789bd3c1c53d0941ae117e9b7adad",
+      "specificPrompt": "OIZS Saravan. ONE runway diagonal LOWER-LEFT outside crop to UPPER-RIGHT visible threshold/turnpad. Tiny square apron BELOW/RIGHT of runway near lower-center. TWO short curved connectors around small bare triangular/rounded infield. One modest low pale-blue/white roof terminal behind apron, tiny neighboring compounds, oval loop parking partly cropped at bottom. Keep terminal small, no control tower or huge terminal. Dry eroded barren plain, a few orchard plots at top edges. Airport geometry from screenshot ONLY; old poster depicts wrong imaginary city hub. Footer: one coherent modest traditional local mosque/courtyard grouping at bottom-right with palms, dry mountains and small city glow; no repeated mosque/dome.",
+      "output": "web/airport-profile-posters-v3/OIZS.webp",
+      "outputSha256": "c62d4536869d41832eae3dc48b9f61fe431a1cf9276824f4936c9af9de8ea180"
+    },
+    {
+      "icao": "OMDB",
+      "satelliteReference": "image(20261018-005242).png",
+      "satelliteReferenceSha256": "d16bbfd530213269e4e3f4329d966ca91e44f290e47708cb2cde546fef416779",
+      "specificPrompt": "OMDB Dubai. Two parallel runway corridors steep LOWER-LEFT toward UPPER-RIGHT. Both lower-left runway ends run outside image: KEEP exact crop, do not zoom out or add thresholds there. Uppermost/far thresholds are near top-right with same geometry. BETWEEN runways, preserve THREE real elongated pale curved/silver concourse roof footprints, their actual gates and connector buildings; white cargo/maintenance hangars line LOWER-RIGHT edge outside lower runway, dense low city grids surround. Dubai Creek is winding at UPPER-LEFT behind city, not sea directly beside every runway. Extrude observed terminals to plausible real 2-4-story massing and low city roofs only. INPUT2 is unrelated airport, use ONLY its navy/amber cinematic treatment, copy NONE of its geography or landmark. Separate bottom scenic footer: ONE Dubai skyline with exactly ONE slender stepped Burj Khalifa strongest at bottom-right. No duplicated Burj, Burj Al Arab or mirrored towers; other skyline buildings naturally varied.",
+      "output": "web/airport-profile-posters-v3/OMDB.webp",
+      "outputSha256": "ccaad4a3aca5e8bb033defd25a992c28164239cb569769528d8ee0a58d2fa765"
+    },
+    {
+      "icao": "OMDW",
+      "satelliteReference": "image(20261018-005519).png",
+      "satelliteReferenceSha256": "6a49318701b10f6ca9b1b57292a14019981371228dcd989d2395bf7a1ec5415c",
+      "specificPrompt": "OMDW Al Maktoum/Dubai World Central. ONE long runway from UPPER-LEFT toward LOWER-RIGHT, keep screenshot visible/cropped endpoints exactly. Broad parallel taxiway/apron system on LOWER-LEFT side with repeated oval dry infields AS SHOWN, not extra runways. Real low broad rectangular terminal with road/parking loops LOWER-center, cargo/warehouse compounds rectangular white roofs along lower-left/bottom, large apron/white hangar lower-right. Many empty sandy plots between warehouses; empty desert beyond runway at upper-right. No future masterplan runways/giant concourses or dense city added. Give existing roofs believable low building volume. INPUT2 ONLY navy/amber style, no geometry/landmark copying. Separate footer ONE coastal Dubai scenic strip with exactly ONE sail-shaped Burj Al Arab at bottom-right on its coherent island base, varied low waterfront left, no repeated hotel or Burj Khalifa.",
+      "output": "web/airport-profile-posters-v3/OMDW.webp",
+      "outputSha256": "4f32b0aac649f99225960d7a99b070611bd0c93ccc4a0d9759d0fab592b6dc81"
+    },
+    {
+      "icao": "OOMS",
+      "satelliteReference": "image(20261018-005632).png",
+      "satelliteReferenceSha256": "3dc51e6f88002216c8d82b81e6541cfbc19c28a15a89b13d7eda181b90318649",
+      "specificPrompt": "OOMS Muscat. Preserve CLOSE oblique source crop: TWO parallel runway corridors UPPER-LEFT toward LOWER-RIGHT, both continue off crop at right/lower-right. Upper/northern long runway dominates upper-middle/right; lower older strip near coast lower-left to bottom-right. Large existing central branching white/silver terminal building BELOW upper runway, its real apron, lower-right long white hangar/maintenance apron and actual connectors. Main groundside rectangular/curved parking loop LEFT of terminal, highway along LEFT coastal edge, sea entirely at LEFT side. North/right dry plain with existing road/small industrial compounds and golf course top-right, no rocky cliffs beside runways or invented airport on peninsula. INPUT2 old art is WRONG, use palette only. Footer one continuous Muscat sea/low mountain city strip with ONE Sultan Qaboos Grand Mosque complex at bottom-right: single main golden dome with integral minarets, not two copied mosques.",
+      "output": "web/airport-profile-posters-v3/OOMS.webp",
+      "outputSha256": "82d0b98bc333da800a26ba3ad44e27d84287e9a7dcdd942dc26ef4068f8267b8"
+    },
+    {
+      "icao": "OPIS",
+      "satelliteReference": "image(20261018-005802).png",
+      "satelliteReferenceSha256": "a222b97887c58bf1a302c5d674414494667c444f15cac079c62c409291fe138f",
+      "specificPrompt": "OPIS Islamabad. TWO close parallel runway strips UPPER-LEFT toward LOWER-RIGHT across lower half, with source thresholds at right-bottom, far left portions cropped. Exact broad taxiway network and long grassy infields AS SOURCE, do not add crossing runway. Distinctive real white three-armed Y-shaped terminal at center/upper-center, apron surrounds its three arms, body joins forecourt and rounded triangular parking area at UPPER-RIGHT. Rectangular low maintenance/hangar compound with wide pale roof at far RIGHT-middle. Green scrub, farms, reservoir at upper-left, small villages only at top/right edges; no city hub added. Terminal should have real facade volume on SAME roof footprint, no extra branches. INPUT2 style only. Footer exactly ONE Faisal Mosque at bottom-right, recognizable white angular tent-roof prayer hall with its FOUR integral slim minarets as ONE complex, Margalla hills and modest Islamabad city glow left. No duplicated mosque/tent roofs.",
+      "output": "web/airport-profile-posters-v3/OPIS.webp",
+      "outputSha256": "5f5d91ac3635b9076ad7c698ba1e9e37793cbf43fe9a48e6dd6a5c97d5638c20"
+    },
+    {
+      "icao": "OPKC",
+      "satelliteReference": "image(20261018-005936).png",
+      "satelliteReferenceSha256": "b6f1127cd8ce09a93cc59b82866863faf621c4bb896b6f5273e3a44c1dd5acd5",
+      "specificPrompt": "OPKC Karachi. Source is CLOSE CROP focused on terminal and nearer runway. Near runway diagonal LEFT-middle toward LOWER-RIGHT outside frame, threshold/displaced markings near left. Parallel upper strip/taxiway immediately behind it, and any second runway is outside screenshot: do not synthesize unseen full airport/runway ends. Real main terminal ABOVE runway center has TWO integral round/hexagonal satellite pier heads joined to one low central terminal and large roughly octagonal groundside parking loop behind. Keep both actual pier heads: they are airport architecture, not duplicate city symbols. White maintenance/hangar roofs and long secondary aprons extend RIGHT. Dense low Karachi urban grid across top and bottom-left, green scrub around airfield; NO SEA/HARBOR touching airport despite wrong input2. Footer ONE separate Karachi cityscape with exactly ONE white cubic arched Mazar-e-Quaid tomb with a single dome strongest bottom-right, garden/palms and varied city glow left. No copied second tomb.",
+      "output": "web/airport-profile-posters-v3/OPKC.webp",
+      "outputSha256": "6987084a4aa160ada7adcb4c2c098e4f08336da4c5e8e9b3ae72b5bfbd0384e7"
+    },
+    {
+      "icao": "ORBI",
+      "satelliteReference": "image(20261018-010054).png",
+      "satelliteReferenceSha256": "8e7b5eab8416bc84dfd7e13348d958c2caa622eb3a99b9443c132ad6f5d81c5a",
+      "specificPrompt": "ORBI Baghdad. Two parallel long runway strips diagonal UPPER-LEFT to LOWER-RIGHT, source is CLOSE CROP, keep both clipped at edges. Main civil terminal between them LEFT of center: THREE real triangular bright-white roof pier heads on outer side of one U-shaped groundside loop; all are parts of one terminal. Preserve three pier footprints, connectors and broad left apron, not giant invented concourses. Upper runway corridor near top/right, lower runway corridor left/bottom with partial bottom apron/hangars. Straight tree-lined access boulevard from terminal to RIGHT-middle, low industrial/service compounds center/right-bottom, sparse dry fields beyond. No river directly at airport. INPUT2 style only. Footer one separate Baghdad city river scene and exactly ONE Al-Shaheed Monument complex at bottom-right: two OFFSET turquoise halves of one split dome on ONE circular platform. This is one indivisible monument; do not duplicate complete dome/monument or add extra split dome.",
+      "output": "web/airport-profile-posters-v3/ORBI.webp",
+      "outputSha256": "f252d44098a54e391143d97708d21d4b12c80125610533479ea586ac7e5b9af7"
+    },
+    {
+      "icao": "ORER",
+      "satelliteReference": "image(20261018-010301).png",
+      "satelliteReferenceSha256": "b419e7b1925d59beda1ea8f900023b40ff4d9a8994702b43edd5e405f4abb263",
+      "specificPrompt": "ORER Erbil. Preserve source close crop: ONE main runway steep UPPER-LEFT outside image to LOWER-center outside image; parallel taxiway immediately RIGHT encloses long grassy infields, not a new runway. Broad main civil apron to RIGHT at center, long low ribbed white terminal roof on its right/east side and curved/oval parking forecourt behind it. Northern separate apron/white hangars near UPPER-left-center; old disused narrower runway/taxiway corridor runs roughly horizontally across TOP-RIGHT with grass compartments, keep as source surface/markings, do not upgrade it to new operational runway. Vast green fields LEFT and bottom, low industrial city grid upper/right, no mountains at airport edge. INPUT2 style only. Footer ONE continuous warm Erbil cityscape with exactly ONE Erbil Citadel complex on its SINGLE tell at bottom-right: tan continuous perimeter wall, varied low historic houses; no mirrored second mound, citadel or duplicate gate.",
+      "output": "web/airport-profile-posters-v3/ORER.webp",
+      "outputSha256": "0816de59b2b6489aaf0eb6f18410c7c7922b24b3b1c9fbc0609d931d38955194"
+    },
+    {
+      "icao": "ORMM",
+      "satelliteReference": "image(20261018-010531).png",
+      "satelliteReferenceSha256": "468d2dfdfaa82616cc676f13983d94e4b88770938a6e2e0a290c74053f457d07",
+      "specificPrompt": "ORMM Basra. Source CLOSE CROP. ONE runway UPPER-LEFT visible distant threshold toward LOWER-RIGHT outside crop across left half. Parallel TAXIWAY on RIGHT forms rounded long dry infields with source connectors. Main rectangular apron RIGHT of runway at center; long low pale terminal roof along apron right edge, U/oval groundside road behind, existing tall slender control tower on ONE small central infield island LEFT of apron may be extruded at its observed footprint only. Low warehouses/tanks/service compounds upper-center/right, dry mottled salt plain left. Dark canal at extreme TOP-RIGHT stays in that position. No sea beside runway, no second runway. INPUT2 style only. Footer one separate Basra Shatt al-Arab corniche scene: ONE coherent palm-lined waterfront, one traditional riverboat near bottom-right and varied low shanasheel-style houses, no duplicated boat, bridge or towers.",
+      "output": "web/airport-profile-posters-v3/ORMM.webp",
+      "outputSha256": "5ab2cb209ca9b28109a306d781ba59f5e884c4c39f467ea45c799d682e0e62b4"
+    },
+    {
+      "icao": "ORNI",
+      "satelliteReference": "image(20261018-010650).png",
+      "satelliteReferenceSha256": "dba462736148f9840cbfe1bb46840164dbfb0d66e88f6de2cd56fedb97de5b4d",
+      "specificPrompt": "ORNI Najaf. Source CLOSE CROP: ONE runway shallow LEFT-middle to LOWER-RIGHT outside frame, threshold at LEFT near center, preserve no far end invented. Long narrow parallel taxiway RIGHT/ABOVE runway, actual connectors including distinct diagonal one from apron left-middle toward runway lower-center; large rectangular apron ABOVE runway. ONE main modest rectangular pale/silver terminal roof upper-left of apron at center-left; groundside service/parking loop and triangular roofed parking behind, small support roofs to left. Source has dense low-rise city grid filling TOP/RIGHT, huge empty sand to LEFT/bottom; preserve those boundaries. Extrude roof footprints, not extra terminals. INPUT2 style only. Footer exactly ONE Imam Ali Shrine complex at bottom-right, ONE golden central dome and its integral pair of gold minarets over one courtyard/arcade, with modest varied Najaf rooftops left. No repeated dome/shrine or cropped duplicate at edge.",
+      "output": "web/airport-profile-posters-v3/ORNI.webp",
+      "outputSha256": "661511c2375488c13eea1951bff4957fc28cc6f673171ee7108cde0fe79a5d6e"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "expectedCount": 63,
+  "expectedCount": 73,
   "illustrativeOnly": true,
   "format": "image/webp",
   "resolution": [
@@ -485,26 +485,106 @@
       "satelliteReference": "image(20261017-232813).png",
       "satelliteReferenceSha256": "1090eeca82dd5a60aab34e2106ed99a6465964117954ee1869a985816cde5ce6",
       "method": "Owner screenshot-guided cinematic illustration; observed roof footprints given proportional low-rise volume; camera crop, airfield connections and single-instance city landmarks visually reviewed"
+    },
+    "OIZS": {
+      "file": "OIZS.webp",
+      "sha256": "c62d4536869d41832eae3dc48b9f61fe431a1cf9276824f4936c9af9de8ea180",
+      "size": 220162,
+      "satelliteReference": "image(20261018-005136).png",
+      "satelliteReferenceSha256": "3f2eac11b592c1639e600a160cab52edc8d789bd3c1c53d0941ae117e9b7adad",
+      "method": "Owner screenshot-guided cinematic illustration; observed roof footprints given proportional building volume; camera crop, airfield connections and single-instance city landmarks visually reviewed"
+    },
+    "OMDB": {
+      "file": "OMDB.webp",
+      "sha256": "ccaad4a3aca5e8bb033defd25a992c28164239cb569769528d8ee0a58d2fa765",
+      "size": 430070,
+      "satelliteReference": "image(20261018-005242).png",
+      "satelliteReferenceSha256": "d16bbfd530213269e4e3f4329d966ca91e44f290e47708cb2cde546fef416779",
+      "method": "Owner screenshot-guided cinematic illustration; observed roof footprints given proportional building volume; camera crop, airfield connections and single-instance city landmarks visually reviewed"
+    },
+    "OMDW": {
+      "file": "OMDW.webp",
+      "sha256": "4f32b0aac649f99225960d7a99b070611bd0c93ccc4a0d9759d0fab592b6dc81",
+      "size": 237800,
+      "satelliteReference": "image(20261018-005519).png",
+      "satelliteReferenceSha256": "6a49318701b10f6ca9b1b57292a14019981371228dcd989d2395bf7a1ec5415c",
+      "method": "Owner screenshot-guided cinematic illustration; observed roof footprints given proportional building volume; camera crop, airfield connections and single-instance city landmarks visually reviewed"
+    },
+    "OOMS": {
+      "file": "OOMS.webp",
+      "sha256": "82d0b98bc333da800a26ba3ad44e27d84287e9a7dcdd942dc26ef4068f8267b8",
+      "size": 279098,
+      "satelliteReference": "image(20261018-005632).png",
+      "satelliteReferenceSha256": "3dc51e6f88002216c8d82b81e6541cfbc19c28a15a89b13d7eda181b90318649",
+      "method": "Owner screenshot-guided cinematic illustration; observed roof footprints given proportional building volume; camera crop, airfield connections and single-instance city landmarks visually reviewed"
+    },
+    "OPIS": {
+      "file": "OPIS.webp",
+      "sha256": "5f5d91ac3635b9076ad7c698ba1e9e37793cbf43fe9a48e6dd6a5c97d5638c20",
+      "size": 230274,
+      "satelliteReference": "image(20261018-005802).png",
+      "satelliteReferenceSha256": "a222b97887c58bf1a302c5d674414494667c444f15cac079c62c409291fe138f",
+      "method": "Owner screenshot-guided cinematic illustration; observed roof footprints given proportional building volume; camera crop, airfield connections and single-instance city landmarks visually reviewed"
+    },
+    "OPKC": {
+      "file": "OPKC.webp",
+      "sha256": "6987084a4aa160ada7adcb4c2c098e4f08336da4c5e8e9b3ae72b5bfbd0384e7",
+      "size": 322416,
+      "satelliteReference": "image(20261018-005936).png",
+      "satelliteReferenceSha256": "b6f1127cd8ce09a93cc59b82866863faf621c4bb896b6f5273e3a44c1dd5acd5",
+      "method": "Owner screenshot-guided cinematic illustration; observed roof footprints given proportional building volume; camera crop, airfield connections and single-instance city landmarks visually reviewed"
+    },
+    "ORBI": {
+      "file": "ORBI.webp",
+      "sha256": "f252d44098a54e391143d97708d21d4b12c80125610533479ea586ac7e5b9af7",
+      "size": 289498,
+      "satelliteReference": "image(20261018-010054).png",
+      "satelliteReferenceSha256": "8e7b5eab8416bc84dfd7e13348d958c2caa622eb3a99b9443c132ad6f5d81c5a",
+      "method": "Owner screenshot-guided cinematic illustration; observed roof footprints given proportional building volume; camera crop, airfield connections and single-instance city landmarks visually reviewed"
+    },
+    "ORER": {
+      "file": "ORER.webp",
+      "sha256": "0816de59b2b6489aaf0eb6f18410c7c7922b24b3b1c9fbc0609d931d38955194",
+      "size": 285122,
+      "satelliteReference": "image(20261018-010301).png",
+      "satelliteReferenceSha256": "b419e7b1925d59beda1ea8f900023b40ff4d9a8994702b43edd5e405f4abb263",
+      "method": "Owner screenshot-guided cinematic illustration; observed roof footprints given proportional building volume; camera crop, airfield connections and single-instance city landmarks visually reviewed"
+    },
+    "ORMM": {
+      "file": "ORMM.webp",
+      "sha256": "5ab2cb209ca9b28109a306d781ba59f5e884c4c39f467ea45c799d682e0e62b4",
+      "size": 265478,
+      "satelliteReference": "image(20261018-010531).png",
+      "satelliteReferenceSha256": "468d2dfdfaa82616cc676f13983d94e4b88770938a6e2e0a290c74053f457d07",
+      "method": "Owner screenshot-guided cinematic illustration; observed roof footprints given proportional building volume; camera crop, airfield connections and single-instance city landmarks visually reviewed"
+    },
+    "ORNI": {
+      "file": "ORNI.webp",
+      "sha256": "661511c2375488c13eea1951bff4957fc28cc6f673171ee7108cde0fe79a5d6e",
+      "size": 325130,
+      "satelliteReference": "image(20261018-010650).png",
+      "satelliteReferenceSha256": "dba462736148f9840cbfe1bb46840164dbfb0d66e88f6de2cd56fedb97de5b4d",
+      "method": "Owner screenshot-guided cinematic illustration; observed roof footprints given proportional building volume; camera crop, airfield connections and single-instance city landmarks visually reviewed"
     }
   },
   "satelliteReferenceBatch": {
     "count": 10,
     "airports": [
-      "OITU",
-      "OITM",
-      "OITR",
-      "OITT",
-      "OITZ",
-      "OIYY",
-      "OIZC",
-      "OIZI",
-      "OIZH",
-      "OIZB"
+      "OIZS",
+      "OMDB",
+      "OMDW",
+      "OOMS",
+      "OPIS",
+      "OPKC",
+      "ORBI",
+      "ORER",
+      "ORMM",
+      "ORNI"
     ],
     "date": "2026-10-18",
-    "batch": 5,
+    "batch": 6,
     "referenceSource": "Owner-supplied Google Earth/Maps screenshots",
-    "buildingTreatment": "Proportional low-rise volumes on observed roof footprints",
+    "buildingTreatment": "Proportional building volumes on observed roof footprints; existing international terminals retain their roof outlines",
     "landmarkReview": "One instance of each focal landmark or coherent complex; no mirrored duplicates"
   },
   "satelliteReferenceBatches": [
@@ -598,6 +678,26 @@
       "batch": 5,
       "referenceSource": "Owner-supplied Google Earth/Maps screenshots",
       "buildingTreatment": "Proportional low-rise volumes on observed roof footprints",
+      "landmarkReview": "One instance of each focal landmark or coherent complex; no mirrored duplicates"
+    },
+    {
+      "count": 10,
+      "airports": [
+        "OIZS",
+        "OMDB",
+        "OMDW",
+        "OOMS",
+        "OPIS",
+        "OPKC",
+        "ORBI",
+        "ORER",
+        "ORMM",
+        "ORNI"
+      ],
+      "date": "2026-10-18",
+      "batch": 6,
+      "referenceSource": "Owner-supplied Google Earth/Maps screenshots",
+      "buildingTreatment": "Proportional building volumes on observed roof footprints; existing international terminals retain their roof outlines",
       "landmarkReview": "One instance of each focal landmark or coherent complex; no mirrored duplicates"
     }
   ]
