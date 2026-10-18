@@ -13,6 +13,7 @@ on:
       - 'tests/chart-display-names-v2621.test.cjs'
       - 'tests/airport-chart-audit-v2621.test.cjs'
       - 'scripts/verify_new20_public_web.cjs'
+      - 'scripts/verify_airport_carousel_r3_browser.cjs'
       - 'scripts/verify_profile_validity_browser.cjs'
       - 'scripts/verify_chart_swipes_browser.cjs'
       - 'scripts/build_offline_manifest.py'
