@@ -19,11 +19,8 @@ function render(icao,el){
  }):[];
  const body=items.length?items.map(n=>'<article class="jp-notam-item"><b>'+esc(n.id||"NOTAM")+'</b><p>'+esc(n.text)+'</p><small>UTC '+esc(utc(n.begin))+' → '+esc(utc(n.end))+'</small></article>').join(""):(fresh?"<p>No current notices returned by the relay; verify with AIS/NOF.</p>":"<p>No verified live feed. Do not interpret this as no NOTAMs.</p>");
  el.innerHTML='<header><span>NOTAM • '+esc(icao)+'</span><small class="jp-notam-state'+(fresh?' jp-notam-fresh':'')+'">'+(fresh?esc(items.length+" reported • "+utc(st.updated)):"Unavailable / unverified")+'</small></header>'+
- '<details class="profile-notam-details"'+(open?' open':'')+'><summary>NOTAM status & details</summary><div class="jp-notam-actions"><a target="_blank" rel="noopener noreferrer" href="'+esc(link(icao))+'">FAA official search ↗</a><button type="button" data-notam-refresh>Refresh</button></div>'+
- '<p class="jp-notam-source">'+esc(fresh?"FAA Search relay • "+utc(st.updated):st.message||"FAA relay unavailable")+'</p>'+
- (fresh?'<p class="jp-notam-warning">Informational only. Verify with authorized AIS/NOF before flight.</p>':'')+
+ '<details class="profile-notam-details"'+(open?' open':'')+'><summary>NOTAM status & details</summary>'+
  '<div class="jp-notam-scroll">'+body+'</div></details>';
- el.querySelector("[data-notam-refresh]").onclick=()=>refresh(icao,true);
 }
 function notify(icao){let el=document.getElementById("profileNotam");if(el&&el.querySelector("header")?.textContent.includes(icao))render(icao,el)}
 async function refresh(icao,force=false){
