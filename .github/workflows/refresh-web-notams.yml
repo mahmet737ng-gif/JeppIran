@@ -25,7 +25,7 @@ jobs:
           python3 scripts/refresh_faa_notams.py
       - name: Publish lightweight public NOTAM cache
         env:
-          GITHUB_TOKEN: \${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           mkdir -p /tmp/jeppiran-notam-publish
           cp /tmp/jeppiran-notams-current.json /tmp/jeppiran-notam-publish/notams-current.json
@@ -35,5 +35,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add notams-current.json
           git commit -m "Refresh FAA NOTAM relay"
-          git remote add origin "https://x-access-token:\${GITHUB_TOKEN}@github.com/\${GITHUB_REPOSITORY}.git"
+          git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git push --force origin notam-cache
