@@ -41,7 +41,7 @@ async function ready(){
     }
   });
   await page.goto(base,{waitUntil:"domcontentloaded"});
-  await page.locator('input[name="chartsLayoutMode"][value="classic"]').waitFor();
+  await page.locator('input[name="chartsLayoutMode"][value="classic"]').waitFor({state:"attached"});
   assert.equal(await page.locator('input[name="chartsLayoutMode"][value="classic"]').isChecked(),true,
     "Old Carousel preference must not override the approved Classic default");
   await page.locator('button.home-card[data-route="charts"]').click();
