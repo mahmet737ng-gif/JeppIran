@@ -36,22 +36,35 @@ def parse(payload):
         seen.add((ident,text))
         out.append(dict(id=ident,text=text,begin=choose(n,"effectiveStartDate","startDate","startdate","begin","validFrom"),end=choose(n,"effectiveEndDate","endDate","enddate","end","validTo"),status=status))
     return out
-def get(icao):
-    body=urllib.parse.urlencode(dict(searchType="0",designatorsForLocation=icao,offset="0",notamsOnly="false")).encode()
+def get_batch(group):
+    # The public FAA search accepts comma-separated location designators.
+    # Grouping reduces rate-limiting; never attribute a NOTAM to the wrong airport.
+    body=urllib.parse.urlencode(dict(searchType="0",designatorsForLocation=",".join(group),offset="0",notamsOnly="false")).encode()
     req=urllib.request.Request(API,data=body,method="POST",headers={"Content-Type":"application/x-www-form-urlencoded; charset=UTF-8","Accept":"application/json","User-Agent":"JEPPIRAN-NOTAM-Relay/1.0"})
     try:
-        with urllib.request.urlopen(req,timeout=16) as response:
+        with urllib.request.urlopen(req,timeout=18) as response:
             raw=response.read(4000000)
             if len(raw)==4000000:raise ValueError("Oversized response")
         result=parse(json.loads(raw))
-        return icao,dict(status="available",fetched_at=dt.datetime.now(dt.timezone.utc).isoformat(),notams=result)
+        fetched=dt.datetime.now(dt.timezone.utc).isoformat()
+        separated={k:[] for k in group}
+        for n in result:
+            # ICAO NOTAM section A) is the authoritative target location.
+            m=re.search(r"(?:^|\s)A\)\s*([A-Z0-9]{4})\b",n["text"].upper())
+            if m and m.group(1) in separated:
+                separated[m.group(1)].append(n)
+        return {icao:dict(status="available",fetched_at=fetched,notams=separated[icao]) for icao in group}
     except Exception as exc:
-        print("FAA retrieval unavailable:",icao,str(exc)[:120],flush=True)
-        return icao,dict(status="unavailable",fetched_at=None,notams=[])
+        print("FAA group retrieval unavailable:",",".join(group),str(exc)[:120],flush=True)
+        return {icao:dict(status="unavailable",fetched_at=None,notams=[]) for icao in group}
+
 def main():
     manifest=json.loads((ROOT/"app/src/main/assets/charts-manifest.json").read_text())
     names=sorted(k for k in manifest["airports"] if re.fullmatch(r"[A-Z0-9]{4}",k))
-    with concurrent.futures.ThreadPoolExecutor(max_workers=3) as pool: results=dict(pool.map(get,names))
+    groups=[names[i:i+4] for i in range(0,len(names),4)]
+    with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
+        results={}
+        for response in pool.map(get_batch,groups):results.update(response)
     output=dict(schema="jeppiran-faa-notam-relay/v1",source="FAA NOTAM Search",generated_at=dt.datetime.now(dt.timezone.utc).isoformat(),stations=results)
     OUT.write_text(json.dumps(output,ensure_ascii=False,separators=(",",":")))
     print("Fetched",sum(x["status"]=="available" for x in results.values()),"of",len(names))

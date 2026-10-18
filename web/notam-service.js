@@ -5,7 +5,7 @@ const URL="https://raw.githubusercontent.com/mahmet737ng-gif/JeppIran/notam-cach
 const SEARCH="https://notams.aim.faa.gov/notamSearch/nsapp.html";
 const states=new Map(), requests=new Map();
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-function parseDate(s){if(!s)return NaN;let v=String(s).trim();if(/^\d{10}$/.test(v))return +v*1000;if(/^\d{4}-\d\d-\d\d \d\d:\d\d/.test(v))v=v.replace(" ","T")+"Z";return Date.parse(v)}
+function parseDate(s){if(!s)return NaN;let v=String(s).trim();const d=v.match(/^(\d\d)\/(\d\d)\/(\d{4})\s+(\d\d)(\d\d)(?:EST)?$/i);if(d)return Date.UTC(+d[3],+d[1]-1,+d[2],+d[4],+d[5]);const icao=v.match(/^(\d\d)(\d\d)(\d\d)(\d\d)(\d\d)(?:EST)?$/i);if(icao)return Date.UTC(2000 + +icao[1],+icao[2]-1,+icao[3],+icao[4],+icao[5]);if(/^\d{4}-\d\d-\d\d \d\d:\d\d/.test(v))v=v.replace(" ","T")+"Z";return Date.parse(v)}
 function utc(s){const t=parseDate(s);return Number.isFinite(t)?new Date(t).toISOString().replace("T"," ").replace(/\.\d{3}Z$/," UTC"):String(s||"—")}
 function link(icao){return SEARCH+"?ACTIONTYPE=NOTAMRETRIEVALBYICAOS&FORMATTYPE=ICAO&METHOD=DISPLAYBYICAOS&REPORTTYPE=REPORT&RETRIEVELOCID="+encodeURIComponent(icao)}
 function render(icao,el){
