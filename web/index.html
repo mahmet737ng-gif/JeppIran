@@ -36,6 +36,12 @@
   <link rel="stylesheet" href="./cdfa-margin-overlay.css?v=2621-cdfa-ipad-column-fit-r3">
   <link rel="stylesheet" href="./taxi-toolbar-v4.css?v=2621-taxi-subbar-r2">
 <style id="universal-sim-ui">#useXpBtn,#useFsxBtn{display:none!important}#simulatorView .sim-card:has(#bridgeUrl){display:none!important}</style>
+  <script>
+  if(window.parent!==window&&new URLSearchParams(location.search).get("jeppiranEmbedCharts")==="1"){
+    document.documentElement.classList.add("jp-preview-classic-embed");
+  }
+  </script>
+  <link rel="stylesheet" href="./preview-classic-embed.css?v=r5" />
 </head>
 <body>
   <div id="app">
@@ -450,7 +456,7 @@
   </script>
   <script src="./notam-service.js?v=2621-notam-relay-clean-r3" defer></script>
   <script src="./metar-flight-category.js?v=2621-wxrules-v1" defer></script>
-  <script src="./app.js?v=2621-oici-ungeoref-neutral-pos-r1-saqez-r1-oigg-local-r3-geo-retention-r2-offline-pdf-recovery-r1" defer></script>
+  <script src="./app.js?v=2621-oici-ungeoref-neutral-pos-r1-saqez-r1-oigg-local-r3-geo-retention-r2-offline-pdf-recovery-r1-preview-classic-embed-r5" defer></script>
   <script src="./offline-manager.js?v=2621-auto-sync-r3-ipad-verify" defer></script>
   <script src="./cdfa-margin-overlay.js?v=2621-cdfa-ipad-column-fit-r3" defer></script>
   <script src="./cdfa-chart-panel.js?v=2621-cdfa-inpage-white-margin-r1" defer></script>
@@ -506,7 +512,7 @@
       // including a running chart session, retains the original behavior.
       event.preventDefault();
       event.stopImmediatePropagation();
-      window.location.assign(new URL("./preview/airport-carousel-r4/",document.baseURI).href);
+      window.location.assign(new URL("./preview/airport-carousel-r5/",document.baseURI).href);
     },true);
     document.addEventListener("DOMContentLoaded",sync);
   })();

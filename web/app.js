@@ -606,6 +606,35 @@ const AIRPORTS={
 
 let airportMetadata={}, airportRunwayMetadata={};
 let charts=[], manifest=null, enrouteValidityManifest=null, selectedAirport="", selectedChart=null, expanded=new Set();
+// Only the isolated R5 iframe may request a published chart in the original
+// Classic viewer. No other user-facing route, PDF or georeference is modified.
+const IS_PREVIEW_CLASSIC_EMBED=window.parent!==window &&
+  new URLSearchParams(location.search).get("jeppiranEmbedCharts")==="1";
+if(IS_PREVIEW_CLASSIC_EMBED){
+  document.documentElement.classList.add("jp-preview-classic-embed");
+  window.addEventListener("message",event=>{
+    if(event.source!==window.parent||event.origin!==location.origin)return;
+    const msg=event.data;
+    if(!msg||msg.type!=="JEPPIRAN_PREVIEW_SELECT_CHART_V1")return;
+    const code=String(msg.icao||"").toUpperCase(),page=Number(msg.page);
+    if(!/^[A-Z]{4}$/.test(code)||!Number.isSafeInteger(page)||page<1||!manifest||!charts.length)return;
+    const chart=charts.find(c=>c.airport===code&&Number(c.page)===page);
+    const source=manifest.airports?.[code];
+    if(!chart||!source||Number(source.global_pages?.[Number(chart.pdf_page)-1])!==page)return;
+    if(selectedAirport!==code)selectAirport(code);
+    if(!$("#chartsView").classList.contains("active"))route("charts",true);
+    selectChart(chart);
+    event.source.postMessage({
+      type:"JEPPIRAN_PREVIEW_CHART_SELECTED_V1",icao:code,page
+    },event.origin);
+  });
+}
+function signalPreviewClassicReady(){
+  if(IS_PREVIEW_CLASSIC_EMBED&&manifest&&charts.length){
+    window.parent.postMessage({type:"JEPPIRAN_PREVIEW_CLASSIC_READY_V1"},location.origin);
+  }
+}
+
 let airportTreeExpanded=false;
 let chartZoom=1, chartPanX=0, chartPanY=0;
 // Dual Layer Ops marker: chart follow is a viewer-only feature; no simulator transport changes.
@@ -800,6 +829,7 @@ async function loadData(){
     const records=Array.isArray(c)?c:(c.charts||[]);
     if(!records.length)throw Error("Empty chart index");
     manifest=m; charts=records;
+    signalPreviewClassicReady();
     renderAirports();
     if(!selectedAirport && charts.some(c=>c.airport==="OIII"))selectAirport("OIII");
     else if(!selectedAirport)selectAirport(charts[0].airport);
@@ -2476,7 +2506,7 @@ function selectChart(c,options={}){
   showChartMetar(true,true);
   // On phones, choosing a procedure opens the chart immediately, rather
   // than leaving a tiny chart next to a permanent procedure column.
-  if(window.matchMedia("(max-width: 749px)").matches &&
+  if(!IS_PREVIEW_CLASSIC_EMBED && window.matchMedia("(max-width: 749px)").matches &&
      !document.body.classList.contains("viewer-fullscreen")){
     enterViewerFullscreen();
   }

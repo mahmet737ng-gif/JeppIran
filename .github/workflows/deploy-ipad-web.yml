@@ -110,6 +110,7 @@ jobs:
           node scripts/verify_airport_carousel_r2_browser.cjs
           node scripts/verify_airport_carousel_r3_browser.cjs
           node scripts/verify_airport_carousel_r4_browser.cjs
+          node scripts/verify_airport_carousel_r5_classic_browser.cjs
           node scripts/verify_classic_charts_default_browser.cjs
 
       - name: Verify additive OICK V2 source georeferencing

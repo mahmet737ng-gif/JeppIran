@@ -1,0 +1,50 @@
+/* Isolated R5 embedding of the *actual* Classic chart viewer.
+   This CSS is dormant unless the app runs INSIDE its R5 preview iframe.
+   Do not modify any owner-approved Classic layout, art or tool behavior. */
+html.jp-preview-classic-embed,
+html.jp-preview-classic-embed body,
+html.jp-preview-classic-embed #app{height:100%!important;min-height:0!important;overflow:hidden!important}
+html.jp-preview-classic-embed #app>.topbar,
+html.jp-preview-classic-embed #app>#jpHomeBtn,
+html.jp-preview-classic-embed #chartsView>.airport-pane,
+html.jp-preview-classic-embed #chartsView #airportPickerBtn,
+html.jp-preview-classic-embed #chartsView #chartsBackMobileBtn,
+html.jp-preview-classic-embed #chartsView #airportProfile{
+  display:none!important
+}
+html.jp-preview-classic-embed #chartsView,
+html.jp-preview-classic-embed #chartsView.active,
+html.jp-preview-classic-embed #chartsView.chart-open{
+  display:block!important;
+  position:relative!important;
+  width:100%!important;height:100dvh!important;min-height:0!important;
+  max-height:100dvh!important;max-width:none!important;
+  margin:0!important;padding:0!important;
+  border:0!important;overflow:hidden!important;
+}
+html.jp-preview-classic-embed #chartsView>.viewer-pane{
+  display:flex!important;
+  flex-direction:column!important;
+  width:100%!important;height:100%!important;
+  min-width:0!important;min-height:0!important;
+  max-height:100dvh!important;overflow:hidden!important;
+  padding:0!important;margin:0!important;
+}
+html.jp-preview-classic-embed #chartsView .viewer-toolbar{
+  display:flex!important;
+  flex:0 0 auto!important;
+  min-height:56px!important;
+  height:auto!important;
+  flex-wrap:wrap!important
+}
+html.jp-preview-classic-embed #chartsView #jpCdfaWorkspace{
+  display:flex!important;flex:1 1 auto!important;
+  min-height:0!important;max-height:none!important;
+  overflow:hidden!important
+}
+html.jp-preview-classic-embed #chartsView #pdfStage{
+  flex:1 1 auto!important;
+  min-height:0!important;height:100%!important;max-height:none!important;
+  overflow:hidden!important
+}
+html.jp-preview-classic-embed #chartsView .chart-metar-banner{z-index:5}
