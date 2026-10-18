@@ -160,6 +160,24 @@ async function waitForServer(){
     return {outer:rect(outer),frame:rect(frame),cap:rect(cap),overflow:getComputedStyle(outer).overflowY,
       scrolled:outer.scrollHeight>outer.clientHeight+3};
   });
+  const scenicPaint=await page.evaluate(()=>{
+    const root=document.querySelector("#airportProfile");
+    const frame=root.querySelector(".jp-poster-frame");
+    const heading=root.querySelector(".profile-heading > div:first-child");
+    const fg=root.querySelector(".jp-poster-scenic-foreground");
+    return {background:getComputedStyle(root).backgroundImage,
+      size:getComputedStyle(root).backgroundSize,
+      frameImage:getComputedStyle(frame).backgroundImage,
+      hiddenOldTitle:heading?getComputedStyle(heading).display:"absent",
+      foreground:fg?getComputedStyle(fg).display:"absent"};
+  });
+  assert.match(scenicPaint.background,/airport-profile-posters-v3\/OIII\.webp/,
+    "OIII must paint the approved full-width photo on the viewport");
+  assert.equal(scenicPaint.size,"cover","OIII desktop image must fill the whole airport viewport");
+  assert.equal(scenicPaint.frameImage,"none","legacy narrow poster frame must not paint a second crop");
+  assert.equal(scenicPaint.hiddenOldTitle,"none","hide original duplicate heading");
+  assert.equal(scenicPaint.foreground,"none","remove foreground scenic mask in OIII");
+  console.log("PASS OIII full image behind top ribbon",JSON.stringify(scenicPaint));
   assert.ok(!fixedPoster.scrolled,"airport poster viewport must not scroll: "+JSON.stringify(fixedPoster));
   assert.equal(fixedPoster.overflow,"hidden","airport image never becomes scrolling content");
   assert.ok(fixedPoster.frame.left>=fixedPoster.outer.left-2&&fixedPoster.frame.top>=fixedPoster.outer.top-2 &&
