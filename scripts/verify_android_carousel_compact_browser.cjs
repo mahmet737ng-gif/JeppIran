@@ -43,6 +43,8 @@ async function ready(){
   assert.equal(await page.locator("body").evaluate(el=>el.classList.contains("chart-selected")),false);
   await page.locator('.procedure-category[data-category="STAR"]').click();
   await page.waitForFunction(()=>document.body.classList.contains("chart-selected"));
+  // Compact transition is deliberately animated; measure AFTER it settles.
+  await page.waitForTimeout(450);
   const geometry=await page.evaluate(()=>({
     airport:document.querySelector(".carousel-region").getBoundingClientRect().toJSON(),
     viewer:document.querySelector("#classicViewerHost").getBoundingClientRect().toJSON(),
@@ -57,6 +59,7 @@ async function ready(){
   assert.equal(await page.locator("#airportName").isVisible(),false);
   assert.equal(await page.locator("#classicViewerHost").isVisible(),true);
   await page.locator('.procedure-category[data-category="STAR"]').click();
+  await page.waitForTimeout(450);
   assert.equal(await page.locator("#airportName").isVisible(),true);
   assert.equal(await page.locator("#classicViewerHost").isHidden(),true);
   const restored=await page.locator(".carousel-region").evaluate(el=>el.getBoundingClientRect().height);
