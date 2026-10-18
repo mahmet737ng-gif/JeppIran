@@ -1,0 +1,36 @@
+name: Free Android release build queue
+
+on:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/unblock-android-release-queue.yml']
+permissions:
+  actions: write
+  contents: read
+jobs:
+  cancel-completed-version-patch-job:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - name: Confirm Android 29.4 is already published before cancelling obsolete patch generation
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          REPO="${{ github.repository }}"
+          gh release view jeppiran-android-262565 --repo "$REPO" --json assets --jq '.assets[].name' | grep -qx '29.4.apk'
+          mkdir -p "$RUNNER_TEMP/meta"
+          gh release download jeppiran-test --repo "$REPO" --pattern app-update.json --dir "$RUNNER_TEMP/meta"
+          python3 - "$RUNNER_TEMP/meta/app-update.json" <<'PY'
+          import json,sys
+          p=json.load(open(sys.argv[1]))
+          assert int(p['versionCode'])==262565 and p['versionName']=='29.4'
+          assert p['apkUrl'].endswith('/29.4.apk')
+          PY
+          RUN=39171509229
+          STATUS="$(gh run view "$RUN" --repo "$REPO" --json status --jq .status)"
+          if [ "$STATUS" = "in_progress" ] || [ "$STATUS" = "queued" ]; then
+            gh run cancel "$RUN" --repo "$REPO"
+          else
+            echo "Old patch job already finished: $STATUS"
+          fi
