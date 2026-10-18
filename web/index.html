@@ -370,7 +370,7 @@
       </fieldset>
       <fieldset class="appearance-theme-options" id="chartLayoutSettings" aria-label="Charts interface style">
         <legend>Charts layout</legend>
-        <label><input type="radio" name="chartsLayoutMode" value="classic" checked><span>Classic · current chart view</span></label>
+        <label><input type="radio" name="chartsLayoutMode" value="classic" checked><span>Classic · current chart view (default)</span></label>
         <label><input type="radio" name="chartsLayoutMode" value="carousel"><span>Carousel · nested chart categories (test)</span></label>
         <p style="font-size:12px;line-height:1.5;margin:8px 0 0;opacity:.75">Classic remains the default. Carousel opens the isolated test page when you tap Charts; approved chart tools and PDFs in Classic are unchanged.</p>
       </fieldset>
@@ -481,10 +481,12 @@
 
   <!-- Explicit opt-in: never change the owner-approved Charts view unless the
        user selects Carousel in Settings. No changes to PDF/chart/georef code. -->
-  <script id="charts-layout-preference-r3">
+  <script id="charts-layout-preference-classic-default-r1">
   (()=>{
     "use strict";
-    const KEY="jeppiran-chart-layout";
+    // Reset once to owner-approved Classic on this release; older preview-only
+    // Carousel selections are intentionally not imported. New choices persist.
+    const KEY="jeppiran-chart-layout-v2";
     const layout=()=>{try{return localStorage.getItem(KEY)==="carousel"?"carousel":"classic"}catch(_){return "classic"}};
     function sync(){
       document.querySelectorAll('input[name="chartsLayoutMode"]').forEach(input=>{
