@@ -766,3 +766,22 @@ html.jp-android-carousel-qa .topline .preview-mark span{
     min-height:42px!important;
   }
 }
+
+
+/* The Android QA Update entry opens the unified native updater, never a
+ * stale Web-only/legacy Android mix. */
+.qa-updates-link{display:none}
+html.jp-android-carousel-qa .qa-updates-link{
+ display:inline-flex;align-items:center;justify-content:center;
+ font:800 10px system-ui,sans-serif;letter-spacing:.045em;
+ color:#eaf8ff!important;text-decoration:none;
+ padding:8px 10px;border:1px solid #377fa8;border-radius:8px;
+ background:rgba(9,61,97,.78);white-space:nowrap;
+}
+html.jp-android-carousel-qa .qa-updates-link:hover{
+ border-color:#67d5fd;background:rgba(19,105,153,.9);
+}
+@media(max-width:690px){
+ html.jp-android-carousel-qa .qa-updates-link{font-size:10px;padding:7px}
+ html.jp-android-carousel-qa .topline .preview-mark{font-size:9px!important;padding:4px!important}
+}

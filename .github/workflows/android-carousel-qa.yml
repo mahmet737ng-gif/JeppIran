@@ -52,6 +52,7 @@ jobs:
           export NODE_PATH="$RUNNER_TEMP/jeppiran-carousel-browser-qa/node_modules"
           export JEPPIRAN_CHROME_BIN="$(command -v google-chrome)"
           test -n "$JEPPIRAN_CHROME_BIN"
+          node scripts/verify_android_updates_background.cjs
           node scripts/verify_android_carousel_compact_browser.cjs
           node scripts/verify_airport_carousel_r5_classic_browser.cjs
 
