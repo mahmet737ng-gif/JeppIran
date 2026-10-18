@@ -37,7 +37,7 @@ object NotamStore {
         val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
         val raw = prefs.getString(key + "_raw", "").orEmpty()
         val time = prefs.getLong(key + "_time", 0L)
-        if (raw.isBlank()) return null
+        if (raw.isBlank() || time <= 0 || System.currentTimeMillis() - time > 45 * 60 * 1000L) return null
         return Snapshot(key, parse(raw), time, "FAA NOTAM Search cache")
     }
 
@@ -85,6 +85,9 @@ object NotamStore {
                 throw IllegalStateException("FAA NOTAM Search returned an empty response.")
             }
             response
+        } catch (_: Exception) {
+            // FAA Search may return HTTP 403 under rate limiting. Use the server-side relay.
+            return fetchRelay(context, key)
         } finally {
             connection.disconnect()
         }
@@ -96,6 +99,75 @@ object NotamStore {
             .apply()
 
         return Snapshot(key, parse(raw), now, "FAA NOTAM Search")
+    }
+
+    private const val RELAY =
+        "https://raw.githubusercontent.com/mahmet737ng-gif/JeppIran/notam-cache/notams-current.json"
+
+    // NotamStore never treats an old relay response as live; no third-party secrets
+    // are distributed in the Android application.
+    private fun fetchRelay(context: Context, icao: String): Snapshot {
+        val conn = (URL(RELAY).openConnection() as HttpURLConnection)
+        val body = try {
+            conn.connectTimeout = 12000
+            conn.readTimeout = 20000
+            conn.setRequestProperty("Accept", "application/json")
+            conn.setRequestProperty("Cache-Control", "no-cache")
+            if (conn.responseCode !in 200..299) {
+                throw IllegalStateException("NOTAM relay HTTP " + conn.responseCode)
+            }
+            conn.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+        } finally {
+            conn.disconnect()
+        }
+        val row = JSONObject(body).optJSONObject("stations")?.optJSONObject(icao)
+            ?: throw IllegalStateException("No relay entry for " + icao)
+        if (row.optString("status") != "available") {
+            throw IllegalStateException("Current NOTAMs are unavailable for " + icao)
+        }
+        val utc = row.optString("fetched_at").take(19)
+        val parser = java.text.SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss", Locale.US)
+        parser.timeZone = java.util.TimeZone.getTimeZone("UTC")
+        parser.isLenient = false
+        val stamp = parser.parse(utc)?.time ?: 0L
+        val now = System.currentTimeMillis()
+        if (stamp <= 0L || now - stamp > 45 * 60 * 1000L || stamp > now + 120000L) {
+            throw IllegalStateException("The NOTAM relay is stale")
+        }
+        val incoming = row.optJSONArray("notams")
+            ?: throw IllegalStateException("Invalid NOTAM relay format")
+        val valid = JSONArray()
+        for (i in 0 until incoming.length()) {
+            val item = incoming.optJSONObject(i) ?: continue
+            val status = item.optString("status").uppercase(Locale.US)
+            if (status in setOf("CANCELLED", "CANCELED", "EXPIRED", "INACTIVE")) continue
+            val expiry = parseFaaUtc(item.optString("end"))
+            if (expiry != null && expiry <= now) continue
+            val starts = parseFaaUtc(item.optString("begin"))
+            if (starts != null && starts > now) continue
+            if (item.optString("text").isBlank()) continue
+            valid.put(item)
+        }
+        val raw = valid.toString()
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
+            .putString(icao + "_raw", raw)
+            .putLong(icao + "_time", stamp)
+            .apply()
+        return Snapshot(icao, parse(raw), stamp, "FAA NOTAM Search relay")
+    }
+
+    private fun parseFaaUtc(raw: String): Long? {
+        val m = Regex("""^(\d{2})/(\d{2})/(\d{4})\s+(\d{2})(\d{2})(?:EST)?$""",
+            RegexOption.IGNORE_CASE).matchEntire(raw.trim()) ?: return null
+        return try {
+            val utc = java.util.Calendar.getInstance(java.util.TimeZone.getTimeZone("UTC"))
+            utc.isLenient = false
+            utc.set(m.groupValues[3].toInt(), m.groupValues[1].toInt() - 1,
+                m.groupValues[2].toInt(), m.groupValues[4].toInt(),
+                m.groupValues[5].toInt(), 0)
+            utc.set(java.util.Calendar.MILLISECOND, 0)
+            utc.timeInMillis
+        } catch (_: Exception) { null }
     }
 
     private fun formEncode(values: Map<String, String>): String =
