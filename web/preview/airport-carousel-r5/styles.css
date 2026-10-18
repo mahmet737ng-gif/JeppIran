@@ -640,3 +640,96 @@ body.chart-is-fullscreen{overflow:hidden}
   .carousel-region{height:125px}
   .classic-viewer-host{height:clamp(270px,58dvh,800px)}
 }
+
+
+/* ANDROID CAROUSEL QA — confirmed chart selected = compact top selector.
+   Only staged for separate .phoneqa APK. Classic app layout is untouched. */
+.carousel-region{
+  transition:height .33s cubic-bezier(.22,.82,.22,1),margin .33s cubic-bezier(.22,.82,.22,1);
+}
+.airport-token .icao,.airport-token .iata{
+  transition:filter .18s ease;
+}
+body.chart-selected .page-frame{height:100dvh;min-height:0;overflow:hidden}
+body.chart-selected .topline{
+  flex:0 0 auto;min-height:48px;padding-top:5px;padding-bottom:5px;
+}
+body.chart-selected .topline .search-box{
+  height:32px;max-width:210px;
+}
+body.chart-selected .topline .preview-mark{display:none}
+body.chart-selected main{
+  flex:1 1 auto;height:calc(100dvh - 48px);min-height:0;
+  display:flex;flex-direction:column;overflow:hidden;padding:0 0 2px;
+}
+body.chart-selected .carousel-region{
+  flex:0 0 auto;height:80px!important;
+  min-height:0!important;margin:0 auto!important;
+}
+body.chart-selected .airport-token{
+  min-height:56px!important;gap:3px!important;
+}
+body.chart-selected .airport-token .icao{
+  font-size:calc(var(--icao-size,24px) * .59)!important;
+}
+body.chart-selected .airport-token .iata{
+  font-size:calc(var(--iata-size,15px) * .72)!important;
+}
+body.chart-selected .airport-token::before,
+body.chart-selected .airport-token::after{
+  top:11%!important;bottom:11%!important;
+}
+body.chart-selected .procedure-zone{
+  flex:0 0 auto;margin:0 auto 3px!important;
+}
+body.chart-selected .classic-viewer-host{
+  flex:1 1 auto!important;min-height:0!important;
+  height:auto!important;max-height:none!important;
+  margin:1px auto 2px!important;
+}
+body.chart-selected .footer{display:none!important}
+@media(max-width:690px){
+  body.chart-selected .topline{min-height:42px;padding:3px 7px;gap:8px}
+  body.chart-selected .topline .brand b{font-size:14px}
+  body.chart-selected .topline .brand>span:last-child{display:none}
+  body.chart-selected .topline .search-box{height:28px;max-width:155px;width:38vw}
+  body.chart-selected .topline .search-box input{font-size:10px}
+  body.chart-selected .original-link{font-size:9px;padding:5px}
+  body.chart-selected main{height:calc(100dvh - 42px)}
+  body.chart-selected .carousel-region{
+    height:63px!important;
+    grid-template-columns:22px minmax(0,1fr) 22px!important;
+    width:calc(100vw - 6px)!important;
+  }
+  body.chart-selected .nav-arrow{font-size:29px;width:22px;height:55px}
+  body.chart-selected .airport-token{
+    min-height:48px!important;
+  }
+  body.chart-selected .airport-token .icao{
+    font-size:calc(var(--icao-size,20px) * .64)!important;
+    line-height:1!important
+  }
+  body.chart-selected .airport-token .iata{
+    font-size:calc(var(--iata-size,11px) * .72)!important;
+    line-height:1!important
+  }
+  body.chart-selected .procedure-categories{
+    min-height:48px!important;
+  }
+  body.chart-selected .category-shell>.procedure-category{
+    min-height:43px!important;
+  }
+  body.chart-selected .category-shell.active>.procedure-category{
+    min-height:96px!important;
+  }
+  body.chart-selected .category-shell .procedure-details.open{
+    max-height:98px!important;height:98px!important;
+  }
+  body.chart-selected .classic-viewer-host{
+    width:calc(100vw - 6px)!important;
+    border-radius:6px!important;
+  }
+}
+@media(prefers-reduced-motion:reduce){
+  .carousel-region{transition:none!important}
+}

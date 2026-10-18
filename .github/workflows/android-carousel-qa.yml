@@ -1,0 +1,88 @@
+name: Build JeppIran Carousel Android QA APK
+
+on:
+  push:
+    branches:
+      - feature/android-carousel-compact-qa
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: jeppiran-carousel-android-qa
+  cancel-in-progress: true
+
+jobs:
+  build-carousel-qa:
+    name: Separate-install Carousel R5 QA APK
+    runs-on: ubuntu-24.04
+    timeout-minutes: 85
+    steps:
+      - name: Checkout QA branch with real chart sources
+        uses: actions/checkout@v5
+        with:
+          lfs: true
+          fetch-depth: 1
+
+      - name: Set up Java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools'
+
+      - name: Install Android 36
+        run: |
+          yes | sdkmanager --licenses > /dev/null || true
+          sdkmanager 'platforms;android-36' 'build-tools;36.0.0'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Verify source contract and compact chart-selection behavior
+        run: |
+          node --check web/preview/airport-carousel-r5/app.js
+          node --check web/app.js
+          npm install --prefix "$RUNNER_TEMP/jeppiran-carousel-browser-qa" --no-audit --no-fund --package-lock=false playwright@1.58.2
+          export NODE_PATH="$RUNNER_TEMP/jeppiran-carousel-browser-qa/node_modules"
+          export JEPPIRAN_CHROME_BIN="$(command -v google-chrome)"
+          test -n "$JEPPIRAN_CHROME_BIN"
+          node scripts/verify_android_carousel_compact_browser.cjs
+          node scripts/verify_airport_carousel_r5_classic_browser.cjs
+
+      - name: Build full locally bundled Android assets including real airport PDFs
+        run: |
+          python3 scripts/build_android_local_web.py
+          test -s app/build/generated/jeppiran-local-web/jeppiran-web/preview/airport-carousel-r5/index.html
+          test -s app/build/generated/jeppiran-local-web/jeppiran-web/preview/airport-carousel-r5/app.js
+          test -s app/build/generated/jeppiran-local-web/jeppiran-web/index.html
+          test -s app/build/generated/jeppiran-local-web/jeppiran-web/vendor/pdf.min.mjs
+          python3 scripts/build_android_local_web.py --verify-only
+
+      - name: Compile separately installable QA APK (NOT production release)
+        env:
+          JEPPIRAN_PHONE_QA: 'true'
+          JEPPIRAN_VERSION_CODE: '262199'
+          JEPPIRAN_VERSION_NAME: '2.1'
+        run: gradle testDebugUnitTest assembleDebug --stacktrace
+
+      - name: Verify APK exists
+        run: |
+          test -s app/build/outputs/apk/debug/app-debug.apk
+          ls -lh app/build/outputs/apk/debug/app-debug.apk
+          echo "### JeppIran Carousel Android QA APK" >> "$GITHUB_STEP_SUMMARY"
+          echo "This test APK installs alongside original JeppIran (separate package com.tareghmsr.jeppiran.phoneqa)." >> "$GITHUB_STEP_SUMMARY"
+          echo "Download the **JeppIran-Carousel-R5-Android-QA** artifact from this workflow run." >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload test APK artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: JeppIran-Carousel-R5-Android-QA
+          path: app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30

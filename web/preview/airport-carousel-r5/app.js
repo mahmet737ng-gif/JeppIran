@@ -1,4 +1,4 @@
-/* JeppIran V2621 — isolated airport-carousel-r5 preview.
+/* JeppIran V2621 — isolated airport-carousel-r5 Android compact QA preview.
  * No changes to source airport assets, PDF pages, georeferencing or main app.
  * Display-only. Aviation weather must come from a real METAR, never mock data.
  */
@@ -642,5 +642,11 @@ async function boot(){
     console.warn("Optional airport profile index unavailable",error);
   }
 }
+// Android OS back gesture closes a chart group before leaving Carousel QA.
+window.jeppiranAndroidBack=()=>{
+  if(document.fullscreenElement){void document.exitFullscreen().catch(()=>{});return true;}
+  if(activeChartCategory){closeProcedureCategory();return true;}
+  return false;
+};
 void boot();
 })();

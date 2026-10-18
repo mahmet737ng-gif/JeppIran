@@ -37,7 +37,14 @@ import androidx.webkit.WebViewAssetLoader
 class MobileWebActivity : AppCompatActivity() {
     private val appHost = "appassets.androidplatform.net"
     private val appPath = "/assets/jeppiran-web/"
-    private val appUrl = "https://$appHost${appPath}index.html?platform=android-phone"
+    // Side-by-side Carousel QA build launches only the BUNDLED local test UI.
+    // Production application ID keeps its existing owner-approved Classic home.
+    private val appUrl: String by lazy {
+        if (applicationContext.packageName.endsWith(".phoneqa"))
+            "https://$appHost${appPath}preview/airport-carousel-r5/index.html?platform=android-carousel-qa"
+        else
+            "https://$appHost${appPath}index.html?platform=android-phone"
+    }
 
     private val assetLoader by lazy {
         WebViewAssetLoader.Builder()
