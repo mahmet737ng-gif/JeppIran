@@ -1,0 +1,529 @@
+:root{color-scheme:dark;--sky:#081726;--cyan:#62cbff;--white:#f9fcff;font-family:Inter,Arial,Helvetica,sans-serif}
+*{box-sizing:border-box}html,body{height:100%;margin:0}body{background:#071625;color:#fff;min-width:320px;overflow-x:hidden}
+button,input{font:inherit}button{cursor:pointer}button:focus-visible,a:focus-visible,input:focus-visible{outline:2px solid #70d5ff;outline-offset:3px}
+.scenery,.scenery-shade{position:fixed;inset:0;pointer-events:none}.scenery{z-index:0;background:#081827 center center/cover no-repeat;transition:opacity .22s ease;will-change:background-image}.scenery::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(3,17,32,.2),transparent 52%,rgba(1,9,20,.18))}
+.scenery-shade{z-index:1;background:linear-gradient(180deg,rgba(1,16,30,.83) 0%,rgba(2,19,34,.65) 27%,rgba(2,15,28,.34) 51%,rgba(2,12,23,.19) 70%,rgba(3,12,22,.58) 100%)}
+.page-frame{position:relative;z-index:2;min-height:100svh;display:flex;flex-direction:column}.topline{display:flex;align-items:center;gap:20px;padding:12px clamp(14px,2.8vw,46px);min-height:66px;border-bottom:1px solid rgba(130,209,255,.13);background:linear-gradient(180deg,rgba(2,14,27,.80),rgba(3,17,33,.25));position:relative;z-index:5}
+.brand{display:flex;align-items:center;gap:11px;color:#fff;text-decoration:none;white-space:nowrap;font-size:17px}.brand b{font-size:21px;letter-spacing:-.04em}.brand>span:last-child{font-size:16px;color:#c4d8eb}.wing{font-size:26px;color:#b8e5ff;transform:rotate(-24deg)}
+.search-box{width:min(330px,28vw);height:38px;position:relative;display:flex;align-items:center;gap:9px;padding:0 12px;border:1px solid rgba(115,196,237,.4);border-radius:9px;background:rgba(3,25,46,.66)}.search-box svg{fill:none;stroke:#b2d1e3;stroke-width:2;width:18px;height:18px;flex-shrink:0}.search-box input{background:none;outline:none;border:none;color:#fff;font-size:13px;width:100%;min-width:0}.search-box input::placeholder{color:#bed1e0}.search-results{position:absolute;left:0;right:0;top:calc(100% + 4px);border:1px solid #285d80;border-radius:9px;background:rgba(4,21,37,.97);max-height:300px;overflow:auto;box-shadow:0 14px 40px #0007}.search-results button{width:100%;display:flex;justify-content:space-between;align-items:center;border:0;border-bottom:1px solid #254761;background:transparent;color:white;text-align:left;padding:10px;gap:10px}.search-results button:hover{background:#134264}.search-results small{color:#9cbed2}.search-results[hidden]{display:none}
+.preview-mark{margin-left:auto;display:flex;flex-direction:column;text-align:right;color:#9fe4ff;letter-spacing:.12em;font-size:11px;font-weight:800}.preview-mark span{font-weight:500;letter-spacing:.025em;color:#aabfcb;font-size:10px;margin-top:3px}.original-link{border:1px solid #3d6f91;color:#cfefff;text-decoration:none;padding:9px 13px;border-radius:9px;font-size:12px;white-space:nowrap;background:rgba(10,36,58,.5)}.original-link:hover{background:#10486a}
+main{width:100%;flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-start;padding:clamp(8px,2.2vh,24px) 0 15px}.carousel-region{display:grid;grid-template-columns:44px minmax(0,1fr) 44px;align-items:center;gap:5px;width:min(1550px,96vw);height:clamp(150px,21vh,196px);margin-top:0;position:relative}.carousel{touch-action:pan-y;overflow:hidden;position:relative;height:100%;user-select:none;-webkit-user-select:none;cursor:grab;isolation:isolate}.carousel.dragging{cursor:grabbing}.carousel::before,.carousel::after{content:"";position:absolute;z-index:3;top:0;bottom:0;width:6%;pointer-events:none}.carousel::before{left:0;background:linear-gradient(90deg,rgba(3,15,29,.33),transparent)}.carousel::after{right:0;background:linear-gradient(-90deg,rgba(3,15,29,.33),transparent)}.carousel-track{position:absolute;inset:0;overflow:visible}
+.airport-token{--distance:0;position:absolute;left:50%;top:50%;width:var(--slot-width,140px);min-height:112px;padding:5px 4px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;background:transparent;border:0;box-shadow:none;color:rgba(246,251,255,.9);white-space:nowrap;transform:translate(calc(-50% + var(--shift,0px)), -50%) scale(var(--scale,1));opacity:var(--opacity,1);will-change:transform,opacity;transition:color .14s;z-index:1;outline-offset:4px}.airport-token:hover:not(.active){color:#fff}.airport-token .icao{font-weight:850;font-size:clamp(19px,2vw,29px);letter-spacing:-.02em;line-height:1.05;text-shadow:0 2px 11px rgba(0,0,0,.6)}.airport-token .iata{font-size:clamp(13px,1.2vw,18px);font-weight:550;color:#d6e1ed;letter-spacing:.02em;line-height:1.05;text-shadow:0 2px 8px #0008}.airport-token.active{z-index:2;color:#fff;gap:5px}.airport-token.active .icao{font-size:clamp(51px,5.7vw,83px);font-weight:900;letter-spacing:-.045em;filter:drop-shadow(0 4px 12px #0006)}.airport-token.active .iata{font-size:clamp(26px,2.65vw,36px);font-weight:750;color:#fff}.airport-token.active::before,.airport-token.active::after{content:"";position:absolute;top:15%;bottom:13%;width:2px;border-radius:4px;background:linear-gradient(transparent,#39adff 40%,#48c4ff 75%,transparent);box-shadow:0 0 13px #008bff}.airport-token.active::before{left:-12px}.airport-token.active::after{right:-12px}
+.nav-arrow{display:grid;place-items:center;position:relative;z-index:3;border:0;background:transparent;color:#dce9f7;width:44px;height:60px;font-family:Arial;font-size:46px;line-height:1;text-shadow:0 1px 12px #0007}.nav-arrow:hover{color:#57d5ff}
+.selected-airport{text-align:center;padding:4px 12px;margin-top:0;max-width:100%;text-shadow:0 2px 15px #0009}.selected-airport h1{font-size:clamp(23px,2.8vw,43px);font-weight:820;letter-spacing:-.025em;margin:0 0 9px;line-height:1.22}.selected-airport p#airportPlace{font-size:clamp(15px,1.35vw,21px);color:#e4e9f0;margin:0 0 24px}.sep{color:#90a8b8;padding:0 6px}.weather-line{display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:14px;font-size:clamp(15px,1.55vw,23px);font-weight:500}.weather-unit{display:flex;align-items:center;gap:10px;white-space:nowrap}.weather-icon{font-size:22px;color:#f4f8ff}.weather-line .divider{height:27px;width:1px;background:rgba(235,249,255,.66)}.flight-dot{display:inline-block;height:15px;width:15px;border-radius:50%;background:#a9b1ba}.flight-dot.vfr{background:#31e978}.flight-dot.mvfr{background:#f0d850}.flight-dot.ifr{background:#45b6ff}.flight-dot.lifr{background:#ff4b64}.flight-category{color:#c1cad4;font-weight:800}.flight-category.vfr{color:#36e37d}.flight-category.mvfr{color:#ffdf5c}.flight-category.ifr{color:#4abfff}.flight-category.lifr{color:#ff5e78}.weather-status{font-size:11px!important;letter-spacing:.02em;color:#b5c8d8;margin:11px 0 0!important;min-height:1.6em}
+.actions{margin-top:clamp(20px,6vh,58px);display:flex;align-items:center;flex-direction:column;gap:13px}.charts-button{border-radius:11px;padding:12px 22px;background:linear-gradient(120deg,rgba(4,38,64,.9),rgba(5,28,48,.84));color:#ebf8ff;border:1px solid #55b0dc;box-shadow:0 8px 26px #0005;font-size:14px;font-weight:700}.charts-button:hover{border-color:#96e3ff;background:#155176}.hint{color:#cfdae8;text-align:center;font-size:12px;text-shadow:0 2px 7px #000}.footer{text-align:center;font-size:10px;color:rgba(241,249,255,.64);letter-spacing:.17em;padding:15px 5px}
+dialog{border:1px solid #37779f;border-radius:16px;color:#f3faff;width:min(780px,94vw);height:min(640px,86svh);background:#061b30;box-shadow:0 20px 100px #000c;padding:0;overscroll-behavior:contain}dialog::backdrop{background:rgba(0,6,16,.82);backdrop-filter:blur(7px)}.dialog-head{display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:#09263d;padding:18px 21px;z-index:2}.dialog-head h2{margin:5px 0;font-size:22px}.dialog-head .mini{color:#78cfff;font-size:10px;letter-spacing:.15em}.dialog-head button{border:1px solid #5ba5cb;color:white;background:#133b57;border-radius:9px;font-size:26px;width:37px;height:37px}.chart-groups{padding:10px 20px 15px}.chart-group{margin:9px 0;border:1px solid #2a5470;border-radius:9px;overflow:hidden}.chart-group summary{padding:13px;background:#0a2f4e;cursor:pointer;font-weight:750;color:#c4eaff}.chart-group a{color:#e8f6ff;text-decoration:none;display:block;padding:11px 13px;border-top:1px solid #173d59;font-size:12px;line-height:1.4}.chart-group a:hover{background:#194f70}.dialog-note{font-size:11px;padding:10px 20px 20px;color:#a6c6d9}
+@media(max-width:1050px){.topline{gap:10px}.search-box{width:220px}.carousel-region{width:99vw;grid-template-columns:32px minmax(0,1fr) 32px;height:170px}.nav-arrow{width:30px;font-size:35px}.selected-airport h1{font-size:29px}}
+@media(max-width:690px){.topline{min-height:59px;padding:9px 13px;gap:9px;flex-wrap:wrap}.brand b{font-size:18px}.brand>span:last-child{font-size:13px}.wing{font-size:21px}.preview-mark{font-size:9px}.preview-mark span{font-size:9px}.original-link{display:none}.search-box{order:3;width:100%;margin-top:5px;height:35px}.carousel-region{height:142px;margin-top:12px;grid-template-columns:25px minmax(0,1fr) 25px}.nav-arrow{font-size:31px;width:25px}.airport-token{min-height:90px;gap:3px}.airport-token .icao{font-size:15px}.airport-token .iata{font-size:10px}.airport-token.active .icao{font-size:43px}.airport-token.active .iata{font-size:22px}.airport-token.active::before{left:-7px}.airport-token.active::after{right:-7px}.selected-airport{margin-top:0}.selected-airport h1{font-size:23px}.selected-airport p#airportPlace{font-size:14px;margin-bottom:16px}.weather-line{gap:8px 10px;font-size:15px;max-width:95vw}.weather-line .divider{height:16px}.weather-icon{font-size:16px}.weather-unit{gap:5px}.flight-dot{height:10px;width:10px}.actions{margin-top:26px}.hint{max-width:280px;font-size:10px}.footer{font-size:8px;letter-spacing:.07em}}
+@media(prefers-reduced-motion:reduce){.scenery{transition:none}}
+
+/* r2: truly continuous carousel typography. Every token remains mounted;
+   CSS reads interpolated values from the animation rather than toggling fonts
+   abruptly when the closest airport changes. No card artwork or backgrounds. */
+.airport-token,
+.airport-token.active {
+  gap:5px;
+  background:transparent!important;
+  border:0;
+  box-shadow:none;
+}
+.airport-token .icao,
+.airport-token.active .icao {
+  font-size:var(--icao-size,24px)!important;
+  line-height:1.08;
+  transition:none!important;
+}
+.airport-token .iata,
+.airport-token.active .iata {
+  font-size:var(--iata-size,15px)!important;
+  line-height:1.1;
+  transition:none!important;
+}
+.airport-token::before,
+.airport-token::after,
+.airport-token.active::before,
+.airport-token.active::after {
+  content:"";
+  position:absolute;
+  top:15%;bottom:13%;
+  width:2px;border-radius:4px;
+  background:linear-gradient(transparent,#39adff 40%,#48c4ff 75%,transparent);
+  box-shadow:0 0 13px #008bff;
+  opacity:var(--guide-opacity,0);
+  pointer-events:none;
+}
+.airport-token::before,.airport-token.active::before{left:-12px}
+.airport-token::after,.airport-token.active::after{right:-12px}
+@media(max-width:690px){
+  .airport-token::before,.airport-token.active::before{left:-7px}
+  .airport-token::after,.airport-token.active::after{right:-7px}
+}
+@media(prefers-reduced-motion:reduce){
+  .airport-token{transition:none!important}
+}
+
+
+/* airport-carousel-r1 / chart-dock trial r1 — preview only.
+   Fixed slender glass strip and retractable selector do not alter original app. */
+.chart-dock{
+  position:fixed;z-index:22;
+  bottom:calc(env(safe-area-inset-bottom,0px) + 30px);
+  left:50%;transform:translateX(-50%);
+  display:grid;grid-template-columns:92px repeat(4,minmax(0,1fr));
+  align-items:center;gap:5px;
+  width:min(760px,calc(100vw - 28px));
+  height:58px;padding:5px 7px;
+  background:linear-gradient(128deg,rgba(4,23,42,.9),rgba(5,31,51,.83));
+  border:1px solid rgba(112,192,236,.53);
+  border-radius:14px;
+  box-shadow:0 12px 45px rgba(0,0,0,.46);
+  -webkit-backdrop-filter:blur(17px) saturate(1.25);
+  backdrop-filter:blur(17px) saturate(1.25);
+}
+.chart-dock-airport{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  border-right:1px solid rgba(135,205,238,.2);line-height:1.05;height:75%;
+}
+.chart-dock-airport>span{font-weight:900;color:#fff;font-size:15px;letter-spacing:.02em}
+.chart-dock-airport>small{font-size:9px;color:#76c6eb;letter-spacing:.14em;margin-top:5px}
+.chart-dock-button{
+  display:flex;align-items:center;justify-content:center;height:100%;
+  border-radius:8px;border:1px solid transparent;color:#def0fd;
+  background:rgba(62,129,178,.08);
+  font-weight:800;font-size:clamp(11px,1vw,13px);letter-spacing:.065em;
+  transition:background-color .19s ease,border-color .19s ease,color .19s ease;
+}
+.chart-dock-button:hover,.chart-dock-button:focus-visible{
+  background:rgba(56,156,211,.18);border-color:rgba(91,199,254,.42);color:#fff;
+}
+.chart-dock-button.active{
+  color:#fff;background:rgba(26,130,188,.32);
+  border-color:rgba(87,205,255,.8);
+  box-shadow:inset 0 -2px 0 #65d7ff,0 0 16px rgba(38,153,239,.18);
+}
+.chart-sheet-scrim{
+  position:fixed;z-index:19;inset:0;
+  background:rgba(1,9,19,.28);
+  -webkit-backdrop-filter:blur(1px);backdrop-filter:blur(1px);
+}
+.chart-sheet-scrim[hidden]{display:none!important}
+.chart-sheet{
+  position:fixed;z-index:21;
+  left:50%;bottom:calc(env(safe-area-inset-bottom,0px) + 97px);
+  transform:translate(-50%,24px);
+  width:min(760px,calc(100vw - 28px));
+  max-height:min(56svh,530px);min-height:230px;
+  display:flex;flex-direction:column;overflow:hidden;
+  padding:0 14px 8px;
+  border-radius:18px;border:1px solid rgba(110,198,245,.58);
+  background:linear-gradient(145deg,rgba(4,24,44,.97),rgba(6,25,42,.94));
+  box-shadow:0 18px 65px rgba(0,0,0,.54);
+  -webkit-backdrop-filter:blur(22px) saturate(1.2);
+  backdrop-filter:blur(22px) saturate(1.2);
+  opacity:0;pointer-events:none;
+  transition:transform .25s cubic-bezier(.21,.82,.24,1),opacity .18s ease;
+}
+.chart-sheet.open{opacity:1;transform:translate(-50%,0);pointer-events:auto}
+.sheet-handle{width:45px;height:4px;border-radius:5px;background:#6aafda;margin:8px auto 10px;flex-shrink:0;opacity:.8}
+.chart-sheet-header{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:12px}
+.sheet-heading-group{min-width:0}
+.sheet-airport-code{color:#75c9f8;font-size:10px;font-weight:800;letter-spacing:.12em}
+.chart-sheet-header h2{margin:3px 0 0;font-weight:850;letter-spacing:-.01em;font-size:clamp(18px,1.5vw,24px);color:#f2faff}
+.sheet-close{
+  width:36px;height:36px;flex-shrink:0;border-radius:9px;
+  border:1px solid rgba(126,198,236,.48);
+  background:rgba(51,105,142,.22);color:#fff;font-size:29px;line-height:1;
+}
+.sheet-close:hover{border-color:#74d7ff;background:rgba(51,141,189,.37)}
+.chart-search-wrap{
+  height:41px;display:flex;align-items:center;gap:8px;flex-shrink:0;
+  border:1px solid rgba(91,158,207,.49);border-radius:10px;
+  background:rgba(1,15,29,.6);padding:0 12px;
+}
+.chart-search-wrap span{font-size:22px;color:#a7dcfa}
+.chart-search-wrap input{
+  background:transparent;border:0;outline:0;color:#fff;min-width:0;width:100%;font-size:13px;
+}
+.chart-search-wrap:focus-within{border-color:#6bd9ff}
+.chart-search-wrap input::placeholder{color:#a6bfd1}
+.sheet-chart-count{font-size:11px;color:#a8cbe1;margin:9px 2px 7px;flex-shrink:0}
+.sheet-chart-list{overflow-y:auto;flex:1;min-height:60px;padding:0 2px 6px;overscroll-behavior:contain;scrollbar-color:#397196 transparent}
+.sheet-chart-link{
+  display:flex;align-items:center;gap:12px;
+  width:100%;text-decoration:none;color:#e9f5fc;
+  border:1px solid rgba(92,157,199,.26);border-radius:9px;
+  background:rgba(21,59,88,.37);
+  padding:11px 12px;margin-bottom:6px;
+  transition:background .16s ease,border-color .16s ease;
+}
+.sheet-chart-link:hover,.sheet-chart-link:focus-visible{background:rgba(26,101,150,.53);border-color:#62c8f5}
+.sheet-chart-number{font-family:Menlo,Consolas,monospace;flex-shrink:0;min-width:45px;color:#6dd1ff;font-size:11px;font-weight:800}
+.sheet-chart-title{flex:1;min-width:0;text-wrap:pretty;line-height:1.35;font-size:12px}
+.sheet-chart-arrow{font-size:18px;color:#8cd5f8}
+.sheet-chart-empty{padding:16px 8px;color:#afcee4;text-align:center;font-size:13px}
+.sheet-disclaimer{margin:5px 2px 2px;font-size:10px;color:#a3bed0;text-align:center;flex-shrink:0}
+.footer{padding-bottom:7px}
+@media(max-width:690px){
+  .chart-dock{height:53px;bottom:calc(env(safe-area-inset-bottom,0px) + 28px);gap:2px;padding:4px;
+    grid-template-columns:57px repeat(4,minmax(0,1fr));width:calc(100vw - 16px);border-radius:12px}
+  .chart-dock-airport>span{font-size:12px}
+  .chart-dock-airport>small{font-size:7px;letter-spacing:.02em}
+  .chart-dock-button{font-size:10px;letter-spacing:0;border-radius:7px}
+  .chart-sheet{width:calc(100vw - 16px);bottom:calc(env(safe-area-inset-bottom,0px) + 88px);
+    max-height:min(64svh,580px);padding:0 9px 8px;border-radius:15px}
+  .sheet-chart-link{gap:9px;padding:11px 8px}
+  .sheet-chart-number{min-width:35px;font-size:10px}
+  .sheet-chart-title{font-size:12px}
+  .footer{padding-bottom:4px}
+}
+@media(max-height:590px){
+  .chart-sheet{max-height:calc(100svh - 134px);min-height:170px}
+}
+@media(prefers-reduced-motion:reduce){
+  .chart-sheet,.chart-dock-button{transition:none}
+}
+
+
+/* R2: first paint never depends on a network request or a JavaScript bundle.
+   Keep the last approved OIII poster visible under a light navy shade. */
+.scenery{
+  background-image:url("../../airport-profile-posters-v3/OIII.webp");
+  background-color:#0a2438;
+}
+/* Static 4 + center + 4 placeholders disappear as soon as the live,
+   continuously animated buttons mount. */
+.static-airports{
+  position:absolute;inset:0;display:grid;grid-template-columns:repeat(9,minmax(0,1fr));
+  align-items:center;justify-items:center;gap:0;padding:0 3px;
+}
+.static-airport{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:5px;min-width:0;color:rgba(241,250,255,.65);
+  font-size:clamp(11px,1.3vw,21px);text-shadow:0 2px 9px rgba(0,0,0,.6);
+  white-space:nowrap;
+}
+.static-airport strong{font-weight:850}
+.static-airport small{font-size:.64em;color:rgba(218,236,247,.77)}
+.static-selected{
+  color:#fff;font-size:clamp(30px,4.7vw,74px);
+  position:relative;font-weight:900;
+}
+.static-selected small{font-size:.48em;color:#fff}
+.static-selected::before,.static-selected::after{
+  content:"";height:74%;position:absolute;top:13%;width:2px;
+  background:#34b3fc;box-shadow:0 0 12px #097af0;
+}
+.static-selected::before{left:-8px}.static-selected::after{right:-8px}
+@media(max-width:1050px){
+  .static-airport{font-size:clamp(11px,1.4vw,16px)}
+  .static-selected{font-size:clamp(28px,4.6vw,56px)}
+}
+@media(max-width:690px){
+  .static-airports{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .static-airport:nth-child(-n+2),.static-airport:nth-last-child(-n+2){display:none}
+  .static-airport{font-size:12px}
+  .static-selected{font-size:37px}
+}
+
+
+/* R3: tabs immediately below the center ICAO, expanding to a second
+   horizontally draggable wheel of source-verified chart titles. */
+.procedure-zone{
+  position:relative;z-index:6;
+  display:flex;flex-direction:column;align-items:center;
+  width:min(1150px,97vw);
+  margin:-4px auto 16px;
+}
+.procedure-categories{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:5px;width:min(510px,92vw);
+  padding:5px;border:1px solid rgba(90,172,220,.53);
+  border-radius:12px;background:rgba(5,21,37,.67);
+  box-shadow:0 8px 25px rgba(0,0,0,.25);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+}
+.procedure-category{
+  min-height:35px;border:1px solid transparent;border-radius:8px;
+  background:transparent;color:#d7eaf6;font-size:12px;
+  font-weight:800;letter-spacing:.08em;
+  transition:background-color .18s ease,border-color .18s ease,color .18s ease;
+}
+.procedure-category:hover,.procedure-category:focus-visible{
+  color:#fff;background:rgba(37,146,211,.17);
+  border-color:rgba(112,214,255,.42);
+}
+.procedure-category.active{
+  color:#fff;background:rgba(35,137,197,.34);
+  border-color:rgba(108,218,255,.84);
+  box-shadow:inset 0 -2px 0 #5ec9ff,0 0 14px rgba(7,141,246,.16);
+}
+.procedure-details{
+  width:min(1080px,97vw);
+  max-height:0;opacity:0;visibility:hidden;overflow:hidden;
+  transition:max-height .31s cubic-bezier(.25,.8,.2,1),opacity .2s ease;
+  pointer-events:none;
+}
+.procedure-details.open{
+  max-height:235px;opacity:1;visibility:visible;pointer-events:auto;
+}
+.procedure-tools{
+  margin:8px auto 0;display:flex;align-items:center;gap:9px;
+  width:min(850px,95%);min-height:35px;
+}
+#procedureCount{
+  color:#b4dcf3;font-weight:700;letter-spacing:.03em;
+  font-size:11px;flex:1;min-width:0;
+}
+.procedure-search-label{
+  display:flex;align-items:center;gap:6px;height:32px;
+  background:rgba(4,20,36,.67);
+  border:1px solid rgba(121,182,222,.43);border-radius:7px;
+  padding:0 9px;
+}
+.procedure-search-label span{font-size:18px;color:#8accf2}
+.procedure-search-label input{
+  width:min(220px,29vw);background:transparent;border:0;outline:none;
+  color:white;font-size:12px;
+}
+.procedure-search-label input::placeholder{color:#8eb5cd}
+#collapseProcedure{
+  width:31px;height:31px;font-size:23px;color:#f5fbff;
+  background:rgba(18,64,97,.59);border:1px solid rgba(103,175,214,.45);
+  border-radius:8px;
+}
+.procedure-wheel-row{
+  display:grid;grid-template-columns:35px minmax(0,1fr) 35px;
+  align-items:center;gap:0;width:100%;height:119px;
+}
+.procedure-arrow{
+  height:57px;font-size:36px;background:transparent;
+  color:#d4eeff;border:none;
+}
+.procedure-arrow:hover{color:#5fcaff}
+.procedure-wheel{
+  width:100%;height:100%;position:relative;overflow:hidden;
+  touch-action:pan-y;cursor:grab;user-select:none;
+  -webkit-user-select:none;
+  isolation:isolate;
+}
+.procedure-wheel:active{cursor:grabbing}
+.procedure-track{position:absolute;inset:0}
+.procedure-token{
+  position:absolute;top:50%;left:50%;
+  width:var(--procedure-w,225px);height:98px;
+  padding:9px 10px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:6px;text-align:center;
+  transform:translate(calc(-50% + var(--procedure-x,0px)),-50%) scale(var(--procedure-scale,1));
+  opacity:var(--procedure-opacity,1);
+  border:1px solid rgba(94,171,220,.21);border-radius:11px;
+  background:rgba(4,23,43,.49);
+  color:#e5f5ff;
+  box-shadow:0 4px 18px rgba(0,0,0,.19);
+  will-change:transform,opacity;
+}
+.procedure-token.active{
+  border-color:rgba(95,210,255,.92);
+  background:rgba(12,57,88,.84);
+  box-shadow:0 0 16px rgba(30,144,245,.17),0 8px 26px rgba(0,0,0,.25);
+}
+.procedure-token .procedure-number{
+  color:#84d8ff;font-size:12px;
+  font-weight:800;white-space:nowrap;font-variant-numeric:tabular-nums;
+}
+.procedure-token .procedure-title{
+  font-size:var(--procedure-title-size,14px);
+  line-height:1.25;font-weight:700;
+  max-width:100%;display:-webkit-box;
+  -webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;
+  overflow-wrap:anywhere;
+}
+.procedure-open-row{
+  display:flex;align-items:center;justify-content:center;gap:22px;
+  min-height:39px;
+  color:#b5d6ea;font-size:11px;
+}
+.procedure-open-row a{
+  padding:8px 15px;
+  color:#fff;border-radius:8px;font-weight:800;
+  text-decoration:none;background:rgba(16,116,174,.51);
+  border:1px solid rgba(111,214,255,.7);
+}
+.procedure-open-row a:hover{background:rgba(20,136,204,.81)}
+.procedure-open-row a[aria-disabled="true"]{opacity:.5;pointer-events:none}
+.procedure-empty{
+  position:absolute;left:0;right:0;top:50%;
+  text-align:center;color:#d4e6ef;font-size:13px;
+  transform:translateY(-50%);
+}
+.selected-airport{z-index:2}
+.actions{margin-top:clamp(14px,3vh,32px)}
+/* The old fixed lower chart dock is replaced, not shown. */
+.chart-dock,.chart-sheet,.chart-sheet-scrim{display:none!important}
+@media(max-width:690px){
+  .procedure-zone{margin:1px auto 10px}
+  .procedure-categories{width:calc(100vw - 24px);padding:4px;gap:2px}
+  .procedure-category{min-height:38px;font-size:11px;letter-spacing:.01em}
+  .procedure-details.open{max-height:250px}
+  .procedure-tools{width:96%;gap:4px}
+  #procedureCount{font-size:10px}
+  .procedure-search-label{height:31px}
+  .procedure-search-label input{width:min(135px,30vw)}
+  .procedure-wheel-row{height:124px;grid-template-columns:22px minmax(0,1fr) 22px}
+  .procedure-arrow{font-size:28px}
+  .procedure-token{height:106px;padding:7px 6px}
+  .procedure-open-row{gap:10px;font-size:10px;flex-wrap:wrap}
+  .procedure-open-row a{padding:7px 10px}
+}
+@media(max-height:680px) and (min-width:691px){
+  .carousel-region{height:143px}
+  .procedure-wheel-row{height:102px}
+  .procedure-details.open{max-height:219px}
+  .actions{margin-top:8px}
+}
+@media(prefers-reduced-motion:reduce){
+  .procedure-details,.procedure-category{transition:none}
+}
+
+
+/* R4 — category expands WITHIN its own carousel tab; no detached chart strip. */
+.procedure-zone{margin:-2px auto 10px;width:min(1280px,98vw)}
+.procedure-categories{
+  display:flex;gap:7px;align-items:flex-start;
+  width:min(1240px,97vw);max-width:none;
+  padding:6px;border-radius:13px;
+  background:rgba(3,20,37,.66);border:1px solid rgba(111,190,233,.52);
+  overflow-x:auto;overflow-y:hidden;scrollbar-width:thin;
+  scrollbar-color:#4288b3 transparent;
+  -webkit-overflow-scrolling:touch;
+}
+.category-shell{flex:1 1 0;min-width:79px;transition:flex-grow .28s ease,min-width .28s ease}
+.category-shell.active{flex:7 1 0;min-width:500px}
+.category-shell .procedure-category{
+  display:block;width:100%;min-height:41px;padding:6px 6px;
+  border:1px solid transparent;border-radius:9px;
+}
+.category-shell.active .procedure-category{
+  background:rgba(41,139,205,.39);border-color:rgba(113,218,255,.9);
+}
+.category-body{width:100%;min-width:0}
+.category-body:empty{display:none}
+.category-body .procedure-details{
+  width:100%;max-height:0;margin:0;opacity:0;
+  transition:max-height .29s cubic-bezier(.19,.79,.21,1),opacity .2s ease;
+}
+.category-body .procedure-details.open{
+  width:100%;max-height:148px;opacity:1;visibility:visible;
+  pointer-events:auto;
+}
+.category-body .procedure-tools{margin:5px auto 1px;width:100%;min-height:25px}
+.category-body #procedureCount{font-size:10px}
+.category-body .procedure-search-label{height:27px}
+.category-body .procedure-search-label input{width:135px;font-size:10px}
+.category-body #collapseProcedure{height:26px;width:26px;line-height:1;font-size:18px}
+.category-body .procedure-wheel-row{
+  width:100%;height:105px;
+  grid-template-columns:24px minmax(0,1fr) 24px;
+}
+.category-body .procedure-arrow{font-size:28px;height:42px}
+.category-body .procedure-token{
+  height:83px;padding:7px 8px;
+  border-radius:9px;background:rgba(11,37,60,.61);
+}
+.category-body .procedure-token.active{background:rgba(17,65,98,.88)}
+.category-body .procedure-token .procedure-number{font-size:11px}
+.category-body .procedure-token .procedure-title{line-height:1.2}
+/* Only one info surface at a time: category = real PDF preview, collapsed =
+   original airport name, city, METAR, wind and QNH. */
+body.category-open .selected-airport,
+body.category-open .actions{display:none!important}
+.inline-chart-viewer[hidden]{display:none!important}
+.inline-chart-viewer{
+  position:relative;z-index:4;
+  display:flex;flex-direction:column;
+  width:min(1150px,96vw);
+  height:clamp(300px,53svh,635px);
+  margin:2px auto 13px;overflow:hidden;
+  border:1px solid rgba(103,176,219,.74);border-radius:14px;
+  background:rgba(5,17,29,.96);
+  box-shadow:0 12px 36px rgba(0,0,0,.6);
+}
+.chart-viewer-head{
+  flex:0 0 auto;display:flex;align-items:center;
+  gap:10px;justify-content:space-between;
+  min-height:47px;padding:6px 12px;
+  border-bottom:1px solid rgba(95,172,220,.42);
+  background:rgba(8,33,55,.97);
+}
+.chart-viewer-heading{display:flex;min-width:0;flex-direction:column;gap:3px}
+.chart-viewer-heading span{font-size:10px;letter-spacing:.09em;color:#75cff7;font-weight:700}
+.chart-viewer-heading strong{
+  display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  font-size:13px;color:#f0faff;max-width:72vw;
+}
+.chart-viewer-controls{display:flex;gap:6px;align-items:center;flex-shrink:0}
+.chart-viewer-controls button{
+  min-width:33px;height:32px;border-radius:8px;border:1px solid rgba(102,183,235,.43);
+  background:rgba(30,85,124,.43);color:#fff;font-size:22px;
+  line-height:1;
+}
+.chart-viewer-controls button:hover{border-color:#86dfff;background:rgba(43,121,164,.62)}
+.chart-viewer-controls button[hidden]{display:none}
+.viewer-chart-tap{
+  position:relative;display:flex;flex:1;min-height:0;
+  width:100%;align-items:center;justify-content:center;
+  overflow:hidden;border:0;border-radius:0;padding:10px;
+  color:#162b3b;background:#d8e0e8;cursor:zoom-in;
+}
+.viewer-chart-tap canvas{display:block;object-fit:contain;max-width:100%;max-height:100%}
+.viewer-chart-tap canvas[hidden]{display:none}
+.viewer-chart-message{
+  position:absolute;z-index:3;top:50%;left:50%;
+  transform:translate(-50%,-50%);
+  display:block;text-align:center;
+  max-width:80%;font-weight:700;font-size:14px;color:#364a59;
+}
+.viewer-chart-message[hidden]{display:none}
+.viewer-tap-hint{
+  position:absolute;z-index:2;bottom:13px;right:14px;
+  border-radius:7px;padding:6px 10px;font-size:11px;font-weight:700;
+  color:#fff;background:rgba(3,26,43,.75);pointer-events:none;
+}
+.viewer-safety-note{flex:0 0 auto;padding:5px 10px;color:#bad2e2;font-size:9px;letter-spacing:.09em;text-align:center}
+.inline-chart-viewer.fullscreen-viewer,
+.inline-chart-viewer:fullscreen{
+  position:fixed!important;z-index:200!important;
+  inset:0!important;top:0!important;left:0!important;right:0!important;bottom:0!important;
+  transform:none!important;width:100vw!important;height:100dvh!important;
+  max-width:none!important;max-height:none!important;margin:0!important;
+  border:0!important;border-radius:0!important;background:#091521!important;
+}
+.inline-chart-viewer.fullscreen-viewer .viewer-chart-tap{cursor:default}
+.inline-chart-viewer.fullscreen-viewer .viewer-tap-hint{display:none}
+.inline-chart-viewer.fullscreen-viewer .chart-viewer-head{min-height:55px}
+body.chart-is-fullscreen{overflow:hidden}
+@media(max-width:690px){
+  .procedure-zone{width:100%;margin:2px auto 8px}
+  .procedure-categories{width:calc(100vw - 15px);gap:4px;padding:4px}
+  .category-shell{min-width:48px}
+  .category-shell.active{min-width:210px;flex:6 1 0}
+  .category-shell .procedure-category{font-size:9px;min-height:38px;padding:4px 1px;letter-spacing:0}
+  .category-body .procedure-tools{gap:3px}
+  .category-body #procedureCount{font-size:9px}
+  .category-body .procedure-search-label{padding:0 5px}
+  .category-body .procedure-search-label input{width:56px;font-size:10px}
+  .category-body .procedure-wheel-row{height:105px;grid-template-columns:17px minmax(0,1fr) 17px}
+  .category-body .procedure-arrow{font-size:22px}
+  .category-body .procedure-token{height:82px;padding:5px 5px}
+  .category-body .procedure-token .procedure-title{font-size:var(--procedure-title-size,12px)}
+  .inline-chart-viewer{width:calc(100vw - 14px);height:clamp(260px,48svh,570px);margin-top:5px}
+  .chart-viewer-head{padding:5px 7px}
+  .chart-viewer-heading strong{max-width:53vw;font-size:11px}
+  .chart-viewer-controls button{min-width:29px;height:30px;font-size:20px}
+  .viewer-safety-note{font-size:8px}
+}
+@media(max-height:620px) and (min-width:691px){
+  .carousel-region{height:115px}
+  .inline-chart-viewer{height:47svh}
+}
+@media(prefers-reduced-motion:reduce){.category-shell,.category-body .procedure-details{transition:none}}

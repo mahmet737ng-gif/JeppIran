@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#071524">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>JeppIran — Airport Carousel & Nested Chart Viewer Test R4</title>
+  <link rel="icon" href="../../app-icon.png">
+  <link rel="stylesheet" href="./styles.css?v=carousel-r4-1">
+  <script src="../../metar-flight-category.js?v=2621-wxrules-v1" defer></script>
+  <script src="./app.js?v=carousel-r4-1" defer></script>
+</head>
+<body>
+  <div class="scenery" id="scenery" aria-hidden="true"></div>
+  <div class="scenery-shade" aria-hidden="true"></div>
+  <div class="page-frame">
+    <header class="topline">
+      <a class="brand" href="../../" title="Open original JeppIran (unchanged)"><span class="wing" aria-hidden="true">✈</span><b>JeppIran</b><span>Charts</span></a>
+      <div class="search-box"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.7" cy="10.7" r="6.3"></circle><path d="m15.3 15.3 5 5"></path></svg><input id="airportSearch" type="search" placeholder="Search ICAO, IATA or airport…" autocomplete="off" aria-label="Find an airport"><div id="searchResults" class="search-results" hidden></div></div>
+      <div class="preview-mark">TEST PREVIEW <span>airport-carousel-r4</span></div>
+      <a class="original-link" href="../../#charts" title="Leave preview and open original Charts">Original app <span aria-hidden="true">↗</span></a>
+    </header>
+
+    <main>
+      <section class="carousel-region" aria-label="Choose airport">
+        <button id="prevAirport" class="nav-arrow prev" type="button" aria-label="Previous airport">‹</button>
+        <div id="airportCarousel" class="carousel" role="group" aria-label="Airport selector — swipe left or right, use arrow keys or tap an airport" tabindex="0"><div id="carouselTrack" class="carousel-track">
+          <div class="static-airports" aria-hidden="true">
+            <span class="static-airport"><strong>OIMM</strong><small>MHD</small></span>
+            <span class="static-airport"><strong>OISL</strong><small>LRR</small></span>
+            <span class="static-airport"><strong>OIYY</strong><small>AZD</small></span>
+            <span class="static-airport"><strong>OIFM</strong><small>IFN</small></span>
+            <span class="static-airport static-selected"><strong>OIII</strong><small>THR</small></span>
+            <span class="static-airport"><strong>OIKB</strong><small>BND</small></span>
+            <span class="static-airport"><strong>OIAW</strong><small>AWZ</small></span>
+            <span class="static-airport"><strong>OIBB</strong><small>BUZ</small></span>
+            <span class="static-airport"><strong>OITT</strong><small>TBZ</small></span>
+          </div>
+        </div></div>
+        <button id="nextAirport" class="nav-arrow next" type="button" aria-label="Next airport">›</button>
+      </section>
+
+
+      <section id="procedureZone" class="procedure-zone" aria-label="Nested airport procedures">
+        <nav class="procedure-categories" aria-label="Expand a chart category and swipe its charts">
+          <div class="category-shell" data-category="STAR">
+            <button class="procedure-category" data-category="STAR" type="button" aria-controls="procedureDetails" aria-expanded="false">STAR</button>
+            <div class="category-body"></div>
+          </div>
+          <div class="category-shell" data-category="SID">
+            <button class="procedure-category" data-category="SID" type="button" aria-controls="procedureDetails" aria-expanded="false">SID</button>
+            <div class="category-body"></div>
+          </div>
+          <div class="category-shell" data-category="AIRPORT">
+            <button class="procedure-category" data-category="AIRPORT" type="button" aria-controls="procedureDetails" aria-expanded="false">AIRPORT</button>
+            <div class="category-body"></div>
+          </div>
+          <div class="category-shell" data-category="APP">
+            <button class="procedure-category" data-category="APP" type="button" aria-controls="procedureDetails" aria-expanded="false">APP</button>
+            <div class="category-body"></div>
+          </div>
+        </nav>
+        <div id="procedureDetails" class="procedure-details" aria-hidden="true" inert>
+          <div class="procedure-tools">
+            <span id="procedureCount" aria-live="polite">Select a category</span>
+            <label class="procedure-search-label"><span aria-hidden="true">⌕</span><input type="search" id="procedureSearch" autocomplete="off" placeholder="Find…" aria-label="Search chart titles"></label>
+            <button id="collapseProcedure" type="button" aria-label="Collapse charts">×</button>
+          </div>
+          <div class="procedure-wheel-row">
+            <button id="procedurePrev" type="button" class="procedure-arrow" aria-label="Previous chart">‹</button>
+            <div id="procedureWheel" class="procedure-wheel" tabindex="0" aria-label="Swipe charts within this category"><div id="procedureTrack" class="procedure-track"></div></div>
+            <button id="procedureNext" type="button" class="procedure-arrow" aria-label="Next chart">›</button>
+          </div>
+        </div>
+      </section>
+
+      <section id="inlineChartViewer" class="inline-chart-viewer" aria-label="Selected chart viewer" hidden>
+        <header class="chart-viewer-head">
+          <div class="chart-viewer-heading">
+            <span id="viewerCategory">STAR · OIII</span>
+            <strong id="viewerProcedureTitle">Choose a chart</strong>
+          </div>
+          <div class="chart-viewer-controls">
+            <button id="viewerPrev" type="button" title="Previous chart" aria-label="Previous chart">‹</button>
+            <button id="viewerNext" type="button" title="Next chart" aria-label="Next chart">›</button>
+            <button id="viewerFullScreen" type="button" title="Expand chart" aria-label="Open chart full screen">⛶</button>
+            <button id="viewerCloseFullScreen" type="button" title="Close full screen" aria-label="Exit chart full screen" hidden>×</button>
+          </div>
+        </header>
+        <button id="viewerChartTap" class="viewer-chart-tap" type="button" aria-label="Tap chart to open full screen">
+          <canvas id="viewerChartCanvas" aria-label="Rendered airport chart"></canvas>
+          <span id="viewerChartMessage" class="viewer-chart-message" role="status">Choose a category to preview charts</span>
+          <span id="viewerTapHint" class="viewer-tap-hint">Tap chart to open full screen</span>
+        </button>
+        <footer class="viewer-safety-note">JEPPIRAN V2621 · Preview only · Not for actual navigation</footer>
+      </section>
+
+      <section class="selected-airport" aria-live="polite">
+        <h1 id="airportName">Mehrabad International Airport</h1>
+        <p id="airportPlace">Tehran, Iran <span class="sep">│</span> Elevation 3,962 ft</p>
+        <div class="weather-line" aria-label="Aviation weather">
+          <div class="weather-unit"><span id="flightDot" class="flight-dot unknown"></span><strong id="flightCategory" class="flight-category unknown">WX —</strong></div>
+          <span class="divider"></span>
+          <div class="weather-unit"><span class="weather-icon" aria-hidden="true">☁</span><span id="clouds">—</span></div>
+          <span class="divider"></span>
+          <div class="weather-unit"><span class="weather-icon" aria-hidden="true">♨</span><span id="temperature">—</span></div>
+          <span class="divider"></span>
+          <div class="weather-unit"><span class="weather-icon" aria-hidden="true">≋</span><span id="wind">— / — kt</span></div>
+          <span class="divider"></span>
+          <div class="weather-unit"><span class="weather-icon" aria-hidden="true">◉</span><span id="qnh">QNH —</span></div>
+        </div>
+        <p id="weatherStatus" class="weather-status" role="status">Checking live METAR…</p>
+      </section>
+
+      <div class="actions"><span class="hint">Swipe or drag quickly to spin • Release to snap to center</span></div>
+    </main>
+
+    <footer class="footer">JEPPIRAN · V2621 · DESIGN PREVIEW ONLY · NOT FOR NAVIGATION</footer>
+  </div>
+</body>
+</html>

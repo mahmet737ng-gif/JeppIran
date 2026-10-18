@@ -371,7 +371,7 @@
       <fieldset class="appearance-theme-options" id="chartLayoutSettings" aria-label="Charts interface style">
         <legend>Charts layout</legend>
         <label><input type="radio" name="chartsLayoutMode" value="classic" checked><span>Classic · current chart view</span></label>
-        <label><input type="radio" name="chartsLayoutMode" value="carousel"><span>Carousel · airport and procedure wheels (test)</span></label>
+        <label><input type="radio" name="chartsLayoutMode" value="carousel"><span>Carousel · nested chart categories (test)</span></label>
         <p style="font-size:12px;line-height:1.5;margin:8px 0 0;opacity:.75">Classic remains the default. Carousel opens the isolated test page when you tap Charts; approved chart tools and PDFs in Classic are unchanged.</p>
       </fieldset>
       <section class="offline-settings-section" aria-labelledby="offlinePackTitle">
@@ -504,7 +504,7 @@
       // including a running chart session, retains the original behavior.
       event.preventDefault();
       event.stopImmediatePropagation();
-      window.location.assign(new URL("./preview/airport-carousel-r3/",document.baseURI).href);
+      window.location.assign(new URL("./preview/airport-carousel-r4/",document.baseURI).href);
     },true);
     document.addEventListener("DOMContentLoaded",sync);
   })();
