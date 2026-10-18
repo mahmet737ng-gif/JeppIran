@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.SystemClock
+import android.os.Build
 import android.widget.Toast
 import android.view.View
 import android.webkit.CookieManager
@@ -149,12 +150,25 @@ class MobileWebActivity : AppCompatActivity() {
                 val uri = request?.url ?: return null
                 if (uri.host != appHost) return null // Optional live weather, etc.
                 // Fail closed: NEVER fetch an absent Android asset from a website.
-                return assetLoader.shouldInterceptRequest(uri)
-                    ?: WebResourceResponse(
-                        "text/plain", "UTF-8", 404, "Not Found",
-                        mapOf("Cache-Control" to "no-store"),
-                        ByteArrayInputStream(ByteArray(0))
-                    )
+                val response = assetLoader.shouldInterceptRequest(uri)
+                if (response != null) {
+                    // A newly installed APK must never reuse JS/CSS from the
+                    // previous APK despite having the same local asset URL.
+                    val name = uri.lastPathSegment.orEmpty().lowercase()
+                    if (name.endsWith(".html") || name.endsWith(".js") ||
+                        name.endsWith(".css")) {
+                        val headers = response.responseHeaders.orEmpty().toMutableMap()
+                        headers["Cache-Control"] = "no-store, max-age=0"
+                        headers["Pragma"] = "no-cache"
+                        response.responseHeaders = headers
+                    }
+                    return response
+                }
+                return WebResourceResponse(
+                    "text/plain", "UTF-8", 404, "Not Found",
+                    mapOf("Cache-Control" to "no-store"),
+                    ByteArrayInputStream(ByteArray(0))
+                )
             }
 
             override fun shouldOverrideUrlLoading(
@@ -236,6 +250,18 @@ class MobileWebActivity : AppCompatActivity() {
         }
         // Always start from installed APK assets; never restore a prior
         // session pointing to the now-retired hosted website.
+        // The installed package owns the bundled HTML/JS/CSS. Clear only
+        // WebView's HTTP cache when the APK version changes, retaining
+        // localStorage preferences and all internal chart downloads.
+        val pkg = packageManager.getPackageInfo(packageName, 0)
+        @Suppress("DEPRECATION")
+        val version = if (Build.VERSION.SDK_INT >= 28) pkg.longVersionCode
+                      else pkg.versionCode.toLong()
+        val marker = getSharedPreferences("jeppiran_web_asset_cache", MODE_PRIVATE)
+        if (marker.getLong("last_apk_version", -1L) != version) {
+            browser.clearCache(true)
+            marker.edit().putLong("last_apk_version", version).apply()
+        }
         browser.loadUrl(appUrl)
     }
 
