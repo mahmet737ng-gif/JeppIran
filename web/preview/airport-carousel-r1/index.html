@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#071524">
+  <meta name="robots" content="noindex,nofollow,noarchive">
+  <title>JeppIran — Airport Carousel Test</title>
+  <link rel="icon" href="../../app-icon.png">
+  <link rel="stylesheet" href="./styles.css?v=carousel-r1-5">
+  <script src="../../metar-flight-category.js?v=2621-wxrules-v1" defer></script>
+  <script src="./app.js?v=carousel-r1-5" defer></script>
+</head>
+<body>
+  <div class="scenery" id="scenery" aria-hidden="true"></div>
+  <div class="scenery-shade" aria-hidden="true"></div>
+  <div class="page-frame">
+    <header class="topline">
+      <a class="brand" href="../../" title="Open original JeppIran (unchanged)"><span class="wing" aria-hidden="true">✈</span><b>JeppIran</b><span>Charts</span></a>
+      <div class="search-box"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.7" cy="10.7" r="6.3"></circle><path d="m15.3 15.3 5 5"></path></svg><input id="airportSearch" type="search" placeholder="Search ICAO, IATA or airport…" autocomplete="off" aria-label="Find an airport"><div id="searchResults" class="search-results" hidden></div></div>
+      <div class="preview-mark">TEST PREVIEW <span>airport-carousel-r1</span></div>
+      <a class="original-link" href="../../#charts" title="Leave preview and open original Charts">Original app <span aria-hidden="true">↗</span></a>
+    </header>
+
+    <main>
+      <section class="carousel-region" aria-label="Choose airport">
+        <button id="prevAirport" class="nav-arrow prev" type="button" aria-label="Previous airport">‹</button>
+        <div id="airportCarousel" class="carousel" role="group" aria-label="Airport selector — swipe left or right, use arrow keys or tap an airport" tabindex="0"><div id="carouselTrack" class="carousel-track"></div></div>
+        <button id="nextAirport" class="nav-arrow next" type="button" aria-label="Next airport">›</button>
+      </section>
+
+      <section class="selected-airport" aria-live="polite">
+        <h1 id="airportName">Mehrabad International Airport</h1>
+        <p id="airportPlace">Tehran, Iran <span class="sep">│</span> Elevation 3,962 ft</p>
+        <div class="weather-line" aria-label="Aviation weather">
+          <div class="weather-unit"><span id="flightDot" class="flight-dot unknown"></span><strong id="flightCategory" class="flight-category unknown">WX —</strong></div>
+          <span class="divider"></span>
+          <div class="weather-unit"><span class="weather-icon" aria-hidden="true">☁</span><span id="clouds">—</span></div>
+          <span class="divider"></span>
+          <div class="weather-unit"><span class="weather-icon" aria-hidden="true">♨</span><span id="temperature">—</span></div>
+          <span class="divider"></span>
+          <div class="weather-unit"><span class="weather-icon" aria-hidden="true">≋</span><span id="wind">— / — kt</span></div>
+          <span class="divider"></span>
+          <div class="weather-unit"><span class="weather-icon" aria-hidden="true">◉</span><span id="qnh">QNH —</span></div>
+        </div>
+        <p id="weatherStatus" class="weather-status" role="status">Loading source-backed METAR…</p>
+      </section>
+
+      <div class="actions">
+        <button id="showCharts" type="button" class="charts-button">Explore <b id="chartsAirport">OIII</b> charts <span aria-hidden="true">↗</span></button>
+        <span class="hint">Swipe or drag quickly to spin • Release to snap to center</span>
+      </div>
+    </main>
+    <footer class="footer">JEPPIRAN · V2621 · DESIGN PREVIEW ONLY · NOT FOR NAVIGATION</footer>
+  </div>
+
+  <dialog id="chartDialog" aria-labelledby="chartDialogTitle">
+    <div class="dialog-head"><div><span class="mini">AIRPORT CHARTS · V2621</span><h2 id="chartDialogTitle">OIII · Mehrabad</h2></div><button id="closeCharts" type="button" aria-label="Close chart list">×</button></div>
+    <div id="chartGroups" class="chart-groups"></div>
+    <p class="dialog-note">Opens the original published airport PDF at its chart page. Preview layout only; not for navigation.</p>
+  </dialog>
+</body>
+</html>
