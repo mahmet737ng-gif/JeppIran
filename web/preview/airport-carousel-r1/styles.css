@@ -16,3 +16,48 @@ dialog{border:1px solid #37779f;border-radius:16px;color:#f3faff;width:min(780px
 @media(max-width:1050px){.topline{gap:10px}.search-box{width:220px}.carousel-region{width:99vw;grid-template-columns:32px minmax(0,1fr) 32px;height:170px}.nav-arrow{width:30px;font-size:35px}.selected-airport h1{font-size:29px}}
 @media(max-width:690px){.topline{min-height:59px;padding:9px 13px;gap:9px;flex-wrap:wrap}.brand b{font-size:18px}.brand>span:last-child{font-size:13px}.wing{font-size:21px}.preview-mark{font-size:9px}.preview-mark span{font-size:9px}.original-link{display:none}.search-box{order:3;width:100%;margin-top:5px;height:35px}.carousel-region{height:142px;margin-top:12px;grid-template-columns:25px minmax(0,1fr) 25px}.nav-arrow{font-size:31px;width:25px}.airport-token{min-height:90px;gap:3px}.airport-token .icao{font-size:15px}.airport-token .iata{font-size:10px}.airport-token.active .icao{font-size:43px}.airport-token.active .iata{font-size:22px}.airport-token.active::before{left:-7px}.airport-token.active::after{right:-7px}.selected-airport{margin-top:0}.selected-airport h1{font-size:23px}.selected-airport p#airportPlace{font-size:14px;margin-bottom:16px}.weather-line{gap:8px 10px;font-size:15px;max-width:95vw}.weather-line .divider{height:16px}.weather-icon{font-size:16px}.weather-unit{gap:5px}.flight-dot{height:10px;width:10px}.actions{margin-top:26px}.hint{max-width:280px;font-size:10px}.footer{font-size:8px;letter-spacing:.07em}}
 @media(prefers-reduced-motion:reduce){.scenery{transition:none}}
+
+/* r2: truly continuous carousel typography. Every token remains mounted;
+   CSS reads interpolated values from the animation rather than toggling fonts
+   abruptly when the closest airport changes. No card artwork or backgrounds. */
+.airport-token,
+.airport-token.active {
+  gap:5px;
+  background:transparent!important;
+  border:0;
+  box-shadow:none;
+}
+.airport-token .icao,
+.airport-token.active .icao {
+  font-size:var(--icao-size,24px)!important;
+  line-height:1.08;
+  transition:none!important;
+}
+.airport-token .iata,
+.airport-token.active .iata {
+  font-size:var(--iata-size,15px)!important;
+  line-height:1.1;
+  transition:none!important;
+}
+.airport-token::before,
+.airport-token::after,
+.airport-token.active::before,
+.airport-token.active::after {
+  content:"";
+  position:absolute;
+  top:15%;bottom:13%;
+  width:2px;border-radius:4px;
+  background:linear-gradient(transparent,#39adff 40%,#48c4ff 75%,transparent);
+  box-shadow:0 0 13px #008bff;
+  opacity:var(--guide-opacity,0);
+  pointer-events:none;
+}
+.airport-token::before,.airport-token.active::before{left:-12px}
+.airport-token::after,.airport-token.active::after{right:-12px}
+@media(max-width:690px){
+  .airport-token::before,.airport-token.active::before{left:-7px}
+  .airport-token::after,.airport-token.active::after{right:-7px}
+}
+@media(prefers-reduced-motion:reduce){
+  .airport-token{transition:none!important}
+}

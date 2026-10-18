@@ -11,7 +11,8 @@ const fallbackIata=Object.freeze({OIII:"THR",OIIE:"IKA",OIMM:"MHD",OISS:"SYZ",OI
 const fallbackNames={OIII:["Mehrabad International Airport","Tehran, Iran",3962],OIIE:["Imam Khomeini International Airport","Tehran, Iran",3305],OIMM:["Mashhad International Airport","Mashhad, Iran",3263]};
 const $=sel=>document.querySelector(sel);
 const el={carousel:$("#airportCarousel"),track:$("#carouselTrack"),name:$("#airportName"),place:$("#airportPlace"),scenery:$("#scenery"),category:$("#flightCategory"),dot:$("#flightDot"),clouds:$("#clouds"),temp:$("#temperature"),wind:$("#wind"),qnh:$("#qnh"),weatherStatus:$("#weatherStatus"),search:$("#airportSearch"),results:$("#searchResults")};
-let codes=["OIII"], metadata={},selected=0,centerOffset=0,raf=0,animationToken=0,gesture=null;
+let codes=["OIII"], metadata={},selected=0,visualPos=0,raf=0,animationToken=0,gesture=null;
+const carouselButtons=new Map();
 let chartManifest=null,charts=null,wxCache=null,wxCacheAt=0,metarRequest=0;
 const wrap=i=>(i%codes.length+codes.length)%codes.length;
 const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
@@ -21,38 +22,66 @@ const current=()=>getCode(selected);
 const slotStep=()=>el.carousel.clientWidth/(innerWidth<=690?5.5:innerWidth<=1040?7.3:9.25);
 const visibleRadius=()=>innerWidth<=690?2:innerWidth<=1040?3:4;
 function preferredIndex(code){return codes.indexOf(code)}
-function makeAirportButton(index,relative){
-  const code=getCode(index),data=getProfile(code);
-  const button=document.createElement("button");
+// Every airport button is created once. Continuous interpolation updates only its
+// transform, font size and opacity — never replace DOM nodes mid-gesture.
+const wrappedDelta=(index,position)=>{
+  const n=codes.length;
+  return ((index-position+n/2)%n+n)%n-n/2;
+};
+const smoothstep=t=>t*t*(3-2*t);
+let suppressTapUntil=0;
+function makeAirportButton(index){
+  const code=getCode(index),data=getProfile(code),button=document.createElement("button");
   button.type="button";button.className="airport-token";
-  button.setAttribute("aria-label",code+" "+(data.iata||fallbackIata[code]||"")+" "+(data.name||""));
   button.dataset.airport=code;
+  button.setAttribute("aria-label",code+" "+(data.iata||fallbackIata[code]||"")+" "+(data.name||""));
+  button.tabIndex=-1;
   const icao=document.createElement("span"),iata=document.createElement("span");
   icao.className="icao";iata.className="iata";
   icao.textContent=code;iata.textContent=data.iata||fallbackIata[code]||"—";
   button.append(icao,iata);
-  const dist=Math.abs(relative-centerOffset),active=relative===0;
-  if(active){button.classList.add("active");button.setAttribute("aria-current","true");}
-  const opacity=dist<.5?1:clamp(1-(dist-1)*.155,.26,.97);
-  button.style.setProperty("--slot-width",slotStep()*1.15+"px");
-  button.style.setProperty("--shift",(relative-centerOffset)*slotStep()+"px");
-  button.style.setProperty("--scale",active?"1":String(clamp(1-(dist-1)*.035,.86,1)));
-  button.style.setProperty("--opacity",opacity.toFixed(3));
   button.addEventListener("click",()=>{
     if(gesture?.moved||performance.now()<suppressTapUntil)return;
-    centerOn(selected+relative,true);
+    centerOn(index,true);
   });
   return button;
 }
-let suppressTapUntil=0;
-function paintTrack(){
-  const radius=visibleRadius(),fragment=document.createDocumentFragment();
-  for(let relative=-(radius+2);relative<=radius+2;relative++){
-    const distance=Math.abs(relative-centerOffset);
-    if(distance>radius+.75)continue;
-    fragment.append(makeAirportButton(selected+relative,relative));
+function buildTrack(){
+  carouselButtons.clear();
+  const fragment=document.createDocumentFragment();
+  for(let i=0;i<codes.length;i++){
+    const button=makeAirportButton(i);
+    carouselButtons.set(i,button);
+    fragment.append(button);
   }
   el.track.replaceChildren(fragment);
+}
+function paintTrack(){
+  const radius=visibleRadius(),step=slotStep();
+  const compact=innerWidth<=690;
+  const mid=wrap(Math.round(visualPos));
+  for(const [index,button] of carouselButtons){
+    const d=wrappedDelta(index,visualPos),distance=Math.abs(d);
+    const visible=distance<=radius+1.2;
+    button.style.visibility=visible?"visible":"hidden";
+    button.style.pointerEvents=visible?"auto":"none";
+    button.tabIndex=visible?0:-1;
+    if(!visible)continue;
+    const focus=smoothstep(clamp(1-distance/1.12,0,1));
+    const opacity=distance<.45?1:clamp(1-Math.max(0,distance-.5)*.17,.24,1);
+    button.style.setProperty("--slot-width",(step*1.28).toFixed(2)+"px");
+    button.style.setProperty("--shift",(d*step).toFixed(3)+"px");
+    button.style.setProperty("--scale","1");
+    button.style.setProperty("--opacity",opacity.toFixed(3));
+    button.style.setProperty("--icao-size",((compact?15:24)+(compact?29:53)*focus).toFixed(2)+"px");
+    button.style.setProperty("--iata-size",((compact?10:15)+(compact?13:20)*focus).toFixed(2)+"px");
+    button.style.setProperty("--guide-opacity",focus.toFixed(3));
+    button.style.zIndex=String(100-Math.floor(distance*10));
+    const active=index===mid;
+    button.classList.toggle("active",active);
+    if(active)button.setAttribute("aria-current","true");
+    else button.removeAttribute("aria-current");
+  }
 }
 function resetWeather(){
   el.category.textContent="WX —";el.category.className="flight-category unknown";
@@ -76,112 +105,124 @@ function updateSelected(){
   const elevation=Number.isFinite(d.elevation)?d.elevation:(fallback&&fallback[2]);
   el.place.textContent=(city&&country?city+", "+country:city||country||"Location unavailable")+"  │  Elevation "+(Number.isFinite(elevation)?elevation.toLocaleString("en-US")+" ft":"unavailable");
   $("#chartsAirport").textContent=code;
+  if(!window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches){
+    for(const node of [el.name,el.place])node.animate?.([
+      {opacity:.65,transform:"translateY(5px)"},
+      {opacity:1,transform:"translateY(0)"}
+    ],{duration:280,easing:"cubic-bezier(.2,.8,.2,1)"});
+  }
   updateImage(code);resetWeather();void updateMetar(code);
 }
 function stopAnimation(){animationToken++;if(raf)cancelAnimationFrame(raf);raf=0;}
-function goIndex(index){
-  const indexWrapped=wrap(index);
-  if(selected===indexWrapped){centerOffset=0;paintTrack();return;}
-  selected=indexWrapped;centerOffset=0;paintTrack();updateSelected();
+function commitPosition(target){
+  const next=wrap(Math.round(target)),changed=selected!==next;
+  visualPos=next;selected=next;
+  paintTrack();
+  if(changed)updateSelected();
+}
+// Animated easing runs on an unwrapped floating airport index. This avoids
+// discrete index switches halfway through an animation (the old "name jump").
+function animateTo(target,duration){
+  stopAnimation();
+  const origin=visualPos,begin=performance.now(),token=animationToken;
+  const reduced=window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+  if(reduced){commitPosition(target);return;}
+  const distance=Math.abs(target-origin);
+  const ms=duration??clamp(210+distance*67,225,720);
+  function frame(t){
+    if(token!==animationToken)return;
+    const p=clamp((t-begin)/ms,0,1);
+    const ease=1-Math.pow(1-p,3);
+    visualPos=origin+(target-origin)*ease;
+    paintTrack();
+    if(p<1)raf=requestAnimationFrame(frame);
+    else {raf=0;commitPosition(target);}
+  }
+  raf=requestAnimationFrame(frame);
 }
 function centerOn(target,animated){
-  if(!animated){stopAnimation();goIndex(target);return;}
-  const delta=target-selected;
-  if(!delta){settle();return;}
-  changeBy(delta);
+  const index=wrap(target);
+  const delta=wrappedDelta(index,visualPos);
+  if(animated)animateTo(visualPos+delta);
+  else {stopAnimation();commitPosition(index);}
 }
-function settle(){
-  const delta=Math.round(centerOffset);
-  // centerOffset represents dragged displacement in units, final selected index is shifted oppositely.
-  goIndex(selected+delta);
+function changeBy(steps){
+  if(!Number.isFinite(steps)||!steps)return;
+  animateTo(visualPos+clamp(Math.round(steps),-8,8));
 }
-function animateGlide(targetOffset,duration){
-  stopAnimation();const token=animationToken,start=centerOffset,begin=performance.now();
-  function tick(time){
-    if(token!==animationToken)return;
-    const t=clamp((time-begin)/duration,0,1),ease=1-Math.pow(1-t,3);
-    centerOffset=start+(targetOffset-start)*ease;
-    // normalize during animation for large moves to keep centered slots populated
-    const carry=Math.trunc(centerOffset);
-    if(carry){selected=wrap(selected+carry);centerOffset-=carry;}
-    paintTrack();
-    if(t<1)raf=requestAnimationFrame(tick);
-    else {raf=0;const end=Math.round(centerOffset);const prev=selected;goIndex(selected+end);if(prev!==selected)updateSelected();else {paintTrack();}}
-  }
-  raf=requestAnimationFrame(tick);
-}
-function moveBy(steps){stopAnimation();centerOffset=0;paintTrack();goIndex(selected+steps)}
-function changeBy(steps){ // animated movement with direct-index wrap handling
-  stopAnimation();const start=selected;
-  const n=Math.abs(steps),dir=Math.sign(steps);
-  if(!n)return;
-  let from=0;const total=Math.min(n,8);const begin=performance.now(),duration=Math.min(560,180+total*45),token=animationToken;
-  function animate(time){
-    if(token!==animationToken)return;
-    const t=clamp((time-begin)/duration,0,1),v=dir*total*(1-Math.pow(1-t,3));
-    const shift=Math.trunc(v);selected=wrap(start+shift);centerOffset=v-shift;paintTrack();
-    if(t<1)raf=requestAnimationFrame(animate);else {selected=wrap(start+dir*total);centerOffset=0;paintTrack();updateSelected();raf=0;}
-  }
-  raf=requestAnimationFrame(animate);
-}
-// Gesture: finger and carousel move 1:1 while held. Release speed controls number of airports crossed.
+// Finger tracks the text one-for-one; a fast flick adds a bounded, damped glide
+// and the stop always snaps to a real airport position.
 function pointerDown(e){
-  if(e.button!==0 && e.pointerType==="mouse")return;
-  stopAnimation();gesture={id:e.pointerId,startX:e.clientX,lastX:e.clientX,lastT:performance.now(),history:[{x:e.clientX,t:performance.now()}],moved:false};
-  el.carousel.classList.add("dragging");el.carousel.setPointerCapture(e.pointerId);
+  if(e.button!==0&&e.pointerType==="mouse")return;
+  if(gesture)return;
+  stopAnimation();
+  const now=performance.now();
+  gesture={id:e.pointerId,startX:e.clientX,startPos:visualPos,
+    history:[{x:e.clientX,t:now}],moved:false};
+  el.carousel.classList.add("dragging");
+  // Leave native button click intact; capture only after an actual swipe.
 }
 function pointerMove(e){
   if(!gesture||gesture.id!==e.pointerId)return;
   const dx=e.clientX-gesture.startX;
-  if(Math.abs(dx)>5)gesture.moved=true;
+  if(Math.abs(dx)>5&&!gesture.moved){
+    gesture.moved=true;
+    try{el.carousel.setPointerCapture(e.pointerId)}catch(_){}
+  }
   if(!gesture.moved)return;
-  const now=performance.now();gesture.history.push({x:e.clientX,t:now});
-  gesture.history=gesture.history.filter(p=>now-p.t<=110);
-  const offset=dx/slotStep();
-  centerOffset=-offset; // moving left reveals later airports
-  const carry=Math.trunc(centerOffset);
-  if(carry){selected=wrap(selected+carry);centerOffset-=carry;gesture.startX+=-carry*slotStep();}
+  const now=performance.now();
+  gesture.history.push({x:e.clientX,t:now});
+  gesture.history=gesture.history.filter(item=>now-item.t<=120);
+  visualPos=gesture.startPos-dx/slotStep();
   paintTrack();
 }
 function pointerUp(e){
   if(!gesture||gesture.id!==e.pointerId)return;
-  const info=gesture;gesture=null;el.carousel.classList.remove("dragging");
-  try{el.carousel.releasePointerCapture(e.pointerId)}catch(_){}
-  if(!info.moved)return;
-  suppressTapUntil=performance.now()+200;
-  const now=performance.now(),recent=info.history.filter(p=>now-p.t<110),first=recent[0]||{x:info.startX,t:now-1},last=recent[recent.length-1]||{x:info.lastX,t:now};
-  const velocity=(last.x-first.x)/Math.max(12,last.t-first.t); // screen px per ms
-  const inertia=clamp((-velocity*270)/slotStep(),-5.5,5.5);
-  const total=clamp(centerOffset+inertia,-6.5,6.5);
-  const target=Math.round(total); // snap to airport corresponding to gesture velocity
-  changeByFromDrag(target);
-}
-function changeByFromDrag(n){
-  const startSelected=selected,startOffset=centerOffset,token=++animationToken;
-  const dest=clamp(n,-6,6),duration=clamp(180+Math.abs(dest-startOffset)*65,220,660),startTime=performance.now();
-  function frame(t){
-    if(token!==animationToken)return;
-    const p=clamp((t-startTime)/duration,0,1),x=startOffset+(dest-startOffset)*(1-Math.pow(1-p,3));
-    const whole=Math.trunc(x);
-    selected=wrap(startSelected+whole);centerOffset=x-whole;paintTrack();
-    if(p<1)raf=requestAnimationFrame(frame);else {selected=wrap(startSelected+dest);centerOffset=0;raf=0;paintTrack();updateSelected();}
+  const info=gesture;
+  gesture=null;
+  el.carousel.classList.remove("dragging");
+  if(info.moved){try{el.carousel.releasePointerCapture(e.pointerId)}catch(_){}}
+  if(!info.moved){
+    animateTo(Math.round(visualPos),200);
+    return;
   }
-  raf=requestAnimationFrame(frame);
+  suppressTapUntil=performance.now()+240;
+  const now=performance.now();
+  const points=info.history.filter(p=>now-p.t<=115);
+  const first=points[0]||{x:info.startX,t:now};
+  const last=points[points.length-1]||first;
+  const velocity=(last.x-first.x)/Math.max(15,last.t-first.t);
+  const projected=clamp(-velocity*240/slotStep(),-5.5,5.5);
+  const target=Math.round(visualPos+projected);
+  animateTo(target,clamp(215+Math.abs(target-visualPos)*70,220,690));
 }
 el.carousel.addEventListener("pointerdown",pointerDown);
 el.carousel.addEventListener("pointermove",pointerMove);
 el.carousel.addEventListener("pointerup",pointerUp);
-el.carousel.addEventListener("pointercancel",()=>{gesture=null;el.carousel.classList.remove("dragging");centerOffset=0;paintTrack()});
+el.carousel.addEventListener("pointercancel",()=>{
+  gesture=null;el.carousel.classList.remove("dragging");
+  animateTo(Math.round(visualPos),230);
+});
 el.carousel.addEventListener("dragstart",e=>e.preventDefault());
-el.carousel.addEventListener("wheel",e=>{if(Math.abs(e.deltaX)>Math.abs(e.deltaY)||e.shiftKey){e.preventDefault();changeBy(Math.sign(e.deltaX||e.deltaY));}},{passive:false});
+el.carousel.addEventListener("wheel",e=>{
+  if(Math.abs(e.deltaX)>Math.abs(e.deltaY)||e.shiftKey){
+    e.preventDefault();
+    const delta=e.deltaX||e.deltaY;
+    changeBy(Math.sign(delta)*clamp(Math.round(Math.abs(delta)/85),1,4));
+  }
+},{passive:false});
 el.carousel.addEventListener("keydown",e=>{
-  if(e.key==="ArrowLeft"||e.key==="ArrowRight"){e.preventDefault();changeBy(e.key==="ArrowRight"?1:-1)}
-  else if(e.key==="Home"){e.preventDefault();centerOn(0,false)}
-  else if(e.key==="End"){e.preventDefault();centerOn(codes.length-1,false)}
+  if(e.key==="ArrowLeft"||e.key==="ArrowRight"){
+    e.preventDefault();changeBy(e.key==="ArrowRight"?1:-1);
+  }else if(e.key==="Home"){
+    e.preventDefault();centerOn(0,true);
+  }else if(e.key==="End"){
+    e.preventDefault();centerOn(codes.length-1,true);
+  }
 });
 $("#prevAirport").addEventListener("click",()=>changeBy(-1));
 $("#nextAirport").addEventListener("click",()=>changeBy(1));
-window.addEventListener("resize",()=>{centerOffset=0;paintTrack()},{passive:true});
+window.addEventListener("resize",()=>paintTrack(),{passive:true});
 function showResults(){
  const value=el.search.value.trim().toUpperCase();el.results.replaceChildren();
  if(!value){el.results.hidden=true;return;}
@@ -263,9 +304,9 @@ async function boot(){
   codes=newCodes;
   const info=await fetch(ROOT+"data/airport-profiles.json",{cache:"no-store"});
   if(info.ok){const parsed=await info.json();metadata=parsed.airports||{}}
-  selected=Math.max(0,codes.indexOf("OIII"));centerOffset=0;
-  paintTrack();updateSelected();
- }catch(e){el.weatherStatus.textContent="Airport source unavailable: "+e.message;paintTrack();updateSelected();}
+  selected=Math.max(0,codes.indexOf("OIII"));visualPos=selected;
+  buildTrack();paintTrack();updateSelected();
+ }catch(e){el.weatherStatus.textContent="Airport source unavailable: "+e.message;buildTrack();paintTrack();updateSelected();}
 }
 void boot();
 })();

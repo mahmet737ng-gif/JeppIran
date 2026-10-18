@@ -106,6 +106,7 @@ jobs:
           export JEPPIRAN_CHROME_BIN="$(command -v google-chrome)"
           test -n "$JEPPIRAN_CHROME_BIN"
           node scripts/verify_aircraft_marker_browser.cjs
+          node scripts/verify_airport_carousel_browser.cjs
 
       - name: Verify additive OICK V2 source georeferencing
         run: node --test web/tests/oick-v2-georef.test.cjs
