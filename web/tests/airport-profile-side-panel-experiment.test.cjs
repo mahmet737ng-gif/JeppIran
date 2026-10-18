@@ -17,8 +17,8 @@ test("the reversible side-panel experiment is scoped only to Mehrabad",()=>{
 test("the experiment loads after poster rendering and preserves other airports",()=>{
   const html=read("web/index.html");
   const css=read("web/airport-profile-side-panel-experiment.css");
-  assert.ok(html.indexOf("airport-profile-posters.js")<html.indexOf("airport-profile-side-panel-experiment.js"));
-  assert.match(html,/airport-profile-side-panel-experiment\.css\?v=2621-oiii-side-panel-exp-r1/);
+  assert.doesNotMatch(html,/src="\.\/airport-profile-side-panel-experiment\.js/);
+  assert.doesNotMatch(html,/href="\.\/airport-profile-side-panel-experiment\.css/);
   assert.doesNotMatch(html,/airport-runway-schematics/);
   assert.match(css,/jp-side-panel-experiment\.jp-side-panel-collapsed/);
   assert.match(css,/@media\(max-width:720px\)/);

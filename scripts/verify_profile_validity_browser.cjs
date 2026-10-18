@@ -160,6 +160,27 @@ async function waitForServer(){
     return {outer:rect(outer),frame:rect(frame),cap:rect(cap),overflow:getComputedStyle(outer).overflowY,
       scrolled:outer.scrollHeight>outer.clientHeight+3};
   });
+  // Visual contract of the owner-selected concept #2 (not just valid DOM).
+  const concept2=await page.evaluate(()=>{
+    const root=document.querySelector("#airportProfile");
+    const bar=root.querySelector(":scope > .jp-o3-topbar");
+    const caption=root.querySelector(".jp-poster-caption");
+    const bb=bar.getBoundingClientRect(),cb=caption.getBoundingClientRect();
+    return {bar:bb.toJSON(),caption:cb.toJSON(),
+      oldToggle:root.querySelectorAll(".jp-side-panel-toggle").length,
+      oldSidebar:root.classList.contains("jp-side-panel-experiment"),
+      moduleCount:root.querySelectorAll(".jp-o3-shortcuts .jp-o3-control").length,
+      raw:root.querySelector(".jp-o3-metar .jp-o3-action-detail")?.textContent||""};
+  });
+  assert.equal(concept2.oldToggle,0,"legacy OIII side-tab must not obstruct the photo");
+  assert.equal(concept2.oldSidebar,false,"no old side-panel experiment should be active");
+  assert.equal(concept2.moduleCount,7,"the selected top strip keeps seven quick modules");
+  assert.ok(concept2.bar.height>75 && concept2.bar.height<165,
+    "design 2 must be a compact floating ribbon, not tall stacked cards: "+JSON.stringify(concept2));
+  assert.ok(concept2.bar.left>=concept2.caption.right-30,
+    "top ribbon must not cover OIII/THR title: "+JSON.stringify(concept2));
+  assert.ok(concept2.raw.trim().length>5,"real METAR must appear in compact header");
+  console.log("PASS OIII design-2 compact ribbon layout",JSON.stringify(concept2));
   const scenicPaint=await page.evaluate(()=>{
     const root=document.querySelector("#airportProfile");
     const frame=root.querySelector(".jp-poster-frame");

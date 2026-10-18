@@ -19,11 +19,13 @@ test("topbar scripts deploy after approved posters and old side panel remains re
  const html=read("web/index.html"),sw=read("web/service-worker.js");
  const side=read("web/airport-profile-side-panel-experiment.js");
  for(const file of ["airport-profile-topbar-experiment.css","airport-profile-topbar-experiment.js"]){
-  const rev=file.endsWith(".css")?"r2":"r1";
+  const rev=file.endsWith(".css")?"r3":"r1";
   assert.ok(html.includes(file+"?v=2621-oiii-topbar-design2-"+rev));
   assert.ok(sw.includes(file+"?v=2621-oiii-topbar-design2-"+rev));
  }
  assert.ok(html.indexOf("airport-profile-posters.js")<html.indexOf("airport-profile-topbar-experiment.js"));
- assert.ok(html.indexOf("airport-profile-topbar-experiment.js")<html.indexOf("airport-profile-side-panel-experiment.js"));
+ assert.doesNotMatch(html,/src="\.\/airport-profile-side-panel-experiment\.js/);
+ assert.doesNotMatch(html,/href="\.\/airport-profile-side-panel-experiment\.css/);
+ assert.match(css,/grid-template-columns:repeat\(7,minmax\(0,1fr\)\)!important/);
  assert.match(side,/!root\.classList\.contains\("jp-o3-topbar-experiment"\)/);
 });
