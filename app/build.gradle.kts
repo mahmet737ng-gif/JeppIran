@@ -45,7 +45,7 @@ android {
         minSdk = 24
         targetSdk = 36
         versionCode = ciVersionCode
-        versionName = if (isPhonePreview) "V2621-phone-qa" else ciVersionName
+        versionName = if (isPhonePreview) "29.3 Carousel TEST" else ciVersionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }

@@ -7,6 +7,7 @@ import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
 import android.os.SystemClock
+import android.util.Log
 import android.widget.Toast
 import android.view.View
 import android.webkit.CookieManager
@@ -203,6 +204,18 @@ class MobileWebActivity : AppCompatActivity() {
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 progress.visibility = View.GONE
+                // QA build self-check: verify actual visible landing frame, not
+                // just files included in an APK artifact.
+                if (packageName.endsWith(".phoneqa")) {
+                    val isPreview = url?.contains("/preview/airport-carousel-r5/") == true
+                    browser.evaluateJavascript(
+                        "(function(){return !!(document.querySelector('.procedure-categories') && " +
+                            "document.documentElement.classList.contains('jp-android-carousel-qa'))})()"
+                    ) { rendered ->
+                        Log.i("JeppIranCarouselQA",
+                            "previewLanding=" + isPreview + " renderedCarousel=" + rendered)
+                    }
+                }
                 // Android skin is linked in the local HTML before rendering.
                 // No site load, browser cache or service worker is involved.
             }

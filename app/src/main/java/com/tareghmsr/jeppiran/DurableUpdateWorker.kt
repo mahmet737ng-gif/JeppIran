@@ -32,6 +32,9 @@ object DurableUpdateQueue {
     fun enqueue(context: Context, type: String) {
         require(type in types)
         val app = context.applicationContext
+        // KEEP must also preserve the stored progress/pause state. Otherwise
+        // reopening Updates and tapping again could reset a live job to 0%.
+        if (state(app, type) in setOf("queued", "running", "paused")) return
         val request = OneTimeWorkRequestBuilder<DurableUpdateWorker>()
             .setInputData(workDataOf("type" to type))
             .setConstraints(Constraints.Builder()

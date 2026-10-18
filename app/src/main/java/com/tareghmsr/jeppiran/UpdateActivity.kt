@@ -161,26 +161,27 @@ class UpdateActivity : AppCompatActivity() {
         }
 
         content.addView(TextView(this).apply {
-            text = "UPDATES"
-            textSize = 27f
+            text = "JEPPIRAN  /  UPDATES"
+            textSize = 24f
             typeface = Typeface.DEFAULT_BOLD
             setTextColor(primaryTextColor())
         })
 
         content.addView(TextView(this).apply {
-            text = "Terminal Charts, Enroute Data and Application updates are separate. Downloads continue when you leave this page."
+            text = "TERMINAL CHARTS  ·  ENROUTE DATA  ·  APPLICATION\nDownloads continue outside this page. Pause or resume any active transfer below."
             textSize = 13f
             setTextColor(secondaryTextColor())
             setPadding(0, 5.dp, 0, 18.dp)
         })
 
-        addSectionTitle(content, "TERMINAL CHARTS")
+        val terminalCard = updateSectionCard()
+        addSectionTitle(terminalCard, "TERMINAL CHARTS")
 
         dataStatus = statusCard("Checking available Terminal Charts…")
-        content.addView(dataStatus)
+        terminalCard.addView(dataStatus)
 
         dataDetails = detailCard("Checking cycle validity…")
-        content.addView(
+        terminalCard.addView(
             dataDetails,
             LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -193,18 +194,18 @@ class UpdateActivity : AppCompatActivity() {
         }.apply {
             isEnabled = false
         }
-        content.addView(dataUpdateButton, buttonParams(12))
+        terminalCard.addView(dataUpdateButton, buttonParams(12))
         dataPauseButton = actionButton("PAUSE DOWNLOAD") {
             DurableUpdateQueue.togglePause(this, DurableUpdateQueue.TERMINAL)
             showBackgroundDownloadStatus()
         }.apply { visibility = android.view.View.GONE }
-        content.addView(dataPauseButton, buttonParams(5))
+        terminalCard.addView(dataPauseButton, buttonParams(5))
         dataProgress = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
             max = 100
             progress = 0
             visibility = android.view.View.GONE
         }
-        content.addView(dataProgress, LinearLayout.LayoutParams(
+        terminalCard.addView(dataProgress, LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT, 9.dp).apply { topMargin = 8.dp })
 
         viewChangesButton = actionButton("VIEW ACTIVE CYCLE CHANGES") {
@@ -220,16 +221,18 @@ class UpdateActivity : AppCompatActivity() {
                     .allChangedAirports(this@UpdateActivity)
                     .isNotEmpty()
         }
-        content.addView(viewChangesButton, buttonParams(8))
+        terminalCard.addView(viewChangesButton, buttonParams(8))
 
-        addSectionTitle(content, "ENROUTE DATA", 24)
+        content.addView(terminalCard, sectionCardParams(10))
+        val enrouteCard = updateSectionCard()
+        addSectionTitle(enrouteCard, "ENROUTE DATA", 0)
 
         enrouteStatus =
             statusCard(
                 "Checking available Enroute Data…"
             )
 
-        content.addView(
+        enrouteCard.addView(
             enrouteStatus
         )
 
@@ -238,7 +241,7 @@ class UpdateActivity : AppCompatActivity() {
                 "Checking Enroute validity…"
             )
 
-        content.addView(
+        enrouteCard.addView(
             enrouteDetails,
             LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -259,7 +262,7 @@ class UpdateActivity : AppCompatActivity() {
                     false
             }
 
-        content.addView(
+        enrouteCard.addView(
             enrouteUpdateButton,
             buttonParams(12)
         )
@@ -267,37 +270,50 @@ class UpdateActivity : AppCompatActivity() {
             DurableUpdateQueue.togglePause(this, DurableUpdateQueue.ENROUTE)
             showBackgroundDownloadStatus()
         }.apply { visibility = android.view.View.GONE }
-        content.addView(enroutePauseButton, buttonParams(5))
+        enrouteCard.addView(enroutePauseButton, buttonParams(5))
         enrouteProgress = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
             max = 100
             visibility = android.view.View.GONE
         }
-        content.addView(enrouteProgress, LinearLayout.LayoutParams(
+        enrouteCard.addView(enrouteProgress, LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT, 9.dp).apply { topMargin = 8.dp })
 
-        addSectionTitle(content, "APPLICATION", 24)
+        content.addView(enrouteCard, sectionCardParams(14))
+        val appCard = updateSectionCard()
+        addSectionTitle(appCard, "APPLICATION", 0)
 
         appStatus = statusCard("Checking application version…")
-        content.addView(appStatus)
+        appCard.addView(appStatus)
 
         appUpdateButton = actionButton("UPDATE APP") {
             installAppUpdate()
         }.apply {
             isEnabled = false
         }
-        content.addView(appUpdateButton, buttonParams(12))
+        appCard.addView(appUpdateButton, buttonParams(12))
         appPauseButton = actionButton("PAUSE DOWNLOAD") {
             DurableUpdateQueue.togglePause(this, DurableUpdateQueue.APPLICATION)
             showBackgroundDownloadStatus()
         }.apply { visibility = android.view.View.GONE }
-        content.addView(appPauseButton, buttonParams(5))
+        appCard.addView(appPauseButton, buttonParams(5))
         appProgress = ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal).apply {
             max = 100
             progress = 0
             visibility = android.view.View.GONE
         }
-        content.addView(appProgress, LinearLayout.LayoutParams(
+        appCard.addView(appProgress, LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT, 9.dp).apply { topMargin = 8.dp })
+
+        content.addView(appCard, sectionCardParams(14))
+
+        val backgroundNotice = TextView(this).apply {
+            text = "BACKGROUND DOWNLOADS ENABLED"
+            textSize = 11f
+            setTextColor(Color.rgb(104, 216, 252))
+            typeface = Typeface.DEFAULT_BOLD
+            setPadding(4.dp, 18.dp, 4.dp, 0)
+        }
+        content.addView(backgroundNotice)
 
         checkButton = actionButton("CHECK ALL UPDATES") {
             checkAllUpdates()
@@ -743,6 +759,19 @@ class UpdateActivity : AppCompatActivity() {
             connection?.disconnect()
         }
     }
+
+    private fun updateSectionCard(): LinearLayout =
+        LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(15.dp, 12.dp, 15.dp, 16.dp)
+            background = cardBackground()
+        }
+
+    private fun sectionCardParams(topMarginDp: Int): LinearLayout.LayoutParams =
+        LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        ).apply { topMargin = topMarginDp.dp }
 
     private fun addSectionTitle(
         parent: LinearLayout,

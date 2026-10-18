@@ -22,7 +22,8 @@ async function ready(){
   assert.match(local,/press Back again to exit/,"Native must never exit from a single Back");
   assert.match(local,/lastQaBackPress/);
   const manifest=fs.readFileSync(path.join(root,"app/src/main/AndroidManifest.xml"),"utf8");
-  assert.match(manifest,/JeppIran Carousel QA/);
+  assert.match(manifest,/JeppIran Carousel TEST/);
+  assert.match(manifest,/jeppiran_carousel_qa_icon/);
   const build=fs.readFileSync(path.join(root,"app/build.gradle.kts"),"utf8");
   assert.match(build,/com\.tareghmsr\.jeppiran\.phoneqa/);
   await ready();
