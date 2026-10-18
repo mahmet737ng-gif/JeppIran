@@ -180,7 +180,21 @@ class MobileWebActivity : AppCompatActivity() {
                 }
                 if (url.scheme == "https" &&
                     url.host == appHost && url.path.orEmpty().startsWith(appPath)
-                ) return false
+                ) {
+                    // The QA top frame may NEVER fall into the Classic airport
+                    // home, even through a stale link. Embedded Classic iframe
+                    // requests are subframes and remain allowed.
+                    if (packageName.endsWith(".phoneqa") &&
+                        request.isForMainFrame &&
+                        !url.path.orEmpty().startsWith(
+                            appPath + "preview/airport-carousel-r5/"
+                        )
+                    ) {
+                        view?.loadUrl(appUrl)
+                        return true
+                    }
+                    return false
+                }
                 if (request.isForMainFrame && url.scheme == "https") {
                     startActivity(Intent(Intent.ACTION_VIEW, url))
                 }
