@@ -425,7 +425,11 @@ async function boot(){
     const manifest=await fetchJsonTimed(ROOT+"data/charts-manifest.json",9500);
     const newCodes=Object.keys(manifest?.airports||{}).sort();
     if(!newCodes.length)throw Error("Empty airport list");
-    codes=newCodes;refreshCatalogView();
+    const selectedIcao=current();
+    codes=newCodes;
+    selected=Math.max(0,codes.indexOf(selectedIcao));
+    visualPos=selected;
+    buildTrack();paintTrack();updateSelected();
   }catch(error){
     console.warn("Carousel preview using built-in airport labels",error);
     // The fallback airport selector stays functional without metadata.
