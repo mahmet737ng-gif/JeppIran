@@ -785,3 +785,72 @@ html.jp-android-carousel-qa .qa-updates-link:hover{
  html.jp-android-carousel-qa .qa-updates-link{font-size:10px;padding:7px}
  html.jp-android-carousel-qa .topline .preview-mark{font-size:9px!important;padding:4px!important}
 }
+
+
+/* Android R8: compact selectable airport/STAR/SID/AIRPORT/APP rail.
+   Keep the Classic chart contents untouched until the user opens fullscreen. */
+.procedure-tools[hidden],.procedure-search-label[hidden],#procedureCount[hidden],
+#procedureSearch[hidden],#collapseProcedure[hidden]{display:none!important}
+.procedure-zone{margin:0 auto 6px!important}
+.procedure-categories{gap:3px!important;padding:3px!important;min-height:47px!important}
+.category-shell{min-width:52px!important}
+.category-shell>.procedure-category{width:52px!important;flex-basis:52px!important;min-height:43px!important;padding:3px!important}
+.category-shell.active>.procedure-category{min-height:75px!important}
+.category-shell .procedure-details.open{
+  height:77px!important;max-height:77px!important;padding:2px!important
+}
+.category-shell .procedure-tools{display:none!important}
+.category-shell .procedure-wheel-row,.category-shell .procedure-wheel{height:69px!important}
+.category-shell .procedure-token{height:62px!important;min-height:62px!important;padding:3px 4px!important}
+.category-shell .procedure-token .procedure-title{font-size:var(--procedure-title-size,11px)!important;line-height:1.15!important}
+.category-shell .procedure-arrow{height:33px!important;font-size:23px!important}
+.selected-airport{margin-top:2px!important}
+.actions .hint{display:none!important}
+.preview-fullscreen-tools{display:none}
+.preview-fullscreen-tools button{
+  min-width:47px;height:41px;border-radius:9px;
+  background:rgba(14,33,48,.8);border:1px solid rgba(220,240,250,.38);
+  color:#fff;font-size:24px;font-weight:700;backdrop-filter:blur(6px)
+}
+.preview-fullscreen-tools #previewCdfaBtn{font-size:13px;letter-spacing:.02em}
+.preview-fullscreen-tools button[hidden]{display:none!important}
+body.preview-chart-fullscreen{overflow:hidden!important}
+body.preview-chart-fullscreen .classic-viewer-host{
+  display:flex!important;position:fixed!important;inset:0!important;
+  width:100vw!important;height:100dvh!important;min-height:100dvh!important;
+  max-height:none!important;max-width:none!important;
+  margin:0!important;border:0!important;border-radius:0!important;
+  z-index:9999!important;background:#000!important
+}
+body.preview-chart-fullscreen .preview-fullscreen-tools{
+  position:absolute;display:flex!important;right:10px;top:calc(env(safe-area-inset-top, 0px) + 9px);
+  gap:8px;z-index:10002;pointer-events:auto
+}
+html.jp-android-carousel-qa .qa-updates-link{display:none!important}
+@media(max-width:690px){
+  .carousel-region{height:130px!important;margin-top:2px!important}
+  .airport-token{min-height:98px!important;gap:1px!important}
+  .airport-token .icao{font-weight:800!important;line-height:1.01!important;letter-spacing:-.045em!important}
+  .airport-token .iata{line-height:1.05!important;font-weight:750!important}
+  .airport-token::before,.airport-token::after{height:58%!important;top:21%!important;bottom:auto!important}
+  .procedure-zone{width:calc(100vw - 14px)!important;margin:0 auto 5px!important}
+  .procedure-categories{width:100%!important;gap:2px!important;padding:2px!important;scrollbar-width:none!important}
+  .category-shell{min-width:44px!important}
+  .category-shell.active{flex:0 0 calc(100vw - 161px)!important;min-width:calc(100vw - 161px)!important}
+  .category-shell>.procedure-category{width:44px!important;flex-basis:44px!important;font-size:10px!important}
+  .category-shell.active>.procedure-category{min-height:77px!important}
+  .category-shell .procedure-details.open{height:77px!important;max-height:77px!important}
+  .category-shell .procedure-wheel-row,.category-shell .procedure-wheel{height:70px!important}
+  .category-shell .procedure-token{height:63px!important;min-height:63px!important}
+  body.chart-selected .carousel-region{height:59px!important;margin:0 auto!important}
+  body.chart-selected .airport-token{min-height:46px!important}
+  body.chart-selected .procedure-categories{min-height:43px!important}
+  body.chart-selected .category-shell.active>.procedure-category{min-height:69px!important}
+  body.chart-selected .category-shell .procedure-details.open{height:69px!important;max-height:69px!important}
+  body.chart-selected .category-shell .procedure-wheel-row,
+  body.chart-selected .category-shell .procedure-wheel{height:62px!important}
+  body.chart-selected .category-shell .procedure-token{height:56px!important;min-height:56px!important}
+  html.jp-android-carousel-qa .topline{justify-content:space-between!important}
+  html.jp-android-carousel-qa .topline .brand{position:relative;z-index:3;margin-left:0!important}
+  html.jp-android-carousel-qa .topline .qa-updates-link{display:none!important}
+}
