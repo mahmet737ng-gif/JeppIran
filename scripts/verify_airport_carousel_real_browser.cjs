@@ -7,7 +7,8 @@ const path=require("node:path");
 const fs=require("node:fs");
 const {chromium}=require("playwright");
 const port=18927;
-const base="http://127.0.0.1:"+port+"/preview/airport-carousel-r13/";
+const base="http://127.0.0.1:"+port+"/preview/airport-carousel-r13-fixed/";
+const oldBase="http://127.0.0.1:"+port+"/preview/airport-carousel-r13/";
 const server=spawn("python3",["-m","http.server",String(port),"--bind","127.0.0.1","--directory","web"],{cwd:path.resolve(__dirname,".."),stdio:"ignore"});
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 (async()=>{
@@ -123,7 +124,7 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
    assert.ok(!missingImageHtml.includes('id="miniChartImage"'));
    await stalePage.route("**/preview/airport-carousel-r13/",route=>
      route.fulfill({status:200,contentType:"text/html; charset=utf-8",body:missingImageHtml}));
-   await stalePage.goto(base,{waitUntil:"domcontentloaded"});
+   await stalePage.goto(oldBase,{waitUntil:"domcontentloaded"});
    await stalePage.waitForFunction(()=>document.querySelectorAll(".airport-token").length===78);
    assert.equal(await stalePage.locator("#miniChartImage").count(),1,
      "New JS must repair missing preview image element from cached old HTML");
@@ -138,6 +139,6 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
    console.log("PASS mixed-version R13 regression: cached old HTML, new JS, OIKM chart list and image preview");
    await stalePage.close();
    assert.ok(errors.filter(x=>/ReferenceError|SyntaxError|TypeError|404/.test(x)).length===0,errors.join("; "));
-   console.log("PASS FINAL R13: all 78 airports even without manifest; fast JPEG chart preview; no PDF on swipe; iPad geometry; Classic only on tap");
+   console.log("PASS FINAL R13 FIXED: fresh URL 78 airports, real JPEG, no PDF swipe, iPad geometry, Classic tap, cached old HTML resilient");
  }finally{if(browser)await browser.close();server.kill("SIGTERM")}
 })().catch(err=>{console.error(err);process.exitCode=1});
