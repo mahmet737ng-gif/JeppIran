@@ -36,6 +36,40 @@ const wrappedDelta=(index,position)=>{
 };
 const smoothstep=t=>t*t*(3-2*t);
 let suppressTapUntil=0;
+let displayedProfileCode="",profileMetarTimer=0;
+const profilePanel=$(".selected-airport");
+// Weather is fetched only after the carousel has settled; transient airports
+// still update their name, city, elevation and approved imagery immediately.
+function planProfileWeather(code){
+  clearTimeout(profileMetarTimer);
+  ++metarRequest;
+  profileMetarTimer=setTimeout(()=>{
+    if(displayedProfileCode===code&&!document.body.classList.contains("has-chart-preview")&&
+       !document.body.classList.contains("chart-selected")){
+      void updateMetar(code);
+    }
+  },380);
+}
+function renderAirportProfile(code,force=false){
+  if(!force&&code===displayedProfileCode)return;
+  displayedProfileCode=code;
+  const d=getProfile(code),fallback=fallbackNames[code];
+  el.name.textContent=d.name||fallback?.[0]||code+" Airport";
+  const city=d.city||fallback?.[1]?.split(",")[0]||"";
+  const country=d.country||fallback?.[1]?.split(",").slice(1).join(",").trim()||"";
+  const elevation=Number.isFinite(d.elevation)?d.elevation:fallback?.[2];
+  el.place.textContent=(city&&country?city+", "+country:city||country||"Location unavailable")+
+    "  │  Elevation "+(Number.isFinite(elevation)?elevation.toLocaleString("en-US")+" ft":"unavailable");
+  profilePanel.dataset.profileAirport=code;
+  updateImage(code);
+  resetWeather();
+  planProfileWeather(code);
+}
+function beginAirportBrowsing(){
+  if(activeChartCategory)closeProcedureCategory();
+  else if(document.body.classList.contains("has-chart-preview")||
+          document.body.classList.contains("chart-selected"))hideInlineChart();
+}
 function makeAirportButton(index){
   const code=getCode(index),data=getProfile(code),button=document.createElement("button");
   button.type="button";button.className="airport-token";
@@ -88,6 +122,9 @@ function paintTrack(){
     if(active)button.setAttribute("aria-current","true");
     else button.removeAttribute("aria-current");
   }
+  // Render the profile of whichever ICAO is passing through the center,
+  // not merely the final snap destination.
+  renderAirportProfile(getCode(mid));
 }
 function resetWeather(){
   el.category.textContent="WX —";el.category.className="flight-category unknown";
@@ -105,26 +142,13 @@ function updateImage(code){
   img.src=artwork(code);
 }
 function updateSelected(){
-  const code=current(),d=getProfile(code),fallback=fallbackNames[code];
-  el.name.textContent=d.name||(fallback&&fallback[0])||code+" Airport";
-  const city=d.city||fallback&&fallback[1]?.split(",")[0]||"",country=d.country||fallback&&fallback[1]?.split(",").slice(1).join(",").trim()||"";
-  const elevation=Number.isFinite(d.elevation)?d.elevation:(fallback&&fallback[2]);
-  el.place.textContent=(city&&country?city+", "+country:city||country||"Location unavailable")+"  │  Elevation "+(Number.isFinite(elevation)?elevation.toLocaleString("en-US")+" ft":"unavailable");
-  // Chart tabs live below ICAO in R3, not in a separate lower dock.
-  if(!window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches){
-    for(const node of [el.name,el.place])node.animate?.([
-      {opacity:.65,transform:"translateY(5px)"},
-      {opacity:1,transform:"translateY(0)"}
-    ],{duration:280,easing:"cubic-bezier(.2,.8,.2,1)"});
-  }
-  // This page selects charts, not METAR observations. Keep the approved poster;
-  // weather belongs to the separate Classic chart and WX views.
-  updateImage(code);
+  renderAirportProfile(current());
   if(activeChartCategory)void refreshProcedureCategory(activeChartCategory);
 }
 function stopAnimation(){animationToken++;if(raf)cancelAnimationFrame(raf);raf=0;}
 function commitPosition(target){
   const next=wrap(Math.round(target)),changed=selected!==next;
+  if(changed)beginAirportBrowsing();
   visualPos=next;selected=next;
   paintTrack();
   if(changed)updateSelected();
@@ -137,6 +161,7 @@ function animateTo(target,duration){
   const reduced=window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
   if(reduced){commitPosition(target);return;}
   const distance=Math.abs(target-origin);
+  if(distance>.01)beginAirportBrowsing();
   const ms=duration??clamp(210+distance*67,225,720);
   function frame(t){
     if(token!==animationToken)return;
@@ -153,7 +178,7 @@ function centerOn(target,animated){
   const index=wrap(target);
   const delta=wrappedDelta(index,visualPos);
   if(animated)animateTo(visualPos+delta);
-  else {stopAnimation();commitPosition(index);}
+  else {stopAnimation();if(Math.abs(delta)>.01)beginAirportBrowsing();commitPosition(index);}
 }
 function changeBy(steps){
   if(!Number.isFinite(steps)||!steps)return;
@@ -176,6 +201,7 @@ function pointerMove(e){
   const dx=e.clientX-gesture.startX;
   if(Math.abs(dx)>5&&!gesture.moved){
     gesture.moved=true;
+    beginAirportBrowsing();
     try{el.carousel.setPointerCapture(e.pointerId)}catch(_){}
   }
   if(!gesture.moved)return;
@@ -662,6 +688,8 @@ function showMiniChart(item){
   if(!item||!validProcedure(item)){
     cancelMiniDraw();miniItem=null;miniKey="";
     miniHost.hidden=true;miniImage.hidden=true;
+    document.body.classList.remove("has-chart-preview");
+    planProfileWeather(displayedProfileCode);
     return;
   }
   const key=item.airport+":"+Number(item.page);
@@ -672,6 +700,8 @@ function showMiniChart(item){
   classicHost.hidden=true;classicRequested=null;
   document.body.classList.remove("chart-selected","preview-chart-fullscreen");
   miniHost.hidden=false;
+  document.body.classList.add("has-chart-preview");
+  ++metarRequest;clearTimeout(profileMetarTimer);
   $("#miniChartContext").textContent=item.airport+" · "+activeChartCategory+" · "+(item.chart_number||"");
   $("#miniChartTitle").textContent=item.name||"Chart "+item.page;
   miniStatus.hidden=false;miniStatus.textContent="Loading chart preview…";
@@ -774,7 +804,8 @@ function displayFocusedChart(){
 function hideInlineChart(){
   cancelMiniDraw();miniKey="";miniItem=null;miniHost.hidden=true;
   miniCanvas.hidden=true;miniImage.hidden=true;
-  document.body.classList.remove("preview-chart-fullscreen");
+  document.body.classList.remove("has-chart-preview","preview-chart-fullscreen");
+  planProfileWeather(displayedProfileCode);
   $("#previewCdfaBtn").hidden=true;
   classicFrame.contentWindow?.postMessage({type:"JEPPIRAN_PREVIEW_EXIT_FULLSCREEN_V1"},location.origin);
   classicRequested=null;
@@ -794,6 +825,8 @@ function dispatchClassicSelection(){
 }
 function showInlineChart(item){
   cancelMiniDraw();miniHost.hidden=true;miniKey="";miniImage.hidden=true;
+  document.body.classList.add("has-chart-preview");
+  ++metarRequest;clearTimeout(profileMetarTimer);
   if(previewSelectionFrame)cancelAnimationFrame(previewSelectionFrame);
   previewSelectionFrame=0;
   if(!item||!validProcedure(item)){
@@ -857,6 +890,7 @@ function refreshCatalogView(){
   stopAnimation();
   selected=Math.max(0,codes.indexOf(was));
   visualPos=selected;
+  displayedProfileCode="";
   buildTrack();paintTrack();updateSelected();
 }
 async function boot(){
