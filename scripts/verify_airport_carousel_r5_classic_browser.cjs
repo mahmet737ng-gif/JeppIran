@@ -58,6 +58,12 @@ async function ready(){for(let i=0;i<70;i++){try{if((await fetch(url)).ok)return
    await page.goto(url,{waitUntil:"domcontentloaded"});
    await page.waitForFunction(()=>document.querySelectorAll(".airport-token").length===12);
    assert.equal(await page.locator(".airport-token.active").getAttribute("data-airport"),"OIII");
+   // R10 search: strongest result is centered on EVERY input change, not only Enter.
+   assert.ok(await page.locator("#airportSearch").isVisible(),"Search must not be hidden by compact CSS");
+   await page.locator("#airportSearch").fill("OIKK");
+   await page.waitForFunction(()=>document.querySelector(".airport-token.active")?.dataset.airport==="OIKK");
+   await page.locator("#airportSearch").fill("THR");
+   await page.waitForFunction(()=>document.querySelector(".airport-token.active")?.dataset.airport==="OIII");
    assert.equal(await page.locator("#classicViewerHost").isHidden(),true);
    await page.locator('.procedure-category[data-category="STAR"]').click();
    await page.waitForFunction(()=>document.querySelectorAll(".procedure-token").length===2);
