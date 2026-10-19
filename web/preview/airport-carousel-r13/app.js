@@ -598,9 +598,26 @@ if(typeof ResizeObserver!=="undefined"){
 const classicHost=$("#classicViewerHost"),classicFrame=$("#classicViewerFrame");
 const classicStatus=$("#classicViewerStatus");
 let classicReady=false,classicRequested=null,classicConfirmedKey="",classicLoadStarted=false;
-const miniHost=$("#miniChartPreview"),miniCanvas=$("#miniChartCanvas"),miniImage=$("#miniChartImage");
-const thumbWarmCache=new Map();
+const miniHost=$("#miniChartPreview"),miniCanvas=$("#miniChartCanvas");
 const miniStatus=$("#miniChartStatus"),miniTap=$("#miniPreviewTap");
+// Earlier R13 HTML revisions shipped without #miniChartImage. A previously
+// cached document can legitimately load a newer JS bundle. Repair that DOM
+// mismatch in-place before any category/preview callback executes.
+function ensureMiniChartImage(){
+  let img=$("#miniChartImage");
+  if(img)return img;
+  img=document.createElement("img");
+  img.id="miniChartImage";
+  img.hidden=true;
+  img.alt="Preview of selected published chart";
+  img.decoding="async";
+  img.style.cssText="display:block;max-width:100%;max-height:100%;width:auto;height:auto;object-fit:contain";
+  if(miniTap)miniTap.insertBefore(img,miniCanvas||miniTap.firstChild);
+  else miniHost?.append(img);
+  return img;
+}
+const miniImage=ensureMiniChartImage();
+const thumbWarmCache=new Map();
 let miniItem=null,miniKey="",miniToken=0,miniTimer=0,miniRenderTask=null;
 let miniLibraryPromise=null,miniPdfCache=new Map();
 function cancelMiniDraw(){
