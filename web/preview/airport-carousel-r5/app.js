@@ -16,6 +16,7 @@ const carouselButtons=new Map();
 let chartManifest=null,charts=null,wxCache=null,wxCacheAt=0,metarRequest=0;
 let chartCatalogPromise=null,activeChartCategory=null,chartSheetToken=0,activeChartRows=[];
 let chartVisualPos=0,chartSelected=0,chartFrame=0,chartToken=0,chartGesture=null,chartSearchRows=[];
+let previewQueuedIndex=-1,previewSelectionFrame=0;
 const chartButtons=new Map();
 const wrap=i=>(i%codes.length+codes.length)%codes.length;
 const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
@@ -232,8 +233,21 @@ window.addEventListener("resize",()=>paintTrack(),{passive:true});
 function showResults(){
  const value=el.search.value.trim().toUpperCase();el.results.replaceChildren();
  if(!value){el.results.hidden=true;return;}
- const matches=codes.filter(c=>c.includes(value)||String(getProfile(c).iata||fallbackIata[c]||"").toUpperCase().includes(value)||String(getProfile(c).name||"").toUpperCase().includes(value)).slice(0,12);
+ const matchRank=code=>{
+   const icao=code.toUpperCase(),iata=String(getProfile(code).iata||fallbackIata[code]||"").toUpperCase();
+   const name=String(getProfile(code).name||"").toUpperCase();
+   if(icao===value||iata===value)return 0;
+   if(icao.startsWith(value))return 1;
+   if(iata.startsWith(value))return 2;
+   if(name.startsWith(value))return 3;
+   if(icao.includes(value)||iata.includes(value))return 4;
+   return 5;
+ };
+ const matches=codes.filter(c=>c.includes(value)||String(getProfile(c).iata||fallbackIata[c]||"").toUpperCase().includes(value)||String(getProfile(c).name||"").toUpperCase().includes(value))
+   .sort((a,b)=>matchRank(a)-matchRank(b)||preferredIndex(a)-preferredIndex(b)).slice(0,12);
  if(!matches.length){el.results.hidden=true;return;}
+ // Each letter centers the strongest match in the airport wheel.
+ centerOn(preferredIndex(matches[0]),true);
  for(const code of matches){const b=document.createElement("button");b.type="button";const label=document.createElement("b"),small=document.createElement("small");label.textContent=code+" · "+(getProfile(code).iata||fallbackIata[code]||"—");small.textContent=getProfile(code).name||"Airport";b.append(label,small);b.onclick=()=>{centerOn(preferredIndex(code),false);el.search.value="";el.results.hidden=true;el.carousel.focus()};el.results.append(b)}
  el.results.hidden=false;
 }
@@ -305,7 +319,7 @@ function chartLink(item){
   return ROOT+"charts/"+encodeURIComponent(source.file||item.airport+".pdf")+"#page="+Number(item.pdf_page);
 }
 function clearChartAnimation(){chartToken++;if(chartFrame)cancelAnimationFrame(chartFrame);chartFrame=0}
-function clearChartButtons(){clearChartAnimation();chartButtons.clear();procTrack.replaceChildren();}
+function clearChartButtons(){clearChartAnimation();if(previewSelectionFrame)cancelAnimationFrame(previewSelectionFrame);previewSelectionFrame=0;previewQueuedIndex=-1;chartButtons.clear();procTrack.replaceChildren();}
 function closeProcedureCategory(){
   activeChartCategory=null;chartSheetToken++;
   clearChartButtons();chartGesture=null;
@@ -375,6 +389,8 @@ function paintProcedureWheel(){
     if(on)button.setAttribute("aria-current","true");
     else button.removeAttribute("aria-current");
   }
+  // The original Classic PDF follows the focused procedure during swipe/glide.
+  queueFocusedChart(activeIdx);
 }
 function commitProcedure(pos){
   chartSelected=chartWrap(Math.round(pos));
@@ -422,7 +438,7 @@ function displayProcedureRows(rows){
       "No matching charts in this category.":"No published charts in this category.";
     procTrack.append(status);
     void showInlineChart(null);
-  }else {paintProcedureWheel();hideInlineChart();}
+  }else {paintProcedureWheel();queueFocusedChart(chartSelected,true);}
 }
 function filterProcedureRows(){
   const q=$("#procedureSearch").value.trim().toUpperCase();
@@ -556,11 +572,36 @@ window.addEventListener("resize",()=>paintProcedureWheel(),{passive:true});
 const classicHost=$("#classicViewerHost"),classicFrame=$("#classicViewerFrame");
 const classicStatus=$("#classicViewerStatus");
 let classicReady=false,classicRequested=null,classicConfirmedKey="",classicLoadStarted=false;
+// Coalesce pointer events to one selection per animation frame.
+// The original Classic iframe stays mounted, preserving the PDF renderer and toolbar.
+function queueFocusedChart(index,immediate=false){
+  if(!activeChartCategory||!chartSearchRows.length)return;
+  previewQueuedIndex=index;
+  if(immediate){
+    if(previewSelectionFrame)cancelAnimationFrame(previewSelectionFrame);
+    previewSelectionFrame=0;
+    displayFocusedChart();
+  }else if(!previewSelectionFrame){
+    previewSelectionFrame=requestAnimationFrame(()=>{
+      previewSelectionFrame=0;
+      displayFocusedChart();
+    });
+  }
+}
+function displayFocusedChart(){
+  const row=chartSearchRows[chartWrap(previewQueuedIndex)];
+  if(!row||!validProcedure(row)||!activeChartCategory)return;
+  const key=row.airport+":"+Number(row.page);
+  if(classicRequested&&classicRequested.icao+":"+classicRequested.page===key)return;
+  showInlineChart(row);
+}
 function hideInlineChart(){
   document.body.classList.remove("preview-chart-fullscreen");
   $("#previewCdfaBtn").hidden=true;
   classicFrame.contentWindow?.postMessage({type:"JEPPIRAN_PREVIEW_EXIT_FULLSCREEN_V1"},location.origin);
   classicRequested=null;
+  if(previewSelectionFrame)cancelAnimationFrame(previewSelectionFrame);
+  previewSelectionFrame=0;previewQueuedIndex=-1;
   classicHost.hidden=true;
   document.body.classList.remove("chart-selected");
   if(!activeChartCategory)document.querySelector(".procedure-categories")?.scrollTo({left:0,behavior:"instant"});
