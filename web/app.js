@@ -1283,13 +1283,33 @@ function renderTreeInto(root){
     h.setAttribute("aria-expanded",groupOpen?"true":"false");h.textContent=(groupOpen?"▾ ":"▸ ")+catLabel+" ("+items.length+")";
     h.onclick=e=>{e.stopPropagation();expanded.has(cat)?expanded.delete(cat):expanded.add(cat);renderAirports($("#airportSearch").value)};
     wrap.appendChild(h);
-    if(groupOpen)items.forEach(c=>{
-      const item=document.createElement("button");item.type="button";
-      item.className="tree-item"+(selectedChart&&Number(selectedChart.page)===Number(c.page)?" selected":"");
-      item.innerHTML=profileEsc(displayChartNumber(c)?displayChartNumber(c)+" • "+displayChartName(c):displayChartName(c));
-      item.onclick=e=>{e.stopPropagation();selectChart(c)};
-      wrap.appendChild(item)
-    });
+    if(groupOpen){
+      // On iPad the ADC/Layout pages must be immediately selectable, not buried
+      // behind many airport information and briefing pages.
+      const isLayout=c=>/^(?:10|20)-9[A-Z0-9]*$/i.test(String(c.chart_number||""))||
+        /AIRPORT DIAGRAM|\\bADC\\b|LAYOUT|APRON|PARKING|TAXI|STANDS?/i.test(String(c.name||""));
+      const layoutRows=cat==="Airport"?items.filter(isLayout):[];
+      const normalRows=cat==="Airport"?items.filter(c=>!isLayout(c)):items;
+      const addChart=c=>{
+        const item=document.createElement("button");item.type="button";
+        item.className="tree-item"+(selectedChart&&Number(selectedChart.page)===Number(c.page)?" selected":"");
+        item.innerHTML=profileEsc(displayChartNumber(c)?displayChartNumber(c)+" • "+displayChartName(c):displayChartName(c));
+        item.setAttribute("aria-label",displayChartNumber(c)+" "+displayChartName(c));
+        item.onclick=e=>{e.stopPropagation();selectChart(c)};
+        wrap.appendChild(item);
+      };
+      if(layoutRows.length){
+        const label=document.createElement("div");
+        label.className="airport-layout-heading";label.textContent="LAYOUT / ADC ("+layoutRows.length+")";
+        wrap.appendChild(label);
+        layoutRows.forEach(addChart);
+        if(normalRows.length){
+          const other=document.createElement("div");other.className="airport-layout-heading secondary";
+          other.textContent="OTHER AIRPORT CHARTS";wrap.appendChild(other);
+        }
+      }
+      normalRows.forEach(addChart);
+    }
     root.appendChild(wrap)
   });
 }
