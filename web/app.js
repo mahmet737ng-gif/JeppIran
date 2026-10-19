@@ -2878,6 +2878,13 @@ function extractWxRaw(data,type){
 }
 async function loadGithubWxCache(){
   if(githubWxCache&&Date.now()-githubWxCacheAt<60000)return githubWxCache;
+  const prefetch=window.JEPPIRAN_AIRPORT_PREFETCH;
+  if(prefetch){
+    try{
+      const loaded=prefetch.get("metar")||await prefetch.ready("metar");
+      if(loaded?.stations){githubWxCache=loaded;githubWxCacheAt=Date.now();return loaded}
+    }catch(_){}
+  }
   const bust=Math.floor(Date.now()/300000);
   try{
     const r=await fetch(WX_CACHE_RAW+"?v="+bust,{cache:"no-store",mode:"cors"});
