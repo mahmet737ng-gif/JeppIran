@@ -22,7 +22,7 @@ const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
 const getCode=i=>codes[wrap(i)];
 const getProfile=code=>metadata[code]||{};
 const current=()=>getCode(selected);
-const slotStep=()=>el.carousel.clientWidth/(innerWidth<=690?5.5:innerWidth<=1040?7.3:9.25);
+const slotStep=()=>el.carousel.clientWidth/(innerWidth<=690?6.35:innerWidth<=1040?8.1:10.25);
 const visibleRadius=()=>innerWidth<=690?2:innerWidth<=1040?3:4;
 function preferredIndex(code){return codes.indexOf(code)}
 // Every airport button is created once. Continuous interpolation updates only its
@@ -76,8 +76,8 @@ function paintTrack(){
     button.style.setProperty("--shift",(d*step).toFixed(3)+"px");
     button.style.setProperty("--scale","1");
     button.style.setProperty("--opacity",opacity.toFixed(3));
-    button.style.setProperty("--icao-size",((compact?14:20)+(compact?22:35)*focus).toFixed(2)+"px");
-    button.style.setProperty("--iata-size",((compact?10:12)+(compact?8:14)*focus).toFixed(2)+"px");
+    button.style.setProperty("--icao-size",((compact?13:17)+(compact?14:23)*focus).toFixed(2)+"px");
+    button.style.setProperty("--iata-size",((compact?9:10)+(compact?5:8)*focus).toFixed(2)+"px");
     button.style.setProperty("--guide-opacity",focus.toFixed(3));
     button.style.zIndex=String(100-Math.floor(distance*10));
     const active=index===mid;
@@ -114,7 +114,9 @@ function updateSelected(){
       {opacity:1,transform:"translateY(0)"}
     ],{duration:280,easing:"cubic-bezier(.2,.8,.2,1)"});
   }
-  updateImage(code);resetWeather();void updateMetar(code);
+  // This page selects charts, not METAR observations. Keep the approved poster;
+  // weather belongs to the separate Classic chart and WX views.
+  updateImage(code);
   if(activeChartCategory)void refreshProcedureCategory(activeChartCategory);
 }
 function stopAnimation(){animationToken++;if(raf)cancelAnimationFrame(raf);raf=0;}
@@ -311,7 +313,11 @@ function closeProcedureCategory(){
   procSection.setAttribute("aria-hidden","true");
   procSection.inert=true;
   document.body.classList.remove("category-open");
+  // A collapsed STAR/SID/AIRPORT/APP rail must return to four adjacent tabs.
+  // Preserve chart positions without carrying over any horizontal scroll gap.
   document.querySelectorAll(".category-shell").forEach(el=>el.classList.remove("active"));
+  const categoryRail=document.querySelector(".procedure-categories");
+  if(categoryRail){categoryRail.scrollLeft=0;requestAnimationFrame(()=>{if(!activeChartCategory)categoryRail.scrollLeft=0;});}
   document.querySelectorAll(".procedure-category").forEach(el=>{
     el.classList.remove("active");el.setAttribute("aria-expanded","false");
   });
@@ -321,7 +327,7 @@ function chartDelta(index,pos){
   const n=chartSearchRows.length;
   return n?((index-pos+n/2)%n+n)%n-n/2:0;
 }
-function chartWidth(){return procWheel.clientWidth/(innerWidth<=690?2.9:innerWidth<=1040?3.5:4.45)}
+function chartWidth(){return procWheel.clientWidth/(innerWidth<=690?2.15:innerWidth<=1040?2.85:3.6)}
 function buildProcedureWheel(){
   chartButtons.clear();
   const nodes=document.createDocumentFragment();
@@ -362,7 +368,7 @@ function paintProcedureWheel(){
     button.style.setProperty("--procedure-w",(step*1.23).toFixed(2)+"px");
     button.style.setProperty("--procedure-scale",(0.83+focus*.17).toFixed(3));
     button.style.setProperty("--procedure-opacity",clamp(1-Math.max(0,d-.4)*.28,.26,1).toFixed(3));
-    button.style.setProperty("--procedure-title-size",(11+focus*(innerWidth<=690?2:3)).toFixed(2)+"px");
+    button.style.setProperty("--procedure-title-size",(9+focus*(innerWidth<=690?1:2)).toFixed(2)+"px");
     button.style.zIndex=String(20-Math.floor(d*5));
     const on=index===activeIdx;
     button.classList.toggle("active",on);
@@ -469,6 +475,10 @@ function toggleProcedureCategory(category){
   procSection.inert=false;procSection.classList.add("open");
   procSection.setAttribute("aria-hidden","false");
   document.body.classList.add("category-open");
+  // Always start the expanded rail at its actual selected category.
+  // No stale scroll offset after switching away from a chart or using Back.
+  const categoryRail=document.querySelector(".procedure-categories");
+  if(categoryRail)categoryRail.scrollLeft=0;
   // Original Classic viewer mounts after the first valid chart selection.
   $("#procedureSearch").value="";
   document.querySelectorAll(".category-shell").forEach(el=>el.classList.toggle("active",el===shell));
@@ -553,6 +563,7 @@ function hideInlineChart(){
   classicRequested=null;
   classicHost.hidden=true;
   document.body.classList.remove("chart-selected");
+  if(!activeChartCategory)document.querySelector(".procedure-categories")?.scrollTo({left:0,behavior:"instant"});
 }
 function dispatchClassicSelection(){
   if(!classicReady||!classicRequested||!classicFrame.contentWindow)return;
