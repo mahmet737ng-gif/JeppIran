@@ -341,7 +341,10 @@ function chartDelta(index,pos){
   const n=chartSearchRows.length;
   return n?((index-pos+n/2)%n+n)%n-n/2:0;
 }
-function chartWidth(){return procWheel.clientWidth/(innerWidth<=690?2.15:innerWidth<=1040?2.85:3.6)}
+function chartWidth(){
+  const wide=innerWidth>=900&&matchMedia("(orientation:landscape)").matches;
+  return procWheel.clientWidth/(wide?(innerWidth<1200?2.35:2.7):(innerWidth<=690?2.15:innerWidth<=1040?2.85:3.6));
+}
 function buildProcedureWheel(){
   chartButtons.clear();
   const nodes=document.createDocumentFragment();
@@ -355,8 +358,8 @@ function buildProcedureWheel(){
     button.append(num,title);
     button.addEventListener("click",()=>{
       if(chartGesture?.moved||performance.now()<chartSuppressTap)return;
-      if(i!==chartSelected||Math.abs(chartVisualPos-chartSelected)>.01)centerProcedure(i,true);
-      // Any visible procedure opens on the first tap; swiping alone only moves the wheel.
+      if(i!==chartSelected||Math.abs(chartVisualPos-chartSelected)>.01)centerProcedure(i,false);
+      // A deliberate tap opens Classic; wheel movement alone stays a lightweight preview.
       void showInlineChart(item);
     });
     chartButtons.set(i,button);
@@ -379,17 +382,17 @@ function paintProcedureWheel(){
     if(!visible)continue;
     const focus=smoothstep(clamp(1-d/1.15,0,1));
     button.style.setProperty("--procedure-x",(delta*step).toFixed(2)+"px");
-    button.style.setProperty("--procedure-w",(step*1.23).toFixed(2)+"px");
+    button.style.setProperty("--procedure-w",(step*(innerWidth>=900&&matchMedia("(orientation:landscape)").matches?1.03:1.23)).toFixed(2)+"px");
     button.style.setProperty("--procedure-scale",(0.83+focus*.17).toFixed(3));
     button.style.setProperty("--procedure-opacity",clamp(1-Math.max(0,d-.4)*.28,.26,1).toFixed(3));
-    button.style.setProperty("--procedure-title-size",(9+focus*(innerWidth<=690?1:2)).toFixed(2)+"px");
+    button.style.setProperty("--procedure-title-size",(innerWidth>=900&&matchMedia("(orientation:landscape)").matches?11.5+focus*2.25:9+focus*(innerWidth<=690?1:2)).toFixed(2)+"px");
     button.style.zIndex=String(20-Math.floor(d*5));
     const on=index===activeIdx;
     button.classList.toggle("active",on);
     if(on)button.setAttribute("aria-current","true");
     else button.removeAttribute("aria-current");
   }
-  // The original Classic PDF follows the focused procedure during swipe/glide.
+  // While swiping, update only a compact PDF thumbnail; never open Classic automatically.
   queueFocusedChart(activeIdx);
 }
 function commitProcedure(pos){
@@ -437,7 +440,7 @@ function displayProcedureRows(rows){
     status.textContent=activeChartRows.length?
       "No matching charts in this category.":"No published charts in this category.";
     procTrack.append(status);
-    void showInlineChart(null);
+    showMiniChart(null);
   }else {paintProcedureWheel();queueFocusedChart(chartSelected,true);}
 }
 function filterProcedureRows(){
@@ -478,7 +481,7 @@ async function refreshProcedureCategory(category){
     const status=document.createElement("div");
     status.className="procedure-empty";status.textContent="Unable to load V2621 charts: "+error.message;
     procTrack.append(status);
-    void showInlineChart(null);
+    showMiniChart(null);
   }
 }
 function toggleProcedureCategory(category){
@@ -572,6 +575,98 @@ window.addEventListener("resize",()=>paintProcedureWheel(),{passive:true});
 const classicHost=$("#classicViewerHost"),classicFrame=$("#classicViewerFrame");
 const classicStatus=$("#classicViewerStatus");
 let classicReady=false,classicRequested=null,classicConfirmedKey="",classicLoadStarted=false;
+const miniHost=$("#miniChartPreview"),miniCanvas=$("#miniChartCanvas");
+const miniStatus=$("#miniChartStatus"),miniTap=$("#miniPreviewTap");
+let miniItem=null,miniKey="",miniToken=0,miniTimer=0,miniRenderTask=null;
+let miniLibraryPromise=null,miniPdfCache=new Map();
+function cancelMiniDraw(){
+  ++miniToken;clearTimeout(miniTimer);miniTimer=0;
+  if(miniRenderTask){try{miniRenderTask.cancel()}catch(_){}miniRenderTask=null;}
+}
+function miniPdfLibrary(){
+  if(!miniLibraryPromise)miniLibraryPromise=import(ROOT+"vendor/pdf.min.mjs").then(lib=>{
+    lib.GlobalWorkerOptions.workerSrc=ROOT+"vendor/pdf.worker.min.mjs";
+    return lib;
+  }).catch(error=>{miniLibraryPromise=null;throw error});
+  return miniLibraryPromise;
+}
+function miniPdfDocument(lib,url){
+  if(!miniPdfCache.has(url)){
+    const promise=lib.getDocument({url}).promise.catch(error=>{miniPdfCache.delete(url);throw error});
+    miniPdfCache.set(url,promise);
+    if(miniPdfCache.size>3)miniPdfCache.delete(miniPdfCache.keys().next().value);
+  }
+  return miniPdfCache.get(url);
+}
+function showMiniChart(item){
+  if(!item||!validProcedure(item)){
+    cancelMiniDraw();miniItem=null;miniKey="";
+    miniHost.hidden=true;
+    return;
+  }
+  const key=item.airport+":"+Number(item.page);
+  if(miniKey===key&&!miniHost.hidden)return;
+  cancelMiniDraw();
+  miniKey=key;miniItem=item;
+  // Browsing is deliberately NOT full chart mode; Classic opens only on tap.
+  classicHost.hidden=true;classicRequested=null;
+  document.body.classList.remove("chart-selected","preview-chart-fullscreen");
+  miniHost.hidden=false;
+  $("#miniChartContext").textContent=item.airport+" · "+activeChartCategory+" · "+(item.chart_number||"");
+  $("#miniChartTitle").textContent=item.name||"Chart "+item.page;
+  miniStatus.hidden=false;miniStatus.textContent="Loading chart preview…";
+  miniCanvas.hidden=true;
+  const token=miniToken;
+  // Debounce costly PDF rasterization while the user is spinning the wheel.
+  miniTimer=setTimeout(()=>{miniTimer=0;void drawMiniChart(item,token)},130);
+}
+async function drawMiniChart(item,token){
+  try{
+    const lib=await miniPdfLibrary();
+    if(token!==miniToken||miniHost.hidden)return;
+    const source=chartManifest.airports[item.airport];
+    const url=ROOT+"charts/"+encodeURIComponent(source.file||item.airport+".pdf");
+    const pdf=await miniPdfDocument(lib,url);
+    if(token!==miniToken||miniHost.hidden)return;
+    const pageNo=Number(item.pdf_page);
+    if(pageNo<1||pageNo>pdf.numPages)throw Error("Page unavailable");
+    const page=await pdf.getPage(pageNo);
+    if(token!==miniToken||miniHost.hidden)return;
+    const area=miniTap.getBoundingClientRect();
+    const original=page.getViewport({scale:1});
+    const fitScale=Math.min(Math.max(110,area.width-18)/original.width,
+      Math.max(140,area.height-18)/original.height);
+    // The thumbnail uses a capped pixel density; the full-resolution viewer is untouched.
+    const scale=fitScale*Math.min(devicePixelRatio||1,1.4);
+    const viewport=page.getViewport({scale});
+    const canvas=document.createElement("canvas");
+    canvas.width=Math.max(1,Math.ceil(viewport.width));
+    canvas.height=Math.max(1,Math.ceil(viewport.height));
+    const context=canvas.getContext("2d",{alpha:false});
+    if(!context)throw Error("Canvas unavailable");
+    const task=page.render({canvasContext:context,viewport});
+    miniRenderTask=task;
+    await task.promise;
+    if(miniRenderTask===task)miniRenderTask=null;
+    if(token!==miniToken||miniHost.hidden)return;
+    // Commit a fully drawn thumbnail at once so fast swipes never flash half-rendered charts.
+    miniCanvas.width=canvas.width;miniCanvas.height=canvas.height;
+    miniCanvas.getContext("2d",{alpha:false}).drawImage(canvas,0,0);
+    miniCanvas.style.width=Math.round(viewport.width/Math.min(devicePixelRatio||1,1.4))+"px";
+    miniCanvas.style.height=Math.round(viewport.height/Math.min(devicePixelRatio||1,1.4))+"px";
+    miniCanvas.hidden=false;miniStatus.hidden=true;
+  }catch(error){
+    if(token!==miniToken||miniHost.hidden)return;
+    miniStatus.textContent="Preview unavailable: "+(error?.message||"PDF error");
+    miniStatus.hidden=false;miniCanvas.hidden=true;
+  }
+}
+function openMiniChart(){
+  if(miniItem&&validProcedure(miniItem))showInlineChart(miniItem);
+}
+$("#miniChartOpen").addEventListener("click",openMiniChart);
+miniTap.addEventListener("click",openMiniChart);
+
 // Coalesce pointer events to one selection per animation frame.
 // The original Classic iframe stays mounted, preserving the PDF renderer and toolbar.
 function queueFocusedChart(index,immediate=false){
@@ -593,9 +688,11 @@ function displayFocusedChart(){
   if(!row||!validProcedure(row)||!activeChartCategory)return;
   const key=row.airport+":"+Number(row.page);
   if(classicRequested&&classicRequested.icao+":"+classicRequested.page===key)return;
-  showInlineChart(row);
+  showMiniChart(row);
 }
 function hideInlineChart(){
+  cancelMiniDraw();miniKey="";miniItem=null;miniHost.hidden=true;
+  miniCanvas.hidden=true;
   document.body.classList.remove("preview-chart-fullscreen");
   $("#previewCdfaBtn").hidden=true;
   classicFrame.contentWindow?.postMessage({type:"JEPPIRAN_PREVIEW_EXIT_FULLSCREEN_V1"},location.origin);
@@ -615,6 +712,9 @@ function dispatchClassicSelection(){
   },location.origin);
 }
 function showInlineChart(item){
+  cancelMiniDraw();miniHost.hidden=true;miniKey="";
+  if(previewSelectionFrame)cancelAnimationFrame(previewSelectionFrame);
+  previewSelectionFrame=0;
   if(!item||!validProcedure(item)){
     document.body.classList.remove("chart-selected");
     classicRequested=null;
