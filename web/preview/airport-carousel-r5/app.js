@@ -427,6 +427,8 @@ function centerProcedure(index,animate){
 }
 function moveProcedure(direction){
   if(!chartSearchRows.length)return;
+  // A deliberate navigation gesture exits full Classic to lightweight browsing.
+  if(document.body.classList.contains("chart-selected"))hideInlineChart();
   glideProcedure(chartVisualPos+direction);
 }
 function displayProcedureRows(rows){
@@ -471,6 +473,7 @@ async function loadPublishedCharts(){
 }
 async function refreshProcedureCategory(category){
   if(!activeChartCategory||activeChartCategory!==category)return;
+  if(document.body.classList.contains("chart-selected"))hideInlineChart();
   const request=++chartSheetToken,code=current();
   clearChartButtons();
   chartSearchRows=[];activeChartRows=[];
@@ -546,6 +549,7 @@ procWheel.addEventListener("pointermove",e=>{
   const dx=e.clientX-chartGesture.startX;
   if(!chartGesture.moved&&Math.abs(dx)>5){
     chartGesture.moved=true;
+    if(document.body.classList.contains("chart-selected"))hideInlineChart();
     try{procWheel.setPointerCapture(e.pointerId)}catch(_){}
   }
   if(!chartGesture.moved)return;
@@ -687,6 +691,8 @@ miniTap.addEventListener("click",openMiniChart);
 // Coalesce pointer events to one selection per animation frame.
 // The original Classic iframe stays mounted, preserving the PDF renderer and toolbar.
 function queueFocusedChart(index,immediate=false){
+  // Reflow/ResizeObserver must never close a deliberately opened full Classic chart.
+  if(document.body.classList.contains("chart-selected"))return;
   if(!activeChartCategory||!chartSearchRows.length)return;
   previewQueuedIndex=index;
   if(immediate){
