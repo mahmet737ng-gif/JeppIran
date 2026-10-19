@@ -122,7 +122,17 @@ class PilotBriefingActivity : AppCompatActivity() {
     private fun refreshAll(userRequested: Boolean) {
         statusText.text = "Updating weather and NOTAM data…"
         Thread {
-            val weather = runCatching { FlightDataStore.fetch(this, icao) }
+            // Startup already populated the complete 78-ICAO weather cache.
+            // Opening an airport must not silently refetch it. An explicit
+            // REFRESH still contacts the live provider when requested.
+            val prefetched = FlightDataStore.cached(this, icao)?.takeIf {
+                System.currentTimeMillis() - it.fetchedAt in 0 until 5 * 60 * 1000L
+            }
+            val weather = if (!userRequested && prefetched != null) {
+                Result.success(prefetched)
+            } else {
+                runCatching { FlightDataStore.fetch(this, icao) }
+            }
             val notams = runCatching { NotamStore.fetch(this, icao) }
 
             runOnUiThread {
