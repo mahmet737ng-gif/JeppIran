@@ -110,6 +110,15 @@ def build(manifest_path, csv_path=None):
             found[icao] = {**found.get(icao, {}), **entry["profile"],
                            "source": "Jeppesen Airport Information and ADC " + chart_profiles["cycle"],
                            "chartSource": entry["source"]}
+    # Display-name overrides approved by the owner. Preserve ICAO, country,
+    # coordinates and runway/elevation fields from their original sources.
+    owner_names = {
+        "ORBI": "Baghdad International Airport",
+        "OIAW": "Ahwaz International Airport",
+    }
+    for icao, name in owner_names.items():
+        if icao in desired:
+            found[icao] = {**found.get(icao, {}), "name": name}
     missing = sorted(desired.difference(found))
     out = {
         "cycle": manifest.get("version", ""),
