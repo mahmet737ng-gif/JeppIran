@@ -5,8 +5,6 @@
 (()=>{
 "use strict";
 const ROOT="../../";
-const WX_CACHE_URL="https://raw.githubusercontent.com/mahmet737ng-gif/JeppIran/wx-cache/wx-live.json";
-const WX_CACHE_API="https://api.github.com/repos/mahmet737ng-gif/JeppIran/contents/wx-live.json?ref=wx-cache";
 const fallbackIata=Object.freeze({OIII:"THR",OIIE:"IKA",OIMM:"MHD",OISS:"SYZ",OIFM:"IFN",OIKB:"BND",OITT:"TBZ",OIAW:"AWZ",OIBK:"KIH",OICC:"KSH",OIYY:"AZD",OIBB:"BUZ",OIMB:"XBJ",OIAW:"AWZ",OITR:"OMH",OIHH:"HDM",OIAA:"ABD",OIBA:"AEU",OIBP:"PGU",OIMN:"BJB",OING:"GBT",OIHR:"AJK",OISL:"LRR",OIKK:"KER",OIGG:"RAS",OIMS:"AFZ",OISY:"YES",OIZH:"ZAH",OITL:"ADU",OITZ:"JWN",OIKY:"SYJ",OICK:"KHD",OIKM:"BXR",OITM:"ACP",OIZC:"ZBR",OIMT:"TCX",OIPK:"PYK",OISR:"LFM",OITU:"IMQ",LTFM:"IST",LTAC:"ESB",OMDB:"DXB",OMDW:"DWC",OOMS:"MCT",ORBI:"BGW",ORER:"EBL",ORMM:"BSR",ORNI:"NJF",OTHH:"DOH",UGTB:"TBS",UGSB:"BUS",UDYZ:"EVN",OPIS:"ISB",OPKC:"KHI"});
 const fallbackNames={OIII:["Mehrabad International Airport","Tehran, Iran",3962],OIIE:["Imam Khomeini International Airport","Tehran, Iran",3305],OIMM:["Mashhad International Airport","Mashhad, Iran",3263]};
 const $=sel=>document.querySelector(sel);
@@ -15,7 +13,7 @@ const el={carousel:$("#airportCarousel"),track:$("#carouselTrack"),name:$("#airp
 const BUILTIN_AIRPORT_CODES=Object.freeze(["LTAC","LTFM","OIAA","OIAM","OIAW","OIBA","OIBB","OIBK","OIBL","OIBP","OIBQ","OIBS","OIBV","OICC","OICI","OICK","OICS","OICZ","OIFE","OIFM","OIFP","OIFS","OIGG","OIHH","OIHR","OIIE","OIII","OIIP","OIKB","OIKJ","OIKK","OIKM","OIKQ","OIKR","OIKY","OIMB","OIMJ","OIMM","OIMN","OIMS","OIMT","OINE","OING","OINN","OINR","OINZ","OISF","OISL","OISR","OISS","OISY","OITK","OITL","OITM","OITR","OITT","OITU","OITZ","OIYY","OIZB","OIZC","OIZH","OIZI","OIZS","OMDB","OMDW","OOMS","OPIS","OPKC","ORBI","ORER","ORMM","ORNI","ORSJ","OTHH","UDYZ","UGSB","UGTB"]);
 let codes=[...BUILTIN_AIRPORT_CODES], metadata={},selected=BUILTIN_AIRPORT_CODES.indexOf("OIII"),visualPos=selected,raf=0,animationToken=0,gesture=null;
 const carouselButtons=new Map();
-let chartManifest=null,charts=null,wxCache=null,wxCacheAt=0,metarRequest=0;
+let chartManifest=null,charts=null,metarRequest=0;
 let chartCatalogPromise=null,activeChartCategory=null,chartSheetToken=0,activeChartRows=[];
 let chartVisualPos=0,chartSelected=0,chartFrame=0,chartToken=0,chartGesture=null,chartSearchRows=[];
 let previewQueuedIndex=-1,previewSelectionFrame=0;
@@ -48,7 +46,7 @@ const profilePanel=$(".selected-airport");
 // Every ICAO change is an O(1) in-memory lookup. There must NEVER be a
 // network request, timeout, or debounce in the hot carousel-swipe path.
 function availableWeather(){
-  return window.JEPPIRAN_AIRPORT_PREFETCH?.get("metar")||wxCache;
+  return window.JEPPIRAN_AIRPORT_PREFETCH?.get("metar")||null;
 }
 function paintRawMetar(raw){
   const d=decode(raw);
@@ -323,33 +321,6 @@ el.search.addEventListener("input",showResults);
 el.search.addEventListener("keydown",e=>{if(e.key==="Escape")el.results.hidden=true;else if(e.key==="Enter"&&!el.results.hidden){e.preventDefault();el.results.querySelector("button")?.click()}});
 document.addEventListener("click",e=>{if(!e.target.closest(".search-box"))el.results.hidden=true});
 function normalizeRaw(row){const s=typeof row==="string"?row:row?.raw||row?.rawText||row?.rawOb||"";return String(s||"").trim()}
-async function readSourceMetar(code){
- // Batch fetched at startup holds all 78 ICAOs. No repeated full-file fetch
- // on each intermediate airport while swiping the Carousel.
- const pre=window.JEPPIRAN_AIRPORT_PREFETCH;
- if(pre){
-  try{
-   // A cached result wins immediately; don't block rendering on a
-   // revalidation request against GitHub that might take 12 seconds.
-   const all=pre.get("metar")||await Promise.race([
-     pre.ready("metar"),new Promise(resolve=>setTimeout(()=>resolve(null),1700))
-   ]);
-   if(all?.stations){wxCache=all;wxCacheAt=Date.now()}
-  }catch(_){}
- }
- if(!wxCache||Date.now()-wxCacheAt>1000*60){
-  try{const res=await fetch(WX_CACHE_URL+"?t="+Math.floor(Date.now()/300000),{cache:"no-store",mode:"cors"});if(!res.ok)throw Error("Weather cache offline");wxCache=await res.json();wxCacheAt=Date.now();}
-  catch(_){try{const r=await fetch(WX_CACHE_API+"&t="+Math.floor(Date.now()/300000),{mode:"cors",cache:"no-store"});if(r.ok){const doc=await r.json();wxCache=JSON.parse(atob(String(doc.content).replace(/\s+/g,"")));wxCacheAt=Date.now()}}catch(_){}}
- }
- const cached=normalizeRaw(wxCache?.stations?.[code]?.metar);
- if(cached)return {raw:cached,source:"JeppIran cached METAR"};
- const attempts=[
-  {url:"https://rotatepilot.com/api/v1/metar?icao="+encodeURIComponent(code)+"&taf=1",pick:d=>d?.raw},
-  {url:"https://metars.eu/api/metars/"+encodeURIComponent(code),pick:d=>d?.raw||d?.rawText||d?.data?.raw||d?.data?.rawText||d?.data?.[0]?.raw}
- ];
- for(const a of attempts){try{const r=await fetch(a.url,{mode:"cors",cache:"no-store"});if(!r.ok)continue;const json=await r.json();const raw=normalizeRaw(a.pick(json));if(raw)return {raw,source:"Live METAR provider"};}catch(_){}}
- throw Error("METAR unavailable");
-}
 function decode(raw){
  const tokens=raw.toUpperCase().trim().split(/\s+/),base=tokens.slice(0,Math.max(0,tokens.findIndex(x=>/^(?:RMK|NOSIG|TEMPO|BECMG)$/.test(x)))||undefined); // current observation only
  const arr=base.length?base:tokens;
@@ -362,22 +333,6 @@ function decode(raw){
  const pressure=arr.find(t=>/^Q\d{4}$/.test(t)||/^A\d{4}$/.test(t));
  const qnh=pressure?.startsWith("Q")?"QNH "+pressure.slice(1)+" hPa":pressure?.startsWith("A")?"QNH "+(Number(pressure.slice(1))/100).toFixed(2)+" inHg":"QNH —";
  return {cloud,tval,wind:w,qnh};
-}
-async function updateMetar(code){
- const req=++metarRequest;
- try{const {raw}=await readSourceMetar(code);
-  if(req!==metarRequest||displayedProfileCode!==code||
-    document.body.classList.contains("has-chart-preview")||
-    document.body.classList.contains("chart-selected"))return;
-  const d=decode(raw);
-  const category=window.JEPPIRAN_FLIGHT_CATEGORY?.classify(raw)?.code||"UNKNOWN",key=category.toLowerCase();
-  el.category.textContent=category==="UNKNOWN"?"WX —":category;
-  el.category.className="flight-category "+key;
-  el.dot.className="flight-dot "+key;
-  el.clouds.textContent=d.cloud;el.temp.textContent=d.tval;el.wind.textContent=d.wind;el.qnh.textContent=d.qnh;
-  // The airport profile displays the actual METAR report, not a source/advisory message.
-  el.weatherStatus.textContent=raw;
- }catch(_){if(req!==metarRequest||displayedProfileCode!==code)return;el.weatherStatus.textContent="METAR unavailable — no weather values invented";}
 }
 /* PREVIEW-ONLY CHART DOCK — STAR / SID / AIRPORT / APP.
  * Source stays V2621, every href resolves to the existing airport PDF's
