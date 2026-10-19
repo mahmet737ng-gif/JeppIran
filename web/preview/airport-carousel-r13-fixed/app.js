@@ -140,16 +140,29 @@ function resetWeather(){
   el.weatherStatus.textContent="Checking available METAR…";
 }
 function artwork(code){return `${ROOT}airport-profile-posters-v3/${code}.webp`}
-let bgTicket=0;
+const posterImages=new Map();
+function preloadPoster(code){
+  if(posterImages.has(code))return;
+  const img=new Image();
+  img.decoding="async";img.src=artwork(code);
+  posterImages.set(code,img);
+  while(posterImages.size>12)posterImages.delete(posterImages.keys().next().value);
+}
 function updateImage(code){
-  // Only the immutable approved poster is used; no synthetic airport imagery.
-  const ticket=++bgTicket,img=new Image();
-  img.onload=()=>{if(ticket===bgTicket)el.scenery.style.backgroundImage=`url("${artwork(code)}")`};
-  img.onerror=()=>{if(ticket===bgTicket)el.scenery.style.backgroundImage="none"};
-  img.src=artwork(code);
+  // The previous onload callback discarded the poster for airports crossed
+  // during an animated swipe. Update the CSS target immediately, then the
+  // browser can load the source-approved image without a race.
+  el.scenery.dataset.airport=code;
+  el.scenery.style.setProperty("background-image",`url("${artwork(code)}")`,"important");
+  const index=codes.indexOf(code);
+  if(index>=0)for(const off of [-2,-1,1,2])preloadPoster(codes[wrap(index+off)]);
 }
 function updateSelected(){
   renderAirportProfile(current());
+  // A profile can reach center before selected changes when a swipe is underway.
+  // Recheck its METAR once its ICAO becomes the committed selection.
+  if(displayedProfileCode===current()&&
+     el.weatherStatus.textContent==="Checking available METAR…")planProfileWeather(current());
   if(activeChartCategory)void refreshProcedureCategory(activeChartCategory);
 }
 function stopAnimation(){animationToken++;if(raf)cancelAnimationFrame(raf);raf=0;}
@@ -296,7 +309,11 @@ async function readSourceMetar(code){
  const pre=window.JEPPIRAN_AIRPORT_PREFETCH;
  if(pre){
   try{
-   const all=pre.get("metar")||await pre.ready("metar");
+   // A cached result wins immediately; don't block rendering on a
+   // revalidation request against GitHub that might take 12 seconds.
+   const all=pre.get("metar")||await Promise.race([
+     pre.ready("metar"),new Promise(resolve=>setTimeout(()=>resolve(null),1700))
+   ]);
    if(all?.stations){wxCache=all;wxCacheAt=Date.now()}
   }catch(_){}
  }
@@ -328,7 +345,10 @@ function decode(raw){
 }
 async function updateMetar(code){
  const req=++metarRequest;
- try{const {raw}=await readSourceMetar(code);if(req!==metarRequest||current()!==code)return;
+ try{const {raw}=await readSourceMetar(code);
+  if(req!==metarRequest||displayedProfileCode!==code||
+    document.body.classList.contains("has-chart-preview")||
+    document.body.classList.contains("chart-selected"))return;
   const d=decode(raw);
   const category=window.JEPPIRAN_FLIGHT_CATEGORY?.classify(raw)?.code||"UNKNOWN",key=category.toLowerCase();
   el.category.textContent=category==="UNKNOWN"?"WX —":category;
@@ -337,7 +357,7 @@ async function updateMetar(code){
   el.clouds.textContent=d.cloud;el.temp.textContent=d.tval;el.wind.textContent=d.wind;el.qnh.textContent=d.qnh;
   // The airport profile displays the actual METAR report, not a source/advisory message.
   el.weatherStatus.textContent=raw;
- }catch(_){if(req!==metarRequest||current()!==code)return;el.weatherStatus.textContent="METAR unavailable — no weather values invented";}
+ }catch(_){if(req!==metarRequest||displayedProfileCode!==code)return;el.weatherStatus.textContent="METAR unavailable — no weather values invented";}
 }
 /* PREVIEW-ONLY CHART DOCK — STAR / SID / AIRPORT / APP.
  * Source stays V2621, every href resolves to the existing airport PDF's
@@ -987,6 +1007,13 @@ window.jeppiranAndroidBack=()=>{
   }
   return false;
 };
+window.addEventListener("jeppiran-airport-briefings-updated",event=>{
+  if(event.detail?.kind!=="metar"||!displayedProfileCode)return;
+  if(document.body.classList.contains("has-chart-preview")||
+     document.body.classList.contains("chart-selected"))return;
+  clearTimeout(profileMetarTimer);
+  void updateMetar(displayedProfileCode);
+});
 $("#previewFullscreenExit").addEventListener("click",()=>{
   classicFrame.contentWindow?.postMessage({type:"JEPPIRAN_PREVIEW_EXIT_FULLSCREEN_V1"},location.origin);
   document.body.classList.remove("preview-chart-fullscreen");
