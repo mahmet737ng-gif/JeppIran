@@ -1304,3 +1304,13 @@ body:not(.has-chart-preview):not(.chart-selected) .selected-airport .weather-sta
     font-size:12px;gap:6px 9px
   }
 }
+
+/* Airport profile: show the actual METAR report as legible text, not the
+   former source/verification status. These rules do not touch Classic charts. */
+body:not(.has-chart-preview):not(.chart-selected) .selected-airport #weatherStatus{
+  display:block!important;
+  max-width:min(850px,90vw);margin:12px auto 0!important;
+  color:#e6f7ff;font:500 clamp(12px,1.1vw,15px)/1.55 ui-monospace,SFMono-Regular,Consolas,monospace!important;
+  letter-spacing:0!important;text-align:center;
+  white-space:normal;overflow-wrap:anywhere;user-select:text
+}
