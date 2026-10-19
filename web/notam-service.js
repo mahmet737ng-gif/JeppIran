@@ -4,6 +4,23 @@
 const URL="https://raw.githubusercontent.com/mahmet737ng-gif/JeppIran/notam-cache/notams-current.json", MAX_AGE=45*60000;
 const SEARCH="https://notams.aim.faa.gov/notamSearch/nsapp.html";
 const states=new Map(), requests=new Map();
+let batchPromise=null,batchChecked=0;
+async function sharedBatch(){
+  const warm=window.JEPPIRAN_AIRPORT_PREFETCH;
+  if(warm){
+    try{
+      const ready=warm.get("notam")||await warm.ready("notam");
+      if(ready?.stations)return ready;
+    }catch(_){}
+  }
+  if(!batchPromise||Date.now()-batchChecked>=5*60000){
+    batchChecked=Date.now();
+    batchPromise=fetch(URL+"?v="+Math.floor(Date.now()/300000),{cache:"no-store"})
+      .then(res=>{if(!res.ok)throw Error("NOTAM relay HTTP "+res.status);return res.json()})
+      .catch(err=>{batchPromise=null;throw err});
+  }
+  return batchPromise;
+}
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 function parseDate(s){if(!s)return NaN;let v=String(s).trim();const d=v.match(/^(\d\d)\/(\d\d)\/(\d{4})\s+(\d\d)(\d\d)(?:EST)?$/i);if(d)return Date.UTC(+d[3],+d[1]-1,+d[2],+d[4],+d[5]);const icao=v.match(/^(\d\d)(\d\d)(\d\d)(\d\d)(\d\d)(?:EST)?$/i);if(icao)return Date.UTC(2000 + +icao[1],+icao[2]-1,+icao[3],+icao[4],+icao[5]);if(/^\d{4}-\d\d-\d\d \d\d:\d\d/.test(v))v=v.replace(" ","T")+"Z";return Date.parse(v)}
 function utc(s){const t=parseDate(s);return Number.isFinite(t)?new Date(t).toISOString().replace("T"," ").replace(/\.\d{3}Z$/," UTC"):String(s||"—")}
@@ -30,9 +47,8 @@ async function refresh(icao,force=false){
  states.set(icao,{status:"loading",message:"Checking FAA NOTAM relay…",checked:Date.now()});notify(icao);
  const job=(async()=>{
   try{
-   const res=await fetch(URL+"?v="+Math.floor(Date.now()/300000),{cache:"no-store"});
-   if(!res.ok)throw Error("NOTAM relay HTTP "+res.status);
-   const data=await res.json(),row=data?.stations?.[icao];
+   // Single warm batch is shared by all 78 airport profiles.
+   const data=await sharedBatch(),row=data?.stations?.[icao];
    if(row?.status!=="available"||!Array.isArray(row.notams))throw Error("FAA data currently unavailable for "+icao);
    const fetched=String(row.fetched_at||"");
    if(!Number.isFinite(parseDate(fetched))||Date.now()-parseDate(fetched)>=MAX_AGE||parseDate(fetched)>Date.now()+120000)throw Error("Outdated or invalid FAA retrieval time");
