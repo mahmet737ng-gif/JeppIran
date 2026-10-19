@@ -117,6 +117,8 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
    const airportRect=await page.locator("#airportCarousel").boundingBox();
    const step=await page.locator("#airportCarousel").evaluate(el=>el.clientWidth/10.25);
    const startX=airportRect.left+airportRect.width/2, startY=airportRect.top+airportRect.height/2;
+   console.log("Profile swipe coordinates",JSON.stringify({airportRect,step,startX,startY}));
+   assert.ok([step,startX,startY].every(Number.isFinite),"Invalid carousel swipe coordinates");
    await page.mouse.move(startX,startY);
    await page.mouse.down();
    await page.mouse.move(startX+step*1.15,startY,{steps:5});
