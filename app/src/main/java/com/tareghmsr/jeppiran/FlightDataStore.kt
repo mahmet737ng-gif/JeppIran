@@ -1,6 +1,8 @@
 package com.tareghmsr.jeppiran
 
 import android.content.Context
+import org.json.JSONObject
+import java.util.concurrent.atomic.AtomicBoolean
 import java.net.HttpURLConnection
 import java.net.URL
 import java.net.URLEncoder
@@ -35,6 +37,59 @@ object FlightDataStore {
 
     private const val PREFS = "jeppiran_weather_cache"
     private const val USER_AGENT = "JEPPIRAN/1.0 Taregh Msr"
+    private const val BATCH_URL =
+        "https://raw.githubusercontent.com/mahmet737ng-gif/JeppIran/wx-cache/wx-live.json"
+    private const val BATCH_TTL_MS = 5 * 60 * 1000L
+    private val batchInProgress = AtomicBoolean(false)
+
+    /**
+     * One network request at Android process start populates the native cache
+     * for the SAME 78 ICAOs as the web Carousel. No per-airport requests are
+     * made by this warm-up and it never blocks the UI thread. Missing reports
+     * remain empty rather than being misrepresented as an issued METAR.
+     */
+    fun prefetchAllAsync(context: Context) {
+        val app = context.applicationContext
+        val prefs = app.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        if (System.currentTimeMillis() - prefs.getLong("_batch_time", 0L) < BATCH_TTL_MS) return
+        if (!batchInProgress.compareAndSet(false, true)) return
+        Thread({
+            try {
+                val connection = URL(BATCH_URL).openConnection() as HttpURLConnection
+                val body = try {
+                    connection.connectTimeout = 12000
+                    connection.readTimeout = 12000
+                    connection.setRequestProperty("User-Agent", USER_AGENT)
+                    connection.setRequestProperty("Cache-Control", "no-cache")
+                    if (connection.responseCode !in 200..299) {
+                        throw IllegalStateException("METAR batch HTTP " + connection.responseCode)
+                    }
+                    connection.inputStream.bufferedReader(Charsets.UTF_8).use { it.readText() }
+                } finally {
+                    connection.disconnect()
+                }
+                val stations = JSONObject(body).optJSONObject("stations")
+                    ?: throw IllegalStateException("Invalid METAR batch")
+                require(stations.length() == 78) { "Incomplete METAR batch" }
+                val now = System.currentTimeMillis()
+                val editor = prefs.edit()
+                val keys = stations.keys()
+                while (keys.hasNext()) {
+                    val icao = keys.next().trim().uppercase(Locale.US)
+                    if (!Regex("^[A-Z0-9]{4}$").matches(icao)) continue
+                    val row = stations.optJSONObject(icao) ?: continue
+                    editor.putString(icao + "_metar", row.optString("metar").trim())
+                    editor.putString(icao + "_taf", row.optString("taf").trim())
+                    editor.putLong(icao + "_time", now)
+                }
+                editor.putLong("_batch_time", now).apply()
+            } catch (error: Exception) {
+                android.util.Log.w("JeppIran", "METAR batch update unavailable; retaining cached reports", error)
+            } finally {
+                batchInProgress.set(false)
+            }
+        }, "JeppIran-METAR-Batch").start()
+    }
 
     fun cached(context: Context, icao: String): WeatherSnapshot? {
         val key = icao.trim().uppercase(Locale.US)
