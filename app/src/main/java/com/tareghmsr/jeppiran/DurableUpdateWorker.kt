@@ -28,6 +28,71 @@ object DurableUpdateQueue {
     const val APPLICATION = "application"
     private const val PREFS = "jeppiran_durable_updates_v1"
     private val types = setOf(TERMINAL, ENROUTE, APPLICATION)
+    private const val APP_TARGET_VERSION = "application_target_version"
+
+    /** The completed flag means only that a download finished, not that an
+     * APK still needs installing. Reconcile it against the actual installed
+     * package on every return to Updates (also handles old persisted states).
+     * Never touch a queued/running/paused download. */
+    @Suppress("DEPRECATION")
+    fun pendingApplicationApk(context: Context): java.io.File? {
+        if (state(context, APPLICATION) != "completed") return null
+        val apk = java.io.File(context.cacheDir, "updates/jeppiran-update.apk")
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        if (!apk.isFile || apk.length() == 0L) {
+            clearStagedApplication(context, "No verified APK is staged. Check for updates.")
+            return null
+        }
+
+        // Old installers did not record the target. Recover it once from the
+        // staged APK rather than leaving an immortal INSTALL button.
+        var target = prefs.getLong(APP_TARGET_VERSION, -1L)
+        if (target <= 0L) {
+            val archive = context.packageManager.getPackageArchiveInfo(apk.absolutePath, 0)
+            if (archive == null || archive.packageName != context.packageName) {
+                clearStagedApplication(context, "Staged APK is invalid. Check for updates.")
+                return null
+            }
+            target = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                archive.longVersionCode
+            } else {
+                archive.versionCode.toLong()
+            }
+            prefs.edit().putLong(APP_TARGET_VERSION, target).apply()
+        }
+        val installed = try {
+            val info = context.packageManager.getPackageInfo(context.packageName, 0)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) info.longVersionCode
+            else info.versionCode.toLong()
+        } catch (_: Exception) {
+            // A transient PackageManager failure must not lose a valid download.
+            return apk
+        }
+        if (installed >= target) {
+            clearStagedApplication(
+                context, "JEPPIRAN is up to date • " + AppVersion.name(context)
+            )
+            return null
+        }
+        return apk
+    }
+
+    internal fun recordApplicationTarget(context: Context, versionCode: Long) {
+        require(versionCode > 0L)
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+            .edit().putLong(APP_TARGET_VERSION, versionCode).apply()
+    }
+
+    private fun clearStagedApplication(context: Context, message: String) {
+        context.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
+            .putString(APPLICATION + "_state", "idle")
+            .putInt(APPLICATION + "_progress", 0)
+            .putString(APPLICATION + "_detail", message)
+            .remove(APP_TARGET_VERSION)
+            .remove(APPLICATION + "_paused")
+            .apply()
+        java.io.File(context.cacheDir, "updates/jeppiran-update.apk").delete()
+    }
 
     fun enqueue(context: Context, type: String) {
         require(type in types)
@@ -38,6 +103,11 @@ object DurableUpdateQueue {
                 .setRequiredNetworkType(NetworkType.CONNECTED).build())
             .addTag("jeppiran-update-" + type)
             .build()
+        if (type == APPLICATION) {
+            // No previous completed APK/version can be reused as a new target.
+            app.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+                .edit().remove(APP_TARGET_VERSION).apply()
+        }
         record(app, type, "queued", 0, "Waiting for network")
         app.getSharedPreferences(PREFS, Context.MODE_PRIVATE).edit()
             .putBoolean(type + "_paused", false).apply()
@@ -223,5 +293,10 @@ class DurableUpdateWorker(ctx: Context, params: WorkerParameters) : Worker(ctx, 
             checkpoint()
             update(progress, "Verifying APK • " + progress + "%")
         }
+        // Write target only AFTER the signed APK has been reconstructed or
+        // downloaded and verified. doWork() then marks the queue completed.
+        DurableUpdateQueue.recordApplicationTarget(
+            applicationContext, check.remote.versionCode
+        )
     }
 }
