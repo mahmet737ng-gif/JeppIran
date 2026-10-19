@@ -15,6 +15,7 @@ on:
       - 'scripts/verify_new20_public_web.cjs'
       - 'scripts/verify_airport_carousel_r3_browser.cjs'
       - 'scripts/verify_airport_carousel_real_browser.cjs'
+      - 'scripts/build_carousel_chart_previews.py'
       - 'scripts/verify_profile_validity_browser.cjs'
       - 'scripts/verify_chart_swipes_browser.cjs'
       - 'scripts/build_offline_manifest.py'
@@ -243,6 +244,12 @@ jobs:
 
           print(f"Bundled {downloaded} airport PDFs ({total_bytes / 1048576:.1f} MiB).")
           PY
+
+      - name: Generate lightweight previews for all 78 airports from real charts
+        run: |
+          python3 -m pip install --disable-pip-version-check pymupdf==1.26.5
+          python3 scripts/build_carousel_chart_previews.py
+          python3 scripts/build_carousel_chart_previews.py --verify
 
       - name: Verify real Carousel chart rendering and geometry after PDF generation
         run: |
