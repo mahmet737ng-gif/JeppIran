@@ -23,6 +23,7 @@ on:
       - 'scripts/build_carousel_chart_previews.py'
       - 'scripts/build_chart_point_search_index.py'
       - 'web/preview/airport-carousel-r13-fixed/**'
+      - 'scripts/verify_notam_profile_zoom_browser.cjs'
       - 'scripts/verify_profile_validity_browser.cjs'
       - 'scripts/verify_chart_swipes_browser.cjs'
       - 'scripts/build_offline_manifest.py'
@@ -384,6 +385,7 @@ jobs:
           export NODE_PATH="$RUNNER_TEMP/jeppiran-browser-qa/node_modules"
           export JEPPIRAN_CHROME_BIN="$(command -v google-chrome)"
           node scripts/verify_profile_scenery_browser.cjs
+          node scripts/verify_notam_profile_zoom_browser.cjs
 
       - name: Verify visible airport chart validity in real Chrome
         run: |
