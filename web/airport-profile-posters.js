@@ -16,6 +16,9 @@
   const dimensions = new Map();
   let queued = false;
   let lastCode = "";
+  // Preserve the approved closed-NOTAM fit while the user reads notices.
+  // An expanding details panel is not a reason to zoom the whole profile.
+  let closedNotamFit = null;
   const urlFor = (icao) => {
     const cached = window.JEPPIRAN_POSTER_CACHE_URLS?.[icao];
     // Older offline registries can still point these airports at previous
@@ -111,10 +114,19 @@
     const available = Math.max(180, root.clientHeight - scenicReserve - 16);
     const natural = Math.max(1,shell.scrollHeight);
     const scale = Math.min(1,available/natural);
-    const chosen = Math.max(0.64,scale);
+    const code = (root.querySelector(".profile-icao")?.textContent || "").trim().toUpperCase();
+    const notamExpanded = Boolean(root.querySelector("#profileNotam .profile-notam-details[open]"));
+    const layoutKey = code + ":" + Math.round(root.clientWidth) + "x" + Math.round(root.clientHeight);
+    // Opening the NOTAM changes shell.scrollHeight. Never treat that as a
+    // change in the viewport's available dimensions: freeze its card zoom.
+    // Collapse, resize, or a different airport still gets a normal re-fit.
+    const chosen = notamExpanded && closedNotamFit?.key === layoutKey
+      ? closedNotamFit.zoom
+      : Math.max(0.64,scale);
+    if (!notamExpanded) closedNotamFit = {key:layoutKey,zoom:chosen};
     shell.style.zoom = String(chosen);
     shell.style.maxHeight = (available/chosen)+"px";
-    shell.style.overflowY = scale < 0.64 ? "auto" : "hidden";
+    shell.style.overflowY = natural*chosen > available+2 ? "auto" : "hidden";
   }
   function positionFrame(icao) {
     if (!root.classList.contains("jp-airport-poster-loaded")) return;
@@ -170,6 +182,7 @@
     root.classList.remove("jp-airport-poster-loaded");
     root.style.removeProperty("--jp-airport-poster-image");
     root.style.removeProperty("--jp-scenic-reserve");
+    closedNotamFit = null;
     root.querySelector(".jp-poster-frame")?.remove();
     root.querySelector(".jp-poster-scenic-foreground")?.remove();
     const shell = root.querySelector(".profile-shell");
