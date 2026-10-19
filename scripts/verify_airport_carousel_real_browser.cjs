@@ -29,6 +29,12 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
    page.on("response",r=>{if(/charts-manifest|charts-current|\/charts\/OIII.pdf|vendor\/pdf/.test(r.url())&&r.status()>=400)errors.push(r.status()+" "+r.url())});
    await page.goto(base,{waitUntil:"domcontentloaded"});
    await page.waitForFunction(()=>document.querySelector(".airport-token.active")?.dataset.airport==="OIII",{timeout:12000});
+   // With no chart open, the airport name, city, elevation and weather fields
+   // must appear below the compact four-tab rail.
+   assert.ok(await page.locator(".selected-airport").isVisible(),
+     "Airport profile must be visible before any chart is previewed");
+   assert.equal(await page.locator(".selected-airport").getAttribute("data-profile-airport"),"OIII");
+   assert.ok((await page.locator("#airportPlace").innerText()).includes("Elevation"));
    assert.equal(await page.locator(".airport-token").count(),78,
      "The complete 78-airport catalog must exist at first paint");
    const icaoBefore=await page.locator("#airportCarousel").boundingBox();
@@ -63,6 +69,8 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
    assert.ok(layout.active?.right>layout.wheel.left&&layout.active?.left<layout.wheel.right,"Selected chart outside the wheel");
    assert.ok(layout.activeText.length>=4,"Selected chart has no text");
    assert.ok(!layout.mini,"Mini preview not shown");
+   assert.ok(await page.locator(".selected-airport").isHidden(),
+     "Airport profile should disappear when a chart is previewed");
    await page.waitForFunction(()=>{
      const img=document.querySelector("#miniChartImage");
      return img&&img.complete&&img.naturalWidth>100&&!img.hidden;
@@ -102,6 +110,38 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
    assert.equal(pdfRequests.length,0,"Second thumbnail must not download the PDF");
    await page.locator("#miniChartOpen").click();
    assert.ok(await page.locator("#classicViewerHost").isVisible(),"Tap did not open full chart");
+   assert.ok(await page.locator(".selected-airport").isHidden(),
+     "Airport profile must remain hidden for a full Classic chart");
+   // Drag the airport strip WHILE Classic is open. The profile must emerge
+   // immediately, and track each intermediate centered ICAO before release.
+   const airportRect=await page.locator("#airportCarousel").boundingBox();
+   const step=await page.locator("#airportCarousel").evaluate(el=>el.clientWidth/10.25);
+   const startX=airportRect.left+airportRect.width/2, startY=airportRect.top+airportRect.height/2;
+   await page.mouse.move(startX,startY);
+   await page.mouse.down();
+   await page.mouse.move(startX+step*1.15,startY,{steps:5});
+   await page.waitForFunction(()=>document.querySelector(".selected-airport")?.dataset.profileAirport==="OIIE");
+   assert.ok(await page.locator(".selected-airport").isVisible(),
+     "First intermediate airport profile should be visible during the drag");
+   assert.ok(await page.locator("#classicViewerHost").isHidden(),
+     "Full Classic should close at the first deliberate airport swipe");
+   await page.mouse.move(startX+step*2.15,startY,{steps:5});
+   await page.waitForFunction(()=>document.querySelector(".selected-airport")?.dataset.profileAirport==="OIHR");
+   assert.ok((await page.locator("#airportName").innerText()).length>3,
+     "Second intermediate airport needs profile name while finger is still held");
+   await page.mouse.up();
+   await page.waitForTimeout(720);
+   assert.ok(await page.locator(".selected-airport").isVisible(),
+     "Airport profile remains visible after the carousel stops");
+   assert.equal(await page.locator(".category-shell.active").count(),0,
+     "Airport swipe must close stale chart category instead of opening another preview");
+   await page.locator('.procedure-category[data-category="AIRPORT"]').click();
+   await page.waitForFunction(()=>!document.querySelector("#miniChartPreview").hidden,{timeout:13000});
+   assert.ok(await page.locator(".selected-airport").isHidden(),
+     "Opening any new chart preview hides the profile again");
+   await page.locator('.procedure-category[data-category="AIRPORT"]').click();
+   assert.ok(await page.locator(".selected-airport").isVisible(),
+     "Closing chart preview restores current airport profile");
    // An unavailable index must never shrink the 78-airport carousel to 9 entries.
    const offlinePage=await context.newPage();
    await offlinePage.route("**/data/charts-manifest.json*",route=>route.abort());
@@ -139,6 +179,7 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
    console.log("PASS mixed-version R13 regression: cached old HTML, new JS, OIKM chart list and image preview");
    await stalePage.close();
    assert.ok(errors.filter(x=>/ReferenceError|SyntaxError|TypeError|404/.test(x)).length===0,errors.join("; "));
+   console.log("PASS R13 profile switch: absent chart shows profile, JPEG/Classic hides, finger swipe reveals every intermediate ICAO, closing chart restores");
    console.log("PASS FINAL R13 FIXED: fresh URL 78 airports, real JPEG, no PDF swipe, iPad geometry, Classic tap, cached old HTML resilient");
  }finally{if(browser)await browser.close();server.kill("SIGTERM")}
 })().catch(err=>{console.error(err);process.exitCode=1});
