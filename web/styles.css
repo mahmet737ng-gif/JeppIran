@@ -2070,3 +2070,23 @@ body.viewer-fullscreen #chartsView #chartsBackBtn{display:none!important}
   #chartsView.chart-open #chartsBackMobileBtn,
   body.viewer-fullscreen #chartsBackMobileBtn{display:none!important}
 }
+
+
+/* AIRPORT chart picker: readable, touch-accessible layout (ADC/taxi/stand)
+   choices on iPad. All underlying chart/page mapping stays unchanged. */
+#chartsView .airport-inline-tree .airport-layout-heading{
+  padding:8px 10px 6px;margin:6px 1px 3px;
+  color:#7fd3ff;font-size:11px;font-weight:800;letter-spacing:.04em;
+  border-bottom:1px solid rgba(74,157,209,.38);
+}
+#chartsView .airport-inline-tree .airport-layout-heading.secondary{
+  margin-top:12px;color:#a9c5d7;
+}
+@media(hover:none) and (min-width:750px){
+  #chartsView .airport-inline-tree .tree-item{
+    display:block;min-height:44px;
+    padding-top:10px!important;padding-bottom:10px!important;
+    touch-action:manipulation;cursor:pointer;
+    position:relative;z-index:1;
+  }
+}
