@@ -23,7 +23,14 @@ const chartButtons=new Map();
 const wrap=i=>(i%codes.length+codes.length)%codes.length;
 const clamp=(n,min,max)=>Math.max(min,Math.min(max,n));
 const getCode=i=>codes[wrap(i)];
-const getProfile=code=>metadata[code]||{};
+const APPROVED_AIRPORT_NAMES=Object.freeze({
+  ORBI:"Baghdad International Airport",
+  OIAW:"Ahwaz International Airport"
+});
+const getProfile=code=>{
+  const data=metadata[code]||{};
+  return APPROVED_AIRPORT_NAMES[code]?{...data,name:APPROVED_AIRPORT_NAMES[code]}:data;
+};
 const current=()=>getCode(selected);
 const slotStep=()=>el.carousel.clientWidth/(innerWidth<=690?6.35:innerWidth<=1040?8.1:10.25);
 const visibleRadius=()=>innerWidth<=690?2:innerWidth<=1040?3:4;
