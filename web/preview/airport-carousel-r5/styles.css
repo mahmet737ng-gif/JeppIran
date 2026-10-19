@@ -854,3 +854,5 @@ html.jp-android-carousel-qa .qa-updates-link{display:none!important}
   html.jp-android-carousel-qa .topline .brand{position:relative;z-index:3;margin-left:0!important}
   html.jp-android-carousel-qa .topline .qa-updates-link{display:none!important}
 }
+
+/* R8 browser QA checkpoint: explicit chart selection and Classic iframe handshake. */
