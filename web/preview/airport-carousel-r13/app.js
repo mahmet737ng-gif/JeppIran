@@ -598,7 +598,8 @@ if(typeof ResizeObserver!=="undefined"){
 const classicHost=$("#classicViewerHost"),classicFrame=$("#classicViewerFrame");
 const classicStatus=$("#classicViewerStatus");
 let classicReady=false,classicRequested=null,classicConfirmedKey="",classicLoadStarted=false;
-const miniHost=$("#miniChartPreview"),miniCanvas=$("#miniChartCanvas");
+const miniHost=$("#miniChartPreview"),miniCanvas=$("#miniChartCanvas"),miniImage=$("#miniChartImage");
+const thumbWarmCache=new Map();
 const miniStatus=$("#miniChartStatus"),miniTap=$("#miniPreviewTap");
 let miniItem=null,miniKey="",miniToken=0,miniTimer=0,miniRenderTask=null;
 let miniLibraryPromise=null,miniPdfCache=new Map();
@@ -613,6 +614,25 @@ function miniPdfLibrary(){
   }).catch(error=>{miniLibraryPromise=null;throw error});
   return miniLibraryPromise;
 }
+function thumbUrl(item){
+  return ROOT+"chart-previews/"+encodeURIComponent(item.airport)+"/"+Number(item.pdf_page)+".jpg";
+}
+function warmAdjacentThumbs(){
+  if(!chartSearchRows.length||miniHost.hidden)return;
+  const center=chartSearchRows.findIndex(item=>item.airport===miniItem?.airport&&
+    Number(item.page)===Number(miniItem?.page));
+  if(center<0)return;
+  for(const offset of [-2,-1,1,2]){
+    const neighbor=chartSearchRows[chartWrap(center+offset)];
+    if(!neighbor)continue;
+    const url=thumbUrl(neighbor);
+    if(thumbWarmCache.has(url))continue;
+    const img=new Image();
+    img.decoding="async";img.src=url;
+    thumbWarmCache.set(url,img);
+  }
+  while(thumbWarmCache.size>16)thumbWarmCache.delete(thumbWarmCache.keys().next().value);
+}
 function miniPdfDocument(lib,url){
   if(!miniPdfCache.has(url)){
     const promise=lib.getDocument({url}).promise.catch(error=>{miniPdfCache.delete(url);throw error});
@@ -624,7 +644,7 @@ function miniPdfDocument(lib,url){
 function showMiniChart(item){
   if(!item||!validProcedure(item)){
     cancelMiniDraw();miniItem=null;miniKey="";
-    miniHost.hidden=true;
+    miniHost.hidden=true;miniImage.hidden=true;
     return;
   }
   const key=item.airport+":"+Number(item.page);
@@ -638,10 +658,29 @@ function showMiniChart(item){
   $("#miniChartContext").textContent=item.airport+" · "+activeChartCategory+" · "+(item.chart_number||"");
   $("#miniChartTitle").textContent=item.name||"Chart "+item.page;
   miniStatus.hidden=false;miniStatus.textContent="Loading chart preview…";
-  miniCanvas.hidden=true;
+  miniCanvas.hidden=true;miniImage.hidden=true;
   const token=miniToken;
-  // Debounce costly PDF rasterization while the user is spinning the wheel.
-  miniTimer=setTimeout(()=>{miniTimer=0;void drawMiniChart(item,token)},130);
+  // The JPEG was generated from the real published PDF at deploy-time.
+  // Loading a small image is far faster than repeatedly downloading/decoding
+  // a full airport PDF with PDF.js while the user spins the carousel.
+  const url=thumbUrl(item);
+  miniImage.onload=()=>{
+    if(token!==miniToken||miniHost.hidden)return;
+    if(miniImage.naturalWidth<50){
+      miniImage.onerror?.();
+      return;
+    }
+    miniCanvas.hidden=true;miniImage.hidden=false;miniStatus.hidden=true;
+    warmAdjacentThumbs();
+  };
+  miniImage.onerror=()=>{
+    if(token!==miniToken||miniHost.hidden)return;
+    miniImage.hidden=true;
+    // Robust fallback for older mirrors / incomplete JPEG publication.
+    miniStatus.textContent="Loading PDF fallback…";
+    miniTimer=setTimeout(()=>{miniTimer=0;void drawMiniChart(item,token)},50);
+  };
+  miniImage.src=url;
 }
 async function drawMiniChart(item,token){
   try{
@@ -717,7 +756,7 @@ function displayFocusedChart(){
 }
 function hideInlineChart(){
   cancelMiniDraw();miniKey="";miniItem=null;miniHost.hidden=true;
-  miniCanvas.hidden=true;
+  miniCanvas.hidden=true;miniImage.hidden=true;
   document.body.classList.remove("preview-chart-fullscreen");
   $("#previewCdfaBtn").hidden=true;
   classicFrame.contentWindow?.postMessage({type:"JEPPIRAN_PREVIEW_EXIT_FULLSCREEN_V1"},location.origin);
@@ -737,7 +776,7 @@ function dispatchClassicSelection(){
   },location.origin);
 }
 function showInlineChart(item){
-  cancelMiniDraw();miniHost.hidden=true;miniKey="";
+  cancelMiniDraw();miniHost.hidden=true;miniKey="";miniImage.hidden=true;
   if(previewSelectionFrame)cancelAnimationFrame(previewSelectionFrame);
   previewSelectionFrame=0;
   if(!item||!validProcedure(item)){
