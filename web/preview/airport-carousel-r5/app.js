@@ -76,8 +76,8 @@ function paintTrack(){
     button.style.setProperty("--shift",(d*step).toFixed(3)+"px");
     button.style.setProperty("--scale","1");
     button.style.setProperty("--opacity",opacity.toFixed(3));
-    button.style.setProperty("--icao-size",((compact?15:24)+(compact?29:53)*focus).toFixed(2)+"px");
-    button.style.setProperty("--iata-size",((compact?10:15)+(compact?13:20)*focus).toFixed(2)+"px");
+    button.style.setProperty("--icao-size",((compact?14:20)+(compact?22:35)*focus).toFixed(2)+"px");
+    button.style.setProperty("--iata-size",((compact?10:12)+(compact?8:14)*focus).toFixed(2)+"px");
     button.style.setProperty("--guide-opacity",focus.toFixed(3));
     button.style.zIndex=String(100-Math.floor(distance*10));
     const active=index===mid;
@@ -336,7 +336,8 @@ function buildProcedureWheel(){
     button.addEventListener("click",()=>{
       if(chartGesture?.moved||performance.now()<chartSuppressTap)return;
       if(i!==chartSelected||Math.abs(chartVisualPos-chartSelected)>.01)centerProcedure(i,true);
-      else void showInlineChart(item);
+      // Any visible procedure opens on the first tap; swiping alone only moves the wheel.
+      void showInlineChart(item);
     });
     chartButtons.set(i,button);
     nodes.append(button);
@@ -361,7 +362,7 @@ function paintProcedureWheel(){
     button.style.setProperty("--procedure-w",(step*1.23).toFixed(2)+"px");
     button.style.setProperty("--procedure-scale",(0.83+focus*.17).toFixed(3));
     button.style.setProperty("--procedure-opacity",clamp(1-Math.max(0,d-.4)*.28,.26,1).toFixed(3));
-    button.style.setProperty("--procedure-title-size",(12+focus*(innerWidth<=690?3:5)).toFixed(2)+"px");
+    button.style.setProperty("--procedure-title-size",(11+focus*(innerWidth<=690?2:3)).toFixed(2)+"px");
     button.style.zIndex=String(20-Math.floor(d*5));
     const on=index===activeIdx;
     button.classList.toggle("active",on);
@@ -373,8 +374,6 @@ function commitProcedure(pos){
   chartSelected=chartWrap(Math.round(pos));
   chartVisualPos=chartSelected;
   paintProcedureWheel();
-  const item=chartSearchRows[chartSelected];
-  void showInlineChart(item);
 }
 function glideProcedure(pos,duration){
   clearChartAnimation();
@@ -417,7 +416,7 @@ function displayProcedureRows(rows){
       "No matching charts in this category.":"No published charts in this category.";
     procTrack.append(status);
     void showInlineChart(null);
-  }else commitProcedure(0);
+  }else {paintProcedureWheel();hideInlineChart();}
 }
 function filterProcedureRows(){
   const q=$("#procedureSearch").value.trim().toUpperCase();
@@ -478,9 +477,7 @@ function toggleProcedureCategory(category){
     el.classList.toggle("active",on);
     el.setAttribute("aria-expanded",String(on));
   });
-  classicHost.hidden=false;
-  classicStatus.hidden=false;
-  classicStatus.textContent="Loading "+category+" charts…";
+  hideInlineChart();
   void refreshProcedureCategory(category);
 }
 document.querySelectorAll(".procedure-category").forEach(b=>
@@ -550,6 +547,9 @@ const classicHost=$("#classicViewerHost"),classicFrame=$("#classicViewerFrame");
 const classicStatus=$("#classicViewerStatus");
 let classicReady=false,classicRequested=null,classicConfirmedKey="",classicLoadStarted=false;
 function hideInlineChart(){
+  document.body.classList.remove("preview-chart-fullscreen");
+  $("#previewCdfaBtn").hidden=true;
+  classicFrame.contentWindow?.postMessage({type:"JEPPIRAN_PREVIEW_EXIT_FULLSCREEN_V1"},location.origin);
   classicRequested=null;
   classicHost.hidden=true;
   document.body.classList.remove("chart-selected");
@@ -587,6 +587,15 @@ function showInlineChart(item){
 }
 window.addEventListener("message",event=>{
   if(event.origin!==location.origin||event.source!==classicFrame.contentWindow)return;
+  if(event.data?.type==="JEPPIRAN_PREVIEW_FULLSCREEN_V1"){
+    const open=event.data.open===true;
+    document.body.classList.toggle("preview-chart-fullscreen",open);
+    $("#previewCdfaBtn").hidden=!open||event.data.cdfaAvailable!==true;
+  }
+  if(event.data?.type==="JEPPIRAN_PREVIEW_CDFA_STATUS_V1"){
+    $("#previewCdfaBtn").dataset.available=String(event.data.available===true);
+    $("#previewCdfaBtn").hidden=!document.body.classList.contains("preview-chart-fullscreen")||event.data.available!==true;
+  }
   if(event.data?.type==="JEPPIRAN_PREVIEW_CLASSIC_READY_V1"){
     classicReady=true;
     dispatchClassicSelection();
@@ -670,6 +679,9 @@ if(["android-phone","android-carousel-qa"].includes(
 }
 // Android OS back gesture closes a chart group before leaving Carousel QA.
 window.jeppiranAndroidBack=()=>{
+  if(document.body.classList.contains("preview-chart-fullscreen")){
+    $("#previewFullscreenExit").click();return true;
+  }
   if(document.fullscreenElement){void document.exitFullscreen().catch(()=>{});return true;}
   if(activeChartCategory){closeProcedureCategory();return true;}
   if(["android-phone","android-carousel-qa"].includes(
@@ -679,5 +691,12 @@ window.jeppiranAndroidBack=()=>{
   }
   return false;
 };
+$("#previewFullscreenExit").addEventListener("click",()=>{
+  classicFrame.contentWindow?.postMessage({type:"JEPPIRAN_PREVIEW_EXIT_FULLSCREEN_V1"},location.origin);
+  document.body.classList.remove("preview-chart-fullscreen");
+});
+$("#previewCdfaBtn").addEventListener("click",()=>{
+  classicFrame.contentWindow?.postMessage({type:"JEPPIRAN_PREVIEW_TOGGLE_CDFA_V1"},location.origin);
+});
 void boot();
 })();
