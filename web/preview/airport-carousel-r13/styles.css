@@ -1250,3 +1250,11 @@ body.chart-selected .mini-chart-preview{display:none!important}
     max-width:min(245px,calc(100vw - 145px))!important
   }
 }
+
+/* FINAL R13: compressed thumbnails are displayed immediately; the full Classic
+   canvas PDF renderer is only used on an explicit tap or a thumbnail failure. */
+.mini-preview-surface #miniChartImage{
+  display:block;max-width:100%;max-height:100%;width:auto;height:auto;
+  object-fit:contain;box-shadow:0 1px 9px rgba(0,0,0,.13)
+}
+.mini-preview-surface #miniChartImage[hidden]{display:none!important}
