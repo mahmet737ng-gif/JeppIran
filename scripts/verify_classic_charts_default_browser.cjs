@@ -53,7 +53,7 @@ async function ready(){
   assert.equal(await page.evaluate(()=>localStorage.getItem("jeppiran-chart-layout-v2")),"carousel");
   await page.goto(base,{waitUntil:"domcontentloaded"});
   await page.locator('button.home-card[data-route="charts"]').click();
-  await page.waitForURL(/\/preview\/airport-carousel-r5\/$/);
+  await page.waitForURL(/\/preview\/airport-carousel-r13\/$/);
   await page.goto(base,{waitUntil:"domcontentloaded"});
   assert.equal(await page.locator('input[name="chartsLayoutMode"][value="carousel"]').isChecked(),true,
     "Only a deliberate new Carousel choice should be remembered");
