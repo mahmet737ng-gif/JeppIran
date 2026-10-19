@@ -112,7 +112,22 @@ class UpdateActivity : AppCompatActivity() {
         val actions = listOf(dataUpdateButton, enrouteUpdateButton, appUpdateButton)
         for ((i, row) in rows.withIndex()) {
             val (type, label, pause) = row
+            val wasCompleted = type == DurableUpdateQueue.APPLICATION &&
+                DurableUpdateQueue.state(this, type) == "completed"
+            if (wasCompleted) {
+                // The installer may have succeeded while Updates was closed.
+                // A persisted WorkManager "completed" means download complete,
+                // not that the same APK must be offered for installation again.
+                DurableUpdateQueue.pendingApplicationApk(this)
+            }
             val state = DurableUpdateQueue.state(this, type)
+            if (type == DurableUpdateQueue.APPLICATION && state != "completed") {
+                actions[i].text = "UPDATE APP"
+                if (wasCompleted) {
+                    label.text = DurableUpdateQueue.detail(this, type)
+                    actions[i].isEnabled = false
+                }
+            }
             val busy = state in setOf("queued", "running", "paused")
             val percent = DurableUpdateQueue.progress(this, type)
             bars[i].visibility = if (busy || state == "completed") android.view.View.VISIBLE
@@ -689,14 +704,18 @@ class UpdateActivity : AppCompatActivity() {
 
     private fun installAppUpdate() {
         if (DurableUpdateQueue.state(this, DurableUpdateQueue.APPLICATION) == "completed") {
+            // Never launch an installer for an APK that Android already has.
+            val apk = DurableUpdateQueue.pendingApplicationApk(this)
+            if (apk == null) {
+                showBackgroundDownloadStatus()
+                checkAppUpdate()
+                return
+            }
             if (!AppUpdateManager.canInstallPackages(this)) {
                 AppUpdateManager.openInstallPermission(this)
                 return
             }
-            val apk = java.io.File(cacheDir, "updates/jeppiran-update.apk")
-            if (apk.isFile && apk.length() > 0) {
-                AppUpdateManager.launchInstaller(this, apk)
-            } else appStatus.text = "Verified APK missing. Check updates again."
+            AppUpdateManager.launchInstaller(this, apk)
             return
         }
         if (packageName.endsWith(".phoneqa")) {
