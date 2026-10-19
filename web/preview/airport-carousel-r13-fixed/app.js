@@ -15,6 +15,20 @@ let codes=[...BUILTIN_AIRPORT_CODES], metadata={},selected=BUILTIN_AIRPORT_CODES
 const carouselButtons=new Map();
 let chartManifest=null,charts=null,metarRequest=0;
 let chartCatalogPromise=null,activeChartCategory=null,chartSheetToken=0,activeChartRows=[];
+let pointIndex=null,pointIndexPromise=null,pendingSearchChart=null;
+function loadPublishedPoints(){
+  if(pointIndex)return Promise.resolve(pointIndex);
+  if(!pointIndexPromise)pointIndexPromise=fetchJsonTimed(
+    ROOT+"data/chart-point-index-v2621.json",12000
+  ).then(data=>{
+    if(data?.cycle!=="2621"||!data.pages||typeof data.pages!=="object")
+      throw Error("Wrong cycle point index");
+    pointIndex=data.pages;
+    if(el.search.value.trim())showResults();
+    return pointIndex;
+  }).catch(error=>{pointIndexPromise=null;console.warn("Chart point search index unavailable",error);return null});
+  return pointIndexPromise;
+}
 let chartVisualPos=0,chartSelected=0,chartFrame=0,chartToken=0,chartGesture=null,chartSearchRows=[];
 let previewQueuedIndex=-1,previewSelectionFrame=0;
 const chartButtons=new Map();
@@ -296,26 +310,93 @@ el.carousel.addEventListener("keydown",e=>{
 $("#prevAirport").addEventListener("click",()=>changeBy(-1));
 $("#nextAirport").addEventListener("click",()=>changeBy(1));
 window.addEventListener("resize",()=>paintTrack(),{passive:true});
+function searchCategory(row){
+  const category=String(row.category||"").toUpperCase();
+  return category==="APPROACH"?"APP":category==="AIRPORT"?"AIRPORT":category;
+}
+function openSearchChart(row){
+  if(!charts||!row||!codes.includes(row.airport))return;
+  const category=searchCategory(row);
+  if(!(category in categoryMap))return;
+  el.search.value="";el.results.hidden=true;el.results.replaceChildren();
+  // Always resolve the *exact* chart page, not merely its airport/category.
+  if(activeChartCategory)closeProcedureCategory();
+  centerOn(preferredIndex(row.airport),false);
+  pendingSearchChart={airport:row.airport,page:Number(row.page),category};
+  toggleProcedureCategory(category);
+}
 function showResults(){
- const value=el.search.value.trim().toUpperCase();el.results.replaceChildren();
- if(!value){el.results.hidden=true;return;}
- const matchRank=code=>{
-   const icao=code.toUpperCase(),iata=String(getProfile(code).iata||fallbackIata[code]||"").toUpperCase();
-   const name=String(getProfile(code).name||"").toUpperCase();
-   if(icao===value||iata===value)return 0;
-   if(icao.startsWith(value))return 1;
-   if(iata.startsWith(value))return 2;
-   if(name.startsWith(value))return 3;
-   if(icao.includes(value)||iata.includes(value))return 4;
-   return 5;
- };
- const matches=codes.filter(c=>c.includes(value)||String(getProfile(c).iata||fallbackIata[c]||"").toUpperCase().includes(value)||String(getProfile(c).name||"").toUpperCase().includes(value))
-   .sort((a,b)=>matchRank(a)-matchRank(b)||preferredIndex(a)-preferredIndex(b));
- if(!matches.length){el.results.hidden=true;return;}
- // Each letter centers the strongest match in the airport wheel.
- centerOn(preferredIndex(matches[0]),true);
- for(const code of matches){const b=document.createElement("button");b.type="button";const label=document.createElement("b"),small=document.createElement("small");label.textContent=code+" · "+(getProfile(code).iata||fallbackIata[code]||"—");small.textContent=getProfile(code).name||"Airport";b.append(label,small);b.onclick=()=>{centerOn(preferredIndex(code),false);el.search.value="";el.results.hidden=true;el.carousel.focus()};el.results.append(b)}
- el.results.hidden=false;
+  const value=el.search.value.trim().toUpperCase();
+  el.results.replaceChildren();
+  if(!value){el.results.hidden=true;return;}
+  const matchRank=code=>{
+    const icao=code.toUpperCase(),iata=String(getProfile(code).iata||fallbackIata[code]||"").toUpperCase();
+    const name=String(getProfile(code).name||"").toUpperCase();
+    if(icao===value||iata===value)return 0;
+    if(icao.startsWith(value))return 1;
+    if(iata.startsWith(value))return 2;
+    if(name.startsWith(value))return 3;
+    if(icao.includes(value)||iata.includes(value))return 4;
+    return 5;
+  };
+  const airports=codes.filter(c=>c.includes(value)||
+    String(getProfile(c).iata||fallbackIata[c]||"").toUpperCase().includes(value)||
+    String(getProfile(c).name||"").toUpperCase().includes(value))
+    .sort((a,b)=>matchRank(a)-matchRank(b)||preferredIndex(a)-preferredIndex(b));
+  const results=[];
+  for(const code of airports.slice(0,8)){
+    results.push({kind:"airport",airport:code,rank:matchRank(code),
+      title:code+" · "+(getProfile(code).iata||fallbackIata[code]||"—"),
+      subtitle:getProfile(code).name||"Airport"});
+  }
+  // Chart titles, procedure identifiers and chart numbers come from the exact
+  // published V2621 chart catalog; no PDF download occurs during search.
+  if(value.length>=2&&charts){
+    for(const row of charts){
+      const name=String(row.name||"").toUpperCase();
+      const chartNumber=String(row.chart_number||"").toUpperCase();
+      const titleMatch=name.includes(value)||chartNumber===value;
+      const terms=pointIndex?.[String(row.page)]||[];
+      const fix= value.length>=3?terms.find(word=>word===value||word.startsWith(value)):null;
+      if(!titleMatch&&!fix)continue;
+      const rank=titleMatch?(name===value?0:name.startsWith(value)?1:2):(fix===value?3:4);
+      results.push({kind:titleMatch?"procedure":"point",rank,airport:row.airport,row,
+        title:(fix&&!titleMatch?fix+" · ":"")+(row.chart_number||"")+" · "+(row.name||"Chart"),
+        subtitle:row.airport+" · "+searchCategory(row)+(fix?" · Fix "+fix:"")});
+    }
+    // Keep exact procedure matches and actual point matches above loose ones.
+    results.sort((a,b)=>{
+      if(a.kind==="airport"&&b.kind!=="airport")return -1;
+      if(b.kind==="airport"&&a.kind!=="airport")return 1;
+      return a.rank-b.rank||a.airport.localeCompare(b.airport)||
+        (Number(a.row?.page||0)-Number(b.row?.page||0));
+    });
+  }
+  if(!results.length){
+    if((!charts||!pointIndex)&&value.length>=2){
+      const line=document.createElement("div");line.className="search-waiting";
+      line.textContent="Searching airport charts and waypoints…";
+      el.results.append(line);el.results.hidden=false;
+    }else el.results.hidden=true;
+    return;
+  }
+  // Typing ICAO/IATA still centers the best airport, as in the approved wheel.
+  if(airports.length)centerOn(preferredIndex(airports[0]),true);
+  for(const found of results.slice(0,35)){
+    const button=document.createElement("button"),name=document.createElement("b"),details=document.createElement("small");
+    button.type="button";button.className="search-result-"+found.kind;
+    name.textContent=found.title;details.textContent=found.subtitle;
+    button.append(name,details);
+    button.setAttribute("aria-label",found.kind+" "+found.title+" "+found.subtitle);
+    button.onclick=()=>{
+      if(found.kind==="airport"){
+        centerOn(preferredIndex(found.airport),false);
+        el.search.value="";el.results.hidden=true;el.carousel.focus();
+      }else openSearchChart(found.row);
+    };
+    el.results.append(button);
+  }
+  el.results.hidden=false;
 }
 el.search.addEventListener("input",showResults);
 el.search.addEventListener("keydown",e=>{if(e.key==="Escape")el.results.hidden=true;else if(e.key==="Enter"&&!el.results.hidden){e.preventDefault();el.results.querySelector("button")?.click()}});
@@ -538,6 +619,11 @@ async function refreshProcedureCategory(category){
       String(c.category||"").toUpperCase()===categoryMap[category])
       .sort((a,b)=>Number(a.page)-Number(b.page));
     filterProcedureRows();
+    if(pendingSearchChart&&pendingSearchChart.airport===code&&pendingSearchChart.category===category){
+      const target=chartSearchRows.findIndex(item=>Number(item.page)===pendingSearchChart.page);
+      pendingSearchChart=null;
+      if(target>=0)centerProcedure(target,false);
+    }
   }catch(error){
     if(request!==chartSheetToken||activeChartCategory!==category)return;
     $("#procedureCount").textContent="Charts unavailable";
@@ -1034,7 +1120,10 @@ async function boot(){
     chartManifest=manifest;
     // Start the lightweight procedure-title index in the background, not
     // after the user taps STAR/SID/AIRPORT/APP for the first time.
-    void loadPublishedCharts().catch(()=>{});
+    void loadPublishedCharts().then(()=>{
+      if(el.search.value.trim())showResults();
+    }).catch(()=>{});
+    void loadPublishedPoints();
     selected=Math.max(0,codes.indexOf(selectedIcao));
     visualPos=selected;
     buildTrack();paintTrack();updateSelected();
