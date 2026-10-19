@@ -15,6 +15,11 @@ on:
       - 'scripts/verify_new20_public_web.cjs'
       - 'scripts/verify_airport_carousel_r3_browser.cjs'
       - 'scripts/verify_airport_carousel_real_browser.cjs'
+      - 'tests/airport-briefings-prefetch-v2621.test.cjs'
+      - 'web/airport-briefings-preload.js'
+      - 'web/notam-service.js'
+      - 'web/preview/airport-carousel-r13-fixed/**'
+      - 'web/data/chart-briefing-titles-v2621.json'
       - 'scripts/build_carousel_chart_previews.py'
       - 'scripts/verify_profile_validity_browser.cjs'
       - 'scripts/verify_chart_swipes_browser.cjs'
@@ -86,6 +91,13 @@ jobs:
 
       - name: Check Charts Back navigation and fullscreen Home removal
         run: node --test tests/home-navigation-v2621.test.cjs
+
+      - name: Verify 78-airport METAR/NOTAM startup cache and approved display names
+        run: |
+          node --check web/airport-briefings-preload.js
+          node --check web/notam-service.js
+          node --check web/preview/airport-carousel-r13-fixed/app.js
+          node --test tests/airport-briefings-prefetch-v2621.test.cjs
 
       - name: Verify exact V2621 apron and airport ground plate display-only names
         run: node --test tests/chart-display-names-v2621.test.cjs
