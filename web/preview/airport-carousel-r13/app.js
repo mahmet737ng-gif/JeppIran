@@ -11,7 +11,9 @@ const fallbackIata=Object.freeze({OIII:"THR",OIIE:"IKA",OIMM:"MHD",OISS:"SYZ",OI
 const fallbackNames={OIII:["Mehrabad International Airport","Tehran, Iran",3962],OIIE:["Imam Khomeini International Airport","Tehran, Iran",3305],OIMM:["Mashhad International Airport","Mashhad, Iran",3263]};
 const $=sel=>document.querySelector(sel);
 const el={carousel:$("#airportCarousel"),track:$("#carouselTrack"),name:$("#airportName"),place:$("#airportPlace"),scenery:$("#scenery"),category:$("#flightCategory"),dot:$("#flightDot"),clouds:$("#clouds"),temp:$("#temperature"),wind:$("#wind"),qnh:$("#qnh"),weatherStatus:$("#weatherStatus"),search:$("#airportSearch"),results:$("#searchResults")};
-let codes=["OIMM","OISL","OIYY","OIFM","OIII","OIKB","OIAW","OIBB","OITT"], metadata={},selected=4,visualPos=4,raf=0,animationToken=0,gesture=null;
+// Shipped full V2621 manifest set: 78 airports available before any network request.
+const BUILTIN_AIRPORT_CODES=Object.freeze(["LTAC","LTFM","OIAA","OIAM","OIAW","OIBA","OIBB","OIBK","OIBL","OIBP","OIBQ","OIBS","OIBV","OICC","OICI","OICK","OICS","OICZ","OIFE","OIFM","OIFP","OIFS","OIGG","OIHH","OIHR","OIIE","OIII","OIIP","OIKB","OIKJ","OIKK","OIKM","OIKQ","OIKR","OIKY","OIMB","OIMJ","OIMM","OIMN","OIMS","OIMT","OINE","OING","OINN","OINR","OINZ","OISF","OISL","OISR","OISS","OISY","OITK","OITL","OITM","OITR","OITT","OITU","OITZ","OIYY","OIZB","OIZC","OIZH","OIZI","OIZS","OMDB","OMDW","OOMS","OPIS","OPKC","ORBI","ORER","ORMM","ORNI","ORSJ","OTHH","UDYZ","UGSB","UGTB"]);
+let codes=[...BUILTIN_AIRPORT_CODES], metadata={},selected=BUILTIN_AIRPORT_CODES.indexOf("OIII"),visualPos=selected,raf=0,animationToken=0,gesture=null;
 const carouselButtons=new Map();
 let chartManifest=null,charts=null,wxCache=null,wxCacheAt=0,metarRequest=0;
 let chartCatalogPromise=null,activeChartCategory=null,chartSheetToken=0,activeChartRows=[];
@@ -244,7 +246,7 @@ function showResults(){
    return 5;
  };
  const matches=codes.filter(c=>c.includes(value)||String(getProfile(c).iata||fallbackIata[c]||"").toUpperCase().includes(value)||String(getProfile(c).name||"").toUpperCase().includes(value))
-   .sort((a,b)=>matchRank(a)-matchRank(b)||preferredIndex(a)-preferredIndex(b)).slice(0,12);
+   .sort((a,b)=>matchRank(a)-matchRank(b)||preferredIndex(a)-preferredIndex(b));
  if(!matches.length){el.results.hidden=true;return;}
  // Each letter centers the strongest match in the airport wheel.
  centerOn(preferredIndex(matches[0]),true);
@@ -810,15 +812,17 @@ async function boot(){
   try{
     const manifest=await fetchJsonTimed(ROOT+"data/charts-manifest.json",9500);
     const newCodes=Object.keys(manifest?.airports||{}).sort();
-    if(!newCodes.length)throw Error("Empty airport list");
+    if(newCodes.length!==BUILTIN_AIRPORT_CODES.length||
+       newCodes.some((icao,index)=>icao!==BUILTIN_AIRPORT_CODES[index]))
+       throw Error("Incomplete airport manifest: keep full built-in "+BUILTIN_AIRPORT_CODES.length+"-airport set");
     const selectedIcao=current();
     codes=newCodes;
     selected=Math.max(0,codes.indexOf(selectedIcao));
     visualPos=selected;
     buildTrack();paintTrack();updateSelected();
   }catch(error){
-    console.warn("Carousel preview using built-in airport labels",error);
-    // The fallback airport selector stays functional without metadata.
+    console.warn("Airport manifest unavailable; using the complete bundled "+BUILTIN_AIRPORT_CODES.length+"-airport V2621 catalog",error);
+    // Full 78-airport selector stays functional even if the manifest is temporarily blocked.
   }
   try{
     const profiles=await fetchJsonTimed(ROOT+"data/airport-profiles.json",9500);
