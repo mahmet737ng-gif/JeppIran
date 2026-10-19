@@ -277,9 +277,25 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
    await page.waitForFunction(()=>[...document.querySelectorAll(".search-result-procedure")]
      .some(btn=>btn.textContent.includes("MIVAK 4N")),{timeout:12000});
    await page.locator(".search-result-procedure").filter({hasText:"MIVAK 4N"}).first().click();
-   await page.waitForFunction(()=>document.querySelector(".airport-token.active")?.dataset.airport==="OIII"
-     && document.querySelector(".procedure-category.active")?.dataset.category==="STAR"
-     && document.querySelector("#miniChartTitle")?.textContent.includes("MIVAK 4N"),null,{timeout:16000});
+   try{
+     await page.waitForFunction(()=>document.querySelector(".airport-token.active")?.dataset.airport==="OIII"
+       && document.querySelector(".procedure-category.active")?.dataset.category==="STAR"
+       && document.querySelector("#miniChartTitle")?.textContent.includes("MIVAK 4N"),null,{timeout:8000});
+   }catch(error){
+     const state=await page.evaluate(()=>({
+       airport:document.querySelector(".airport-token.active")?.dataset.airport,
+       category:document.querySelector(".procedure-category.active")?.dataset.category,
+       mini:document.querySelector("#miniChartTitle")?.textContent,
+       miniHidden:document.querySelector("#miniChartPreview")?.hidden,
+       selected:document.querySelector(".procedure-token.active")?.textContent,
+       count:document.querySelectorAll(".procedure-token").length,
+       status:document.querySelector("#procedureCount")?.textContent,
+       results:document.querySelectorAll("#searchResults button").length,
+       searchValue:document.querySelector("#airportSearch")?.value
+     }));
+     console.log("Procedure search navigation diagnostic:",JSON.stringify(state));
+     throw error;
+   }
    assert.ok(await page.locator("#classicViewerHost").isHidden(),
      "Procedure search should select the lightweight preview, not open Classic");
    // Search genuine five-letter chart waypoints extracted from V2621 source PDFs.
