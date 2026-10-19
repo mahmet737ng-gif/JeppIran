@@ -75,9 +75,9 @@ function planProfileWeather(code){
     else el.weatherStatus.textContent="METAR unavailable for "+code;
     return;
   }
+  // The startup loader was launched when the page opened. Only its eventual
+  // update event may replace this message; swipes must never start downloads.
   el.weatherStatus.textContent="Downloading airport METARs…";
-  // Only initial startup may request a batch; subsequent swipes never fetch.
-  window.JEPPIRAN_AIRPORT_PREFETCH?.start();
 }
 function renderAirportProfile(code,force=false){
   if(!force&&code===displayedProfileCode)return;
