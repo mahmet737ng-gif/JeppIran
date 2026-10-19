@@ -1158,3 +1158,95 @@ body.chart-selected .mini-chart-preview{display:none!important}
 @media(prefers-reduced-motion:reduce){
   .mini-chart-preview{scroll-behavior:auto}
 }
+
+/* R12 CHART-BODY-ONLY EXPANSION
+   ICAO carousel/tokens and their typography are intentionally untouched.
+   The four category buttons remain compact. Only the neighboring chart body
+   grows after a category is opened; the closed selector is a short centered rail. */
+.procedure-zone .procedure-categories{
+  width:max-content!important;max-width:calc(100vw - 18px)!important;
+  min-width:0!important;min-height:45px!important;
+  display:flex!important;flex-wrap:nowrap!important;
+  align-items:flex-start!important;justify-content:flex-start!important;
+  overflow-x:auto!important;overflow-y:hidden!important;
+  gap:4px!important;padding:3px!important;margin:0 auto!important
+}
+.procedure-zone .category-shell,
+.procedure-zone .category-shell:not(.active){
+  display:flex!important;align-items:flex-start!important;
+  flex:0 0 75px!important;min-width:75px!important;max-width:75px!important
+}
+.procedure-zone .category-shell.active{
+  flex:0 0 clamp(470px,calc(100vw - 345px),1120px)!important;
+  min-width:clamp(470px,calc(100vw - 345px),1120px)!important;
+  max-width:clamp(470px,calc(100vw - 345px),1120px)!important
+}
+.procedure-zone .category-shell>.procedure-category{
+  flex:0 0 75px!important;width:75px!important;
+  min-width:75px!important;min-height:78px!important;
+  max-height:78px!important;height:78px!important;
+  padding:5px 3px!important;font-size:11px!important
+}
+.procedure-zone .category-shell>.category-body{
+  flex:0 0 0px!important;width:0!important;min-width:0!important;
+  max-width:0!important;overflow:hidden!important;
+  opacity:0;transition:opacity .18s ease
+}
+.procedure-zone .category-shell.active>.category-body{
+  flex:1 1 0%!important;width:auto!important;min-width:0!important;
+  max-width:none!important;opacity:1
+}
+.procedure-zone .category-shell .procedure-details.open{
+  display:flex!important;width:100%!important;min-width:0!important;
+  height:78px!important;max-height:78px!important;opacity:1!important;
+  visibility:visible!important;pointer-events:auto!important;padding:0 3px!important
+}
+.procedure-zone .category-shell .procedure-wheel-row,
+.procedure-zone .category-shell .procedure-wheel{
+  height:73px!important;min-height:73px!important
+}
+.procedure-zone .category-shell .procedure-token{
+  height:68px!important;min-height:68px!important;
+  padding:4px 7px!important;gap:2px!important
+}
+.procedure-zone .category-shell .procedure-token .procedure-title{
+  display:-webkit-box!important;-webkit-box-orient:vertical!important;
+  -webkit-line-clamp:4!important;line-clamp:4!important;
+  white-space:normal!important;overflow-wrap:break-word!important;
+  font-size:var(--procedure-title-size,13px)!important;
+  line-height:1.12!important
+}
+/* Empty, loading or error states must remain readable inside the expanded rail. */
+.procedure-zone .procedure-empty{
+  z-index:50;display:block!important;
+  color:#cfedff!important;font-size:12px!important;
+  padding:5px!important;pointer-events:none
+}
+@media(max-width:899px){
+  .procedure-zone .category-shell,.procedure-zone .category-shell:not(.active){
+    flex:0 0 58px!important;min-width:58px!important;max-width:58px!important
+  }
+  .procedure-zone .category-shell>.procedure-category{
+    flex:0 0 58px!important;width:58px!important;min-width:58px!important;
+    font-size:10px!important
+  }
+  .procedure-zone .category-shell.active{
+    flex:0 0 min(520px,calc(100vw - 195px))!important;
+    min-width:min(520px,calc(100vw - 195px))!important;
+    max-width:min(520px,calc(100vw - 195px))!important
+  }
+}
+@media(max-width:690px){
+  .procedure-zone .category-shell,.procedure-zone .category-shell:not(.active){
+    flex:0 0 43px!important;min-width:43px!important;max-width:43px!important
+  }
+  .procedure-zone .category-shell>.procedure-category{
+    flex:0 0 43px!important;width:43px!important;min-width:43px!important;
+    font-size:9px!important
+  }
+  .procedure-zone .category-shell.active{
+    flex:0 0 min(245px,calc(100vw - 145px))!important;
+    min-width:min(245px,calc(100vw - 145px))!important;
+    max-width:min(245px,calc(100vw - 145px))!important
+  }
+}
