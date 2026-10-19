@@ -77,9 +77,22 @@ async function ready(){for(let i=0;i<70;i++){try{if((await fetch(url)).ok)return
    assert.ok(layout.wheelLeft>=layout.starRight-2,"Chart names should start to the RIGHT of STAR: "+JSON.stringify(layout));
    assert.ok(layout.wheelRight<=layout.sidLeft+2,"Chart names must finish BEFORE SID: "+JSON.stringify(layout));
    assert.ok(Math.abs(layout.starTop-layout.sidTop)<4,"STAR and SID must be in the SAME row");
-   assert.ok(await page.locator("#classicViewerHost").isVisible(),"R10 must show the centered Classic chart automatically when category opens");
-   // The original PDF should appear without any chart-token tap.
-   await page.waitForFunction(()=>document.body.classList.contains("chart-selected"));
+   assert.ok(await page.locator("#classicViewerHost").isHidden(),"Wheel browsing must not mount the full Classic viewer");
+   assert.ok(await page.locator("#miniChartPreview").isVisible(),"The centered chart must show a compact preview");
+   await page.waitForFunction(()=>document.querySelector("#miniChartCanvas")?.width>0 &&
+     !document.querySelector("#miniChartCanvas")?.hidden,{timeout:17000});
+   assert.ok(layout.wheelRight-layout.wheelLeft>700,
+     "Landscape desktop selector must fill the available space: "+JSON.stringify(layout));
+   // Moving the wheel changes only the thumbnail; Classic stays unloaded.
+   await page.locator("#procedureNext").click();
+   await page.waitForFunction(()=>document.querySelector(".procedure-token.active")?.dataset.chartPage==="103");
+   await page.waitForFunction(()=>document.querySelector("#miniChartTitle")?.textContent.includes("Conventional Arrival"));
+   assert.ok(await page.locator("#classicViewerHost").isHidden());
+   // Check landscape iPad dimensions before explicitly opening a full chart.
+   await page.setViewportSize({width:1024,height:768});
+   const tabletWheel=await page.locator("#procedureWheel").boundingBox();
+   assert.ok(tabletWheel.width>420,"Landscape iPad wheel should remain wide: "+tabletWheel.width);
+   await page.setViewportSize({width:1440,height:900});
    await page.locator('.procedure-token[data-chart-page="101"]').click();
    assert.ok(await page.locator("#classicViewerHost").isVisible());
    await page.waitForFunction(()=>document.querySelector("#classicViewerStatus")?.hidden,null,{timeout:17000}).catch(async error=>{
@@ -117,6 +130,6 @@ async function ready(){for(let i=0;i<70;i++){try{if((await fetch(url)).ok)return
    assert.equal(await page.locator("#classicViewerHost").isHidden(),true);
    assert.equal(await page.locator(".procedure-categories .category-shell.active").count(),0,"Collapsed categories must restore their compact four-tab rail");
    assert.ok(!errors.some(s=>/ReferenceError|SyntaxError|TypeError/.test(s)),errors.join("; "));
-   console.log("PASS R10: original Classic iframe, automatic live chart preview, aligned STAR/SID wheel, Classic toolbar preserved");
+   console.log("PASS R11: wide desktop/iPad wheel, real debounced PDF thumbnail follows selection, full Classic only on tap, original toolbar preserved");
  }finally{if(browser)await browser.close();server.kill("SIGTERM")}
 })().catch(e=>{console.error(e);process.exitCode=1});
