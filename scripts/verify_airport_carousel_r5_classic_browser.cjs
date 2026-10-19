@@ -74,7 +74,15 @@ async function ready(){for(let i=0;i<70;i++){try{if((await fetch(url)).ok)return
    assert.ok(await page.locator("#classicViewerHost").isHidden(),"A category is a picker until a chart is tapped");
    await page.locator('.procedure-token[data-chart-page="101"]').click();
    assert.ok(await page.locator("#classicViewerHost").isVisible());
-   await page.waitForFunction(()=>document.querySelector("#classicViewerStatus")?.hidden,{timeout:17000});
+   await page.waitForFunction(()=>document.querySelector("#classicViewerStatus")?.hidden,null,{timeout:17000}).catch(async error=>{
+     console.error("Classic preview diagnostics",JSON.stringify({
+       status:await page.locator("#classicViewerStatus").textContent(),
+       iframeSrc:await page.locator("#classicViewerFrame").getAttribute("src"),
+       frameUrl:page.frames().map(f=>f.url()),
+       parentErrors:errors
+     }));
+     throw error;
+   });
    const frame=page.frame({url:/jeppiranEmbedCharts=1/});
    assert.ok(frame,"Real Classic app must be mounted in an iframe");
    await frame.locator("#viewerChart").waitFor();
