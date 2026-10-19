@@ -45,17 +45,39 @@ const smoothstep=t=>t*t*(3-2*t);
 let suppressTapUntil=0;
 let displayedProfileCode="",profileMetarTimer=0;
 const profilePanel=$(".selected-airport");
-// Weather is fetched only after the carousel has settled; transient airports
-// still update their name, city, elevation and approved imagery immediately.
+// Every ICAO change is an O(1) in-memory lookup. There must NEVER be a
+// network request, timeout, or debounce in the hot carousel-swipe path.
+function availableWeather(){
+  return window.JEPPIRAN_AIRPORT_PREFETCH?.get("metar")||wxCache;
+}
+function paintRawMetar(raw){
+  const d=decode(raw);
+  const category=window.JEPPIRAN_FLIGHT_CATEGORY?.classify(raw)?.code||"UNKNOWN";
+  const key=category.toLowerCase();
+  el.category.textContent=category==="UNKNOWN"?"WX —":category;
+  el.category.className="flight-category "+key;
+  el.dot.className="flight-dot "+key;
+  el.clouds.textContent=d.cloud;
+  el.temp.textContent=d.tval;
+  el.wind.textContent=d.wind;
+  el.qnh.textContent=d.qnh;
+  el.weatherStatus.textContent=raw;
+}
 function planProfileWeather(code){
-  clearTimeout(profileMetarTimer);
+  // The aggregate is populated at app entry, before any individual request.
+  // A legitimate missing METAR stays missing — never contact live providers
+  // just because the user scrolled across an ICAO code.
   ++metarRequest;
-  profileMetarTimer=setTimeout(()=>{
-    if(displayedProfileCode===code&&!document.body.classList.contains("has-chart-preview")&&
-       !document.body.classList.contains("chart-selected")){
-      void updateMetar(code);
-    }
-  },380);
+  const aggregate=availableWeather();
+  if(aggregate?.stations){
+    const raw=normalizeRaw(aggregate.stations[code]?.metar);
+    if(raw)paintRawMetar(raw);
+    else el.weatherStatus.textContent="METAR unavailable for "+code;
+    return;
+  }
+  el.weatherStatus.textContent="Downloading airport METARs…";
+  // Only initial startup may request a batch; subsequent swipes never fetch.
+  window.JEPPIRAN_AIRPORT_PREFETCH?.start();
 }
 function renderAirportProfile(code,force=false){
   if(!force&&code===displayedProfileCode)return;
@@ -159,10 +181,8 @@ function updateImage(code){
 }
 function updateSelected(){
   renderAirportProfile(current());
-  // A profile can reach center before selected changes when a swipe is underway.
-  // Recheck its METAR once its ICAO becomes the committed selection.
-  if(displayedProfileCode===current()&&
-     el.weatherStatus.textContent==="Checking available METAR…")planProfileWeather(current());
+  // A center change has already read from the shared in-memory aggregate.
+  // Do not schedule another weather download during the selection commit.
   if(activeChartCategory)void refreshProcedureCategory(activeChartCategory);
 }
 function stopAnimation(){animationToken++;if(raf)cancelAnimationFrame(raf);raf=0;}
@@ -1011,8 +1031,7 @@ window.addEventListener("jeppiran-airport-briefings-updated",event=>{
   if(event.detail?.kind!=="metar"||!displayedProfileCode)return;
   if(document.body.classList.contains("has-chart-preview")||
      document.body.classList.contains("chart-selected"))return;
-  clearTimeout(profileMetarTimer);
-  void updateMetar(displayedProfileCode);
+  planProfileWeather(displayedProfileCode);
 });
 $("#previewFullscreenExit").addEventListener("click",()=>{
   classicFrame.contentWindow?.postMessage({type:"JEPPIRAN_PREVIEW_EXIT_FULLSCREEN_V1"},location.origin);
