@@ -832,7 +832,8 @@ async function drawMiniChart(item,token){
   }
 }
 function openMiniChart(){
-  if(performance.now()<previewSuppressClick)return;
+  // The swipe stage itself suppresses synthetic drag clicks. The explicit
+  // Open chart button is OUTSIDE that stage and must never be rate-limited.
   if(miniItem&&validProcedure(miniItem))showInlineChart(miniItem);
 }
 $("#miniChartOpen").addEventListener("click",openMiniChart);
