@@ -68,7 +68,10 @@
           </div>
         </nav>
         <div id="procedureDetails" class="procedure-details" aria-hidden="true" inert>
-          <div class="procedure-tools">
+          <div class="procedure-tools" hidden>
+            <span id="procedureCount" aria-live="polite"></span>
+            <input type="search" id="procedureSearch" aria-label="Filter procedure charts" hidden>
+            <button id="collapseProcedure" type="button" aria-label="Collapse charts" hidden>×</button>
           </div>
           <div class="procedure-wheel-row">
             <button id="procedurePrev" type="button" class="procedure-arrow" aria-label="Previous chart">‹</button>
