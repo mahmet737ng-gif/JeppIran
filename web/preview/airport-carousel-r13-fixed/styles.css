@@ -1258,3 +1258,49 @@ body.chart-selected .mini-chart-preview{display:none!important}
   object-fit:contain;box-shadow:0 1px 9px rgba(0,0,0,.13)
 }
 .mini-preview-surface #miniChartImage[hidden]{display:none!important}
+
+/* R13 LIVE AIRPORT PROFILE CONTRACT
+   The legacy R9 selector hid all profile content, even without any chart.
+   Keep the chart rail and ICAO typography untouched. The existing source-backed
+   profile data is visible whenever no thumbnail or Classic chart is showing. */
+body:not(.has-chart-preview):not(.chart-selected) .selected-airport{
+  display:block!important;position:relative;z-index:4;
+  flex:0 0 auto;visibility:visible!important;opacity:1!important;
+  width:min(900px,94vw);max-width:94vw;
+  margin:clamp(12px,3vh,27px) auto 10px!important;
+  padding:clamp(12px,2vw,23px) clamp(14px,3vw,32px)!important;
+  background:linear-gradient(135deg,rgba(4,23,41,.71),rgba(5,29,51,.57));
+  border:1px solid rgba(109,190,230,.39);
+  border-radius:15px;box-shadow:0 10px 36px rgba(0,0,0,.25);
+  backdrop-filter:blur(8px);
+}
+body.has-chart-preview .selected-airport,
+body.chart-selected .selected-airport{
+  display:none!important;
+}
+body:not(.has-chart-preview):not(.chart-selected) .selected-airport h1{
+  color:#f7fbff;font-size:clamp(19px,2.55vw,34px);line-height:1.15;
+  margin:0 0 7px!important
+}
+body:not(.has-chart-preview):not(.chart-selected) .selected-airport #airportPlace{
+  margin:0 0 13px!important;
+  font-size:clamp(12px,1.3vw,17px);
+}
+body:not(.has-chart-preview):not(.chart-selected) .selected-airport .weather-line{
+  font-size:clamp(12px,1.2vw,17px);gap:7px 15px;
+}
+body:not(.has-chart-preview):not(.chart-selected) .selected-airport .weather-icon{
+  font-size:18px
+}
+body:not(.has-chart-preview):not(.chart-selected) .selected-airport .weather-status{
+  margin:8px 0 0!important
+}
+@media(max-width:690px){
+  body:not(.has-chart-preview):not(.chart-selected) .selected-airport{
+    width:calc(100vw - 16px);max-width:calc(100vw - 16px);
+    margin:8px auto 6px!important;padding:12px 10px!important
+  }
+  body:not(.has-chart-preview):not(.chart-selected) .selected-airport .weather-line{
+    font-size:12px;gap:6px 9px
+  }
+}
