@@ -14,6 +14,7 @@ on:
       - 'tests/airport-chart-audit-v2621.test.cjs'
       - 'scripts/verify_new20_public_web.cjs'
       - 'scripts/verify_airport_carousel_r3_browser.cjs'
+      - 'scripts/verify_airport_carousel_real_browser.cjs'
       - 'scripts/verify_profile_validity_browser.cjs'
       - 'scripts/verify_chart_swipes_browser.cjs'
       - 'scripts/build_offline_manifest.py'
@@ -242,6 +243,12 @@ jobs:
 
           print(f"Bundled {downloaded} airport PDFs ({total_bytes / 1048576:.1f} MiB).")
           PY
+
+      - name: Verify real Carousel chart rendering and geometry after PDF generation
+        run: |
+          export NODE_PATH="$RUNNER_TEMP/jeppiran-browser-qa/node_modules"
+          export JEPPIRAN_CHROME_BIN="$(command -v google-chrome)"
+          node scripts/verify_airport_carousel_real_browser.cjs
 
       - name: Extract source-backed OIIE runway and apron geometry candidates
         run: |
