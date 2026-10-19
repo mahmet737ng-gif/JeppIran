@@ -71,6 +71,26 @@ self.addEventListener("fetch",event=>{
   if(event.request.method!=="GET")return;
   const url=new URL(event.request.url);
   if(url.origin!==self.location.origin)return;
+  // The approved Carousel R13 directory URL was previously served by the
+  // generic cache-first fallback, so a stale HTML shell could import newer JS.
+  // Always revalidate the R13 document, JS and CSS online. Preserve cached
+  // versions as offline fallbacks and do not interfere with chart PDF caches.
+  if(url.pathname.includes("/preview/airport-carousel-r13/") &&
+     (url.pathname.endsWith("/airport-carousel-r13/") ||
+      /\\/(?:index\\.html|app\\.js|styles\\.css)$/.test(url.pathname))){
+    event.respondWith((async()=>{
+      try{
+        const response=await fetch(event.request,{cache:"no-store"});
+        if(!response.ok)throw Error("Carousel HTTP "+response.status);
+        const copy=response.clone();
+        event.waitUntil(caches.open(CACHE).then(cache=>cache.put(event.request,copy)));
+        return response;
+      }catch(_){
+        return (await localFallback(event.request))||Response.error();
+      }
+    })());
+    return;
+  }
   // New NOTAM UI must not be replaced with retired offline code while online.
   if(url.pathname.endsWith("/notam-service.js")||url.pathname.endsWith("/notam-service.css")){
     event.respondWith((async()=>{
