@@ -435,7 +435,9 @@ function paintProcedureWheel(){
     if(on)button.setAttribute("aria-current","true");
     else button.removeAttribute("aria-current");
   }
-  // While swiping, update only a compact PDF thumbnail; never open Classic automatically.
+  // Both the chart-name wheel and the picture wheel move on the same
+  // animation frame; only changing the active image can initiate a JPEG load.
+  updatePreviewDeck();
   queueFocusedChart(activeIdx);
 }
 function commitProcedure(pos){
@@ -644,6 +646,46 @@ const classicStatus=$("#classicViewerStatus");
 let classicReady=false,classicRequested=null,classicConfirmedKey="",classicLoadStarted=false;
 const miniHost=$("#miniChartPreview"),miniCanvas=$("#miniChartCanvas");
 const miniStatus=$("#miniChartStatus"),miniTap=$("#miniPreviewTap");
+const previewStage=$("#miniPreviewCarousel");
+const previewBefore=$("#miniPreviewBefore"),previewAfter=$("#miniPreviewAfter");
+const previewBeforeImage=$("#miniPreviewBeforeImage"),previewAfterImage=$("#miniPreviewAfterImage");
+const previewBeforeTitle=$("#miniPreviewBeforeTitle"),previewAfterTitle=$("#miniPreviewAfterTitle");
+let previewGesture=null,previewSuppressClick=0;
+// Keep only the centered chart full-sized; its real V2621 PDF thumbnail
+// and the adjacent real thumbnails are always visible in the preview deck.
+function updatePreviewDeck(){
+  if(miniHost.hidden||!chartSearchRows.length)return;
+  const centered=Math.round(chartVisualPos);
+  const distance=previewStage.clientWidth*(innerWidth<=690?.28:innerWidth<=1050?.31:.31);
+  const slots=[
+    {button:previewBefore,img:previewBeforeImage,title:previewBeforeTitle,shift:-1},
+    {button:miniTap,shift:0},
+    {button:previewAfter,img:previewAfterImage,title:previewAfterTitle,shift:1}
+  ];
+  for(const slot of slots){
+    const delta=centered+slot.shift-chartVisualPos;
+    const abs=Math.abs(delta),isMiddle=slot.shift===0;
+    const button=slot.button;
+    button.hidden=!isMiddle&&chartSearchRows.length<=1;
+    if(button.hidden)continue;
+    button.style.setProperty("--deck-x",(delta*distance).toFixed(2)+"px");
+    button.style.setProperty("--deck-scale",Math.max(.69,1-.23*abs).toFixed(3));
+    button.style.setProperty("--deck-opacity",Math.max(.43,1-.27*abs).toFixed(3));
+    button.style.setProperty("--deck-z",String(8-Math.round(abs*3)));
+    if(!isMiddle){
+      const row=chartSearchRows[chartWrap(centered+slot.shift)];
+      const key=row.airport+":"+Number(row.pdf_page);
+      if(button.dataset.previewKey!==key){
+        button.dataset.previewKey=key;
+        slot.img.src=thumbUrl(row);
+        slot.title.textContent=(row.chart_number||"")+" · "+(row.name||"");
+        button.setAttribute("aria-label",
+          (slot.shift<0?"Previous":"Next")+" chart: "+(row.chart_number||"")+" "+(row.name||""));
+      }
+    }
+  }
+}
+
 // Earlier R13 HTML revisions shipped without #miniChartImage. A previously
 // cached document can legitimately load a newer JS bundle. Repair that DOM
 // mismatch in-place before any category/preview callback executes.
@@ -719,6 +761,7 @@ function showMiniChart(item){
   document.body.classList.remove("chart-selected","preview-chart-fullscreen");
   miniHost.hidden=false;
   document.body.classList.add("has-chart-preview");
+  updatePreviewDeck();
   ++metarRequest;clearTimeout(profileMetarTimer);
   $("#miniChartContext").textContent=item.airport+" · "+activeChartCategory+" · "+(item.chart_number||"");
   $("#miniChartTitle").textContent=item.name||"Chart "+item.page;
@@ -789,10 +832,67 @@ async function drawMiniChart(item,token){
   }
 }
 function openMiniChart(){
+  if(performance.now()<previewSuppressClick)return;
   if(miniItem&&validProcedure(miniItem))showInlineChart(miniItem);
 }
 $("#miniChartOpen").addEventListener("click",openMiniChart);
 miniTap.addEventListener("click",openMiniChart);
+for(const [button,offset] of [[previewBefore,-1],[previewAfter,1]]){
+  button.addEventListener("click",()=>{
+    if(performance.now()<previewSuppressClick||!chartSearchRows.length)return;
+    const target=chartWrap(Math.round(chartVisualPos)+offset);
+    centerProcedure(target,true); // neighboring preview centers, does not open Classic
+  });
+}
+const deckStep=()=>Math.max(90,previewStage.clientWidth*(innerWidth<=690?.28:.31));
+previewStage.addEventListener("pointerdown",event=>{
+  if(!chartSearchRows.length||previewGesture)return;
+  if(event.pointerType==="mouse"&&event.button!==0)return;
+  clearChartAnimation();
+  previewGesture={id:event.pointerId,x:event.clientX,start:chartVisualPos,
+    moved:false,history:[{x:event.clientX,t:performance.now()}]};
+});
+previewStage.addEventListener("pointermove",event=>{
+  if(!previewGesture||previewGesture.id!==event.pointerId)return;
+  const dx=event.clientX-previewGesture.x;
+  if(!previewGesture.moved&&Math.abs(dx)>6){
+    previewGesture.moved=true;
+    try{previewStage.setPointerCapture(event.pointerId)}catch(_){}
+  }
+  if(!previewGesture.moved)return;
+  const now=performance.now();
+  previewGesture.history.push({x:event.clientX,t:now});
+  previewGesture.history=previewGesture.history.filter(p=>now-p.t<120);
+  chartVisualPos=previewGesture.start-dx/deckStep();
+  paintProcedureWheel();
+});
+previewStage.addEventListener("pointerup",event=>{
+  if(!previewGesture||previewGesture.id!==event.pointerId)return;
+  const g=previewGesture;previewGesture=null;
+  if(g.moved){
+    previewSuppressClick=performance.now()+300;
+    try{previewStage.releasePointerCapture(event.pointerId)}catch(_){}
+    const now=performance.now(),points=g.history.filter(p=>now-p.t<120);
+    const first=points[0]||{x:g.x,t:now},last=points[points.length-1]||first;
+    const velocity=(last.x-first.x)/Math.max(16,last.t-first.t);
+    glideProcedure(Math.round(chartVisualPos+clamp(-velocity*210/deckStep(),-3,3)));
+  }else glideProcedure(Math.round(chartVisualPos),150);
+});
+previewStage.addEventListener("pointercancel",()=>{
+  previewGesture=null;glideProcedure(Math.round(chartVisualPos),200);
+});
+previewStage.addEventListener("click",event=>{
+  if(performance.now()<previewSuppressClick){
+    event.preventDefault();event.stopImmediatePropagation();
+  }
+},true);
+previewStage.addEventListener("dragstart",event=>event.preventDefault());
+previewStage.addEventListener("wheel",event=>{
+  if(Math.abs(event.deltaX)>Math.abs(event.deltaY)||event.shiftKey){
+    event.preventDefault();
+    moveProcedure(Math.sign(event.deltaX||event.deltaY));
+  }
+},{passive:false});
 
 // Coalesce pointer events to one selection per animation frame.
 // The original Classic iframe stays mounted, preserving the PDF renderer and toolbar.
