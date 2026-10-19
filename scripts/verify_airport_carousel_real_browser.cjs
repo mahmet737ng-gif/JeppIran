@@ -6,7 +6,7 @@ const {spawn}=require("node:child_process");
 const path=require("node:path");
 const {chromium}=require("playwright");
 const port=18927;
-const base="http://127.0.0.1:"+port+"/preview/airport-carousel-r5/";
+const base="http://127.0.0.1:"+port+"/preview/airport-carousel-r13/";
 const server=spawn("python3",["-m","http.server",String(port),"--bind","127.0.0.1","--directory","web"],{cwd:path.resolve(__dirname,".."),stdio:"ignore"});
 const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 (async()=>{
@@ -62,12 +62,26 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
      canvas:document.querySelector("#miniChartCanvas").width+"x"+document.querySelector("#miniChartCanvas").height}));
    console.log("REAL PDF thumbnail status:",JSON.stringify(preview));
    assert.ok(preview.loaded,"Real PDF thumbnail failed "+JSON.stringify({preview,errors}));
+   // iPad landscape must keep the ICAO row unchanged and chart names within the wheel.
+   await page.setViewportSize({width:1024,height:768});
+   await page.waitForTimeout(300);
+   const ipad=await page.evaluate(()=>{
+     const rr=e=>{const r=e.getBoundingClientRect();return {left:r.left,right:r.right,width:r.width}};
+     return {icao:rr(document.querySelector("#airportCarousel")),
+       wheel:rr(document.querySelector("#procedureWheel")),
+       name:rr(document.querySelector(".procedure-token.active .procedure-title"))};
+   });
+   console.log("REAL iPad landscape geometry:",JSON.stringify(ipad));
+   assert.ok(ipad.wheel.width>=350,"iPad landscape chart names should have usable width");
+   assert.ok(ipad.name.left>=ipad.wheel.left-2 && ipad.name.right<=ipad.wheel.right+2,
+     "iPad chart title is clipped outside the selector");
+   await page.setViewportSize({width:1440,height:900});
    await page.locator("#procedureNext").click();
    await page.waitForFunction(()=>document.querySelector(".procedure-token.active")?.dataset.chartPage!=="394",{timeout:7000});
    assert.ok(await page.locator("#classicViewerHost").isHidden(),"Swipe opened Classic unexpectedly");
    await page.locator("#miniChartOpen").click();
    assert.ok(await page.locator("#classicViewerHost").isVisible(),"Tap did not open full chart");
    assert.ok(errors.filter(x=>/ReferenceError|SyntaxError|TypeError|404/.test(x)).length===0,errors.join("; "));
-   console.log("PASS REAL R13: compact ICAO/category, expanded chart names visible, actual PDF.js thumbnail loaded, Classic on tap");
+   console.log("PASS REAL R13: isolated cache, compact ICAO/category, expanded chart names visible, actual PDF.js thumbnail loaded, Classic on tap");
  }finally{if(browser)await browser.close();server.kill("SIGTERM")}
 })().catch(err=>{console.error(err);process.exitCode=1});
