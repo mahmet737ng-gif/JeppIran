@@ -110,6 +110,44 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
      "Fast source-backed thumbnail missing "+JSON.stringify({preview,errors}));
    assert.ok(elapsed<7000,"Preview exceeded fast-load budget: "+elapsed+"ms");
    assert.equal(pdfRequests.length,0,"Browsing must not request a full airport PDF");
+   // R13 visual carousel: the previous and next *actual* chart screenshots
+   // must be visible at the same time and smaller than the centered plate.
+   await page.waitForFunction(()=>{
+     const imgs=["miniPreviewBeforeImage","miniPreviewAfterImage"].map(id=>document.getElementById(id));
+     return imgs.every(el=>el?.complete&&el.naturalWidth>100);
+   },null,{timeout:12000});
+   const thumbLayout=await page.evaluate(()=>{
+     const bounds=id=>{const r=document.getElementById(id).getBoundingClientRect();
+       return {x:r.x,width:r.width,height:r.height,left:r.left,right:r.right}};
+     const item=id=>document.getElementById(id)?.dataset.previewKey;
+     return {stage:bounds("miniPreviewCarousel"),
+       prev:bounds("miniPreviewBefore"),selected:bounds("miniPreviewTap"),
+       next:bounds("miniPreviewAfter"),before:item("miniPreviewBefore"),
+       after:item("miniPreviewAfter"),
+       prevSrc:document.querySelector("#miniPreviewBeforeImage")?.currentSrc,
+       nextSrc:document.querySelector("#miniPreviewAfterImage")?.currentSrc};
+   });
+   assert.ok(thumbLayout.prev.width<thumbLayout.selected.width*.90,
+     "Previous thumbnail should be visibly smaller: "+JSON.stringify(thumbLayout));
+   assert.ok(thumbLayout.next.width<thumbLayout.selected.width*.90,
+     "Next thumbnail should be visibly smaller: "+JSON.stringify(thumbLayout));
+   assert.ok(thumbLayout.prev.right>thumbLayout.stage.left &&
+     thumbLayout.next.left<thumbLayout.stage.right,
+     "Adjacent charts must remain visible inside the viewport");
+   assert.ok(thumbLayout.prevSrc.includes("/chart-previews/OIII/") &&
+     thumbLayout.nextSrc.includes("/chart-previews/OIII/"),
+     "Both side previews must use genuine per-chart thumbnails");
+   console.log("PASS three-chart visual carousel",JSON.stringify(thumbLayout));
+   // Adjacent card taps *select* the chart; only center/Open loads Classic.
+   const startingChart=await page.locator(".procedure-token.active").getAttribute("data-chart-page");
+   await page.locator("#miniPreviewAfter").click();
+   await page.waitForFunction(previous=>document.querySelector(".procedure-token.active")
+     ?.dataset.chartPage!==previous,startingChart,{timeout:7000});
+   assert.ok(await page.locator("#classicViewerHost").isHidden(),
+     "Tapping a side thumbnail must not open full Classic");
+   await page.locator("#miniPreviewBefore").click();
+   await page.waitForFunction(original=>document.querySelector(".procedure-token.active")
+     ?.dataset.chartPage===original,startingChart,{timeout:7000});
    // iPad landscape must keep the ICAO row unchanged and chart names within the wheel.
    await page.setViewportSize({width:1024,height:768});
    await page.waitForTimeout(300);
@@ -124,6 +162,21 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
    assert.ok(ipad.name.left>=ipad.wheel.left-2 && ipad.name.right<=ipad.wheel.right+2,
      "iPad chart title is clipped outside the selector");
    await page.setViewportSize({width:1440,height:900});
+   // Horizontal drag on the IMAGE carousel is synced to the chart-name wheel.
+   const photoBox=await page.locator("#miniPreviewCarousel").boundingBox();
+   const sx=photoBox.x+photoBox.width*.50,sy=photoBox.y+photoBox.height*.50;
+   const originalCard=await page.locator(".procedure-token.active").getAttribute("data-chart-page");
+   await page.mouse.move(sx,sy);
+   await page.mouse.down();
+   await page.mouse.move(sx-photoBox.width*.37,sy,{steps:12});
+   await page.mouse.up();
+   await page.waitForFunction(original=>document.querySelector(".procedure-token.active")
+     ?.dataset.chartPage!==original,originalCard,{timeout:7000});
+   assert.ok(await page.locator("#classicViewerHost").isHidden(),
+     "Dragging the thumbnail carousel must not open Classic");
+   const previewSelected=await page.locator("#miniChartContext").innerText();
+   assert.ok(previewSelected.includes("OIII"));
+   console.log("PASS horizontal thumbnail swipe and snap without Classic viewer");
    await page.locator("#procedureNext").click();
    await page.waitForFunction(()=>document.querySelector(".procedure-token.active")?.dataset.chartPage!=="394",{timeout:7000});
    assert.ok(await page.locator("#classicViewerHost").isHidden(),"Swipe opened Classic unexpectedly");
