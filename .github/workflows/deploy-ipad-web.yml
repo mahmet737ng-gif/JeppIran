@@ -21,6 +21,8 @@ on:
       - 'web/preview/airport-carousel-r13-fixed/**'
       - 'web/data/chart-briefing-titles-v2621.json'
       - 'scripts/build_carousel_chart_previews.py'
+      - 'scripts/build_chart_point_search_index.py'
+      - 'web/preview/airport-carousel-r13-fixed/**'
       - 'scripts/verify_profile_validity_browser.cjs'
       - 'scripts/verify_chart_swipes_browser.cjs'
       - 'scripts/build_offline_manifest.py'
@@ -262,6 +264,21 @@ jobs:
           python3 -m pip install --disable-pip-version-check pymupdf==1.26.5
           python3 scripts/build_carousel_chart_previews.py
           python3 scripts/build_carousel_chart_previews.py --verify
+
+      - name: Index searchable published V2621 waypoints by exact PDF chart page
+        run: |
+          python3 scripts/build_chart_point_search_index.py
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          index=json.loads(Path("web/data/chart-point-index-v2621.json").read_text())
+          charts=json.loads(Path("web/data/charts-current.json").read_text())
+          valid={str(c["page"]) for c in charts}
+          assert index["cycle"]=="2621"
+          assert len(index["pages"])>100, "Too few searchable PDF pages"
+          assert set(index["pages"]).issubset(valid), "Unmapped chart in fix search index"
+          print("PASS waypoint search index",len(index["pages"]),"chart pages")
+          PY
 
       - name: Verify real Carousel chart rendering and geometry after PDF generation
         run: |
