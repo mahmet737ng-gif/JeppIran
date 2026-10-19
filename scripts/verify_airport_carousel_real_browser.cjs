@@ -24,10 +24,17 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
    // Deterministic source-backed METAR fixture; the UI must display its raw
    // report, not the deprecated cached/source/disclaimer status message.
    const metarSample="METAR OIII 191900Z 24006KT 9999 SCT030 21/12 Q1015";
+   const ahwazMetar="METAR OIAW 192030Z 27002KT CAVOK 28/07 Q1012";
+   const airports=Object.keys(JSON.parse(fs.readFileSync(
+     path.join(path.resolve(__dirname,".."),"web/data/charts-manifest.json"),"utf8")).airports);
+   const weatherStations=Object.fromEntries(airports.map(icao=>[
+     icao,{metar:icao==="OIII"?metarSample:icao==="OIAW"?ahwazMetar:
+        "METAR "+icao+" 192030Z 24005KT 9999 FEW030 21/12 Q1015"}
+   ]));
    await page.route("**/wx-cache/wx-live.json*",route=>route.fulfill({
      status:200,contentType:"application/json",
      headers:{"access-control-allow-origin":"*"},
-     body:JSON.stringify({stations:{OIII:{metar:metarSample}}})
+     body:JSON.stringify({stations:weatherStations})
    }));
    const errors=[],pdfRequests=[];
    page.on("request",request=>{
@@ -160,6 +167,12 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
    await page.waitForTimeout(720);
    assert.ok(await page.locator(".selected-airport").isVisible(),
      "Airport profile remains visible after the carousel stops");
+   // The real approved airport artwork must follow the center at swipe speed.
+   const scenery=await page.locator("#scenery").evaluate(el=>({
+     code:el.dataset.airport,background:getComputedStyle(el).backgroundImage
+   }));
+   assert.ok(scenery.background.includes("/"+scenery.code+".webp"),
+     "Background must belong to currently centered airport: "+JSON.stringify(scenery));
    assert.equal(await page.locator(".category-shell.active").count(),0,
      "Airport swipe must close stale chart category instead of opening another preview");
    await page.locator('.procedure-category[data-category="AIRPORT"]').click();
@@ -169,6 +182,24 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
    await page.locator('.procedure-category[data-category="AIRPORT"]').click();
    assert.ok(await page.locator(".selected-airport").isVisible(),
      "Closing chart preview restores current airport profile");
+   // Reproduce user screenshot: choose Ahwaz after a prior airport was
+   // centered; the poster and actual Ahwaz METAR must both update.
+   await page.locator("#airportSearch").fill("OIAW");
+   await page.locator("#searchResults button").first().click();
+   await page.waitForFunction(()=>document.querySelector(".selected-airport")
+      ?.dataset.profileAirport==="OIAW",{timeout:9000});
+   await page.waitForFunction(()=>{
+     const img=document.querySelector("#scenery");
+     return img?.dataset.airport==="OIAW"&&
+       getComputedStyle(img).backgroundImage.includes("/OIAW.webp");
+   },null,{timeout:7000});
+   await page.waitForFunction(expected=>document.querySelector("#weatherStatus")
+     ?.textContent===expected,ahwazMetar,{timeout:9000});
+   const ahwazState=await page.evaluate(()=>({
+     weather:document.querySelector("#weatherStatus").textContent,
+     background:getComputedStyle(document.querySelector("#scenery")).backgroundImage
+   }));
+   console.log("PASS Ahwaz METAR + changing poster",JSON.stringify(ahwazState));
    // An unavailable index must never shrink the 78-airport carousel to 9 entries.
    const offlinePage=await context.newPage();
    await offlinePage.route("**/data/charts-manifest.json*",route=>route.abort());
