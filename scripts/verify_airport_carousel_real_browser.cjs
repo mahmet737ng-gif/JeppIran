@@ -21,6 +21,14 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
    browser=await chromium.launch({headless:true,...(process.env.JEPPIRAN_CHROME_BIN?{executablePath:process.env.JEPPIRAN_CHROME_BIN}:{})});
    const context=await browser.newContext({viewport:{width:1440,height:900},serviceWorkers:"block"});
    const page=await context.newPage();
+   // Deterministic source-backed METAR fixture; the UI must display its raw
+   // report, not the deprecated cached/source/disclaimer status message.
+   const metarSample="METAR OIII 191900Z 24006KT 9999 SCT030 21/12 Q1015";
+   await page.route("**/wx-cache/wx-live.json*",route=>route.fulfill({
+     status:200,contentType:"application/json",
+     headers:{"access-control-allow-origin":"*"},
+     body:JSON.stringify({stations:{OIII:{metar:metarSample}}})
+   }));
    const errors=[],pdfRequests=[];
    page.on("request",request=>{
      if(/\/charts\/[^/]+\.pdf(?:$|\?)/.test(request.url()))pdfRequests.push(request.url());
@@ -35,6 +43,10 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
      "Airport profile must be visible before any chart is previewed");
    assert.equal(await page.locator(".selected-airport").getAttribute("data-profile-airport"),"OIII");
    assert.ok((await page.locator("#airportPlace").innerText()).includes("Elevation"));
+   await page.waitForFunction(expected=>
+     document.querySelector("#weatherStatus")?.textContent===expected,metarSample,{timeout:12000});
+   assert.equal(await page.locator("#weatherStatus").innerText(),metarSample,
+     "Airport profile must show the original raw METAR, without advisory words");
    assert.equal(await page.locator(".airport-token").count(),78,
      "The complete 78-airport catalog must exist at first paint");
    const icaoBefore=await page.locator("#airportCarousel").boundingBox();
@@ -110,6 +122,19 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
    assert.equal(pdfRequests.length,0,"Second thumbnail must not download the PDF");
    await page.locator("#miniChartOpen").click();
    assert.ok(await page.locator("#classicViewerHost").isVisible(),"Tap did not open full chart");
+   // Even when the chart iframe loads and selects the V2621 PDF, its METAR
+   // banner must never appear automatically. The toolbar's manual METAR
+   // control remains available in the main standalone app.
+   await page.waitForFunction(()=>Boolean(document.querySelector("#classicViewerFrame")
+     ?.contentDocument?.querySelector("#chartMetarBanner")),null,{timeout:20000});
+   await page.waitForTimeout(300);
+   const banner=await page.locator("#classicViewerFrame").evaluate(iframe=>{
+     const element=iframe.contentDocument?.querySelector("#chartMetarBanner");
+     return {visible:element?.classList.contains("visible"),
+       inEmbed:iframe.contentWindow?.document?.documentElement?.classList.contains("jp-preview-classic-embed")};
+   });
+   assert.equal(banner.inEmbed,true,"Chart iframe must be in scoped Carousel embed mode");
+   assert.equal(banner.visible,false,"METAR must not appear automatically over Classic chart");
    assert.ok(await page.locator(".selected-airport").isHidden(),
      "Airport profile must remain hidden for a full Classic chart");
    // Drag the airport strip WHILE Classic is open. The profile must emerge
@@ -181,6 +206,7 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
    console.log("PASS mixed-version R13 regression: cached old HTML, new JS, OIKM chart list and image preview");
    await stalePage.close();
    assert.ok(errors.filter(x=>/ReferenceError|SyntaxError|TypeError|404/.test(x)).length===0,errors.join("; "));
+   console.log("PASS METAR: original raw report in airport profile, no automatic Classic popup");
    console.log("PASS R13 profile switch: absent chart shows profile, JPEG/Classic hides, finger swipe reveals every intermediate ICAO, closing chart restores");
    console.log("PASS FINAL R13 FIXED: fresh URL 78 airports, real JPEG, no PDF swipe, iPad geometry, Classic tap, cached old HTML resilient");
  }finally{if(browser)await browser.close();server.kill("SIGTERM")}
