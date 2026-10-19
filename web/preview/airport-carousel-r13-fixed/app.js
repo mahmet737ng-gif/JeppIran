@@ -312,14 +312,15 @@ function decode(raw){
 }
 async function updateMetar(code){
  const req=++metarRequest;
- try{const {raw,source}=await readSourceMetar(code);if(req!==metarRequest||current()!==code)return;
+ try{const {raw}=await readSourceMetar(code);if(req!==metarRequest||current()!==code)return;
   const d=decode(raw);
   const category=window.JEPPIRAN_FLIGHT_CATEGORY?.classify(raw)?.code||"UNKNOWN",key=category.toLowerCase();
   el.category.textContent=category==="UNKNOWN"?"WX —":category;
   el.category.className="flight-category "+key;
   el.dot.className="flight-dot "+key;
   el.clouds.textContent=d.cloud;el.temp.textContent=d.tval;el.wind.textContent=d.wind;el.qnh.textContent=d.qnh;
-  el.weatherStatus.textContent=source+" · Verify observation timestamp · Not for navigation";
+  // The airport profile displays the actual METAR report, not a source/advisory message.
+  el.weatherStatus.textContent=raw;
  }catch(_){if(req!==metarRequest||current()!==code)return;el.weatherStatus.textContent="METAR unavailable — no weather values invented";}
 }
 /* PREVIEW-ONLY CHART DOCK — STAR / SID / AIRPORT / APP.
