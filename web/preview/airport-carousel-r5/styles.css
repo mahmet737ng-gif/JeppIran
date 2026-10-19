@@ -1041,3 +1041,8 @@ body.chart-selected .classic-viewer-host{
 @media(prefers-reduced-motion:reduce){
   .procedure-token{will-change:auto}
 }
+
+/* Keep the STAR/SID/AIRPORT/APP headings on the exact same top baseline
+   whether one of their horizontally nested chart wheels is expanded. */
+.procedure-zone .procedure-categories{align-items:flex-start!important}
+.procedure-zone .category-shell{align-self:flex-start!important}
