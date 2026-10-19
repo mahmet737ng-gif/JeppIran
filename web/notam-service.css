@@ -5,3 +5,21 @@
 #chartsView #profileNotam .jp-notam-item{border-top:1px solid #3179a466;padding:6px 0}
 #chartsView #profileNotam .jp-notam-item b,#chartsView #profileNotam .jp-notam-item p{font-family:monospace;font-size:12px;overflow-wrap:anywhere;white-space:pre-wrap}
 #chartsView #profileNotam .jp-notam-item small{font-size:10px;opacity:.8}
+/* NOTAM READER DOES NOT RESIZE THE PROFILE
+   A long report scrolls within its own card; it must not enlarge the
+   profile-shell's natural height and trigger its scenic fit zoom. */
+#chartsView .airport-profile #profileNotam,
+#chartsView .airport-profile #profileNotam .profile-notam-details {
+  min-width:0;
+}
+#chartsView .airport-profile #profileNotam .profile-notam-details[open] .jp-notam-scroll {
+  max-height:clamp(88px,17dvh,165px)!important;
+  overflow-y:auto!important;
+  overflow-x:hidden!important;
+  overscroll-behavior:contain;
+  scrollbar-gutter:stable;
+}
+#chartsView .airport-profile #profileNotam .jp-notam-item p {
+  min-width:0;
+  overflow-wrap:anywhere;
+}
