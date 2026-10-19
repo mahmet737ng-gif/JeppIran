@@ -77,7 +77,9 @@ self.addEventListener("fetch",event=>{
   // versions as offline fallbacks and do not interfere with chart PDF caches.
   if(url.pathname.includes("/preview/airport-carousel-r13/") &&
      (url.pathname.endsWith("/airport-carousel-r13/") ||
-      /\\/(?:index\\.html|app\\.js|styles\\.css)$/.test(url.pathname))){
+      url.pathname.endsWith("/index.html") ||
+      url.pathname.endsWith("/app.js") ||
+      url.pathname.endsWith("/styles.css"))){
     event.respondWith((async()=>{
       try{
         const response=await fetch(event.request,{cache:"no-store"});
