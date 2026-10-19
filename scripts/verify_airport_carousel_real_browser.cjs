@@ -4,6 +4,7 @@
 const assert=require("node:assert/strict");
 const {spawn}=require("node:child_process");
 const path=require("node:path");
+const fs=require("node:fs");
 const {chromium}=require("playwright");
 const port=18927;
 const base="http://127.0.0.1:"+port+"/preview/airport-carousel-r13/";
@@ -108,6 +109,34 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
    await offlinePage.locator("#airportSearch").fill("OTHH");
    await offlinePage.waitForFunction(()=>document.querySelector(".airport-token.active")?.dataset.airport==="OTHH");
    await offlinePage.close();
+   // Regression: an old R13 HTML shell without the thumbnail IMG can load a
+   // newer JavaScript bundle from a separately versioned URL. That formerly
+   // threw "Cannot set properties of null (setting 'hidden')" and emptied
+   // every chart category. Recreate the exact mixed-version scenario.
+   const stalePage=await context.newPage();
+   const staleErrors=[];
+   stalePage.on("pageerror",error=>staleErrors.push(error.message));
+   const sourceHtml=fs.readFileSync(path.join(path.resolve(__dirname,".."),
+     "web/preview/airport-carousel-r13/index.html"),"utf8");
+   const missingImageHtml=sourceHtml.replace(/<img id="miniChartImage"[^>]*>/,"")
+     .replace("R13 • 78 Airports","R13 • Fresh preview");
+   assert.ok(!missingImageHtml.includes('id="miniChartImage"'));
+   await stalePage.route("**/preview/airport-carousel-r13/",route=>
+     route.fulfill({status:200,contentType:"text/html; charset=utf-8",body:missingImageHtml}));
+   await stalePage.goto(base,{waitUntil:"domcontentloaded"});
+   await stalePage.waitForFunction(()=>document.querySelectorAll(".airport-token").length===78);
+   assert.equal(await stalePage.locator("#miniChartImage").count(),1,
+     "New JS must repair missing preview image element from cached old HTML");
+   await stalePage.locator("#airportSearch").fill("OIKM");
+   await stalePage.waitForFunction(()=>document.querySelector(".airport-token.active")?.dataset.airport==="OIKM");
+   await stalePage.locator('.procedure-category[data-category="AIRPORT"]').click();
+   await stalePage.waitForFunction(()=>document.querySelectorAll(".procedure-token").length>=1,{timeout:20000});
+   await stalePage.waitForFunction(()=>document.querySelector("#miniChartImage")?.naturalWidth>100
+      && !document.querySelector("#miniChartImage")?.hidden,{timeout:16000});
+   assert.ok(!staleErrors.some(x=>x.includes("null")||x.includes("TypeError")),
+     "Stale HTML / new JS mismatch: "+staleErrors.join("; "));
+   console.log("PASS mixed-version R13 regression: cached old HTML, new JS, OIKM chart list and image preview");
+   await stalePage.close();
    assert.ok(errors.filter(x=>/ReferenceError|SyntaxError|TypeError|404/.test(x)).length===0,errors.join("; "));
    console.log("PASS FINAL R13: all 78 airports even without manifest; fast JPEG chart preview; no PDF on swipe; iPad geometry; Classic only on tap");
  }finally{if(browser)await browser.close();server.kill("SIGTERM")}
