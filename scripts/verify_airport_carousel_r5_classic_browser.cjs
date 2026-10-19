@@ -71,7 +71,9 @@ async function ready(){for(let i=0;i<70;i++){try{if((await fetch(url)).ok)return
    assert.ok(layout.wheelLeft>=layout.starRight-2,"Chart names should start to the RIGHT of STAR: "+JSON.stringify(layout));
    assert.ok(layout.wheelRight<=layout.sidLeft+2,"Chart names must finish BEFORE SID: "+JSON.stringify(layout));
    assert.ok(Math.abs(layout.starTop-layout.sidTop)<4,"STAR and SID must be in the SAME row");
-   assert.ok(await page.locator("#classicViewerHost").isHidden(),"A category is a picker until a chart is tapped");
+   assert.ok(await page.locator("#classicViewerHost").isVisible(),"R10 must show the centered Classic chart automatically when category opens");
+   // The original PDF should appear without any chart-token tap.
+   await page.waitForFunction(()=>document.body.classList.contains("chart-selected"));
    await page.locator('.procedure-token[data-chart-page="101"]').click();
    assert.ok(await page.locator("#classicViewerHost").isVisible());
    await page.waitForFunction(()=>document.querySelector("#classicViewerStatus")?.hidden,null,{timeout:17000}).catch(async error=>{
@@ -107,8 +109,8 @@ async function ready(){for(let i=0;i<70;i++){try{if((await fetch(url)).ok)return
    assert.ok(x.x>=sid.x+sid.width-2&&x.x+x.width<=app.x+2,"SID charts must appear between SID and AIRPORT");
    await page.locator('.procedure-category[data-category="SID"]').click();
    assert.equal(await page.locator("#classicViewerHost").isHidden(),true);
-   assert.equal(await page.locator("#airportName").isVisible(),true);
+   assert.equal(await page.locator(".procedure-categories .category-shell.active").count(),0,"Collapsed categories must restore their compact four-tab rail");
    assert.ok(!errors.some(s=>/ReferenceError|SyntaxError|TypeError/.test(s)),errors.join("; "));
-   console.log("PASS R5: real Classic iframe viewer and toolbar, chart names between STAR/SID, live chart switching, Classic default");
+   console.log("PASS R10: original Classic iframe, automatic live chart preview, aligned STAR/SID wheel, Classic toolbar preserved");
  }finally{if(browser)await browser.close();server.kill("SIGTERM")}
 })().catch(e=>{console.error(e);process.exitCode=1});
