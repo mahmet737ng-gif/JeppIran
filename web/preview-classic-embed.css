@@ -117,3 +117,7 @@ html.jp-preview-classic-embed body.viewer-fullscreen #chartsView #jpCdfaWorkspac
 html.jp-preview-classic-embed body.viewer-fullscreen #chartsView #pdfStage{
   height:100dvh!important;max-height:100dvh!important;
 }
+
+/* R8: never float the Classic hamburger over the chart; procedure switch stays in the parent rail. */
+html.jp-preview-classic-embed #jpChartMenuBtn,
+html.jp-preview-classic-embed #jpChartDrawer{display:none!important}
