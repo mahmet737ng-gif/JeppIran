@@ -15,6 +15,16 @@ const records={metar:null,notam:null};
 const jobs={metar:null,notam:null};
 const refreshed={metar:0,notam:0};
 const REFRESH_MS={metar:5*60000,notam:30*60000};
+const LOCAL_METAR_KEY="jeppiran-metar-all-78-v1";
+// On a repeat launch, restore the whole batch synchronously before rendering
+// the first airport; the background request updates it when online.
+try{
+ const saved=window.localStorage?.getItem(LOCAL_METAR_KEY);
+ if(saved){
+  const data=JSON.parse(saved);
+  if(data&&data.stations&&Object.keys(data.stations).length===78)records.metar=data;
+ }
+}catch(_){}
 function validate(kind,data){
  if(!data||typeof data!=="object"||!data.stations||typeof data.stations!=="object")throw Error("Invalid "+kind+" feed");
  // Do not accept a successful HTTP response with an empty/partial catalog.
@@ -23,7 +33,12 @@ function validate(kind,data){
 }
 function update(kind,data,network){
  records[kind]=validate(kind,data);
- if(network)refreshed[kind]=Date.now();
+ if(network){
+  refreshed[kind]=Date.now();
+  if(kind==="metar")try{
+    window.localStorage?.setItem(LOCAL_METAR_KEY,JSON.stringify(records.metar));
+  }catch(_){}
+ }
  window.dispatchEvent(new CustomEvent("jeppiran-airport-briefings-updated",{detail:{kind}}));
  return records[kind];
 }
