@@ -1011,3 +1011,33 @@ body.chart-selected .classic-viewer-host{
   body.chart-selected .carousel-region{height:43px!important}
   body.chart-selected .topline{min-height:35px!important}
 }
+
+/* R10 LIVE CHART SWIPE — separate preview only.
+   Keep full approved airport artwork visible at the lower edge. */
+.scenery{background-position:center bottom!important}
+/* Search must stay available: R9 accidentally hid it in the compact layout. */
+.topline .search-box{
+  display:flex!important;position:relative;z-index:12;
+  flex:0 1 285px;width:min(285px,32vw)!important;
+  height:34px!important;margin-top:0!important;order:unset!important
+}
+.topline .search-results{z-index:20}
+.procedure-token{
+  transform:translate3d(calc(-50% + var(--procedure-x,0px)),-50%,0)
+    scale(var(--procedure-scale,1));
+  backface-visibility:hidden;
+  will-change:transform,opacity
+}
+@media(max-width:690px){
+  .topline .search-box,html.jp-android-carousel-qa .topline .search-box{
+    display:flex!important;flex:1 1 130px!important;
+    width:auto!important;max-width:180px!important;min-width:95px!important;
+    height:29px!important;padding:0 7px!important
+  }
+  .topline .search-box input{font-size:10px!important}
+  .topline .search-box svg{width:14px;height:14px}
+  .preview-mark{display:none!important}
+}
+@media(prefers-reduced-motion:reduce){
+  .procedure-token{will-change:auto}
+}
