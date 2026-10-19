@@ -100,3 +100,20 @@ html.jp-preview-classic-embed #chartsView .chart-metar-banner{z-index:5}
     max-height:64px!important;overflow:hidden!important;
   }
 }
+
+/* R8 embedded Android chart: a tap promotes the original chart surface to the
+   parent overlay. The chart image, zoom, pan and CDFA engine remain Classic. */
+html.jp-preview-classic-embed body.viewer-fullscreen #chartsView .viewer-toolbar,
+html.jp-preview-classic-embed body.viewer-fullscreen #chartsView .chart-metar-banner,
+html.jp-preview-classic-embed body.viewer-fullscreen #jpChartMenuBtn,
+html.jp-preview-classic-embed body.viewer-fullscreen #jpChartDrawer,
+html.jp-preview-classic-embed body.viewer-fullscreen #fullscreenExitBtn,
+html.jp-preview-classic-embed body.viewer-fullscreen #fullscreenCdfaBtn {
+  display:none!important;
+}
+html.jp-preview-classic-embed body.viewer-fullscreen #chartsView #jpCdfaWorkspace {
+  height:100dvh!important;flex:1 1 auto!important;
+}
+html.jp-preview-classic-embed body.viewer-fullscreen #chartsView #pdfStage{
+  height:100dvh!important;max-height:100dvh!important;
+}
