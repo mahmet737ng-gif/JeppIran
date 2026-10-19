@@ -1,4 +1,4 @@
-const CACHE="jeppiran-pwa-2621-carousels-batch78-r1";
+const CACHE="jeppiran-pwa-2621-ipad-layout-carousel-r8";
 const SNAPSHOT_META="jeppiran-offline-meta-v2";
 const SNAPSHOT_KEY="./__jeppiran_active_offline_v2__";
 const OFFLINE_ASSET_CACHE="jeppiran-all-offline-assets-v1";
