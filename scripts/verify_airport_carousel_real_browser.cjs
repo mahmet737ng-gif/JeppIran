@@ -272,6 +272,47 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
    assert.equal(weatherRequests.length,requestsAfterStartup,
      "Changing an ICAO after startup must NEVER initiate a weather request");
    console.log("PASS instant METAR switching; no additional network requests while browsing");
+   // Search must navigate a real V2621 procedure, not just its airport.
+   await page.locator("#airportSearch").fill("MIVAK 4N");
+   await page.waitForFunction(()=>[...document.querySelectorAll(".search-result-procedure")]
+     .some(btn=>btn.textContent.includes("MIVAK 4N")),{timeout:12000});
+   await page.locator(".search-result-procedure").filter({hasText:"MIVAK 4N"}).first().click();
+   await page.waitForFunction(()=>document.querySelector(".airport-token.active")?.dataset.airport==="OIII"
+     && document.querySelector(".procedure-category.active")?.dataset.category==="STAR"
+     && document.querySelector("#miniChartTitle")?.textContent.includes("MIVAK 4N"),null,{timeout:16000});
+   assert.ok(await page.locator("#classicViewerHost").isHidden(),
+     "Procedure search should select the lightweight preview, not open Classic");
+   // Search genuine five-letter chart waypoints extracted from V2621 source PDFs.
+   await page.waitForFunction(()=>window.fetch!==undefined,{timeout:3000});
+   const fixPick=await page.evaluate(async()=>{
+     const [idx,charts]=await Promise.all([
+       fetch("../../data/chart-point-index-v2621.json").then(r=>r.json()),
+       fetch("../../data/charts-current.json").then(r=>r.json())
+     ]);
+     const rows=Object.fromEntries(charts.map(r=>[String(r.page),r]));
+     for(const [pg,terms] of Object.entries(idx.pages||{})){
+       const row=rows[pg];
+       if(!row||terms.length===0)continue;
+       const fix=terms.find(fix=>!/^[A-Z]{5}$/.test(fix)===false &&
+         !String(row.name||"").toUpperCase().includes(fix));
+       if(fix)return {fix,page:Number(pg),airport:row.airport};
+     }
+     return null;
+   });
+   assert.ok(fixPick,"No source-derived waypoint candidate available for search QA");
+   await page.locator("#airportSearch").fill(fixPick.fix);
+   await page.waitForFunction(()=>document.querySelector(".search-result-point"),null,{timeout:12000});
+   const target=page.locator(".search-result-point").filter({hasText:fixPick.airport}).first();
+   await target.click();
+   await page.waitForFunction(expected=>{
+     const airport=document.querySelector(".airport-token.active")?.dataset.airport;
+     const chart=Number(document.querySelector(".procedure-token.active")?.dataset.chartPage);
+     return airport===expected.airport&&Number.isFinite(chart)&&
+       document.querySelector("#miniChartPreview")?.hidden===false;
+   },{airport:fixPick.airport},{timeout:15000});
+   assert.ok(await page.locator("#classicViewerHost").isHidden(),
+     "Point search should resolve to actual source chart preview");
+   console.log("PASS V2621 procedure and PDF-derived point search",JSON.stringify(fixPick));
    // An unavailable index must never shrink the 78-airport carousel to 9 entries.
    const offlinePage=await context.newPage();
    await offlinePage.route("**/data/charts-manifest.json*",route=>route.abort());
