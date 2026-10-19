@@ -22,6 +22,10 @@ class JeppIranApplication :
 
     override fun onCreate() {
         super.onCreate()
+        // Warm every airport's METAR in the background as soon as Android
+        // launches. This is independent of whether the user opens the local
+        // WebView, the native WX page, or an airport briefing.
+        FlightDataStore.prefetchAllAsync(this)
         registerActivityLifecycleCallbacks(
             this
         )
