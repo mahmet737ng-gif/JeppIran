@@ -2603,6 +2603,10 @@ function fetchChartMetar(icao){
   return request;
 }
 async function showChartMetar(autoHide=true,automatic=false,forceRefresh=false){
+  // Carousel embeds display raw METAR in their airport profile. Do not
+  // automatically cover a newly opened chart with an additional METAR banner.
+  // The user-initiated METAR toolbar button remains available.
+  if(IS_PREVIEW_CLASSIC_EMBED&&automatic){hideChartMetar();return;}
   const icao=selectedAirport;
   if(!chartMetarViewActive(icao))return;
   const banner=$("#chartMetarBanner"),text=$("#chartMetarText");
@@ -2624,7 +2628,7 @@ async function showChartMetar(autoHide=true,automatic=false,forceRefresh=false){
     if(!automatic&&!cached&&chartMetarViewActive(icao)&&banner.classList.contains("visible"))text.textContent="METAR "+icao+" unavailable";
   }
 }
-setInterval(()=>showChartMetar(true,true,true),CHART_METAR_POLL_INTERVAL);
+if(!IS_PREVIEW_CLASSIC_EMBED)setInterval(()=>showChartMetar(true,true,true),CHART_METAR_POLL_INTERVAL);
 $("#positionStatusBtn").addEventListener("click",()=>{
   const picker=$("#positionSourceDialog");
   if(!picker.open)picker.showModal();
