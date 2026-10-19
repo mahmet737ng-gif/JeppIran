@@ -64,6 +64,8 @@ async function ready(){for(let i=0;i<70;i++){try{if((await fetch(url)).ok)return
    await page.waitForFunction(()=>document.querySelector(".airport-token.active")?.dataset.airport==="OIKK");
    await page.locator("#airportSearch").fill("THR");
    await page.waitForFunction(()=>document.querySelector(".airport-token.active")?.dataset.airport==="OIII");
+   // Typeahead animates airport text size during centering; sample only after it settles.
+   await page.waitForTimeout(850);
    assert.equal(await page.locator("#classicViewerHost").isHidden(),true);
    const collapsedRail=await page.locator(".procedure-categories").boundingBox();
    const airportStripBefore=await page.locator("#airportCarousel").boundingBox();
