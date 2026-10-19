@@ -147,6 +147,12 @@ function paintTrack(){
     button.style.visibility=visible?"visible":"hidden";
     button.style.pointerEvents=visible?"auto":"none";
     button.tabIndex=visible?0:-1;
+    // Hidden items must lose the active class. Otherwise a long jump leaves
+    // an invisible previously selected airport active in the DOM.
+    const active=visible&&index===mid;
+    button.classList.toggle("active",active);
+    if(active)button.setAttribute("aria-current","true");
+    else button.removeAttribute("aria-current");
     if(!visible)continue;
     const focus=smoothstep(clamp(1-distance/1.12,0,1));
     const opacity=distance<.45?1:clamp(1-Math.max(0,distance-.5)*.17,.24,1);
@@ -158,10 +164,6 @@ function paintTrack(){
     button.style.setProperty("--iata-size",((compact?9:10)+(compact?5:8)*focus).toFixed(2)+"px");
     button.style.setProperty("--guide-opacity",focus.toFixed(3));
     button.style.zIndex=String(100-Math.floor(distance*10));
-    const active=index===mid;
-    button.classList.toggle("active",active);
-    if(active)button.setAttribute("aria-current","true");
-    else button.removeAttribute("aria-current");
   }
   // Render the profile of whichever ICAO is passing through the center,
   // not merely the final snap destination.
@@ -503,6 +505,10 @@ function paintProcedureWheel(){
     button.style.visibility=visible?"visible":"hidden";
     button.style.pointerEvents=visible?"auto":"none";
     button.tabIndex=visible?0:-1;
+    const on=visible&&index===activeIdx;
+    button.classList.toggle("active",on);
+    if(on)button.setAttribute("aria-current","true");
+    else button.removeAttribute("aria-current");
     if(!visible)continue;
     const focus=smoothstep(clamp(1-d/1.15,0,1));
     button.style.setProperty("--procedure-x",(delta*step).toFixed(2)+"px");
@@ -511,10 +517,6 @@ function paintProcedureWheel(){
     button.style.setProperty("--procedure-opacity",clamp(1-Math.max(0,d-.4)*.28,.26,1).toFixed(3));
     button.style.setProperty("--procedure-title-size",(innerWidth>=900&&matchMedia("(orientation:landscape)").matches?13+focus*1.5:9+focus*(innerWidth<=690?1:2)).toFixed(2)+"px");
     button.style.zIndex=String(20-Math.floor(d*5));
-    const on=index===activeIdx;
-    button.classList.toggle("active",on);
-    if(on)button.setAttribute("aria-current","true");
-    else button.removeAttribute("aria-current");
   }
   // Both the chart-name wheel and the picture wheel move on the same
   // animation frame; only changing the active image can initiate a JPEG load.
