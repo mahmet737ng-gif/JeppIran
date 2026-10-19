@@ -464,7 +464,7 @@ async function loadPublishedCharts(){
   if(chartManifest&&charts)return [chartManifest,charts];
   if(!chartCatalogPromise){
     chartCatalogPromise=Promise.all([
-      fetchJsonTimed(ROOT+"data/charts-manifest.json?carousel=r13",14000),
+      chartManifest?Promise.resolve(chartManifest):fetchJsonTimed(ROOT+"data/charts-manifest.json?carousel=r13",14000),
       fetchJsonTimed(ROOT+"data/charts-current.json?carousel=r13",14000)
     ]).then(([m,c])=>{
       if(!m?.airports||!Array.isArray(c))throw Error("Chart index is incomplete");
@@ -856,6 +856,10 @@ async function boot(){
        throw Error("Incomplete airport manifest: keep full built-in "+BUILTIN_AIRPORT_CODES.length+"-airport set");
     const selectedIcao=current();
     codes=newCodes;
+    chartManifest=manifest;
+    // Start the lightweight procedure-title index in the background, not
+    // after the user taps STAR/SID/AIRPORT/APP for the first time.
+    void loadPublishedCharts().catch(()=>{});
     selected=Math.max(0,codes.indexOf(selectedIcao));
     visualPos=selected;
     buildTrack();paintTrack();updateSelected();
