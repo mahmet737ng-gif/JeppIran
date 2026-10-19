@@ -36,7 +36,10 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
      headers:{"access-control-allow-origin":"*"},
      body:JSON.stringify({stations:weatherStations})
    }));
-   const errors=[],pdfRequests=[];
+   const errors=[],pdfRequests=[],weatherRequests=[];
+   page.on("request",request=>{
+     if(/wx-live\.json|aviationweather\.gov\/api\/data\/metar|rotatepilot\.com\/api\/v1\/metar|metars\.eu\/api\/metars/.test(request.url()))weatherRequests.push(request.url());
+   });
    page.on("request",request=>{
      if(/\/charts\/[^/]+\.pdf(?:$|\?)/.test(request.url()))pdfRequests.push(request.url());
    });
@@ -200,6 +203,22 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
      background:getComputedStyle(document.querySelector("#scenery")).backgroundImage
    }));
    console.log("PASS Ahwaz METAR + changing poster",JSON.stringify(ahwazState));
+   const requestsAfterStartup=weatherRequests.length;
+   // Swipe-through/airport selection MUST be a synchronous lookup. Neither the
+   // 78-station JSON nor an individual live-provider request may start here.
+   await page.locator("#airportSearch").fill("OIII");
+   await page.locator("#searchResults button").first().click();
+   await page.waitForFunction(expected=>
+     document.querySelector("#weatherStatus")?.textContent===expected,metarSample,
+     {timeout:600});
+   await page.locator("#airportSearch").fill("OIAW");
+   await page.locator("#searchResults button").first().click();
+   await page.waitForFunction(expected=>
+     document.querySelector("#weatherStatus")?.textContent===expected,ahwazMetar,
+     {timeout:600});
+   assert.equal(weatherRequests.length,requestsAfterStartup,
+     "Changing an ICAO after startup must NEVER initiate a weather request");
+   console.log("PASS instant METAR switching; no additional network requests while browsing");
    // An unavailable index must never shrink the 78-airport carousel to 9 entries.
    const offlinePage=await context.newPage();
    await offlinePage.route("**/data/charts-manifest.json*",route=>route.abort());
