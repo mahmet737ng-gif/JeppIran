@@ -343,7 +343,10 @@ function chartDelta(index,pos){
 }
 function chartWidth(){
   const wide=innerWidth>=900&&matchMedia("(orientation:landscape)").matches;
-  return procWheel.clientWidth/(wide?(innerWidth<1200?2.35:2.7):(innerWidth<=690?2.15:innerWidth<=1040?2.85:3.6));
+  // A nested chart body can be zero-width during its first layout pass.
+  // The safe fallback and ResizeObserver below prevent invisible 0px tokens.
+  const width=procWheel.clientWidth||procWheel.parentElement?.clientWidth||240;
+  return Math.max(76,width/(wide?(innerWidth<1200?2.35:2.7):(innerWidth<=690?2.15:innerWidth<=1040?2.85:3.6)));
 }
 function buildProcedureWheel(){
   chartButtons.clear();
@@ -385,7 +388,7 @@ function paintProcedureWheel(){
     button.style.setProperty("--procedure-w",(step*(innerWidth>=900&&matchMedia("(orientation:landscape)").matches?1.03:1.23)).toFixed(2)+"px");
     button.style.setProperty("--procedure-scale",(0.83+focus*.17).toFixed(3));
     button.style.setProperty("--procedure-opacity",clamp(1-Math.max(0,d-.4)*.28,.26,1).toFixed(3));
-    button.style.setProperty("--procedure-title-size",(innerWidth>=900&&matchMedia("(orientation:landscape)").matches?11.5+focus*2.25:9+focus*(innerWidth<=690?1:2)).toFixed(2)+"px");
+    button.style.setProperty("--procedure-title-size",(innerWidth>=900&&matchMedia("(orientation:landscape)").matches?13+focus*1.5:9+focus*(innerWidth<=690?1:2)).toFixed(2)+"px");
     button.style.zIndex=String(20-Math.floor(d*5));
     const on=index===activeIdx;
     button.classList.toggle("active",on);
@@ -441,7 +444,12 @@ function displayProcedureRows(rows){
       "No matching charts in this category.":"No published charts in this category.";
     procTrack.append(status);
     showMiniChart(null);
-  }else {paintProcedureWheel();queueFocusedChart(chartSelected,true);}
+  }else {
+    paintProcedureWheel();
+    queueFocusedChart(chartSelected,true);
+    // Re-measure once the category body has expanded (especially on Safari).
+    requestAnimationFrame(()=>{if(activeChartCategory&&chartSearchRows.length)paintProcedureWheel()});
+  }
 }
 function filterProcedureRows(){
   const q=$("#procedureSearch").value.trim().toUpperCase();
@@ -467,6 +475,11 @@ async function refreshProcedureCategory(category){
   clearChartButtons();
   chartSearchRows=[];activeChartRows=[];
   $("#procedureCount").textContent="Loading "+category+" charts · "+code+"…";
+  // The narrow rail previously looked empty while its async chart index loaded.
+  const loading=document.createElement("div");
+  loading.id="procedureEmpty";loading.className="procedure-empty";
+  loading.textContent="Loading "+category+" charts…";
+  procTrack.replaceChildren(loading);
   try{
     const [,all]=await loadPublishedCharts();
     if(request!==chartSheetToken||activeChartCategory!==category||current()!==code)return;
@@ -508,6 +521,7 @@ function toggleProcedureCategory(category){
   });
   hideInlineChart();
   void refreshProcedureCategory(category);
+  requestAnimationFrame(()=>{if(activeChartCategory===category)paintProcedureWheel()});
 }
 document.querySelectorAll(".procedure-category").forEach(b=>
   b.addEventListener("click",()=>toggleProcedureCategory(b.dataset.category)));
@@ -567,6 +581,9 @@ window.addEventListener("keydown",e=>{
   if(e.key==="Escape"&&activeChartCategory){e.preventDefault();closeProcedureCategory();}
 });
 window.addEventListener("resize",()=>paintProcedureWheel(),{passive:true});
+if(typeof ResizeObserver!=="undefined"){
+  new ResizeObserver(()=>{if(chartSearchRows.length)requestAnimationFrame(paintProcedureWheel)}).observe(procWheel);
+}
 
 /* The R5 page DOES NOT contain a home-made PDF renderer.
  * It embeds the original Classic JeppIran chart viewer, unmodified,
@@ -657,7 +674,7 @@ async function drawMiniChart(item,token){
     miniCanvas.hidden=false;miniStatus.hidden=true;
   }catch(error){
     if(token!==miniToken||miniHost.hidden)return;
-    miniStatus.textContent="Preview unavailable: "+(error?.message||"PDF error");
+    miniStatus.textContent="PDF preview unavailable. Tap Open chart to use Classic. "+(error?.message||"");
     miniStatus.hidden=false;miniCanvas.hidden=true;
   }
 }
