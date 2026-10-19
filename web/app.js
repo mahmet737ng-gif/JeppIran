@@ -612,9 +612,23 @@ const IS_PREVIEW_CLASSIC_EMBED=window.parent!==window &&
   new URLSearchParams(location.search).get("jeppiranEmbedCharts")==="1";
 if(IS_PREVIEW_CLASSIC_EMBED){
   document.documentElement.classList.add("jp-preview-classic-embed");
+  const previewCdfaButton=$("#chartCdfaBtn");
+  const reportPreviewCdfa=()=>{
+    const available=!!previewCdfaButton&&!previewCdfaButton.disabled&&!previewCdfaButton.hidden;
+    window.parent.postMessage({type:"JEPPIRAN_PREVIEW_CDFA_STATUS_V1",available},location.origin);
+  };
+  if(previewCdfaButton){new MutationObserver(reportPreviewCdfa).observe(previewCdfaButton,{attributes:true,attributeFilter:["disabled","hidden","style","class"]});reportPreviewCdfa();}
   window.addEventListener("message",event=>{
     if(event.source!==window.parent||event.origin!==location.origin)return;
     const msg=event.data;
+    if(msg?.type==="JEPPIRAN_PREVIEW_EXIT_FULLSCREEN_V1"){
+      void exitViewerFullscreen(false);return;
+    }
+    if(msg?.type==="JEPPIRAN_PREVIEW_TOGGLE_CDFA_V1"){
+      const cdfa=$("#chartCdfaBtn");
+      if(cdfa&&!cdfa.disabled&&!cdfa.hidden)cdfa.click();
+      return;
+    }
     if(!msg||msg.type!=="JEPPIRAN_PREVIEW_SELECT_CHART_V1")return;
     const code=String(msg.icao||"").toUpperCase(),page=Number(msg.page);
     if(!/^[A-Z]{4}$/.test(code)||!Number.isSafeInteger(page)||page<1||!manifest||!charts.length)return;
@@ -2747,6 +2761,13 @@ function scheduleFullscreenRefit(delay=240){
 
 async function enterViewerFullscreen(){
   document.body.classList.add("viewer-fullscreen");
+  if(IS_PREVIEW_CLASSIC_EMBED){
+    const btn=$("#chartCdfaBtn");
+    window.parent.postMessage({type:"JEPPIRAN_PREVIEW_FULLSCREEN_V1",open:true,
+      cdfaAvailable:!!btn&&!btn.disabled&&!btn.hidden},location.origin);
+    scheduleFullscreenRefit(240);
+    return;
+  }
   const root=document.documentElement;
   const request=root.requestFullscreen||root.webkitRequestFullscreen;
   if(request){try{await request.call(root)}catch(e){}}
@@ -2756,6 +2777,11 @@ async function enterViewerFullscreen(){
 async function exitViewerFullscreen(exitNative=true){
   setFullscreenChartDrawer(false);
   document.body.classList.remove("viewer-fullscreen");
+  if(IS_PREVIEW_CLASSIC_EMBED){
+    window.parent.postMessage({type:"JEPPIRAN_PREVIEW_FULLSCREEN_V1",open:false},location.origin);
+    scheduleFullscreenRefit(240);
+    return;
+  }
   if(exitNative){
     const active=document.fullscreenElement||document.webkitFullscreenElement;
     const exit=document.exitFullscreen||document.webkitExitFullscreen;
