@@ -75,8 +75,8 @@ self.addEventListener("fetch",event=>{
   // generic cache-first fallback, so a stale HTML shell could import newer JS.
   // Always revalidate the R13 document, JS and CSS online. Preserve cached
   // versions as offline fallbacks and do not interfere with chart PDF caches.
-  if(url.pathname.includes("/preview/airport-carousel-r13/") &&
-     (url.pathname.endsWith("/airport-carousel-r13/") ||
+  if(url.pathname.includes("/preview/airport-carousel-r13") &&
+     ((url.pathname.endsWith("/airport-carousel-r13/") || url.pathname.endsWith("/airport-carousel-r13-fixed/")) ||
       url.pathname.endsWith("/index.html") ||
       url.pathname.endsWith("/app.js") ||
       url.pathname.endsWith("/styles.css"))){
