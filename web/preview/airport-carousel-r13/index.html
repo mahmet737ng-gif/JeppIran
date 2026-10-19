@@ -5,16 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#071524">
   <meta name="robots" content="noindex,nofollow,noarchive">
-  <title>JeppIran — Airport Carousel R13 – Isolated Preview</title>
+  <title>JeppIran — Airport Carousel R13 · Final</title>
   <link rel="icon" href="../../app-icon.png">
-  <link rel="stylesheet" href="./styles.css?v=carousel-isolated-r13-20261019">
+  <link rel="stylesheet" href="./styles.css?v=carousel-final-r13-thumbs-1">
   <script src="../../metar-flight-category.js?v=2621-wxrules-v1" defer></script>
   <script>
     if(["android-phone","android-carousel-qa"].includes(new URLSearchParams(location.search).get("platform"))){
       document.documentElement.classList.add("jp-android-carousel-qa");
     }
   </script>
-  <script src="./app.js?v=carousel-isolated-r13-20261019" defer></script>
+  <script src="./app.js?v=carousel-final-r13-thumbs-1" defer></script>
 </head>
 <body>
   <div class="scenery" id="scenery" aria-hidden="true"></div>
@@ -24,7 +24,7 @@
       <a class="brand" href="../../" title="Open original JeppIran (unchanged)"><span class="wing" aria-hidden="true">✈</span><b>JeppIran</b><span>Charts</span></a>
       <div class="search-box"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.7" cy="10.7" r="6.3"></circle><path d="m15.3 15.3 5 5"></path></svg><input id="airportSearch" type="search" placeholder="Search ICAO, IATA or airport…" autocomplete="off" aria-label="Find an airport"><div id="searchResults" class="search-results" hidden></div></div>
       
-      <div class="preview-mark">CAROUSEL R13 <span>R13 • Fresh preview</span></div>
+      <div class="preview-mark">CAROUSEL R13 <span>R13 • 78 Airports</span></div>
       <a class="original-link" href="../../#charts" title="Leave preview and open original Charts">Original app <span aria-hidden="true">↗</span></a>
     </header>
 
@@ -92,6 +92,7 @@
           <button type="button" id="miniChartOpen" class="mini-preview-open">Open chart ↗</button>
         </div>
         <button type="button" id="miniPreviewTap" class="mini-preview-surface" aria-label="Open this chart in the Classic viewer">
+          <img id="miniChartImage" hidden alt="Preview of selected published chart" decoding="async">
           <canvas id="miniChartCanvas" hidden aria-hidden="true"></canvas>
           <span id="miniChartStatus" class="mini-preview-status" role="status">Preparing preview…</span>
         </button>
