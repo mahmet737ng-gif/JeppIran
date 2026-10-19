@@ -7,7 +7,7 @@
   <meta name="robots" content="noindex,nofollow,noarchive">
   <title>JeppIran — Airport Carousel R13 · Fixed</title>
   <link rel="icon" href="../../app-icon.png">
-  <link rel="stylesheet" href="./styles.css?v=carousel-r13-instant-metar-v5">
+  <link rel="stylesheet" href="./styles.css?v=carousel-r13-triple-preview-v6">
   <script src="../../airport-briefings-preload.js?v=2621-batch78-instant-r2" defer></script>
   <script src="../../metar-flight-category.js?v=2621-wxrules-v1" defer></script>
   <script>
@@ -15,7 +15,7 @@
       document.documentElement.classList.add("jp-android-carousel-qa");
     }
   </script>
-  <script src="./app.js?v=carousel-r13-instant-metar-v5" defer></script>
+  <script src="./app.js?v=carousel-r13-triple-preview-v6" defer></script>
 </head>
 <body>
   <div class="scenery" id="scenery" aria-hidden="true"></div>
@@ -92,11 +92,21 @@
           </div>
           <button type="button" id="miniChartOpen" class="mini-preview-open">Open chart ↗</button>
         </div>
-        <button type="button" id="miniPreviewTap" class="mini-preview-surface" aria-label="Open this chart in the Classic viewer">
-          <img id="miniChartImage" hidden alt="Preview of selected published chart" decoding="async">
-          <canvas id="miniChartCanvas" hidden aria-hidden="true"></canvas>
-          <span id="miniChartStatus" class="mini-preview-status" role="status">Preparing preview…</span>
-        </button>
+        <div id="miniPreviewCarousel" class="mini-preview-carousel" role="group" aria-label="Swipe chart previews; tap a neighboring chart to center it">
+          <button type="button" id="miniPreviewBefore" class="mini-preview-neighbor mini-preview-before" aria-label="Preview previous chart">
+            <img id="miniPreviewBeforeImage" alt="" loading="eager" decoding="async">
+            <span id="miniPreviewBeforeTitle" class="mini-neighbor-title"></span>
+          </button>
+          <button type="button" id="miniPreviewTap" class="mini-preview-surface" aria-label="Open centered chart in Classic viewer">
+            <img id="miniChartImage" hidden alt="Preview of selected published chart" decoding="async">
+            <canvas id="miniChartCanvas" hidden aria-hidden="true"></canvas>
+            <span id="miniChartStatus" class="mini-preview-status" role="status">Preparing preview…</span>
+          </button>
+          <button type="button" id="miniPreviewAfter" class="mini-preview-neighbor mini-preview-after" aria-label="Preview next chart">
+            <img id="miniPreviewAfterImage" alt="" loading="eager" decoding="async">
+            <span id="miniPreviewAfterTitle" class="mini-neighbor-title"></span>
+          </button>
+        </div>
       </section>
 
       <section id="classicViewerHost" class="classic-viewer-host" hidden aria-label="Original Classic JeppIran chart viewer">
