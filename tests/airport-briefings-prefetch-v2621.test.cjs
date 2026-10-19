@@ -23,6 +23,7 @@ test("Entry preloads exactly two aggregate requests for 78 ICAOs, then reuses th
      const data=String(url).includes("wx-live.json")?weather:notam;
      return {ok:true,json:async()=>data}
    }};
+ context.window.caches=context.caches;
  vm.createContext(context);
  vm.runInContext(asset("web/airport-briefings-preload.js"),context);
  const api=context.window.JEPPIRAN_AIRPORT_PREFETCH;
