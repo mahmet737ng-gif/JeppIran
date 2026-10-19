@@ -1287,7 +1287,7 @@ function renderTreeInto(root){
       // On iPad the ADC/Layout pages must be immediately selectable, not buried
       // behind many airport information and briefing pages.
       const isLayout=c=>/^(?:10|20)-9[A-Z0-9]*$/i.test(String(c.chart_number||""))||
-        /AIRPORT DIAGRAM|\\bADC\\b|LAYOUT|APRON|PARKING|TAXI|STANDS?/i.test(String(c.name||""));
+        /AIRPORT DIAGRAM|\bADC\b|LAYOUT|APRON|PARKING|TAXI|STANDS?/i.test(String(c.name||""));
       const layoutRows=cat==="Airport"?items.filter(isLayout):[];
       const normalRows=cat==="Airport"?items.filter(c=>!isLayout(c)):items;
       const addChart=c=>{
