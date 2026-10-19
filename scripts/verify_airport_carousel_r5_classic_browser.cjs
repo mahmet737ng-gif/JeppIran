@@ -65,6 +65,10 @@ async function ready(){for(let i=0;i<70;i++){try{if((await fetch(url)).ok)return
    await page.locator("#airportSearch").fill("THR");
    await page.waitForFunction(()=>document.querySelector(".airport-token.active")?.dataset.airport==="OIII");
    assert.equal(await page.locator("#classicViewerHost").isHidden(),true);
+   const collapsedRail=await page.locator(".procedure-categories").boundingBox();
+   const airportStripBefore=await page.locator("#airportCarousel").boundingBox();
+   const icaoFontBefore=await page.locator(".airport-token.active .icao").evaluate(e=>getComputedStyle(e).fontSize);
+   assert.ok(collapsedRail.width<440,"Collapsed category tabs should remain compact: "+collapsedRail.width);
    await page.locator('.procedure-category[data-category="STAR"]').click();
    await page.waitForFunction(()=>document.querySelectorAll(".procedure-token").length===2);
    const layout=await page.evaluate(()=>{
@@ -77,6 +81,16 @@ async function ready(){for(let i=0;i<70;i++){try{if((await fetch(url)).ok)return
    assert.ok(layout.wheelLeft>=layout.starRight-2,"Chart names should start to the RIGHT of STAR: "+JSON.stringify(layout));
    assert.ok(layout.wheelRight<=layout.sidLeft+2,"Chart names must finish BEFORE SID: "+JSON.stringify(layout));
    assert.ok(Math.abs(layout.starTop-layout.sidTop)<4,"STAR and SID must be in the SAME row");
+   const expandedRail=await page.locator(".procedure-categories").boundingBox();
+   const airportStripAfter=await page.locator("#airportCarousel").boundingBox();
+   const icaoFontAfter=await page.locator(".airport-token.active .icao").evaluate(e=>getComputedStyle(e).fontSize);
+   assert.ok(expandedRail.width>collapsedRail.width+320,
+     "Only opening chart names should expand the category rail");
+   assert.ok(Math.abs(airportStripAfter.width-airportStripBefore.width)<1,
+     "Airport ICAO carousel width must stay completely unchanged");
+   assert.equal(icaoFontAfter,icaoFontBefore,"ICAO typography must not resize");
+   assert.ok(await page.locator('.procedure-token[data-chart-page="101"]').isVisible(),
+     "STAR chart title must be visible, not a blank expanded box");
    assert.ok(await page.locator("#classicViewerHost").isHidden(),"Wheel browsing must not mount the full Classic viewer");
    assert.ok(await page.locator("#miniChartPreview").isVisible(),"The centered chart must show a compact preview");
    await page.waitForFunction(()=>document.querySelector("#miniChartCanvas")?.width>0 &&
@@ -129,6 +143,8 @@ async function ready(){for(let i=0;i<70;i++){try{if((await fetch(url)).ok)return
    await page.locator('.procedure-category[data-category="SID"]').click();
    assert.equal(await page.locator("#classicViewerHost").isHidden(),true);
    assert.equal(await page.locator(".procedure-categories .category-shell.active").count(),0,"Collapsed categories must restore their compact four-tab rail");
+   const closedAgain=await page.locator(".procedure-categories").boundingBox();
+   assert.ok(closedAgain.width<440,"Closing category must shrink to compact four tabs");
    assert.ok(!errors.some(s=>/ReferenceError|SyntaxError|TypeError/.test(s)),errors.join("; "));
    console.log("PASS R11: wide desktop/iPad wheel, real debounced PDF thumbnail follows selection, full Classic only on tap, original toolbar preserved");
  }finally{if(browser)await browser.close();server.kill("SIGTERM")}
