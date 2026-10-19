@@ -1046,3 +1046,115 @@ body.chart-selected .classic-viewer-host{
    whether one of their horizontally nested chart wheels is expanded. */
 .procedure-zone .procedure-categories{align-items:flex-start!important}
 .procedure-zone .category-shell{align-self:flex-start!important}
+
+/* R11 LANDSCAPE PROCEDURE RAIL: iPad landscape and Windows have room for
+   the complete procedure names. The small Classic-independent thumbnail
+   replaces the full-height viewer during swipes. */
+.mini-chart-preview[hidden]{display:none!important}
+.mini-chart-preview{
+  position:relative;z-index:4;
+  display:flex;flex-direction:column;
+  width:min(410px,calc(100vw - 24px));
+  height:clamp(270px,47dvh,430px);
+  margin:12px auto 12px;
+  border:1px solid rgba(122,202,248,.76);border-radius:12px;
+  background:rgba(4,19,34,.92);
+  overflow:hidden;
+  box-shadow:0 16px 38px rgba(0,0,0,.46);
+}
+.mini-preview-caption{
+  min-height:51px;flex:0 0 auto;display:flex;
+  align-items:center;justify-content:space-between;gap:10px;
+  padding:7px 10px;background:rgba(7,39,66,.91);
+  border-bottom:1px solid rgba(105,186,234,.37);
+}
+.mini-preview-heading{display:flex;flex-direction:column;min-width:0;gap:4px}
+.mini-preview-heading small{color:#87d2fa;font-size:10px;font-weight:800;letter-spacing:.035em}
+.mini-preview-heading strong{
+  color:#f6fbff;font-size:12px;font-weight:750;
+  display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;
+  white-space:nowrap
+}
+.mini-preview-open{
+  flex:0 0 auto;min-height:32px;padding:6px 10px;
+  color:white;font-size:11px;font-weight:800;
+  border:1px solid rgba(99,197,244,.7);border-radius:7px;
+  background:rgba(18,100,149,.71)
+}
+.mini-preview-open:hover{background:rgba(30,135,193,.85)}
+.mini-preview-surface{
+  flex:1 1 auto;min-height:0;width:100%;
+  border:0;padding:9px;display:flex;
+  justify-content:center;align-items:center;
+  background:#e8ebef;color:#304353;
+  overflow:hidden;cursor:zoom-in
+}
+.mini-preview-surface canvas{
+  display:block;max-width:100%;max-height:100%;
+  object-fit:contain;box-shadow:0 1px 9px rgba(0,0,0,.13)
+}
+.mini-preview-surface canvas[hidden],.mini-preview-status[hidden]{display:none!important}
+.mini-preview-status{font-size:12px;font-weight:700;text-align:center;padding:12px}
+body.chart-selected .mini-chart-preview{display:none!important}
+@media (min-width:900px) and (orientation:landscape){
+  .procedure-zone{width:min(1560px,99vw)!important;max-width:none!important}
+  .procedure-zone .procedure-categories{
+    width:min(1535px,97vw)!important;max-width:calc(100vw - 18px)!important;
+    min-width:0!important;display:flex!important;
+    align-items:flex-start!important;gap:5px!important;
+    padding:5px!important;margin:0 auto!important
+  }
+  .procedure-zone .category-shell,
+  .procedure-zone .category-shell:not(.active){
+    flex:0 0 clamp(65px,6.7vw,86px)!important;
+    min-width:clamp(65px,6.7vw,86px)!important;
+    max-width:none!important;align-self:flex-start!important
+  }
+  .procedure-zone .category-shell.active{
+    flex:1 1 0!important;min-width:0!important;max-width:none!important
+  }
+  .procedure-zone .category-shell>.procedure-category{
+    width:clamp(65px,6.7vw,86px)!important;
+    flex:0 0 clamp(65px,6.7vw,86px)!important;
+    height:85px!important;min-height:85px!important;max-height:85px!important;
+    padding:5px 3px!important;font-size:11px!important
+  }
+  .procedure-zone .category-shell .procedure-details,
+  .procedure-zone .category-shell .procedure-details.open{
+    height:85px!important;max-height:85px!important;
+    padding:0 3px!important;min-width:0!important
+  }
+  .procedure-zone .category-shell .procedure-wheel-row,
+  .procedure-zone .category-shell .procedure-wheel{
+    height:81px!important;min-height:81px!important
+  }
+  .procedure-zone .category-shell .procedure-token{
+    height:75px!important;min-height:75px!important;
+    padding:4px 8px!important;gap:3px!important
+  }
+  .procedure-zone .category-shell .procedure-token .procedure-number{
+    font-size:11px!important;line-height:1.15!important
+  }
+  .procedure-zone .category-shell .procedure-token .procedure-title{
+    font-size:var(--procedure-title-size,13px)!important;
+    line-height:1.13!important;-webkit-line-clamp:4!important;
+    overflow-wrap:break-word!important;white-space:normal!important
+  }
+  .procedure-zone .category-shell .procedure-arrow{height:45px!important}
+  .mini-chart-preview{
+    height:min(48dvh,450px);
+    width:min(435px,calc(100vw - 30px));
+    margin:12px auto 15px
+  }
+}
+@media(max-width:899px){
+  .mini-chart-preview{
+    width:min(360px,calc(100vw - 14px));
+    height:clamp(255px,42dvh,380px);
+    margin:7px auto
+  }
+  .mini-preview-heading strong{font-size:11px}
+}
+@media(prefers-reduced-motion:reduce){
+  .mini-chart-preview{scroll-behavior:auto}
+}
