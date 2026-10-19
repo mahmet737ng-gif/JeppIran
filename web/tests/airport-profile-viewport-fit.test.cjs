@@ -19,8 +19,13 @@ test("original assets are not edited, all 50 source signatures are present",()=>
 });
 test("new asset versioned in HTML and service worker and tests included in Pages",()=>{
  const html=read("web/index.html"),sw=read("web/service-worker.js"),wf=read(".github/workflows/deploy-ipad-web.yml");
- for(const name of ["airport-profile-viewport-locked.css?v=2621-poster-viewport-fixed-r1","airport-profile-posters.js?v=2621-profile-v3-78-r1"])
-  assert.ok(html.includes(name)&&sw.includes(name),name);
+ const fixedViewport="airport-profile-viewport-locked.css?v=2621-poster-viewport-fixed-r1";
+ assert.ok(html.includes(fixedViewport)&&sw.includes(fixedViewport),fixedViewport);
+ // Keep immutable poster viewport and source image rules; allow the fit
+ // controller's JS revision to fix bugs such as zoom on NOTAM expansion.
+ const posterEntry=html.match(/airport-profile-posters\.js\?v=[a-z0-9-]+/);
+ assert.ok(posterEntry,"poster layout controller must be versioned");
+ assert.ok(sw.includes(posterEntry[0]),"web entry and offline shell must match");
  assert.match(wf,/node --test web\/tests\/airport-profile-viewport-fit\.test\.cjs/);
 });
 
