@@ -5,16 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#071524">
   <meta name="robots" content="noindex,nofollow,noarchive">
-  <title>JeppIran — Airport Carousel QA Android Test R6</title>
+  <title>JeppIran — Airport Carousel Android R8</title>
   <link rel="icon" href="../../app-icon.png">
-  <link rel="stylesheet" href="./styles.css?v=carousel-r5-3">
+  <link rel="stylesheet" href="./styles.css?v=carousel-android-r8">
   <script src="../../metar-flight-category.js?v=2621-wxrules-v1" defer></script>
   <script>
     if(["android-phone","android-carousel-qa"].includes(new URLSearchParams(location.search).get("platform"))){
       document.documentElement.classList.add("jp-android-carousel-qa");
     }
   </script>
-  <script src="./app.js?v=carousel-android-r7" defer></script>
+  <script src="./app.js?v=carousel-android-r8" defer></script>
 </head>
 <body>
   <div class="scenery" id="scenery" aria-hidden="true"></div>
@@ -23,8 +23,8 @@
     <header class="topline">
       <a class="brand" href="../../" title="Open original JeppIran (unchanged)"><span class="wing" aria-hidden="true">✈</span><b>JeppIran</b><span>Charts</span></a>
       <div class="search-box"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.7" cy="10.7" r="6.3"></circle><path d="m15.3 15.3 5 5"></path></svg><input id="airportSearch" type="search" placeholder="Search ICAO, IATA or airport…" autocomplete="off" aria-label="Find an airport"><div id="searchResults" class="search-results" hidden></div></div>
-      <a id="qaUpdatesLink" class="qa-updates-link" href="jeppiran://updates" title="Open native Updates and pause/resume downloads">UPDATES</a>
-      <div class="preview-mark">CAROUSEL BETA <span>Android R7</span></div>
+      
+      <div class="preview-mark">CAROUSEL BETA <span>Android R8</span></div>
       <a class="original-link" href="../../#charts" title="Leave preview and open original Charts">Original app <span aria-hidden="true">↗</span></a>
     </header>
 
@@ -69,9 +69,6 @@
         </nav>
         <div id="procedureDetails" class="procedure-details" aria-hidden="true" inert>
           <div class="procedure-tools">
-            <span id="procedureCount" aria-live="polite">Select a category</span>
-            <label class="procedure-search-label"><span aria-hidden="true">⌕</span><input type="search" id="procedureSearch" autocomplete="off" placeholder="Find…" aria-label="Search chart titles"></label>
-            <button id="collapseProcedure" type="button" aria-label="Collapse charts">×</button>
           </div>
           <div class="procedure-wheel-row">
             <button id="procedurePrev" type="button" class="procedure-arrow" aria-label="Previous chart">‹</button>
@@ -82,6 +79,7 @@
       </section>
 
       <section id="classicViewerHost" class="classic-viewer-host" hidden aria-label="Original Classic JeppIran chart viewer">
+        <div class="preview-fullscreen-tools" aria-label="Fullscreen chart controls"><button id="previewCdfaBtn" type="button" hidden>CDFA</button><button id="previewFullscreenExit" type="button" aria-label="Exit fullscreen">×</button></div>
         <div id="classicViewerStatus" class="classic-viewer-status" role="status">Choose a chart to load the Classic viewer…</div>
         <iframe id="classicViewerFrame" title="JeppIran Classic chart viewer and original toolbar"
           referrerpolicy="same-origin" loading="eager"
@@ -105,7 +103,6 @@
         <p id="weatherStatus" class="weather-status" role="status">Checking live METAR…</p>
       </section>
 
-      <div class="actions"><span class="hint">Swipe or drag quickly to spin • Release to snap to center</span></div>
     </main>
 
     <footer class="footer">JEPPIRAN · V2621 · DESIGN PREVIEW ONLY · NOT FOR NAVIGATION</footer>
