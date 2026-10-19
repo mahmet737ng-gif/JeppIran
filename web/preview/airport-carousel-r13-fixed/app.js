@@ -1005,12 +1005,17 @@ async function fetchJsonTimed(url,timeoutMs=9000){
   } finally {clearTimeout(timer)}
 }
 function refreshCatalogView(){
-  const was=current();
-  stopAnimation();
+  const was=current(),inFlight=Boolean(raf),movingPosition=visualPos;
+  // Optional airport metadata may finish downloading while a user is typing
+  // or swiping. Rebuild labels without cancelling the ongoing animation.
+  // The animation will still snap to the originally requested ICAO.
+  if(!inFlight)stopAnimation();
   selected=Math.max(0,codes.indexOf(was));
-  visualPos=selected;
+  visualPos=inFlight?movingPosition:selected;
   displayedProfileCode="";
-  buildTrack();paintTrack();updateSelected();
+  buildTrack();paintTrack();
+  if(inFlight)renderAirportProfile(getCode(Math.round(visualPos)),true);
+  else updateSelected();
 }
 async function boot(){
   // Show the full airport carousel, OIII poster and thin chart dock BEFORE any
