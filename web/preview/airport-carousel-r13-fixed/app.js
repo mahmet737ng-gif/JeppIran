@@ -284,6 +284,15 @@ el.search.addEventListener("keydown",e=>{if(e.key==="Escape")el.results.hidden=t
 document.addEventListener("click",e=>{if(!e.target.closest(".search-box"))el.results.hidden=true});
 function normalizeRaw(row){const s=typeof row==="string"?row:row?.raw||row?.rawText||row?.rawOb||"";return String(s||"").trim()}
 async function readSourceMetar(code){
+ // Batch fetched at startup holds all 78 ICAOs. No repeated full-file fetch
+ // on each intermediate airport while swiping the Carousel.
+ const pre=window.JEPPIRAN_AIRPORT_PREFETCH;
+ if(pre){
+  try{
+   const all=pre.get("metar")||await pre.ready("metar");
+   if(all?.stations){wxCache=all;wxCacheAt=Date.now()}
+  }catch(_){}
+ }
  if(!wxCache||Date.now()-wxCacheAt>1000*60){
   try{const res=await fetch(WX_CACHE_URL+"?t="+Math.floor(Date.now()/300000),{cache:"no-store",mode:"cors"});if(!res.ok)throw Error("Weather cache offline");wxCache=await res.json();wxCacheAt=Date.now();}
   catch(_){try{const r=await fetch(WX_CACHE_API+"&t="+Math.floor(Date.now()/300000),{mode:"cors",cache:"no-store"});if(r.ok){const doc=await r.json();wxCache=JSON.parse(atob(String(doc.content).replace(/\s+/g,"")));wxCacheAt=Date.now()}}catch(_){}}
@@ -492,9 +501,15 @@ async function loadPublishedCharts(){
   if(!chartCatalogPromise){
     chartCatalogPromise=Promise.all([
       chartManifest?Promise.resolve(chartManifest):fetchJsonTimed(ROOT+"data/charts-manifest.json?carousel=r13",14000),
-      fetchJsonTimed(ROOT+"data/charts-current.json?carousel=r13",14000)
-    ]).then(([m,c])=>{
+      fetchJsonTimed(ROOT+"data/charts-current.json?carousel=r13",14000),
+      fetchJsonTimed(ROOT+"data/chart-briefing-titles-v2621.json",14000).catch(()=>null)
+    ]).then(([m,c,brief])=>{
       if(!m?.airports||!Array.isArray(c))throw Error("Chart index is incomplete");
+      if(brief?.cycle==="2621")for(const item of c){
+        const label=brief.pages?.[String(item.page)];
+        if(label?.icao===item.airport&&label.chart_number===item.chart_number&&label.name)
+          item.name=label.name;
+      }
       chartManifest=m;charts=c;return [m,c];
     }).catch(error=>{chartCatalogPromise=null;throw error});
   }
