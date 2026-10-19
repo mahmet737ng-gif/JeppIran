@@ -612,7 +612,7 @@ const IS_PREVIEW_CLASSIC_EMBED=window.parent!==window &&
   new URLSearchParams(location.search).get("jeppiranEmbedCharts")==="1";
 if(IS_PREVIEW_CLASSIC_EMBED){
   document.documentElement.classList.add("jp-preview-classic-embed");
-  const previewCdfaButton=$("#chartCdfaBtn");
+  const previewCdfaButton=document.getElementById("chartCdfaBtn");
   const reportPreviewCdfa=()=>{
     const available=!!previewCdfaButton&&!previewCdfaButton.disabled&&!previewCdfaButton.hidden;
     window.parent.postMessage({type:"JEPPIRAN_PREVIEW_CDFA_STATUS_V1",available},location.origin);
