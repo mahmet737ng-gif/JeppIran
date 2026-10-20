@@ -6,6 +6,9 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/refresh-web-weather.yml'
+      - 'scripts/refresh_iran_taf.py'
+      - 'scripts/irimo_weather.py'
+      - 'tests/test_iran_taf_cache.py'
   schedule:
     - cron: '*/5 * * * *'
 
@@ -110,6 +113,14 @@ jobs:
           print("Cached stations:", sum(1 for row in stations.values() if row["metar"] or row["taf"]))
           PY
 
+      - name: Test IRIMO parser and Iranian TAF expiration rules
+        run: |
+          python3 -m unittest discover -s tests -p 'test_irimo_weather.py' -v
+          python3 -m unittest discover -s tests -p 'test_iran_taf_cache.py' -v
+
+      - name: Prefer current IRIMO HTML TAF; fall back to time-validated NOAA
+        run: python3 scripts/refresh_iran_taf.py
+
       - name: Publish lightweight wx-cache branch
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -117,11 +128,12 @@ jobs:
           rm -rf /tmp/wx-publish
           mkdir -p /tmp/wx-publish
           cp /tmp/wx-live.json /tmp/wx-publish/wx-live.json
+          cp /tmp/taf-iran.json /tmp/wx-publish/taf-iran.json
           cd /tmp/wx-publish
           git init -b wx-cache
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add wx-live.json
+          git add wx-live.json taf-iran.json
           git commit -m "Refresh JEPPIRAN web weather cache"
           git remote add origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           git push --force origin wx-cache
