@@ -72,3 +72,18 @@ test("larger chart tree and change-only METAR alerts respect chart selection",()
   assert.match(js,/if\(cached&&!automatic\)presentChartMetar/);
   assert.match(js,/if\(automatic&&!chartMetarShown\.get\(icao\)\)/);
 });
+
+test("PDF zoom sharpens from original vector page and edge paging requires overscroll",()=>{
+  const js=read("app.js");
+  assert.match(js,/async function renderChartDetail\(request\)/);
+  assert.match(js,/page\.render\(\{canvasContext:next\.getContext/);
+  assert.match(js,/canvas\.getContext\("2d",\{alpha:false\}\)\.drawImage\(next,0,0\)/);
+  assert.match(js,/scheduleChartDetail\(\)/);
+  assert.match(js,/maxPixels=memoryConstrained\?16000000:30000000/);
+  assert.match(js,/chartDetail\.page=page;chartDetail\.quality=dpr/);
+  assert.match(js,/chartHorizontalPanLimit\(\)/);
+  assert.match(js,/extra>52&&adjacentChart\(direction\)/);
+  assert.match(js,/edgePaging\?Math\.abs\(state\.dx\)>=48/);
+  assert.match(js,/state\.reversing/);
+  assert.match(js,/zoom:chartZoom,panX:chartZoom>1\.001\?chartPanX:0/);
+});
