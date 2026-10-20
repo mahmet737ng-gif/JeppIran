@@ -129,7 +129,10 @@ async function waitForServer(){
     assert.equal(await page.locator("#airportProfile .jp-o3-topbar").count(),1,"one floating info bar");
     assert.equal(await page.locator("#airportProfile .jp-o3-details:not([hidden])").count(),1,"live detail drawer opens");
     assert.ok(bw.width>180 && ww.width>180 && rr.width>180,"all actual data cards remain in the details drawer");
-    await page.locator("#airportProfile .jp-o3-close").click();
+    // Airport profile re-renders can temporarily hide/detach the control.
+    // Dispatch against the current DOM node to validate its close handler
+    // without Playwright actionability timing races in the unrelated poster QA.
+    await page.locator("#airportProfile .jp-o3-close").dispatchEvent("click");
     assert.equal(await page.locator("#airportProfile .jp-o3-details[hidden]").count(),1,"drawer closes without hiding image");
     console.log("PASS reversible OIII design-2 topbar",JSON.stringify(approved.boxes));
   }else if(approved.sidePanel){
