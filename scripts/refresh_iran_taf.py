@@ -14,6 +14,39 @@ ROOT=Path(__file__).resolve().parents[1]
 WX=Path("/tmp/wx-live.json")
 OUT=Path("/tmp/taf-iran.json")
 
+def load_device_reports(now):
+    """Read the actual IRIMO HTML reports deposited by a reachable Windows PC.
+    Only time-valid data fetched in the previous 15 minutes may replace NOAA.
+    Missing/stale/invalid relay must silently leave NOAA in charge.
+    """
+    import re
+    import urllib.request
+    url="https://raw.githubusercontent.com/mahmet737ng-gif/JeppIran/irimo-cache/irimo-current.json"
+    try:
+        req=urllib.request.Request(url+"?v="+str(int(now.timestamp()//300)),
+            headers={"User-Agent":"JEPPIRAN-IRIMO-Bridge-Reader/1.0"})
+        with urllib.request.urlopen(req,timeout=8) as response:
+            source=json.load(response)
+        if source.get("schema")!="jeppiran-irimo-device/v1":return {}
+        stamp=dt.datetime.fromisoformat(source["fetched_at"].replace("Z","+00:00"))
+        age=(now-stamp.astimezone(UTC)).total_seconds()
+        if age < -180 or age > 900:
+            print("IRIMO device cache is older than 15m or future dated",flush=True)
+            return {}
+        result={}
+        for code,record in source.get("stations",{}).items():
+            if not re.fullmatch(r"OI[A-Z0-9]{2}",code) or not isinstance(record,dict):continue
+            for kind in ("metar","taf"):
+                raw=str(record.get(kind) or "").strip()
+                prefix=(r"(?:METAR|SPECI)" if kind=="metar" else r"TAF(?:\s+(?:AMD|COR))?")
+                if re.match(r"^"+prefix+r"\s+"+code+r"\s+",raw) and is_current(kind,raw,now):
+                    result.setdefault(code,{})[kind]=raw
+        print("Time-validated sourced IRIMO reports:",len(result),flush=True)
+        return result
+    except Exception as exc:
+        print("IRIMO device bridge not available:",str(exc)[:130],flush=True)
+        return {}
+
 def taf_details(raw, now):
     issue=TAF_ISSUE.match(raw)
     if not issue: return None
@@ -55,8 +88,11 @@ def main(no_irimo=False,now=None):
     stations=weather.get("stations")
     if not isinstance(stations,dict):raise ValueError("Invalid NOAA weather cache")
     codes={code for code in manifest["airports"] if len(code)==4 and code.startswith("OI")}
-    irimo={}; irimo_status="not_checked"
-    if not no_irimo:
+    bridge={} if no_irimo else load_device_reports(now)
+    codes.update(bridge)
+    irimo={code:record["taf"] for code,record in bridge.items() if record.get("taf")}
+    irimo_status="device_relay" if irimo else "not_checked"
+    if not no_irimo and not irimo:
         try:
             content=fetch_block(588,timeout=7)
             irimo={code:raw for code,raw in extract(content,"taf").items() if code.startswith("OI")}
@@ -66,6 +102,12 @@ def main(no_irimo=False,now=None):
         except Exception as e:
             irimo_status="unavailable"
             print("IRIMO HTML unavailable, keeping validated NOAA:",repr(e)[:160],flush=True)
+    for code,record in bridge.items():
+        if record.get("metar"):
+            row=stations.setdefault(code,{})
+            row["metar"]=record["metar"]
+            row["metar_source"]="IRIMO"
+            row["metar_retrieved_at"]=now.isoformat()
     rows,n_irimo=build_rows(stations,codes,irimo,now)
     for code in codes:
         record=stations.setdefault(code,{})
