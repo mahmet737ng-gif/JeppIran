@@ -1,0 +1,52 @@
+/* CDFA increment preview — separate additive SVG group; locked table untouched.
+   The transform remains in the same PDF coordinate space as its vector rows. */
+#chartsView #chartTransformLayer #jpCdfaSide .jp-cdfa-next-increment{
+  pointer-events:none;transform-box:view-box;transform-origin:0 0;
+  transition:transform 730ms cubic-bezier(.2,.96,.22,1),opacity 230ms ease;
+  will-change:transform,opacity;
+}
+#chartsView #chartTransformLayer #jpCdfaSide .jp-cdfa-next-increment.jp-inc-no-motion{
+  transition:none!important;
+}
+#chartsView #chartTransformLayer #jpCdfaSide .jp-inc-line{
+  stroke:#F3AF26;stroke-width:5.4;stroke-linecap:round;
+  fill:none;vector-effect:non-scaling-stroke;
+}
+#chartsView #chartTransformLayer #jpCdfaSide .jp-inc-line.jp-inc-halo{
+  stroke:#E99B0A;stroke-width:11;opacity:.23;
+}
+body.chart-inverted #chartsView #chartTransformLayer #jpCdfaSide .jp-inc-line{
+  stroke:#F7CB6D;
+}
+@media(prefers-reduced-motion:reduce){
+  #chartsView #chartTransformLayer #jpCdfaSide .jp-cdfa-next-increment{
+    transition:opacity 180ms ease!important;
+  }
+}
+.jp-cdfa-increment-qa{
+  position:fixed;bottom:max(20px,env(safe-area-inset-bottom));
+  right:max(18px,env(safe-area-inset-right));z-index:270;
+  width:min(350px,calc(100vw - 36px));box-sizing:border-box;
+  padding:12px 14px 11px;border:1px solid rgba(252,198,82,.65);
+  border-radius:14px;box-shadow:0 15px 50px rgba(0,0,0,.39);
+  color:#f7f8fd;background:rgba(11,23,36,.96);
+  font:600 12px/1.5 -apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+}
+.jp-cdfa-increment-qa[hidden]{display:none!important}
+.jp-inc-qa-header,.jp-inc-qa-value,.jp-inc-qa-actions{
+  display:flex;justify-content:space-between;align-items:center;gap:7px;
+}
+.jp-inc-qa-header span{font-size:9px;letter-spacing:.06em;color:#F3BF4B}
+.jp-inc-qa-value{margin:8px 0;font-size:12px}
+.jp-inc-qa-number{font-size:22px;font-variant-numeric:tabular-nums}
+.jp-inc-next-label{color:#F3BF4B;font-size:10px;text-align:right}
+.jp-cdfa-increment-qa .jp-inc-slider{width:100%;accent-color:#F3BF4B;cursor:pointer}
+.jp-inc-qa-actions{margin-top:9px}
+.jp-inc-qa-actions button{
+  flex:1;padding:7px;background:#213950;color:white;border:1px solid #536778;
+  border-radius:7px;font:inherit;cursor:pointer;touch-action:manipulation;
+}
+.jp-inc-qa-actions button:focus-visible,.jp-inc-slider:focus-visible{
+  outline:2px solid #F3BF4B;outline-offset:2px;
+}

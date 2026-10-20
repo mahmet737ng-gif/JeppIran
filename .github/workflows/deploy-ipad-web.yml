@@ -90,6 +90,12 @@ jobs:
       - name: Enforce owner-locked CDFA layout
         run: node --test tests/cdfa-ui-locked-v2621.test.cjs
 
+      - name: Test additive CDFA increment tracker without changing owner-locked CDFA
+        run: |
+          node --check web/cdfa-increment-core.js
+          node --check web/cdfa-increment-tracker.js
+          node --test web/tests/cdfa-increment-tracker.test.cjs
+
       - name: Enforce owner-locked iPad chart gestures and appearance
         run: node --test tests/ipad-chart-ui-locked-v2621.test.cjs
 
