@@ -74,7 +74,9 @@
   function bounds(index){
     // Layout is derived from existing lock-protected vector strokes, not
     // duplicated or recalculated table metrics.
-    const rules=[...svg.querySelectorAll("line.jp-cdfa-rule")];
+    const rules=[...svg.querySelectorAll("line.jp-cdfa-rule")].filter(line=>
+      Number(line.getAttribute("x1"))===0 &&
+      Math.abs(Number(line.getAttribute("y1"))-Number(line.getAttribute("y2")))<.01);
     const top=Number(rules[index+1]?.getAttribute("y1"));
     const bottom=index+2<rules.length
       ?Number(rules[index+2].getAttribute("y1"))
