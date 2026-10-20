@@ -14,7 +14,7 @@
   <link rel="manifest" href="./manifest.webmanifest">
   <link rel="icon" href="./app-icon.png" type="image/png">
   <link rel="apple-touch-icon" sizes="256x256" href="./app-icon.png">
-  <link rel="stylesheet" href="./styles.css?v=2621-header-home-order-r1-offline-verify-r1-ipad-layout-r1">
+  <link rel="stylesheet" href="./styles.css?v=2621-header-home-order-r1-offline-verify-r1-ipad-layout-r1-chart-back-zoom80">
   <link rel="stylesheet" href="./fullscreen-chart-drawer.css?v=2621-fullscreen-nav-r1">
   <link rel="stylesheet" href="./home-ils-background.css?v=2621-ils-bg-fixed-r1">
   <link rel="stylesheet" href="./airport-adc-banners.css?v=2621-adc-template2-r1">
@@ -130,12 +130,13 @@
           </div>
           <div class="viewer-actions">
             <div class="viewer-nav-group" aria-label="Chart navigation">
+              <button id="chartReturnBtn" class="icon-btn compact-btn chart-return-btn" type="button" aria-label="Return to airport profile" title="Back to airport profile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 14-5-5 5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-2"/></svg><span>BACK</span></button>
               <button id="prevChartBtn" class="icon-btn compact-btn raster-btn raster-only" title="Previous chart" aria-label="Previous chart"><span class="toolbar-art art-back" aria-hidden="true"></span></button>
               <button id="nextChartBtn" class="icon-btn compact-btn raster-btn raster-only" title="Next chart" aria-label="Next chart"><span class="toolbar-art art-next" aria-hidden="true"></span></button>
             </div>
             <div class="viewer-zoom-group" aria-label="Chart zoom">
               <button id="zoomOutBtn" class="icon-btn compact-btn raster-btn raster-only" title="Zoom out" aria-label="Zoom out"><span class="toolbar-art art-zoom-out" aria-hidden="true"></span></button>
-              <button id="zoomResetBtn" class="icon-btn zoom-value raster-btn" title="Reset zoom"><span id="zoomValue">100%</span></button>
+              <button id="zoomResetBtn" class="icon-btn zoom-value raster-btn" title="Reset zoom"><span id="zoomValue">80%</span></button>
               <button id="zoomInBtn" class="icon-btn compact-btn raster-btn raster-only" title="Zoom in" aria-label="Zoom in"><span class="toolbar-art art-zoom-in" aria-hidden="true"></span></button>
             </div>
             <button id="chartMetarBtn" class="icon-btn metar-toolbar-btn raster-btn" title="Show or hide airport METAR"><span class="toolbar-art art-metar" aria-hidden="true"></span><span class="toolbar-label">METAR</span></button>
@@ -459,7 +460,7 @@
   <script src="./airport-briefings-preload.js?v=2621-batch78-instant-r2" defer></script>
   <script src="./notam-service.js?v=2621-notam-relay-clean-r3" defer></script>
   <script src="./metar-flight-category.js?v=2621-wxrules-v1" defer></script>
-  <script src="./app.js?v=2621-oici-ungeoref-neutral-pos-r1-saqez-r1-oigg-local-r3-geo-retention-r2-offline-pdf-recovery-r1-preview-classic-embed-r8-ipad-layout-r1-no-auto-metar-r2-batch78-carousel-chart-sync-margin-nav-swipe-r2-overlay-irimo-capture-r1-default-zoom50-r1" defer></script>
+  <script src="./app.js?v=2621-oici-ungeoref-neutral-pos-r1-saqez-r1-oigg-local-r3-geo-retention-r2-offline-pdf-recovery-r1-preview-classic-embed-r8-ipad-layout-r1-no-auto-metar-r2-batch78-carousel-chart-sync-margin-nav-swipe-r2-overlay-irimo-capture-r1-default-zoom50-r1-back-to-profile-zoom80-r1" defer></script>
   <script src="./chart-margin-tree.js?v=2621-chart-margin-tree-r2-overlay" defer></script>
   <script src="./offline-manager.js?v=2621-auto-sync-r4-sw-integrity-bypass" defer></script>
   <script src="./cdfa-margin-overlay.js?v=2621-cdfa-ipad-column-fit-r3" defer></script>

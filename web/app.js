@@ -650,8 +650,9 @@ function signalPreviewClassicReady(){
 }
 
 let airportTreeExpanded=false;
-// Owner-approved default chart scale: 50%. Other chart scale/pan and georeferencing rules are unchanged.
-const DEFAULT_CHART_ZOOM=.5;
+// Owner-requested larger default chart scale; 50% manual minimum stays available.
+// No changes to georeference, PDF source, or CDFA geometry.
+const DEFAULT_CHART_ZOOM=.8;
 let chartZoom=DEFAULT_CHART_ZOOM, chartPanX=0, chartPanY=0;
 // Dual Layer Ops marker: chart follow is a viewer-only feature; no simulator transport changes.
 let aircraftFollowEnabled=false, taxiOffRouteCount=0, taxiOffRouteActive=false;
@@ -2237,7 +2238,7 @@ function chartSwipePanel(canvas,scrollOffset=0){
   panel.appendChild(inner);
   return panel;
 }
-// Keep reversible paging available at both the new 50% default and legacy 100% zoom.
+// Keep reversible paging available at the new 80% default and legacy 100% zoom.
 function isChartPagingZoom(){return Math.abs(chartZoom-DEFAULT_CHART_ZOOM)<.015||Math.abs(chartZoom-1)<.015;}
 function beginChartSwipe(direction){
   if(activeChartSlide||!isChartPagingZoom()||!selectedChart)return null;
@@ -2397,6 +2398,13 @@ function zoomAround(next,cx,cy){
 $("#zoomOutBtn").addEventListener("click",()=>setChartZoom(chartZoom/1.25));
 $("#zoomInBtn").addEventListener("click",()=>setChartZoom(chartZoom*1.25));
 $("#zoomResetBtn").addEventListener("click",resetChartView);
+// Distinct BACK control returns to airport profile rather than changing the PDF
+// or leaving the current app origin through browser history.
+$("#chartReturnBtn").addEventListener("click",()=>{
+  if(selectedChart)window.jeppiranAndroidBack();
+  else if(selectedAirport)selectAirport(selectedAirport);
+  else route("home");
+});
 $("#prevChartBtn").addEventListener("click",()=>navigateChart(-1));
 $("#nextChartBtn").addEventListener("click",()=>navigateChart(1));
 // Independent PDF inversion: visual filter only, never rewrite PDF pixels, GPS,

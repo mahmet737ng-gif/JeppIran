@@ -32,9 +32,9 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   },null,{timeout:60000});
   // Canvas dimensions are assigned before its asynchronous PDF render finishes.
   // Wait for paintChartTransform() to update the visible zoom label.
-  await page.waitForFunction(()=>document.getElementById("zoomValue")?.textContent==="50%",null,{timeout:60000});
-  assert.equal(await page.evaluate(()=>chartZoom),.5,"Opening a chart must default to 50% zoom");
-  assert.equal(await page.locator("#zoomValue").innerText(),"50%","Zoom display must read 50%");
+  await page.waitForFunction(()=>document.getElementById("zoomValue")?.textContent==="80%",null,{timeout:60000});
+  assert.equal(await page.evaluate(()=>chartZoom),.8,"Opening a chart must default to 80% zoom");
+  assert.equal(await page.locator("#zoomValue").innerText(),"80%","Zoom display must read 80%");
   const first=await page.locator("#viewerChart").innerText();
   await page.waitForFunction(()=>chartSlidePreviews.size>0,null,{timeout:25000});
   await page.evaluate(()=>{
@@ -67,14 +67,31 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   });
   await page.waitForFunction(()=>activeChartSlide===null,null,{timeout:3000});
   await page.waitForFunction(first=>document.getElementById("viewerChart").textContent!==first,first,{timeout:16000});
-  assert.equal(await page.evaluate(()=>chartZoom),.5,"Swiping must open the next chart at 50%");
+  assert.equal(await page.evaluate(()=>chartZoom),.8,"Swiping must open the next chart at 80%");
   const second=await page.locator("#viewerChart").innerText();
   assert.notEqual(second,first,"a completed swipe must select the adjacent PDF");
   await page.locator("#zoomInBtn").click();
-  assert.ok(await page.evaluate(()=>chartZoom)>.5,"User zoom-in must remain available");
+  assert.ok(await page.evaluate(()=>chartZoom)>.8,"User zoom-in must remain available");
   await page.locator("#zoomResetBtn").click();
-  assert.equal(await page.evaluate(()=>chartZoom),.5,"Reset zoom must return to 50%");
-  console.log("PASS default/reset 50% zoom, matching swipe-preview scale, reversible navigation and retained zoom control.");
+  assert.equal(await page.evaluate(()=>chartZoom),.8,"Reset zoom must return to 80%");
+  console.log("PASS default/reset 80% zoom, matching swipe-preview scale, reversible navigation and retained zoom control.");
+  // Distinct toolbar BACK must restore the airport profile; Prev/Next must
+  // continue navigating charts and Android system-Back behavior stays intact.
+  const beforeBack=await page.evaluate(()=>({icao:selectedAirport,page:selectedChart?.page}));
+  await page.locator("#chartReturnBtn").click();
+  assert.equal(await page.locator("#chartsView").evaluate(el=>el.classList.contains("chart-open")),false,
+    "Toolbar BACK closes chart to reveal the airport profile");
+  assert.equal(await page.evaluate(()=>selectedAirport),beforeBack.icao);
+  assert.equal(await page.evaluate(()=>selectedChart),null);
+  await page.evaluate(pageNumber=>{
+    const chart=charts.find(c=>Number(c.page)===pageNumber);
+    if(!chart)throw Error("Original chart could not be reopened after BACK");
+    selectChart(chart);
+  },beforeBack.page);
+  assert.equal(await page.locator("#chartsView").evaluate(el=>el.classList.contains("chart-open")),true);
+  assert.equal(await page.locator("#chartReturnBtn").count(),1);
+  console.log("PASS separate toolbar BACK: chart → airport profile → chart.");
+
   // Android keeps HOME navigation in the Charts header (and closed-drawer profile),
   // but fullscreen remains clean; the system Back gesture still works.
   await page.setViewportSize({width:390,height:844});
