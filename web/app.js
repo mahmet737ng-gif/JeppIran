@@ -2238,7 +2238,7 @@ function chartSwipePanel(canvas,scrollOffset=0){
   panel.appendChild(inner);
   return panel;
 }
-// Keep reversible paging available at the new 80% default and legacy 100% zoom.
+// Reversible chart paging runs at the fitted default zoom (100%).
 function isChartPagingZoom(){return Math.abs(chartZoom-DEFAULT_CHART_ZOOM)<.015||Math.abs(chartZoom-1)<.015;}
 function beginChartSwipe(direction){
   if(activeChartSlide||!isChartPagingZoom()||!selectedChart)return null;
@@ -2287,6 +2287,7 @@ function updateChartSwipe(state,dx,x,time){
   // Reversing intentionally before lift cancels the navigation, even if
   // the finger has not returned all the way to its initial position.
   if(state.maxAbsDx-Math.abs(state.dx)>Math.max(18,Math.min(40,state.width*.045)))state.reversing=true;
+  if(state.lastT&&time-state.lastT>=4)state.vx=Math.max(-3,Math.min(3,(x-state.lastX)/(time-state.lastT)));
   state.lastX=x;state.lastT=time;
   state.track.style.transform="translate3d("+state.dx+"px,0,0)";
 }
@@ -2298,7 +2299,9 @@ function finishChartSwipe(state,canceled){
     (Math.abs(state.dx)>=32||(elapsed<300&&Math.abs(state.dx)>=16));
   const destination=advance?-state.dir*state.width:0;
   const remaining=Math.abs(destination-state.dx);
-  const duration=Math.max(110,Math.min(260,120+remaining*.16));
+  // Velocity-sensitive coast, still committed only on pointer release.
+  const speed=advance?Math.abs(state.vx||0):0;
+  const duration=Math.max(115,Math.min(320,145+remaining*.17-speed*35));
   state.track.style.transition="transform "+duration+"ms cubic-bezier(.22,.78,.17,1)";
   requestAnimationFrame(()=>{state.track.style.transform="translate3d("+destination+"px,0,0)"});
   setTimeout(()=>{
@@ -2421,8 +2424,8 @@ function setChartInverted(enabled){
 setChartInverted(localStorage.getItem("jeppiran-chart-inverted")==="1");
 $("#chartInvertBtn").addEventListener("click",()=>setChartInverted(!document.body.classList.contains("chart-inverted")));
 
-// Owner-approved iPad V2 (2026-10-20): short reversible horizontal chart
-// paging, vertical glide with speed-proportional inertia, single/double tap unchanged.
+// Reversible chart paging at fitted zoom, kinetic horizontal/vertical pan when zoomed,
+// and unchanged single/double-tap behavior.
 function setupChartGestures(){
   const stage=$("#pdfStage");
   if(!stage||stage.dataset.gestures==="1")return;
@@ -2433,33 +2436,38 @@ function setupChartGestures(){
   let tailFrame=0, kineticFrame=0, singleTapTimer=0, recentMove=null, pinched=false;
   let slideGesture=null;
   function cancelKinetic(){if(kineticFrame)cancelAnimationFrame(kineticFrame);kineticFrame=0;}
-  function startVerticalInertia(){
+  function startPanInertia(){
     const sample=recentMove;
     if(!sample||performance.now()-sample.time>85||
        window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
-    let velocity=Math.max(-3,Math.min(3,sample.vy||0));
-    if(Math.abs(velocity)<.25)return;
+    let vx=chartZoom>1.001?Math.max(-3,Math.min(3,sample.vx||0)):0;
+    let vy=Math.max(-3,Math.min(3,sample.vy||0));
+    if(Math.hypot(vx,vy)<.25)return;
     let previous=performance.now();
     const frame=now=>{
       const dt=Math.min(35,Math.max(1,now-previous));previous=now;
       let progressed=false;
       if(chartZoom>1.001){
-        const before=chartPanY;
-        chartPanY+=velocity*dt;applyChartTransform();
-        progressed=Math.abs(chartPanY-before)>.05;
+        const oldX=chartPanX,oldY=chartPanY;
+        chartPanX+=vx*dt;chartPanY+=vy*dt;applyChartTransform();
+        progressed=Math.hypot(chartPanX-oldX,chartPanY-oldY)>.05;
+        if(Math.abs(chartPanX-oldX)<.05)vx=0;
+        if(Math.abs(chartPanY-oldY)<.05)vy=0;
       }else{
         const before=stage.scrollTop;
-        stage.scrollTop-=velocity*dt;
+        stage.scrollTop-=vy*dt;
         progressed=Math.abs(stage.scrollTop-before)>.05;
       }
-      velocity*=Math.pow(.93,dt/16.67);
-      if(Math.abs(velocity)>.07&&progressed)
+      const decay=Math.pow(.93,dt/16.67);
+      vx*=decay;vy*=decay;
+      if(Math.hypot(vx,vy)>.07&&progressed)
         kineticFrame=requestAnimationFrame(frame);
       else kineticFrame=0;
     };
     kineticFrame=requestAnimationFrame(frame);
   }
   function cancelTail(){if(tailFrame)cancelAnimationFrame(tailFrame);tailFrame=0;}
+  window.addEventListener("jeppiran-chart-selected",()=>{cancelKinetic();cancelTail()});
   function chartHit(target){
     if(!(target instanceof Element))return false;
     if(target.closest("button,a,input,select,textarea,summary,[role='button'],.taxi-qa-panel,.jp-margin-chart-tree"))return false;
@@ -2550,6 +2558,7 @@ function setupChartGestures(){
       recentMove={x:e.clientX,y:e.clientY,
         dx:e.clientX-(previousMove?.x??e.clientX),
         dy:e.clientY-(previousMove?.y??e.clientY),time:moveTime,
+        vx:moveDt>=4?(e.clientX-(previousMove?.x??e.clientX))/moveDt:(previousMove?.vx||0),
         vy:moveDt>=4?(e.clientY-(previousMove?.y??e.clientY))/moveDt:(previousMove?.vy||0)};
       if(chartZoom>1.001){
         chartPanX=panStart.panX+dx;chartPanY=panStart.panY+dy;applyChartTransform();
@@ -2596,11 +2605,10 @@ function setupChartGestures(){
           }
         }
       }else if(!canceled&&start&&travel>=12&&!pinched){
-        // No delayed scrolling/fling after finger release for zoomed PDF pan;
-        // at normal scale only a fast vertical flick gets owner-requested inertia.
+        // Fitted zoom: horizontal paging and vertical glide. Zoomed PDF: glide in both axes.
         cancelTail();
-        if(Math.abs(dy)>Math.abs(dx)*1.3)
-          startVerticalInertia();
+        if(chartZoom>1.001||Math.abs(dy)>Math.abs(dx)*1.3)
+          startPanInertia();
       }
       panStart=null;swipeStart=null;pinchStartDistance=0;
       recentMove=null;pinched=false;
@@ -2638,7 +2646,11 @@ function selectChart(c,options={}){
   renderAirports($("#airportSearch").value);
   refreshPositionStatus();
   $("#viewerChart").textContent=(displayChartNumber(c)?displayChartNumber(c)+" • ":"")+displayChartName(c);
-  showChartMetar(true,true);
+  // Cache is a baseline, not a notification. Opening another chart stays quiet.
+  if(!chartMetarShown.has(selectedAirport))
+    chartMetarShown.set(selectedAirport,metarReportKey(wxCache[selectedAirport+":metar"]||""));
+  hideChartMetar();
+  void showChartMetar(true,true);
   // On phones, choosing a procedure opens the chart immediately, rather
   // than leaving a tiny chart next to a permanent procedure column.
   if(!IS_PREVIEW_CLASSIC_EMBED && window.matchMedia("(max-width: 749px)").matches &&
@@ -2707,7 +2719,8 @@ async function showChartMetar(autoHide=true,automatic=false,forceRefresh=false){
   const banner=$("#chartMetarBanner"),text=$("#chartMetarText");
   if(!banner||!text)return;
   const cached=wxCache[icao+":metar"]||"";
-  if(cached)presentChartMetar(icao,cached,autoHide,!automatic);
+  // Do not replay cached reports on chart selection; manual button still shows them.
+  if(cached&&!automatic)presentChartMetar(icao,cached,autoHide,true);
   else if(!automatic){
     chartMetarAirport=icao;
     text.textContent="METAR "+icao+" • loading…";
@@ -2717,8 +2730,12 @@ async function showChartMetar(autoHide=true,automatic=false,forceRefresh=false){
   if(automatic&&!forceRefresh&&cached&&chartMetarCheckedAt.has(icao)&&Date.now()-chartMetarCheckedAt.get(icao)<CHART_METAR_POLL_INTERVAL)return;
   try{
     const raw=await fetchChartMetar(icao);
-    // An unchanged response must not reopen a banner the user has dismissed.
-    presentChartMetar(icao,raw,autoHide);
+    // First report without a baseline initializes silently; notify only changes.
+    if(automatic&&!chartMetarShown.get(icao)){
+      chartMetarShown.set(icao,metarReportKey(raw));
+      return;
+    }
+    presentChartMetar(icao,raw,autoHide,!automatic);
   }catch(_){
     if(!automatic&&!cached&&chartMetarViewActive(icao)&&banner.classList.contains("visible"))text.textContent="METAR "+icao+" unavailable";
   }
