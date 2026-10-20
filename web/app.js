@@ -2277,28 +2277,34 @@ function warmAdjacentChartSlides(){
     if(c)createChartSlidePreview(c,doc,epoch).catch(()=>{});
   }
 }
-function chartSwipePanel(canvas,scrollOffset=0){
+function chartSwipePanel(canvas,scrollOffset=0,{zoom=chartZoom,panX=0,panY=0}={}){
   const panel=document.createElement("div");
   panel.className="jp-chart-swipe-panel";
   const inner=document.createElement("div");
   inner.className="jp-chart-swipe-paper";
   const copy=document.createElement("canvas");
-  copy.width=canvas.width;copy.height=canvas.height;
-  copy.style.width=canvas.style.width||canvas.width+"px";
-  copy.style.height=canvas.style.height||canvas.height+"px";
-  // Temporary swipe panels must match the current live PDF zoom.
-  copy.style.transformOrigin="50% 0";copy.style.transform="scale("+chartZoom+")";
+  // The live PDF may have a 30MP zoom-detail bitmap. Swipe snapshots use
+  // a bounded temporary copy, never another full-resolution allocation.
+  const ratio=Math.min(1,Math.sqrt(6500000/Math.max(1,canvas.width*canvas.height)));
+  copy.width=Math.max(1,Math.round(canvas.width*ratio));
+  copy.height=Math.max(1,Math.round(canvas.height*ratio));
+  copy.style.width=canvas.style.width||canvas.clientWidth+"px";
+  copy.style.height=canvas.style.height||canvas.clientHeight+"px";
+  copy.style.transformOrigin="50% 0";copy.style.transform="scale("+zoom+")";
   const ctx=copy.getContext("2d",{alpha:false});
-  if(ctx)ctx.drawImage(canvas,0,0);
-  inner.style.top=(-scrollOffset)+"px";
+  if(ctx)ctx.drawImage(canvas,0,0,copy.width,copy.height);
+  inner.style.top=(panY-scrollOffset)+"px";
+  inner.style.transform="translateX(calc(-50% + "+panX+"px))";
   inner.appendChild(copy);
   panel.appendChild(inner);
   return panel;
 }
 // Reversible chart paging runs at the fitted default zoom (100%).
 function isChartPagingZoom(){return Math.abs(chartZoom-DEFAULT_CHART_ZOOM)<.015||Math.abs(chartZoom-1)<.015;}
-function beginChartSwipe(direction){
-  if(activeChartSlide||!isChartPagingZoom()||!selectedChart)return null;
+function beginChartSwipe(direction,{fromEdge=false}={}){
+  // At normal zoom a horizontal drag pages immediately. When zoomed it must
+  // first reach the horizontal PDF boundary AND continue significantly past it.
+  if(activeChartSlide||(!fromEdge&&!isChartPagingZoom())||!selectedChart)return null;
   const target=adjacentChart(direction),stage=$("#pdfStage"),current=$("#pdfCanvas");
   if(!target||!current||!stage||!chartSlideDocument)return null;
   const width=stage.clientWidth;
@@ -2312,7 +2318,9 @@ function beginChartSwipe(direction){
   shield.setAttribute("aria-hidden","true");
   const track=document.createElement("div");
   track.className="jp-chart-swipe-track";
-  const here=chartSwipePanel(current,stage.scrollTop);
+  const here=chartSwipePanel(current,stage.scrollTop,{
+    zoom:chartZoom,panX:chartZoom>1.001?chartPanX:0,panY:chartZoom>1.001?chartPanY:0
+  });
   const there=document.createElement("div");
   there.className="jp-chart-swipe-panel jp-chart-swipe-neighbor";
   there.style.left=(direction===1?"100%":"-100%");
@@ -2322,12 +2330,13 @@ function beginChartSwipe(direction){
   there.appendChild(label);
   track.append(here,there);shield.appendChild(track);stage.appendChild(shield);
   const state={shield,track,there,label,stage,dir:direction,target,width,dx:0,
-    ready:false,done:false,lastX:0,lastT:0,reversing:false,maxAbsDx:0,startedAt:performance.now()};
+    edgePaging:fromEdge,ready:false,done:false,lastX:0,lastT:0,
+    reversing:false,maxAbsDx:0,startedAt:performance.now()};
   activeChartSlide=state;
   const cached=chartSlidePreviews.get(chartSlideKey(target,width));
   const show=canvas=>{
     if(!canvas||activeChartSlide!==state||state.done)return;
-    const paper=chartSwipePanel(canvas,0);
+    const paper=chartSwipePanel(canvas,0,{zoom:fromEdge?1:chartZoom});
     while(paper.firstChild)there.appendChild(paper.firstChild);
     label.remove();state.ready=true;
   };
@@ -2353,7 +2362,8 @@ function finishChartSwipe(state,canceled){
   state.done=true;
   const elapsed=performance.now()-state.startedAt;
   const advance=!canceled&&!state.reversing&&
-    (Math.abs(state.dx)>=32||(elapsed<300&&Math.abs(state.dx)>=16));
+    (state.edgePaging?Math.abs(state.dx)>=48:
+      (Math.abs(state.dx)>=32||(elapsed<300&&Math.abs(state.dx)>=16)));
   const destination=advance?-state.dir*state.width:0;
   const remaining=Math.abs(destination-state.dx);
   // Velocity-sensitive coast, still committed only on pointer release.
@@ -2382,6 +2392,13 @@ function navigateChart(delta){
   if(idx<0||next<0||next>=seq.length)return;
   selectChart(seq[next],{keepTreeClosed:true});
 }
+function chartHorizontalPanLimit(){
+  const stage=$("#pdfStage"),layer=$("#chartTransformLayer");
+  if(!stage||!layer)return {maxX:0,scrollable:false};
+  const w=layer.offsetWidth*chartZoom;
+  return {maxX:Math.max(0,(w-stage.clientWidth)/2+80),
+    scrollable:w>stage.clientWidth+24};
+}
 function clampChartPan(){
   const stage=$("#pdfStage"),layer=$("#chartTransformLayer");
   if(!stage||!layer)return;
@@ -2392,7 +2409,7 @@ function clampChartPan(){
     chartPanX=0;chartPanY=0;
     return;
   }
-  const maxX=Math.max(0,(w-stage.clientWidth)/2+80);
+  const maxX=chartHorizontalPanLimit().maxX;
   const maxY=Math.max(0,h-stage.clientHeight+80);
   chartPanX=Math.max(-maxX,Math.min(maxX,chartPanX));
   chartPanY=Math.max(-maxY,Math.min(80,chartPanY));
@@ -2620,7 +2637,32 @@ function setupChartGestures(){
         vx:moveDt>=4?(e.clientX-(previousMove?.x??e.clientX))/moveDt:(previousMove?.vx||0),
         vy:moveDt>=4?(e.clientY-(previousMove?.y??e.clientY))/moveDt:(previousMove?.vy||0)};
       if(chartZoom>1.001){
-        chartPanX=panStart.panX+dx;chartPanY=panStart.panY+dy;applyChartTransform();
+        const limits=chartHorizontalPanLimit();
+        const candidateX=panStart.panX+dx;
+        // Edge paging starts only after a deliberate overswipe beyond the
+        // entire scrollable PDF width. Ordinary zoomed panning never pages.
+        const extra=Math.abs(candidateX)-limits.maxX;
+        const direction=candidateX<0?1:-1;
+        const eligible=limits.scrollable&&Math.abs(dx)>Math.abs(dy)*1.25;
+        if(!slideGesture&&eligible&&extra>52&&adjacentChart(direction)){
+          chartPanX=Math.sign(candidateX)*limits.maxX;
+          chartPanY=panStart.panY+dy;
+          applyChartTransform();
+          slideGesture=beginChartSwipe(direction,{fromEdge:true});
+          if(slideGesture){
+            clearTimeout(singleTapTimer);singleTapTimer=0;lastTapAt=0;
+            slideGesture.edgeLimit=limits.maxX;
+            slideGesture.edgeThreshold=52;
+          }
+        }
+        if(slideGesture?.edgePaging){
+          const overshoot=slideGesture.dir===1?
+            -candidateX-slideGesture.edgeLimit: candidateX-slideGesture.edgeLimit;
+          const continuation=Math.max(0,overshoot-slideGesture.edgeThreshold);
+          updateChartSwipe(slideGesture,-slideGesture.dir*continuation,e.clientX,performance.now());
+          return;
+        }
+        chartPanX=candidateX;chartPanY=panStart.panY+dy;applyChartTransform();
       }else if(canVerticalPan&&Math.abs(dy)>Math.abs(dx)*0.65){
         stageEl.scrollTop=panStart.scrollTop-dy;
       }
