@@ -602,9 +602,9 @@ async function loadPublishedCharts(){
   }
   return chartCatalogPromise;
 }
-async function refreshProcedureCategory(category){
+async function refreshProcedureCategory(category,options={}){
   if(!activeChartCategory||activeChartCategory!==category)return;
-  if(document.body.classList.contains("chart-selected"))hideInlineChart();
+  if(document.body.classList.contains("chart-selected")&&!options.preserveClassic)hideInlineChart();
   const request=++chartSheetToken,code=current();
   clearChartButtons();
   chartSearchRows=[];activeChartRows=[];
@@ -621,6 +621,12 @@ async function refreshProcedureCategory(category){
       String(c.category||"").toUpperCase()===categoryMap[category])
       .sort((a,b)=>Number(a.page)-Number(b.page));
     filterProcedureRows();
+    // A Classic chart swipe can land in STAR, SID, AIRPORT, or APP.
+    // Keep the embedded PDF visible and select the identical published page.
+    if(options.preserveClassic&&Number.isSafeInteger(options.page)){
+      const i=chartSearchRows.findIndex(row=>Number(row.page)===options.page);
+      if(i>=0)centerProcedure(i,false);
+    }
     if(pendingSearchChart&&pendingSearchChart.airport===code&&pendingSearchChart.category===category){
       const target=chartSearchRows.findIndex(item=>Number(item.page)===pendingSearchChart.page);
       pendingSearchChart=null;
@@ -636,9 +642,18 @@ async function refreshProcedureCategory(category){
     showMiniChart(null);
   }
 }
-function toggleProcedureCategory(category){
+function toggleProcedureCategory(category,options={}){
   if(!(category in categoryMap))return;
-  if(activeChartCategory===category){closeProcedureCategory();return;}
+  if(activeChartCategory===category){
+    if(options.preserveClassic){
+      if(Number.isSafeInteger(options.page)){
+        const i=chartSearchRows.findIndex(row=>Number(row.page)===options.page);
+        if(i>=0)centerProcedure(i,false);
+      }
+      return;
+    }
+    closeProcedureCategory();return;
+  }
   activeChartCategory=category;
   const shell=document.querySelector('.category-shell[data-category="'+category+'"]');
   if(!shell)return;
@@ -658,8 +673,8 @@ function toggleProcedureCategory(category){
     el.classList.toggle("active",on);
     el.setAttribute("aria-expanded",String(on));
   });
-  hideInlineChart();
-  void refreshProcedureCategory(category);
+  if(!options.preserveClassic)hideInlineChart();
+  void refreshProcedureCategory(category,options);
   requestAnimationFrame(()=>{if(activeChartCategory===category)paintProcedureWheel()});
 }
 document.querySelectorAll(".procedure-category").forEach(b=>
@@ -1077,9 +1092,15 @@ window.addEventListener("message",event=>{
     const {icao,page}=event.data;
     const key=String(icao)+":"+Number(page);
     classicConfirmedKey=key;
-    if(classicRequested&&key===classicRequested.icao+":"+classicRequested.page){
-      classicStatus.hidden=true;
-    }
+    if(!document.body.classList.contains("chart-selected"))return;
+    // Classic may move on its OWN swipe/arrow. Never send the same page back.
+    // The published V2621 row determines the actual category and chart index.
+    const row=charts?.find(item=>item.airport===icao&&Number(item.page)===Number(page));
+    if(!row||current()!==icao||!validProcedure(row))return;
+    classicRequested={icao,page:Number(page)};
+    classicStatus.hidden=true;
+    const category=Object.keys(categoryMap).find(k=>categoryMap[k]===String(row.category).toUpperCase());
+    if(category)toggleProcedureCategory(category,{preserveClassic:true,page:Number(page)});
   }
 });
 
