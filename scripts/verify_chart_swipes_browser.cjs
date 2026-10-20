@@ -90,6 +90,9 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   },beforeBack.page);
   assert.equal(await page.locator("#chartsView").evaluate(el=>el.classList.contains("chart-open")),true);
   assert.equal(await page.locator("#chartReturnBtn").count(),1);
+  // The BACK click leaves the Playwright cursor hovering over the new tile.
+  // Compare raster frames at rest, never hover-highlighted BACK vs idle Prev.
+  await page.mouse.move(900,720);
   const matchingMosaic=await page.evaluate(()=>{
     const back=document.querySelector("#chartReturnBtn");
     const prev=document.querySelector("#prevChartBtn");
