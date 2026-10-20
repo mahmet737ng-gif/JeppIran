@@ -2383,8 +2383,9 @@ function setChartInverted(enabled){
 setChartInverted(localStorage.getItem("jeppiran-chart-inverted")==="1");
 $("#chartInvertBtn").addEventListener("click",()=>setChartInverted(!document.body.classList.contains("chart-inverted")));
 
-// iPad interaction lock V1: single chart tap toggles full screen; two taps zoom;
-// gestures do not trigger taps. The 90ms, <=2.5px finish is NOT fling/inertia.
+// iPad interaction owner-approved V2 (2026-10-20): a single chart tap
+// toggles fullscreen and double-tap zooms; quick vertical motion has inertia.
+// Horizontal chart navigation remains short, release-based and reversible.
 function setupChartGestures(){
   const stage=$("#pdfStage");
   if(!stage||stage.dataset.gestures==="1")return;
