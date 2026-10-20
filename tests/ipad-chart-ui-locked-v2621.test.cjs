@@ -13,7 +13,8 @@ test('iPad single chart tap toggles fullscreen without breaking double-tap or ge
   assert.match(js,/exitViewerFullscreen\(\)/);
   assert.match(js,/pinched=true/);
   assert.match(js,/stage\.style\.touchAction="none"/);
-  assert.match(js,/chartPanX=panStart\.panX\+dx/);
+  assert.match(js,/const candidateX=panStart\.panX\+dx/);
+  assert.match(js,/chartPanX=candidateX;chartPanY=panStart\.panY\+dy/);
   assert.match(js,/stageEl\.scrollTop=panStart\.scrollTop-dy/);
   // Owner's newer 2026-10-20 V2 gesture contract supersedes no-fling:
   assert.match(js,/function startPanInertia\(\)/);
