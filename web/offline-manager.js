@@ -164,12 +164,27 @@
         if(signal.aborted)throw new DOMException("Cancelled","AbortError");
         let cacheName=await findReusable(old,item,layer,layerName,manual);
         if(cacheName===null){
-          // Only new/changed/unavailable resources use the network.
-          const response=await fetch(item.url,{cache:"no-store",signal});
-          if(!response.ok||response.type==="opaque")throw Error("HTTP "+response.status+" downloading "+item.url);
-          const bytes=await response.clone().arrayBuffer();
-          if(bytes.byteLength!==item.size||(await sha(bytes))!==item.sha256.toLowerCase())
-            throw Error("Checksum mismatch: "+item.url);
+          // Sync must bypass the controlling Service Worker's cache-first
+          // response path. A no-store option alone does not bypass a SW:
+          // Safari can otherwise return an obsolete JS whose SHA-256 differs
+          // from the freshly published offline manifest.
+          let response=null,verified=false;
+          for(let attempt=0;attempt<2&&!verified;attempt++){
+            const fresh=new URL(item.url,origin);
+            fresh.searchParams.set("jeppiran_offline_sync",
+              item.sha256.slice(0,16)+"-"+Date.now()+"-"+attempt);
+            response=await fetch(fresh.href,{cache:"no-store",signal});
+            if(!response.ok||response.type==="opaque")
+              throw Error("HTTP "+response.status+" downloading "+item.url);
+            const bytes=await response.clone().arrayBuffer();
+            verified=bytes.byteLength===item.size &&
+              (await sha(bytes))===item.sha256.toLowerCase();
+          }
+          if(!verified)
+            throw Error("Checksum mismatch after fresh download: "+item.url+
+              ". Reload the app when the site finishes publishing, then retry");
+          // Store verified bytes against their canonical URL, never the
+          // cache-busting sync URL. Atomic commit still happens only at end.
           try{await layer.put(item.url,response);}
           catch(e){if(e?.name==="QuotaExceededError")throw Error("Not enough browser storage; previous offline version is still safe");throw e;}
           cacheName=layerName;downloaded++;downloadBytes+=item.size;
