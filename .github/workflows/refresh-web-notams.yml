@@ -7,7 +7,7 @@ on:
       - 'scripts/refresh_faa_notams.py'
       - '.github/workflows/refresh-web-notams.yml'
   schedule:
-    - cron: '*/5 * * * *'
+    - cron: '*/30 * * * *'
 permissions:
   contents: write
 concurrency:
