@@ -15,7 +15,10 @@ test('iPad single chart tap toggles fullscreen without breaking double-tap or ge
   assert.match(js,/stage\.style\.touchAction="none"/);
   assert.match(js,/chartPanX=panStart\.panX\+dx/);
   assert.match(js,/stageEl\.scrollTop=panStart\.scrollTop-dy/);
-  assert.match(js,/No delayed scrolling\/fling after finger release/);
+  // 2026-10-20 owner override: speed-sensitive vertical inertia replaces
+  // the older no-fling behavior, without changing taps or PDF transforms.
+  assert.match(js,/function startVerticalInertia\(\)/);
+  assert.match(js,/velocity\*=Math\.pow\(\.93,dt\/16\.67\)/);
   assert.match(css,/#chartsView\.chart-open \.viewer-toolbar\{[\s\S]*?z-index:85/);
   assert.match(html,/id="fullscreenExitBtn"/);
 });
