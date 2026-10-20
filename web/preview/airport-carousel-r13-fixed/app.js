@@ -333,17 +333,19 @@ function showResults(){
   if(!value){el.results.hidden=true;return;}
   const matchRank=code=>{
     const icao=code.toUpperCase(),iata=String(getProfile(code).iata||fallbackIata[code]||"").toUpperCase();
-    const name=String(getProfile(code).name||"").toUpperCase();
+    const city=String(getProfile(code).city||getProfile(code).place||"").toUpperCase();
     if(icao===value||iata===value)return 0;
     if(icao.startsWith(value))return 1;
     if(iata.startsWith(value))return 2;
-    if(name.startsWith(value))return 3;
+    if(city.startsWith(value))return 3;
     if(icao.includes(value)||iata.includes(value))return 4;
     return 5;
   };
-  const airports=codes.filter(c=>c.includes(value)||
-    String(getProfile(c).iata||fallbackIata[c]||"").toUpperCase().includes(value)||
-    String(getProfile(c).name||"").toUpperCase().includes(value))
+  // OWNER LOCK: search only ICAO/IATA, city, country and procedure name.
+  const airports=codes.filter(c=>[c,getProfile(c).iata||fallbackIata[c]||"",
+    getProfile(c).city||getProfile(c).place||"",
+    getProfile(c).country||({OI:"Iran",LT:"Turkey",OM:"United Arab Emirates",OO:"Oman",OR:"Iraq",OT:"Qatar",OP:"Pakistan",UG:"Georgia",UD:"Armenia"})[c.slice(0,2)]||""]
+    .some(part=>String(part).toUpperCase().includes(value)))
     .sort((a,b)=>matchRank(a)-matchRank(b)||preferredIndex(a)-preferredIndex(b));
   const results=[];
   for(const code of airports.slice(0,8)){
@@ -356,17 +358,13 @@ function showResults(){
   if(value.length>=2&&charts){
     for(const row of charts){
       const name=String(row.name||"").toUpperCase();
-      const chartNumber=String(row.chart_number||"").toUpperCase();
-      const titleMatch=name.includes(value)||chartNumber===value;
-      const terms=pointIndex?.[String(row.page)]||[];
-      const fix= value.length>=3?terms.find(word=>word===value||word.startsWith(value)):null;
-      if(!titleMatch&&!fix)continue;
-      const rank=titleMatch?(name===value?0:name.startsWith(value)?1:2):(fix===value?3:4);
-      results.push({kind:titleMatch?"procedure":"point",rank,airport:row.airport,row,
-        title:(fix&&!titleMatch?fix+" · ":"")+(row.chart_number||"")+" · "+(row.name||"Chart"),
-        subtitle:row.airport+" · "+searchCategory(row)+(fix?" · Fix "+fix:"")});
+      if(!name.includes(value))continue;
+      const rank=name===value?0:name.startsWith(value)?1:2;
+      results.push({kind:"procedure",rank,airport:row.airport,row,
+        title:(row.chart_number||"")+" · "+(row.name||"Chart"),
+        subtitle:row.airport+" · "+searchCategory(row)});
     }
-    // Keep exact procedure matches and actual point matches above loose ones.
+    // Exact procedure matches rank above partial procedure names.
     results.sort((a,b)=>{
       if(a.kind==="airport"&&b.kind!=="airport")return -1;
       if(b.kind==="airport"&&a.kind!=="airport")return 1;
@@ -375,9 +373,9 @@ function showResults(){
     });
   }
   if(!results.length){
-    if((!charts||!pointIndex)&&value.length>=2){
+    if(!charts&&value.length>=2){
       const line=document.createElement("div");line.className="search-waiting";
-      line.textContent="Searching airport charts and waypoints…";
+      line.textContent="Searching airport procedures…";
       el.results.append(line);el.results.hidden=false;
     }else el.results.hidden=true;
     return;
@@ -580,8 +578,8 @@ function displayProcedureRows(rows){
 }
 function filterProcedureRows(){
   const q=$("#procedureSearch").value.trim().toUpperCase();
-  displayProcedureRows(activeChartRows.filter(c=>(
-    String(c.chart_number||"")+" "+String(c.name||"")).toUpperCase().includes(q)));
+  displayProcedureRows(activeChartRows.filter(c=>
+    String(c.name||"").toUpperCase().includes(q)));
 }
 async function loadPublishedCharts(){
   if(chartManifest&&charts)return [chartManifest,charts];
@@ -1147,7 +1145,7 @@ async function boot(){
     void loadPublishedCharts().then(()=>{
       if(el.search.value.trim())showResults();
     }).catch(()=>{});
-    void loadPublishedPoints();
+    // Waypoints are excluded from all application search bars.
     selected=Math.max(0,codes.indexOf(selectedIcao));
     visualPos=selected;
     buildTrack();paintTrack();updateSelected();
