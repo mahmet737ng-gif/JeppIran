@@ -650,7 +650,9 @@ function signalPreviewClassicReady(){
 }
 
 let airportTreeExpanded=false;
-let chartZoom=1, chartPanX=0, chartPanY=0;
+// Owner-approved default chart scale: 50%. Other chart scale/pan and georeferencing rules are unchanged.
+const DEFAULT_CHART_ZOOM=.5;
+let chartZoom=DEFAULT_CHART_ZOOM, chartPanX=0, chartPanY=0;
 // Dual Layer Ops marker: chart follow is a viewer-only feature; no simulator transport changes.
 let aircraftFollowEnabled=false, taxiOffRouteCount=0, taxiOffRouteActive=false;
 // Camera transitions never modify the live position source or simulator bridge.
@@ -2154,7 +2156,7 @@ async function renderSelectedPdf(c){
   canvas.style.width=Math.floor(viewport.width/dpr)+"px"; canvas.style.height=Math.floor(viewport.height/dpr)+"px";
   const layer=$("#chartTransformLayer");
   layer.style.width=canvas.style.width; layer.style.height=canvas.style.height;
-  chartZoom=1;chartPanX=0;chartPanY=0;stage.scrollTop=0;
+  chartZoom=DEFAULT_CHART_ZOOM;chartPanX=0;chartPanY=0;stage.scrollTop=0;
   await page.render({canvasContext:canvas.getContext("2d",{alpha:false}),viewport}).promise;
   stage.querySelector(".pdf-loading")?.remove();
   applyChartTransform();
@@ -2226,6 +2228,8 @@ function chartSwipePanel(canvas,scrollOffset=0){
   copy.width=canvas.width;copy.height=canvas.height;
   copy.style.width=canvas.style.width||canvas.width+"px";
   copy.style.height=canvas.style.height||canvas.height+"px";
+  // Temporary swipe panels must match the live PDF zoom (now 50% by default).
+  copy.style.transformOrigin="50% 0";copy.style.transform="scale("+chartZoom+")";
   const ctx=copy.getContext("2d",{alpha:false});
   if(ctx)ctx.drawImage(canvas,0,0);
   inner.style.top=(-scrollOffset)+"px";
@@ -2233,8 +2237,10 @@ function chartSwipePanel(canvas,scrollOffset=0){
   panel.appendChild(inner);
   return panel;
 }
+// Keep reversible paging available at both the new 50% default and legacy 100% zoom.
+function isChartPagingZoom(){return Math.abs(chartZoom-DEFAULT_CHART_ZOOM)<.015||Math.abs(chartZoom-1)<.015;}
 function beginChartSwipe(direction){
-  if(activeChartSlide||Math.abs(chartZoom-1)>0.015||!selectedChart)return null;
+  if(activeChartSlide||!isChartPagingZoom()||!selectedChart)return null;
   const target=adjacentChart(direction),stage=$("#pdfStage"),current=$("#pdfCanvas");
   if(!target||!current||!stage||!chartSlideDocument)return null;
   const width=stage.clientWidth;
@@ -2367,7 +2373,7 @@ function setChartZoom(next,{resetPan=false}={}){
     stage.scrollTop=Math.max(0,-savedScroll);
   if(stage&&resetPan)stage.scrollTop=0;
 }
-function resetChartView(){setChartZoom(1,{resetPan:true})}
+function resetChartView(){setChartZoom(DEFAULT_CHART_ZOOM,{resetPan:true})}
 function zoomAround(next,cx,cy){
   cancelAircraftFollow();
   const stage=$("#pdfStage");
@@ -2519,7 +2525,7 @@ function setupChartGestures(){
       const dx=e.clientX-panStart.x,dy=e.clientY-panStart.y;
       // Exactly follow current displacement; fast swipes move fast, and
       // reversing the finger visibly reverses the two-page preview.
-      if(Math.abs(chartZoom-1)<0.015&&swipeStart&&!pinched){
+      if(isChartPagingZoom()&&swipeStart&&!pinched){
         if(!slideGesture&&Math.abs(dx)>7&&Math.abs(dx)>Math.abs(dy)*1.3){
           slideGesture=beginChartSwipe(dx<0?1:-1);
           if(slideGesture){clearTimeout(singleTapTimer);singleTapTimer=0;lastTapAt=0;}

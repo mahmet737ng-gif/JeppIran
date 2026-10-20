@@ -30,6 +30,8 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
    const canvas=document.getElementById("pdfCanvas");
    return canvas&&canvas.width>150&&canvas.height>150;
   },null,{timeout:60000});
+  assert.equal(await page.evaluate(()=>chartZoom),.5,"Opening a chart must default to 50% zoom");
+  assert.equal(await page.locator("#zoomValue").innerText(),"50%","Zoom display must read 50%");
   const first=await page.locator("#viewerChart").innerText();
   await page.waitForFunction(()=>chartSlidePreviews.size>0,null,{timeout:25000});
   await page.evaluate(()=>{
@@ -62,9 +64,14 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   });
   await page.waitForFunction(()=>activeChartSlide===null,null,{timeout:3000});
   await page.waitForFunction(first=>document.getElementById("viewerChart").textContent!==first,first,{timeout:16000});
+  assert.equal(await page.evaluate(()=>chartZoom),.5,"Swiping must open the next chart at 50%");
   const second=await page.locator("#viewerChart").innerText();
   assert.notEqual(second,first,"a completed swipe must select the adjacent PDF");
-  console.log("PASS PDF transition follows finger, reverses without navigating, commits next chart only on release.");
+  await page.locator("#zoomInBtn").click();
+  assert.ok(await page.evaluate(()=>chartZoom)>.5,"User zoom-in must remain available");
+  await page.locator("#zoomResetBtn").click();
+  assert.equal(await page.evaluate(()=>chartZoom),.5,"Reset zoom must return to 50%");
+  console.log("PASS default/reset 50% zoom, matching swipe-preview scale, reversible navigation and retained zoom control.");
   // Android keeps HOME navigation in the Charts header (and closed-drawer profile),
   // but fullscreen remains clean; the system Back gesture still works.
   await page.setViewportSize({width:390,height:844});
