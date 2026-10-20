@@ -22,8 +22,13 @@ async function ready(){for(let i=0;i<100;i++){try{if((await fetch(base)).ok)retu
   await page.waitForFunction(()=>Object.keys(window.JEPPIRAN_POSTER_CACHE_URLS||{}).length>=70,null,{timeout:25000});
   for(const code of ["OIII","OIMM","OISS","OIAW","OIIE","OIBL","OICI","OTHH"]){
    await page.evaluate(icao=>selectAirport(icao),code);
-   await page.waitForFunction(code=>document.querySelector("#airportProfile .profile-icao")?.textContent.trim()===code &&
-      !!document.querySelector("#airportProfile .jp-poster-scenic-foreground"),code,{timeout:18000});
+   await page.waitForFunction(code=>{
+      const root=document.getElementById("airportProfile");
+      if(!root||root.querySelector(".profile-icao")?.textContent.trim()!==code)return false;
+      const frame=root.querySelector(".jp-poster-frame");
+      return !!(frame?.querySelector(".jp-poster-caption")&&
+        root.querySelector(".jp-poster-scenic-foreground")&&root.querySelector(".profile-shell"));
+   },code,{timeout:18000});
    const value=await page.evaluate(()=>{
     const root=document.getElementById("airportProfile"),frame=root.querySelector(".jp-poster-frame");
     const band=root.querySelector(".jp-poster-scenic-foreground"),caption=frame.querySelector(".jp-poster-caption");
