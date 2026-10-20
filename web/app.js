@@ -1390,6 +1390,22 @@ function runwayCompassMarkup(rw, weather){
 
     '</div>';
 }
+// Historical source HTML as supplied from IRIMO on 20 Oct 2026.
+// Never substitute these records for a live NOAA report or for flight rules.
+const IRIMO_HTML_CAPTURE=Object.freeze({
+  OIAW:Object.freeze({
+    metar:Object.freeze({time:"2026-10-20 15:30 UTC",raw:"METAR OIAW 201530Z 36006KT CAVOK 31/09 Q1014"}),
+    taf:Object.freeze({time:"2026-10-20 11:00 UTC",raw:"TAF OIAW 201100Z 2012/2118 32005KT 7000 NSC\nTEMPO 2012/2024 32016G22KT 4000 SA FEW035CB SCT040 BKN100\nPROB30 TS/RA SCT030CB SCT035 BKN1000\nTEMPO 2112/2118 32018G24KT 4000 SA FEW030CB SCT035 BKN1000"})
+  })
+});
+function renderIrimoHtmlCapture(icao,kind){
+  const row=IRIMO_HTML_CAPTURE[icao]&&IRIMO_HTML_CAPTURE[icao][kind];
+  if(!row)return "";
+  return '<aside class="jp-irimo-html-archive" aria-label="Archived IRIMO '+kind.toUpperCase()+' report">'+
+    '<div class="jp-irimo-html-archive-head"><span>IRIMO HTML • '+profileEsc(row.time)+'</span>'+
+    '<strong>ARCHIVED · NOT LIVE</strong></div><pre>'+profileEsc(row.raw)+'</pre></aside>';
+}
+
 function renderAirportProfile(icao){
   const root=$("#airportProfile");if(!root||icao!==selectedAirport)return;
   const community=icao==="OICZ"?{...(airportMetadata[icao]||{}),name:"Saqez Airport",city:"Saqez"}:(airportMetadata[icao]||{});
@@ -1399,6 +1415,8 @@ function renderAirportProfile(icao){
   const meta=[community.name||legacy[0]||"Airport data unavailable",community.city||legacy[1]||""];
   const raw=wxCache[icao+":metar"]||"";
   const taf=wxCache[icao+":taf"]||"";
+  const irimoMetarArchive=renderIrimoHtmlCapture(icao,"metar");
+  const irimoTafArchive=renderIrimoHtmlCapture(icao,"taf");
   const wx=metarInfo(raw);const rw=profileCurrentRunway(icao),comp=windComponents(raw,rw);
   // Flight-rule badge belongs to the profile METAR card. It is based solely
   // on the reported cloud ceiling and prevailing visibility, never forecast
@@ -1437,14 +1455,14 @@ function renderAirportProfile(icao){
       '<section class="profile-card" id="profileWeather"><header><span class="jp-metar-heading"><span>METAR • '+profileEsc(icao)+'</span>'+flightBadge+'</span><small id="profileMetarAge">'+(raw?"Last received / cached":"Loading live METAR…")+'</small></header>'+
         '<span class="metar-raw" id="profileMetarRaw">'+profileEsc(raw||"Waiting for actual METAR…")+'</span>'+
         '<div class="weather-summary"><div class="weather-brief"><span class="weather-icon">'+wx.icon+'</span><div><strong>'+profileEsc(raw?wx.temp:"—")+'</strong><small>'+profileEsc(raw?wx.desc:"Weather unavailable")+'</small><small>'+profileEsc(raw?wx.clouds:"")+'</small></div></div>'+
-        '<div class="weather-facts"><span>◉ '+profileEsc(wx.visibility)+'</span><span>➤ '+(wx.windDirection===null?"—":wx.windDirection.toString().padStart(3,"0")+"°")+' / '+(wx.windSpeed===null?"—":wx.windSpeed+" kt")+'</span><span>UTC <span class="profile-utc"></span></span></div></div></section>'+
+        '<div class="weather-facts"><span>◉ '+profileEsc(wx.visibility)+'</span><span>➤ '+(wx.windDirection===null?"—":wx.windDirection.toString().padStart(3,"0")+"°")+' / '+(wx.windSpeed===null?"—":wx.windSpeed+" kt")+'</span><span>UTC <span class="profile-utc"></span></span></div></div>'+irimoMetarArchive+'</section>'+
       '<section class="profile-card" id="profileWind"><header><span>WIND COMPONENTS '+(rw?"("+profileEsc(rw.name)+")":"")+'</span></header>'+
       '<div class="wind-compact"><div class="wind-compass">'+runwayCompassMarkup(rw,wx)+'</div>'+
       '<div class="wind-data"><div><span>Runway HDG (ADC)</span><b>'+(rw?(Number.isFinite(rw.headingAdc)?Math.round(rw.headingAdc)+"°":"—"):"—")+'</b></div><div><span>METAR wind direction</span><b>'+(comp?comp.direction+"° / "+comp.speed+" kt":"—")+'</b></div><div><span class="'+(comp?(comp.headRaw>=0?"wind-status-head":Number(comp.head)>=3&&Number(comp.head)<=5?"wind-status-tail-warning":Number(comp.head)>5?"wind-status-tail-danger":"wind-status-neutral"):"wind-status-neutral")+'">↑ '+(comp?comp.headName:"Headwind")+'</span><b class="'+(comp?(comp.headRaw>=0?"wind-status-head":Number(comp.head)>=3&&Number(comp.head)<=5?"wind-status-tail-warning":Number(comp.head)>5?"wind-status-tail-danger":"wind-status-neutral"):"wind-status-neutral")+'">'+(comp?comp.head+" kt":"—")+'</b></div><div><span class="wind-cross">→ Crosswind</span><b class="wind-cross">'+(comp?comp.cross+" kt "+comp.crossName:"—")+'</b></div></div></div></section>'+
       '<section class="profile-card" id="profileRunways"><header><span>RUNWAYS</span><small>V2621 ADC runway-end numbers only</small></header>'+runwayRows+'</section>'+
       '<div class="profile-right-stack">'+
       '<section class="profile-card" id="profileNotam"><header><span>NOTAM • '+profileEsc(icao)+'</span></header><details class="profile-notam-details"><summary>NOTAM status & details</summary><p>No validated NOTAM feed is connected. Current NOTAM status unknown. Check an authorized AIS/NOF source before flight.</p></details></section>'+
-      '<section class="profile-card" id="profileTaf"><header><span>TAF • '+profileEsc(icao)+'</span><small>Forecast / last available</small></header><div class="profile-weather-text">'+profileEsc(taf||"TAF unavailable — request pending")+'</div></section>'+
+      '<section class="profile-card" id="profileTaf"><header><span>TAF • '+profileEsc(icao)+'</span><small>Forecast / last available</small></header><div class="profile-weather-text">'+profileEsc(taf||"TAF unavailable — request pending")+'</div>'+irimoTafArchive+'</section>'+
       '</div>'+
     '</div></div>';
   updateTerminalValidityDisplay();

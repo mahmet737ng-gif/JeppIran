@@ -103,3 +103,12 @@
   #chartsView .airport-profile .jp-caption-country {font-size:9px;letter-spacing:.02em}
   #chartsView .airport-profile .jp-caption-coordinates {font-size:9px;letter-spacing:.02em}
 }
+
+
+/* Additive IRIMO HTML snapshot: archived raw text, never operational METAR/TAF. */
+#chartsView .jp-irimo-html-archive{margin-top:8px;padding:8px 9px;background:rgba(8,32,52,.43);border:1px solid rgba(93,156,192,.36);border-radius:7px}
+#chartsView .jp-irimo-html-archive-head{display:flex;align-items:center;gap:6px 10px;flex-wrap:wrap;justify-content:space-between;font-size:10px}
+#chartsView .jp-irimo-html-archive-head strong{color:#ffd086;font-weight:700;letter-spacing:.015em;font-size:10px}
+#chartsView .jp-irimo-html-archive pre{margin:6px 0 0;white-space:pre-wrap;overflow-wrap:anywhere;direction:ltr;text-align:left;font:11px/1.42 ui-monospace,Consolas,monospace;max-height:112px;overflow-y:auto}
+:root.light #chartsView .jp-irimo-html-archive{background:rgba(238,246,253,.66);border-color:rgba(35,91,127,.4)}
+:root.light #chartsView .jp-irimo-html-archive-head strong{color:#825800}
