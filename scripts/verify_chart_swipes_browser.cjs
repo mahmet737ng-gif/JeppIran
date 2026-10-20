@@ -30,6 +30,9 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
    const canvas=document.getElementById("pdfCanvas");
    return canvas&&canvas.width>150&&canvas.height>150;
   },null,{timeout:60000});
+  // Canvas dimensions are assigned before its asynchronous PDF render finishes.
+  // Wait for paintChartTransform() to update the visible zoom label.
+  await page.waitForFunction(()=>document.getElementById("zoomValue")?.textContent==="50%",null,{timeout:60000});
   assert.equal(await page.evaluate(()=>chartZoom),.5,"Opening a chart must default to 50% zoom");
   assert.equal(await page.locator("#zoomValue").innerText(),"50%","Zoom display must read 50%");
   const first=await page.locator("#viewerChart").innerText();
