@@ -36,21 +36,32 @@ async function ready(){for(let i=0;i<100;i++){if(server.exitCode!==null)throw Er
       frame.style.backgroundImage.includes(design+".webp") &&
       frame.getBoundingClientRect().width>20 && frame.getBoundingClientRect().height>20;
    },{code:icao,design:actual},{timeout:18000});
-   const result=await page.evaluate(()=>{
+   // An airport change can re-render its frame after the first wait.
+   // Read the image and its geometry atomically, retrying transient DOM states.
+   const result=await page.waitForFunction(({code,design})=>{
     const outer=document.querySelector("#airportProfile");
+    if(!outer||outer.querySelector(".profile-icao")?.textContent.trim()!==code)return false;
     const frame=outer.querySelector(".jp-poster-frame");
+    const caption=frame?.querySelector(".jp-caption-title");
+    if(!frame||!caption||!frame.style.backgroundImage.includes(design+".webp"))return false;
     const f=frame.getBoundingClientRect(),o=outer.getBoundingClientRect();
-    return {image:frame.style.backgroundImage,caption:frame.querySelector(".jp-caption-title")?.textContent,width:f.width,height:f.height,inside:f.left>=o.left-2&&f.right<=o.right+2&&f.top>=o.top-2&&f.bottom<=o.bottom+2};
-   });
+    if(f.width<20||f.height<20)return false;
+    return {image:frame.style.backgroundImage,caption:caption.textContent,width:f.width,height:f.height,inside:f.left>=o.left-2&&f.right<=o.right+2&&f.top>=o.top-2&&f.bottom<=o.bottom+2};
+   },{code:icao,design:actual},{timeout:18000}).then(h=>h.jsonValue());
    assert.ok(result.image.includes(actual+".webp"),"incorrect image for "+icao);
    assert.ok(result.caption?.includes(icao),"missing clear ICAO caption "+icao);
    assert.ok(result.inside,"cropped image for "+icao);
    if(chartProfiles[icao]){
     const expected=chartProfiles[icao].profile;
-    const shown=await page.evaluate(()=>({name:document.querySelector("#airportProfile .profile-heading h2")?.textContent,
-     iata:document.querySelector("#airportProfile .profile-code-row .profile-chip")?.textContent,
-     place:document.querySelector("#airportProfile .profile-heading p")?.textContent,
-     coordinates:document.querySelector("#airportProfile .profile-coordinates")?.textContent}));
+    const shown=await page.waitForFunction(code=>{
+     const root=document.querySelector("#airportProfile");
+     if(!root||root.querySelector(".profile-icao")?.textContent.trim()!==code)return false;
+     const name=root.querySelector(".profile-heading h2")?.textContent,
+       iata=root.querySelector(".profile-code-row .profile-chip")?.textContent,
+       place=root.querySelector(".profile-heading p")?.textContent,
+       coordinates=root.querySelector(".profile-coordinates")?.textContent;
+     return name&&iata&&place&&coordinates?{name,iata,place,coordinates}:false;
+    },icao,{timeout:18000}).then(h=>h.jsonValue());
     assert.equal(shown.name,expected.name,icao+" chart airport name");
     assert.equal(shown.iata,expected.iata,icao+" chart IATA");
     assert.ok(shown.place.includes(expected.city)&&shown.place.includes(expected.country),icao+" chart location");
