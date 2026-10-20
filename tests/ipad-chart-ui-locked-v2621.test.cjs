@@ -74,3 +74,26 @@ test('full screen CDFA files are cache-busted and CDFA script is network-first',
  assert.match(sw,/app\\\.js\|cdfa-chart-panel\\\.js/);
  assert.doesNotMatch(sw,/self\.skipWaiting\(/);
 });
+
+test('2026-10-20 owner-locked chart tree stays ON PDF left margin and keeps all other viewer layers',()=>{
+  const nav=read('web/chart-margin-tree.js');
+  const css=read('web/chart-margin-tree.css');
+  const js=read('web/app.js');
+  const preview=read('web/preview/airport-carousel-r13-fixed/app.js');
+  const previewCss=read('web/preview/airport-carousel-r13-fixed/styles.css');
+  assert.match(nav,/layer\.appendChild\(host\)/);
+  assert.match(nav,/jeppiran-chart-rendered/);
+  assert.match(nav,/\.jp-margin-tree-search/);
+  assert.match(nav,/opened\.add\(selectedAirport/);
+  assert.doesNotMatch(nav,/workspace\.insertBefore|refitSelectedChartForLayout/);
+  assert.match(css,/#chartsView\.chart-open #chartTransformLayer > \.jp-margin-chart-tree/);
+  assert.doesNotMatch(css,/flex:0 0 var\(--jp-chart-margin-width/);
+  assert.match(css,/#chartsView\.chart-open #offlinePdfBtn,#chartsView\.chart-open #fullscreenBtn/);
+  assert.match(js,/Math\.max\(\.5,Math\.min\(4,Number\(next\)/);
+  assert.match(js,/function startVerticalInertia\(\)/);
+  assert.match(js,/Math\.abs\(dx\)>7/);
+  assert.match(js,/\.jp-margin-chart-tree/);
+  assert.doesNotMatch(preview,/void loadPublishedPoints\(\)/);
+  assert.doesNotMatch(preview,/kind:titleMatch\?"procedure":"point"/);
+  assert.match(previewCss,/body\.chart-selected \.procedure-zone,[\s\S]*?display:none!important/);
+});
