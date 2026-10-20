@@ -44,3 +44,9 @@ test("offline shell includes matching chart tree scripts and locked chart assets
   assert.match(html,/app\.js\?v=2621-oici-ungeoref-neutral-pos-r1/);
   assert.match(html,/oigg-local-r3/);
 });
+
+test("legacy Classic browser QA respects the owner-hidden top chart title",()=>{
+  const smoke=read("../scripts/verify_airport_carousel_r5_classic_browser.cjs");
+  assert.match(smoke,/viewerChart"\)\.waitFor\(\{state:"attached"\}\)/);
+  assert.doesNotMatch(smoke,/viewerChart"\)\.waitFor\(\)/);
+});
