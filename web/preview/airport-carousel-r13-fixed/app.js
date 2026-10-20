@@ -1095,7 +1095,10 @@ window.addEventListener("message",event=>{
     // Classic may move on its OWN swipe/arrow. Never send the same page back.
     // The published V2621 row determines the actual category and chart index.
     const row=charts?.find(item=>item.airport===icao&&Number(item.page)===Number(page));
-    if(!row||current()!==icao||!validProcedure(row))return;
+    if(!row||!validProcedure(row))return;
+    // A selection from the PDF's own margin tree may jump to another airport:
+    // synchronize the parent carousel too, without reopening the top chart strip.
+    if(current()!==icao&&codes.includes(icao))centerOn(preferredIndex(icao),false);
     classicRequested={icao,page:Number(page)};
     classicStatus.hidden=true;
     const category=Object.keys(categoryMap).find(k=>categoryMap[k]===String(row.category).toUpperCase());
