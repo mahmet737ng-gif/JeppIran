@@ -68,7 +68,7 @@ def get_batch(group):
 
 def main():
     manifest=json.loads((ROOT/"app/src/main/assets/charts-manifest.json").read_text())
-    names=sorted(set(k for k in manifest["airports"] if re.fullmatch(r"[A-Z0-9]{4}",k)) | {"OIIX"})
+    names=sorted(k for k in manifest["airports"] if re.fullmatch(r"[A-Z0-9]{4}",k))
     groups=[names[i:i+4] for i in range(0,len(names),4)]
     with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:
         results={}
