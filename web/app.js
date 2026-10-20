@@ -1234,8 +1234,12 @@ function renderAirports(filter=""){
   const fav=new Set(getAirportFavorites());
   [...new Set(charts.map(displayAirportCode))].sort().filter(icao=>{
     const record=icao==="OICZ"?{...airportMetadata[icao],name:"Saqez Airport",city:"Saqez"}:(airportMetadata[icao]||{});const legacy=AIRPORTS[icao]||["",""];
-    const meta=[record.name||legacy[0]||"",record.city||legacy[1]||""];
-    return (!q||(icao+" "+meta.join(" ")).toUpperCase().includes(q))&&(airportFilterMode!=="favorites"||fav.has(icao));
+    // OWNER LOCK: only ICAO / IATA / city / country / procedure names.
+    const iata=record.iata||{OIII:"THR",OIIE:"IKA",OIMM:"MHD",LTFM:"IST",OTHH:"DOH"}[icao]||"";
+    const country=record.country||({OI:"Iran",LT:"Turkey",OM:"United Arab Emirates",OO:"Oman",OR:"Iraq",OT:"Qatar",OP:"Pakistan",UG:"Georgia",UD:"Armenia"})[icao.slice(0,2)]||"";
+    const fields=[icao,iata,record.city||legacy[1]||"",country];
+    const procedureHit=!!q&&charts.some(c=>displayAirportCode(c)===icao&&displayChartName(c).toUpperCase().includes(q));
+    return (!q||fields.some(v=>String(v).toUpperCase().includes(q))||procedureHit)&&(airportFilterMode!=="favorites"||fav.has(icao));
   }).forEach(icao=>{
     const record=icao==="OICZ"?{...airportMetadata[icao],name:"Saqez Airport",city:"Saqez"}:(airportMetadata[icao]||{});const legacy=AIRPORTS[icao]||["",""];
     const meta=[record.name||legacy[0]||"AIRPORT",record.city||legacy[1]||""];
@@ -2206,7 +2210,7 @@ function chartSwipePanel(canvas,scrollOffset=0){
   return panel;
 }
 function beginChartSwipe(direction){
-  if(activeChartSlide||chartZoom>1.001||!selectedChart)return null;
+  if(activeChartSlide||Math.abs(chartZoom-1)>0.015||!selectedChart)return null;
   const target=adjacentChart(direction),stage=$("#pdfStage"),current=$("#pdfCanvas");
   if(!target||!current||!stage||!chartSlideDocument)return null;
   const width=stage.clientWidth;
@@ -2260,7 +2264,7 @@ function finishChartSwipe(state,canceled){
   state.done=true;
   const elapsed=performance.now()-state.startedAt;
   const advance=!canceled&&!state.reversing&&
-    (Math.abs(state.dx)>=42||(elapsed<230&&Math.abs(state.dx)>=25));
+    (Math.abs(state.dx)>=32||(elapsed<300&&Math.abs(state.dx)>=16));
   const destination=advance?-state.dir*state.width:0;
   const remaining=Math.abs(destination-state.dx);
   const duration=Math.max(110,Math.min(260,120+remaining*.16));
@@ -2412,7 +2416,7 @@ function setupChartGestures(){
   function cancelTail(){if(tailFrame)cancelAnimationFrame(tailFrame);tailFrame=0;}
   function chartHit(target){
     if(!(target instanceof Element))return false;
-    if(target.closest("button,a,input,select,textarea,summary,[role='button'],.taxi-qa-panel"))return false;
+    if(target.closest("button,a,input,select,textarea,summary,[role='button'],.taxi-qa-panel,.jp-margin-chart-tree"))return false;
     return !!target.closest(".pdf-canvas-wrap,#chartTransformLayer,#pdfCanvas");
   }
   function tinyPanStop(){
@@ -2483,8 +2487,8 @@ function setupChartGestures(){
       const dx=e.clientX-panStart.x,dy=e.clientY-panStart.y;
       // Exactly follow current displacement; fast swipes move fast, and
       // reversing the finger visibly reverses the two-page preview.
-      if(chartZoom<=1.001&&swipeStart&&!pinched){
-        if(!slideGesture&&Math.abs(dx)>14&&Math.abs(dx)>Math.abs(dy)*1.3){
+      if(Math.abs(chartZoom-1)<0.015&&swipeStart&&!pinched){
+        if(!slideGesture&&Math.abs(dx)>7&&Math.abs(dx)>Math.abs(dy)*1.3){
           slideGesture=beginChartSwipe(dx<0?1:-1);
           if(slideGesture){clearTimeout(singleTapTimer);singleTapTimer=0;lastTapAt=0;}
         }
