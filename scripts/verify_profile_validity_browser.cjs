@@ -61,10 +61,14 @@ async function waitForServer(){
     ["20-9B","AIRCRAFT PARKING CHART (APRON 1 / PASSENGER APRON)"],
     ["20-9C","AIRCRAFT PARKING CHART (APRON 2 CARGO / APRON 3 SALAM)"]
   ]){
-    const row=page.locator("#chartsView .airport-inline-tree .tree-item").filter({hasText:number}).first();
+    // Before opening, use the airport profile list; after opening, all
+    // navigation lives inside the white margin of the PDF, not the old sidebar.
+    const chartOpen=await page.locator("#chartsView").evaluate(el=>el.classList.contains("chart-open"));
+    const selector=chartOpen?"#jpMarginChartTree .jp-margin-tree-chart":"#chartsView .airport-inline-tree .tree-item";
+    const row=page.locator(selector).filter({hasText:number}).first();
     await row.waitFor({state:"visible",timeout:12000});
     assert.ok((await row.innerText()).includes(title),
-      "visible AIRPORT sidebar must show source-reviewed "+number+" title");
+      "visible chart navigation must show source-reviewed "+number+" title");
     await row.click();
     assert.ok((await page.locator("#viewerChart").innerText()).includes(title),
       "opened chart toolbar must show source-reviewed "+number+" title");
