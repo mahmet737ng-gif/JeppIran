@@ -55,8 +55,11 @@ async function verifySelection(page,category,pageNumber){
     "Airport wheel remains available while only a preview is active");
   await page.locator("#miniChartOpen").click();
   await verifySelection(page,"SID",379);
-  console.log("PASS iPad chart open: ICAO row hidden, chart category remains visible");
+  console.log("PASS iPad chart open: ICAO row and top chart rail hidden");
+  assert.ok(await page.locator(".procedure-categories").isHidden(),
+   "Chart selection should remove the top category/name rail");
   const frame=page.frameLocator("#classicViewerFrame");
+  await frame.locator("#jpChartMarginNav").waitFor({state:"visible",timeout:20000});
   await frame.locator("#nextChartBtn").waitFor({state:"visible",timeout:25000});
   await frame.locator("#nextChartBtn").click();
   await verifySelection(page,"AIRPORT",380);
@@ -81,9 +84,8 @@ async function verifySelection(page,category,pageNumber){
   await page.mouse.up();
   await verifySelection(page,"AIRPORT",380);
   console.log("PASS chart-canvas swipe synchronizes the matching category + chart");
-  // Closing the selected category restores the airport list (no persistent
-  // invisible capture layer remains over the ICAO picker).
-  await page.locator('.procedure-category[data-category="AIRPORT"]').click();
+  // The Preview return action restores the airport list without the old rail.
+  await page.locator("#previewBackToCharts").click();
   await page.waitForFunction(()=>document.querySelector("#airportCarousel")
    ?.getBoundingClientRect().height>50 &&
    document.querySelector("#classicViewerHost")?.hidden,{timeout:9000});

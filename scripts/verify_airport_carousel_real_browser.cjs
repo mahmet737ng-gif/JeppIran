@@ -202,11 +202,13 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
      "Airport profile must remain hidden for a full Classic chart");
    assert.ok(await page.locator("#airportCarousel").isHidden(),
      "Airport ICAO list must disappear when the full Classic chart opens");
-   assert.ok(await page.locator(".procedure-categories").isVisible(),
-     "Chart/category selector must remain visible above Classic");
-   // Exit Classic by collapsing its category: the original airport carousel
-   // then returns for the user to choose another airport.
-   await page.locator(".procedure-category.active").click();
+   assert.ok(await page.locator(".procedure-categories").isHidden(),
+     "Chart/category name rail must disappear above the opened Classic chart");
+   const marginTree=page.frameLocator("#classicViewerFrame").locator("#jpChartMarginNav");
+   await marginTree.waitFor({state:"visible",timeout:20000});
+   assert.ok(await page.frameLocator("#classicViewerFrame").locator("#jpChartMarginList .is-current").count()>0,
+     "The left-margin chart tree must highlight the selected chart");
+   await page.locator("#previewBackToCharts").click();
    await page.waitForFunction(()=>document.querySelector("#airportCarousel")
       ?.getBoundingClientRect().height>50 &&
       document.querySelector("#classicViewerHost")?.hidden,{timeout:7000});
@@ -324,20 +326,12 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
      }
      return null;
    });
-   assert.ok(fixPick,"No source-derived waypoint candidate available for search QA");
+   assert.ok(fixPick,"No source-derived waypoint candidate available for exclusion QA");
    await page.locator("#airportSearch").fill(fixPick.fix);
-   await page.waitForFunction(()=>document.querySelector(".search-result-point"),null,{timeout:12000});
-   const target=page.locator(".search-result-point").filter({hasText:fixPick.airport}).first();
-   await target.click();
-   await page.waitForFunction(expected=>{
-     const airport=document.querySelector(".airport-token.active")?.dataset.airport;
-     const chart=Number(document.querySelector(".procedure-token.active")?.dataset.chartPage);
-     return airport===expected.airport&&Number.isFinite(chart)&&
-       document.querySelector("#miniChartPreview")?.hidden===false;
-   },{airport:fixPick.airport},{timeout:15000});
-   assert.ok(await page.locator("#classicViewerHost").isHidden(),
-     "Point search should resolve to actual source chart preview");
-   console.log("PASS V2621 procedure and PDF-derived point search",JSON.stringify(fixPick));
+   await page.waitForTimeout(250);
+   assert.equal(await page.locator(".search-result-point").count(),0,
+     "Global Search Bars must exclude waypoint/fix matches");
+   console.log("PASS V2621 procedure-only search; waypoint results excluded",JSON.stringify(fixPick));
    // An unavailable index must never shrink the 78-airport carousel to 9 entries.
    const offlinePage=await context.newPage();
    await offlinePage.route("**/data/charts-manifest.json*",route=>route.abort());
