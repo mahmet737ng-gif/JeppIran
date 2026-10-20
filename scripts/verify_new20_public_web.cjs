@@ -16,7 +16,27 @@ assert.ok(posterScript,"Current versioned airport poster script is required");
 if(!base||!/^https:\/\//.test(base))throw Error("Pages deployment output URL is required");
 const url=(relative)=>new URL(relative,base.endsWith("/")?base:base+"/");
 const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
-async function get(relative){const r=await fetch(url(relative),{headers:{"Cache-Control":"no-cache"},signal:AbortSignal.timeout(35000)});if(!r.ok)throw Error(relative+" HTTP "+r.status);return r}
+async function get(relative){
+ // GitHub Pages CDN occasionally returns a transient 429/502/503/504 even
+ // for immutable WebP bytes. Retry temporary failures while still requiring
+ // every published image to match its SHA-256 exactly.
+ let lastError;
+ for(let attempt=0;attempt<6;attempt++){
+  try{
+   const r=await fetch(url(relative),{
+     headers:{"Cache-Control":"no-cache"},signal:AbortSignal.timeout(35000)
+   });
+   if(r.ok)return r;
+   lastError=new Error(relative+" HTTP "+r.status);
+   if(![429,502,503,504].includes(r.status))throw lastError;
+  }catch(error){
+   lastError=error;
+   if(error?.message?.includes("HTTP 404")||error?.message?.includes("HTTP 403"))throw error;
+  }
+  if(attempt<5)await wait(Math.min(4000,650*(attempt+1)));
+ }
+ throw lastError;
+}
 (async()=>{
  let ready=false;
  for(let i=1;i<=15;i++){
