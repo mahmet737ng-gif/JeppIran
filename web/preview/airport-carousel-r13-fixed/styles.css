@@ -1414,3 +1414,42 @@ body:not(.has-chart-preview):not(.chart-selected) .selected-airport #weatherStat
     will-change:auto;transition:none!important
   }
 }
+
+/* iPadOS standalone/edge-to-edge mode: preserve the native system status bar.
+   The 0px safe inset reported by some iPad WKWebViews cannot be used as a
+   reliable clearance for the battery/time overlay. */
+.topline{padding-top:max(12px,env(safe-area-inset-top,0px))!important}
+body.chart-selected .topline{padding-top:max(6px,env(safe-area-inset-top,0px))!important}
+@supports (-webkit-touch-callout:none){
+  @media (pointer:coarse){
+    .topline,body.chart-selected .topline{
+      padding-top:max(30px,env(safe-area-inset-top,0px))!important;
+    }
+    .topline{min-height:88px!important}
+    body.chart-selected .topline{min-height:66px!important}
+  }
+}
+/* A selected full Classic chart consumes the airport wheel's space.
+   Its category/chart rail stays visible so the user knows where they are.
+   Leaving Classic restores the original ICAO carousel immediately. */
+body.chart-selected .carousel-region,
+body.chart-selected #airportCarousel,
+body.chart-selected #prevAirport,
+body.chart-selected #nextAirport{
+  display:none!important;
+}
+body.chart-selected .page-frame{
+  height:100dvh!important;min-height:0!important;overflow:hidden;
+}
+body.chart-selected main{
+  flex:1 1 0%!important;height:auto!important;
+  min-height:0!important;padding:0 0 max(3px,env(safe-area-inset-bottom,0px))!important;
+}
+body.chart-selected .procedure-zone{
+  flex:0 0 auto!important;
+  margin:3px auto 4px!important;
+}
+body.chart-selected .classic-viewer-host{
+  flex:1 1 0%!important;min-height:0!important;height:auto!important;
+  margin:0 auto!important;
+}
