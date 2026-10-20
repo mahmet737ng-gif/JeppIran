@@ -36,6 +36,8 @@ test("Web and native reject cached OICI models; live/outside labels do not name 
  assert.doesNotMatch(s,/code\+" (?:LIVE|OUTSIDE)"/);
  assert.match(js,/badge\.textContent="POS LIVE"/);
  const html=read("web/index.html"),sw=read("web/service-worker.js");
- assert.ok(html.includes("app.js?v=2621-oici-ungeoref-neutral-pos-r1"));
- assert.ok(sw.includes("app.js?v=2621-oici-ungeoref-neutral-pos-r1"));
+ // Keep the actual safety checks above; version labels may change independently.
+ const currentScript=html.match(/\.\/app\.js\?v=([a-z0-9-]+)/i);
+ assert.ok(currentScript,"HTML must load the versioned protected chart viewer");
+ assert.ok(sw.includes("./app.js?v="+currentScript[1]),"offline shell must cache that exact viewer version");
 });
