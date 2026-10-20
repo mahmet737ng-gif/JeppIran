@@ -270,15 +270,14 @@ body.viewer-fullscreen .fullscreen-exit{display:flex}
 .viewer-actions{align-items:center;overflow-x:auto;scrollbar-width:none}
 .viewer-actions::-webkit-scrollbar{display:none}
 .viewer-nav-group,.viewer-zoom-group{display:flex;gap:5px;flex-shrink:0}
-/* Separate airport-profile return beside unchanged previous/next chart arrows. */
+/* BACK uses the SAME approved PNG-matte tile and raster-button frame as
+   the other chart actions. The BACK caption distinguishes it from Prev chart. */
 #chartsView .viewer-nav-group .chart-return-btn{
- display:inline-flex;align-items:center;justify-content:center;gap:6px;
- min-height:38px;min-width:83px;padding:7px 10px;flex-shrink:0;
- font:800 11px/1 system-ui,sans-serif;letter-spacing:.04em;white-space:nowrap;
- touch-action:manipulation;
+  min-width:90px;white-space:nowrap;touch-action:manipulation;
 }
-#chartsView .viewer-nav-group .chart-return-btn svg{width:17px;height:17px;flex:none}
-#chartsView .viewer-nav-group .chart-return-btn:focus-visible{outline:2px solid #42caff;outline-offset:2px}
+#chartsView .viewer-nav-group .chart-return-btn .toolbar-art{
+  flex:0 0 auto;
+}
 .compact-btn{min-width:38px;padding:9px 10px}
 .zoom-value{min-width:62px;padding-left:9px;padding-right:9px}
 .pdf-stage{

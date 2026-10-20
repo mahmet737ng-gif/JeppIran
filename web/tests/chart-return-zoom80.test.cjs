@@ -11,6 +11,10 @@ test("Chart BACK is distinct from PDF Previous/Next",()=>{
  assert.match(app,/#chartReturnBtn"\)\.addEventListener\("click"/);
  assert.match(app,/if\(selectedChart\)window\.jeppiranAndroidBack\(\)/);
  assert.match(css,/#chartsView \.viewer-nav-group \.chart-return-btn/);
+ assert.match(group,/id="chartReturnBtn"[^>]+class="[^"]*raster-btn/);
+ assert.match(group,/id="chartReturnBtn"[\s\S]*?class="toolbar-art art-back"/);
+ assert.match(group,/id="chartReturnBtn"[\s\S]*?class="toolbar-label">BACK/);
+ assert.match(css,/\.toolbar-art\s*\{[\s\S]*?toolbar-artwork\/toolbar-matte\.png/);
 });
 test("Chart default/reset are 80% with 50% minimum still available",()=>{
  const html=read("index.html"),app=read("app.js"),sw=read("service-worker.js");

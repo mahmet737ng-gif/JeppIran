@@ -90,6 +90,22 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   },beforeBack.page);
   assert.equal(await page.locator("#chartsView").evaluate(el=>el.classList.contains("chart-open")),true);
   assert.equal(await page.locator("#chartReturnBtn").count(),1);
+  const matchingMosaic=await page.evaluate(()=>{
+    const back=document.querySelector("#chartReturnBtn");
+    const prev=document.querySelector("#prevChartBtn");
+    const a=getComputedStyle(back),b=getComputedStyle(prev);
+    const backIcon=getComputedStyle(back.querySelector(".toolbar-art"));
+    const prevIcon=getComputedStyle(prev.querySelector(".toolbar-art"));
+    return {raster:back.classList.contains("raster-btn"),
+      background:a.backgroundColor===b.backgroundColor,
+      border:a.borderColor===b.borderColor,
+      radius:a.borderRadius===b.borderRadius,
+      iconImage:backIcon.backgroundImage===prevIcon.backgroundImage &&
+        backIcon.backgroundImage.includes("toolbar-matte.png"),
+      caption:back.querySelector(".toolbar-label")?.textContent?.trim()};
+  });
+  assert.deepEqual(matchingMosaic,{raster:true,background:true,border:true,radius:true,iconImage:true,caption:"BACK"},
+    "BACK must match the approved mosaic buttons in Chrome");
   console.log("PASS separate toolbar BACK: chart → airport profile → chart.");
 
   // Android keeps HOME navigation in the Charts header (and closed-drawer profile),
