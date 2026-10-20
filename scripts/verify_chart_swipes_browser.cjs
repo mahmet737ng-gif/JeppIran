@@ -130,6 +130,7 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   });
   await page.waitForFunction(()=>activeChartSlide===null,null,{timeout:3500});
   await page.waitForFunction(before=>selectedChart?.page!==before,edgeBefore,{timeout:20000});
+  await page.waitForFunction(()=>chartZoom===1 && document.getElementById("zoomValue")?.textContent==="100%",null,{timeout:20000});
   assert.equal(await page.evaluate(()=>chartZoom),1,"Next chart opens at its fitted default zoom");
   console.log("PASS edge-only zoomed page navigation, reversed-swipe cancellation and 100% reset.");
 
