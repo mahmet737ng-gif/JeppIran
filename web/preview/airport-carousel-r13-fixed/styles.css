@@ -1453,3 +1453,23 @@ body.chart-selected .classic-viewer-host{
   flex:1 1 0%!important;min-height:0!important;height:auto!important;
   margin:0 auto!important;
 }
+
+/* Chart Preview → Chart Viewer: hide the obsolete horizontal chart-name/category
+   rail while the Classic iframe has its own searchable left-margin tree. */
+body.chart-selected .procedure-zone,
+body.chart-selected #procedureDetails,
+body.chart-selected .procedure-categories {display:none!important}
+.preview-back-to-charts{display:none}
+body.chart-selected .preview-back-to-charts{
+  display:inline-flex!important;position:fixed;z-index:10040;
+  top:max(8px,env(safe-area-inset-top,0px));right:11px;
+  min-height:36px;align-items:center;justify-content:center;
+  background:rgba(7,34,58,.92);color:#e4f6ff;
+  border:1px solid rgba(98,193,239,.68);border-radius:9px;
+  padding:0 11px;font:800 11px system-ui,sans-serif;cursor:pointer
+}
+@supports (-webkit-touch-callout:none){
+  @media(pointer:coarse){
+    body.chart-selected .preview-back-to-charts{top:max(32px,env(safe-area-inset-top,0px))}
+  }
+}

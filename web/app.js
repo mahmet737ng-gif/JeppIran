@@ -2230,7 +2230,7 @@ function beginChartSwipe(direction){
   there.appendChild(label);
   track.append(here,there);shield.appendChild(track);stage.appendChild(shield);
   const state={shield,track,there,label,stage,dir:direction,target,width,dx:0,
-    ready:false,done:false,lastX:0,lastT:0,reversing:false};
+    ready:false,done:false,lastX:0,lastT:0,reversing:false,maxAbsDx:0,startedAt:performance.now()};
   activeChartSlide=state;
   const cached=chartSlidePreviews.get(chartSlideKey(target,width));
   const show=canvas=>{
@@ -2248,18 +2248,19 @@ function updateChartSwipe(state,dx,x,time){
   // Direction is fixed for this gesture. Crossing the start position cancels.
   const clipped=Math.max(-state.width,Math.min(state.width,dx));
   state.dx=state.dir===1?Math.min(0,clipped):Math.max(0,clipped);
-  if(state.lastT&&time>state.lastT){
-    state.reversing=Math.abs(x-state.lastX)>2 &&
-      Math.sign(x-state.lastX)===state.dir;
-  }
+  state.maxAbsDx=Math.max(state.maxAbsDx,Math.abs(state.dx));
+  // Reversing intentionally before lift cancels the navigation, even if
+  // the finger has not returned all the way to its initial position.
+  if(state.maxAbsDx-Math.abs(state.dx)>Math.max(18,Math.min(40,state.width*.045)))state.reversing=true;
   state.lastX=x;state.lastT=time;
   state.track.style.transform="translate3d("+state.dx+"px,0,0)";
 }
 function finishChartSwipe(state,canceled){
   if(!state||state.done)return;
   state.done=true;
-  const advance=!canceled&&state.ready&&!state.reversing&&
-    Math.abs(state.dx)>=Math.max(80,state.width*0.32);
+  const elapsed=performance.now()-state.startedAt;
+  const advance=!canceled&&!state.reversing&&
+    (Math.abs(state.dx)>=42||(elapsed<230&&Math.abs(state.dx)>=25));
   const destination=advance?-state.dir*state.width:0;
   const remaining=Math.abs(destination-state.dx);
   const duration=Math.max(110,Math.min(260,120+remaining*.16));
@@ -2313,6 +2314,11 @@ function paintChartTransform(){
   if(stage)stage.style.overflowY=chartZoom<=1.001?"auto":"hidden";
   layer.style.transform="translate3d("+chartPanX+"px,"+chartPanY+"px,0) scale("+chartZoom+")";
   layer.style.setProperty("--marker-inverse-scale",String(aircraftMarkerScaleForZoom(chartZoom)));
+  const wrap=stage?.querySelector(".pdf-canvas-wrap");
+  if(wrap){
+    const height=layer.offsetHeight;
+    layer.style.marginBottom=chartZoom<1?(-(height*(1-chartZoom)))+"px":"";
+  }
   const label=$("#zoomValue");if(label)label.textContent=Math.round(chartZoom*100)+"%";
 }
 function applyChartTransform(){
@@ -2325,7 +2331,7 @@ function setChartZoom(next,{resetPan=false}={}){
   cancelAircraftFollow();
   const stage=$("#pdfStage"),old=chartZoom;
   const savedScroll=stage?.scrollTop||0;
-  chartZoom=Math.max(1,Math.min(4,Number(next)||1));
+  chartZoom=Math.max(.5,Math.min(4,Number(next)||1));
   if(old<=1.001&&chartZoom>1.001){chartPanY=-savedScroll;if(stage)stage.scrollTop=0;}
   if(resetPan||chartZoom<=1.001){chartPanX=0;chartPanY=0}
   applyChartTransform();
@@ -2339,9 +2345,10 @@ function zoomAround(next,cx,cy){
   const stage=$("#pdfStage");
   if(!stage){setChartZoom(next);return}
   const old=chartZoom;
-  const z=Math.max(1,Math.min(4,next));
+  const z=Math.max(.5,Math.min(4,next));
   if(Math.abs(z-old)<0.001)return;
   const savedScroll=old<=1.001?stage.scrollTop:0;
+  const restoredScroll=old>1.001&&z<=1.001?Math.max(0,-chartPanY):0;
   if(old<=1.001&&z>1.001){chartPanY=-savedScroll;stage.scrollTop=0;}
   const r=stage.getBoundingClientRect();
   const px=cx-r.left-r.width/2,py=cy-r.top;
@@ -2351,7 +2358,7 @@ function zoomAround(next,cx,cy){
   chartZoom=z;
   if(chartZoom<=1.001){chartPanX=0;chartPanY=0}
   applyChartTransform();
-  if(old>1.001&&chartZoom<=1.001)stage.scrollTop=Math.max(0,-chartPanY);
+  if(old>1.001&&chartZoom<=1.001)stage.scrollTop=restoredScroll;
 }
 $("#zoomOutBtn").addEventListener("click",()=>setChartZoom(chartZoom/1.25));
 $("#zoomInBtn").addEventListener("click",()=>setChartZoom(chartZoom*1.25));
@@ -2381,8 +2388,27 @@ function setupChartGestures(){
   // Browser touch scrolling and manual PDF pan must not fight each other.
   // Chart follows actual finger displacement at 1:1 in both axes.
   stage.style.touchAction="none";
-  let tailFrame=0, singleTapTimer=0, recentMove=null, pinched=false;
+  let tailFrame=0, kineticFrame=0, singleTapTimer=0, recentMove=null, pinched=false;
   let slideGesture=null;
+  function cancelKinetic(){if(kineticFrame)cancelAnimationFrame(kineticFrame);kineticFrame=0;}
+  function startVerticalInertia(){
+    const sample=recentMove;
+    if(chartZoom>1.001||!sample||performance.now()-sample.time>85||
+       window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
+    let velocity=Math.max(-3,Math.min(3,sample.vy||0));
+    if(Math.abs(velocity)<.25)return;
+    let previous=performance.now();
+    const frame=now=>{
+      const dt=Math.min(35,Math.max(1,now-previous));previous=now;
+      const before=stage.scrollTop;
+      stage.scrollTop-=velocity*dt;
+      velocity*=Math.pow(.93,dt/16.67);
+      if(Math.abs(velocity)>.07&&Math.abs(stage.scrollTop-before)>.05)
+        kineticFrame=requestAnimationFrame(frame);
+      else kineticFrame=0;
+    };
+    kineticFrame=requestAnimationFrame(frame);
+  }
   function cancelTail(){if(tailFrame)cancelAnimationFrame(tailFrame);tailFrame=0;}
   function chartHit(target){
     if(!(target instanceof Element))return false;
@@ -2411,7 +2437,7 @@ function setupChartGestures(){
   }
   stage.addEventListener("wheel",e=>{
     if(!$("#pdfCanvas"))return;
-    cancelTail();
+    cancelTail();cancelKinetic();
     if(e.ctrlKey||e.metaKey){
       e.preventDefault();
       zoomAround(chartZoom*(e.deltaY<0?1.12:1/1.12),e.clientX,e.clientY);
@@ -2423,7 +2449,7 @@ function setupChartGestures(){
   },{passive:false});
   stage.addEventListener("pointerdown",e=>{
     if(!$("#pdfCanvas")||!chartHit(e.target))return;
-    cancelTail();
+    cancelTail();cancelKinetic();
     cancelAircraftFollow();
     try{stage.setPointerCapture(e.pointerId)}catch(_){}
     chartPointers.set(e.pointerId,{x:e.clientX,y:e.clientY});
@@ -2469,7 +2495,12 @@ function setupChartGestures(){
       }
       const stageEl=$("#pdfStage"),layerEl=$("#chartTransformLayer");
       const canVerticalPan=!!(stageEl&&layerEl&&layerEl.offsetHeight*chartZoom>stageEl.clientHeight+1);
-      recentMove={x:e.clientX,y:e.clientY,dx:e.clientX-(recentMove?.x??e.clientX),dy:e.clientY-(recentMove?.y??e.clientY),time:performance.now()};
+      const moveTime=performance.now(),previousMove=recentMove;
+      const moveDt=Math.max(1,moveTime-(previousMove?.time??moveTime));
+      recentMove={x:e.clientX,y:e.clientY,
+        dx:e.clientX-(previousMove?.x??e.clientX),
+        dy:e.clientY-(previousMove?.y??e.clientY),time:moveTime,
+        vy:moveDt>=4?(e.clientY-(previousMove?.y??e.clientY))/moveDt:(previousMove?.vy||0)};
       if(chartZoom>1.001){
         chartPanX=panStart.panX+dx;chartPanY=panStart.panY+dy;applyChartTransform();
       }else if(canVerticalPan&&Math.abs(dy)>Math.abs(dx)*0.65){
@@ -2515,8 +2546,9 @@ function setupChartGestures(){
           }
         }
       }else if(!canceled&&start&&travel>=12&&!pinched){
-        // No delayed scrolling/fling after finger release.
         cancelTail();
+        if(chartZoom<=1.001&&Math.abs(dy)>Math.abs(dx)*1.3)
+          startVerticalInertia();
       }
       panStart=null;swipeStart=null;pinchStartDistance=0;
       recentMove=null;pinched=false;
@@ -2548,6 +2580,7 @@ function selectChart(c,options={}){
     },location.origin);
   }
   $("#chartsView").classList.add("chart-open");
+  window.dispatchEvent(new CustomEvent("jeppiran-chart-selected",{detail:{airport:c.airport,page:Number(c.page)}}));
   if(jpChartDrawerOpen)refreshFullscreenChartDrawer();
   expanded.add(c.category||"Other");
   renderAirports($("#airportSearch").value);

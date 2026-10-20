@@ -1,0 +1,94 @@
+/* Left PDF workspace chart tree. Does not touch chart pixels, CDFA or flight overlays. */
+#chartsView.chart-open #jpCdfaWorkspace{
+  display:flex!important;flex-direction:row!important;position:relative!important;
+  min-width:0!important;min-height:0!important;overflow:hidden!important;
+}
+#chartsView.chart-open #jpCdfaWorkspace > #pdfStage,
+html.jp-preview-classic-embed #chartsView.chart-open #jpCdfaWorkspace > #pdfStage,
+body.viewer-fullscreen #chartsView.chart-open #jpCdfaWorkspace > #pdfStage{
+  position:relative!important;inset:auto!important;
+  display:block!important;flex:1 1 0%!important;
+  width:0!important;min-width:0!important;max-width:none!important;
+  height:100%!important;min-height:0!important;max-height:none!important;
+  overflow-x:hidden!important;
+}
+body.viewer-fullscreen #chartsView.chart-open .pdf-canvas-wrap{
+  width:100%!important;min-width:0!important;
+}
+#chartsView #jpChartMarginNav{
+  flex:0 0 0;width:0;min-width:0;min-height:0;max-width:0;
+  overflow:hidden;visibility:hidden;pointer-events:none;
+  display:flex;flex-direction:column;box-sizing:border-box;
+  border:0;background:#f5f7f9;color:#1d3342;
+  -webkit-overflow-scrolling:touch;
+}
+#chartsView.jp-chart-margin-open #jpChartMarginNav{
+  flex:0 0 var(--jp-chart-margin-width,206px);
+  width:var(--jp-chart-margin-width,206px);
+  max-width:var(--jp-chart-margin-width,206px);
+  visibility:visible;pointer-events:auto;
+  border-right:1px solid #c4cdd4;
+}
+#jpChartMarginNav .jp-chart-margin-head{
+  display:flex;align-items:center;justify-content:space-between;
+  min-height:48px;gap:8px;padding:6px 7px 6px 12px;
+  font:800 12px system-ui,sans-serif;border-bottom:1px solid #d1dbe3
+}
+#jpChartMarginClose{
+  flex:0 0 35px;width:35px;height:35px;border:1px solid #b5c6d4;
+  border-radius:7px;background:#fff;color:#284356;font:500 24px/1 system-ui;cursor:pointer
+}
+#jpChartMarginSearch{
+  display:block;width:calc(100% - 14px);min-height:40px;margin:9px 7px;
+  padding:6px 8px;border:1px solid #a9bcc9;border-radius:8px;
+  background:white;color:#142b3c;font:500 11px system-ui;
+}
+#jpChartMarginNav .jp-chart-margin-list{
+  flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;touch-action:pan-y;
+  overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
+  padding:0 6px max(20px,env(safe-area-inset-bottom,0px));
+}
+#jpChartMarginNav .jp-chart-margin-category{
+  width:100%;min-height:40px;display:block;margin:3px 0 0;
+  padding:8px 6px;background:#e1eaf1;color:#1b4b69;
+  border:0;border-radius:5px;font:800 11px system-ui;text-align:left;cursor:pointer
+}
+#jpChartMarginNav .jp-chart-margin-chart{
+  display:block;width:100%;min-height:42px;padding:7px 7px 7px 14px;
+  margin:3px 0;border:1px solid transparent;border-radius:6px;
+  color:#283d4c;background:#fff;font:600 11px/1.35 system-ui;
+  text-align:left;overflow-wrap:anywhere;cursor:pointer
+}
+#jpChartMarginNav .jp-chart-margin-chart.is-current{
+  border-color:#1492ce;background:#d8f1ff;color:#064b70;
+  box-shadow:inset 3px 0 #0ca1e9
+}
+#jpChartMarginNav .jp-chart-margin-empty{padding:10px;font:12px system-ui;color:#577184}
+#jpChartMarginNav button:focus-visible,#jpChartMarginSearch:focus-visible,#jpChartMarginToggle:focus-visible{
+  outline:2px solid #00aeed;outline-offset:1px
+}
+#jpChartMarginToggle{
+  position:absolute;top:10px;left:10px;z-index:10035;
+  min-height:38px;border:1px solid #72bfe6;border-radius:8px;
+  background:rgba(7,37,61,.84);color:#f1fbff;padding:0 9px;
+  font:800 11px system-ui;cursor:pointer;touch-action:manipulation;
+}
+#chartsView:not(.chart-open) #jpChartMarginToggle{display:none!important}
+#chartsView.jp-chart-margin-open #jpChartMarginToggle{display:none!important}
+/* Retire the old overlaid navigation in favor of the chart-margin tree. */
+#chartsView.chart-open ~ #jpChartDrawer,#jpChartDrawer,#jpChartMenuBtn,#jpChartDrawerBackdrop{
+  display:none!important
+}
+html.jp-preview-classic-embed #jpChartMarginNav{display:flex!important}
+body.viewer-fullscreen #chartsView.chart-open #jpCdfaWorkspace{
+  width:100%!important;height:100dvh!important;flex:1 1 auto!important;
+}
+@media(max-width:719px){
+  #chartsView{--jp-chart-margin-width:min(42vw,155px)}
+  #jpChartMarginNav .jp-chart-margin-head{font-size:10px;padding-left:6px}
+  #jpChartMarginNav .jp-chart-margin-chart{font-size:10px;padding-left:7px}
+  #jpChartMarginSearch{font-size:10px}
+}
+@media(min-width:720px){
+  #chartsView{--jp-chart-margin-width:clamp(170px,19vw,235px)}
+}

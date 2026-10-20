@@ -1037,6 +1037,7 @@ function hideInlineChart(){
   document.body.classList.remove("chart-selected");
   if(!activeChartCategory)document.querySelector(".procedure-categories")?.scrollTo({left:0,behavior:"instant"});
 }
+$("#previewBackToCharts")?.addEventListener("click",()=>hideInlineChart());
 function dispatchClassicSelection(){
   if(!classicReady||!classicRequested||!classicFrame.contentWindow)return;
   classicFrame.contentWindow.postMessage({
