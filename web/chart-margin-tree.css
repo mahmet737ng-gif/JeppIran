@@ -1,99 +1,80 @@
-/* Left PDF workspace chart tree. Does not touch chart pixels, CDFA or flight overlays. */
-#chartsView.chart-open #jpCdfaWorkspace{
-  display:flex!important;flex-direction:row!important;position:relative!important;
-  min-width:0!important;min-height:0!important;overflow:hidden!important;
+/* LOCK: 2026-10-20 chart navigation is drawn ON the left white PDF margin.
+   No sidebar, no PDF reflow, no CDFA change, independent of app light/dark. */
+#chartsView.chart-open #chartTransformLayer > .jp-margin-chart-tree{
+  position:absolute;left:clamp(3px,.7%,10px);top:clamp(5px,.9%,14px);
+  z-index:32;width:clamp(130px,24%,222px);max-height:min(630px,90%);
+  display:flex;flex-direction:column;border:1px solid rgba(65,88,106,.55);
+  border-radius:8px;overflow:hidden;background:rgba(255,255,255,.97);
+  color:#162b3b;box-shadow:0 3px 12px rgba(0,0,0,.19);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:11px;line-height:1.35;pointer-events:auto;touch-action:pan-y;
+  -webkit-text-size-adjust:100%;
 }
-#chartsView.chart-open #jpCdfaWorkspace > #pdfStage,
-html.jp-preview-classic-embed #chartsView.chart-open #jpCdfaWorkspace > #pdfStage,
-body.viewer-fullscreen #chartsView.chart-open #jpCdfaWorkspace > #pdfStage{
-  position:relative!important;inset:auto!important;
-  display:block!important;flex:1 1 0%!important;
-  width:0!important;min-width:0!important;max-width:none!important;
-  height:100%!important;min-height:0!important;max-height:none!important;
-  overflow-x:hidden!important;
+#chartsView.chart-open #chartTransformLayer .jp-margin-tree-header{
+  display:flex;align-items:center;gap:6px;min-height:31px;padding:3px 5px;
+  background:rgba(225,239,248,.95);font-size:11px;letter-spacing:.06em
 }
-body.viewer-fullscreen #chartsView.chart-open .pdf-canvas-wrap{
-  width:100%!important;min-width:0!important;
+#chartsView.chart-open #chartTransformLayer .jp-margin-tree-toggle{
+  width:28px;min-width:28px;min-height:25px;padding:0;border:1px solid #a0b8ca;
+  border-radius:5px;background:white;color:#0c3650;font-size:15px;font-weight:700
 }
-#chartsView #jpChartMarginNav{
-  flex:0 0 0;width:0;min-width:0;min-height:0;max-width:0;
-  overflow:hidden;visibility:hidden;pointer-events:none;
-  display:flex;flex-direction:column;box-sizing:border-box;
-  border:0;background:#f5f7f9;color:#1d3342;
-  -webkit-overflow-scrolling:touch;
+#chartsView.chart-open #chartTransformLayer .jp-margin-tree-content{
+  display:flex;flex-direction:column;min-height:0;flex:1 1 auto;
 }
-#chartsView.jp-chart-margin-open #jpChartMarginNav{
-  flex:0 0 var(--jp-chart-margin-width,206px);
-  width:var(--jp-chart-margin-width,206px);
-  max-width:var(--jp-chart-margin-width,206px);
-  visibility:visible;pointer-events:auto;
-  border-right:1px solid #c4cdd4;
+#chartsView.chart-open #chartTransformLayer .jp-margin-tree-search{
+  flex:0 0 auto;width:calc(100% - 8px);min-height:30px;padding:5px;margin:4px;
+  border:1px solid #91b1c2;border-radius:5px;background:white;color:#142938;
+  font:inherit;outline-offset:0
 }
-#jpChartMarginNav .jp-chart-margin-head{
-  display:flex;align-items:center;justify-content:space-between;
-  min-height:48px;gap:8px;padding:6px 7px 6px 12px;
-  font:800 12px system-ui,sans-serif;border-bottom:1px solid #d1dbe3
+#chartsView.chart-open #chartTransformLayer .jp-margin-tree-list{
+  flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;
+  padding:3px 3px 9px;scrollbar-width:thin;touch-action:pan-y
 }
-#jpChartMarginClose{
-  flex:0 0 35px;width:35px;height:35px;border:1px solid #b5c6d4;
-  border-radius:7px;background:#fff;color:#284356;font:500 24px/1 system-ui;cursor:pointer
+#chartsView.chart-open #chartTransformLayer .jp-margin-tree-list button{
+  display:block;width:100%;padding:5px 4px;border:0;border-radius:4px;
+  background:transparent;color:inherit;text-align:left;font:inherit;
+  overflow-wrap:anywhere;line-height:1.3;touch-action:manipulation
 }
-#jpChartMarginSearch{
-  display:block;width:calc(100% - 14px);min-height:40px;margin:9px 7px;
-  padding:6px 8px;border:1px solid #a9bcc9;border-radius:8px;
-  background:white;color:#142b3c;font:500 11px system-ui;
+#chartsView.chart-open #chartTransformLayer .jp-margin-tree-list .jp-margin-tree-airport{
+  font-size:12px;font-weight:800;color:#06517c
 }
-#jpChartMarginNav .jp-chart-margin-list{
-  flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;touch-action:pan-y;
-  overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
-  padding:0 6px max(20px,env(safe-area-inset-bottom,0px));
+#chartsView.chart-open #chartTransformLayer .jp-margin-tree-list .jp-margin-tree-category{
+  padding-left:8px;font-weight:750;background:#edf4f8;margin:3px 0 1px
 }
-#jpChartMarginNav .jp-chart-margin-category{
-  width:100%;min-height:40px;display:block;margin:3px 0 0;
-  padding:8px 6px;background:#e1eaf1;color:#1b4b69;
-  border:0;border-radius:5px;font:800 11px system-ui;text-align:left;cursor:pointer
+#chartsView.chart-open #chartTransformLayer .jp-margin-tree-list .jp-margin-tree-chart{
+  padding-left:14px;border-bottom:1px solid rgba(30,78,110,.1)
 }
-#jpChartMarginNav .jp-chart-margin-chart{
-  display:block;width:100%;min-height:42px;padding:7px 7px 7px 14px;
-  margin:3px 0;border:1px solid transparent;border-radius:6px;
-  color:#283d4c;background:#fff;font:600 11px/1.35 system-ui;
-  text-align:left;overflow-wrap:anywhere;cursor:pointer
+#chartsView.chart-open #chartTransformLayer .jp-margin-tree-list .jp-margin-tree-chart.is-selected{
+  background:#cde9f7;color:#073955;font-weight:800;outline:1px solid #62b8e3
 }
-#jpChartMarginNav .jp-chart-margin-chart.is-current{
-  border-color:#1492ce;background:#d8f1ff;color:#064b70;
-  box-shadow:inset 3px 0 #0ca1e9
+#chartsView.chart-open #chartTransformLayer .jp-margin-chart-tree:not(.is-open){
+  width:45px;height:33px;max-height:33px;
 }
-#jpChartMarginNav .jp-chart-margin-empty{padding:10px;font:12px system-ui;color:#577184}
-#jpChartMarginNav button:focus-visible,#jpChartMarginSearch:focus-visible,#jpChartMarginToggle:focus-visible{
-  outline:2px solid #00aeed;outline-offset:1px
+#chartsView.chart-open #chartTransformLayer .jp-margin-chart-tree:not(.is-open) .jp-margin-tree-content,
+#chartsView.chart-open #chartTransformLayer .jp-margin-chart-tree:not(.is-open) .jp-margin-tree-header strong{
+  display:none
 }
-#jpChartMarginToggle{
-  position:absolute;top:10px;left:10px;z-index:10035;
-  min-height:38px;border:1px solid #72bfe6;border-radius:8px;
-  background:rgba(7,37,61,.84);color:#f1fbff;padding:0 9px;
-  font:800 11px system-ui;cursor:pointer;touch-action:manipulation;
+#chartsView.chart-open #chartTransformLayer .jp-margin-tree-empty{padding:7px;color:#66757f;font-size:10px}
+body.chart-inverted #chartsView.chart-open #chartTransformLayer > .jp-margin-chart-tree{
+  background:rgba(0,0,0,.96);color:white;border-color:#888
 }
-#chartsView:not(.chart-open) #jpChartMarginToggle{display:none!important}
-#chartsView.jp-chart-margin-open #jpChartMarginToggle{display:none!important}
-/* Retire the old overlaid navigation in favor of the chart-margin tree. */
-#chartsView.chart-open ~ #jpChartDrawer,#jpChartDrawer,#jpChartMenuBtn,#jpChartDrawerBackdrop{
-  display:none!important
+body.chart-inverted #chartsView.chart-open #chartTransformLayer .jp-margin-tree-header,
+body.chart-inverted #chartsView.chart-open #chartTransformLayer .jp-margin-tree-list .jp-margin-tree-category{
+  background:#222;color:#eee
 }
-html.jp-preview-classic-embed #jpChartMarginNav{display:flex!important}
-body.viewer-fullscreen #chartsView.chart-open #jpCdfaWorkspace{
-  width:100%!important;height:100dvh!important;flex:1 1 auto!important;
+body.chart-inverted #chartsView.chart-open #chartTransformLayer .jp-margin-tree-search,
+body.chart-inverted #chartsView.chart-open #chartTransformLayer .jp-margin-tree-toggle{
+  background:#080808;color:white;border-color:#777
 }
-@media(max-width:719px){
-  #chartsView{--jp-chart-margin-width:min(42vw,155px)}
-  #jpChartMarginNav .jp-chart-margin-head{font-size:10px;padding-left:6px}
-  #jpChartMarginNav .jp-chart-margin-chart{font-size:10px;padding-left:7px}
-  #jpChartMarginSearch{font-size:10px}
+body.chart-inverted #chartsView.chart-open #chartTransformLayer .jp-margin-tree-list .jp-margin-tree-chart.is-selected{
+  background:#315266;color:#fff
 }
-@media(min-width:720px){
-  #chartsView{--jp-chart-margin-width:clamp(170px,19vw,235px)}
+/* Chart selection removes the old airport rail; the PDF owns the whole width. */
+#chartsView.chart-open .airport-pane{display:none!important}
+#chartsView.chart-open.charts-layout.active{grid-template-columns:minmax(0,1fr)!important;grid-template-rows:minmax(0,1fr)!important}
+#chartsView.chart-open .viewer-pane{grid-column:1!important;grid-row:1!important}
+#chartsView.chart-open .viewer-toolbar .viewer-title{display:none!important}
+#chartsView.chart-open #offlinePdfBtn,#chartsView.chart-open #fullscreenBtn{display:none!important}
+@media(max-width:749px){
+  #chartsView.chart-open #chartTransformLayer > .jp-margin-chart-tree{font-size:10px;width:clamp(116px,28%,175px)}
 }
-
-/* Toolbar retains fullscreen/offline implementations but no longer exposes
-   redundant viewer buttons. Existing offline settings keep working. */
-#chartsView.chart-open #fullscreenBtn,
-#chartsView.chart-open #offlinePdfBtn{display:none!important}
