@@ -29,17 +29,22 @@ async function ready(){for(let i=0;i<100;i++){try{if((await fetch(base)).ok)retu
       return !!(frame?.querySelector(".jp-poster-caption")&&
         root.querySelector(".jp-poster-scenic-foreground")&&root.querySelector(".profile-shell"));
    },code,{timeout:18000});
-   const value=await page.evaluate(()=>{
-    const root=document.getElementById("airportProfile"),frame=root.querySelector(".jp-poster-frame");
-    const band=root.querySelector(".jp-poster-scenic-foreground"),caption=frame.querySelector(".jp-poster-caption");
+   // Profile data can re-render between separate awaited browser commands.
+   // Read all geometry atomically, retrying if a transient DOM replacement occurs.
+   const value=await page.waitForFunction(icao=>{
+    const root=document.getElementById("airportProfile");
+    if(!root||root.querySelector(".profile-icao")?.textContent.trim()!==icao)return false;
+    const frame=root.querySelector(".jp-poster-frame");
+    const band=root.querySelector(".jp-poster-scenic-foreground"),caption=frame?.querySelector(".jp-poster-caption");
     const shell=root.querySelector(".profile-shell");
+    if(!frame||!band||!caption||!shell)return false;
     const rect=root.getBoundingClientRect(),scenic=band.getBoundingClientRect(),title=caption.getBoundingClientRect();
     return {r:rect.toJSON(),scenic:scenic.toJSON(),title:title.toJSON(),
       layer:getComputedStyle(band).zIndex,source:band.style.backgroundImage,
       reserve:parseFloat(root.style.getPropertyValue("--jp-scenic-reserve")),
       footer:!!root.querySelector(".jp-caption-coordinates"),
       shellBottom:shell.getBoundingClientRect().bottom};
-   });
+   },code,{timeout:18000}).then(handle=>handle.jsonValue());
    assert.ok(value.scenic.bottom<=value.r.bottom+2&&value.scenic.top>=value.r.top,
      code+" city symbol strip clipped");
    assert.ok(value.title.top>=value.r.top && value.title.top<value.r.top+value.r.height*.29,
