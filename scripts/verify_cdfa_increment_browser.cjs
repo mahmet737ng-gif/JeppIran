@@ -22,7 +22,8 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
    selectAirport("OIII");selectChart(c);
   });
   await page.waitForFunction(()=>document.querySelector("#pdfCanvas")?.width>100&&
-   !document.querySelector("#chartCdfaBtn")?.disabled,null,{timeout:90000});
+   !document.querySelector("#chartCdfaBtn")?.disabled&&
+   !document.querySelector("#pdfStage .pdf-loading"),null,{timeout:90000});
   await page.locator("#chartCdfaBtn").click();
   await sleep(1100);
   console.log("CDFA preview diagnostics",JSON.stringify(await page.evaluate(()=>({
