@@ -1,0 +1,80 @@
+/* LOCK: 2026-10-20 chart navigation is drawn ON the left white PDF margin.
+   No sidebar, no PDF reflow, no CDFA change, independent of app light/dark. */
+#chartsView.chart-open #chartTransformLayer > .jp-margin-chart-tree{
+  position:absolute;left:clamp(3px,.7%,10px);top:clamp(5px,.9%,14px);
+  z-index:32;width:clamp(130px,24%,222px);max-height:min(630px,90%);
+  display:flex;flex-direction:column;border:1px solid rgba(65,88,106,.55);
+  border-radius:8px;overflow:hidden;background:rgba(255,255,255,.97);
+  color:#162b3b;box-shadow:0 3px 12px rgba(0,0,0,.19);
+  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  font-size:11px;line-height:1.35;pointer-events:auto;touch-action:pan-y;
+  -webkit-text-size-adjust:100%;
+}
+#chartsView.chart-open #chartTransformLayer .jp-margin-tree-header{
+  display:flex;align-items:center;gap:6px;min-height:31px;padding:3px 5px;
+  background:rgba(225,239,248,.95);font-size:11px;letter-spacing:.06em
+}
+#chartsView.chart-open #chartTransformLayer .jp-margin-tree-toggle{
+  width:28px;min-width:28px;min-height:25px;padding:0;border:1px solid #a0b8ca;
+  border-radius:5px;background:white;color:#0c3650;font-size:15px;font-weight:700
+}
+#chartsView.chart-open #chartTransformLayer .jp-margin-tree-content{
+  display:flex;flex-direction:column;min-height:0;flex:1 1 auto;
+}
+#chartsView.chart-open #chartTransformLayer .jp-margin-tree-search{
+  flex:0 0 auto;width:calc(100% - 8px);min-height:30px;padding:5px;margin:4px;
+  border:1px solid #91b1c2;border-radius:5px;background:white;color:#142938;
+  font:inherit;outline-offset:0
+}
+#chartsView.chart-open #chartTransformLayer .jp-margin-tree-list{
+  flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;
+  padding:3px 3px 9px;scrollbar-width:thin;touch-action:pan-y
+}
+#chartsView.chart-open #chartTransformLayer .jp-margin-tree-list button{
+  display:block;width:100%;padding:5px 4px;border:0;border-radius:4px;
+  background:transparent;color:inherit;text-align:left;font:inherit;
+  overflow-wrap:anywhere;line-height:1.3;touch-action:manipulation
+}
+#chartsView.chart-open #chartTransformLayer .jp-margin-tree-list .jp-margin-tree-airport{
+  font-size:12px;font-weight:800;color:#06517c
+}
+#chartsView.chart-open #chartTransformLayer .jp-margin-tree-list .jp-margin-tree-category{
+  padding-left:8px;font-weight:750;background:#edf4f8;margin:3px 0 1px
+}
+#chartsView.chart-open #chartTransformLayer .jp-margin-tree-list .jp-margin-tree-chart{
+  padding-left:14px;border-bottom:1px solid rgba(30,78,110,.1)
+}
+#chartsView.chart-open #chartTransformLayer .jp-margin-tree-list .jp-margin-tree-chart.is-selected{
+  background:#cde9f7;color:#073955;font-weight:800;outline:1px solid #62b8e3
+}
+#chartsView.chart-open #chartTransformLayer .jp-margin-chart-tree:not(.is-open){
+  width:45px;height:33px;max-height:33px;
+}
+#chartsView.chart-open #chartTransformLayer .jp-margin-chart-tree:not(.is-open) .jp-margin-tree-content,
+#chartsView.chart-open #chartTransformLayer .jp-margin-chart-tree:not(.is-open) .jp-margin-tree-header strong{
+  display:none
+}
+#chartsView.chart-open #chartTransformLayer .jp-margin-tree-empty{padding:7px;color:#66757f;font-size:10px}
+body.chart-inverted #chartsView.chart-open #chartTransformLayer > .jp-margin-chart-tree{
+  background:rgba(0,0,0,.96);color:white;border-color:#888
+}
+body.chart-inverted #chartsView.chart-open #chartTransformLayer .jp-margin-tree-header,
+body.chart-inverted #chartsView.chart-open #chartTransformLayer .jp-margin-tree-list .jp-margin-tree-category{
+  background:#222;color:#eee
+}
+body.chart-inverted #chartsView.chart-open #chartTransformLayer .jp-margin-tree-search,
+body.chart-inverted #chartsView.chart-open #chartTransformLayer .jp-margin-tree-toggle{
+  background:#080808;color:white;border-color:#777
+}
+body.chart-inverted #chartsView.chart-open #chartTransformLayer .jp-margin-tree-list .jp-margin-tree-chart.is-selected{
+  background:#315266;color:#fff
+}
+/* Chart selection removes the old airport rail; the PDF owns the whole width. */
+#chartsView.chart-open .airport-pane{display:none!important}
+#chartsView.chart-open.charts-layout.active{grid-template-columns:minmax(0,1fr)!important;grid-template-rows:minmax(0,1fr)!important}
+#chartsView.chart-open .viewer-pane{grid-column:1!important;grid-row:1!important}
+#chartsView.chart-open .viewer-toolbar .viewer-title{display:none!important}
+#chartsView.chart-open #offlinePdfBtn,#chartsView.chart-open #fullscreenBtn{display:none!important}
+@media(max-width:749px){
+  #chartsView.chart-open #chartTransformLayer > .jp-margin-chart-tree{font-size:10px;width:clamp(116px,28%,175px)}
+}
