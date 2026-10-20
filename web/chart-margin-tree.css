@@ -78,3 +78,7 @@ body.chart-inverted #chartsView.chart-open #chartTransformLayer .jp-margin-tree-
 @media(max-width:749px){
   #chartsView.chart-open #chartTransformLayer > .jp-margin-chart-tree{font-size:10px;width:clamp(116px,28%,175px)}
 }
+
+/* One navigation source in Viewer: retire the old viewport hamburger/drawer.
+   The PDF-attached white-margin tree remains available in fullscreen. */
+#jpChartMenuBtn,#jpChartDrawer,#jpChartDrawerBackdrop{display:none!important}
