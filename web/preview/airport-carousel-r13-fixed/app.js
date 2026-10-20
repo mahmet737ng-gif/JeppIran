@@ -333,17 +333,16 @@ function showResults(){
   if(!value){el.results.hidden=true;return;}
   const matchRank=code=>{
     const icao=code.toUpperCase(),iata=String(getProfile(code).iata||fallbackIata[code]||"").toUpperCase();
-    const name=String(getProfile(code).name||"").toUpperCase();
+    const city=String(getProfile(code).city||"").toUpperCase();
     if(icao===value||iata===value)return 0;
     if(icao.startsWith(value))return 1;
     if(iata.startsWith(value))return 2;
-    if(name.startsWith(value))return 3;
+    if(city.startsWith(value))return 3;
     if(icao.includes(value)||iata.includes(value))return 4;
     return 5;
   };
   const airports=codes.filter(c=>c.includes(value)||
     String(getProfile(c).iata||fallbackIata[c]||"").toUpperCase().includes(value)||
-    String(getProfile(c).name||"").toUpperCase().includes(value)||
     String(getProfile(c).city||"").toUpperCase().includes(value)||
     String(getProfile(c).country||"").toUpperCase().includes(value))
     .sort((a,b)=>matchRank(a)-matchRank(b)||preferredIndex(a)-preferredIndex(b));
@@ -1095,7 +1094,9 @@ window.addEventListener("message",event=>{
     // Classic may move on its OWN swipe/arrow. Never send the same page back.
     // The published V2621 row determines the actual category and chart index.
     const row=charts?.find(item=>item.airport===icao&&Number(item.page)===Number(page));
-    if(!row||current()!==icao||!validProcedure(row))return;
+    if(!row||!validProcedure(row))return;
+    // The in-PDF margin tree may navigate to another airport.
+    if(current()!==icao&&codes.includes(icao))centerOn(preferredIndex(icao),false);
     classicRequested={icao,page:Number(page)};
     classicStatus.hidden=true;
     const category=Object.keys(categoryMap).find(k=>categoryMap[k]===String(row.category).toUpperCase());
