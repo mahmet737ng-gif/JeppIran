@@ -15,7 +15,9 @@ test('iPad single chart tap toggles fullscreen without breaking double-tap or ge
   assert.match(js,/stage\.style\.touchAction="none"/);
   assert.match(js,/chartPanX=panStart\.panX\+dx/);
   assert.match(js,/stageEl\.scrollTop=panStart\.scrollTop-dy/);
-  assert.match(js,/No delayed scrolling\/fling after finger release/);
+  // Owner's newer 2026-10-20 V2 gesture contract supersedes no-fling:
+  assert.match(js,/function startVerticalInertia\(\)/);
+  assert.match(js,/Math\.abs\(dx\)>7/);
   assert.match(css,/#chartsView\.chart-open \.viewer-toolbar\{[\s\S]*?z-index:85/);
   assert.match(html,/id="fullscreenExitBtn"/);
 });

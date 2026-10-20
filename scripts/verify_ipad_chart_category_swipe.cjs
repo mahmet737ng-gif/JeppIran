@@ -59,7 +59,7 @@ async function verifySelection(page,category,pageNumber){
   assert.ok(await page.locator(".procedure-categories").isHidden(),
    "Chart selection should remove the top category/name rail");
   const frame=page.frameLocator("#classicViewerFrame");
-  await frame.locator("#jpChartMarginNav").waitFor({state:"visible",timeout:20000});
+  await frame.locator("#jpMarginChartTree").waitFor({state:"visible",timeout:20000});
   await frame.locator("#nextChartBtn").waitFor({state:"visible",timeout:25000});
   await frame.locator("#nextChartBtn").click();
   await verifySelection(page,"AIRPORT",380);

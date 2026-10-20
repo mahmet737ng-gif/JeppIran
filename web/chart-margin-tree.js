@@ -1,144 +1,130 @@
-/* JEPPIRAN V2621 — searchable chart tree in the dedicated left PDF workspace margin.
- * Metadata only: no PDF, simulator, georeference, TAXI or CDFA changes. */
+/* JEPPIRAN CHART MARGIN TREE — OWNER LOCK 2026-10-20.
+   The navigation lives INSIDE the PDF transform layer, over its left white
+   paper margin. It must never reserve page/gutter width or alter CDFA data. */
 (()=>{
   "use strict";
-  const workspace=document.getElementById("jpCdfaWorkspace");
-  const view=document.getElementById("chartsView");
-  if(!workspace||!view)return;
-  const nav=document.createElement("aside");
-  nav.id="jpChartMarginNav";
-  nav.setAttribute("aria-label","Airport procedure chart tree");
-  nav.innerHTML='<div class="jp-chart-margin-head"><strong id="jpChartMarginAirport"></strong><button id="jpChartMarginClose" type="button" aria-label="Collapse chart tree">×</button></div>'+
-    '<input id="jpChartMarginSearch" type="search" aria-label="Search airports or procedures" placeholder="ICAO / IATA / city / procedure" autocomplete="off" />'+
-    '<div id="jpChartMarginList" class="jp-chart-margin-list" role="tree"></div>';
-  const toggle=document.createElement("button");
-  toggle.id="jpChartMarginToggle";
-  toggle.type="button";toggle.textContent="☰ CHARTS";
-  toggle.setAttribute("aria-label","Show airport chart tree");
-  toggle.setAttribute("aria-controls","jpChartMarginNav");
-  toggle.setAttribute("aria-expanded","false");
-  workspace.insertBefore(nav,workspace.firstChild);
-  workspace.appendChild(toggle);
-  const search=nav.querySelector("#jpChartMarginSearch");
-  const list=nav.querySelector("#jpChartMarginList");
-  const heading=nav.querySelector("#jpChartMarginAirport");
-  const groups=[["Airport","AIRPORT"],["STAR","STAR"],["SID","SID"],["Approach","APP"],["Other","OTHER"]];
+  const categories=[["STAR","STAR"],["SID","SID"],["Airport","AIRPORT"],["Approach","APP"]];
+  const fallbackIata={OIII:"THR",OIIE:"IKA",OIMM:"MHD",OISS:"SYZ",OIFM:"IFN",OIKB:"BND",OITT:"TBZ",OIAW:"AWZ",OIBK:"KIH",OICC:"KSH",OIYY:"AZD",OIAA:"ABD",LTFM:"IST",LTAC:"ESB",OMDB:"DXB",OMDW:"DWC",OOMS:"MCT",OTHH:"DOH",ORBI:"BGW",ORER:"EBL",ORNI:"NJF",OPIS:"ISB",OPKC:"KHI",UGTB:"TBS",UGSB:"BUS",UDYZ:"EVN"};
+  const fallbackCountry=code=>({
+    OI:"Iran",LT:"Turkey",OM:"United Arab Emirates",OO:"Oman",
+    OR:"Iraq",OT:"Qatar",OP:"Pakistan",UG:"Georgia",UD:"Armenia"
+  })[String(code).slice(0,2)]||"";
+  const escape=s=>String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  let query="",open=true,airportOpen=true;
   const opened=new Set();
-  let manuallyToggled=false,navOpen=false,lastPage=null;
-  function available(){
-    return typeof selectedChart!=="undefined"&&!!selectedChart &&
-      typeof selectedAirport!=="undefined"&&!!selectedAirport;
+  const airportInfo=code=>{
+    const meta=airportMetadata?.[code]||{};
+    const legacy=AIRPORTS?.[code]||[];
+    return {code,iata:meta.iata||fallbackIata[code]||"",
+      city:meta.city||legacy[1]||"",country:meta.country||fallbackCountry(code)};
+  };
+  const matchesAirport=(code,q)=>{
+    const meta=airportInfo(code);
+    return [meta.code,meta.iata,meta.city,meta.country].some(v=>String(v).toUpperCase().includes(q));
+  };
+  function goToChart(c){
+    if(!c)return;
+    const code=displayAirportCode(c);
+    if(code!==selectedAirport)selectAirport(code);
+    if(!document.getElementById("chartsView")?.classList.contains("active"))route("charts");
+    selectChart(c);
   }
-  function setOpen(next,manual=false){
-    if(manual)manuallyToggled=true;
-    navOpen=!!next&&available();
-    view.classList.toggle("jp-chart-margin-open",navOpen);
-    toggle.setAttribute("aria-expanded",String(navOpen));
-    toggle.setAttribute("aria-label",navOpen?"Collapse airport chart tree":"Show airport chart tree");
-    nav.setAttribute("aria-hidden",String(!navOpen));
-    if(navOpen)revealCurrent();
-    // The original PDF renderer must refit when the dedicated margin width changes.
-    if(manual&&typeof refitSelectedChartForLayout==="function"&&document.getElementById("pdfCanvas")){
-      setTimeout(()=>{if(available())void refitSelectedChartForLayout()},80);
-    }
+  function putFocusInView(container,element){
+    if(!container||!element)return;
+    const rect=element.getBoundingClientRect(), parent=container.getBoundingClientRect();
+    if(rect.top<parent.top)container.scrollTop-=parent.top-rect.top+12;
+    else if(rect.bottom>parent.bottom)container.scrollTop+=rect.bottom-parent.bottom+12;
   }
-  function revealCurrent(){
-    if(!navOpen)return;
-    const item=list.querySelector(".is-current");
-    if(!item)return;
-    requestAnimationFrame(()=>{
-      const bounds=list.getBoundingClientRect(),itemBounds=item.getBoundingClientRect();
-      if(itemBounds.top<bounds.top)list.scrollTop-=bounds.top-itemBounds.top+8;
-      else if(itemBounds.bottom>bounds.bottom)list.scrollTop+=itemBounds.bottom-bounds.bottom+8;
-    });
-  }
-  function selectedCode(){return String(selectedAirport||"");}
-  function metaText(){
-    const code=selectedCode(),rec=(airportMetadata&&airportMetadata[code])||{};
-    const legacy=(AIRPORTS&&AIRPORTS[code])||[];
-    const fixed=(AIRPORT_PROFILE&&AIRPORT_PROFILE[code])||{};
-    return [code,rec.iata||fixed.iata||"",rec.city||legacy[1]||"",rec.country||"",
-      rec.name||legacy[0]||""].join(" ").toUpperCase();
-  }
-  function render(){
+  function refresh(){
+    const host=document.getElementById("jpMarginChartTree"),list=host?.querySelector(".jp-margin-tree-list");
+    if(!host||!list||!selectedChart)return;
+    host.classList.toggle("is-open",open);
+    host.querySelector(".jp-margin-tree-toggle").setAttribute("aria-expanded",String(open));
+    host.querySelector(".jp-margin-tree-toggle").textContent=open?"‹":"☰";
+    host.querySelector(".jp-margin-tree-search").value=query;
     list.replaceChildren();
-    if(!available()){heading.textContent="CHARTS";return;}
-    heading.textContent=selectedCode()+" · CHARTS";
-    const q=search.value.trim().toUpperCase();
-    const airportMatch=q&&metaText().includes(q);
-    const seq=charts.filter(c=>displayAirportCode(c)===selectedAirport)
-      .sort((a,b)=>Number(a.page)-Number(b.page));
-    let count=0;
-    const savedScroll=list.scrollTop;
-    for(const [key,label] of groups){
-      const all=seq.filter(c=>(c.category||"Other")===key);
-      if(!all.length)continue;
-      const items=!q||airportMatch?all:all.filter(c=>
-        (String(displayChartName(c))+" "+String(displayChartNumber(c))).toUpperCase().includes(q));
-      if(!items.length)continue;
-      count+=items.length;
-      const group=document.createElement("section");
-      group.className="jp-chart-margin-group";
-      group.setAttribute("role","group");
-      const isOpen=q.length>0||opened.has(key);
-      const head=document.createElement("button");
-      head.type="button";head.className="jp-chart-margin-category";
-      head.setAttribute("aria-expanded",String(isOpen));
-      head.textContent=(isOpen?"▾ ":"▸ ")+label+" ("+items.length+")";
-      head.addEventListener("click",()=>{
-        opened.has(key)?opened.delete(key):opened.add(key);
-        render();
-      });
-      group.appendChild(head);
-      if(isOpen){
-        for(const c of items){
-          const current=!!selectedChart&&Number(c.page)===Number(selectedChart.page);
-          const row=document.createElement("button");
-          row.type="button";
-          row.className="jp-chart-margin-chart"+(current?" is-current":"");
-          row.setAttribute("role","treeitem");
-          row.setAttribute("aria-selected",String(current));
-          const title=String(displayChartName(c)),number=String(displayChartNumber(c)||"");
-          row.textContent=(number?number+" · ":"")+title;
-          row.title=title;
-          row.addEventListener("click",()=>{
-            opened.add(key);
-            if(!current)selectChart(c,{keepTreeClosed:true});
-            else revealCurrent();
-          });
-          group.appendChild(row);
+    if(!open)return;
+    const current=selectedAirport;
+    const q=query.trim().toUpperCase();
+    const sequence=(charts||[]).filter(c=>categories.some(([cat])=>cat===(c.category||"")));
+    const codes=q
+      ? [...new Set(sequence.map(displayAirportCode))].filter(code=>
+          matchesAirport(code,q)||sequence.some(c=>displayAirportCode(c)===code&&
+            String(displayChartName(c)).toUpperCase().includes(q)))
+      : [current];
+    codes.sort((a,b)=>(a===current?-1:b===current?1:a.localeCompare(b)));
+    let highlighted=null,count=0;
+    for(const code of codes){
+      const meta=airportInfo(code),all=sequence.filter(c=>displayAirportCode(c)===code);
+      const airportMatch=!q||matchesAirport(code,q);
+      const filtered=q&&!airportMatch?all.filter(c=>String(displayChartName(c)).toUpperCase().includes(q)):all;
+      if(!filtered.length)continue;
+      const airport=document.createElement("button");
+      airport.type="button";airport.className="jp-margin-tree-airport"+(code===current?" is-current":"");
+      airport.textContent=(airportOpen||q?"▾ ":"▸ ")+code+(meta.iata?" / "+meta.iata:"");
+      airport.title=[meta.city,meta.country].filter(Boolean).join(", ");
+      airport.setAttribute("aria-expanded",String(airportOpen||!!q));
+      airport.addEventListener("click",()=>{airportOpen=!airportOpen;refresh()});
+      list.appendChild(airport);
+      if(!airportOpen&&!q)continue;
+      for(const [cat,label] of categories){
+        const rows=filtered.filter(c=>c.category===cat).sort((a,b)=>Number(a.page)-Number(b.page));
+        if(!rows.length)continue;
+        const expanded=!!q||opened.has(code+":"+cat);
+        const group=document.createElement("button");
+        group.type="button";group.className="jp-margin-tree-category";
+        group.textContent=(expanded?"▾ ":"▸ ")+label+" ("+rows.length+")";
+        group.setAttribute("aria-expanded",String(expanded));
+        group.addEventListener("click",()=>{const key=code+":"+cat;opened.has(key)?opened.delete(key):opened.add(key);refresh()});
+        list.appendChild(group);
+        if(!expanded)continue;
+        for(const c of rows){
+          if(count++>=260)break;
+          const selected=!!selectedChart&&Number(c.page)===Number(selectedChart.page)&&
+            displayAirportCode(c)===displayAirportCode(selectedChart);
+          const b=document.createElement("button");
+          b.type="button";b.className="jp-margin-tree-chart"+(selected?" is-selected":"");
+          b.dataset.chartPage=String(c.page);
+          const number=displayChartNumber(c);
+          b.textContent=(number?number+" · ":"")+displayChartName(c);
+          b.title=b.textContent;
+          b.setAttribute("aria-current",selected?"page":"false");
+          b.addEventListener("click",()=>goToChart(c));
+          list.appendChild(b);
+          if(selected)highlighted=b;
         }
       }
-      list.appendChild(group);
     }
-    if(!count){
-      const empty=document.createElement("p");
-      empty.className="jp-chart-margin-empty";
-      empty.textContent="No matching airport or procedure";
-      list.appendChild(empty);
+    if(!list.children.length){
+      const empty=document.createElement("p");empty.className="jp-margin-tree-empty";
+      empty.textContent="No airports or procedures match";list.appendChild(empty);
     }
-    list.scrollTop=savedScroll;
-    revealCurrent();
+    if(!q&&highlighted)requestAnimationFrame(()=>putFocusInView(list,highlighted));
   }
-  function syncSelection(){
-    if(!available()){setOpen(false);return;}
-    const key=Number(selectedChart.page);
-    const changed=key!==lastPage;lastPage=key;
-    if(changed)opened.add(selectedChart.category||"Other");
-    if(!manuallyToggled)setOpen(window.innerWidth>=720);
-    render();
-  }
-  toggle.addEventListener("click",()=>setOpen(!navOpen,true));
-  nav.querySelector("#jpChartMarginClose").addEventListener("click",()=>setOpen(false,true));
-  search.addEventListener("input",render);
-  nav.addEventListener("keydown",e=>{if(e.key==="Escape"){e.stopPropagation();setOpen(false,true);toggle.focus();}});
-  window.addEventListener("jeppiran-chart-selected",syncSelection);
-  window.addEventListener("resize",()=>{
-    if(!manuallyToggled&&available()&&navOpen!==(window.innerWidth>=720)){
-      setOpen(window.innerWidth>=720);
-      if(document.getElementById("pdfCanvas")&&typeof refitSelectedChartForLayout==="function")
-        setTimeout(()=>{if(available())void refitSelectedChartForLayout()},80);
+  function attach(){
+    const layer=document.getElementById("chartTransformLayer");
+    if(!layer||!selectedChart)return;
+    let host=layer.querySelector("#jpMarginChartTree");
+    if(!host){
+      host=document.createElement("aside");
+      host.id="jpMarginChartTree";
+      host.className="jp-margin-chart-tree";
+      host.setAttribute("aria-label","Airport chart tree in the white PDF margin");
+      host.innerHTML='<div class="jp-margin-tree-header"><button class="jp-margin-tree-toggle" type="button" aria-label="Toggle chart list" aria-expanded="true">‹</button><strong>CHARTS</strong></div><div class="jp-margin-tree-content"><input class="jp-margin-tree-search" type="search" placeholder="ICAO · IATA · city · country · procedure" aria-label="Search airports and procedures" autocomplete="off"><div class="jp-margin-tree-list" role="navigation" aria-label="Available airport charts"></div></div>';
+      const toggle=host.querySelector(".jp-margin-tree-toggle");
+      toggle.addEventListener("click",()=>{open=!open;refresh()});
+      host.querySelector(".jp-margin-tree-search").addEventListener("input",e=>{query=e.target.value;refresh();e.target.focus()});
+      host.addEventListener("pointerdown",e=>e.stopPropagation());
+      host.addEventListener("pointermove",e=>e.stopPropagation());
+      host.addEventListener("pointerup",e=>e.stopPropagation());
+      host.addEventListener("wheel",e=>e.stopPropagation(),{passive:true});
+      layer.appendChild(host);
     }
-  });
-  syncSelection();
+    opened.add(selectedAirport+":"+(selectedChart.category||""));
+    refresh();
+  }
+  window.addEventListener("jeppiran-chart-rendered",attach);
+  // Chart selection and PDF decode occur asynchronously. Tree updates only
+  // after the matching immutable PDF page has finished rendering.
+  document.addEventListener("DOMContentLoaded",attach);
 })();
