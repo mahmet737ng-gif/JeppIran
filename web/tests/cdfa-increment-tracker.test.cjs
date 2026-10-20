@@ -24,7 +24,7 @@ test("visual addition preserves locked table and PDF-georeference assets",()=>{
  const sw=fs.readFileSync(path.join(root,"service-worker.js"),"utf8");
  assert.match(html,/cdfa-increment-core\.js\?v=2621-cdfa-increment-qa-r2/);
  assert.match(html,/cdfa-increment-tracker\.js\?v=2621-cdfa-increment-qa-r2/);
- assert.match(html,/cdfa-increment-tracker\.css\?v=2621-cdfa-increment-qa-r2/);
+ assert.match(html,/cdfa-increment-tracker\.css\?v=2621-cdfa-increment-colors-r3/);
  assert.match(sw,/cdfa-increment-tracker\.js\?v=2621-cdfa-increment-qa-r2/);
  assert.match(overlay,/\.observe\(panel,\{childList:true,subtree:true\}\)/);
  assert.match(overlay,/line\.setAttribute\("y1"/);
@@ -43,4 +43,15 @@ test("DME crossing uses 0.035 NM deadband, avoiding jumpy highlight at the row b
  assert.equal(core.targetIndex(rows,6.94,2),3);
  assert.equal(core.targetIndex(rows,7.02,3),3);
  assert.equal(core.targetIndex(rows,7.05,3),2);
+});
+
+test("CDFA moving guides are pink on normal paper and keep approved yellow on INVERT",()=>{
+ const css=fs.readFileSync(path.join(root,"cdfa-increment-tracker.css"),"utf8");
+ const preview=fs.readFileSync(path.join(root,"cdfa-increment-preview.html"),"utf8");
+ assert.match(css,/stroke:#FF4FA0;stroke-width:5\.4/);
+ assert.match(css,/stroke:#FF7AB8;stroke-width:11/);
+ assert.match(css,/body\.chart-inverted[\s\S]*?\.jp-inc-line\{\s*stroke:#F7CB6D;/);
+ assert.match(css,/body\.chart-inverted[\s\S]*?\.jp-inc-line\.jp-inc-halo\{\s*stroke:#E99B0A;/);
+ assert.match(preview,/id="previewInvertBtn"/);
+ assert.doesNotMatch(preview,/#jpCdfaSide \.jp-inc-line\{stroke:#f8b63e/);
 });

@@ -9,14 +9,19 @@
   transition:none!important;
 }
 #chartsView #chartTransformLayer #jpCdfaSide .jp-inc-line{
-  stroke:#F3AF26;stroke-width:5.4;stroke-linecap:round;
+  stroke:#FF4FA0;stroke-width:5.4;stroke-linecap:round;
   fill:none;vector-effect:non-scaling-stroke;
 }
 #chartsView #chartTransformLayer #jpCdfaSide .jp-inc-line.jp-inc-halo{
-  stroke:#E99B0A;stroke-width:11;opacity:.23;
+  stroke:#FF7AB8;stroke-width:11;opacity:.23;
 }
+/* Only the CHART INVERT control switches the moving guides back to yellow.
+   App light/dark theme must not change the approved CDFA color choice. */
 body.chart-inverted #chartsView #chartTransformLayer #jpCdfaSide .jp-inc-line{
   stroke:#F7CB6D;
+}
+body.chart-inverted #chartsView #chartTransformLayer #jpCdfaSide .jp-inc-line.jp-inc-halo{
+  stroke:#E99B0A;
 }
 @media(prefers-reduced-motion:reduce){
   #chartsView #chartTransformLayer #jpCdfaSide .jp-cdfa-next-increment{

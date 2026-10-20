@@ -16,6 +16,17 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
    document.querySelector("#next")?.textContent.includes("D"),null,{timeout:25000});
   const initial=await page.evaluate(()=>document.querySelectorAll("#jpCdfaSide .jp-cdfa-next-increment line").length);
   assert.equal(initial,4,"Two visible guides plus faint halos");
+  const normalStroke=await page.evaluate(()=>getComputedStyle(
+   document.querySelector("#jpCdfaSide .jp-inc-line:not(.jp-inc-halo)")).stroke);
+  assert.equal(normalStroke,"rgb(255, 79, 160)","Normal chart guide must be pink");
+  await page.locator("#previewInvertBtn").click();
+  const invertedStroke=await page.evaluate(()=>getComputedStyle(
+   document.querySelector("#jpCdfaSide .jp-inc-line:not(.jp-inc-halo)")).stroke);
+  assert.equal(invertedStroke,"rgb(247, 203, 109)","INVERT chart guide retains yellow");
+  await page.locator("#previewInvertBtn").click();
+  assert.equal(await page.evaluate(()=>getComputedStyle(
+   document.querySelector("#jpCdfaSide .jp-inc-line:not(.jp-inc-halo)")).stroke),
+   "rgb(255, 79, 160)","Switching INVERT off restores pink");
   const before=await page.evaluate(()=>{const s=document.querySelector("#demoSlider");s.value="7.4";s.dispatchEvent(new Event("input",{bubbles:true}));
    const m=document.querySelector(".jp-cdfa-next-increment");return {dme:m.dataset.dme,top:m.style.transform};});
   assert.equal(before.dme,"7");
