@@ -2324,7 +2324,7 @@ function paintChartTransform(){
   if(stage)stage.style.overflowY=chartZoom<=1.001?"auto":"hidden";
   layer.style.transform="translate3d("+chartPanX+"px,"+chartPanY+"px,0) scale("+chartZoom+")";
   layer.style.setProperty("--marker-inverse-scale",String(aircraftMarkerScaleForZoom(chartZoom)));
-  const wrap=stage?.querySelector(".pdf-canvas-wrap");
+  const wrap=stage?.querySelector?.(".pdf-canvas-wrap");
   if(wrap){
     const height=layer.offsetHeight;
     layer.style.marginBottom=chartZoom<1?(-(height*(1-chartZoom)))+"px":"";
