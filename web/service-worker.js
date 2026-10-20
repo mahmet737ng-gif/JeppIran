@@ -71,6 +71,14 @@ self.addEventListener("fetch",event=>{
   if(event.request.method!=="GET")return;
   const url=new URL(event.request.url);
   if(url.origin!==self.location.origin)return;
+  // Integrity-checked offline downloads are a separate, network-only channel.
+  // Never return cached shell or old snapshots here, even when Safari's
+  // controlling worker predates the manifest being synchronized.
+  // The caller verifies SHA-256 before the atomic snapshot pointer changes.
+  if(url.searchParams.has("jeppiran_offline_sync")){
+    event.respondWith(fetch(event.request,{cache:"no-store"}));
+    return;
+  }
   // The approved Carousel R13 directory URL was previously served by the
   // generic cache-first fallback, so a stale HTML shell could import newer JS.
   // Always revalidate the R13 document, JS and CSS online. Preserve cached
