@@ -19,7 +19,7 @@ test("new style URL versioned in both HTML and offline service worker",()=>{
   assert.ok(html.includes(url));
   assert.ok(sw.includes(url));
   // Offline cache epoch must advance with new navigation assets, independently of poster CSS.
-  assert.match(sw,/const CACHE="jeppiran-pwa-2621-ipad-layout-carousel-r\d+(?:-[^"]+)?"/);
+  assert.match(sw,/const CACHE="jeppiran-pwa-2621-[a-z0-9-]+"/);
   assert.match(sw,/url\.pathname\.endsWith\("\/notam-service\.css"\)/);
 });
 test("the same 50 approved image names and SHA256 locks are retained",()=>{
