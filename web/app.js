@@ -650,9 +650,9 @@ function signalPreviewClassicReady(){
 }
 
 let airportTreeExpanded=false;
-// Owner-requested larger default chart scale; 50% manual minimum stays available.
-// No changes to georeference, PDF source, or CDFA geometry.
-const DEFAULT_CHART_ZOOM=.8;
+// Fit PDF pages to the available viewer width by default; manual zoom stays 50%-400%.
+// No changes to georeference, PDF source, CDFA geometry or chart gestures.
+const DEFAULT_CHART_ZOOM=1;
 let chartZoom=DEFAULT_CHART_ZOOM, chartPanX=0, chartPanY=0;
 // Dual Layer Ops marker: chart follow is a viewer-only feature; no simulator transport changes.
 let aircraftFollowEnabled=false, taxiOffRouteCount=0, taxiOffRouteActive=false;
@@ -2229,7 +2229,7 @@ function chartSwipePanel(canvas,scrollOffset=0){
   copy.width=canvas.width;copy.height=canvas.height;
   copy.style.width=canvas.style.width||canvas.width+"px";
   copy.style.height=canvas.style.height||canvas.height+"px";
-  // Temporary swipe panels must match the live PDF zoom (now 50% by default).
+  // Temporary swipe panels must match the current live PDF zoom.
   copy.style.transformOrigin="50% 0";copy.style.transform="scale("+chartZoom+")";
   const ctx=copy.getContext("2d",{alpha:false});
   if(ctx)ctx.drawImage(canvas,0,0);
