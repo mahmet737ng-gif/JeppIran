@@ -1235,7 +1235,17 @@ function renderAirports(filter=""){
   [...new Set(charts.map(displayAirportCode))].sort().filter(icao=>{
     const record=icao==="OICZ"?{...airportMetadata[icao],name:"Saqez Airport",city:"Saqez"}:(airportMetadata[icao]||{});const legacy=AIRPORTS[icao]||["",""];
     const meta=[record.name||legacy[0]||"",record.city||legacy[1]||""];
-    return (!q||(icao+" "+meta.join(" ")).toUpperCase().includes(q))&&(airportFilterMode!=="favorites"||fav.has(icao));
+    const iata=record.iata||AIRPORT_PROFILE[icao]?.iata||"";
+    const country=record.country||(
+      icao.startsWith("OI")?"Iran":icao.startsWith("LT")?"Türkiye":
+      icao.startsWith("OP")?"Pakistan":icao.startsWith("OR")?"Iraq":
+      icao.startsWith("OT")?"Qatar":icao.startsWith("OM")?"United Arab Emirates":
+      icao.startsWith("OO")?"Oman":icao.startsWith("UD")?"Armenia":
+      icao.startsWith("UG")?"Georgia":"");
+    const nameMatch=[icao,iata,country,...meta].join(" ").toUpperCase().includes(q);
+    const procedureMatch=!!q&&!nameMatch&&charts.some(c=>
+      displayAirportCode(c)===icao&&String(displayChartName(c)).toUpperCase().includes(q));
+    return (!q||nameMatch||procedureMatch)&&(airportFilterMode!=="favorites"||fav.has(icao));
   }).forEach(icao=>{
     const record=icao==="OICZ"?{...airportMetadata[icao],name:"Saqez Airport",city:"Saqez"}:(airportMetadata[icao]||{});const legacy=AIRPORTS[icao]||["",""];
     const meta=[record.name||legacy[0]||"AIRPORT",record.city||legacy[1]||""];

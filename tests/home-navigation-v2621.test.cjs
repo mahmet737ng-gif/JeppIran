@@ -31,7 +31,8 @@ test('HOME is hidden on Charts and fullscreen without affecting owner-locked ges
   assert.match(css,/#chartsView\.chart-open #chartsBackMobileBtn,\s*body\.viewer-fullscreen #chartsBackMobileBtn\{display:none!important\}/);
   assert.match(read('web/fullscreen-chart-drawer.css'),/body\.viewer-fullscreen #jpChartMenuBtn/);
   const sw=read('web/service-worker.js');
-  assert.match(sw,/const CACHE="jeppiran-pwa-2621-ipad-layout-carousel-r8"/);
+  // Cache epoch advances when the chart navigation shell adds offline assets.
+  assert.match(sw,/const CACHE="jeppiran-pwa-2621-ipad-layout-carousel-r\d+(?:-[^"]+)?"/);
   assert.match(sw,/url\.pathname\.endsWith\("\/notam-service\.js"\)/);
   assert.match(sw,/url\.pathname\.endsWith\("\/notam-service\.css"\)/);
 });

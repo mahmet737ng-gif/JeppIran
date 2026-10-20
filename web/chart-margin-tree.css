@@ -92,3 +92,8 @@ body.viewer-fullscreen #chartsView.chart-open #jpCdfaWorkspace{
 @media(min-width:720px){
   #chartsView{--jp-chart-margin-width:clamp(170px,19vw,235px)}
 }
+
+/* Toolbar retains fullscreen/offline implementations but no longer exposes
+   redundant viewer buttons. Existing offline settings keep working. */
+#chartsView.chart-open #fullscreenBtn,
+#chartsView.chart-open #offlinePdfBtn{display:none!important}
