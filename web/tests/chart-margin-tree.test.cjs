@@ -61,3 +61,13 @@ test("real browser profile QA switches from profile tree to in-chart PDF tree",(
   assert.match(smoke,/chartOpen\?"#jpMarginChartTree \.jp-margin-tree-chart"/);
   assert.match(smoke,/#chartsView \.airport-inline-tree \.tree-item/);
 });
+
+test("larger chart tree and change-only METAR alerts respect chart selection",()=>{
+  const css=read("chart-margin-tree.css"),js=read("app.js");
+  assert.match(css,/width:clamp\(198px,20%,238px\)/);
+  assert.match(css,/font-size:13px;line-height:1\.4/);
+  assert.match(css,/-webkit-overflow-scrolling:touch/);
+  assert.match(js,/hideChartMetar\(\);\s*void showChartMetar\(true,true\)/);
+  assert.match(js,/if\(cached&&!automatic\)presentChartMetar/);
+  assert.match(js,/if\(automatic&&!chartMetarShown\.get\(icao\)\)/);
+});
