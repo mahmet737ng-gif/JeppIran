@@ -407,6 +407,7 @@ jobs:
           export NODE_PATH="$RUNNER_TEMP/jeppiran-browser-qa/node_modules"
           export JEPPIRAN_CHROME_BIN="$(command -v google-chrome)"
           node scripts/verify_chart_swipes_browser.cjs
+          node scripts/verify_cdfa_increment_browser.cjs
 
       - name: Verify OIIE runway-only routes and locked-out stand gates in real Chrome
         run: |
