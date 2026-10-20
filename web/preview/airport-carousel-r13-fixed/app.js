@@ -343,7 +343,9 @@ function showResults(){
   };
   const airports=codes.filter(c=>c.includes(value)||
     String(getProfile(c).iata||fallbackIata[c]||"").toUpperCase().includes(value)||
-    String(getProfile(c).name||"").toUpperCase().includes(value))
+    String(getProfile(c).name||"").toUpperCase().includes(value)||
+    String(getProfile(c).city||"").toUpperCase().includes(value)||
+    String(getProfile(c).country||"").toUpperCase().includes(value))
     .sort((a,b)=>matchRank(a)-matchRank(b)||preferredIndex(a)-preferredIndex(b));
   const results=[];
   for(const code of airports.slice(0,8)){
@@ -351,22 +353,18 @@ function showResults(){
       title:code+" · "+(getProfile(code).iata||fallbackIata[code]||"—"),
       subtitle:getProfile(code).name||"Airport"});
   }
-  // Chart titles, procedure identifiers and chart numbers come from the exact
-  // published V2621 chart catalog; no PDF download occurs during search.
+  // Search published procedure names only; waypoint/fix text is deliberately
+  // excluded from global Search Bars by the current owner requirement.
   if(value.length>=2&&charts){
     for(const row of charts){
       const name=String(row.name||"").toUpperCase();
-      const chartNumber=String(row.chart_number||"").toUpperCase();
-      const titleMatch=name.includes(value)||chartNumber===value;
-      const terms=pointIndex?.[String(row.page)]||[];
-      const fix= value.length>=3?terms.find(word=>word===value||word.startsWith(value)):null;
-      if(!titleMatch&&!fix)continue;
-      const rank=titleMatch?(name===value?0:name.startsWith(value)?1:2):(fix===value?3:4);
-      results.push({kind:titleMatch?"procedure":"point",rank,airport:row.airport,row,
-        title:(fix&&!titleMatch?fix+" · ":"")+(row.chart_number||"")+" · "+(row.name||"Chart"),
-        subtitle:row.airport+" · "+searchCategory(row)+(fix?" · Fix "+fix:"")});
+      if(!name.includes(value))continue;
+      const rank=name===value?0:name.startsWith(value)?1:2;
+      results.push({kind:"procedure",rank,airport:row.airport,row,
+        title:(row.chart_number||"")+" · "+(row.name||"Chart"),
+        subtitle:row.airport+" · "+searchCategory(row)});
     }
-    // Keep exact procedure matches and actual point matches above loose ones.
+    // Keep exact procedure names above loose matches.
     results.sort((a,b)=>{
       if(a.kind==="airport"&&b.kind!=="airport")return -1;
       if(b.kind==="airport"&&a.kind!=="airport")return 1;
@@ -375,9 +373,9 @@ function showResults(){
     });
   }
   if(!results.length){
-    if((!charts||!pointIndex)&&value.length>=2){
+    if(!charts&&value.length>=2){
       const line=document.createElement("div");line.className="search-waiting";
-      line.textContent="Searching airport charts and waypoints…";
+      line.textContent="Searching airports and procedures…";
       el.results.append(line);el.results.hidden=false;
     }else el.results.hidden=true;
     return;
@@ -1147,7 +1145,7 @@ async function boot(){
     void loadPublishedCharts().then(()=>{
       if(el.search.value.trim())showResults();
     }).catch(()=>{});
-    void loadPublishedPoints();
+    // Waypoint search is disabled; do not fetch its index.
     selected=Math.max(0,codes.indexOf(selectedIcao));
     visualPos=selected;
     buildTrack();paintTrack();updateSelected();

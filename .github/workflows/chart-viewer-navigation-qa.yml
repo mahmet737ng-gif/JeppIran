@@ -1,0 +1,30 @@
+name: Chart Viewer Navigation QA
+on:
+  push:
+    branches: [main]
+    paths:
+      - "web/chart-margin-tree.js"
+      - "web/chart-margin-tree.css"
+      - "web/app.js"
+      - "web/index.html"
+      - "web/service-worker.js"
+      - "web/preview/airport-carousel-r13-fixed/**"
+      - "web/tests/chart-margin-tree.test.cjs"
+      - ".github/workflows/chart-viewer-navigation-qa.yml"
+  workflow_dispatch:
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Syntax checks
+        run: |
+          node --check web/app.js
+          node --check web/chart-margin-tree.js
+          node --check web/preview/airport-carousel-r13-fixed/app.js
+          node --check web/service-worker.js
+      - name: Navigation and offline contracts
+        run: node --test web/tests/chart-margin-tree.test.cjs
