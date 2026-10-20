@@ -47,8 +47,8 @@ jobs:
                       data = json.load(r)
                   for icao, row in data.get("stations", {}).items():
                       if icao in stations:
-                          stations[icao]["metar"] = str(row.get("metar") or "")
-                          stations[icao]["taf"] = str(row.get("taf") or "")
+                          stations[icao]["metar"] = str(row.get("metar") or "") if row.get("metar_source") != "IRIMO" else ""
+                          stations[icao]["taf"] = str(row.get("taf") or "") if row.get("taf_source") != "IRIMO" else ""
               except Exception as exc:
                   print("No previous cache:", exc)
 
