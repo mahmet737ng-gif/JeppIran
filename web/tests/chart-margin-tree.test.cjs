@@ -50,3 +50,9 @@ test("legacy Classic browser QA respects the owner-hidden top chart title",()=>{
   assert.match(smoke,/viewerChart"\)\.waitFor\(\{state:"attached"\}\)/);
   assert.doesNotMatch(smoke,/viewerChart"\)\.waitFor\(\)/);
 });
+
+test("real browser profile QA switches from profile tree to in-chart PDF tree",()=>{
+  const smoke=read("../scripts/verify_profile_validity_browser.cjs");
+  assert.match(smoke,/chartOpen\?"#jpMarginChartTree \.jp-margin-tree-chart"/);
+  assert.match(smoke,/#chartsView \.airport-inline-tree \.tree-item/);
+});
