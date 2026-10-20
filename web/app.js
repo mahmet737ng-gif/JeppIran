@@ -2058,6 +2058,58 @@ let pdfRenderToken=0,currentPdfUrl="";
 let chartSlideDocument=null,chartSlideDocumentUrl="",chartSlideDocumentEpoch=0;
 const chartSlidePreviews=new Map();
 let activeChartSlide=null;
+// PDF detail is re-rendered from the original vector PDF at the settled zoom.
+// Pixel dimensions may change; the canvas CSS size and georeferenced chart
+// coordinates must NEVER change when the new bitmap is installed.
+const chartDetail={page:null,quality:0,request:0,timer:0,task:null};
+function cancelChartDetail(){
+  chartDetail.request++;
+  if(chartDetail.timer){clearTimeout(chartDetail.timer);chartDetail.timer=0;}
+  if(chartDetail.task){try{chartDetail.task.cancel()}catch(_){} chartDetail.task=null;}
+}
+function scheduleChartDetail(delay=200){
+  if(!chartDetail.page||!selectedChart||!$("#pdfCanvas"))return;
+  const request=++chartDetail.request;
+  if(chartDetail.timer)clearTimeout(chartDetail.timer);
+  if(chartDetail.task){try{chartDetail.task.cancel()}catch(_){} chartDetail.task=null;}
+  chartDetail.timer=setTimeout(()=>{chartDetail.timer=0;void renderChartDetail(request)},delay);
+}
+async function renderChartDetail(request){
+  const page=chartDetail.page,canvas=$("#pdfCanvas");
+  if(!page||!canvas||request!==chartDetail.request)return;
+  const w=canvas.clientWidth,h=canvas.clientHeight;
+  if(w<50||h<50)return;
+  const memoryConstrained=matchMedia("(pointer:coarse)").matches||innerWidth<750;
+  const maxPixels=memoryConstrained?16000000:30000000;
+  const nativeDensity=Math.max(1.65,Math.min(devicePixelRatio||1,2));
+  const targetDensity=Math.min(4.8,Math.max(nativeDensity,chartZoom*nativeDensity),
+    Math.sqrt(maxPixels/(w*h)),8192/Math.max(w,h));
+  if(targetDensity<=chartDetail.quality+0.13)return;
+  const basis=page.getViewport({scale:1});
+  const viewport=page.getViewport({scale:(w/basis.width)*targetDensity});
+  const next=document.createElement("canvas");
+  next.width=Math.max(1,Math.ceil(viewport.width));
+  next.height=Math.max(1,Math.ceil(viewport.height));
+  let task=null;
+  try{
+    task=page.render({canvasContext:next.getContext("2d",{alpha:false}),viewport});
+    chartDetail.task=task;
+    await task.promise;
+    if(request!==chartDetail.request||chartDetail.page!==page||
+       $("#pdfCanvas")!==canvas)return;
+    // A single instantaneous bitmap replacement keeps existing DOM listeners,
+    // aircraft markers, CDFA/TAXI overlays, chart tree and pan offset intact.
+    canvas.width=next.width;canvas.height=next.height;
+    canvas.getContext("2d",{alpha:false}).drawImage(next,0,0);
+    chartDetail.quality=targetDensity;
+  }catch(error){
+    if(error?.name!=="RenderingCancelledException")
+      console.warn("High-resolution chart detail unavailable",error);
+  }finally{
+    if(chartDetail.task===task)chartDetail.task=null;
+    next.width=0;next.height=0;
+  }
+}
 
 async function pdfJs(){
   if(window.pdfjsLib)return window.pdfjsLib;
@@ -2113,6 +2165,7 @@ async function getPdfBytes(url,save=true){
 }
 async function renderSelectedPdf(c){
   const token=++pdfRenderToken;
+  cancelChartDetail();chartDetail.page=null;chartDetail.quality=0;
   // A reassigned airport diagram remains at its immutable source PDF page.
   // Using the destination-airport PDF here would display an unrelated chart.
   const pdfIcao=c.airport;
@@ -2150,7 +2203,9 @@ async function renderSelectedPdf(c){
   const wrap=stage.querySelector(".pdf-canvas-wrap"), canvas=$("#pdfCanvas");
   const base=page.getViewport({scale:1});
   const available=Math.max(320,stage.clientWidth-4);
-  const dpr=Math.min(window.devicePixelRatio||1,2.5);
+  // A moderately sharp first paint; further PDF-vector detail is rendered
+  // only after zoom settles, without allocating enormous canvases on load.
+  const dpr=Math.min(2.5,Math.max(1.6,window.devicePixelRatio||1));
   const cssScale=available/base.width;
   const viewport=page.getViewport({scale:cssScale*dpr});
   canvas.width=Math.floor(viewport.width); canvas.height=Math.floor(viewport.height);
@@ -2159,6 +2214,8 @@ async function renderSelectedPdf(c){
   layer.style.width=canvas.style.width; layer.style.height=canvas.style.height;
   chartZoom=DEFAULT_CHART_ZOOM;chartPanX=0;chartPanY=0;stage.scrollTop=0;
   await page.render({canvasContext:canvas.getContext("2d",{alpha:false}),viewport}).promise;
+  if(token!==pdfRenderToken)return;
+  chartDetail.page=page;chartDetail.quality=dpr;
   stage.querySelector(".pdf-loading")?.remove();
   applyChartTransform();
   updateAircraftMarker();
@@ -2376,6 +2433,7 @@ function setChartZoom(next,{resetPan=false}={}){
   if(stage&&old>1.001&&chartZoom<=1.001&&!resetPan)
     stage.scrollTop=Math.max(0,-savedScroll);
   if(stage&&resetPan)stage.scrollTop=0;
+  scheduleChartDetail();
 }
 function resetChartView(){setChartZoom(DEFAULT_CHART_ZOOM,{resetPan:true})}
 function zoomAround(next,cx,cy){
@@ -2397,6 +2455,7 @@ function zoomAround(next,cx,cy){
   if(chartZoom<=1.001){chartPanX=0;chartPanY=0}
   applyChartTransform();
   if(old>1.001&&chartZoom<=1.001)stage.scrollTop=restoredScroll;
+  scheduleChartDetail();
 }
 $("#zoomOutBtn").addEventListener("click",()=>setChartZoom(chartZoom/1.25));
 $("#zoomInBtn").addEventListener("click",()=>setChartZoom(chartZoom*1.25));
