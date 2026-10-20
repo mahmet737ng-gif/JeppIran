@@ -15,6 +15,7 @@ on:
       - 'scripts/verify_new20_public_web.cjs'
       - 'scripts/verify_airport_carousel_r3_browser.cjs'
       - 'scripts/verify_airport_carousel_real_browser.cjs'
+      - 'scripts/verify_ipad_chart_category_swipe.cjs'
       - 'tests/airport-briefings-prefetch-v2621.test.cjs'
       - 'web/airport-briefings-preload.js'
       - 'web/notam-service.js'
@@ -286,6 +287,7 @@ jobs:
           export NODE_PATH="$RUNNER_TEMP/jeppiran-browser-qa/node_modules"
           export JEPPIRAN_CHROME_BIN="$(command -v google-chrome)"
           node scripts/verify_airport_carousel_real_browser.cjs
+          node scripts/verify_ipad_chart_category_swipe.cjs
 
       - name: Extract source-backed OIIE runway and apron geometry candidates
         run: |
