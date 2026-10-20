@@ -24,6 +24,20 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
   await page.waitForFunction(()=>document.querySelector("#pdfCanvas")?.width>100&&
    !document.querySelector("#chartCdfaBtn")?.disabled,null,{timeout:90000});
   await page.locator("#chartCdfaBtn").click();
+  await sleep(1100);
+  console.log("CDFA preview diagnostics",JSON.stringify(await page.evaluate(()=>({
+    selected:typeof selectedChart!=="undefined"?{page:selectedChart?.page,icao:selectedChart?.airport}:null,
+    panelHidden:document.querySelector("#jpCdfaSide")?.hidden,
+    panelParent:document.querySelector("#jpCdfaSide")?.parentElement?.id,
+    tableRows:document.querySelectorAll("#jpCdfaSide .jp-cdfa-table tbody tr").length,
+    hasSvg:!!document.querySelector("#jpCdfaSide .jp-cdfa-vector"),
+    hasMarker:!!document.querySelector("#jpCdfaSide .jp-cdfa-next-increment"),
+    qaPanel:!!document.querySelector(".jp-cdfa-increment-qa"),
+    qaPanelHidden:document.querySelector(".jp-cdfa-increment-qa")?.hidden,
+    coreLoaded:!!window.JEPPIRAN_CDFA_NEXT_CORE,
+    viewerButtonDisabled:document.querySelector("#chartCdfaBtn")?.disabled
+  }))));
+
   await page.waitForFunction(()=>document.querySelector("#jpCdfaSide .jp-cdfa-next-increment")&&
    document.querySelector(".jp-cdfa-increment-qa:not([hidden])"),null,{timeout:25000});
   const initial=await page.evaluate(()=>document.querySelectorAll("#jpCdfaSide .jp-cdfa-table tbody tr").length);

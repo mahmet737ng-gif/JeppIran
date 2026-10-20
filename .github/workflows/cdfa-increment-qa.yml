@@ -1,0 +1,29 @@
+name: CDFA Increment Browser QA
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'web/cdfa-increment-*.js'
+      - 'web/cdfa-increment-*.css'
+      - 'scripts/verify_cdfa_increment_browser.cjs'
+      - '.github/workflows/cdfa-increment-qa.yml'
+permissions:
+  contents: read
+jobs:
+  visual-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Verify add-on source syntax and unit rules
+        run: |
+          node --check web/cdfa-increment-core.js
+          node --check web/cdfa-increment-tracker.js
+          node --test web/tests/cdfa-increment-tracker.test.cjs
+      - name: Run live DOM table and animated SVG browser checks
+        run: |
+          npm install --prefix "$RUNNER_TEMP/jeppiran-browser-qa" --no-audit --no-fund --package-lock=false playwright@1.58.2
+          export NODE_PATH="$RUNNER_TEMP/jeppiran-browser-qa/node_modules"
+          export JEPPIRAN_CHROME_BIN="$(command -v google-chrome)"
+          test -n "$JEPPIRAN_CHROME_BIN"
+          node scripts/verify_cdfa_increment_browser.cjs
