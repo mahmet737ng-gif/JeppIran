@@ -577,8 +577,8 @@ function displayProcedureRows(rows){
 }
 function filterProcedureRows(){
   const q=$("#procedureSearch").value.trim().toUpperCase();
-  displayProcedureRows(activeChartRows.filter(c=>(
-    String(c.chart_number||"")+" "+String(c.name||"")).toUpperCase().includes(q)));
+  displayProcedureRows(activeChartRows.filter(c=>
+    String(c.name||"").toUpperCase().includes(q)));
 }
 async function loadPublishedCharts(){
   if(chartManifest&&charts)return [chartManifest,charts];
