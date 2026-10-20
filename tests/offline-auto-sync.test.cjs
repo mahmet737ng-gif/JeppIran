@@ -60,15 +60,19 @@ function makeBrowser(){
   const window={caches:memory,crypto:webcrypto,addEventListener(name,cb){listeners[name]=cb;}};
   const navigator={onLine:true,serviceWorker:{ready:Promise.resolve({active:true}),controller:{}},
                    storage:{persist:async()=>false}};
-  let remote={...files};let failures=new Set();const requests=[];
+  let remote={...files};let failures=new Set();const requests=[],requestUrls=[];
+  let staleWorker=false;
   let manifest;
   async function fetch(url,opts={}){
-    const path=new URL(url,BASE).pathname.replace("/JeppIran/","./");
+    const requestUrl=new URL(url,BASE);
+    const path=requestUrl.pathname.replace("/JeppIran/","./");
     if(opts.signal?.aborted)throw new DOMException("Cancelled","AbortError");
     if(path==="./offline-assets.json")return new Response(JSON.stringify(manifest),{status:200});
-    requests.push(path);
+    requests.push(path);requestUrls.push(requestUrl.href);
     if(failures.has(path))throw Error("network unavailable");
     const body=remote[path];
+    if(staleWorker&&!requestUrl.searchParams.has("jeppiran_offline_sync"))
+      return new Response("stale-service-worker-script",{status:200});
     return body===undefined?new Response("not found",{status:404}):new Response(body,{status:200});
   }
   const sandbox={window,document,navigator,caches:memory,crypto:webcrypto,fetch,Response,
@@ -76,8 +80,9 @@ function makeBrowser(){
     setInterval:()=>{},Date,console};
   const script=fs.readFileSync("web/offline-manager.js","utf8");
   vm.runInNewContext(script,sandbox,{filename:"offline-manager.js"});
-  return {api:window.JeppIranOffline,memory,requests,controls,window,document,listeners,
+  return {api:window.JeppIranOffline,memory,requests,requestUrls,controls,window,document,listeners,
     setManifest:v=>{manifest=v;},setRemote:(key,value)=>{remote[key]=value;},
+    staleSW:value=>{staleWorker=value;},
     fail:(key)=>failures.add(key),resume:key=>failures.delete(key)};
 }
 test("first sync downloads complete package, second only checks; one change downloads one file",async()=>{
@@ -179,4 +184,38 @@ test("PDF error screen offers direct access to offline settings",()=>{
   const app=fs.readFileSync("web/app.js","utf8");
   assert.match(app,/openOfflineSettingsFromChart/);
   assert.match(app,/This airport PDF has not been saved on this iPad/);
+});
+
+test("iPad Go Offline bypasses stale controlling Service Worker responses with SHA-verified fresh URLs",async()=>{
+  const b=makeBrowser();
+  b.setManifest(await packageFor(files));
+  b.staleSW(true);
+  await b.api.sync();
+  assert.equal(await b.api.hasSnapshot(),true,"stale SW must not corrupt offline sync");
+  assert.ok(b.requestUrls.length>=Object.keys(files).length);
+  assert.ok(b.requestUrls.every(u=>new URL(u).searchParams.has("jeppiran_offline_sync")),
+    "Every downloaded resource must use the network-only integrity channel");
+  const result=await b.api.getPdfResponse("./charts/OIIE.pdf",await sha(files["./charts/OIIE.pdf"]));
+  assert.equal(await result.text(),files["./charts/OIIE.pdf"]);
+  assert.match(b.controls.offlinePackStatus.textContent,/READY OFFLINE/);
+});
+test("service worker never returns old cache on integrity-marked Go Offline requests",async()=>{
+ const textSW=fs.readFileSync("web/service-worker.js","utf8");
+ const callbacks={},memory=new Storage(),network=[];
+ const SW={location:{origin:new URL(BASE).origin},registration:{scope:BASE},
+   addEventListener:(type,handler)=>{callbacks[type]=handler;}};
+ vm.runInNewContext(textSW,{self:SW,caches:memory,
+   fetch:async(request,opts)=>{network.push({url:request.url,cache:opts?.cache});return new Response("new-asset");},
+   Response,Request,URL,console});
+ const cache=await memory.open("jeppiran-all-offline-assets-v1");
+ await cache.put("./airport-poster-preload.js",new Response("old-asset"));
+ const request=new Request(BASE+"airport-poster-preload.js?jeppiran_offline_sync=abcd1234");
+ let output;const evt={request,respondWith(p){output=Promise.resolve(p)},waitUntil(){}};
+ callbacks.fetch(evt);
+ const result=await output;
+ assert.equal(await result.text(),"new-asset");
+ assert.equal(network.length,1);
+ assert.equal(network[0].cache,"no-store");
+ const unchanged=await cache.match("./airport-poster-preload.js");
+ assert.equal(await unchanged.text(),"old-asset","old verified offline snapshot must remain untouched");
 });
