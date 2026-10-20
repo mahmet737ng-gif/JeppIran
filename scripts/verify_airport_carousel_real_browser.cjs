@@ -204,9 +204,9 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
      "Airport ICAO list must disappear when the full Classic chart opens");
    assert.ok(await page.locator(".procedure-categories").isHidden(),
      "Chart/category name rail must disappear above the opened Classic chart");
-   const marginTree=page.frameLocator("#classicViewerFrame").locator("#jpChartMarginNav");
+   const marginTree=page.frameLocator("#classicViewerFrame").locator("#jpMarginChartTree");
    await marginTree.waitFor({state:"visible",timeout:20000});
-   assert.ok(await page.frameLocator("#classicViewerFrame").locator("#jpChartMarginList .is-current").count()>0,
+   assert.ok(await page.frameLocator("#classicViewerFrame").locator("#jpMarginChartTree .jp-margin-tree-chart.is-selected").count()>0,
      "The left-margin chart tree must highlight the selected chart");
    await page.locator("#previewBackToCharts").click();
    await page.waitForFunction(()=>document.querySelector("#airportCarousel")
