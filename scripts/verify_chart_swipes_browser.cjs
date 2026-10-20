@@ -32,9 +32,9 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   },null,{timeout:60000});
   // Canvas dimensions are assigned before its asynchronous PDF render finishes.
   // Wait for paintChartTransform() to update the visible zoom label.
-  await page.waitForFunction(()=>document.getElementById("zoomValue")?.textContent==="80%",null,{timeout:60000});
-  assert.equal(await page.evaluate(()=>chartZoom),.8,"Opening a chart must default to 80% zoom");
-  assert.equal(await page.locator("#zoomValue").innerText(),"80%","Zoom display must read 80%");
+  await page.waitForFunction(()=>document.getElementById("zoomValue")?.textContent==="100%",null,{timeout:60000});
+  assert.equal(await page.evaluate(()=>chartZoom),1,"Opening a chart must fit at 100% zoom");
+  assert.equal(await page.locator("#zoomValue").innerText(),"100%","Zoom display must read 100%");
   const first=await page.locator("#viewerChart").innerText();
   await page.waitForFunction(()=>chartSlidePreviews.size>0,null,{timeout:25000});
   await page.evaluate(()=>{
@@ -67,14 +67,14 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   });
   await page.waitForFunction(()=>activeChartSlide===null,null,{timeout:3000});
   await page.waitForFunction(first=>document.getElementById("viewerChart").textContent!==first,first,{timeout:16000});
-  assert.equal(await page.evaluate(()=>chartZoom),.8,"Swiping must open the next chart at 80%");
+  assert.equal(await page.evaluate(()=>chartZoom),1,"Swiping must open the next chart at 100%");
   const second=await page.locator("#viewerChart").innerText();
   assert.notEqual(second,first,"a completed swipe must select the adjacent PDF");
   await page.locator("#zoomInBtn").click();
-  assert.ok(await page.evaluate(()=>chartZoom)>.8,"User zoom-in must remain available");
+  assert.ok(await page.evaluate(()=>chartZoom)>1,"User zoom-in must remain available");
   await page.locator("#zoomResetBtn").click();
-  assert.equal(await page.evaluate(()=>chartZoom),.8,"Reset zoom must return to 80%");
-  console.log("PASS default/reset 80% zoom, matching swipe-preview scale, reversible navigation and retained zoom control.");
+  assert.equal(await page.evaluate(()=>chartZoom),1,"Reset zoom must return to 100%");
+  console.log("PASS default/reset 100% zoom, matching swipe-preview scale, reversible navigation and retained zoom control.");
   // Distinct toolbar BACK must restore the airport profile; Prev/Next must
   // continue navigating charts and Android system-Back behavior stays intact.
   const beforeBack=await page.evaluate(()=>({icao:selectedAirport,page:selectedChart?.page}));
