@@ -2546,6 +2546,8 @@ function setupChartGestures(){
           }
         }
       }else if(!canceled&&start&&travel>=12&&!pinched){
+        // No delayed scrolling/fling after finger release for zoomed PDF pan;
+        // at normal scale only a fast vertical flick gets owner-requested inertia.
         cancelTail();
         if(chartZoom<=1.001&&Math.abs(dy)>Math.abs(dx)*1.3)
           startVerticalInertia();
