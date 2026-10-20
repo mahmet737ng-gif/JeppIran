@@ -200,8 +200,17 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
    assert.equal(banner.visible,false,"METAR must not appear automatically over Classic chart");
    assert.ok(await page.locator(".selected-airport").isHidden(),
      "Airport profile must remain hidden for a full Classic chart");
-   // Drag the airport strip WHILE Classic is open. The profile must emerge
-   // immediately, and track each intermediate centered ICAO before release.
+   assert.ok(await page.locator("#airportCarousel").isHidden(),
+     "Airport ICAO list must disappear when the full Classic chart opens");
+   assert.ok(await page.locator(".procedure-categories").isVisible(),
+     "Chart/category selector must remain visible above Classic");
+   // Exit Classic by collapsing its category: the original airport carousel
+   // then returns for the user to choose another airport.
+   await page.locator(".procedure-category.active").click();
+   await page.waitForFunction(()=>document.querySelector("#airportCarousel")
+      ?.getBoundingClientRect().height>50 &&
+      document.querySelector("#classicViewerHost")?.hidden,{timeout:7000});
+   // Drag the restored airport strip and track intermediate ICAO profiles.
    const airportRect=await page.locator("#airportCarousel").boundingBox();
    const step=await page.locator("#airportCarousel").evaluate(el=>el.clientWidth/10.25);
    const startX=airportRect.x+airportRect.width/2, startY=airportRect.y+airportRect.height/2;
