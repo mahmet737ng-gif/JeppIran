@@ -1,0 +1,33 @@
+name: Probe IRIMO METAR and TAF Blocks
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths:
+      - 'scripts/irimo_weather.py'
+      - 'tests/test_irimo_weather.py'
+      - '.github/workflows/probe-irimo-weather.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+      - name: Parse and validity unit tests
+        run: |
+          python3 -m unittest discover -s tests -p 'test_irimo_weather.py' -v
+      - name: Probe official IRIMO blocks 601 and 588
+        run: |
+          python3 scripts/irimo_weather.py --out /tmp/irimo-probe.json
+      - name: Upload diagnostic result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: irimo-probe-result
+          path: /tmp/irimo-probe.json
+          if-no-files-found: warn
