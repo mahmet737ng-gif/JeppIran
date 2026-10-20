@@ -34,3 +34,13 @@ test("visual addition preserves locked table and PDF-georeference assets",()=>{
  assert.match(overlay,/cdfa_increment_qa/);
  assert.doesNotMatch(overlay,/georefByPage|publishedConstraints|altitudeFt\s*=/);
 });
+
+test("DME crossing uses 0.035 NM deadband, avoiding jumpy highlight at the row boundary",()=>{
+ const rows=[{dme:9},{dme:8},{dme:7},{dme:6},{dme:2.6}];
+ // D7 currently selected while inbound. Noise at 6.99 must keep D7,
+ // but crossing to 6.94 must move to D6 and remain there until outbound 7.035.
+ assert.equal(core.targetIndex(rows,6.99,2),2);
+ assert.equal(core.targetIndex(rows,6.94,2),3);
+ assert.equal(core.targetIndex(rows,7.02,3),3);
+ assert.equal(core.targetIndex(rows,7.05,3),2);
+});
