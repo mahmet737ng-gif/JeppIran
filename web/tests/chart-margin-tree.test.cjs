@@ -18,15 +18,17 @@ test("chart tree belongs to the PDF's actual left white margin, with no separate
   assert.doesNotMatch(css,/flex:0 0 var\(--jp-chart-margin-width/);
   assert.match(css,/#chartsView\.chart-open #offlinePdfBtn,#chartsView\.chart-open #fullscreenBtn/);
 });
-test("short release-based reversible horizontal swipe, vertical inertia and zoom to 50%",()=>{
+test("short release-based reversible horizontal paging, two-axis kinetic pan and zoom to 50%",()=>{
   const js=read("app.js");
   assert.match(js,/Math\.max\(\.5,Math\.min\(4,Number\(next\)/);
   assert.match(js,/Math\.max\(\.5,Math\.min\(4,next\)/);
   assert.match(js,/state\.reversing/);
   assert.match(js,/Math\.abs\(dx\)>7/);
   assert.match(js,/Math\.abs\(state\.dx\)>=32/);
-  assert.match(js,/function startVerticalInertia\(\)/);
-  assert.match(js,/velocity\*=Math\.pow\(\.93,dt\/16\.67\)/);
+  assert.match(js,/function startPanInertia\(\)/);
+  assert.match(js,/chartPanX\+=vx\*dt;chartPanY\+=vy\*dt/);
+  assert.match(js,/vx\*=decay;vy\*=decay/);
+  assert.match(js,/state\.vx=Math\.max/);
 });
 test("preview removes upper chart-name rail and excludes waypoint searching",()=>{
   const css=read("preview/airport-carousel-r13-fixed/styles.css");
@@ -39,10 +41,13 @@ test("preview removes upper chart-name rail and excludes waypoint searching",()=
 });
 test("offline shell includes matching chart tree scripts and locked chart assets",()=>{
   const sw=read("service-worker.js"),html=read("index.html");
-  assert.match(sw,/chart-margin-tree\.js\?v=2621-chart-margin-tree-r2-overlay/);
-  assert.match(sw,/chart-margin-tree\.css\?v=2621-chart-margin-tree-r2-overlay/);
-  assert.match(html,/app\.js\?v=2621-oici-ungeoref-neutral-pos-r1/);
-  assert.match(html,/oigg-local-r3/);
+  for(const asset of ["chart-margin-tree.js","chart-margin-tree.css","app.js"]){
+    const escaped=asset.replace(/\./g,"\\.");
+    const match=html.match(new RegExp("\\./"+escaped+"\\?v=[a-z0-9-]+","i"));
+    assert.ok(match,asset+" must be versioned in HTML");
+    assert.ok(sw.includes(match[0]),asset+" must use the exact same version in offline shell");
+  }
+  assert.match(sw,/oigg-star-flightqa-v2621\.json\?v=oigg-local-r3/);
 });
 
 test("legacy Classic browser QA respects the owner-hidden top chart title",()=>{
