@@ -1268,6 +1268,7 @@ function renderAirports(filter=""){
 }
 $("#airportSearch").addEventListener("input",e=>renderAirports(e.target.value));
 function selectAirport(icao){
+  cancelChartDetail();chartDetail.page=null;
   selectedAirport=icao;selectedChart=null;airportTreeExpanded=true;profileTab="Overview";
   closeAirportPicker();
   window.jeppiranSelectedRunway=icao==="OIAA"?"32L":"";
@@ -1925,6 +1926,7 @@ function beginFindMeTransition(){
   if(reduceMotion){
     chartZoom=FIND_ME_ZOOM;chartPanX=target.panX;chartPanY=target.panY;
     paintChartTransform();
+    scheduleChartDetail();
     return;
   }
   const startZoom=chartZoom,startX=chartPanX,startY=chartPanY;
@@ -1948,6 +1950,7 @@ function beginFindMeTransition(){
       anim.raf=requestAnimationFrame(tick);
     }else{
       findMeAnimation=null;
+      scheduleChartDetail();
       // Any new live GPS/simulator fix is picked up by smooth FOLLOW tracking.
       updateAircraftMarker();
     }
@@ -1970,6 +1973,7 @@ function trackAircraftFrame(now){
   chartPanX=Math.abs(dx)<.18?target.panX:chartPanX+dx*blend;
   chartPanY=Math.abs(dy)<.18?target.panY:chartPanY+dy*blend;
   paintChartTransform();
+  if(chartDetail.quality<1.6*chartZoom)scheduleChartDetail(280);
   if(Math.abs(target.panX-chartPanX)>.18||Math.abs(target.panY-chartPanY)>.18){
     followTrackingFrame=requestAnimationFrame(trackAircraftFrame);
   }else followTrackingTime=0;
@@ -2916,6 +2920,7 @@ async function refitSelectedChartForLayout(){
     chartPanY=oldPanY;
     applyChartTransform();
     if(oldZoom<=1.001)$("#pdfStage").scrollTop=oldScroll;
+    scheduleChartDetail();
   }catch(e){
     $("#pdfStage").innerHTML='<div class="empty-state"><img src="./app-icon.png" alt=""><b>Chart unavailable</b><span>'+escapeHtml(e.message)+'</span></div>';
   }
