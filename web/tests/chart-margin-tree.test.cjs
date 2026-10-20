@@ -27,6 +27,7 @@ test("short release-based reversible horizontal paging, two-axis kinetic pan and
   assert.match(js,/Math\.abs\(state\.dx\)>=32/);
   assert.match(js,/function startPanInertia\(\)/);
   assert.match(js,/chartPanX\+=vx\*dt;chartPanY\+=vy\*dt/);
+  assert.match(js,/Math\.hypot\(vx,vy\)>\.07&&progressed/);
   assert.match(js,/vx\*=decay;vy\*=decay/);
   assert.match(js,/state\.vx=Math\.max/);
 });
