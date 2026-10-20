@@ -2397,17 +2397,26 @@ function setupChartGestures(){
   function cancelKinetic(){if(kineticFrame)cancelAnimationFrame(kineticFrame);kineticFrame=0;}
   function startVerticalInertia(){
     const sample=recentMove;
-    if(chartZoom>1.001||!sample||performance.now()-sample.time>85||
+    if(!sample||performance.now()-sample.time>85||
        window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
     let velocity=Math.max(-3,Math.min(3,sample.vy||0));
     if(Math.abs(velocity)<.25)return;
     let previous=performance.now();
     const frame=now=>{
       const dt=Math.min(35,Math.max(1,now-previous));previous=now;
-      const before=stage.scrollTop;
-      stage.scrollTop-=velocity*dt;
+      let progressed=false;
+      if(chartZoom>1.001){
+        const before=chartPanY;
+        chartPanY+=velocity*dt;
+        applyChartTransform();
+        progressed=Math.abs(chartPanY-before)>.05;
+      }else{
+        const before=stage.scrollTop;
+        stage.scrollTop-=velocity*dt;
+        progressed=Math.abs(stage.scrollTop-before)>.05;
+      }
       velocity*=Math.pow(.93,dt/16.67);
-      if(Math.abs(velocity)>.07&&Math.abs(stage.scrollTop-before)>.05)
+      if(Math.abs(velocity)>.07&&progressed)
         kineticFrame=requestAnimationFrame(frame);
       else kineticFrame=0;
     };
@@ -2551,7 +2560,7 @@ function setupChartGestures(){
         }
       }else if(!canceled&&start&&travel>=12&&!pinched){
         cancelTail();
-        if(chartZoom<=1.001&&Math.abs(dy)>Math.abs(dx)*1.3)
+        if(Math.abs(dy)>Math.abs(dx)*1.3)
           startVerticalInertia();
       }
       panStart=null;swipeStart=null;pinchStartDistance=0;
