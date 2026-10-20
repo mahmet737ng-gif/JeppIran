@@ -122,7 +122,9 @@ async function ready(){for(let i=0;i<70;i++){try{if((await fetch(url)).ok)return
    });
    const frame=page.frame({url:/jeppiranEmbedCharts=1/});
    assert.ok(frame,"Real Classic app must be mounted in an iframe");
-   await frame.locator("#viewerChart").waitFor();
+   // Owner 2026-10-20: the chart title is still updated for a11y/state,
+   // but its old top-of-viewer label is intentionally hidden.
+   await frame.locator("#viewerChart").waitFor({state:"attached"});
    await frame.waitForFunction(()=>document.querySelector("#viewerChart")?.textContent.includes("RNAV Arrival"),{timeout:17000});
    assert.ok(await frame.locator(".viewer-toolbar").isVisible(),"Original Classic toolbar must remain usable");
    assert.ok(await frame.locator("#zoomInBtn").isVisible(),"Original zoom must remain");
