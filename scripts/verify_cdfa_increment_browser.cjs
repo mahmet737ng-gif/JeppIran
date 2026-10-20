@@ -22,8 +22,17 @@ const sleep=ms=>new Promise(r=>setTimeout(r,ms));
    selectAirport("OIII");selectChart(c);
   });
   await page.waitForFunction(()=>document.querySelector("#pdfCanvas")?.width>100&&
-   !document.querySelector("#chartCdfaBtn")?.disabled&&
-   !document.querySelector("#pdfStage .pdf-loading"),null,{timeout:90000});
+   !document.querySelector("#chartCdfaBtn")?.disabled,null,{timeout:90000});
+  await sleep(4500);
+  console.log("PRE-CLICK STATE",JSON.stringify(await page.evaluate(()=>({
+    canvas:document.querySelector("#pdfCanvas")?.width,
+    loading:document.querySelector("#pdfStage .pdf-loading")?.textContent,
+    stage:document.querySelector("#pdfStage")?.textContent?.slice(0,200),
+    selected:Number(selectedChart?.page),
+    hasChart:!!document.getElementById("pdfCanvas"),
+    source:currentPdfUrl
+  }))));
+
   await page.locator("#chartCdfaBtn").click();
   await sleep(1100);
   console.log("CDFA preview diagnostics",JSON.stringify(await page.evaluate(()=>({
