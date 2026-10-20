@@ -45,6 +45,7 @@ const app=read("app.js"),native=read("../app/src/main/java/com/tareghmsr/jeppira
 assert.ok(app.includes("three_source_controls_printed_grid_simulator_qa"));
 assert.ok(native.includes("three_source_controls_printed_grid_simulator_qa"));
 assert.ok(app.includes("oigg-local-r3"));
-assert.ok(read("index.html").includes("oigg-local-r3"));
+// HTML references the versioned app; the OIGG QA asset itself remains pinned in SW.
+assert.ok(read("index.html").includes("./app.js?v=2621-"));
 assert.ok(read("service-worker.js").includes("oigg-local-r3"));
 console.log("PASS OIGG STAR 307/308 revised flight-only QA, D20 and original grid; 807 protected georefs unchanged");
