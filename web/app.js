@@ -2537,6 +2537,16 @@ function selectChart(c,options={}){
   cancelAircraftFollow();
   taxiOffRouteCount=0;taxiOffRouteActive=false;
   selectedChart=c;
+  // In the isolated Carousel embed, Classic's own gestures/Next/Previous
+  // may select a different page or even enter another chart category.
+  // Announce EVERY selection to the parent so its chart wheel stays in sync.
+  // The standard standalone Classic viewer is unaffected.
+  if(IS_PREVIEW_CLASSIC_EMBED){
+    window.parent.postMessage({
+      type:"JEPPIRAN_PREVIEW_CHART_SELECTED_V1",
+      icao:c.airport,page:Number(c.page)
+    },location.origin);
+  }
   $("#chartsView").classList.add("chart-open");
   if(jpChartDrawerOpen)refreshFullscreenChartDrawer();
   expanded.add(c.category||"Other");
