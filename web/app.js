@@ -1234,7 +1234,7 @@ function renderAirports(filter=""){
   const fav=new Set(getAirportFavorites());
   [...new Set(charts.map(displayAirportCode))].sort().filter(icao=>{
     const record=icao==="OICZ"?{...airportMetadata[icao],name:"Saqez Airport",city:"Saqez"}:(airportMetadata[icao]||{});const legacy=AIRPORTS[icao]||["",""];
-    const meta=[record.name||legacy[0]||"",record.city||legacy[1]||""];
+    const meta=[record.city||legacy[1]||""];
     const iata=record.iata||AIRPORT_PROFILE[icao]?.iata||"";
     const country=record.country||(
       icao.startsWith("OI")?"Iran":icao.startsWith("LT")?"Türkiye":
@@ -2216,7 +2216,7 @@ function chartSwipePanel(canvas,scrollOffset=0){
   return panel;
 }
 function beginChartSwipe(direction){
-  if(activeChartSlide||chartZoom>1.001||!selectedChart)return null;
+  if(activeChartSlide||Math.abs(chartZoom-1)>0.015||!selectedChart)return null;
   const target=adjacentChart(direction),stage=$("#pdfStage"),current=$("#pdfCanvas");
   if(!target||!current||!stage||!chartSlideDocument)return null;
   const width=stage.clientWidth;
@@ -2270,7 +2270,7 @@ function finishChartSwipe(state,canceled){
   state.done=true;
   const elapsed=performance.now()-state.startedAt;
   const advance=!canceled&&!state.reversing&&
-    (Math.abs(state.dx)>=42||(elapsed<230&&Math.abs(state.dx)>=25));
+    (Math.abs(state.dx)>=32||(elapsed<300&&Math.abs(state.dx)>=16));
   const destination=advance?-state.dir*state.width:0;
   const remaining=Math.abs(destination-state.dx);
   const duration=Math.max(110,Math.min(260,120+remaining*.16));
@@ -2389,8 +2389,8 @@ function setChartInverted(enabled){
 setChartInverted(localStorage.getItem("jeppiran-chart-inverted")==="1");
 $("#chartInvertBtn").addEventListener("click",()=>setChartInverted(!document.body.classList.contains("chart-inverted")));
 
-// iPad interaction lock V1: single chart tap toggles full screen; two taps zoom;
-// gestures do not trigger taps. The 90ms, <=2.5px finish is NOT fling/inertia.
+// Owner-approved iPad V2 (2026-10-20): short reversible horizontal chart
+// paging, vertical glide with speed-proportional inertia, single/double tap unchanged.
 function setupChartGestures(){
   const stage=$("#pdfStage");
   if(!stage||stage.dataset.gestures==="1")return;
@@ -2403,17 +2403,25 @@ function setupChartGestures(){
   function cancelKinetic(){if(kineticFrame)cancelAnimationFrame(kineticFrame);kineticFrame=0;}
   function startVerticalInertia(){
     const sample=recentMove;
-    if(chartZoom>1.001||!sample||performance.now()-sample.time>85||
+    if(!sample||performance.now()-sample.time>85||
        window.matchMedia("(prefers-reduced-motion: reduce)").matches)return;
     let velocity=Math.max(-3,Math.min(3,sample.vy||0));
     if(Math.abs(velocity)<.25)return;
     let previous=performance.now();
     const frame=now=>{
       const dt=Math.min(35,Math.max(1,now-previous));previous=now;
-      const before=stage.scrollTop;
-      stage.scrollTop-=velocity*dt;
+      let progressed=false;
+      if(chartZoom>1.001){
+        const before=chartPanY;
+        chartPanY+=velocity*dt;applyChartTransform();
+        progressed=Math.abs(chartPanY-before)>.05;
+      }else{
+        const before=stage.scrollTop;
+        stage.scrollTop-=velocity*dt;
+        progressed=Math.abs(stage.scrollTop-before)>.05;
+      }
       velocity*=Math.pow(.93,dt/16.67);
-      if(Math.abs(velocity)>.07&&Math.abs(stage.scrollTop-before)>.05)
+      if(Math.abs(velocity)>.07&&progressed)
         kineticFrame=requestAnimationFrame(frame);
       else kineticFrame=0;
     };
@@ -2422,7 +2430,7 @@ function setupChartGestures(){
   function cancelTail(){if(tailFrame)cancelAnimationFrame(tailFrame);tailFrame=0;}
   function chartHit(target){
     if(!(target instanceof Element))return false;
-    if(target.closest("button,a,input,select,textarea,summary,[role='button'],.taxi-qa-panel"))return false;
+    if(target.closest("button,a,input,select,textarea,summary,[role='button'],.taxi-qa-panel,.jp-margin-chart-tree"))return false;
     return !!target.closest(".pdf-canvas-wrap,#chartTransformLayer,#pdfCanvas");
   }
   function tinyPanStop(){
@@ -2493,8 +2501,8 @@ function setupChartGestures(){
       const dx=e.clientX-panStart.x,dy=e.clientY-panStart.y;
       // Exactly follow current displacement; fast swipes move fast, and
       // reversing the finger visibly reverses the two-page preview.
-      if(chartZoom<=1.001&&swipeStart&&!pinched){
-        if(!slideGesture&&Math.abs(dx)>14&&Math.abs(dx)>Math.abs(dy)*1.3){
+      if(Math.abs(chartZoom-1)<0.015&&swipeStart&&!pinched){
+        if(!slideGesture&&Math.abs(dx)>7&&Math.abs(dx)>Math.abs(dy)*1.3){
           slideGesture=beginChartSwipe(dx<0?1:-1);
           if(slideGesture){clearTimeout(singleTapTimer);singleTapTimer=0;lastTapAt=0;}
         }
@@ -2559,7 +2567,7 @@ function setupChartGestures(){
         // No delayed scrolling/fling after finger release for zoomed PDF pan;
         // at normal scale only a fast vertical flick gets owner-requested inertia.
         cancelTail();
-        if(chartZoom<=1.001&&Math.abs(dy)>Math.abs(dx)*1.3)
+        if(Math.abs(dy)>Math.abs(dx)*1.3)
           startVerticalInertia();
       }
       panStart=null;swipeStart=null;pinchStartDistance=0;
