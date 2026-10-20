@@ -75,6 +75,64 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   await page.locator("#zoomResetBtn").click();
   assert.equal(await page.evaluate(()=>chartZoom),1,"Reset zoom must return to 100%");
   console.log("PASS default/reset 100% zoom, matching swipe-preview scale, reversible navigation and retained zoom control.");
+
+  // Vector-backed detail must sharpen after zoom without changing the PDF's
+  // CSS dimensions (or the georeferenced position of existing overlays).
+  const beforeZoom=await page.evaluate(()=>{
+    const el=document.getElementById("pdfCanvas");
+    return {pixels:el.width,cssWidth:el.clientWidth,cssHeight:el.clientHeight};
+  });
+  await page.evaluate(()=>setChartZoom(1.95));
+  await page.waitForFunction(old=>document.getElementById("pdfCanvas")?.width>old,
+    beforeZoom.pixels,{timeout:45000});
+  const hiRes=await page.evaluate(()=>{
+    const el=document.getElementById("pdfCanvas");
+    return {pixels:el.width,cssWidth:el.clientWidth,cssHeight:el.clientHeight,
+      zoom:chartZoom,quality:chartDetail.quality};
+  });
+  assert.equal(hiRes.cssWidth,beforeZoom.cssWidth,"Hi-res render cannot resize chart coordinates");
+  assert.equal(hiRes.cssHeight,beforeZoom.cssHeight,"Hi-res render cannot resize PDF marker coordinates");
+  assert.ok(hiRes.quality>1.6,"High zoom must request PDF-native extra detail");
+  console.log("PASS vector PDF re-render after zoom without reflow or georeference drift",hiRes);
+
+  // At 195% zoom, continue swiping PAST the actual panning edge to navigate.
+  // A short edge reach or a deliberate finger reversal must not change charts.
+  const edgeBefore=await page.evaluate(()=>{
+    const max=chartHorizontalPanLimit().maxX;
+    if(!chartHorizontalPanLimit().scrollable||max<60)throw Error("Zoomed chart has no horizontal pan range");
+    chartPanX=max;chartPanY=0;applyChartTransform();
+    const first=selectedChart.page;
+    const canvas=document.getElementById("pdfCanvas");
+    const fire=(type,x)=>canvas.dispatchEvent(new PointerEvent(type,{
+      bubbles:true,pointerId:87,pointerType:"touch",isPrimary:true,clientX:x,clientY:420
+    }));
+    fire("pointerdown",510);
+    fire("pointermove",700);
+    if(!activeChartSlide?.edgePaging)throw Error("Edge continuation did not open preview");
+    fire("pointermove",540);
+    if(!activeChartSlide?.reversing)throw Error("Reversal did not cancel pending edge navigation");
+    fire("pointerup",540);
+    return first;
+  });
+  await page.waitForFunction(()=>activeChartSlide===null,null,{timeout:3500});
+  assert.equal(await page.evaluate(()=>selectedChart.page),edgeBefore,
+    "Reversing a zoomed edge swipe must retain the current chart");
+  await page.evaluate(()=>{
+    const canvas=document.getElementById("pdfCanvas");
+    const fire=(type,x)=>canvas.dispatchEvent(new PointerEvent(type,{
+      bubbles:true,pointerId:88,pointerType:"touch",isPrimary:true,clientX:x,clientY:420
+    }));
+    fire("pointerdown",510);
+    fire("pointermove",745);
+    if(!activeChartSlide?.edgePaging||Math.abs(activeChartSlide.dx)<48)
+      throw Error("Long edge continuation failed to arm a chart transition");
+    fire("pointerup",745);
+  });
+  await page.waitForFunction(()=>activeChartSlide===null,null,{timeout:3500});
+  await page.waitForFunction(before=>selectedChart?.page!==before,edgeBefore,{timeout:20000});
+  assert.equal(await page.evaluate(()=>chartZoom),1,"Next chart opens at its fitted default zoom");
+  console.log("PASS edge-only zoomed page navigation, reversed-swipe cancellation and 100% reset.");
+
   // Distinct toolbar BACK must restore the airport profile; Prev/Next must
   // continue navigating charts and Android system-Back behavior stays intact.
   const beforeBack=await page.evaluate(()=>({icao:selectedAirport,page:selectedChart?.page}));
