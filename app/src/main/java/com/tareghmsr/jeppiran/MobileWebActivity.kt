@@ -23,6 +23,7 @@ import android.webkit.WebViewClient
 import android.widget.FrameLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -53,6 +54,7 @@ class MobileWebActivity : AppCompatActivity() {
     private lateinit var progress: ProgressBar
     private lateinit var errorMessage: TextView
     private var lastBackPress: Long = 0L
+    private var backRequestInFlight = false
     private var geoOrigin: String? = null
     private var geoCallback: GeolocationPermissions.Callback? = null
 
@@ -263,6 +265,11 @@ class MobileWebActivity : AppCompatActivity() {
             marker.edit().putLong("last_apk_version", version).apply()
         }
         browser.loadUrl(appUrl)
+        // Android 13+ predictive/system Back goes through the dispatcher.
+        // All in-app navigation is handled by the local SPA before exit.
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() = handleAndroidBack()
+        })
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -270,17 +277,20 @@ class MobileWebActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
     }
 
-    override fun onBackPressed() {
+    private fun handleAndroidBack() {
+        if (backRequestInFlight) return
         // Android's navigation-bar/edge Back gesture replaces any old on-screen
         // Back arrow. Let JEPPIRAN close chart -> profile -> Home in order.
         // Never navigate back into the obsolete hosted website.
         if (!::browser.isInitialized) {
-            super.onBackPressed()
+            finish()
             return
         }
+        backRequestInFlight = true
         browser.evaluateJavascript(
             "(function(){return window.jeppiranAndroidBack ? window.jeppiranAndroidBack() : false})()"
         ) { result ->
+            backRequestInFlight = false
             if (isFinishing || isDestroyed) return@evaluateJavascript
             if (result == "true") {
                 lastBackPress = 0L
