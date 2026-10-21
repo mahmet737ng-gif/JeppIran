@@ -98,6 +98,15 @@ def main():
             dest.parent.mkdir(parents=True, exist_ok=True)
             shutil.copy2(source, dest)
 
+        # Create real 9:16 airport art ONLY inside the Android APK.
+        # The approved landscape artwork is never modified or re-encoded.
+        subprocess.run(
+            ["python3", "scripts/build_android_portrait_posters.py",
+             "--source", str(WEB / "airport-profile-posters-v3"),
+             "--output", str(OUTPUT / "airport-profile-posters-portrait")],
+            cwd=ROOT, check=True,
+        )
+
         # Local APK data must match the signed Android chart-data cycle, not
         # an independent copy of an earlier web deployment.
         (OUTPUT / "data").mkdir(exist_ok=True)
@@ -183,6 +192,20 @@ document.addEventListener("DOMContentLoaded", () => {
         path = unquote(ref.split("?")[0][2:])
         if not (OUTPUT / path).exists():
             raise RuntimeError("Required local shell asset missing: " + path)
+    # Verify every Android-only portrait belongs to an approved source ICAO.
+    source_posters = json.loads((WEB / "airport-profile-posters-v3/manifest.json").read_text())
+    portrait_dir = OUTPUT / "airport-profile-posters-portrait"
+    portrait_manifest = json.loads((portrait_dir / "manifest.json").read_text())
+    expected_codes = set(source_posters["files"])
+    produced = portrait_manifest["files"]
+    if len(expected_codes) != 78 or set(produced) != expected_codes:
+        raise RuntimeError("Incomplete Android portrait airport poster set")
+    for icao, spec in produced.items():
+        portrait = portrait_dir / spec["file"]
+        if (not portrait.is_file() or portrait.stat().st_size != spec["size"]
+                or sha256(portrait) != spec["sha256"]
+                or spec["sourceSha256"] != source_posters["files"][icao]["sha256"]):
+            raise RuntimeError("Invalid Android portrait poster for " + icao)
     pdfs = OUTPUT / "charts"
     if len(CHARTS["airports"]) < 70:
         raise RuntimeError("Unexpected airport count")
