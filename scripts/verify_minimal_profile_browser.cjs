@@ -29,7 +29,13 @@ async function ready(){for(let i=0;i<100;i++){if(server.exitCode!==null)throw Er
     return {found:!!t,parent:!!c,text:t?.textContent.slice(0,100),
       display:t?getComputedStyle(t).display:null,
       parentDisplay:c?getComputedStyle(c).display:null,
-      dimensions:t?.getBoundingClientRect().toJSON()};
+      dimensions:t?.getBoundingClientRect().toJSON(),
+      cardDimensions:c?.getBoundingClientRect().toJSON(),
+      weatherDimensions:el.querySelector(".jp-mp-weather")?.getBoundingClientRect().toJSON(),
+      rootDimensions:el.getBoundingClientRect().toJSON(),
+      weatherDisplay:getComputedStyle(el.querySelector(".jp-mp-weather")).display,
+      weatherGrid:getComputedStyle(el.querySelector(".jp-mp-weather")).gridTemplateColumns,
+      cardWidth:c?getComputedStyle(c).width:null};
   });
   console.log("TAF QA DIAGNOSTIC",JSON.stringify(tafInfo));
   await rootLocator.locator(".jp-mp-taf-text").waitFor({state:"visible",timeout:10000});
