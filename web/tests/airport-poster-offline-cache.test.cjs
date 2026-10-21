@@ -33,15 +33,15 @@ test("preload starts at launch without blocking initial UI or deleting chart PDF
  assert.ok(html.includes(preload)&&sw.includes(preload),preload);
  // The artwork is immutable; only the surrounding layout JS may be updated.
  // Check web/offline parity rather than freezing a retired script revision.
- const posterEntry=html.match(/airport-profile-posters\.js\?v=[a-z0-9-]+/);
- assert.ok(posterEntry,"versioned poster layout JS is required");
- assert.ok(sw.includes(posterEntry[0]),"same poster layout JS revision in offline shell");
- // The airport poster cache is immutable; app.js still needs its own version
+ const minimalEntry=html.match(/profile-minimal\.js\?v=[a-z0-9-]+/);
+ assert.ok(minimalEntry,"versioned minimal profile JS required");
+ assert.ok(sw.includes(minimalEntry[0]),"same minimal profile JS in offline shell");
+  // The airport poster cache is immutable; app.js still needs its own version
  // whenever chart UI logic changes. Verify parity rather than freeze an old SHA.
  const appEntry=html.match(/<script src="\.\/(app\.js\?v=[^"]+)" defer><\/script>/);
  assert.ok(appEntry,"versioned app.js script missing");
  assert.ok(sw.includes("./"+appEntry[1]),"same app.js revision in offline worker");
- assert.ok(html.indexOf("airport-poster-preload.js")<html.indexOf("airport-profile-posters.js"));
+ assert.doesNotMatch(html,/src="\.\/airport-profile-posters\.js/);
  assert.match(sw,/const PDF_CACHE=/);
  assert.match(sw,/const AIRPORT_POSTER_CACHE=/);
 });
