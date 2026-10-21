@@ -73,6 +73,43 @@ test("live bridge DME is forwarded only when a real identifier and numeric NM ar
   "relay and direct simulator websocket must both preserve true DME");
  assert.match(tracker,/cdfaIcao:current\?\.airport/);
  assert.match(tracker,/cdfaPage:current\?\.page/);
- assert.match(tracker,/core\.validatedReading\(packet,record\(\)\)/);
+ assert.match(tracker,/core\.validatedReading\(\{\.\.\.position/);
+ assert.match(tracker,/core\.estimatedReading\(position,r,stationSites\)/);
  assert.match(tracker,/const qa=new URLSearchParams\(location\.search\)\.get\("cdfa_increment_qa"\)==="1"/);
+});
+
+test("GPS and simulator position compute station-bound distance, without altering published CDFA rows",()=>{
+ const stations=JSON.parse(fs.readFileSync(path.join(root,"data/cdfa-dme-stations-v2621.json"),"utf8"));
+ const site=stations.stations.ABD;
+ assert.equal(stations.country,"IR");
+ assert.ok(Object.keys(stations.stations).length>=50);
+ const reference={icao:"OIAA",sourcePage:12,referenceDmeId:"ABD",dmeStationCandidate:"ABD"};
+ const siteLat=30+22/60+31.1/3600,siteLon=48+13/60+14.2/3600;
+ const flat=core.estimatedReading({lat:siteLat,lon:siteLon,alt:150,source:"gps",timestamp:Date.now(),accuracy:9},reference,stations.stations);
+ assert.equal(flat.mode,"ground_estimate"); // no antenna elevation, not assumed to be zero
+ assert.ok(flat.nm<0.00001);
+ const farther=core.estimatedReading({lat:siteLat+0.1,lon:siteLon,alt:150},reference,stations.stations);
+ assert.ok(farther.nm>5.95&&farther.nm<6.05);
+ const elevated=core.estimatedReading({lat:siteLat,lon:siteLon,alt:304.8},reference,
+   {ABD:{...site,elevationFt:0}});
+ assert.equal(elevated.mode,"slant_estimate");
+ assert.ok(Math.abs(elevated.nm-304.8/1852)<0.000001);
+ assert.equal(core.estimatedReading({lat:siteLat,lon:siteLon,source:"gps",accuracy:2000},reference,stations.stations),null);
+ assert.equal(core.estimatedReading({lat:siteLat,lon:siteLon}, {...reference,icao:"UGTB"},stations.stations),null);
+ assert.equal(core.estimatedReading({lat:siteLat,lon:siteLon},
+   {...reference,distanceReference:{navaidColocationVerified:false}},stations.stations),null);
+ assert.equal(core.estimatedReading({lat:siteLat,lon:siteLon},
+   {...reference,referenceDmeId:"WRONG"},stations.stations),null);
+ assert.equal(core.estimatedReading({lat:siteLat,lon:siteLon},reference,{}),null);
+ assert.deepEqual(core.targetIndex([{dme:10},{dme:8},{dme:6}],8.5),1);
+});
+test("simulator panel renders feet, internal metres and GPS altitude input are preserved",()=>{
+ const app=fs.readFileSync(path.join(root,"app.js"),"utf8");
+ const html=fs.readFileSync(path.join(root,"index.html"),"utf8");
+ const sw=fs.readFileSync(path.join(root,"service-worker.js"),"utf8");
+ assert.match(html,/ALT \(ft\)/);
+ assert.match(app,/p\.alt\*3\.280839895/);
+ assert.match(app,/alt:Number\.isFinite\(c\.altitude\)\?c\.altitude:null/);
+ assert.match(app,/jeppiran-position",\{detail:\{\.\.\.p,source\}\}/);
+ assert.match(sw,/cdfa-dme-stations-v2621\.json/);
 });
