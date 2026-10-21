@@ -11,7 +11,7 @@ test("a stale offline registry cannot replace any of the 78 current V3 posters",
  const rootStub={querySelector(){return null}};
  class Observer {observe(){}}
  vm.runInNewContext(source.replace('  window.JEPPIRAN_NEW20_PROFILE_POSTERS =','  window.testPosterUrl = urlFor;\n  window.JEPPIRAN_NEW20_PROFILE_POSTERS ='),{
-   window,document:{getElementById(){return rootStub}},MutationObserver:Observer,ResizeObserver:Observer,requestAnimationFrame(){}
+   window,document:{documentElement:{classList:{contains(){return false}}},getElementById(){return rootStub}},MutationObserver:Observer,ResizeObserver:Observer,requestAnimationFrame(){}
  });
  for(const code of codes){
    assert.equal(window.testPosterUrl(code),"./airport-profile-posters-v3/"+code+".webp?v=2621-poster-v3-13",code+" rejects old registry artwork");
