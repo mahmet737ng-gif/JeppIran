@@ -215,3 +215,14 @@
 @media(prefers-reduced-motion:reduce){
   #chartsView .airport-profile.jp-minimal-profile *{transition:none!important}
 }
+/* TAF must remain visible even if older profile tab rules are loaded. */
+#chartsView .airport-profile.jp-minimal-profile #profileTaf{
+  display:flex!important;visibility:visible!important;opacity:1!important;
+  min-height:137px!important;height:auto!important;max-height:none!important;
+  position:static!important;overflow:visible!important;
+}
+#chartsView .airport-profile.jp-minimal-profile #profileTaf .jp-mp-taf-text{
+  display:block!important;visibility:visible!important;opacity:1!important;
+  min-height:1.6em!important;height:auto!important;max-height:none!important;
+  white-space:pre-wrap!important;overflow-wrap:anywhere!important;
+}
