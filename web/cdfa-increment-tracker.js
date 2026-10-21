@@ -176,7 +176,13 @@
   });
   window.addEventListener("jeppiran-position",event=>{
     if(qa)return;
-    const sample=core.validatedReading(event.detail,record());
+    // Bind the simulator's identified DME to the OPEN chart here. Bridge
+    // packets are chart-agnostic: they must supply the real station ID and NM,
+    // while page/ICAO come from the viewer, never from a guessed coordinate.
+    const current=chart();
+    const packet={...(event.detail||{}),cdfaIcao:current?.airport,
+      cdfaPage:current?.page};
+    const sample=core.validatedReading(packet,record());
     if(sample===null){liveNm=null;liveAt=0;hideMarker();return;}
     liveNm=sample;liveAt=clock();draw();
   });
