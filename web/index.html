@@ -500,7 +500,10 @@
     // Reset once to owner-approved Classic on this release; older preview-only
     // Carousel selections are intentionally not imported. New choices persist.
     const KEY="jeppiran-chart-layout-v2";
-    const ANDROID_KEY="jeppiran-chart-layout-android-r7";
+    // R8 retires the phone-only carousel evaluation as Android's default.
+    // A new key intentionally ignores the old preview choice once, so every
+    // upgraded APK opens the same current Classic UI shipped on Web/iPad.
+    const ANDROID_KEY="jeppiran-chart-layout-android-r8";
     const isAndroid=()=>!!document.querySelector('meta[name="jeppiran-runtime"][content="android-local-apk"]');
     const storageKey=()=>isAndroid()?ANDROID_KEY:KEY;
     const layout=()=>{
@@ -508,10 +511,9 @@
         const chosen=localStorage.getItem(storageKey());
         if(chosen==="classic"||chosen==="carousel")return chosen;
       }catch(_){}
-      // The previously approved Classic stays default on Web/iPad.
-      // Android R7 opens Carousel for the requested phone evaluation;
-      // users can select Classic in Settings whenever they want.
-      return isAndroid()?"carousel":"classic";
+      // The current Classic viewer is the cross-platform production default.
+      // Carousel remains an explicit Settings choice, never Android's boot path.
+      return "classic";
     };
     function sync(){
       document.querySelectorAll('input[name="chartsLayoutMode"]').forEach(input=>{
