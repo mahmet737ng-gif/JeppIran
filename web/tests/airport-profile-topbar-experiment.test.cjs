@@ -21,7 +21,10 @@ test("old topbar remains archived but approved minimalist profile replaces it",(
  assert.doesNotMatch(html,/src="\.\/airport-profile-topbar-experiment\.js/);
  assert.doesNotMatch(html,/src="\.\/airport-profile-posters\.js/);
  assert.doesNotMatch(sw,/"\.\/airport-profile-topbar-experiment\.js\?/);
- assert.match(html,/profile-minimal\\.js\\?v=[^"\\s]+/);
- assert.ok(sw.includes("profile-minimal.js?v=2621-minimal-20261021-r1"));
+ const marker="profile-minimal.js?v=";
+ const index=html.indexOf(marker);
+ assert.ok(index>=0,"Minimal profile script must remain installed");
+ const referenced=html.slice(index,html.indexOf('"',index));
+ assert.ok(sw.includes(referenced),"PWA shell must cache the exact script URL");
  assert.match(side,/!root\.classList\.contains\("jp-o3-topbar-experiment"\)/);
 });
