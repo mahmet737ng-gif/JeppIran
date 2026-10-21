@@ -17,7 +17,7 @@ function displayTaf(raw){
    const lines=[];
    let line="";
    for(const word of words){
-     if(line && line.length+word.length+1>46){lines.push(line);line=word;}
+     if(line && line.length+word.length+1>36){lines.push(line);line=word;}
      else line+=(line?" ":"")+word;
    }
    if(line)lines.push(line);
@@ -85,11 +85,11 @@ function render(ctx){
    '<p class="jp-mp-elevation">Elevation '+(Number.isFinite(elevation)?Number(elevation).toLocaleString()+" ft":"unavailable")+'</p></div>'+
    '<div class="jp-mp-clock"><strong id="profileUtcClock">--:--:-- UTC</strong><small id="profileLocalTime"></small></div></div>'+
    '<div class="jp-mp-weather" aria-label="Airport weather">'+
-   '<section class="jp-mp-weather-card" id="profileWeather"><div class="jp-mp-card-heading"><h2>METAR</h2>'+
+   '<section class="jp-mp-weather-card jp-mp-metar-card" id="jpMinimalMetarCard"><div class="jp-mp-card-heading"><h2>METAR</h2>'+
    (flightCode?'<span class="jp-mp-flight jp-mp-'+escape(flightCode.toLowerCase())+'">'+escape(flightCode)+'</span>':'')+
    '</div><pre id="profileMetarRaw">'+escape(raw||"METAR unavailable")+'</pre>'+
    '<small id="profileMetarAge">'+escape(obsStatus)+'</small></section>'+
-   '<section class="jp-mp-weather-card" id="profileTaf" style="display:flex!important;visibility:visible!important"><div class="jp-mp-card-heading"><h2>TAF</h2></div>'+
+   '<section class="jp-mp-weather-card jp-mp-taf-card" id="jpMinimalTafCard" style="display:flex!important;visibility:visible!important"><div class="jp-mp-card-heading"><h2>TAF</h2></div>'+
    '<pre class="jp-mp-taf-text" style="display:block!important;visibility:visible!important">'+escape(displayTaf(taf))+'</pre><small>'+escape(tafStatus)+'</small></section></div>'+
    '<button type="button" id="jpMinimalNotamToggle" class="jp-mp-notam-button" aria-expanded="false" aria-controls="jpMinimalNotamReader">'+
    '<span>NOTAM</span><span class="jp-mp-expand-indicator" aria-hidden="true">⌄</span></button>'+
