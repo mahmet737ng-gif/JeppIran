@@ -1,0 +1,310 @@
+{
+  "schema": "jeppiran.cdfa.dme-stations-qa.v1",
+  "cycle": "2621",
+  "country": "IR",
+  "source": "Iran AIP ENR 4.1 published 2023–2024 (historical coordinates; verify before use)",
+  "sourceUrl": "https://www.scribd.com/document/906233598/ENR-4-1",
+  "notice": "Training and simulator QA estimates only. Unknown DME antenna heights remain null, never substituted with airport elevation.",
+  "stations": {
+    "ABD": {
+      "latDms": "302231.1N",
+      "lonDms": "0481314.2E",
+      "elevationFt": null
+    },
+    "ABM": {
+      "latDms": "255240.8N",
+      "lonDms": "0550122.1E",
+      "elevationFt": 32
+    },
+    "AWZ": {
+      "latDms": "312015.3N",
+      "lonDms": "0484552.5E",
+      "elevationFt": null
+    },
+    "AJR": {
+      "latDms": "304441.1N",
+      "lonDms": "0494049.3E",
+      "elevationFt": 51
+    },
+    "ANK": {
+      "latDms": "333215.1N",
+      "lonDms": "0534346.8E",
+      "elevationFt": null
+    },
+    "ARK": {
+      "latDms": "340813.9N",
+      "lonDms": "0495113.8E",
+      "elevationFt": 5449
+    },
+    "ARB": {
+      "latDms": "381856.5N",
+      "lonDms": "0482605.1E",
+      "elevationFt": 4307
+    },
+    "BAM": {
+      "latDms": "290438.9N",
+      "lonDms": "0582730.0E",
+      "elevationFt": 3145
+    },
+    "BND": {
+      "latDms": "271149.4N",
+      "lonDms": "0562200.3E",
+      "elevationFt": 13
+    },
+    "LEN": {
+      "latDms": "263210.1N",
+      "lonDms": "0545104.2E",
+      "elevationFt": 72
+    },
+    "MAH": {
+      "latDms": "303322.9N",
+      "lonDms": "0490858.1E",
+      "elevationFt": null
+    },
+    "BJD": {
+      "latDms": "325820.7N",
+      "lonDms": "0591200.5E",
+      "elevationFt": null
+    },
+    "BRD": {
+      "latDms": "372942.2N",
+      "lonDms": "0571923.8E",
+      "elevationFt": null
+    },
+    "BUZ": {
+      "latDms": "285704.7N",
+      "lonDms": "0504933.5E",
+      "elevationFt": 24
+    },
+    "CBH": {
+      "latDms": "252641.9N",
+      "lonDms": "0602451.7E",
+      "elevationFt": null
+    },
+    "DAR": {
+      "latDms": "314659.4N",
+      "lonDms": "0565940.4E",
+      "elevationFt": null
+    },
+    "DNZ": {
+      "latDms": "363853.6N",
+      "lonDms": "0531120.1E",
+      "elevationFt": null
+    },
+    "DHN": {
+      "latDms": "351515.0N",
+      "lonDms": "0524312.0E",
+      "elevationFt": null
+    },
+    "ISN": {
+      "latDms": "324449.1N",
+      "lonDms": "0514940.8E",
+      "elevationFt": 5072
+    },
+    "KHM": {
+      "latDms": "264547.1N",
+      "lonDms": "0555427.6E",
+      "elevationFt": 31
+    },
+    "GGN": {
+      "latDms": "365544.7N",
+      "lonDms": "0542233.3E",
+      "elevationFt": -100
+    },
+    "HAM": {
+      "latDms": "345200.8N",
+      "lonDms": "0483301.0E",
+      "elevationFt": 5717
+    },
+    "HAB": {
+      "latDms": "351234.0N",
+      "lonDms": "0483931.0E",
+      "elevationFt": null
+    },
+    "ILM": {
+      "latDms": "333442.3N",
+      "lonDms": "0462455.4E",
+      "elevationFt": 4426
+    },
+    "IKA": {
+      "latDms": "352434.8N",
+      "lonDms": "0511042.5E",
+      "elevationFt": 3271
+    },
+    "ISR": {
+      "latDms": "271403.8N",
+      "lonDms": "0604320.4E",
+      "elevationFt": null
+    },
+    "KMS": {
+      "latDms": "342023.0N",
+      "lonDms": "0471008.9E",
+      "elevationFt": 4308
+    },
+    "KHG": {
+      "latDms": "291550.0N",
+      "lonDms": "0501900.7E",
+      "elevationFt": null
+    },
+    "KRD": {
+      "latDms": "332603.1N",
+      "lonDms": "0481730.7E",
+      "elevationFt": 3791
+    },
+    "KHY": {
+      "latDms": "382601.4N",
+      "lonDms": "0445758.9E",
+      "elevationFt": 3844
+    },
+    "KIS": {
+      "latDms": "263130.6N",
+      "lonDms": "0535744.7E",
+      "elevationFt": 87
+    },
+    "LAM": {
+      "latDms": "272222.2N",
+      "lonDms": "0531102.3E",
+      "elevationFt": 1329
+    },
+    "LAR": {
+      "latDms": "274030.7N",
+      "lonDms": "0542454.7E",
+      "elevationFt": 2610
+    },
+    "LVA": {
+      "latDms": "264843.4N",
+      "lonDms": "0532121.1E",
+      "elevationFt": null
+    },
+    "MSD": {
+      "latDms": "361352.2N",
+      "lonDms": "0593902.0E",
+      "elevationFt": 3251
+    },
+    "NSH": {
+      "latDms": "363946.1N",
+      "lonDms": "0512751.4E",
+      "elevationFt": null
+    },
+    "PAD": {
+      "latDms": "393611.2N",
+      "lonDms": "0475323.9E",
+      "elevationFt": null
+    },
+    "PRG": {
+      "latDms": "272137.2N",
+      "lonDms": "0524552.0E",
+      "elevationFt": 21
+    },
+    "RAF": {
+      "latDms": "301809.9N",
+      "lonDms": "0560320.3E",
+      "elevationFt": null
+    },
+    "RSR": {
+      "latDms": "365412.5N",
+      "lonDms": "0504049.6E",
+      "elevationFt": -21
+    },
+    "RST": {
+      "latDms": "371934.8N",
+      "lonDms": "0493657.1E",
+      "elevationFt": -42
+    },
+    "RUS": {
+      "latDms": "352643.7N",
+      "lonDms": "0505419.3E",
+      "elevationFt": 3661
+    },
+    "SBZ": {
+      "latDms": "361010.9N",
+      "lonDms": "0573415.0E",
+      "elevationFt": null
+    },
+    "SNJ": {
+      "latDms": "351419.7N",
+      "lonDms": "0470029.2E",
+      "elevationFt": null
+    },
+    "SRN": {
+      "latDms": "272454.1N",
+      "lonDms": "0621931.5E",
+      "elevationFt": null
+    },
+    "SAV": {
+      "latDms": "350106.8N",
+      "lonDms": "0502216.9E",
+      "elevationFt": null
+    },
+    "SYZ": {
+      "latDms": "293224.6N",
+      "lonDms": "0523519.6E",
+      "elevationFt": 4889
+    },
+    "SHR": {
+      "latDms": "362522.3N",
+      "lonDms": "0550519.6E",
+      "elevationFt": null
+    },
+    "SRJ": {
+      "latDms": "293322.5N",
+      "lonDms": "0553937.0E",
+      "elevationFt": 5801
+    },
+    "SIR": {
+      "latDms": "255452.5N",
+      "lonDms": "0543206.3E",
+      "elevationFt": 23
+    },
+    "TBS": {
+      "latDms": "334021.2N",
+      "lonDms": "0565330.9E",
+      "elevationFt": null
+    },
+    "TBZ": {
+      "latDms": "380853.5N",
+      "lonDms": "0461246.6E",
+      "elevationFt": null
+    },
+    "KER": {
+      "latDms": "301658.1N",
+      "lonDms": "0565632.3E",
+      "elevationFt": null
+    },
+    "TRN": {
+      "latDms": "354149.1N",
+      "lonDms": "0511701.6E",
+      "elevationFt": 3989
+    },
+    "UMH": {
+      "latDms": "374114.0N",
+      "lonDms": "0450503.7E",
+      "elevationFt": 4265
+    },
+    "YSJ": {
+      "latDms": "304136.0N",
+      "lonDms": "0513324.1E",
+      "elevationFt": null
+    },
+    "YZD": {
+      "latDms": "315351.6N",
+      "lonDms": "0541657.7E",
+      "elevationFt": 4047
+    },
+    "ZAL": {
+      "latDms": "310543.9N",
+      "lonDms": "0613230.6E",
+      "elevationFt": null
+    },
+    "ZDN": {
+      "latDms": "292912.3N",
+      "lonDms": "0605405.7E",
+      "elevationFt": 4487
+    },
+    "ZAJ": {
+      "latDms": "364646.8N",
+      "lonDms": "0482111.9E",
+      "elevationFt": 5348
+    }
+  }
+}
