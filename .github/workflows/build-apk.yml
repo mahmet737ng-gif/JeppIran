@@ -18,6 +18,7 @@ on:
       # of the GitHub Pages deployment (there is no runtime hosted fallback).
       - 'web/**'
       - 'scripts/build_android_local_web.py'
+      - 'scripts/build_android_portrait_posters.py'
       - '.github/workflows/build-apk.yml'
       - 'build.gradle.kts'
       - 'settings.gradle.kts'
@@ -56,6 +57,8 @@ jobs:
       - name: Ensure OICI 207/209 georeferencing remains disabled before release
         run: |
           node --check web/app.js
+          node --check web/airport-profile-posters.js
+          node --test web/tests/android-portrait-back-nav.test.cjs
           node --check web/chart-margin-tree.js
           node --test tests/airport-chart-audit-v2621.test.cjs
           node --check web/oici-route-only-v2621.mjs
