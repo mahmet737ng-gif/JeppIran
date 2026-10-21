@@ -1,7 +1,8 @@
 /* JEPPIRAN CDFA next-increment tracker: VISUAL-ONLY additive overlay.
  * Owner-locked CDFA rows, geometry, vector metrics and native apps untouched.
- * Live mode requires explicitly identified, chart-bound DME; GPS lat/lon
- * alone can never be substituted for a valid DME reference.
+ * Live mode prefers a station-identified radio DME, then can estimate the
+ * chart's DME using the matched published station coordinates and position.
+ * Site-based distances are TRAINING QA estimates, not measured radio DME.
  * QA simulation requires the explicit ?cdfa_increment_qa=1 query parameter.
  */
 (()=>{
@@ -12,8 +13,8 @@
   if(!panel)return;
   const qa=new URLSearchParams(location.search).get("cdfa_increment_qa")==="1";
   const clock=()=>performance.now();
-  let catalogue=new Map(),activePage=null,svg=null,marker=null,rows=[],target=-1;
-  let liveNm=null,liveAt=0,simNm=null,playing=false,playTimer=0,qaBox=null;
+  let catalogue=new Map(),stationSites={},activePage=null,svg=null,marker=null,rows=[],target=-1;
+  let liveNm=null,liveMode=null,liveAt=0,simNm=null,playing=false,playTimer=0,qaBox=null;
   const MAX_STALENESS_MS=3500;
   function chart(){
     try{return typeof selectedChart!=="undefined"?selectedChart:null}catch(_){return null}
@@ -98,6 +99,7 @@
     marker.style.transform="translateY("+b.top+"px)";
     marker.style.opacity="1";
     marker.dataset.dme=String(rows[index].dme);
+    marker.dataset.reading=qa?"qa_simulation":(liveMode||"unavailable");
     marker.dataset.alt=rows[index].alt;
     target=index;
     if(marker.classList.contains("jp-inc-no-motion"))
@@ -162,7 +164,7 @@
     if(!ensureMarker())return;
     const page=Number(chart()?.page);
     if(page!==activePage){
-      activePage=page;liveNm=null;liveAt=0;simNm=null;target=-1;stopPlay();
+      activePage=page;liveNm=null;liveMode=null;liveAt=0;simNm=null;target=-1;stopPlay();
     }
     draw();
   }
@@ -172,19 +174,25 @@
     .observe(panel,{childList:true,subtree:true});
   window.addEventListener("jeppiran-chart-rendered",()=>requestAnimationFrame(refresh));
   window.addEventListener("jeppiran-chart-selected",()=>{
-    liveNm=null;liveAt=0;simNm=null;target=-1;stopPlay();hideMarker();
+    liveNm=null;liveMode=null;liveAt=0;simNm=null;target=-1;stopPlay();hideMarker();
   });
   window.addEventListener("jeppiran-position",event=>{
     if(qa)return;
-    // Bind the simulator's identified DME to the OPEN chart here. Bridge
-    // packets are chart-agnostic: they must supply the real station ID and NM,
-    // while page/ICAO come from the viewer, never from a guessed coordinate.
-    const current=chart();
-    const packet={...(event.detail||{}),cdfaIcao:current?.airport,
-      cdfaPage:current?.page};
-    const sample=core.validatedReading(packet,record());
-    if(sample===null){liveNm=null;liveAt=0;hideMarker();return;}
-    liveNm=sample;liveAt=clock();draw();
+    const current=chart(),r=record(),position=event.detail||{};
+    // Authentic, chart-identified radio DME takes priority, if provided.
+    // The viewer adds chart identity; it must never manufacture station IDs.
+    const radio=core.validatedReading({...position,
+      cdfaIcao:current?.airport,cdfaPage:current?.page},r);
+    const computed=radio===null?core.estimatedReading(position,r,stationSites):null;
+    const sample=radio!==null?radio:computed?.nm;
+    if(!Number.isFinite(sample)){
+      liveNm=null;liveMode=null;liveAt=0;hideMarker();return;
+    }
+    liveNm=sample;
+    liveMode=radio!==null?"radio_dme":computed.mode;
+    liveAt=clock();
+    // The original rows and altitudes remain unchanged.
+    draw();
   });
   // If simulator data cease, suppress any stale highlight.
   setInterval(()=>{if(!qa&&liveNm!==null&&clock()-liveAt>MAX_STALENESS_MS){
@@ -192,9 +200,13 @@
   }},850);
   Promise.all([
     fetch("./data/cdfa-v2621-v17-qa.json").then(r=>r.ok?r.json():null),
-    fetch("./data/cdfa-exclusions-v2621.json").then(r=>r.ok?r.json():null)
-  ]).then(([data,ex])=>{
+    fetch("./data/cdfa-exclusions-v2621.json").then(r=>r.ok?r.json():null),
+    fetch("./data/cdfa-dme-stations-v2621.json?v=2621-cdfa-gps-r1").then(r=>r.ok?r.json():null)
+  ]).then(([data,ex,stations])=>{
     if(data?.cycle!=="2621"||ex?.cycle!=="2621")return;
+    // A missing or mismatched station dataset safely disables estimates.
+    stationSites=stations?.cycle==="2621"&&stations?.country==="IR"&&
+      stations?.schema==="jeppiran.cdfa.dme-stations-qa.v1"?stations.stations||{}:{};
     const held=new Set([155,705,...(ex.chart_pages_1_based||[])].map(Number));
     catalogue=new Map((data.charts||[]).filter(r=>!held.has(Number(r.sourcePage)))
       .map(r=>[Number(r.sourcePage),r]));
