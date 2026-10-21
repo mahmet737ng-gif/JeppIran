@@ -87,3 +87,17 @@ test("PDF zoom sharpens from original vector page and edge paging requires overs
   assert.match(js,/state\.reversing/);
   assert.match(js,/zoom:chartZoom,panX:chartZoom>1\.001\?chartPanX:0/);
 });
+
+test("iPad fullscreen chart tree stays below status clock at every PDF zoom",()=>{
+  const nav=read("chart-margin-tree.js"),css=read("chart-margin-tree.css");
+  assert.match(nav,/const TREE_SCREEN_CLEARANCE=48/);
+  assert.match(nav,/getComputedStyle\(document\.body\)\.paddingTop/);
+  assert.match(nav,/Math\.ceil\(\(screenTop-rect\.top\)\/scale\)/);
+  assert.match(nav,/host\.style\.top=nextTop/);
+  assert.match(nav,/host\.style\.maxHeight=nextHeight/);
+  assert.match(nav,/window\.visualViewport\?\.addEventListener\("resize"/);
+  assert.match(nav,/Math\.abs\(now-lastLayerScale\)>\.002/);
+  assert.match(css,/body\.viewer-fullscreen #chartsView\.chart-open #chartTransformLayer > \.jp-margin-chart-tree/);
+  assert.match(css,/env\(safe-area-inset-top\)/);
+  assert.doesNotMatch(nav,/stage\.style\.paddingTop|layer\.style\.paddingTop|stage\.style\.transform/);
+});

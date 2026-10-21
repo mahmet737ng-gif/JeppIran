@@ -35,6 +35,25 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   await page.waitForFunction(()=>document.getElementById("zoomValue")?.textContent==="100%",null,{timeout:60000});
   assert.equal(await page.evaluate(()=>chartZoom),1,"Opening a chart must fit at 100% zoom");
   assert.equal(await page.locator("#zoomValue").innerText(),"100%","Zoom display must read 100%");
+  // Fullscreen iPad status bar is drawn at screen top. The chart tree must
+  // clear it even as the PDF scale changes, without any additional sidebar.
+  await page.waitForFunction(()=>document.getElementById("jpMarginChartTree"),null,{timeout:20000});
+  await page.evaluate(()=>document.body.classList.add("viewer-fullscreen"));
+  const topOfTree=()=>page.evaluate(()=>document.getElementById("jpMarginChartTree")?.getBoundingClientRect().top);
+  await page.waitForFunction(()=>document.getElementById("jpMarginChartTree")?.getBoundingClientRect().top>=47,
+    null,{timeout:12000});
+  assert.ok((await topOfTree())>=47,"Fullscreen iPad chart tree clears the status bar");
+  for(const zoom of [.5,1.7]){
+    await page.evaluate(z=>setChartZoom(z),zoom);
+    await page.waitForFunction(()=>document.getElementById("jpMarginChartTree")?.getBoundingClientRect().top>=47,
+      null,{timeout:12000});
+    assert.ok((await topOfTree())>=47,"Tree must clear clock even at "+zoom+"x PDF zoom");
+  }
+  await page.evaluate(()=>{
+    setChartZoom(1);
+    document.body.classList.remove("viewer-fullscreen");
+  });
+  console.log("PASS iPad fullscreen chart tree clears status clock from 50% through 170% zoom.");
   const first=await page.locator("#viewerChart").innerText();
   await page.waitForFunction(()=>chartSlidePreviews.size>0,null,{timeout:25000});
   await page.evaluate(()=>{

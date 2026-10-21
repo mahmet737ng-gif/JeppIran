@@ -80,6 +80,13 @@ body.chart-inverted #chartsView.chart-open #chartTransformLayer .jp-margin-tree-
   #chartsView.chart-open #chartTransformLayer > .jp-margin-chart-tree{font-size:12px;width:clamp(175px,30%,215px)}
 }
 
+/* Fullscreen iPad/PWA can paint behind the system status bar. The JS layout
+   refines this fallback with the actual PDF zoom, without any canvas reflow. */
+body.viewer-fullscreen #chartsView.chart-open #chartTransformLayer > .jp-margin-chart-tree{
+  top:max(56px,calc(env(safe-area-inset-top) + 24px));
+  max-height:min(685px,calc(100% - 68px));
+}
+
 /* One navigation source in Viewer: retire the old viewport hamburger/drawer.
    The PDF-attached white-margin tree remains available in fullscreen. */
 #jpChartMenuBtn,#jpChartDrawer,#jpChartDrawerBackdrop{display:none!important}
