@@ -38,7 +38,13 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   // Fullscreen iPad status bar is drawn at screen top. The chart tree must
   // clear it even as the PDF scale changes, without any additional sidebar.
   await page.waitForFunction(()=>document.getElementById("jpMarginChartTree"),null,{timeout:20000});
-  await page.evaluate(()=>document.body.classList.add("viewer-fullscreen"));
+  await page.evaluate(()=>{
+    // A class toggle in this test does not emit native fullscreenchange.
+    // Dispatch resize so the chart-margin tree performs the same status-bar
+    // clearance calculation as a real browser fullscreen transition.
+    document.body.classList.add("viewer-fullscreen");
+    window.dispatchEvent(new Event("resize"));
+   });
   const topOfTree=()=>page.evaluate(()=>document.getElementById("jpMarginChartTree")?.getBoundingClientRect().top);
   await page.waitForFunction(()=>document.getElementById("jpMarginChartTree")?.getBoundingClientRect().top>=47,
     null,{timeout:12000});
@@ -52,6 +58,7 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
   await page.evaluate(()=>{
     setChartZoom(1);
     document.body.classList.remove("viewer-fullscreen");
+    window.dispatchEvent(new Event("resize"));
   });
   console.log("PASS iPad fullscreen chart tree clears status clock from 50% through 170% zoom.");
   const first=await page.locator("#viewerChart").innerText();
