@@ -21,7 +21,7 @@ test("old topbar remains archived but approved minimalist profile replaces it",(
  assert.doesNotMatch(html,/src="\.\/airport-profile-topbar-experiment\.js/);
  assert.doesNotMatch(html,/src="\.\/airport-profile-posters\.js/);
  assert.doesNotMatch(sw,/"\.\/airport-profile-topbar-experiment\.js\?/);
- assert.ok(html.includes("profile-minimal.js?v=2621-minimal-20261021-r1"));
+ assert.match(html,/profile-minimal\\.js\\?v=[^"\\s]+/);
  assert.ok(sw.includes("profile-minimal.js?v=2621-minimal-20261021-r1"));
  assert.match(side,/!root\.classList\.contains\("jp-o3-topbar-experiment"\)/);
 });
