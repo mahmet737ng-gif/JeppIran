@@ -3207,7 +3207,8 @@ function updatePositionUi(p,source){
   $("#positionDot").classList.add("live");
   $("#posLat").textContent=positionNumber(p.lat,6);
   $("#posLon").textContent=positionNumber(p.lon,6);
-  $("#posAlt").textContent=Number.isFinite(p.alt)?Math.round(p.alt)+" m":"—";
+  // All location packets normalize altitude to metres internally. Display feet only.
+  $("#posAlt").textContent=Number.isFinite(p.alt)?Math.round(p.alt*3.280839895)+" ft":"—";
   $("#posHdg").textContent=Number.isFinite(p.heading)?Math.round((p.heading+360)%360)+"°":"—";
   $("#posGs").textContent=Number.isFinite(p.groundspeed)?Math.round(p.groundspeed*1.943844)+" kt":"—";
   $("#posAcc").textContent=Number.isFinite(p.accuracy)?Math.round(p.accuracy)+" m":source==="gps"?"—":"SIM";
@@ -3223,7 +3224,7 @@ function updatePositionUi(p,source){
   if(source==="xplane") $("#useXpBtn").classList.add("active");
   if(source==="fsx") $("#useFsxBtn").classList.add("active");
   updateAircraftMarker();
-  window.dispatchEvent(new CustomEvent("jeppiran-position",{detail:p}));
+  window.dispatchEvent(new CustomEvent("jeppiran-position",{detail:{...p,source}}));
 }
 function clearPositionUi(message="Disconnected"){
   lastPosition=null;
@@ -3269,7 +3270,8 @@ function startDeviceGps(){
     const c=pos.coords;
     let heading=Number.isFinite(c.heading)?c.heading:null;
     const fix={lat:c.latitude,lon:c.longitude,alt:Number.isFinite(c.altitude)?c.altitude:null,
-      heading,groundspeed:Number.isFinite(c.speed)?c.speed:null,accuracy:c.accuracy,timestamp:pos.timestamp};
+      heading,groundspeed:Number.isFinite(c.speed)?c.speed:null,accuracy:c.accuracy,
+      altitudeAccuracy:Number.isFinite(c.altitudeAccuracy)?c.altitudeAccuracy:null,timestamp:pos.timestamp};
     if(!Number.isFinite(fix.heading) && lastGpsFix){
       const moved=Math.hypot((fix.lat-lastGpsFix.lat)*111000,(fix.lon-lastGpsFix.lon)*111000*Math.cos(fix.lat*Math.PI/180));
       if(moved>4) fix.heading=bearingBetween(lastGpsFix,fix);
