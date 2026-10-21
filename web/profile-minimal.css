@@ -354,3 +354,12 @@
   overflow-wrap:normal!important;overflow-x:auto!important;overflow-y:visible!important;
   line-height:1.55!important;font-size:clamp(11px,3vw,13px)!important;
 }
+
+/* No redundant floating Back control over AIRPORTS on portrait profiles.
+   Preserve HOME and the non-profile chart navigation controls. */
+@media(max-width:749px){
+ body:has(#chartsView.active:not(.chart-open))
+ :is(#jp-global-floating-back,#androidBackBtn,#backBtn,.floating-back,.back-btn){
+   display:none!important;visibility:hidden!important;pointer-events:none!important;
+ }
+}
