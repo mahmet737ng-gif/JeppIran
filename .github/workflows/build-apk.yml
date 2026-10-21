@@ -56,9 +56,11 @@ jobs:
       - name: Ensure OICI 207/209 georeferencing remains disabled before release
         run: |
           node --check web/app.js
+          node --check web/chart-margin-tree.js
           node --test tests/airport-chart-audit-v2621.test.cjs
           node --check web/oici-route-only-v2621.mjs
           node --test tests/oici-route-only-v2621.test.cjs
+          node --test web/tests/chart-margin-tree.test.cjs
 
       - name: Block Android publication if ANY existing georeference was deleted or changed
         run: |
