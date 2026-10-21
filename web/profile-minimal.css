@@ -226,3 +226,31 @@
   min-height:1.6em!important;height:auto!important;max-height:none!important;
   white-space:pre-wrap!important;overflow-wrap:anywhere!important;
 }
+
+/* Final width lock: legacy profile CSS must never collapse the TAF card to 0px. */
+#chartsView .airport-profile.jp-minimal-profile .jp-mp-weather{
+  box-sizing:border-box!important;display:grid!important;
+  width:100%!important;min-width:0!important;
+  grid-template-columns:repeat(2,minmax(0,1fr))!important;
+}
+#chartsView .airport-profile.jp-minimal-profile #profileWeather,
+#chartsView .airport-profile.jp-minimal-profile #profileTaf{
+  box-sizing:border-box!important;
+  width:100%!important;min-width:0!important;
+  max-width:100%!important;flex:1 1 auto!important;
+  align-self:stretch!important;justify-self:stretch!important;
+  overflow:hidden!important;
+}
+#chartsView .airport-profile.jp-minimal-profile #profileMetarRaw,
+#chartsView .airport-profile.jp-minimal-profile #profileTaf .jp-mp-taf-text{
+  box-sizing:border-box!important;display:block!important;flex:0 0 auto!important;
+  width:100%!important;min-width:0!important;max-width:100%!important;
+  height:auto!important;min-height:1.6em!important;
+  white-space:pre-wrap!important;overflow-wrap:anywhere!important;
+  word-break:break-word!important;
+}
+@media(max-width:749px){
+  #chartsView .airport-profile.jp-minimal-profile .jp-mp-weather{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+}
