@@ -3190,6 +3190,16 @@ let activePositionSource=localStorage.getItem("positionSource")||"";
 let gpsWatchId=null, bridgeSocket=null, relaySocket=null, relayPingTimer=null, relayReconnectTimer=null, relayAwaitPositionTimer=null, relayHost="", relayTopic="", lastPosition=null, lastGpsFix=null;
 
 function positionNumber(v,d=5){return Number.isFinite(v)?Number(v).toFixed(d):"—"}
+// CDFA needs the simulator's actual, station-identified DME reading.
+// Never synthesize DME from latitude/longitude or distance to the threshold.
+function simulatorDmePacket(packet){
+  const dme=packet?.dme&&typeof packet.dme==="object"?packet.dme:null;
+  const id=String(dme?.id??packet?.dmeId??"").trim().toUpperCase();
+  const nm=dme?.nm??packet?.dmeNm;
+  if(!/^[A-Z0-9]{2,6}$/.test(id)||typeof nm!=="number"||
+     !Number.isFinite(nm)||nm<0||nm>300)return null;
+  return {id,nm};
+}
 function updatePositionUi(p,source){
   lastPosition=p;
   const sourceLabel=source==="gps"?"DEVICE GPS":source==="xplane"?"X-PLANE 11.5":source==="fsx"?"FSX":"POSITION";
@@ -3433,7 +3443,8 @@ async function connectFsxRelay(host,{reconnect=false}={}){
           if(relayAwaitPositionTimer){clearTimeout(relayAwaitPositionTimer);relayAwaitPositionTimer=null}
           updatePositionUi({lat,lon,alt:d.alt==null?null:Number(d.alt),heading:d.heading==null?null:Number(d.heading),
             groundspeed:(d.groundspeed??d.groundSpeedMps)==null?null:Number(d.groundspeed??d.groundSpeedMps),
-            pitch:d.pitch==null?null:Number(d.pitch),roll:d.roll==null?null:Number(d.roll),accuracy:null,timestamp:Date.now()},"fsx");
+            pitch:d.pitch==null?null:Number(d.pitch),roll:d.roll==null?null:Number(d.roll),accuracy:null,timestamp:Date.now(),
+            dme:simulatorDmePacket(d)},"fsx");
           // The universal bridge shares the proven FSX relay transport but reports its detected simulator.
           const detected=String(d.source||"").trim();
           if(detected && detected!=="FSX"){
@@ -3499,7 +3510,7 @@ function connectSimulatorBridge(){
       if(resolvedSource!==activePositionSource){activePositionSource=resolvedSource;localStorage.setItem("positionSource",resolvedSource)}
       updatePositionUi({lat,lon,alt:d.alt==null?null:Number(d.alt),heading:d.heading==null?null:Number(d.heading),
         groundspeed:(d.groundspeed??d.groundSpeedMps)==null?null:Number(d.groundspeed??d.groundSpeedMps),pitch:d.pitch==null?null:Number(d.pitch),roll:d.roll==null?null:Number(d.roll),
-        accuracy:null,timestamp:Date.now()},resolvedSource);
+        accuracy:null,timestamp:Date.now(),dme:simulatorDmePacket(d)},resolvedSource);
     }catch(_){}
   };
   bridgeSocket.onerror=()=>{$("#simStatus").textContent="Bridge connection error. Check the local bridge, PC firewall and network address."};
