@@ -10,7 +10,12 @@
     OR:"Iraq",OT:"Qatar",OP:"Pakistan",UG:"Georgia",UD:"Armenia"
   })[String(code).slice(0,2)]||"";
   const escape=s=>String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-  let query="",open=true,airportOpen=true;
+  const isAndroidPortrait=()=>
+    document.documentElement.classList.contains("jp-android-phone")&&
+    matchMedia("(max-width: 749px) and (orientation: portrait)").matches;
+  // The full tree is readable by default on tablets. On portrait phones it
+  // starts as one 47px button, leaving the full PDF visible until requested.
+  let query="",open=!isAndroidPortrait(),airportOpen=true;
   const opened=new Set();
   // iPad status bars occupy screen pixels, while this navigation tree lives
   // in a zoomed PDF coordinate space. Convert clearance to unscaled PDF px,
@@ -32,12 +37,21 @@
     const scale=layerScale(layer);
     const bodyInset=parseFloat(getComputedStyle(document.body).paddingTop)||0;
     const visualTop=window.visualViewport?.offsetTop||0;
-    const screenTop=visualTop+Math.max(TREE_SCREEN_CLEARANCE,bodyInset+12);
+    // MobileWebActivity already keeps Android content inside system-bar insets;
+    // the 48px iPad/PWA clearance would waste scarce portrait chart height.
+    const clearance=isAndroidPortrait()?8:TREE_SCREEN_CLEARANCE;
+    const screenTop=visualTop+Math.max(clearance,bodyInset+12);
     // Respect PDF margin coordinates: neither move/reflow the PDF canvas nor
     // position the list in a separate, fixed navigation column.
     const localTop=Math.max(8,Math.ceil((screenTop-rect.top)/scale));
     const viewportBottom=visualTop+(window.visualViewport?.height||window.innerHeight);
-    const visibleHeight=(viewportBottom-Math.max(screenTop,rect.top+localTop*scale)-12)/scale;
+    // Counter the fitted PDF scale on portrait phones so labels and search
+    // stay finger-readable. The tree remains a child of the PDF layer and
+    // never creates a separate layout column or changes chart geometry.
+    const treeScale=isAndroidPortrait()?1/scale:1;
+    host.style.setProperty("--jp-margin-tree-local-scale",String(treeScale));
+    const effectiveScale=scale*treeScale;
+    const visibleHeight=(viewportBottom-Math.max(screenTop,rect.top+localTop*scale)-12)/effectiveScale;
     const paperHeight=layer.offsetHeight-localTop-8;
     const maxHeight=Math.max(38,Math.min(685,visibleHeight,paperHeight));
     const nextTop=localTop+"px",nextHeight=Math.floor(maxHeight)+"px";
