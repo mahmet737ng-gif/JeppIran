@@ -339,3 +339,50 @@ html.jp-android-phone .back-btn,
 html.jp-android-phone .floating-back,
 html.jp-android-phone #androidBackBtn,
 html.jp-android-phone #backBtn{display:none!important}
+
+/* Android portrait parity for the current Classic chart viewer.
+   The chart toolbar is now a single horizontally scrollable control row;
+   the removed title row no longer reserves nearly 100px above the PDF. */
+@media(max-width:749px) and (orientation:portrait){
+  html.jp-android-phone #chartsView.chart-open .viewer-toolbar{
+    height:58px!important;min-height:58px!important;max-height:58px!important;
+    display:flex!important;flex-direction:row!important;align-items:center!important;
+    padding:5px 6px!important;gap:0!important;overflow:hidden!important;
+  }
+  html.jp-android-phone #chartsView.chart-open .viewer-actions{
+    flex:1 1 auto!important;width:100%!important;max-width:100%!important;
+    height:48px!important;padding:2px 1px!important;gap:5px!important;
+    overflow-x:auto!important;overflow-y:hidden!important;
+    scrollbar-width:none;
+  }
+  html.jp-android-phone #chartsView.chart-open .viewer-actions::-webkit-scrollbar{
+    display:none;
+  }
+
+  /* chart-margin-tree.js supplies the inverse of the live PDF transform.
+     This keeps the PDF-attached navigation readable at fit-to-width while
+     preserving its exact owner-locked location inside chartTransformLayer. */
+  html.jp-android-phone #chartsView.chart-open #chartTransformLayer>.jp-margin-chart-tree{
+    top:8px;
+    width:min(82vw,292px);max-width:calc(100vw - 18px);
+    max-height:calc(100dvh - 82px);
+    transform:scale(var(--jp-margin-tree-local-scale,1));
+    transform-origin:top left;
+    font-size:13px;line-height:1.42;
+  }
+  html.jp-android-phone #chartsView.chart-open #chartTransformLayer>.jp-margin-chart-tree:not(.is-open){
+    width:47px;height:42px;max-height:42px;
+  }
+  html.jp-android-phone #chartsView.chart-open #chartTransformLayer .jp-margin-tree-header{
+    min-height:42px;padding:5px 7px;
+  }
+  html.jp-android-phone #chartsView.chart-open #chartTransformLayer .jp-margin-tree-toggle{
+    width:34px;min-width:34px;min-height:32px;
+  }
+  html.jp-android-phone #chartsView.chart-open #chartTransformLayer .jp-margin-tree-search{
+    min-height:44px;font-size:16px;
+  }
+  html.jp-android-phone #chartsView.chart-open #chartTransformLayer .jp-margin-tree-list button{
+    min-height:44px;padding-top:10px;padding-bottom:10px;
+  }
+}
