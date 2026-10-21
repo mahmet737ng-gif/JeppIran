@@ -76,6 +76,8 @@ jobs:
       - name: Ensure OICI 207/209 georeferencing remains disabled before release
         run: |
           node --check web/app.js
+          node --check web/profile-minimal.js
+          node --test web/tests/minimal-airport-profile.test.cjs
           node --check web/oici-route-only-v2621.mjs
           node --test tests/oici-route-only-v2621.test.cjs
 
