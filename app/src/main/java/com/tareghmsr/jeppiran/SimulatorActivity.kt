@@ -541,7 +541,7 @@ class SimulatorActivity : AppCompatActivity() {
             buildString {
                 append("LAT  ").append(String.format(Locale.US, "%.6f", p.latitude))
                 append("\nLON  ").append(String.format(Locale.US, "%.6f", p.longitude))
-                p.altitudeMeters?.let { append("\nALT  ").append(String.format(Locale.US, "%.0f m", it)) }
+                p.altitudeMeters?.let { append("\nALT  ").append(String.format(Locale.US, "%.0f ft", it * 3.280839895)) }
                 p.headingDegrees?.let { append("\nHDG  ").append(String.format(Locale.US, "%.1f°T", it)) }
                 p.groundSpeedMps?.let { append("\nGS   ").append(String.format(Locale.US, "%.1f kt", it * 1.9438444924)) }
                 p.pitchDegrees?.let { append("\nPIT  ").append(String.format(Locale.US, "%.1f°", it)) }
