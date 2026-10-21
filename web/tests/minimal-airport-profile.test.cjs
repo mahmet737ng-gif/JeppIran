@@ -6,13 +6,13 @@ const path=require("node:path");
 const read=p=>fs.readFileSync(path.resolve(__dirname,"../..",p),"utf8");
 test("final minimal profile loads before application and matches the offline worker",()=>{
  const html=read("web/index.html"),sw=read("web/service-worker.js");
- const file="profile-minimal.js?v=2621-minimal-20261021-r1";
+ const file="profile-minimal.js?v=2621-minimal-20261021-r2";
  const css="profile-minimal.css?v=2621-minimal-20261021-r1";
  assert.ok(html.includes(file)&&sw.includes(file),"script missing from PWA shell");
  assert.ok(html.includes(css)&&sw.includes(css),"style missing from PWA shell");
- assert.ok(html.indexOf(file)<html.indexOf("app.js?v=2621-minimal-profile-r1"),
+ assert.ok(html.indexOf(file)<html.indexOf("app.js?v=2621-phone-viewer-20261021-r2"),
    "profile hook must load before app.js");
- assert.ok(sw.includes('app.js?v=2621-minimal-profile-r1'));
+ assert.ok(sw.includes('app.js?v=2621-phone-viewer-20261021-r2'));
  assert.doesNotMatch(html,/src="\.\/airport-profile-posters\.js/);
  assert.doesNotMatch(html,/src="\.\/airport-profile-topbar-experiment\.js/);
 });

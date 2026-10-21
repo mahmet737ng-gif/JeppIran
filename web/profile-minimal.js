@@ -6,6 +6,11 @@ const openGroups=new Map();
 const documents=new Map();
 const escape=s=>String(s==null?"":s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const clean=s=>escape(s||"Unavailable");
+/* Preserve original TAF tokens; put each forecast change group on its own line. */
+function displayTaf(raw){
+ const report=String(raw||"TAF unavailable").replace(/\r\n?/g,"\n").trim();
+ return report.replace(/[ \t]+(?=(?:FM\d{6}|BECMG|TEMPO|PROB\d{2}|INTER)\b)/g,"\n");
+}
 function sourceIdentity(chart,manifest){
  const info=manifest&&manifest.airports&&manifest.airports[chart.airport];
  return info && Number(info.global_pages&&info.global_pages[Number(chart.pdf_page)-1])===Number(chart.page)?info:null;
@@ -72,7 +77,7 @@ function render(ctx){
    '</div><pre id="profileMetarRaw">'+escape(raw||"METAR unavailable")+'</pre>'+
    '<small id="profileMetarAge">'+escape(obsStatus)+'</small></section>'+
    '<section class="jp-mp-weather-card" id="profileTaf" style="display:flex!important;visibility:visible!important"><div class="jp-mp-card-heading"><h2>TAF</h2></div>'+
-   '<pre class="jp-mp-taf-text" style="display:block!important;visibility:visible!important">'+escape(taf||"TAF unavailable")+'</pre><small>'+escape(tafStatus)+'</small></section></div>'+
+   '<pre class="jp-mp-taf-text" style="display:block!important;visibility:visible!important">'+escape(displayTaf(taf))+'</pre><small>'+escape(tafStatus)+'</small></section></div>'+
    '<button type="button" id="jpMinimalNotamToggle" class="jp-mp-notam-button" aria-expanded="false" aria-controls="jpMinimalNotamReader">'+
    '<span>NOTAM</span><span class="jp-mp-expand-indicator" aria-hidden="true">⌄</span></button>'+
    '<div id="jpMinimalNotamReader" class="jp-mp-notam-reader" hidden>'+
