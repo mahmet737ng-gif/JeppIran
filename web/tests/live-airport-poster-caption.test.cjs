@@ -38,9 +38,10 @@ test("live caption assets are versioned in HTML and SW and generated before pack
  assert.ok(html.includes(liveStyle)&&sw.includes(liveStyle));
  // The approved poster sources and caption typography remain locked, but the
  // controller may be updated for layout fixes such as expanding NOTAM cards.
- const controller=html.match(/airport-profile-posters\.js\?v=[a-z0-9-]+/);
- assert.ok(controller,"poster controller must have a versioned URL");
+ const controller=html.match(/profile-minimal\.js\?v=[a-z0-9-]+/);
+ assert.ok(controller,"approved minimal profile must have a versioned URL");
  assert.ok(sw.includes(controller[0]),"web and offline controller revisions must match");
+ assert.doesNotMatch(html,/src="\.\/airport-profile-posters\.js/);
  assert.match(wf,/python3 scripts\/build_textfree_airport_posters\.py/);
  assert.match(wf,/node --test web\/tests\/live-airport-poster-caption\.test\.cjs/);
 });
