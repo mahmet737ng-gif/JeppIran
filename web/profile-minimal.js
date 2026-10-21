@@ -9,7 +9,20 @@ const clean=s=>escape(s||"Unavailable");
 /* Preserve original TAF tokens; put each forecast change group on its own line. */
 function displayTaf(raw){
  const report=String(raw||"TAF unavailable").replace(/\r\n?/g,"\n").trim();
- return report.replace(/[ \t]+(?=(?:FM\d{6}|BECMG|TEMPO|PROB\d{2}|INTER)\b)/g,"\n");
+ // Presentation-only breaks: preserve all original MET forecast tokens.
+ // A single-line provider TAF must be readable on portrait phones too.
+ const groups=report.replace(/[ \t]+(?=(?:FM\d{6}|BECMG|TEMPO|PROB\d{2}|INTER)\b)/g,"\n");
+ return groups.split("\n").map(group=>{
+   const words=group.trim().split(/\s+/).filter(Boolean);
+   const lines=[];
+   let line="";
+   for(const word of words){
+     if(line && line.length+word.length+1>46){lines.push(line);line=word;}
+     else line+=(line?" ":"")+word;
+   }
+   if(line)lines.push(line);
+   return lines.join("\n");
+ }).filter(Boolean).join("\n");
 }
 function sourceIdentity(chart,manifest){
  const info=manifest&&manifest.airports&&manifest.airports[chart.airport];
