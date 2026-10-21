@@ -1268,6 +1268,9 @@ function renderAirports(filter=""){
 }
 $("#airportSearch").addEventListener("input",e=>renderAirports(e.target.value));
 function selectAirport(icao){
+  // Invalidate an in-flight PDF render so returning to the profile cannot
+  // resurrect a chart beneath the collapsed Viewer.
+  ++pdfRenderToken;
   cancelChartDetail();chartDetail.page=null;
   selectedAirport=icao;selectedChart=null;airportTreeExpanded=true;profileTab="Overview";
   closeAirportPicker();
