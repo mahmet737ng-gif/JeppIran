@@ -22,10 +22,10 @@ test("visual addition preserves locked table and PDF-georeference assets",()=>{
  const css=fs.readFileSync(path.join(root,"cdfa-increment-tracker.css"),"utf8");
  const overlay=fs.readFileSync(path.join(root,"cdfa-increment-tracker.js"),"utf8");
  const sw=fs.readFileSync(path.join(root,"service-worker.js"),"utf8");
- assert.match(html,/cdfa-increment-core\.js\?v=2621-cdfa-increment-qa-r2/);
- assert.match(html,/cdfa-increment-tracker\.js\?v=2621-cdfa-live-dme-r1/);
+ assert.match(html,/cdfa-increment-core\.js\?v=2621-cdfa-gps-distance-r1/);
+ assert.match(html,/cdfa-increment-tracker\.js\?v=2621-cdfa-gps-distance-r1/);
  assert.match(html,/cdfa-increment-tracker\.css\?v=2621-cdfa-increment-colors-r3/);
- assert.match(sw,/cdfa-increment-tracker\.js\?v=2621-cdfa-live-dme-r1/);
+ assert.match(sw,/cdfa-increment-tracker\.js\?v=2621-cdfa-gps-distance-r1/);
  assert.match(overlay,/\.observe\(panel,\{childList:true,subtree:true\}\)/);
  assert.match(overlay,/line\.setAttribute\("y1"/);
  assert.match(overlay,/Number\(line\.getAttribute\("x1"\)\)===0/);
