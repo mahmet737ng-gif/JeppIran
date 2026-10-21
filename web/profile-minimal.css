@@ -278,3 +278,47 @@
   line-height:1.45!important;overflow-wrap:anywhere!important;
   white-space:pre-wrap!important;word-break:break-word!important;
 }
+
+/* On phones the profile occupies the available width. The AIRPORTS selector is
+   an off-canvas drawer, not a permanently visible second grid column. */
+@media(max-width:749px){
+ #chartsView.charts-layout.active:not(.chart-open){
+   display:grid!important;grid-template-columns:minmax(0,1fr)!important;
+   grid-template-rows:minmax(0,1fr)!important;
+   width:100%!important;min-width:0!important;overflow:hidden!important;
+ }
+ #chartsView.charts-layout.active:not(.chart-open) .viewer-pane{
+   box-sizing:border-box!important;display:flex!important;flex-direction:column!important;
+   grid-column:1!important;grid-row:1!important;
+   width:100%!important;min-width:0!important;max-width:100%!important;
+   height:100%!important;min-height:0!important;overflow:hidden!important;
+ }
+ #chartsView.charts-layout.active:not(.chart-open) #airportProfile.jp-minimal-profile{
+   box-sizing:border-box!important;display:block!important;
+   width:100%!important;min-width:0!important;max-width:100%!important;
+   flex:1 1 auto!important;min-height:0!important;
+   overflow-x:hidden!important;overflow-y:auto!important;
+   touch-action:pan-y!important;
+ }
+ #chartsView.charts-layout.active:not(.chart-open) .airport-pane{
+   position:fixed!important;top:0!important;left:0!important;bottom:0!important;
+   width:min(350px,88vw)!important;height:100dvh!important;
+   z-index:1650!important;visibility:hidden!important;
+   transform:translate3d(-103%,0,0)!important;
+   transition:transform .17s ease,visibility .17s!important;
+   overflow:hidden!important;display:flex!important;flex-direction:column!important;
+ }
+ #chartsView.charts-layout.active.jp-airport-picker-open:not(.chart-open) .airport-pane{
+   visibility:visible!important;transform:translate3d(0,0,0)!important;
+ }
+ #chartsView.charts-layout.active:not(.chart-open) .jp-airport-picker-toggle{
+   display:flex!important;align-items:center!important;justify-content:space-between!important;
+   flex:0 0 46px!important;padding:8px 14px!important;
+   background:var(--mp-bg,#071523);color:var(--mp-text,#ebf3fb);
+   border:0;border-bottom:1px solid var(--mp-border,#293c50);
+ }
+ #chartsView:not(.chart-open) .jp-airport-picker-close{
+   display:grid!important;place-items:center!important;
+   min-width:42px!important;min-height:42px!important;
+ }
+}
