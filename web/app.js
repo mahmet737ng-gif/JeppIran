@@ -1440,6 +1440,21 @@ function renderAirportProfile(icao){
   const name=community.name||(/airport$/i.test(nameBase)?nameBase:nameBase+" Airport");
   const country=community.country|| (icao.startsWith("OI")?"Iran":icao.startsWith("LT")?"Türkiye":icao.startsWith("OM")?"United Arab Emirates":icao.startsWith("OO")?"Oman":icao.startsWith("OR")?"Iraq":icao.startsWith("UD")?"Armenia":icao.startsWith("UG")?"Georgia":"");
   const cityName=(meta[1]||"").toLowerCase().replace(/\b\w/g,m=>m.toUpperCase());
+  // Owner-approved minimal airport profile: live weather, real chart tree and
+  // PDF-backed previews. Reuse the existing chart selection/navigation engine.
+  if(window.JEPPIRAN_MINIMAL_PROFILE?.render){
+    window.JEPPIRAN_MINIMAL_PROFILE.render({
+      root,icao,name,city:meta[1],country,iata:d.iata||"",
+      elevation:d.elevation,raw,taf,flight,favorite:fav.has(icao),
+      charts:charts.filter(c=>displayAirportCode(c)===icao),
+      displayChartName,displayChartNumber,manifest,pdfJs,getPdfBytes,selectChart,
+      toggleFavorite:()=>{setAirportFavorite(icao);renderAirportProfile(icao)}
+    });
+    updateTerminalValidityDisplay();
+    window.JEPPIRAN_NOTAM?.render(icao,root.querySelector("#profileNotam"));
+    utcDisplay();
+    return;
+  }
   // Procedure titles and categories belong to the selected airport tree in
   // the left airport pane (mobile: translucent AIRPORTS drawer), not here.
   const runwayRows=d.runways&&d.runways.length?d.runways.map(x=>{
