@@ -2972,6 +2972,7 @@ function ensureFullscreenChartDrawer(){
     '<button type="button" data-chart-tool="chartTaxiBtn">TAXI</button>'+
     '<button type="button" data-chart-tool="chartInvertBtn">INVERT</button>'+
     '<button type="button" data-chart-tool="positionStatusBtn">POSITION</button></nav>'+
+    '<button type="button" id="jpChartDrawerProfile" class="jp-chart-drawer-profile">← AIRPORT PROFILE</button>'+ 
     '<div id="jpChartDrawerList" class="jp-chart-drawer-list"></div>';
   document.body.append(backdrop,drawer,menu);
   const close=()=>setFullscreenChartDrawer(false);
@@ -2983,6 +2984,11 @@ function ensureFullscreenChartDrawer(){
   }));
   backdrop.addEventListener("click",close);
   drawer.querySelector("#jpChartDrawerClose").addEventListener("click",close);
+  drawer.querySelector("#jpChartDrawerProfile").addEventListener("click",()=>{
+    // A single explicit return removes the whole Viewer, not just fullscreen.
+    setFullscreenChartDrawer(false);
+    window.jeppiranAndroidBack();
+  });
   drawer.addEventListener("keydown",e=>{if(e.key==="Escape"){e.stopPropagation();close();menu.focus()}});
 }
 function refreshFullscreenChartDrawer(){
@@ -3647,7 +3653,10 @@ window.jeppiranAndroidBack=function(){
     if(chartsView.classList.contains("jp-airport-picker-open")){closeAirportPicker();return true}
     if(selectedChart){
       cancelChartSwipe();
-      if(document.body.classList.contains("viewer-fullscreen"))exitViewerFullscreen(true);
+      if(document.body.classList.contains("viewer-fullscreen")||
+         document.fullscreenElement||document.webkitFullscreenElement)
+        void exitViewerFullscreen(true);
+      // Invalidate PDF renders and clear chart-open before rendering the profile.
       selectAirport(selectedAirport);
       return true;
     }
