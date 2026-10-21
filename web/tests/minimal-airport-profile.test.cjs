@@ -60,3 +60,15 @@ test("no decorative airport wallpaper and categories have no leading icons",()=>
  assert.ok(html.includes('id="chartsBackMobileBtn"'));
  assert.doesNotMatch(html,/id="jp-global-floating-back"/);
 });
+
+
+test("minimal METAR and TAF use unique cards and a full-width layout",()=>{
+ const js=read("web/profile-minimal.js"),css=read("web/profile-minimal.css");
+ assert.match(js,/id="jpMinimalMetarCard"/);
+ assert.match(js,/id="jpMinimalTafCard"/);
+ assert.doesNotMatch(js,/id="profileWeather"/);
+ assert.doesNotMatch(js,/id="profileTaf"/);
+ assert.match(css,/\.jp-mp-weather > \.jp-mp-weather-card/);
+ assert.match(css,/grid-template-columns:minmax\(0,1fr\)!important/);
+ assert.match(css,/word-break:normal!important/);
+});
