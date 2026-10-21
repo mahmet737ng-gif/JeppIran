@@ -24,7 +24,15 @@ async function ready(){for(let i=0;i<100;i++){if(server.exitCode!==null)throw Er
   assert.equal(await rootLocator.evaluate(el=>getComputedStyle(el).backgroundImage),"none");
   assert.equal(await rootLocator.locator(".jp-poster-frame").count(),0);
   assert.ok(await rootLocator.locator("#profileMetarRaw").isVisible());
-  assert.ok(await rootLocator.locator(".jp-mp-taf-text").isVisible());
+  const tafInfo=await rootLocator.evaluate(el=>{
+    const t=el.querySelector(".jp-mp-taf-text"),c=el.querySelector("#profileTaf");
+    return {found:!!t,parent:!!c,text:t?.textContent.slice(0,100),
+      display:t?getComputedStyle(t).display:null,
+      parentDisplay:c?getComputedStyle(c).display:null,
+      dimensions:t?.getBoundingClientRect().toJSON()};
+  });
+  console.log("TAF QA DIAGNOSTIC",JSON.stringify(tafInfo));
+  await rootLocator.locator(".jp-mp-taf-text").waitFor({state:"visible",timeout:10000});
   assert.ok(await rootLocator.locator("#profileUtcClock").isVisible());
   const categories=await rootLocator.locator(".jp-mp-category summary").allInnerTexts();
   for(const item of ["AIRPORT","SID","STAR","APPROACH"])assert.ok(categories.some(s=>s.includes(item)),item+" accordion absent");
