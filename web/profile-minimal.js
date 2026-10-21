@@ -71,8 +71,8 @@ function render(ctx){
    (flightCode?'<span class="jp-mp-flight jp-mp-'+escape(flightCode.toLowerCase())+'">'+escape(flightCode)+'</span>':'')+
    '</div><pre id="profileMetarRaw">'+escape(raw||"METAR unavailable")+'</pre>'+
    '<small id="profileMetarAge">'+escape(obsStatus)+'</small></section>'+
-   '<section class="jp-mp-weather-card" id="profileTaf"><div class="jp-mp-card-heading"><h2>TAF</h2></div>'+
-   '<pre class="jp-mp-taf-text">'+escape(taf||"TAF unavailable")+'</pre><small>'+escape(tafStatus)+'</small></section></div>'+
+   '<section class="jp-mp-weather-card" id="profileTaf" style="display:flex!important;visibility:visible!important"><div class="jp-mp-card-heading"><h2>TAF</h2></div>'+
+   '<pre class="jp-mp-taf-text" style="display:block!important;visibility:visible!important">'+escape(taf||"TAF unavailable")+'</pre><small>'+escape(tafStatus)+'</small></section></div>'+
    '<button type="button" id="jpMinimalNotamToggle" class="jp-mp-notam-button" aria-expanded="false" aria-controls="jpMinimalNotamReader">'+
    '<span>NOTAM</span><span class="jp-mp-expand-indicator" aria-hidden="true">⌄</span></button>'+
    '<div id="jpMinimalNotamReader" class="jp-mp-notam-reader" hidden>'+
