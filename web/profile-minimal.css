@@ -216,12 +216,12 @@
   #chartsView .airport-profile.jp-minimal-profile *{transition:none!important}
 }
 /* TAF must remain visible even if older profile tab rules are loaded. */
-#chartsView .airport-profile.jp-minimal-profile #profileTaf{
+#chartsView .airport-profile.jp-minimal-profile .jp-mp-taf-card{
   display:flex!important;visibility:visible!important;opacity:1!important;
   min-height:137px!important;height:auto!important;max-height:none!important;
   position:static!important;overflow:visible!important;
 }
-#chartsView .airport-profile.jp-minimal-profile #profileTaf .jp-mp-taf-text{
+#chartsView .airport-profile.jp-minimal-profile .jp-mp-taf-card .jp-mp-taf-text{
   display:block!important;visibility:visible!important;opacity:1!important;
   min-height:1.6em!important;height:auto!important;max-height:none!important;
   white-space:pre-wrap!important;overflow-wrap:anywhere!important;
@@ -233,8 +233,8 @@
   width:100%!important;min-width:0!important;
   grid-template-columns:repeat(2,minmax(0,1fr))!important;
 }
-#chartsView .airport-profile.jp-minimal-profile #profileWeather,
-#chartsView .airport-profile.jp-minimal-profile #profileTaf{
+#chartsView .airport-profile.jp-minimal-profile .jp-mp-metar-card,
+#chartsView .airport-profile.jp-minimal-profile .jp-mp-taf-card{
   box-sizing:border-box!important;
   width:100%!important;min-width:0!important;
   max-width:100%!important;flex:1 1 auto!important;
@@ -242,7 +242,7 @@
   overflow:hidden!important;
 }
 #chartsView .airport-profile.jp-minimal-profile #profileMetarRaw,
-#chartsView .airport-profile.jp-minimal-profile #profileTaf .jp-mp-taf-text{
+#chartsView .airport-profile.jp-minimal-profile .jp-mp-taf-card .jp-mp-taf-text{
   box-sizing:border-box!important;display:block!important;flex:0 0 auto!important;
   width:100%!important;min-width:0!important;max-width:100%!important;
   height:auto!important;min-height:1.6em!important;
@@ -261,16 +261,16 @@
   box-sizing:border-box!important;width:100%!important;
   min-width:100%!important;max-width:100%!important;
 }
-#chartsView .airport-profile.jp-minimal-profile #profileWeather,
-#chartsView .airport-profile.jp-minimal-profile #profileTaf{
+#chartsView .airport-profile.jp-minimal-profile .jp-mp-metar-card,
+#chartsView .airport-profile.jp-minimal-profile .jp-mp-taf-card{
   display:block!important;position:relative!important;
   width:100%!important;min-width:100%!important;
   max-width:100%!important;min-height:125px!important;
   margin:0 0 10px!important;padding:13px 16px!important;
   box-sizing:border-box!important;overflow:visible!important;
 }
-#chartsView .airport-profile.jp-minimal-profile #profileWeather pre,
-#chartsView .airport-profile.jp-minimal-profile #profileTaf pre.jp-mp-taf-text{
+#chartsView .airport-profile.jp-minimal-profile .jp-mp-metar-card pre,
+#chartsView .airport-profile.jp-minimal-profile .jp-mp-taf-card pre.jp-mp-taf-text{
   display:block!important;position:static!important;
   box-sizing:border-box!important;width:100%!important;
   min-width:100%!important;max-width:100%!important;
@@ -324,10 +324,33 @@
 }
 
 /* Keep raw weather reports readable without a single horizontal marquee. */
-#chartsView .airport-profile.jp-minimal-profile #profileWeather pre,
-#chartsView .airport-profile.jp-minimal-profile #profileTaf pre.jp-mp-taf-text{
+#chartsView .airport-profile.jp-minimal-profile .jp-mp-metar-card pre,
+#chartsView .airport-profile.jp-minimal-profile .jp-mp-taf-card pre.jp-mp-taf-text{
  white-space:pre-wrap!important;overflow-wrap:anywhere!important;
  word-break:normal!important;max-width:100%!important;
  overflow-x:hidden!important;overflow-y:visible!important;
  tab-size:2!important;
+}
+
+/* Portrait weather-card isolation. Old profile IDs applied grid-area rules
+   to the new minimal page and could collapse a full forecast into one column. */
+#chartsView .airport-profile.jp-minimal-profile .jp-mp-weather{
+  display:grid!important;grid-template-columns:minmax(0,1fr)!important;
+  grid-auto-flow:row!important;gap:10px!important;align-items:stretch!important;
+  box-sizing:border-box!important;width:100%!important;min-width:0!important;
+  max-width:100%!important;margin:0 0 12px!important;
+}
+#chartsView .airport-profile.jp-minimal-profile .jp-mp-weather > .jp-mp-weather-card{
+  display:block!important;grid-area:auto!important;grid-column:1!important;
+  position:relative!important;box-sizing:border-box!important;
+  width:100%!important;min-width:0!important;max-width:100%!important;
+  height:auto!important;min-height:112px!important;overflow:hidden!important;
+  margin:0!important;padding:13px 16px!important;
+}
+#chartsView .airport-profile.jp-minimal-profile .jp-mp-weather > .jp-mp-weather-card > pre{
+  display:block!important;position:static!important;float:none!important;
+  width:100%!important;max-width:100%!important;min-width:0!important;
+  white-space:pre-wrap!important;word-break:normal!important;
+  overflow-wrap:normal!important;overflow-x:auto!important;overflow-y:visible!important;
+  line-height:1.55!important;font-size:clamp(11px,3vw,13px)!important;
 }
