@@ -322,3 +322,12 @@
    min-width:42px!important;min-height:42px!important;
  }
 }
+
+/* Keep raw weather reports readable without a single horizontal marquee. */
+#chartsView .airport-profile.jp-minimal-profile #profileWeather pre,
+#chartsView .airport-profile.jp-minimal-profile #profileTaf pre.jp-mp-taf-text{
+ white-space:pre-wrap!important;overflow-wrap:anywhere!important;
+ word-break:normal!important;max-width:100%!important;
+ overflow-x:hidden!important;overflow-y:visible!important;
+ tab-size:2!important;
+}
