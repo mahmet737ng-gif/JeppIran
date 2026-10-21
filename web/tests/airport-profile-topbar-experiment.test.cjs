@@ -15,16 +15,18 @@ test("design 2 is a reversible OIII-only runtime overlay using live card nodes",
  assert.match(css,/background-image:url\("\.\/airport-profile-posters-v3\/OIII\.webp"\)!important/);
  assert.match(css,/> \.jp-poster-scenic-foreground \{[\s\S]*?display:none!important/);
 });
-test("old topbar remains archived but approved minimalist profile replaces it",()=>{
+test("topbar scripts deploy after approved posters and old side panel remains reversible fallback",()=>{
  const html=read("web/index.html"),sw=read("web/service-worker.js");
  const side=read("web/airport-profile-side-panel-experiment.js");
- assert.doesNotMatch(html,/src="\.\/airport-profile-topbar-experiment\.js/);
- assert.doesNotMatch(html,/src="\.\/airport-profile-posters\.js/);
- assert.doesNotMatch(sw,/"\.\/airport-profile-topbar-experiment\.js\?/);
- const marker="profile-minimal.js?v=";
- const index=html.indexOf(marker);
- assert.ok(index>=0,"Minimal profile script must remain installed");
- const referenced=html.slice(index,html.indexOf('"',index));
- assert.ok(sw.includes(referenced),"PWA shell must cache the exact script URL");
+ const css=read("web/airport-profile-topbar-experiment.css");
+ for(const file of ["airport-profile-topbar-experiment.css","airport-profile-topbar-experiment.js"]){
+  const rev=file.endsWith(".css")?"r3":"r1";
+  assert.ok(html.includes(file+"?v=2621-oiii-topbar-design2-"+rev));
+  assert.ok(sw.includes(file+"?v=2621-oiii-topbar-design2-"+rev));
+ }
+ assert.ok(html.indexOf("airport-profile-posters.js")<html.indexOf("airport-profile-topbar-experiment.js"));
+ assert.doesNotMatch(html,/src="\.\/airport-profile-side-panel-experiment\.js/);
+ assert.doesNotMatch(html,/href="\.\/airport-profile-side-panel-experiment\.css/);
+ assert.match(css,/grid-template-columns:repeat\(7,minmax\(0,1fr\)\)!important/);
  assert.match(side,/!root\.classList\.contains\("jp-o3-topbar-experiment"\)/);
 });

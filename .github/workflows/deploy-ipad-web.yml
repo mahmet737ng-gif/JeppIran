@@ -5,49 +5,10 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
+    # OWNER LOCK: Web/iPad only changes when its own files or deployment
+    # workflow are explicitly changed. Android-only commits never deploy Web.
     paths:
       - 'web/**'
-      - 'tests/offline-auto-sync.test.cjs'
-      - 'tests/profile-clocks-validity.test.cjs'
-      - 'tests/home-navigation-v2621.test.cjs'
-      - 'tests/chart-display-names-v2621.test.cjs'
-      - 'tests/airport-chart-audit-v2621.test.cjs'
-      - 'scripts/verify_new20_public_web.cjs'
-      - 'scripts/verify_airport_carousel_r3_browser.cjs'
-      - 'scripts/verify_airport_carousel_real_browser.cjs'
-      - 'scripts/verify_ipad_chart_category_swipe.cjs'
-      - 'tests/airport-briefings-prefetch-v2621.test.cjs'
-      - 'web/airport-briefings-preload.js'
-      - 'web/notam-service.js'
-      - 'web/preview/airport-carousel-r13-fixed/**'
-      - 'web/data/chart-briefing-titles-v2621.json'
-      - 'scripts/build_carousel_chart_previews.py'
-      - 'scripts/build_chart_point_search_index.py'
-      - 'web/preview/airport-carousel-r13-fixed/**'
-      - 'scripts/verify_notam_profile_zoom_browser.cjs'
-      - 'scripts/verify_profile_validity_browser.cjs'
-      - 'scripts/verify_chart_swipes_browser.cjs'
-      - 'scripts/build_offline_manifest.py'
-      - 'scripts/georef_preservation.py'
-      - 'tests/test_georef_preservation.py'
-      - 'scripts/build_oiie_*.py'
-      - 'scripts/verify_oiie_runway_axes_browser.cjs'
-      - 'scripts/build_web_admin_test.py'
-      - 'scripts/admin-test-controls.js'
-      - 'scripts/admin-qa-home.js'
-      - 'scripts/admin-qa-home.css'
-      - 'scripts/verify_admin_home_browser.cjs'
-      - 'tests/admin-qa-preview.test.cjs'
-      - 'scripts/build_airport_profiles.py'
-      - 'scripts/build_airport_runways.py'
-      - 'app/src/main/assets/airport-runways.json'
-      - 'app/src/main/assets/charts-current.json'
-      - 'app/src/main/assets/charts-manifest.json'
-      - 'app/src/main/assets/enroute-manifest.json'
-      - 'app/src/main/assets/chart-georef.json'
-      - 'app/src/main/assets/chart-changes.json'
-      - 'app/src/main/assets/changed-airports.json'
-      - 'app/src/main/res/drawable-nodpi/airport_card_*.webp'
       - '.github/workflows/deploy-ipad-web.yml'
 
 permissions:
@@ -76,8 +37,6 @@ jobs:
       - name: Ensure OICI 207/209 georeferencing remains disabled before release
         run: |
           node --check web/app.js
-          node --check web/profile-minimal.js
-          node --test web/tests/minimal-airport-profile.test.cjs
           node --check web/oici-route-only-v2621.mjs
           node --test tests/oici-route-only-v2621.test.cjs
 
@@ -385,13 +344,24 @@ jobs:
 
       - name: Verify native two-way runway-only route contract
         run: node web/tests/taxi-oiie-runway-axes.test.cjs web/data/taxi-surveys/OIIE-runway-axes-v2621.json
-      # The owner replaced decorative airport posters with a minimal profile.
-      # Validate the real new interface rather than requiring retired artwork.
-      - name: Verify approved minimal airport profiles in real Chrome
+      - name: Verify all 20 newly assigned poster images actually render in airport profiles in real Chrome
         run: |
           export NODE_PATH="$RUNNER_TEMP/jeppiran-browser-qa/node_modules"
           export JEPPIRAN_CHROME_BIN="$(command -v google-chrome)"
-          node scripts/verify_minimal_profile_browser.cjs
+          node scripts/verify_new20_profile_browser.cjs
+
+      - name: Verify city landmarks and text-free poster header for sample airports in Chrome
+        run: |
+          export NODE_PATH="$RUNNER_TEMP/jeppiran-browser-qa/node_modules"
+          export JEPPIRAN_CHROME_BIN="$(command -v google-chrome)"
+          node scripts/verify_profile_scenery_browser.cjs
+          node scripts/verify_notam_profile_zoom_browser.cjs
+
+      - name: Verify visible airport chart validity in real Chrome
+        run: |
+          export NODE_PATH="$RUNNER_TEMP/jeppiran-browser-qa/node_modules"
+          export JEPPIRAN_CHROME_BIN="$(command -v google-chrome)"
+          node scripts/verify_profile_validity_browser.cjs
 
       - name: Verify reversible chart swipes and live finger-follow transition in real Chrome
         run: |
@@ -468,8 +438,8 @@ jobs:
           # successful package upload; avoid the action's 600000ms default abort.
           timeout: 1200000
 
-      - name: Smoke-test deployed minimal airport profile on live GitHub Pages
+      - name: Smoke-test live GitHub Pages — every new poster and profile mapping
         env:
           JEPPIRAN_PAGE_URL: ${{ steps.deployment.outputs.page_url }}
-        run: node scripts/verify_minimal_public_web.cjs
+        run: node scripts/verify_new20_public_web.cjs
 

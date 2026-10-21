@@ -10,74 +10,8 @@
     OR:"Iraq",OT:"Qatar",OP:"Pakistan",UG:"Georgia",UD:"Armenia"
   })[String(code).slice(0,2)]||"";
   const escape=s=>String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-  const isAndroidPortrait=()=>
-    document.documentElement.classList.contains("jp-android-phone")&&
-    matchMedia("(max-width: 749px) and (orientation: portrait)").matches;
-  // The full tree is readable by default on tablets. On portrait phones it
-  // starts as one 47px button, leaving the full PDF visible until requested.
-  let query="",open=!isAndroidPortrait(),airportOpen=true;
+  let query="",open=true,airportOpen=true;
   const opened=new Set();
-  // iPad status bars occupy screen pixels, while this navigation tree lives
-  // in a zoomed PDF coordinate space. Convert clearance to unscaled PDF px,
-  // so the CLOCK/BATTERY area is never covered in fullscreen at any zoom.
-  const TREE_SCREEN_CLEARANCE=48;
-  let watchedLayer=null,layerTransformObserver=null,lastLayerScale=0,layoutFrame=0;
-  function layerScale(layer){
-    const width=layer?.offsetWidth||0;
-    const rendered=layer?.getBoundingClientRect().width||0;
-    return width>0&&rendered>0?rendered/width:1;
-  }
-  function positionTreeBelowStatusBar(){
-    const host=document.getElementById("jpMarginChartTree");
-    const layer=host?.parentElement;
-    if(!host||!layer)return;
-    // iPad standalone mode may overlap the system status bar even without
-    // the app's viewer-fullscreen class. Always measure screen coordinates.
-    const rect=layer.getBoundingClientRect();
-    const scale=layerScale(layer);
-    const bodyInset=parseFloat(getComputedStyle(document.body).paddingTop)||0;
-    const visualTop=window.visualViewport?.offsetTop||0;
-    // MobileWebActivity already keeps Android content inside system-bar insets;
-    // the 48px iPad/PWA clearance would waste scarce portrait chart height.
-    const clearance=isAndroidPortrait()?8:TREE_SCREEN_CLEARANCE;
-    const screenTop=visualTop+Math.max(clearance,bodyInset+12);
-    // Respect PDF margin coordinates: neither move/reflow the PDF canvas nor
-    // position the list in a separate, fixed navigation column.
-    const localTop=Math.max(8,Math.ceil((screenTop-rect.top)/scale));
-    const viewportBottom=visualTop+(window.visualViewport?.height||window.innerHeight);
-    // Counter the fitted PDF scale on portrait phones so labels and search
-    // stay finger-readable. The tree remains a child of the PDF layer and
-    // never creates a separate layout column or changes chart geometry.
-    const treeScale=isAndroidPortrait()?1/scale:1;
-    host.style.setProperty("--jp-margin-tree-local-scale",String(treeScale));
-    const effectiveScale=scale*treeScale;
-    const visibleHeight=(viewportBottom-Math.max(screenTop,rect.top+localTop*scale)-12)/effectiveScale;
-    const paperHeight=layer.offsetHeight-localTop-8;
-    const maxHeight=Math.max(38,Math.min(685,visibleHeight,paperHeight));
-    const nextTop=localTop+"px",nextHeight=Math.floor(maxHeight)+"px";
-    if(host.style.top!==nextTop)host.style.top=nextTop;
-    if(host.style.maxHeight!==nextHeight)host.style.maxHeight=nextHeight;
-  }
-  function requestSafeTreePosition(){
-    if(layoutFrame)return;
-    layoutFrame=requestAnimationFrame(()=>{
-      layoutFrame=0;positionTreeBelowStatusBar();
-    });
-  }
-  function watchTreeLayer(layer){
-    if(watchedLayer===layer)return;
-    layerTransformObserver?.disconnect();
-    watchedLayer=layer;
-    lastLayerScale=layerScale(layer);
-    layerTransformObserver=new MutationObserver(()=>{
-      const now=layerScale(layer);
-      // Recheck both zoom and pan: the PDF may slide up behind iPad's
-      // non-web status bar even when the fullscreen CSS class is absent.
-      if(Math.abs(now-lastLayerScale)>.002)lastLayerScale=now;
-      requestSafeTreePosition();
-    });
-    layerTransformObserver.observe(layer,{attributes:true,attributeFilter:["style"]});
-  }
   const airportInfo=code=>{
     const meta=airportMetadata?.[code]||{};
     const legacy=AIRPORTS?.[code]||[];
@@ -188,15 +122,7 @@
     }
     opened.add(selectedAirport+":"+(selectedChart.category||""));
     refresh();
-    watchTreeLayer(layer);
-    // Apply immediately after each new PDF page, before the first user tap.
-    positionTreeBelowStatusBar();
   }
-  window.addEventListener("resize",requestSafeTreePosition);
-  window.addEventListener("orientationchange",()=>setTimeout(requestSafeTreePosition,180));
-  window.visualViewport?.addEventListener("resize",requestSafeTreePosition);
-  window.addEventListener("fullscreenchange",requestSafeTreePosition);
-  window.addEventListener("webkitfullscreenchange",requestSafeTreePosition);
   window.addEventListener("jeppiran-chart-rendered",attach);
   // Chart selection and PDF decode occur asynchronously. Tree updates only
   // after the matching immutable PDF page has finished rendering.

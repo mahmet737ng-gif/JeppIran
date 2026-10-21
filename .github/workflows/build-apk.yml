@@ -13,13 +13,10 @@ on:
     # pending run, even with cancel-in-progress: false).
     paths:
       - 'app/**'
-      # Android bundles a LOCAL copy of the approved UI, chart data and PDFs.
-      # A Web source change must be shipped inside the next APK, independently
-      # of the GitHub Pages deployment (there is no runtime hosted fallback).
-      - 'web/**'
+      # Android UI is pinned to a frozen snapshot; Web/iPad-only edits
+      # must not start a new APK or overwrite Android's on-device UI.
       - 'scripts/build_android_local_web.py'
       - 'scripts/build_android_portrait_posters.py'
-      - '.github/workflows/build-apk.yml'
       - 'build.gradle.kts'
       - 'settings.gradle.kts'
       - 'scripts/build_approach_briefings.py'
@@ -53,6 +50,26 @@ jobs:
         with:
           lfs: true
           fetch-depth: 2
+
+      - name: Restore frozen Android app UI (never replace the public website)
+        shell: bash
+        run: |
+          set -euo pipefail
+          # The Android APK owns an independent UI snapshot. Changes to the
+          # published Web/iPad site must never replace Android's approved UI.
+          ANDROID_UI_SHA="c785cdd74cf12256c33dd0bcb47a35a2745b56eb"
+          git fetch --no-tags --depth=1 origin "$ANDROID_UI_SHA"
+          TEMP_WEB_DIR="$(mktemp -d)"
+          git archive "$ANDROID_UI_SHA" web | tar -x -C "$TEMP_WEB_DIR"
+          test -s "$TEMP_WEB_DIR/web/index.html"
+          test -s "$TEMP_WEB_DIR/web/profile-minimal.js"
+          test -s "$TEMP_WEB_DIR/web/profile-minimal.css"
+          test -s "$TEMP_WEB_DIR/web/app.js"
+          # This replacement exists ONLY in the ephemeral Android CI checkout.
+          # It does not commit or publish anything to GitHub Pages.
+          rm -rf web
+          mv "$TEMP_WEB_DIR/web" web
+          echo "Android-only UI restored from $ANDROID_UI_SHA"
 
       - name: Ensure OICI 207/209 georeferencing remains disabled before release
         run: |

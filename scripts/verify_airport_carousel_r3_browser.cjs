@@ -26,9 +26,9 @@ async function waitServer(){
   const main=fs.readFileSync(path.join(root,"web/index.html"),"utf8");
   assert.ok(main.includes('name="chartsLayoutMode" value="classic" checked'));
   assert.ok(main.includes('name="chartsLayoutMode" value="carousel"'));
-  assert.ok(main.includes('jeppiran-chart-layout-android-r8'));
+  assert.ok(main.includes('jeppiran-chart-layout-android-r7'));
   assert.ok(main.includes('localStorage.getItem(storageKey())'));
-  assert.ok(main.includes('return "classic"'));
+  assert.ok(main.includes('return isAndroid()?"carousel":"classic"'));
   assert.ok(main.includes('data-route="charts"'));
   await waitServer();
   browser=await chromium.launch({headless:true,...(process.env.JEPPIRAN_CHROME_BIN?{executablePath:process.env.JEPPIRAN_CHROME_BIN}:{})});
