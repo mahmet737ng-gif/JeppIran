@@ -23,9 +23,10 @@ test("new asset versioned in HTML and service worker and tests included in Pages
  assert.ok(html.includes(fixedViewport)&&sw.includes(fixedViewport),fixedViewport);
  // Keep immutable poster viewport and source image rules; allow the fit
  // controller's JS revision to fix bugs such as zoom on NOTAM expansion.
- const posterEntry=html.match(/airport-profile-posters\.js\?v=[a-z0-9-]+/);
- assert.ok(posterEntry,"poster layout controller must be versioned");
- assert.ok(sw.includes(posterEntry[0]),"web entry and offline shell must match");
+ const minimalEntry=html.match(/profile-minimal\.js\?v=[a-z0-9-]+/);
+ assert.ok(minimalEntry,"approved minimal profile controller must be versioned");
+ assert.ok(sw.includes(minimalEntry[0]),"web entry and offline shell must match");
+ assert.doesNotMatch(html,/src="\.\/airport-profile-posters\.js/);
  assert.match(wf,/node --test web\/tests\/airport-profile-viewport-fit\.test\.cjs/);
 });
 
