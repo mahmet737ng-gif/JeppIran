@@ -109,3 +109,18 @@ test("iPad standalone status bar is respected without viewer-fullscreen",()=>{
  assert.match(js,/requestSafeTreePosition\(\)/);
  assert.match(css,/#chartsView\.chart-open #chartTransformLayer > \.jp-margin-chart-tree\{\s*top:max\(56px/);
 });
+
+test("Android production opens current Classic and keeps portrait PDF navigation readable",()=>{
+  const html=read("index.html"),nav=read("chart-margin-tree.js");
+  const phone=read("../app/src/main/assets/phone-layout.css");
+  assert.match(html,/jeppiran-chart-layout-android-r8/);
+  assert.match(html,/return "classic"/);
+  assert.match(nav,/open=!isAndroidPortrait\(\)/);
+  assert.match(nav,/--jp-margin-tree-local-scale/);
+  assert.match(nav,/const effectiveScale=scale\*treeScale/);
+  assert.match(phone,/@media\(max-width:749px\) and \(orientation:portrait\)/);
+  assert.match(phone,/height:58px!important;min-height:58px!important;max-height:58px!important/);
+  assert.match(phone,/transform:scale\(var\(--jp-margin-tree-local-scale,1\)\)/);
+  assert.match(phone,/width:min\(82vw,292px\)/);
+  assert.match(phone,/\.jp-margin-tree-search\{\s*min-height:44px;font-size:16px/);
+});
