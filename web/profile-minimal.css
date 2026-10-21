@@ -254,3 +254,27 @@
     grid-template-columns:minmax(0,1fr)!important;
   }
 }
+/* Production portrait fallback: two independent full-width weather rows.
+   Avoid implicit grid track collapse from historical profile layout rules. */
+#chartsView .airport-profile.jp-minimal-profile .jp-mp-weather{
+  display:block!important;position:static!important;
+  box-sizing:border-box!important;width:100%!important;
+  min-width:100%!important;max-width:100%!important;
+}
+#chartsView .airport-profile.jp-minimal-profile #profileWeather,
+#chartsView .airport-profile.jp-minimal-profile #profileTaf{
+  display:block!important;position:relative!important;
+  width:100%!important;min-width:100%!important;
+  max-width:100%!important;min-height:125px!important;
+  margin:0 0 10px!important;padding:13px 16px!important;
+  box-sizing:border-box!important;overflow:visible!important;
+}
+#chartsView .airport-profile.jp-minimal-profile #profileWeather pre,
+#chartsView .airport-profile.jp-minimal-profile #profileTaf pre.jp-mp-taf-text{
+  display:block!important;position:static!important;
+  box-sizing:border-box!important;width:100%!important;
+  min-width:100%!important;max-width:100%!important;
+  margin:8px 0 10px!important;padding:0!important;
+  line-height:1.45!important;overflow-wrap:anywhere!important;
+  white-space:pre-wrap!important;word-break:break-word!important;
+}
