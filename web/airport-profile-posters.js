@@ -16,10 +16,19 @@
   const dimensions = new Map();
   let queued = false;
   let lastCode = "";
+  let lastArtworkUrl = "";
   // Preserve the approved closed-NOTAM fit while the user reads notices.
   // An expanding details panel is not a reason to zoom the whole profile.
   let closedNotamFit = null;
+  const androidPortrait = () =>
+    document.documentElement.classList.contains("jp-android-phone") &&
+    window.matchMedia("(max-width: 749px) and (orientation: portrait)").matches;
   const urlFor = (icao) => {
+    // Generated from this exact airport\x27s SHA-verified V3 landscape original.
+    // Only Android portrait uses the independent 9:16 artwork; iPad/web stay locked.
+    if (androidPortrait() && v3AirportSet.has(icao)) {
+      return "./airport-profile-posters-portrait/" + icao + ".webp?v=android-portrait-v1";
+    }
     const cached = window.JEPPIRAN_POSTER_CACHE_URLS?.[icao];
     // Older offline registries can still point these airports at previous
     // artwork. Never let them override the current approved V3 set.
@@ -135,7 +144,7 @@
     // Fit the foreground cards first: zoom can change the available layout width.
     // Measure and size the backdrop only AFTER the final profile layout settles.
     fitCards();
-    const size = dimensions.get(icao) || {width:4,height:3};
+    const size = dimensions.get(urlFor(icao)) || {width:4,height:3};
     // The CSS profile panel may have a fractional transformed width. Use
     // whichever is smaller: layout pixels or actually visible bounds, so no
     // part of the photo can extend past the right/bottom edge.
@@ -196,12 +205,14 @@
   function apply() {
     queued = false;
     const icao = (root.querySelector(".profile-icao")?.textContent || "").trim().toUpperCase();
-    if (icao === lastCode && root.classList.contains("jp-airport-poster-loaded")) {
+    const artworkUrl = urlFor(icao);
+    if (icao === lastCode && artworkUrl === lastArtworkUrl && root.classList.contains("jp-airport-poster-loaded")) {
       positionFrame(icao);
       return;
     }
-    if (icao === lastCode && loading.get(icao) === "pending") return;
+    if (icao === lastCode && artworkUrl === lastArtworkUrl && loading.get(artworkUrl) === "pending") return;
     lastCode = icao;
+    lastArtworkUrl = artworkUrl;
     remove();
     if (!Object.prototype.hasOwnProperty.call(allAirports, icao)) return;
     const currentIata = (root.querySelector(".profile-code-row .profile-chip")?.textContent || "").trim().toUpperCase();
@@ -209,18 +220,18 @@
       // A mismatched ICAO/IATA pair must never display another airport's art.
       return;
     }
-    if (loading.get(icao) === "ready") {use(icao);return;}
-    if (loading.get(icao) === "missing") return;
-    if (loading.get(icao) === "pending") return;
-    loading.set(icao, "pending");
+    if (loading.get(artworkUrl) === "ready") {use(icao);return;}
+    if (loading.get(artworkUrl) === "missing") return;
+    if (loading.get(artworkUrl) === "pending") return;
+    loading.set(artworkUrl, "pending");
     const img = new Image();
     img.onload = () => {
-      loading.set(icao, "ready");
-      dimensions.set(icao, {width:img.naturalWidth,height:img.naturalHeight});
-      if (lastCode === icao) use(icao);
+      loading.set(artworkUrl, "ready");
+      dimensions.set(artworkUrl, {width:img.naturalWidth,height:img.naturalHeight});
+      if (lastCode === icao && lastArtworkUrl === artworkUrl) use(icao);
     };
-    img.onerror = () => {loading.set(icao, "missing");};
-    img.src = urlFor(icao);
+    img.onerror = () => {loading.set(artworkUrl, "missing");};
+    img.src = artworkUrl;
   }
   function queue() {
     if (!queued) {queued = true; requestAnimationFrame(apply);}
@@ -234,12 +245,16 @@
     window.addEventListener("resize",queue,{passive:true});
   }
   queue();
+  // Load the correct aspect-ratio file again when the phone rotates.
+  window.addEventListener("resize", () => {
+    if (lastCode && urlFor(lastCode) !== lastArtworkUrl) queue();
+  }, {passive:true});
   window.addEventListener("jeppiran:poster-assets-ready",()=>{
     // Keep the current frame; future selections take the correct hash URL.
     // If we previously marked an image missing, retry once cache is ready.
     for(const [code,status] of loading)if(status==="missing")loading.delete(code);
     if(lastCode && !root.classList.contains("jp-airport-poster-loaded")){
-      lastCode="";queue();
+      lastCode="";lastArtworkUrl="";queue();
     }
   });
   window.JEPPIRAN_NEW20_PROFILE_POSTERS = Object.freeze({count:20, airportToDesign:additionalPosterAssignments, illustrativeOnly:true});
