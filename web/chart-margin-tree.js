@@ -26,11 +26,8 @@
     const host=document.getElementById("jpMarginChartTree");
     const layer=host?.parentElement;
     if(!host||!layer)return;
-    if(!document.body.classList.contains("viewer-fullscreen")){
-      host.style.removeProperty("top");
-      host.style.removeProperty("max-height");
-      return;
-    }
+    // iPad standalone mode may overlap the system status bar even without
+    // the app's viewer-fullscreen class. Always measure screen coordinates.
     const rect=layer.getBoundingClientRect();
     const scale=layerScale(layer);
     const bodyInset=parseFloat(getComputedStyle(document.body).paddingTop)||0;
@@ -60,12 +57,10 @@
     lastLayerScale=layerScale(layer);
     layerTransformObserver=new MutationObserver(()=>{
       const now=layerScale(layer);
-      // Panning must carry the tree WITH the paper. Adjust only for changes
-      // in PDF zoom (or an actual viewport resize).
-      if(Math.abs(now-lastLayerScale)>.002){
-        lastLayerScale=now;
-        requestSafeTreePosition();
-      }
+      // Recheck both zoom and pan: the PDF may slide up behind iPad's
+      // non-web status bar even when the fullscreen CSS class is absent.
+      if(Math.abs(now-lastLayerScale)>.002)lastLayerScale=now;
+      requestSafeTreePosition();
     });
     layerTransformObserver.observe(layer,{attributes:true,attributeFilter:["style"]});
   }

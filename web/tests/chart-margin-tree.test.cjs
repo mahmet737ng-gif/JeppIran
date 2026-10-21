@@ -101,3 +101,11 @@ test("iPad fullscreen chart tree stays below status clock at every PDF zoom",()=
   assert.match(css,/env\(safe-area-inset-top\)/);
   assert.doesNotMatch(nav,/stage\.style\.paddingTop|layer\.style\.paddingTop|stage\.style\.transform/);
 });
+
+test("iPad standalone status bar is respected without viewer-fullscreen",()=>{
+ const js=read("chart-margin-tree.js"),css=read("chart-margin-tree.css");
+ assert.doesNotMatch(js,/if\(!document\.body\.classList\.contains\("viewer-fullscreen"\)\)\{[\s\S]*?removeProperty\("top"\)/);
+ assert.match(js,/screenTop-rect\.top/);
+ assert.match(js,/requestSafeTreePosition\(\)/);
+ assert.match(css,/#chartsView\.chart-open #chartTransformLayer > \.jp-margin-chart-tree\{\s*top:max\(56px/);
+});
