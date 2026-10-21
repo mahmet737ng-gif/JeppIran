@@ -1,0 +1,27 @@
+/* JEPPIRAN approved brand J: title-only substitution, no Home layout changes. */
+.flight-hero-title h1.jp-branded-wordmark {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  white-space:nowrap;
+  max-width:100%;
+  vertical-align:middle;
+  gap:0;
+  line-height:1;
+}
+.flight-hero-title h1.jp-branded-wordmark > img {
+  display:block;
+  width:auto;
+  height:1.23em;
+  max-width:none;
+  flex:none;
+  object-fit:contain;
+  transform:translateY(.045em);
+  margin-right:-.035em;
+  filter:drop-shadow(0 5px 16px rgba(0,0,0,.28));
+}
+.flight-hero-title h1.jp-branded-wordmark .jp-wordmark-epp { color:#f5faff; }
+.flight-hero-title h1.jp-branded-wordmark .jp-wordmark-iran { color:#3dcfff; }
+@media (max-width:420px) {
+  .flight-hero-title h1.jp-branded-wordmark > img {height:1.16em;}
+}
