@@ -83,3 +83,10 @@ body.chart-inverted #chartsView.chart-open #chartTransformLayer .jp-margin-tree-
 /* One navigation source in Viewer: retire the old viewport hamburger/drawer.
    The PDF-attached white-margin tree remains available in fullscreen. */
 #jpChartMenuBtn,#jpChartDrawer,#jpChartDrawerBackdrop{display:none!important}
+
+/* iPad full-screen safe fallback (JS compensates for active PDF zoom/pan).
+   Scope to the in-chart tree; do not alter PDF, viewer layout or CDFA. */
+body.viewer-fullscreen #chartsView.chart-open #chartTransformLayer > .jp-margin-chart-tree{
+  top:max(58px,calc(env(safe-area-inset-top) + 15px));
+  max-height:min(685px,calc(100dvh - 80px));
+}

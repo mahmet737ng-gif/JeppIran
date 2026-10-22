@@ -87,3 +87,16 @@ test("PDF zoom sharpens from original vector page and edge paging requires overs
   assert.match(js,/state\.reversing/);
   assert.match(js,/zoom:chartZoom,panX:chartZoom>1\.001\?chartPanX:0/);
 });
+
+test("fullscreen PDF tree clears iPad status bar without resizing PDF or CDFA",()=>{
+  const style=read("chart-margin-tree.css"),code=read("chart-margin-tree.js");
+  assert.ok(style.includes("body.viewer-fullscreen #chartsView.chart-open #chartTransformLayer > .jp-margin-chart-tree"));
+  assert.ok(style.includes("env(safe-area-inset-top)"));
+  assert.ok(code.includes("const MIN_TOP_CLEARANCE=58"));
+  assert.ok(code.includes("layerRect.width/layer.offsetWidth"));
+  assert.ok(code.includes("(clearance-layerRect.top)/scale"));
+  assert.ok(code.includes("host.style.maxHeight=localHeight"));
+  assert.ok(code.includes("new MutationObserver(queueSafePosition)"));
+  assert.ok(code.includes("queueSafePosition();"));
+  assert.ok(!code.includes("refitSelectedChartForLayout"));
+});

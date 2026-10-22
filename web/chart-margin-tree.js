@@ -11,6 +11,48 @@
   })[String(code).slice(0,2)]||"";
   const escape=s=>String(s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
   let query="",open=true,airportOpen=true;
+  // The PDF margin tree scales and pans with the chart. Convert the status
+  // bar clearance from viewport pixels into PDF-local coordinates on iPad.
+  const MIN_TOP_CLEARANCE=58;
+  let safeFrame=0;
+  function positionTreeBelowStatusBar(){
+    const host=document.getElementById("jpMarginChartTree");
+    if(!host)return;
+    if(!document.body.classList.contains("viewer-fullscreen")||
+       !document.getElementById("chartsView")?.classList.contains("chart-open")){
+      host.style.removeProperty("top");
+      host.style.removeProperty("max-height");
+      return;
+    }
+    const layer=host.parentElement,layerRect=layer.getBoundingClientRect();
+    const scale=layer.offsetWidth>0?layerRect.width/layer.offsetWidth:1;
+    if(!Number.isFinite(scale)||scale<.1)return;
+    const safeInset=parseFloat(getComputedStyle(document.body).paddingTop)||0;
+    const clearance=Math.max(MIN_TOP_CLEARANCE,safeInset+15);
+    const localTop=Math.max(5,(clearance-layerRect.top)/scale);
+    const localHeight=Math.max(96,(window.innerHeight-clearance-18)/scale);
+    host.style.top=localTop.toFixed(2)+"px";
+    host.style.maxHeight=localHeight.toFixed(2)+"px";
+  }
+  function queueSafePosition(){
+    if(safeFrame)return;
+    safeFrame=requestAnimationFrame(()=>{
+      safeFrame=0;
+      positionTreeBelowStatusBar();
+    });
+  }
+  // Schedule only during layout changes and chart interaction, never a loop.
+  window.addEventListener("resize",queueSafePosition,{passive:true});
+  window.addEventListener("orientationchange",queueSafePosition,{passive:true});
+  document.addEventListener("fullscreenchange",queueSafePosition);
+  document.addEventListener("webkitfullscreenchange",queueSafePosition);
+  document.addEventListener("scroll",queueSafePosition,{capture:true,passive:true});
+  document.addEventListener("pointermove",queueSafePosition,{passive:true});
+  document.addEventListener("touchmove",queueSafePosition,{passive:true});
+  new MutationObserver(queueSafePosition).observe(document.body,{
+    attributes:true,attributeFilter:["class"]
+  });
+
   const opened=new Set();
   const airportInfo=code=>{
     const meta=airportMetadata?.[code]||{};
@@ -122,6 +164,7 @@
     }
     opened.add(selectedAirport+":"+(selectedChart.category||""));
     refresh();
+    queueSafePosition();
   }
   window.addEventListener("jeppiran-chart-rendered",attach);
   // Chart selection and PDF decode occur asynchronously. Tree updates only

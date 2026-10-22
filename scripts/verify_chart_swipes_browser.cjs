@@ -78,6 +78,36 @@ const sleep=ms=>new Promise(resolve=>setTimeout(resolve,ms));
 
   // Vector-backed detail must sharpen after zoom without changing the PDF's
   // CSS dimensions (or the georeferenced position of existing overlays).
+  // iPad Safari fullscreen-style status area: chart list must remain below
+  // the OS clock both at fit and zoom 150%, and inside landscape height.
+  await page.locator("#jpMarginChartTree").waitFor({state:"attached",timeout:15000});
+  await page.evaluate(()=>document.body.classList.add("viewer-fullscreen"));
+  await page.waitForFunction(()=>document.querySelector("#jpMarginChartTree")?.getBoundingClientRect().top>=52,
+    null,{timeout:7000});
+  const getTree=()=>page.evaluate(()=>{
+    const r=document.getElementById("jpMarginChartTree")?.getBoundingClientRect();
+    return {top:r?.top??-1,bottom:r?.bottom??Infinity,screen:innerHeight};
+  });
+  let safe=await getTree();
+  assert.ok(safe.top>=52&&safe.bottom<=safe.screen+1,
+    "iPad clock overlap or offscreen tree: "+JSON.stringify(safe));
+  await page.evaluate(()=>setChartZoom(1.5));
+  await page.waitForFunction(()=>{
+    const r=document.getElementById("jpMarginChartTree")?.getBoundingClientRect();
+    return r&&r.top>=52&&r.bottom<=innerHeight+1;
+  },null,{timeout:7000});
+  safe=await getTree();
+  assert.ok(safe.top>=52&&safe.bottom<=safe.screen+1,
+    "Zoomed PDF tree must remain below status bar: "+JSON.stringify(safe));
+  await page.setViewportSize({width:1024,height:768});
+  await page.waitForFunction(()=>{
+    const r=document.getElementById("jpMarginChartTree")?.getBoundingClientRect();
+    return r&&r.top>=52&&r.bottom<=innerHeight+1;
+  },null,{timeout:7000});
+  await page.evaluate(()=>document.body.classList.remove("viewer-fullscreen"));
+  await page.setViewportSize({width:1100,height:830});
+  await page.evaluate(()=>resetChartView());
+  console.log("PASS iPad clock-safe chart-tree position at fit, 150% zoom, landscape.");
   const beforeZoom=await page.evaluate(()=>{
     const el=document.getElementById("pdfCanvas");
     return {pixels:el.width,cssWidth:el.clientWidth,cssHeight:el.clientHeight};
