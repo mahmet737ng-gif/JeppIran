@@ -100,3 +100,11 @@ test("fullscreen PDF tree clears iPad status bar without resizing PDF or CDFA",(
   assert.ok(code.includes("queueSafePosition();"));
   assert.ok(!code.includes("refitSelectedChartForLayout"));
 });
+
+test("reposition when PDF layer transforms change with pinch or simulator pan",()=>{
+  const nav=read("chart-margin-tree.js"),html=read("index.html"),sw=read("service-worker.js");
+  assert.ok(nav.includes('transformWatcher.observe(layer,{attributes:true,attributeFilter:["style"]})'));
+  assert.ok(nav.includes('window.visualViewport?.addEventListener("resize"'));
+  assert.ok(html.includes("2621-chart-margin-tree-r4-ipad-clock-zoom-sync"));
+  assert.ok(sw.includes("2621-chart-margin-tree-r4-ipad-clock-zoom-sync"));
+});
