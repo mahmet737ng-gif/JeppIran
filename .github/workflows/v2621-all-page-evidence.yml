@@ -1,0 +1,113 @@
+name: Full resolution V2621 source chart verification evidence
+
+on:
+  push:
+    branches:
+      - audit/v2621-all-1654-full-resolution
+    paths:
+      - scripts/audit_chart_pages_2621.py
+      - scripts/render_page_evidence_2621.py
+      - .github/workflows/v2621-all-page-evidence.yml
+      - docs/audits/V2621/manual-review/**
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: v2621-fullpage-evidence
+  cancel-in-progress: false
+
+jobs:
+  independent-source-check:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install PDF rendering dependencies
+        run: python -m pip install --quiet "PyMuPDF==1.26.6" "Pillow>=11.0,<13.0"
+      - name: Audit all original source PDF pages and compare with current production metadata
+        run: python scripts/audit_chart_pages_2621.py
+      - name: Render all 1654 pages at 200 DPI with individual review evidence
+        run: python scripts/render_page_evidence_2621.py
+      - name: Confirm all 1654 pages were recorded without creating artificial approvals
+        run: |
+          python - <<'PY'
+          import csv, json
+          from pathlib import Path
+          base = Path("docs/audits/V2621/full-size-evidence")
+          report = json.loads((base / "summary.json").read_text())
+          assert report["source_sha256"] == "d86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6"
+          assert report["total_pages"] == report["images_at_200_dpi"] == 1654
+          assert report["manually_reviewed_pages"] == 32
+          assert report["live_chart_data_modified"] is False
+          with (base / "all_1654_pages.csv").open(encoding="utf-8-sig") as f:
+              records = list(csv.DictReader(f))
+          assert [int(x["page"]) for x in records] == list(range(1, 1655))
+          assert len(list((base / "images").rglob("*.jpg"))) == 1654
+          assert all(x["title_and_plate_verified_by_human"] == "False" for x in records[32:])
+          print("SOURCE VERIFIED: full-size render exists for every page, 32 human verified.")
+          PY
+      - name: Upload CSV summary and all review questions
+        uses: actions/upload-artifact@v4
+        with:
+          name: JeppIran-V2621-All-Pages-Audit-Report
+          path: |
+            docs/audits/V2621/SUMMARY.md
+            docs/audits/V2621/pages.csv
+            docs/audits/V2621/review_queue.csv
+            docs/audits/V2621/full-size-evidence/*.csv
+            docs/audits/V2621/full-size-evidence/*.json
+          retention-days: 90
+      - name: Upload full-size page images 1–400
+        uses: actions/upload-artifact@v4
+        with:
+          name: V2621-Fullsize-200DPI-Pages-0001-0400
+          path: docs/audits/V2621/full-size-evidence/images/pages_0001_0400/
+          compression-level: 0
+          retention-days: 90
+      - name: Upload full-size page images 401–800
+        uses: actions/upload-artifact@v4
+        with:
+          name: V2621-Fullsize-200DPI-Pages-0401-0800
+          path: docs/audits/V2621/full-size-evidence/images/pages_0401_0800/
+          compression-level: 0
+          retention-days: 90
+      - name: Upload full-size page images 801–1200
+        uses: actions/upload-artifact@v4
+        with:
+          name: V2621-Fullsize-200DPI-Pages-0801-1200
+          path: docs/audits/V2621/full-size-evidence/images/pages_0801_1200/
+          compression-level: 0
+          retention-days: 90
+      - name: Upload full-size page images 1201–1600
+        uses: actions/upload-artifact@v4
+        with:
+          name: V2621-Fullsize-200DPI-Pages-1201-1600
+          path: docs/audits/V2621/full-size-evidence/images/pages_1201_1600/
+          compression-level: 0
+          retention-days: 90
+      - name: Upload full-size page images 1601–1654
+        uses: actions/upload-artifact@v4
+        with:
+          name: V2621-Fullsize-200DPI-Pages-1601-1654
+          path: docs/audits/V2621/full-size-evidence/images/pages_1601_1654/
+          compression-level: 0
+          retention-days: 90
+      - name: Commit versioned PDF audit results, not copyrighted full-size source copies
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add docs/audits/V2621/SUMMARY.md
+          git add docs/audits/V2621/pages.csv docs/audits/V2621/review_queue.csv
+          git add docs/audits/V2621/full-size-evidence/*.csv docs/audits/V2621/full-size-evidence/*.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Record 1654-page source audit and 200dpi visual-evidence index (32 manually reviewed)'
+            git push origin HEAD:audit/v2621-all-1654-full-resolution
+          fi
