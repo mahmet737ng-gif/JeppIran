@@ -15,6 +15,8 @@
   // bar clearance from viewport pixels into PDF-local coordinates on iPad.
   const MIN_TOP_CLEARANCE=58;
   let safeFrame=0;
+  let observedTransformLayer=null;
+  const transformWatcher=new MutationObserver(()=>queueSafePosition());
   function positionTreeBelowStatusBar(){
     const host=document.getElementById("jpMarginChartTree");
     if(!host)return;
@@ -44,6 +46,7 @@
   // Schedule only during layout changes and chart interaction, never a loop.
   window.addEventListener("resize",queueSafePosition,{passive:true});
   window.addEventListener("orientationchange",queueSafePosition,{passive:true});
+  window.visualViewport?.addEventListener("resize",queueSafePosition,{passive:true});
   document.addEventListener("fullscreenchange",queueSafePosition);
   document.addEventListener("webkitfullscreenchange",queueSafePosition);
   document.addEventListener("scroll",queueSafePosition,{capture:true,passive:true});
@@ -146,6 +149,11 @@
   function attach(){
     const layer=document.getElementById("chartTransformLayer");
     if(!layer||!selectedChart)return;
+    if(observedTransformLayer!==layer){
+      transformWatcher.disconnect();
+      transformWatcher.observe(layer,{attributes:true,attributeFilter:["style"]});
+      observedTransformLayer=layer;
+    }
     let host=layer.querySelector("#jpMarginChartTree");
     if(!host){
       host=document.createElement("aside");
