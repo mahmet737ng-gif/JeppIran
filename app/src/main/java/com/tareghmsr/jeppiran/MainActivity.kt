@@ -430,9 +430,15 @@ class MainActivity :
             insets
         }
 
+        // The Home badge shows the terminal data cycle, not the separately
+        // incremented native APK versionName (e.g. 1.9).
         findViewById<android.widget.TextView>(
             R.id.versionText
-        ).text = AppVersion.name(this)
+        ).text = runCatching {
+            assets.open("charts-manifest.json").bufferedReader().use { reader ->
+                org.json.JSONObject(reader.readText()).optString("display_version")
+            }
+        }.getOrNull().orEmpty().ifBlank { "V2622" }
 
         // Android phone parity QA: long-press Charts to preview the exact web UI.
         // Normal tap still opens the stable native chart screen until encrypted
