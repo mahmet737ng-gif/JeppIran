@@ -37,8 +37,8 @@ with tempfile.TemporaryDirectory(prefix="jeppiran-admin-preview-") as tempdir:
     if removed != 1:
         raise RuntimeError("Admin preview offline-manager script was not found")
     index.write_text(html, encoding="utf-8")
-    change(draft / "manifest.webmanifest", '"name": "JeppIran"', '"name": "JeppIran · Admin QA Preview"')
-    change(draft / "manifest.webmanifest", '"short_name": "JeppIran"', '"short_name": "JeppIran TEST"')
+    change(draft / "manifest.webmanifest", '"name": "JeppIran 2622"', '"name": "JeppIran · Admin QA Preview"')
+    change(draft / "manifest.webmanifest", '"short_name": "JeppIran 2622"', '"short_name": "JeppIran TEST"')
     for path in (draft / "service-worker.js", draft / "offline-manager.js", draft / "app.js"):
         source = path.read_text(encoding="utf-8")
         for before, after in [
