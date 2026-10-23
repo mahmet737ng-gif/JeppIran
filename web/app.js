@@ -586,14 +586,6 @@ async function enableDohaAdcQaIfRequested(m){
 }
 
 const VERSION="V2622";
-// The display cycle is independent of the V2621 technical PDF/georef identity.
-function terminalDisplayCycle(source){return String(source?.display_cycle||source?.cycle||source?.version||VERSION).replace(/^V/i,"")}
-function terminalDisplayVersion(source){return "V"+terminalDisplayCycle(source)}
-function shortTerminalCycleRange(cycle){
-  const last=new Date(cycle.until.getTime()-86400000);
-  const month=new Intl.DateTimeFormat("en-US",{month:"short",timeZone:"UTC"});
-  return month.format(cycle.from)+String(cycle.from.getUTCDate()).padStart(2,"0")+"–"+month.format(last)+String(last.getUTCDate()).padStart(2,"0");
-}
 const WX_CACHE_RAW="https://raw.githubusercontent.com/mahmet737ng-gif/JeppIran/wx-cache/wx-live.json";
 const WX_CACHE_API="https://api.github.com/repos/mahmet737ng-gif/JeppIran/contents/wx-live.json?ref=wx-cache";
 const CATEGORY_ORDER=["Airport","STAR","SID","Approach","Other"];
@@ -1121,6 +1113,14 @@ function airportClockTime(now,icao){
 /* Terminal cycle schedule is Jeppesen Digital Terminal Charts' 2026
    bi-weekly ISSUE calendar, not an effective/expiry date for every chart.
    Cycle 2621: 09 Oct 2026; 2622: 23 Oct 2026. 2027+ requires new calendar. */
+// The display cycle is independent of the V2621 technical PDF/georef identity.
+function terminalDisplayCycle(source){return String(source?.display_cycle||source?.cycle||source?.version||VERSION).replace(/^V/i,"")}
+function terminalDisplayVersion(source){return "V"+terminalDisplayCycle(source)}
+function shortTerminalCycleRange(cycle){
+  const last=new Date(cycle.until.getTime()-86400000);
+  const month=new Intl.DateTimeFormat("en-US",{month:"short",timeZone:"UTC"});
+  return month.format(cycle.from)+String(cycle.from.getUTCDate()).padStart(2,"0")+"–"+month.format(last)+String(last.getUTCDate()).padStart(2,"0");
+}
 function terminalRevisionWindow(source){
   const cycle=terminalDisplayCycle(source);
   if(!/^26(0[1-9]|1\d|2[0-6])$/.test(cycle))return null;
@@ -1162,9 +1162,9 @@ function terminalValidityIndicator(){
     '<span class="terminal-date-start">VALID FROM <b>'+profileEsc(utcCycleDate(cycle.from))+'</b></span>'+
     '<span class="terminal-date-end">VALID TO <b>'+profileEsc(utcCycleDate(lastDay))+'</b></span>'+
     '</div>';
-  const heading='<b class="terminal-validity-label">TerminalCharts '+profileEsc(cycle.cycle)+' '+profileEsc(shortTerminalCycleRange(cycle))+'</b>'+
+  const heading='<b class="terminal-validity-label">TERMINAL CHARTS</b>'+
     '<strong class="terminal-validity-status">'+label+'</strong>';
-  const noteMarkup='<small class="terminal-validity-note">'+profileEsc(note)+'</small>';
+  const noteMarkup='<small class="terminal-validity-note">'+profileEsc('TerminalCharts '+cycle.cycle+' '+shortTerminalCycleRange(cycle)+' · '+note)+'</small>';
   return {
     state,
     markup:heading+noteMarkup,
