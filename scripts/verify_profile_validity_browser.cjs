@@ -45,8 +45,8 @@ async function waitForServer(){
   const to=page.locator("#profileTerminalValidity .terminal-date-end b");
   await from.waitFor({state:"visible",timeout:18000});
   await to.waitFor({state:"visible",timeout:10000});
-  assert.equal((await from.innerText()).trim(),"09 Oct 2026","visible starting date in OIII");
-  assert.equal((await to.innerText()).trim(),"22 Oct 2026","visible final date in OIII");
+  assert.equal((await from.innerText()).trim(),"23 Oct 2026","visible starting date in OIII");
+  assert.equal((await to.innerText()).trim(),"05 Nov 2026","visible final date in OIII");
   assert.ok(await page.locator("#profileUtcClock").isVisible(),"UTC clock above dates");
   // Confirm real Chrome uses the reviewed apron headings while retaining source chart identities.
   await page.waitForFunction(()=>
@@ -329,7 +329,7 @@ async function waitForServer(){
     {timeout:25000});
   assert.ok(await page.locator("#updateAirportDetails .jp-update-change").count()>0,
     "published airport revision rows must be visible in Update");
-  assert.match(await page.locator("#updateCycleStatus").innerText(),/Published: V2621/,
+  assert.match(await page.locator("#updateCycleStatus").innerText(),/Published: V2622/,
     "web updates must display the actual cycle, separate from APK version");
   assert.equal(await page.locator("#messageDialog").isVisible(),false,
     "update must not show the old chart-data popup");
@@ -343,7 +343,7 @@ async function waitForServer(){
   });
   assert.ok(await from.isVisible(),"date range visible in light mode");
   assert.ok(await to.isVisible(),"valid-to date visible in light mode");
-  console.log("PASS real Chrome UI: OIII terminal 09 Oct–22 Oct 2026, dates below UTC, no standalone card, Home unchanged, light mode visible.");
+  console.log("PASS real Chrome UI: OIII terminal 23 Oct–05 Nov 2026, dates below UTC, no standalone card, Home unchanged, light mode visible.");
  }finally{
   if(browser)await browser.close();
   server.kill("SIGTERM");
