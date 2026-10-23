@@ -23,6 +23,6 @@ object AppVersion {
                 ""
             )
             .ifBlank {
-                "V2620"
+                "V2622"
             }
 }

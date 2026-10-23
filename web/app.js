@@ -585,7 +585,15 @@ async function enableDohaAdcQaIfRequested(m){
   }catch(error){showAdcQaMessage("DOHA QA DISABLED: "+error.message+". Stable georefs unchanged.");}
 }
 
-const VERSION="V2620";
+const VERSION="V2622";
+// The display cycle is independent of the V2621 technical PDF/georef identity.
+function terminalDisplayCycle(source){return String(source?.display_cycle||source?.cycle||source?.version||VERSION).replace(/^V/i,"")}
+function terminalDisplayVersion(source){return "V"+terminalDisplayCycle(source)}
+function shortTerminalCycleRange(cycle){
+  const last=new Date(cycle.until.getTime()-86400000);
+  const month=new Intl.DateTimeFormat("en-US",{month:"short",timeZone:"UTC"});
+  return month.format(cycle.from)+String(cycle.from.getUTCDate()).padStart(2,"0")+"–"+month.format(last)+String(last.getUTCDate()).padStart(2,"0");
+}
 const WX_CACHE_RAW="https://raw.githubusercontent.com/mahmet737ng-gif/JeppIran/wx-cache/wx-live.json";
 const WX_CACHE_API="https://api.github.com/repos/mahmet737ng-gif/JeppIran/contents/wx-live.json?ref=wx-cache";
 const CATEGORY_ORDER=["Airport","STAR","SID","Approach","Other"];
@@ -851,10 +859,10 @@ async function loadData(){
     if(!selectedAirport && charts.some(c=>c.airport==="OIII"))selectAirport("OIII");
     else if(!selectedAirport)selectAirport(charts[0].airport);
     else if(!selectedChart)renderAirportProfile(selectedAirport);
-    if($("#homeCycle"))$("#homeCycle").textContent=(m.version||VERSION);
+    if($("#homeCycle"))$("#homeCycle").textContent=terminalDisplayVersion(m);
     updateTerminalValidityDisplay();
     refreshPositionStatus();
-    $("#updateSubtitle").textContent=(m.version||VERSION)+" data • "+Object.keys(m.airports||{}).length+" airports";
+    $("#updateSubtitle").textContent=terminalDisplayVersion(m)+" data • "+Object.keys(m.airports||{}).length+" airports";
 
     // Optional data is loaded AFTER the working airport/charts UI is visible.
     // This prevents one large JSON/network request from leaving Charts empty.
@@ -971,7 +979,7 @@ updateBtn.addEventListener("click",()=>{
 });
 function updateText(id,text){const node=document.getElementById(id);if(node)node.textContent=text}
 async function refreshWebUpdates(){
-  const installed=manifest?.version||"Unknown";
+  const installed=manifest?terminalDisplayVersion(manifest):"Unknown";
   updateText("updateCycleStatus","Installed web charts: "+installed+". Checking current published data…");
   updateText("updateCycleDates","Terminal validity comes from the published cycle.");
   updateText("updateChangesStatus","Loading published chart changes…");
@@ -985,15 +993,15 @@ async function refreshWebUpdates(){
     if(!native&&!mResponse.ok)throw Error("Latest chart manifest HTTP "+mResponse.status);
     const latest=native?manifest:await mResponse.json();
     if(!latest)throw Error("Installed chart index unavailable");
-    const current=latest.version||latest.cycle||"Unknown";
+    const current=terminalDisplayVersion(latest);
     const equal=current===installed;
     updateText("updateCycleStatus",native
       ?"Installed locally: "+installed+" · All airport PDF files are bundled in the APK. Check Android updates for a newer chart cycle."
       :"Installed web charts: "+installed+" · Published: "+current+
         (equal?" · UP TO DATE":" · A NEW CYCLE IS AVAILABLE"));
     updateText("updateCycleDates",
-      latest.effective_from&&latest.effective_to
-      ?"Validity: "+latest.effective_from+" → "+latest.effective_to
+      (latest.display_effective_from||latest.effective_from)&&(latest.display_effective_to||latest.effective_to)
+      ?"Validity: "+(latest.display_effective_from||latest.effective_from)+" → "+(latest.display_effective_to||latest.effective_to)
       :"Cycle date range is not provided in the source manifest. Check the validity indicator above.");
     if(enrouteResponse.ok){
       const enroute=await enrouteResponse.json();
@@ -1114,7 +1122,7 @@ function airportClockTime(now,icao){
    bi-weekly ISSUE calendar, not an effective/expiry date for every chart.
    Cycle 2621: 09 Oct 2026; 2622: 23 Oct 2026. 2027+ requires new calendar. */
 function terminalRevisionWindow(source){
-  const cycle=String(source?.cycle||source?.version||"").replace(/^V/i,"");
+  const cycle=terminalDisplayCycle(source);
   if(!/^26(0[1-9]|1\d|2[0-6])$/.test(cycle))return null;
   const ordinal=Number(cycle.slice(2));
   const start=Date.UTC(2026,0,2)+(ordinal-1)*14*86400000;
@@ -1154,7 +1162,7 @@ function terminalValidityIndicator(){
     '<span class="terminal-date-start">VALID FROM <b>'+profileEsc(utcCycleDate(cycle.from))+'</b></span>'+
     '<span class="terminal-date-end">VALID TO <b>'+profileEsc(utcCycleDate(lastDay))+'</b></span>'+
     '</div>';
-  const heading='<b class="terminal-validity-label">TERMINAL CHARTS</b>'+
+  const heading='<b class="terminal-validity-label">TerminalCharts '+profileEsc(cycle.cycle)+' '+profileEsc(shortTerminalCycleRange(cycle))+'</b>'+
     '<strong class="terminal-validity-status">'+label+'</strong>';
   const noteMarkup='<small class="terminal-validity-note">'+profileEsc(note)+'</small>';
   return {
@@ -1463,7 +1471,7 @@ function renderAirportProfile(icao){
       '<section class="profile-card" id="profileWind"><header><span>WIND COMPONENTS '+(rw?"("+profileEsc(rw.name)+")":"")+'</span></header>'+
       '<div class="wind-compact"><div class="wind-compass">'+runwayCompassMarkup(rw,wx)+'</div>'+
       '<div class="wind-data"><div><span>Runway HDG (ADC)</span><b>'+(rw?(Number.isFinite(rw.headingAdc)?Math.round(rw.headingAdc)+"°":"—"):"—")+'</b></div><div><span>METAR wind direction</span><b>'+(comp?comp.direction+"° / "+comp.speed+" kt":"—")+'</b></div><div><span class="'+(comp?(comp.headRaw>=0?"wind-status-head":Number(comp.head)>=3&&Number(comp.head)<=5?"wind-status-tail-warning":Number(comp.head)>5?"wind-status-tail-danger":"wind-status-neutral"):"wind-status-neutral")+'">↑ '+(comp?comp.headName:"Headwind")+'</span><b class="'+(comp?(comp.headRaw>=0?"wind-status-head":Number(comp.head)>=3&&Number(comp.head)<=5?"wind-status-tail-warning":Number(comp.head)>5?"wind-status-tail-danger":"wind-status-neutral"):"wind-status-neutral")+'">'+(comp?comp.head+" kt":"—")+'</b></div><div><span class="wind-cross">→ Crosswind</span><b class="wind-cross">'+(comp?comp.cross+" kt "+comp.crossName:"—")+'</b></div></div></div></section>'+
-      '<section class="profile-card" id="profileRunways"><header><span>RUNWAYS</span><small>V2621 ADC runway-end numbers only</small></header>'+runwayRows+'</section>'+
+      '<section class="profile-card" id="profileRunways"><header><span>RUNWAYS</span><small>ADC runway-end numbers only</small></header>'+runwayRows+'</section>'+
       '<div class="profile-right-stack">'+
       '<section class="profile-card" id="profileNotam"><header><span>NOTAM • '+profileEsc(icao)+'</span></header><details class="profile-notam-details"><summary>NOTAM status & details</summary><p>No validated NOTAM feed is connected. Current NOTAM status unknown. Check an authorized AIS/NOF source before flight.</p></details></section>'+
       '<section class="profile-card" id="profileTaf"><header><span>TAF • '+profileEsc(icao)+'</span><small>Forecast / last available</small></header><div class="profile-weather-text">'+profileEsc(taf||"TAF unavailable — request pending")+'</div>'+irimoTafArchive+'</section>'+
