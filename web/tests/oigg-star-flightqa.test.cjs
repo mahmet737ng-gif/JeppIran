@@ -46,6 +46,8 @@ assert.ok(app.includes("three_source_controls_printed_grid_simulator_qa"));
 assert.ok(native.includes("three_source_controls_printed_grid_simulator_qa"));
 assert.ok(app.includes("oigg-local-r3"));
 // HTML references the versioned app; the OIGG QA asset itself remains pinned in SW.
-assert.ok(read("index.html").includes("./app.js?v=2621-"));
+const appUrl=read("index.html").match(/\.\/app\.js\?v=[a-z0-9-]+/);
+assert.ok(appUrl,"the HTML includes a versioned app script");
+assert.ok(read("service-worker.js").includes(appUrl[0]),"worker caches the same app script revision");
 assert.ok(read("service-worker.js").includes("oigg-local-r3"));
 console.log("PASS OIGG STAR 307/308 revised flight-only QA, D20 and original grid; 807 protected georefs unchanged");
