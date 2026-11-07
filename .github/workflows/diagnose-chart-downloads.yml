@@ -1,0 +1,40 @@
+name: Diagnose immutable chart PDF download bytes
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/diagnose-chart-downloads.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Compare published release and Pages PDF bytes without changing files
+        shell: bash
+        run: |
+          set -uo pipefail
+          for icao in OIFM OIMB OIMT OITT OITU; do
+            for src in release pages release-bust pages-bust; do
+              if [[ "$src" == release* ]]; then
+                url="https://github.com/mahmet737ng-gif/JeppIran/releases/download/charts-V2621-printclean-3/${icao}.pdf"
+              else
+                url="https://mahmet737ng-gif.github.io/JeppIran/charts/${icao}.pdf"
+              fi
+              if [[ "$src" == *-bust ]]; then
+                url="${url}?cb=${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+              fi
+              temp="$(mktemp)"
+              if http=$(curl -fsSL --connect-timeout 15 --max-time 45 -A 'JEPPIRAN-chart-diagnostic/1.0' -w '%{http_code}' -o "$temp" "$url"); then
+                printf "%s %s HTTP=%s size=%s sha256=%s\n" "$icao" "$src" "$http" "$(wc -c < "$temp" | tr -d ' ')" "$(sha256sum "$temp" | cut -d' ' -f1)"
+              else
+                printf "%s %s DOWNLOAD_FAILED status=%s\n" "$icao" "$src" "$?"
+              fi
+              rm -f "$temp"
+            done
+          done
