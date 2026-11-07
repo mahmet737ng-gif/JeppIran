@@ -22,7 +22,7 @@ jobs:
         run: |
           set -uo pipefail
           echo "=== Remaining literal 2622 references ==="
-          rg -n --glob '*.js' --glob '*.cjs' --glob '*.kt' --glob '*.py' --glob '*.html' --glob '*.yml' --glob '*.json' --glob '*.webmanifest' --glob '!**/charts-current.json' --glob '!**/chart-georef.json' '2622|Oct23-Nov05|2026-10-23' web scripts app/src/main .github/workflows tests || true
+          grep -RInE --include='*.js' --include='*.cjs' --include='*.kt' --include='*.py' --include='*.html' --include='*.yml' --include='*.json' --include='*.webmanifest' --exclude='charts-current.json' --exclude='chart-georef.json' '2622|Oct23-Nov05|2026-10-23' web scripts app/src/main .github/workflows tests || true
           echo "=== End inventory ==="
       - name: Compare published release and Pages PDF bytes without changing files
         shell: bash
