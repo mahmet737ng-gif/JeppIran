@@ -585,7 +585,7 @@ async function enableDohaAdcQaIfRequested(m){
   }catch(error){showAdcQaMessage("DOHA QA DISABLED: "+error.message+". Stable georefs unchanged.");}
 }
 
-const VERSION="V2622";
+const VERSION="V2623";
 const WX_CACHE_RAW="https://raw.githubusercontent.com/mahmet737ng-gif/JeppIran/wx-cache/wx-live.json";
 const WX_CACHE_API="https://api.github.com/repos/mahmet737ng-gif/JeppIran/contents/wx-live.json?ref=wx-cache";
 const CATEGORY_ORDER=["Airport","STAR","SID","Approach","Other"];
@@ -1112,7 +1112,7 @@ function airportClockTime(now,icao){
 }
 /* Terminal cycle schedule is Jeppesen Digital Terminal Charts' 2026
    bi-weekly ISSUE calendar, not an effective/expiry date for every chart.
-   Cycle 2621: 09 Oct 2026; 2622: 23 Oct 2026. 2027+ requires new calendar. */
+   Cycle 2621: 09 Oct 2026; 2623 display validity: 05–19 Nov 2026. 2027+ requires new calendar. */
 // The display cycle is independent of the V2621 technical PDF/georef identity.
 function terminalDisplayCycle(source){return String(source?.display_cycle||source?.cycle||source?.version||VERSION).replace(/^V/i,"")}
 function terminalDisplayVersion(source){return "V"+terminalDisplayCycle(source)}
@@ -1123,6 +1123,13 @@ function shortTerminalCycleRange(cycle){
 }
 function terminalRevisionWindow(source){
   const cycle=terminalDisplayCycle(source);
+  // Published display dates are inclusive; keep the underlying PDF/georef cycle separate.
+  const displayFrom=parseUtcCycleDate(source?.display_effective_from);
+  const displayThrough=parseUtcCycleDate(source?.display_effective_to);
+  if(displayFrom&&displayThrough&&displayThrough.getTime()>=displayFrom.getTime())
+    return {cycle,from:displayFrom,until:new Date(displayThrough.getTime()+86400000)};
+  // Current display-cycle fallback if an older manifest has no dates.
+  if(cycle==="2623")return {cycle,from:new Date(Date.UTC(2026,10,5)),until:new Date(Date.UTC(2026,10,20))};
   if(!/^26(0[1-9]|1\d|2[0-6])$/.test(cycle))return null;
   const ordinal=Number(cycle.slice(2));
   const start=Date.UTC(2026,0,2)+(ordinal-1)*14*86400000;

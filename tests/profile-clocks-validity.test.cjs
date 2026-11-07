@@ -52,8 +52,8 @@ test("terminal cycle 2621 issue 9 Oct and next issue 23 Oct, status expires exac
   assert.match(expired.profileValidityMarkup(),/New terminal chart cycle due/);
 });
 test("after importing next chart cycle, active cycle resets to current automatically",()=>{
-  const updated=build("2026-10-23T13:00:00Z",{cycle:"2622",version:"V2622"});
-  assert.equal(updated.terminalRevisionWindow(updated.manifest).from.toISOString().slice(0,10),"2026-10-23");
+  const updated=build("2026-11-05T13:00:00Z",{cycle:"2623",version:"V2623"});
+  assert.equal(updated.terminalRevisionWindow(updated.manifest).from.toISOString().slice(0,10),"2026-11-05");
   assert.match(updated.profileValidityMarkup(),/data-validity="terminal" data-state="current"/);
   const unknown=build("2027-02-10T12:00:00Z",{cycle:"2704",version:"V2704"});
   assert.match(unknown.profileValidityMarkup(),/data-validity="terminal" data-state="unknown"/);
@@ -100,7 +100,7 @@ test("compact validity indicator changes to red overdue state and recovers on cy
   assert.equal(overdue.terminalValidityIndicator().state,"expired");
   assert.match(overdue.terminalValidityIndicator().markup,/UPDATE OVERDUE/);
   assert.match(overdue.terminalValidityIndicator().markup,/New cycle due 23 Oct 2026/);
-  const updated=build("2026-10-23T00:00:00Z",{version:"V2622",cycle:"2622"});
+  const updated=build("2026-11-05T00:00:00Z",{version:"V2623",cycle:"2623"});
   assert.equal(updated.terminalValidityIndicator().state,"current");
   assert.match(css,/#homeView \.home-terminal-validity\[data-state="expired"\]/);
   assert.match(css,/#chartsView \.profile-terminal-validity\[data-state="expired"\]/);
@@ -114,8 +114,8 @@ test("airport profile renders inclusive terminal cycle validity dates, Home rema
   const expired=build("2026-10-23T00:00:00Z");
   assert.equal(expired.terminalValidityIndicator().state,"expired");
   assert.match(expired.terminalValidityIndicator().profileMarkup,/VALID FROM <b>09 Oct 2026<\/b>[\s\S]*VALID TO <b>22 Oct 2026<\/b>/);
-  const updated=build("2026-10-23T00:00:00Z",{version:"V2622",cycle:"2622"});
-  assert.match(updated.terminalValidityIndicator().profileMarkup,/VALID FROM <b>23 Oct 2026<\/b>[\s\S]*VALID TO <b>05 Nov 2026<\/b>/);
+  const updated=build("2026-11-05T00:00:00Z",{version:"V2623",cycle:"2623"});
+  assert.match(updated.terminalValidityIndicator().profileMarkup,/VALID FROM <b>05 Nov 2026<\/b>[\s\S]*VALID TO <b>19 Nov 2026<\/b>/);
   const unknown=build("2027-02-01T00:00:00Z",{version:"V2704",cycle:"2704"});
   assert.match(unknown.terminalValidityIndicator().profileMarkup,/VALID FROM <b>UNAVAILABLE<\/b>[\s\S]*VALID TO <b>UNAVAILABLE<\/b>/);
   assert.match(app,/id==="profileTerminalValidity"\?status\.profileMarkup:status\.markup/);
@@ -138,4 +138,18 @@ test("manifest synchronization remains mandatory before Pages deployment",()=>{
   const action=fs.readFileSync(path.join(root,".github/workflows/deploy-ipad-web.yml"),"utf8");
   assert.match(action,/cp app\/src\/main\/assets\/enroute-manifest\.json web\/data\/enroute-manifest\.json/);
   assert.match(action,/node --test tests\/profile-clocks-validity\.test\.cjs/);
+});
+
+test("cycle 2623 display-validity remains active through 19 November and expires on 20 November",()=>{
+  const current=build("2026-11-19T23:59:59Z",{
+    version:"V2621",cycle:"2621",display_cycle:"2623",
+    display_effective_from:"2026-11-05",display_effective_to:"2026-11-19"
+  });
+  const window=current.terminalRevisionWindow(current.manifest);
+  assert.equal(window.from.toISOString().slice(0,10),"2026-11-05");
+  assert.equal(window.until.toISOString().slice(0,10),"2026-11-20");
+  assert.equal(current.terminalValidityIndicator().state,"current");
+  assert.match(current.terminalValidityIndicator().profileMarkup,/VALID TO <b>19 Nov 2026<\/b>/);
+  const expired=build("2026-11-20T00:00:00Z",current.manifest);
+  assert.equal(expired.terminalValidityIndicator().state,"expired");
 });

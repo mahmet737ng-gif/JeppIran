@@ -577,6 +577,9 @@ jobs:
           python3 scripts/build_airport_poster_precache_manifest.py
           test -s web/data/airport-poster-cache.json
 
+      - name: Stamp cycle 2623 onto frozen Android UI without changing its layout
+        run: python3 scripts/stamp_android_cycle_display.py
+
       - name: Bundle complete offline JEPPIRAN Android application
         shell: bash
         run: |

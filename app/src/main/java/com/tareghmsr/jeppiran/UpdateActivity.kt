@@ -378,8 +378,9 @@ class UpdateActivity : AppCompatActivity() {
                 val version = root.optString("version").trim()
 
                 val cycle =
-                    root.optString("cycle")
+                    root.optString("display_cycle")
                         .trim()
+                        .ifBlank { root.optString("cycle").trim() }
                         .ifBlank {
                             Regex("(\\d{4})")
                                 .find(
@@ -396,12 +397,14 @@ class UpdateActivity : AppCompatActivity() {
                         }
 
                 val effectiveFrom =
-                    root.optString("effective_from")
+                    root.optString("display_effective_from")
                         .trim()
+                        .ifBlank { root.optString("effective_from").trim() }
 
                 val effectiveTo =
-                    root.optString("effective_to")
+                    root.optString("display_effective_to")
                         .trim()
+                        .ifBlank { root.optString("effective_to").trim() }
 
                 require(version.isNotBlank()) {
                     "Remote data version is missing"

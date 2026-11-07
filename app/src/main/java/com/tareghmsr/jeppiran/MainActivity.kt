@@ -438,7 +438,7 @@ class MainActivity :
             assets.open("charts-manifest.json").bufferedReader().use { reader ->
                 org.json.JSONObject(reader.readText()).optString("display_version")
             }
-        }.getOrNull().orEmpty().ifBlank { "V2622" }
+        }.getOrNull().orEmpty().ifBlank { "V2623" }
 
         // Android phone parity QA: long-press Charts to preview the exact web UI.
         // Normal tap still opens the stable native chart screen until encrypted

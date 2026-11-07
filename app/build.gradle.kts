@@ -7,12 +7,12 @@ val isPhonePreview = System.getenv("JEPPIRAN_PHONE_QA") == "true"
 val ciVersionCode =
     System.getenv("JEPPIRAN_VERSION_CODE")
         ?.toIntOrNull()
-        ?: 262200
+        ?: 262300
 
 val ciVersionName =
     System.getenv("JEPPIRAN_VERSION_NAME")
         ?.takeIf { it.isNotBlank() }
-        ?: "V2622"
+        ?: "V2623"
 
 val signingStorePath =
     System.getenv("JEPPIRAN_KEYSTORE_PATH")
@@ -45,7 +45,7 @@ android {
         minSdk = 24
         targetSdk = 36
         versionCode = ciVersionCode
-        versionName = if (isPhonePreview) "V2622-phone-qa" else ciVersionName
+        versionName = if (isPhonePreview) "V2623-phone-qa" else ciVersionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
