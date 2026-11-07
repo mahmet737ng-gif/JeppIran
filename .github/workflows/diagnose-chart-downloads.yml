@@ -15,6 +15,15 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      - name: Checkout source for legacy cycle literal inventory
+        uses: actions/checkout@v5
+      - name: Find old display cycle literals in runtime and CI source
+        shell: bash
+        run: |
+          set -uo pipefail
+          echo "=== Remaining literal 2622 references ==="
+          rg -n --glob '*.js' --glob '*.cjs' --glob '*.kt' --glob '*.py' --glob '*.html' --glob '*.yml' --glob '*.json' --glob '*.webmanifest' --glob '!**/charts-current.json' --glob '!**/chart-georef.json' '2622|Oct23-Nov05|2026-10-23' web scripts app/src/main .github/workflows tests || true
+          echo "=== End inventory ==="
       - name: Compare published release and Pages PDF bytes without changing files
         shell: bash
         run: |
