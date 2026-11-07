@@ -13,6 +13,6 @@ test('IRIMO HTML capture is directly embedded but never used as live weather',()
   assert.match(s,/const taf=wxCache\[icao\+":taf"\]/);
   // Assert the active versioned viewer is loaded; the capture safeguards above
   // must remain true regardless of the filename cache epoch.
-  assert.match(html,/\.\/app\.js\?v=2621-[a-z0-9-]+/);
+  assert.match(html,/\.\/app\.js\?v=2623-[a-z0-9-]+/);
   assert.match(html,/airport-profile-live-text\.css\?v=[^"]+-irimo-capture-r1/);
 });
