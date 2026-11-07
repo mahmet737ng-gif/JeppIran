@@ -51,7 +51,7 @@ def make_manifest():
         if entry["size"] != info["size"] or entry["sha256"].lower() != info["sha256"].lower():
             raise RuntimeError("Manifest hash or byte size mismatch: " + filename)
         pdfs.append(entry)
-    return {"schema": 1, "cycle": chart_data["version"],
+    return {"schema": 1, "cycle": chart_data.get("display_version") or chart_data["version"],
             "release_tag": chart_data.get("release_tag", ""),
             "assets": assets, "pdfs": pdfs,
             "totalBytes": sum(x["size"] for x in assets + pdfs)}
