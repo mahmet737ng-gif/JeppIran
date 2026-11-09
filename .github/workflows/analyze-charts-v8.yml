@@ -5,16 +5,28 @@ on:
   push:
     branches:
       - main
+    # Re-run fixed V2620 PDF parser only when the source or workflow changes.
+    paths:
+      - 'Iran2620.pdf'
+      - '.github/workflows/analyze-charts-v8.yml'
 
 jobs:
   analyze:
     runs-on: ubuntu-24.04
 
     steps:
-      - name: Checkout repository with LFS
+      - name: Checkout source without eager LFS downloads
         uses: actions/checkout@v4
-        with:
-          lfs: true
+        env:
+          GIT_LFS_SKIP_SMUDGE: '1'
+
+      - name: Fetch only the V2620 source PDF
+        shell: bash
+        run: |
+          set -euo pipefail
+          git lfs install --local
+          git lfs pull --include='Iran2620.pdf' --exclude=''
+          test "$(head -c 4 Iran2620.pdf)" = '%PDF'
 
       - name: Install PDF tools
         run: |

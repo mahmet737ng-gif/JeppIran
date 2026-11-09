@@ -45,11 +45,39 @@ jobs:
     runs-on: ubuntu-24.04
 
     steps:
-      - name: Checkout
+      - name: Checkout without repeatedly downloading LFS PDFs
         uses: actions/checkout@v5
+        env:
+          GIT_LFS_SKIP_SMUDGE: '1'
         with:
-          lfs: true
           fetch-depth: 2
+
+      - name: Reuse immutable chart LFS objects across APK builds
+        uses: actions/cache@v4
+        with:
+          path: .git/lfs/objects
+          key: jeppiran-apk-lfs-${{ runner.os }}-${{ hashFiles('Iran*.pdf', 'web/data/charts/*.pdf') }}
+          restore-keys: |
+            jeppiran-apk-lfs-${{ runner.os }}-
+
+      - name: Restore all original PDF bytes for complete Android/source archive
+        shell: bash
+        run: |
+          set -euo pipefail
+          git lfs install --local
+          git lfs pull
+          python3 - <<'PY'
+          from pathlib import Path
+          pdfs = [*Path('.').glob('Iran*.pdf'), *Path('web/data/charts').glob('*.pdf')]
+          assert len(pdfs) >= 80, f"Expected all 80 original PDFs; found {len(pdfs)}"
+          bad = []
+          for path in pdfs:
+              with path.open('rb') as f:
+                  if f.read(4) != b'%PDF':
+                      bad.append(str(path))
+          assert not bad, f"Unresolved Git LFS pointers: {bad}"
+          print(f"Verified {len(pdfs)} real PDF files for Android and full source ZIP")
+          PY
 
       - name: Restore frozen Android app UI (never replace the public website)
         shell: bash

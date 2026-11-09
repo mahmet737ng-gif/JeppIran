@@ -19,8 +19,15 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v5
-        with:
-          lfs: true
+        env:
+          GIT_LFS_SKIP_SMUDGE: '1'
+      - name: Fetch only the original V2621 source PDF
+        shell: bash
+        run: |
+          set -euo pipefail
+          git lfs install --local
+          git lfs pull --include='Iran2621.pdf' --exclude=''
+          echo 'd86b5b5e262a775f8e91d28a403f4b163992dbdd1733ca28e1ba6e46ce8a7ab6  Iran2621.pdf' | sha256sum --check -
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
