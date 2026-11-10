@@ -750,7 +750,9 @@ window.JEPPIRAN_NAV_READY=true;
     if(!touchStart||!e.changedTouches.length)return;
     const x=e.changedTouches[0].clientX-touchStart.x;
     const y=e.changedTouches[0].clientY-touchStart.y;
-    if(Math.abs(x)>75&&Math.abs(x)>Math.abs(y)*1.7&&Date.now()-touchStart.when<900){
+    // Navigation gestures outside the PDF also require a deliberate drag.
+    const requiredTravel=Math.min(360,Math.max(140,innerWidth*.25));
+    if(Math.abs(x)>=requiredTravel&&Math.abs(x)>Math.abs(y)*1.7&&Date.now()-touchStart.when<900){
       if(x>0)history.back();else history.forward();
     }
     touchStart=null;
@@ -2380,9 +2382,12 @@ function finishChartSwipe(state,canceled){
   if(!state||state.done)return;
   state.done=true;
   const elapsed=performance.now()-state.startedAt;
+  // A page changes only after the user visibly drags a substantial portion
+  // of the viewport. A quick flick or an accidental short edge swipe must
+  // spring back to the current page, regardless of finger velocity.
+  const commitDistance=Math.min(360,Math.max(140,state.width*.25));
   const advance=!canceled&&!state.reversing&&
-    (state.edgePaging?Math.abs(state.dx)>=48:
-      (Math.abs(state.dx)>=32||(elapsed<300&&Math.abs(state.dx)>=16)));
+    Math.abs(state.dx)>=commitDistance;
   const destination=advance?-state.dir*state.width:0;
   const remaining=Math.abs(destination-state.dx);
   // Velocity-sensitive coast, still committed only on pointer release.
