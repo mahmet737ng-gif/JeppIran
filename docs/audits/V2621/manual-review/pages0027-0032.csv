@@ -1,0 +1,7 @@
+source_page,icao,category,plate,title,manually_fullsize_viewed,georef_action,notes
+27,OIAW,AIRPORT,,AIRPORT INFORMATION,YES,NONE,Airport information page 1; no georeferenced plan
+28,OIAW,AIRPORT,,AIRPORT INFORMATION,YES,NONE,Airport information page 2; communications continuation
+29,OIAW,STAR,10-2,"EGVAX 1X; EGVAX 1Y; EGVAX 1Z; ITIBI 1X; ITIBI 1Y; ITIBI 1Z",YES,NO_NEW,NOT TO SCALE arrival scheme
+30,OIAW,STAR,10-2A,"GABSU 1X; GABSU 1Y; GABSU 1Z; GODMO 1X; GODMO 1Y; GODMO 1Z",YES,NO_NEW,NOT TO SCALE arrival scheme
+31,OIAW,STAR,10-2B,"EGVAX 1W; GABSU 1W; GODMO 1W; ITIBI 1W",YES,NO_NEW,NOT TO SCALE arrival scheme
+32,OIAW,SID,10-3,"EGVAX 1A; EGVAX 1B; EGVAX 1C; EGVAX 1D",YES,NO_NEW,NOT TO SCALE departure scheme
